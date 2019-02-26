@@ -1,0 +1,52 @@
+/*******************************************************************************
+*									       * 
+* Date:	  15/02/2019							       *
+* Comment: Contains the finite element variation formulation for the system    *
+*          of Elasticity, the FE assembly routine, and solution exporting  to  *
+*          paraview							       *
+*									       *
+*******************************************************************************/
+
+//==============================================================================
+// variation formulation
+//==============================================================================
+
+ varf elas2d(defvec(u),defvec(v))
+	= int2d(Th)(
+        	    lambda*div(u)*div(v)
+	  	    +2.*mu*( epsilon(u)'*epsilon(v) ) 
+		    )
+	- int2d(Th)(ffx*v1+ffy*v2)                  //Force component from MMS
+	+ on(Dlabel,u1=x^3+x^2*y,u2=x*y^2+x^2*y)    //Directlet cond. from MMS
+	;
+
+//==============================================================================
+// Au=b assembly and solving
+//==============================================================================
+
+matrix<real> A = elas2d(Vh,Vh);
+set(A,solver=CG);
+real[int]    b = elas2d(0,Vh);
+
+Vh<real> defvec(u);
+u1[]=A^-1*b;
+
+//==============================================================================
+// Method of manufactured solution
+//==============================================================================
+
+ Vh defvec(ms);
+ [ms1,ms2]=[x*x*x+x*x*y,x*y*y+x*x*y];
+
+//==============================================================================
+// Solution field files in paraview
+//==============================================================================
+
+load "iovtk"      			//Paraview export support
+int[int] vtkorder=[1,1,1];		//Solution export order
+
+savevtk("VTKs/SolutionFEM.vtk",Th,[u1,u2,0],
+	 order=vtkorder,dataname="Displacement");
+	 
+savevtk("VTKs/SolutionMMS.vtk",Th,[ms1,ms2,0],
+	 order=vtkorder,dataname="Displacement");

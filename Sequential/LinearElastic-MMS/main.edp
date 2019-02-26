@@ -1,0 +1,16 @@
+/*******************************************************************************
+*									       *
+* Date:	   21/02/2019							       *
+* Comment: This main file containing  all  modules  that are required for FE   * 
+*          solution of system of elasticity. Also  MMS solution  function is   *
+*	   present in file "varfmatsolve.edp".				       *
+*									       *
+*******************************************************************************/
+
+//==============================================================================
+// All files to be included
+//==============================================================================
+  
+  include "mesh.edp"        //Import the FE mesh
+  include "parameters.edp"  //Control parameters, propeties, etc..
+  include "varfmatsolve.edp"//Assembling and solving the linear system

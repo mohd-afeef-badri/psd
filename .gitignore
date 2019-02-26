@@ -1,0 +1,7 @@
+*.log
+*.~
+*.swp
+
+## PARAVIEW FILES ##
+*.vtk
+*.vtu
