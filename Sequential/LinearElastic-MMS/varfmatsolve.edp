@@ -1,51 +1,112 @@
 /*******************************************************************************
 *									       * 
 * Date:	  15/02/2019							       *
-* Comment: Contains the finite element variation formulation for the system    *
-*          of Elasticity, the FE assembly routine, and solution exporting  to  *
-*          paraview							       *
+* Comment: Contains the finite element variation formulation for the  system   *
+*          of Elasticity, the FE assembly routine, and solution exporting to   *
+*          paraview. Additionally MMS solution and L2 error calculations are   *
+*	   also performed.						       *
 *									       *
 *******************************************************************************/
+
+//==============================================================================
+// -------Method of manufactured solution-------
+//==============================================================================
+
+ fespace Vh1 (Th,P1);					// P1 space for MMS
+ 
+ Vh1 ms1=x*x*x+x*x*y,					// MMS for u1
+     ms2=x*y*y+x*x*y,					// MMS for u2
+     F1=x*(8.*lambda+14.*mu)+y*(4.*lambda+6.*mu),	// MMS for F1
+     F2=x*(6.*mu+4.*lambda)+y*(2.*mu),			// MMS for F2
+     err1,err2;						// Variable for error
+     
+
+ //----------------------- NOT SURE TO DO --------------------//
+ real NormOfEpsilon=sqrt(int2d(Th)( dx(ms1)*dx(ms1) + dy(ms2)*dy(ms2) 
+                           		+ (0.5*(dx(ms2)+dy(ms1)))^2 
+                           		+ (0.5*(dx(ms2)+dy(ms1)))^2 
+                           	  ));
+                         
+ cout << "\nCalculated from MMS |Epsilon|_2 =" << NormOfEpsilon << "\n\n"<<endl;
+ 
+ if(NormOfEpsilon <= 0.5e-2 && NormOfEpsilon >= 0.2e-2 ){
+   cout << "\n|Epsilon|_2 is in the small strain limit\n" << endl;}
+ else{
+   cout << "******WARNING*******WARNING*********WARNING******" << endl;
+   cout << " |Epsilon|_2 IS NOT IN THE SMALL STRAIN LIMIT   *" << endl;
+   cout << "******WARNING*******WARNING*********WARNING******" << endl;
+   cout << "\n\n" << endl;
+ }
 
 //==============================================================================
 // -------Variation formulation-------
 //==============================================================================
 
  varf elas2d(defvec(u),defvec(v))
-	= int2d(Th)(
+	= int2d(Th,qforder=3)(
         	    lambda*div(u)*div(v)
 	  	    +2.*mu*( epsilon(u)'*epsilon(v) ) 
 		    )
-	- int2d(Th)(ffx*v1+ffy*v2)                  // Force component from MMS
-	+ on(Dlabel,u1=x^3+x^2*y,u2=x*y^2+x^2*y)    // Directlet cond. from MMS
+	- int2d(Th,qforder=3)(F1*v1+F2*v2)    	// Force component from MMS	
+	+ on(Dlabel,u1=ms1,u2=ms2)    		// Directlet cond. from MMS
 	;
 
 //==============================================================================
 // -------Au=b assembly and solving-------
 //==============================================================================
 
-matrix<real> A = elas2d(Vh,Vh);
-set(A,solver=CG);
-real[int]    b = elas2d(0,Vh);
+matrix<real> A = elas2d(Vh,Vh);			// Assembly for A
+real[int]    b = elas2d(0,Vh);			// Assembly for b
 
-u1[]=A^-1*b;
+set(A,solver=UMFPACK);				// Solver setup
+u1[]=A^-1*b;					// Solving
+
 
 //==============================================================================
-// -------Method of manufactured solution-------
+// -------L2 error calculation between FEM & MMS-------
 //==============================================================================
 
- Vh defvec(ms);
- [ms1,ms2]=[x*x*x+x*x*y,x*y*y+x*x*y];
+macro errorL2(Wh){
+ mesh Th=Wh.Th;
+ real Thminsize,Thmaxsize; 
+ {
+   fespace Vh0(Th,P0);
+   Vh0 size1=hTriangle;
+   Thminsize=size1[].min;
+   Thmaxsize=size1[].max;
+   cout << " Mesh size is   :" << Thminsize << endl; 
+ }
+ 
+ err1=u1-ms1;
+ real error1=sqrt( int2d(Th,qforder=5) ( err1^2 )  );
+ cout << " L2  error  on u1 :" << error1 / sqrt( int2d(Th,qforder=5) ( ms1^2 )  )   << endl;
+ cout << " Linf error on u1 :" << err1[].max  << endl;
+
+ err2=u2-ms2; 
+ real error2=sqrt( int2d(Th,qforder=5) ( (err2)^2 )  );
+ cout << " L2  error  on u2 :" << error2     << endl;
+ cout << " Linf error on u2 :" << err2[].max  << endl;
+ cout << " \n\n" << endl;
+
+}//EOM
+
+errorL2(Vh);
 
 //==============================================================================
 // -------Solution field files in paraview-------
 //==============================================================================
 
+system("mkdir -p VTKs");			// Create folder VTKs
+
 load "iovtk"      				// Paraview export support
 int[int] vtkorder=[1,1,1];			// Solution export order
+int[int] vtkorder1=[1,1];			// Solution export order
 
 savevtk("VTKs/SolutionFEM.vtk",Th,[u1,u2,0],
 	 order=vtkorder,dataname="Displacement");
 	 
 savevtk("VTKs/SolutionMMS.vtk",Th,[ms1,ms2,0],
 	 order=vtkorder,dataname="Displacement");
+	 
+savevtk("VTKs/error.vtk",Th,err1,err2,
+	 order=vtkorder1,dataname="error-u1 error-u2");

@@ -11,7 +11,7 @@
 
 mesh Th; 				// FE mesh in 2D
 int[int] Dlabel(1);			// Dirichlet BC labels
-bool plotmesh=0;			// Plot mesh uing ffglut
+bool plotmesh=0;			// Plot mesh using ffglut
 
 
 //==============================================================================
@@ -19,7 +19,7 @@ bool plotmesh=0;			// Plot mesh uing ffglut
 //==============================================================================
 
 // 	Note additionally the square mesh can be  converted to a rectangular one
-// 	by controling elongations ex and ey. nx and ny are nodes in x & y resp.
+// 	by controlling elongations ex and ey. nx and ny are nodes in x & y resp.
  
 func int SqMesh(int nx, int ny, real ex, real ey){
 
@@ -34,7 +34,7 @@ func int SqMesh(int nx, int ny, real ex, real ey){
 // -------Unstructured tetra Cubic-Bezier curve mesh function-------
 //==============================================================================
 
-// 	The function will generate a irregualr boundary mesh. The curve contains 
+// 	The function will generate a irregular boundary mesh. The curve contains 
 //      connecting two points with two control points, used to tune irregularity 
 //      of the mesh.
 
@@ -105,11 +105,28 @@ func int CardinalMesh(int nx){
 }
 
 //==============================================================================
-// -------Building and ploting the mesh-------
+// -------Unstructured tetra circle mesh function-------
 //==============================================================================
 
-SqMesh(10,10,2.,1.);			// Call to SqMesh()
-//CardinalMesh(20);			// Call to CardinalMesh()
-//CubBezierMesh(20);			// Call to CubBezierMesh()
+func int CirMesh(int nx, real r){ 
+
+  border a(t=0, 2*pi){x=r*cos(t); y=r*sin(t); label=1;}
+  Th = buildmesh(a(nx));
+  
+  Dlabel.resize(1);			// Single label required
+  Dlabel=[1];				// Dirichlet border
+}  
+
+
+//==============================================================================
+// -------Building and plotting the mesh-------
+//==============================================================================
+
+SqMesh(getARGV("-nx", 3),getARGV("-ny", 3),getARGV("-ex", .1),getARGV("-ey", .1));
+//CardinalMesh(getARGV("-nx", 40));			// Call to CardinalMesh()
+//CubBezierMesh(getARGV("-nx", 12));			// Call to CubBezierMesh()
+//CirMesh(getARGV("-nx", 50),getARGV("-r", 1.));		// Call to CirMesh()
+
+Th = trunc(Th, 1, split=getARGV("-s", 1));
 
 if(plotmesh)plot(Th);

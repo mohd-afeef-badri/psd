@@ -41,4 +41,4 @@ func ffy=x*(6.*mu+4*lambda)+y*(2*mu);
 //==============================================================================
 
 fespace Vh(Th,[P1,P1]);    		// P1 vector functional space
-Vh<real> defvec(u);			// Trial function definition
+Vh defvec(u);				// Trial function definition
