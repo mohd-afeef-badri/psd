@@ -1,110 +1,115 @@
-/* 
-* Name:   mesh.edp
-* Date:	  21/02/2019
-* Comment: Load  2D mesh file. Accepted  external  formats  (GMSH: .msh INRIA .mesh).
-*          Internally  interfaced mesher bmag  and  netgen can also be used. The file
-*          contains  functions to generate a square, cardinal, or a cubic-bezir mesh. 
-*/
+/*******************************************************************************
+*									       *
+* Date:	   21/02/2019							       *
+* Type:    Module file							       *
+* Comment: Load/build 2D mesh file. Interfaced mesher 'bmag' & 'netgen' can be *
+*          used  for  geometry  and  mesh creation. Accepted  external formats * 
+*          include GMSHs '.msh' & INRIAs  '.mesh'. The file contains functions * 
+*	   to generate a square, cardinal, or a cubic-bezir mesh.	       *
+*									       *
+*******************************************************************************/
 
-
-mesh Th;				// FE mesh in 2D 
+mesh Th; 				// FE mesh in 2D
 int[int] Dlabel(1);			// Dirichlet BC labels
-bool plotmesh=0;			// Plot mesh uing ffglu
+bool plotmesh=0;			// Plot mesh uing ffglut
 
 
-//-------Square Mesh function-------// 
+//==============================================================================
+// -------Structural tetra square mesh function-------
+//==============================================================================
 
-// Note additionally the square mesh can  be  converted to a
-// rectangular one by controling elongations ex and ey.
+// 	Note additionally the square mesh can be  converted to a rectangular one
+// 	by controling elongations ex and ey. nx and ny are nodes in x & y resp.
  
 func int SqMesh(int nx, int ny, real ex, real ey){
-  //int nx=5, 	//Nodes in x
-  //    ny=5; 	//Nodes in y
 
-  //real ex=1,  	//x elongation
-  //     ey=1;  	//y elongation
+  Th=square(nx,ny,[ex*x,ey*y]);		// Internal ff-bmag function square
 
-  Th=square(nx,ny,[ex*x,ey*y]);
-
-  Dlabel.resize(4);
-  Dlabel=[1,2,3,4];
+  Dlabel.resize(4);			// Four labels for four sides
+  Dlabel=[1,2,3,4];		     	// All four sides Dirichlet
 }
 
 
-//----Cubic-Bezier curve mesh function----// 
+//==============================================================================
+// -------Unstructured tetra Cubic-Bezier curve mesh function-------
+//==============================================================================
 
-// The curve contains connecting two points with two control 
-// points. This is used to tune irregularity of the mesh.
+// 	The function will generate a irregualr boundary mesh. The curve contains 
+//      connecting two points with two control points, used to tune irregularity 
+//      of the mesh.
 
-func int CubBezierMesh(){
+func int CubBezierMesh(int nx){
 
-	func real bzi(real p0, real p1, real q1, real q2, real t){
-    	return p0*(1-t)^3 + q1*3*(1-t)^2*t + q2*3*(1-t)*t^2 + p1*t^3;
-	}
+  func real bzi(real p0, real p1, real q1, real q2, real t){
+    return p0*(1-t)^3 + q1*3*(1-t)^2*t + q2*3*(1-t)*t^2 + p1*t^3;
+  }
 
-    	real[int] p00 = [0, 1], p01 = [0, -1], q00 = [-2, 0.1], q01 = [-2, -0.5];
-    	real[int] p11 = [1,-0.9], q10 = [0.1, -0.95], q11=[0.5, -1];
-    	real[int] p21 = [2, 0.7], q20 = [3, -0.4], q21 = [4, 0.5];
-    	real[int] q30 = [0.5, 1.1], q31 = [1.5, 1.2];
+  real[int] p00 = [0, 1], p01 = [0, -1], q00 = [-2, 0.1], q01 = [-2, -0.5];
+  real[int] p11 = [1,-0.9], q10 = [0.1, -0.95], q11=[0.5, -1];
+  real[int] p21 = [2, 0.7], q20 = [3, -0.4], q21 = [4, 0.5];
+  real[int] q30 = [0.5, 1.1], q31 = [1.5, 1.2];
     
-  	border G1(t=0, 1){
-  		x=bzi(p00[0], p01[0], q00[0], q01[0], t);
-  		y=bzi(p00[1], p01[1], q00[1], q01[1], t);
-		label = 1;
-  	}	
+  border G1(t=0, 1){
+    x=bzi(p00[0], p01[0], q00[0], q01[0], t);
+    y=bzi(p00[1], p01[1], q00[1], q01[1], t);
+    label = 1;
+  }	
 
- 	border G2(t=0, 1){
-  		x=bzi(p01[0], p11[0], q10[0], q11[0], t);
-  		y=bzi(p01[1], p11[1], q10[1], q11[1], t);
-  		label = 2;
-	}
+  border G2(t=0, 1){
+    x=bzi(p01[0], p11[0], q10[0], q11[0], t);
+    y=bzi(p01[1], p11[1], q10[1], q11[1], t);
+    label = 2;
+  }
   	
-	border G3(t=0, 1){
-		x=bzi(p11[0], p21[0], q20[0], q21[0], t);
-  		y=bzi(p11[1], p21[1], q20[1], q21[1], t);
-		label = 3;
-  	}
+  border G3(t=0, 1){
+    x=bzi(p11[0], p21[0], q20[0], q21[0], t);
+    y=bzi(p11[1], p21[1], q20[1], q21[1], t);
+    label = 3;
+  }
 
-	border G4(t=0, 1){
-  		x=bzi(p21[0], p00[0], q30[0], q31[0], t);
-  		y=bzi(p21[1], p00[1], q30[1], q31[1], t);
-		label = 4;
-  	}
+  border G4(t=0, 1){
+    x=bzi(p21[0], p00[0], q30[0], q31[0], t);
+    y=bzi(p21[1], p00[1], q30[1], q31[1], t);
+    label = 4;
+  }
 
-	int m = 50;
+  Th = buildmesh(G1(2*nx) + G2(nx) + G3(3*nx) + G4(nx));
 
-	Th = buildmesh(G1(2*m) + G2(m) + G3(3*m) + G4(m));
-
-	Dlabel.resize(4);
-        Dlabel=[1,2,3,4];
-				    
+  Dlabel.resize(4);			// Four labels for four sides
+  Dlabel=[1,2,3,4];			// All four sides Dirichlet
+  				    
 }
 
-//----Cardinal mesh function----//
+//==============================================================================
+// -------Unstructured tetra Cardinal curve mesh function-------
+//==============================================================================
 
-func int CardinalMesh(){ 
-	real b = 1.;
-	real a = b;
+func int CardinalMesh(int nx){ 
+  real b = 1.;
+  real a = b;
 
-	func real phix(real t){
-	return (a+b)*cos(t) - b*cos(t*(a+b)/b);
-	}
+  func real phix(real t){
+    return (a+b)*cos(t) - b*cos(t*(a+b)/b);
+  }
 
-	func real phiy(real t){
-  	return (a+b)*sin(t) - b*sin(t*(a+b)/b);
-	}
+  func real phiy(real t){
+    return (a+b)*sin(t) - b*sin(t*(a+b)/b);
+  }
 
-	border C(t=0, 2*pi){x=phix(t); y=phiy(t);label = 1;}
+  border C(t=0, 2*pi){x=phix(t); y=phiy(t);label = 1;}
 
-	Th = buildmesh(C(50));
+  Th = buildmesh(C(nx));
     
-        Dlabel.resize(1);
-        Dlabel=[1];
+  Dlabel.resize(1);			// Single label required
+  Dlabel=[1];				// Dirichlet border
 }
 
-SqMesh(10,10,2.,1.); //SqMesh(int Nodes_x, int Node_y, real Elongation_x, real Elongationy)
-//CardinalMesh();
-//CubBezierMesh();
+//==============================================================================
+// -------Building and ploting the mesh-------
+//==============================================================================
 
-if(plotmesh)
-	plot(Th);
+SqMesh(10,10,2.,1.);			// Call to SqMesh()
+//CardinalMesh(20);			// Call to CardinalMesh()
+//CubBezierMesh(20);			// Call to CubBezierMesh()
+
+if(plotmesh)plot(Th);
