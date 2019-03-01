@@ -11,7 +11,7 @@
 
 mesh Th; 				// FE mesh in 2D
 int[int] Dlabel(1);			// Dirichlet BC labels
-bool plotmesh=0;			// Plot mesh using ffglut
+bool plotmesh=1;			// Plot mesh using ffglut
 
 
 //==============================================================================
@@ -122,11 +122,15 @@ func int CirMesh(int nx, real r){
 // -------Building and plotting the mesh-------
 //==============================================================================
 
-SqMesh(getARGV("-nx", 3),getARGV("-ny", 3),getARGV("-ex", .1),getARGV("-ey", .1));
+//SqMesh(getARGV("-nx", 3),getARGV("-ny", 3),getARGV("-ex", .1),getARGV("-ey", .1));
 //CardinalMesh(getARGV("-nx", 40));			// Call to CardinalMesh()
 //CubBezierMesh(getARGV("-nx", 12));			// Call to CubBezierMesh()
-//CirMesh(getARGV("-nx", 50),getARGV("-r", 1.));		// Call to CirMesh()
 
-Th = trunc(Th, 1, split=getARGV("-s", 1));
+CirMesh(getARGV("-nx", 50),getARGV("-r", 1.));		// Call to CirMesh()
+
+//---Refining Mesh Via Split---//
+int ss=getARGV("-s", 1);
+Th = trunc(Th, 1, split=ss);
+
 
 if(plotmesh)plot(Th);

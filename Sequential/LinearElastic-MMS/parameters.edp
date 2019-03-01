@@ -22,23 +22,18 @@ macro epsilon(i) [dx(i#1), dy(i#2), (dy(i#1)+dx(i#2))/sqrt(2.0)]//EOM
 
 real mu,lambda;
 {  
-real E=200.e9,         			// Modulus of Elasticity - [Pa]
-     nu=0.291,         			// Poisson ratio - [-]
+real E =100.,         			// Modulus of Elasticity - [Pa]
+     nu=0.2;        			// Poisson ratio - [-]
  
 mu= E/(2.*(1.+nu));
 lambda = E*nu/((1.+nu)*(1.-2.*nu));
 }
 
 //==============================================================================
-// Forcing vector as f(x,y,\lambda,\nu)
-//==============================================================================
-
-func ffx=x*(8.*lambda+14.*mu)+y*(4.*lambda+6.*mu);
-func ffy=x*(6.*mu+4*lambda)+y*(2*mu);
-
-//==============================================================================
 // -------FE functional spaces-------
 //==============================================================================
 
 fespace Vh(Th,[P1,P1]);    		// P1 vector functional space
-Vh defvec(u);				// Trial function definition
+Vh defvec(u)				// Trial function definition
+
+fespace Vh1 (Th,P1);			// P1 space for MMS and errors
