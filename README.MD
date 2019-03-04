@@ -1,6 +1,6 @@
-# Solvers with: ff++ solvers #
+# ff++ solid mechanics solver #
 
-Solid mechanics solver modules developed within DSL language FreeFem++ (ff++). For more information on the FreeFem++ (ff++) please see [ff++](https://www.freefem.org). 
+Solid mechanics solver modules developed within DSL language FreeFem++. 
 
 
 ## Command line arguments ##
