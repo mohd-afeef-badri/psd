@@ -12,8 +12,49 @@
 //==============================================================================
 // All command line argument descriptions
 //==============================================================================
+/*
+  -dimension   [int]	Accepts values 2 or 3. Default 2. 2 for 2D 3 for 3D.
+  
+  -partitioner [sting]  Mesh partitioner to be used. Options are "metis"
+  			"parmetis" "scotch" or "ptstoch".
+  			
+  -lagrange    [int]    Lagrange order used for building FE space. Options are 
+  			1 for P1 or 2 for P2. Defaut is P1.
 
-  include "parameters.edp"  		//Control parameters, propeties, etc..
+
+*/
+
+//==============================================================================
+// All files to be included
+//==============================================================================
+
+  include "getARGV.idp"    	// Enables importing commandline arguments
+  include "parameters.edp"  	//Control parameters, propeties, etc..
+
+//==============================================================================
+// All variables
+//==============================================================================
+  int spc = getARGV("-dimension", 2);			//2=2D or 3=3D
+  int lag = getARGV("-lagrange" , 1);			//1=P1 or 2=P2  
+  
+  string whichPartitioner=getARGV("-partitioner", "parmetis");
+   
+{ofstream  w("macro.edp");
+
+w <<"//------------------------------Userdefined macros----------------------------//\n";
+
+if(spc==2){
+ w << "  func Pk = [P"+lag+",P"+lag+"];\t\t\t\t// Finite element space" <<endl;
+ w << "  macro dimension()2// EOM\t\t\t// Two-dimensional problem\n";
+}
+if(spc==3){
+ w << "  func Pk = [P"+lag+",P"+lag+",P"+lag+"];\t\t\t\t// Finite element space" <<endl;
+ w << "  macro dimension()3// EOM\t\t\t// Three-dimensional problem\n";
+}
+
+w << "  macro  partitioner()"+whichPartitioner+"// EOM\t\t// Mesh partitioner\n";
+
+}  
   
 {ofstream  w("meshPartitioning.edp");
 
