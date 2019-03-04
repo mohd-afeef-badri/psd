@@ -1,0 +1,21 @@
+/*******************************************************************************
+*									       *
+* Date:	   04/03/2019							       *
+* Type:    Execution file						       *
+* Comment: This main file generates three files: macro.edp, varfmatsolve.edp,  *
+*          and   meshPartitioning.edp.  Commandline  arguments  controls  the  *
+*          generated file nature.	 		       		       *
+* To run : ff-mpirun -np 1 main.edp -v 0 -ns -nw			       *
+*									       *
+*******************************************************************************/
+
+//==============================================================================
+// All command line argument descriptions
+//==============================================================================
+
+  include "parameters.edp"  		//Control parameters, propeties, etc..
+  
+{ofstream  w("meshPartitioning.edp");
+
+w <<"//----------------------------Mesh And Partitioning---------------------------//\n";
+}

@@ -1,0 +1,16 @@
+/*******************************************************************************
+*									       *
+* Date:	   04/03/2019							       *
+* Type:    Execution file						       *
+* Comment: This main file containing  all  modules  that are required for FE   * 
+*          solution of system of elasticity in parallel.		       *
+* To run : ff-mpirun -np ${Nproc} main.edp -v 0 -ns -nw			       *
+*									       *
+*******************************************************************************/
+
+//==============================================================================
+// All files to be included
+//==============================================================================
+
+  include "meshPartitioning.edp"        //Import the FE mesh
+  include "parameters.edp"  		//Control parameters, propeties, etc..
