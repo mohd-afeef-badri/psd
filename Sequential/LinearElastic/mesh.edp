@@ -1,0 +1,37 @@
+/*******************************************************************************
+*									       *
+* Date:	   15/02/2019							       *
+* Type:    Module file							       *
+* Comment: Load/build 2D mesh file. Interfaced mesher 'bmag' & 'netgen' can be *
+*          used  for  geometry  and  mesh creation. Accepted  external formats * 
+*          include GMSH's '.msh' & INRIA's '.mesh'.   			       * 
+*									       *
+*******************************************************************************/
+
+mesh Th; 				// FE mesh in 2D
+int[int] Dlabel(1);			// Dirichlet BC labels
+bool plotmesh=0;			// Plot mesh uing ffglut 
+
+
+//==============================================================================
+// -------Structural tetra square mesh function-------
+//==============================================================================
+
+// 	Note additionally the square mesh can be  converted to a rectangular one
+// 	by controlling elongations ex and ey. nx and ny are nodes in x & y resp.
+
+func int SqMesh(int nx, int ny, real ex, real ey){
+
+  Th=square(nx,ny,[ex*x,ey*y]);		// Internal ff-bmag function square
+
+  Dlabel.resize(1);			
+  Dlabel=[4];		     		// Label 4 is Dirichlet
+}
+
+//==============================================================================
+// -------Building and plotting the mesh-------
+//==============================================================================
+
+SqMesh(getARGV("-nx", 10),getARGV("-ny", 10),		// Call to SqMesh()
+       getARGV("-ex", 5.),getARGV("-ey", 1));			
+if(plotmesh)plot(Th);					// Plot mesh	
