@@ -1,4 +1,0 @@
-//------------------------------Userdefined macros----------------------------//
-  func Pk = [P1,P1,P1];				// Finite element space
-  macro dimension()3// EOM			// Three-dimensional problem
-  macro  partitioner()metis// EOM		// Mesh partitioner
