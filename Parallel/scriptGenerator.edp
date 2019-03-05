@@ -23,6 +23,8 @@
   			
   -lagrange    [int]      Lagrange order used for building FE space. Options are 
   			  1 for P1 or 2 for P2. Defaut is P1.
+  			  
+  -plot        [bool]     To activate plotting routine.
 
 
 */
@@ -42,6 +44,7 @@
   
   string whichPartitioner=getARGV("-partitioner", "parmetis");
 
+  bool plotAll=  usedARGV("-plot") != -1;
 
 //==============================================================================
 // Building the macro.edp file
@@ -49,18 +52,28 @@
    
 {ofstream  w("macro.edp");
 
-w <<"//------------------------------Userdefined macros----------------------------//\n";
+w <<"/******************************Userdefined macros*******************************\n";
+w <<"*                                                                              *\n";
+w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
+w <<"*         in order to  control this  file please change flag arguments of  the *\n";
+w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*                                                                              *\n";
+w <<"*******************************************************************************/\n\n";
 
 if(spc==2){
- w << "  func Pk = [P"+lag+",P"+lag+"];\t\t\t\t// Finite element space" <<endl;
- w << "  macro dimension()2// EOM\t\t\t// Two-dimensional problem\n";
+ w << "  func Pk = [P"+lag+",P"+lag+"];              // Finite element space\n";
+ w << "  macro dimension()2// EOM                    // Two-dimensional problem\n";
+ w << "  macro def(i)[i, i#1]// EOM                  // Vector field definition\n";
+ w << "  macro init(i)[i, i]// EOM                   // Vector field initialization\n";
 }
 if(spc==3){
- w << "  func Pk = [P"+lag+",P"+lag+",P"+lag+"];\t\t\t\t// Finite element space" <<endl;
- w << "  macro dimension()3// EOM\t\t\t// Three-dimensional problem\n";
+ w << "  func Pk = [P"+lag+",P"+lag+",P"+lag+"];     // Finite element space\n";
+ w << "  macro dimension()3// EOM                    // Three-dimensional problem\n";
+ w << "  macro def(i)[i, i#1, i#2]// EOM             // Vector field definition\n";
+ w << "  macro init(i)[i, i, i]// EOM                // Vector field initialization\n";
 }
 
-w << "  macro  partitioner()"+whichPartitioner+"// EOM\t\t// Mesh partitioner\n";
+w << "  macro  partitioner()"+whichPartitioner+"// EOM             // Mesh partitioner\n";
 
 }  
 
@@ -71,13 +84,18 @@ w << "  macro  partitioner()"+whichPartitioner+"// EOM\t\t// Mesh partitioner\n"
   
 {ofstream  w("meshPartitioning.edp");
 
-w <<"//----------------------------Mesh And Partitioning---------------------------//\n";
-w <<"\n\n";
+w <<"/*****************************Mesh And Partitioning*****************************\n";
+w <<"*                                                                              *\n";
+w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
+w <<"*         in order to  control this  file please change flag arguments of  the *\n";
+w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*                                                                              *\n";
+w <<"*******************************************************************************/\n\n";
 
 if(spc==2)
- w <<"meshN Th = square(1, 1);                   // This is a dummy mesh for now\n";
+ w <<"meshN Th = square(1, 1);                  // This is a dummy mesh for now\n";
 if(spc==3)
- w <<"meshN Th = cube(1, 1);                     // This is a dummy mesh for now\n";
+ w <<"meshN Th = cube(1, 1, 1);                 // This is a dummy mesh for now\n";
 
 w <<"fespace Vh(Th, Pk);                        // Local mixed FE space\n";
 w <<"int[int] arrayIntersection;                // Ranks of neighboring subdomains\n";
@@ -92,10 +110,18 @@ w <<"  int s = getARGV(\"-split\", 1);              // refinement factor\n\n";
 w <<"  load \"gmsh\"                                // Load meshes from gmsh\n";
 w <<"  meshN ThBorder, ThGlobal;                  // Local dummy meshes\n";
 w <<"  ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded\n\n";
-w <<"  build(Th, ThBorder, ThGlobal, -1111, s, 1, D, arrayIntersection,\n"; 
+w <<"  build(Th, ThBorder, ThGlobal, -111111, s, 1, D, arrayIntersection,\n"; 
 w <<"      restrictionIntersection, Vh, Pk, mpiCommWorld, false)\n";
 w <<"  return 0;\n";
 w <<"}\n\n";
-w <<"PartThAndBuildCommunication();\n";
+w <<"PartThAndBuildCommunication();\n\n";
+
+if(plotAll){
+w <<"//==============================================================================\n";
+w <<"// -------Plotting using Medit-------//\n";
+w <<"//==============================================================================\n\n";
+w <<"load  \"medit\"                       // Loading the medit viz module\n";
+w <<"medit(\"Th\"+mpirank+\"\",Th);          // Mesh visualization\n";
+}
 
 }

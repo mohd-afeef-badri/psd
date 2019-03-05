@@ -18,4 +18,3 @@
   include "macro.edp"			// User-defined macro file
   include "../Plugins/DDmacro.edp"	// All domain decomposition macros
   include "meshPartitioning.edp"        // Import the FE mesh
-
