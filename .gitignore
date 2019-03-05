@@ -5,3 +5,7 @@
 ## PARAVIEW FILES ##
 *.vtk
 *.vtu
+
+## PARALLEL VERSION FILES ##
+macro.edp
+meshPartitioning.edp
