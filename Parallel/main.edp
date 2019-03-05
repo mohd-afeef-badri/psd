@@ -12,5 +12,10 @@
 // All files to be included
 //==============================================================================
 
-  include "meshPartitioning.edp"        //Import the FE mesh
-  include "parameters.edp"  		//Control parameters, propeties, etc..
+  load    "PETSc"                       // PETSc plugin are now activated
+  include "getARGV.idp"     		// Enables commandline arguments
+  include "parameters.edp"  		// Control parameters, propeties, etc..    
+  include "macro.edp"			// User-defined macro file
+  include "../Plugins/DDmacro.edp"	// All domain decomposition macros
+  include "meshPartitioning.edp"        // Import the FE mesh
+

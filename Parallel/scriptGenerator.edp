@@ -13,13 +13,16 @@
 // All command line argument descriptions
 //==============================================================================
 /*
-  -dimension   [int]	Accepts values 2 or 3. Default 2. 2 for 2D 3 for 3D.
+  -dimension   [int]	  Accepts values 2 or 3. Default 2. 2 for 2D 3 for 3D.
   
-  -partitioner [sting]  Mesh partitioner to be used. Options are "metis"
-  			"parmetis" "scotch" or "ptstoch".
+  -partitioner [sting]    Mesh partitioner to be used. Options are "metis"
+  			  "parmetis" "scotch" or "ptstoch".
   			
-  -lagrange    [int]    Lagrange order used for building FE space. Options are 
-  			1 for P1 or 2 for P2. Defaut is P1.
+  -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
+  			  active '-parmetis_worker [int]'.			
+  			
+  -lagrange    [int]      Lagrange order used for building FE space. Options are 
+  			  1 for P1 or 2 for P2. Defaut is P1.
 
 
 */
@@ -38,6 +41,11 @@
   int lag = getARGV("-lagrange" , 1);			//1=P1 or 2=P2  
   
   string whichPartitioner=getARGV("-partitioner", "parmetis");
+
+
+//==============================================================================
+// Building the macro.edp file
+//==============================================================================
    
 {ofstream  w("macro.edp");
 
@@ -55,8 +63,39 @@ if(spc==3){
 w << "  macro  partitioner()"+whichPartitioner+"// EOM\t\t// Mesh partitioner\n";
 
 }  
+
+
+//==============================================================================
+// Building the meshPartitioning.edp file
+//==============================================================================
   
 {ofstream  w("meshPartitioning.edp");
 
 w <<"//----------------------------Mesh And Partitioning---------------------------//\n";
+w <<"\n\n";
+
+if(spc==2)
+ w <<"meshN Th = square(1, 1);                   // This is a dummy mesh for now\n";
+if(spc==3)
+ w <<"meshN Th = cube(1, 1);                     // This is a dummy mesh for now\n";
+
+w <<"fespace Vh(Th, Pk);                        // Local mixed FE space\n";
+w <<"int[int] arrayIntersection;                // Ranks of neighboring subdomains\n";
+w <<"int[int][int] restrictionIntersection(0);  // Local-to-neighbors renumbering\n";
+w <<"real[int] D;                               // Partition of unity\n\n";
+
+w <<"//==============================================================================\n";
+w <<"// -------Function building the restriction matrix and partion of unity-------//\n";
+w <<"//==============================================================================\n\n";
+w <<"func int PartThAndBuildCommunication(){\n";
+w <<"  int s = getARGV(\"-split\", 1);              // refinement factor\n\n";
+w <<"  load \"gmsh\"                                // Load meshes from gmsh\n";
+w <<"  meshN ThBorder, ThGlobal;                  // Local dummy meshes\n";
+w <<"  ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded\n\n";
+w <<"  build(Th, ThBorder, ThGlobal, -1111, s, 1, D, arrayIntersection,\n"; 
+w <<"      restrictionIntersection, Vh, Pk, mpiCommWorld, false)\n";
+w <<"  return 0;\n";
+w <<"}\n\n";
+w <<"PartThAndBuildCommunication();\n";
+
 }

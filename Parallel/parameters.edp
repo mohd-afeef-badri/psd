@@ -11,7 +11,7 @@
 // -------FEM mesh to be loaded (Un-partitioned)------- 
 //==============================================================================
 
-string FEMeshName = "../Meshes/2D/Meshes/square";  // Mesh file name
+string ThName = "../Meshes/2D/Meshes/square";  // Mesh file name
 
 //==============================================================================
 // -------Material properties------- 
