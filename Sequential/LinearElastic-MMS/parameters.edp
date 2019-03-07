@@ -34,6 +34,6 @@ lambda = E*nu/((1.+nu)*(1.-2.*nu));
 //==============================================================================
 
 fespace Vh(Th,[P1,P1]);    		// P1 vector functional space
-Vh defvec(u)				// Trial function definition
+Vh defvec(u);				// Trial function definition
 
 fespace Vh1 (Th,P1);			// P1 space for MMS and errors
