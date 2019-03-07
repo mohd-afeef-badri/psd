@@ -17,7 +17,7 @@ string ThName = "../Meshes/2D/Meshes/square";  // Mesh file name
 // -------Material properties------- 
 //==============================================================================
 
-real mu,lambda,fy;
+real mu,lambda,fy,t0;
 
 {  
 real E=200.e9,         			// Modulus of Elasticity - [Pa]
@@ -30,3 +30,10 @@ lambda = E*nu/((1.+nu)*(1.-2.*nu));
 
 fy=rho*g;				// Body force in -y direction     
 }
+
+//==============================================================================
+// -------Dirichlet conditions------- 
+//==============================================================================
+
+int[int] Dlabel(1);
+Dlabel=[2];

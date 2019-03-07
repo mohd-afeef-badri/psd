@@ -18,3 +18,4 @@
   include "macro.edp"			// User-defined macro file
   include "../Plugins/DDmacro.edp"	// All domain decomposition macros
   include "meshPartitioning.edp"        // Import the FE mesh
+  include "varfmatsolve.edp"        	// Varf. and x=A^-1*b

@@ -61,19 +61,24 @@ w <<"*                                                                          
 w <<"*******************************************************************************/\n\n";
 
 if(spc==2){
- w << "  func Pk = [P"+lag+",P"+lag+"];              // Finite element space\n";
+ w << "  func Pk = [P"+lag+",P"+lag+"];                          // Finite element space\n";
  w << "  macro dimension()2// EOM                    // Two-dimensional problem\n";
  w << "  macro def(i)[i, i#1]// EOM                  // Vector field definition\n";
  w << "  macro init(i)[i, i]// EOM                   // Vector field initialization\n";
+ w << "  macro divergence(i)(dx(i)+dy(i#1))// EOM    // Divergence function\n";
+ w << "  macro epsilon(i) [dx(i), dy(i#1),\n"; 
+ w << "                   (dy(i)+dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n";
+  
 }
 if(spc==3){
  w << "  func Pk = [P"+lag+",P"+lag+",P"+lag+"];     // Finite element space\n";
  w << "  macro dimension()3// EOM                    // Three-dimensional problem\n";
  w << "  macro def(i)[i, i#1, i#2]// EOM             // Vector field definition\n";
  w << "  macro init(i)[i, i, i]// EOM                // Vector field initialization\n";
+ w << "  macro divergence(i)(dx(i)+dy(i#1)+dz(i#2))// EOM // Divergence function\n";
 }
 
-w << "  macro  partitioner()"+whichPartitioner+"// EOM             // Mesh partitioner\n";
+w << "  macro  partitioner()"+whichPartitioner+"// EOM          // Mesh partitioner\n";
 
 }  
 
@@ -93,7 +98,7 @@ w <<"*                                                                          
 w <<"*******************************************************************************/\n\n";
 
 if(spc==2)
- w <<"meshN Th = square(1, 1);                  // This is a dummy mesh for now\n";
+ w <<"meshN Th = square(1, 1);                   // This is a dummy mesh for now\n";
 if(spc==3)
  w <<"meshN Th = cube(1, 1, 1);                 // This is a dummy mesh for now\n";
 
@@ -106,15 +111,26 @@ w <<"//=========================================================================
 w <<"// -------Function building the restriction matrix and partion of unity-------//\n";
 w <<"//==============================================================================\n\n";
 w <<"func int PartThAndBuildCommunication(){\n";
-w <<"  int s = getARGV(\"-split\", 1);              // refinement factor\n\n";
-w <<"  load \"gmsh\"                                // Load meshes from gmsh\n";
-w <<"  meshN ThBorder, ThGlobal;                  // Local dummy meshes\n";
-w <<"  ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded\n\n";
-w <<"  build(Th, ThBorder, ThGlobal, -111111, s, 1, D, arrayIntersection,\n"; 
-w <<"      restrictionIntersection, Vh, Pk, mpiCommWorld, false)\n";
+w <<"  int s = getARGV(\"-split\", 1);                    // refinement factor\n\n";
+
+w <<"  load \"gmsh\"                                      // Load meshes from gmsh\n";
+w <<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded\n\n";
+
+w <<"  PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection,\n"; 
+w <<"      restrictionIntersection, Vh, Pk, mpiCommWorld)\n\n";
+
 w <<"  return 0;\n";
 w <<"}\n\n";
-w <<"PartThAndBuildCommunication();\n\n";
+
+w <<"mpiBarrier(mpiCommWorld);\n";
+w <<"t0 = mpiWtime(); \nif(mpirank==0)cout << \"Mesh partitioning with \"<< Stringification(partitioner) <<\" began\\n\";\n\n";
+      
+
+w <<"    PartThAndBuildCommunication();\n\n";
+
+w <<"mpiBarrier(mpiCommWorld);\n";
+w <<"t0 = mpiWtime();\n";
+w <<"if(mpirank==0)cout << \"Mesh partitioning  ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";
 
 if(plotAll){
 w <<"//==============================================================================\n";

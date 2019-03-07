@@ -1,0 +1,82 @@
+/*******************************************************************************
+*									       * 
+* Date:	   15/02/2019							       *
+* Type:    Module file							       *
+* Comment: Contains the finite element variation formulation for the system    *
+*          of Elasticity, the FE assembly routine, and solution exporting  to  *
+*          paraview							       *
+*									       *
+*******************************************************************************/
+
+//==============================================================================
+// variation formulation
+//==============================================================================
+
+varf elast(def(u),def(v))
+	= intN(Th)(
+        	    lambda*divergence(u)*divergence(v)
+	  	    +2.*mu*( epsilon(u)'*epsilon(v) ) 
+		    )
+	+ intN(Th)(fy*v1)			// Force component in y
+        + on(Dlabel,u=0,u1=0)			// Dirichlet cond. on 
+	;
+	
+//==============================================================================
+// -------Local Au=b assembly and solving-------
+//==============================================================================
+
+//------------Assembly for A------------------//
+mpiBarrier(mpiCommWorld);
+t0 = mpiWtime(); 
+if(mpirank==0)cout << "Matrix assembly began\n";
+
+	matrix<real> ALoc = elast(Vh,Vh);		
+
+mpiBarrier(mpiCommWorld);
+if(mpirank==0)cout << "Matrix assembly ended in :-------------------->"<< mpiWtime()-t0 <<"\n*\n";
+
+
+//------------Assembly for b------------------//
+mpiBarrier(mpiCommWorld);
+t0 = mpiWtime(); 
+if(mpirank==0)cout << "RHS assembly began\n";
+
+	real[int]    b = elast(0,Vh);			// Assembly for b
+	
+mpiBarrier(mpiCommWorld);
+if(mpirank==0)cout << "RHS assembly ended in :----------------------->"<< mpiWtime()-t0 <<"\n*\n";
+
+
+//------------Sharing with PETSc------------------//
+mpiBarrier(mpiCommWorld);
+t0 = mpiWtime(); 
+if(mpirank==0)cout << "Sharing with PETSc began\n";
+
+	dmatrix A(ALoc, arrayIntersection, 
+	    		restrictionIntersection, D, bs = 2);// Distributed matrix
+
+mpiBarrier(mpiCommWorld);
+if(mpirank==0)cout << "Sharing with PETSc ended in :----------------->"<< mpiWtime()-t0 <<"\n*\n";	    
+
+
+//------------PETSc solving------------------//
+mpiBarrier(mpiCommWorld);
+t0 = mpiWtime(); 
+if(mpirank==0)cout << "Solving with PETSc began\n";
+
+	Vh<real> def(u);
+	set(A,sparams =" ");				// Solver setup-Petsc
+	u[]=A^-1*b;					// Solving
+
+mpiBarrier(mpiCommWorld);
+if(mpirank==0)cout << "Solving with PETSc ended in :----------------->"<< mpiWtime()-t0 <<"\n";
+
+//==============================================================================
+// -------Solution field files in medit-------
+//==============================================================================
+
+medit("Th"+mpirank+"",Th,u1);          		// Visualization
+
+if(mpirank==0)cout << "--------------------------------------------------------------------------\n\n";
+
+//------ END--FINISH--DONE---------------------------------------------------//
