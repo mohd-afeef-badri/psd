@@ -269,62 +269,24 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
 // -------Building the resctriction and communication MPI patterns------- 
 //==============================================================================
 
-macro buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, PkPart, defPart, initPart, labPeriodic, userPartitioning, bs)
+macro buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, PkPart, defPart, initPart,  userPartitioning, bs)
 {
     real timing = mpiWtime();
     if(mpisize > 1 && !excluded) {
         fespace PhGlobal(ThGlobal, P0);
         fespace VhGlobal(ThGlobal, P1);
         PhGlobal partGlobal;
-        if(userPartitioning.n != PhGlobal.ndof || labPeriodic.n > 0) {
+        if(userPartitioning.n != PhGlobal.ndof) {
             timing = mpiWtime();
             meshN ThGlobalPeriodic;
-            if(labPeriodic.n > 0) {
-                VhGlobal marker;
-                for(int i = 0; i < labPeriodic.n; ++i) {
-                    varf vMarker(u, v) = on(labPeriodic[i], u = 1.0);
-                    marker[] += vMarker(0, VhGlobal, tgv = -1);
-                }
-                PhGlobal partPeriodic = marker > 0.1;
-                while(1) {
-                    AddLayers(ThGlobal, partPeriodic[], 1 + overlap, marker[]);
-                    partPeriodic = marker > 0.001;
-                    ThGlobalPeriodic = trunc(ThGlobal, partPeriodic < 0.999);
-                    if(ThGlobal.nt / real(ThGlobalPeriodic.nt) > mpisize / real(mpisize - 1))
-                        break;
-                }
-            }
             if(mpiRank(comm) == 0) {
                 if(verbosity > 0)
                     cout.scientific << " --- global mesh of " << ThGlobal.nt << " elements (prior to refinement) partitioned with " << Stringification(partitioner);
-                if(labPeriodic.n > 0) {
-                    fespace PhPeriodic(ThGlobalPeriodic, P0);
-                    PhPeriodic partPeriodic;
-                    if(mpiSize(comm) > 2) {
-                        partitionerSeq(partPeriodic[], ThGlobalPeriodic, mpiSize(comm) - 1);
-                        partPeriodic[] += 1.0;
-                    }
-                    else
-                        partPeriodic[] = 1.0;
-                    partGlobal = partPeriodic;
-                }
-                else {
+                    
                     partitionerSeq(partGlobal[], ThGlobal, mpiSize(comm));
-                }
+                
             }
-            if(labPeriodic.n > 0 && Stringification(partitioner) != "metis" && Stringification(partitioner) != "scotch") {
-                fespace PhPeriodic(ThGlobalPeriodic, P0);
-                PhPeriodic partPeriodic;
-                if(mpiSize(comm) > 2) {
-                    partitionerPar(partPeriodic[], ThGlobalPeriodic, comm, mpiSize(comm) - 1);
-                    partPeriodic[] += 1.0;
-                }
-                else
-                    partPeriodic[] = 1.0;
-                partGlobal = partPeriodic;
-            }
-            else
-                partitionerPar(partGlobal[], ThGlobal, comm, mpiSize(comm));
+                partitionerPar(partGlobal[], ThGlobal, comm, mpiSize(comm));               
             if(mpiRank(comm) == 0 && verbosity > 0)
                 cout.scientific << " (in " << mpiWtime() - timing << ")" << endl;
             timing = mpiWtime();
@@ -353,9 +315,18 @@ ENDIFMACRO
     if(verbosity > 0 && mpirank == 0) cout.scientific << " --- partition of unity built (in " << mpiWtime() - timing << ")" << endl;
 }// EOM
 
+/*
 macro build(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded) {
-    int[int] emptyArray(0);
     real[int] emptyRealArray(0);
-    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, emptyArray, emptyRealArray, 1)
+    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init,  emptyRealArray, 1)
+}// EOM
+*/
+macro PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm) {
+    real[int] emptyRealArray(0);
+    meshN ThBorder;
+    int fakeInterface = -111111;
+    int overlap = 1;
+    bool excluded = false;
+    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, emptyRealArray, 1)
 }// EOM
  
