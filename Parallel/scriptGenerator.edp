@@ -129,15 +129,112 @@ w <<"t0 = mpiWtime(); \nif(mpirank==0)cout << \"Mesh partitioning with \"<< Stri
 w <<"    PartThAndBuildCommunication();\n\n";
 
 w <<"mpiBarrier(mpiCommWorld);\n";
-w <<"t0 = mpiWtime();\n";
 w <<"if(mpirank==0)cout << \"Mesh partitioning  ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";
 
-if(plotAll){
-w <<"//==============================================================================\n";
-w <<"// -------Plotting using Medit-------//\n";
-w <<"//==============================================================================\n\n";
-w <<"load  \"medit\"                       // Loading the medit viz module\n";
-w <<"medit(\"Th\"+mpirank+\"\",Th);          // Mesh visualization\n";
 }
+
+
+//==============================================================================
+// Building the varfmatsolve.edp file
+//==============================================================================
+
+{ofstream  w("varfmatsolve.edp");
+
+w <<"/*****************************Mesh And Partitioning*****************************\n";
+w <<"*                                                                              *\n";
+w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
+w <<"*         in order to  control this  file please change flag arguments of  the *\n";
+w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*                                                                              *\n";
+w <<"*******************************************************************************/\n\n";
+
+
+w <<"//==============================================================================\n";
+w <<"// -------Variation formulation-------//\n";
+w <<"//==============================================================================\n\n";
+
+
+
+w <<"varf elast(def(u),def(v))\n";
+w <<"	= intN(Th)(\n";
+w <<"			lambda*divergence(u)*divergence(v)\n";
+w <<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n";
+w <<"		  )\n";
+w <<"	+ intN(Th)(fy*v1)                     // Force component in y\n";
+w <<"	+ on(Dlabel,u=0,u1=0);                // Dirichlet cond. on\n\n";
+
+	  	     
+		    
+w <<"//==============================================================================\n";
+w <<"//  -------Local Au=b assembly and solving-------//\n";
+w <<"//==============================================================================\n\n";	
+         
+w <<"//------------Assembly for A------------------//\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" t0 = mpiWtime(); \n";
+w <<" if(mpirank==0)cout << \"Matrix assembly began\\n\";\n";
+w <<"      matrix<real> ALoc = elast(Vh,Vh);\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" if(mpirank==0)cout << \"Matrix assembly ended in :-------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
+
+
+w <<"//------------Assembly for b------------------//\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" t0 = mpiWtime(); \n";
+w <<" if(mpirank==0)cout << \"RHS assembly began\\n\";\n";
+w <<"      real[int]    b = elast(0,Vh);\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" if(mpirank==0)cout << \"RHS assembly ended in :----------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
+
+
+w <<"//------------Sharing with PETSc------------------//\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" t0 = mpiWtime(); \n";
+w <<" if(mpirank==0)cout << \"Sharing with PETSc began\\n\";\n";
+w <<"      dmatrix A(ALoc, arrayIntersection,\n";
+w <<"                restrictionIntersection, D, bs = 2);// Distributed matrix\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" if(mpirank==0)cout << \"Sharing with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
+
+
+w <<"//------------PETSc solving------------------//\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" t0 = mpiWtime(); \n";
+w <<" if(mpirank==0)cout << \"Solving with PETSc began\\n\";\n";
+w <<"      Vh<real> def(u);\n";
+w <<"      set(A,sparams =\" \");            // Solver setup-Petsc\n";
+w <<"      u[]=A^-1*b;                     // Solving\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" if(mpirank==0)cout << \"Solving with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";	    
+
+
+if(plotAll){
+  system("mkdir -p VTKs");
+   
+  w <<"//==============================================================================\n";
+  w <<"// -------Plotting with paraview-------//\n";
+  w <<"//==============================================================================\n\n";
+
+  w <<"load  \"iovtk\"                       // Loading the vtk viz module\n";
+  w <<"int[int] vtkorder=[1,1,1];            // Solution export order\n";
+
+
+  w <<"//------------Paraview plotting------------------//\n";
+  w <<" mpiBarrier(mpiCommWorld);\n";
+  w <<" t0 = mpiWtime(); \n";
+  w <<" if(mpirank==0)cout << \"Post-processing began\\n\";\n";
+
+  w <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,0],\n"; 
+  w <<"      order=vtkorder,dataname=\"Displacement\");\n";
+  w <<"      if(mpirank==0)  \n";
+  w <<"          exec(\"pvpython  ../Plugins/pvdwriter.py \\\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\\\"  \"+mpisize+\"\");\n"; 
+    
+  w <<" mpiBarrier(mpiCommWorld);\n";
+  w <<" if(mpirank==0)cout << \"Post-processing ended in :--------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n"; 
+  
+
+}
+
+w <<"if(mpirank==0)cout << \"--------------------------------------------------------------------------\\n\\n\";\n\n";
 
 }
