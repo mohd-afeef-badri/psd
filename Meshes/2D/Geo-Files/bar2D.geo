@@ -1,10 +1,14 @@
-//---- GMSH geo file to create a square mesh ---//
+//-------- GMSH geo file to create a 2D bar mesh -------//
+//
+//
+// NOTE: Use the -format msh2 format to genrate the mesh
 
 lc = 1.0/31.0;
+lengthBar=5.0;
 
 Point(1) = {0.0 , 0.0 , 0.0 , lc};
-Point(2) = {5.0 , 0.0 , 0.0 , lc};
-Point(3) = {5.0 , 1.0 , 0.0 , lc};
+Point(2) = {lengthBar , 0.0 , 0.0 , lc};
+Point(3) = {lengthBar , 1.0 , 0.0 , lc};
 Point(4) = {0.0 , 1.0 , 0.0 , lc};
 
 Line(1) = {1 , 2};

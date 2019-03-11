@@ -24,7 +24,7 @@
   -lagrange    [int]      Lagrange order used for building FE space. Options are 
   			  1 for P1 or 2 for P2. Defaut is P1.
   			  
-  -plot        [bool]     To activate plotting routine.
+  -plot        [bool]     To activate plotting routine. Default is false.
 
 
 */
@@ -47,16 +47,17 @@
   bool plotAll=  usedARGV("-plot") != -1;
 
 //==============================================================================
-// Building the macro.edp file
+// Building the macros.edp file
 //==============================================================================
    
-{ofstream  w("macro.edp");
+{ofstream  w("macros.edp");
 
 w <<"/******************************Userdefined macros*******************************\n";
 w <<"*                                                                              *\n";
 w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
 w <<"*         in order to  control this  file please change flag arguments of  the *\n";
 w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*         or in the README.MD file.                                            *\n";
 w <<"*                                                                              *\n";
 w <<"*******************************************************************************/\n\n";
 
@@ -76,6 +77,11 @@ if(spc==3){
  w << "  macro def(i)[i, i#1, i#2]// EOM             // Vector field definition\n";
  w << "  macro init(i)[i, i, i]// EOM                // Vector field initialization\n";
  w << "  macro divergence(i)(dx(i)+dy(i#1)+dz(i#2))// EOM // Divergence function\n";
+ w << "  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),\n"; 
+ w << "                   (dz(i#1)+dy(i#2))/sqrt(2.0),\n"; 
+ w << "                   (dz(i) + dx(i#2))/sqrt(2.0),\n";
+ w << "                   (dy(i) + dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n";
+
 }
 
 w << "  macro  partitioner()"+whichPartitioner+"// EOM          // Mesh partitioner\n";
@@ -94,6 +100,7 @@ w <<"*                                                                          
 w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
 w <<"*         in order to  control this  file please change flag arguments of  the *\n";
 w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*         or in the README.MD file.                                            *\n";
 w <<"*                                                                              *\n";
 w <<"*******************************************************************************/\n\n";
 
@@ -145,6 +152,7 @@ w <<"*                                                                          
 w <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n";
 w <<"*         in order to  control this  file please change flag arguments of  the *\n";
 w <<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n";
+w <<"*         or in the README.MD file.                                            *\n";
 w <<"*                                                                              *\n";
 w <<"*******************************************************************************/\n\n";
 
@@ -161,7 +169,10 @@ w <<"			lambda*divergence(u)*divergence(v)\n";
 w <<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n";
 w <<"		  )\n";
 w <<"	+ intN(Th)(fy*v1)                     // Force component in y\n";
-w <<"	+ on(Dlabel,u=0,u1=0);                // Dirichlet cond. on\n\n";
+if(spc==2)
+ w <<"	+ on(Dlabel,u=0,u1=0);                // Dirichlet cond. on\n\n";
+if(spc==3)
+ w <<"	+ on(Dlabel,u=0,u1=0,u2=0);           // Dirichlet cond. on\n\n"; 
 
 	  	     
 		    
@@ -192,7 +203,7 @@ w <<" mpiBarrier(mpiCommWorld);\n";
 w <<" t0 = mpiWtime(); \n";
 w <<" if(mpirank==0)cout << \"Sharing with PETSc began\\n\";\n";
 w <<"      dmatrix A(ALoc, arrayIntersection,\n";
-w <<"                restrictionIntersection, D, bs = 2);// Distributed matrix\n";
+w <<"                restrictionIntersection, D, bs = "+spc+");// Distributed matrix\n";
 w <<" mpiBarrier(mpiCommWorld);\n";
 w <<" if(mpirank==0)cout << \"Sharing with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
 
@@ -224,7 +235,10 @@ if(plotAll){
   w <<" t0 = mpiWtime(); \n";
   w <<" if(mpirank==0)cout << \"Post-processing began\\n\";\n";
 
-  w <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,0],\n"; 
+  if(spc==2)
+     w <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,0],\n"; 
+  if(spc==3)
+     w <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,u2],\n";    
   w <<"      order=vtkorder,dataname=\"Displacement\");\n";
   w <<"      if(mpirank==0)  \n";
   w <<"          exec(\"pvpython  ../Plugins/pvdwriter.py \\\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\\\"  \"+mpisize+\"\");\n"; 

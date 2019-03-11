@@ -5,7 +5,9 @@
 ## PARAVIEW FILES ##
 *.vtk
 *.vtu
+*.pvd
 
 ## PARALLEL VERSION FILES ##
 macro.edp
 meshPartitioning.edp
+varfmatsolve.edp

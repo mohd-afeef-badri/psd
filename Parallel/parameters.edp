@@ -11,7 +11,7 @@
 // -------FEM mesh to be loaded (Un-partitioned)------- 
 //==============================================================================
 
-string ThName = "../Meshes/2D/Meshes/square";  // Mesh file name
+string ThName = "../Meshes/3D/Meshes/bar3D";  // Mesh file name
 
 //==============================================================================
 // -------Material properties------- 
@@ -36,4 +36,4 @@ fy=rho*g;				// Body force in -y direction
 //==============================================================================
 
 int[int] Dlabel(1);
-Dlabel=[2];
+Dlabel=[1];

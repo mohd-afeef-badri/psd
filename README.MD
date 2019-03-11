@@ -70,14 +70,17 @@ These are commandline flags/options that control your simulation. You can think 
 Here is the list of options that are available. 
 
 ```
--dimension [int]		Accepts values 2 or 3. Default is 2. Use 3 if your problem is 3D. 
+-dimension [int]		Accepts values 2 or 3. Use 3 if your problem is 3D. Default is 2 for 2D problem.
 ```
 ```
 -partitioner [sting]		Mesh partitioner to be used. Options are "metis" "parmetis" "scotch" or "ptstoch".
 ```
 ```
+-partitioner parmetis		Mesh partitioner is parmetis. Additional option active '-parmetis_worker [int]'.
+```
+```
 -lagrange    [int]      	Lagrange order used for building FE space. 1 for P1 or 2 for P2. Defaut is P1. 
 ```
 ```
--plot        [bool]             Use -plot to activate plotting using medit.
+-plot        [bool]             Use -plot to activate plotting using medit. Default is false.
 ```
