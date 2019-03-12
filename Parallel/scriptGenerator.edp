@@ -24,7 +24,17 @@
   -lagrange    [int]      Lagrange order used for building FE space. Options are 
   			  1 for P1 or 2 for P2. Defaut is P1.
   			  
+  -help        [bool]     To activate helping message on the terminal.  			  
+  			  
   -plot        [bool]     To activate plotting routine. Default is false.
+  
+  -pointbc     [bool]     To activate Dirichlet boundary condition on point.
+  
+  -bodyforce   [bool]     To activate volumetric source term (body force).
+  
+  -dirichletbc [bool]     To activate Dirichlet boundary condition.
+  
+  -tractionbc  [bool]     To activate traction boundary condition (Neumann).  
 
 
 */
@@ -39,12 +49,75 @@
 //==============================================================================
 // All variables
 //==============================================================================
-  int spc = getARGV("-dimension", 2);			//2=2D or 3=3D
-  int lag = getARGV("-lagrange" , 1);			//1=P1 or 2=P2  
+  int spc = getARGV("-dimension", 2);
+  int lag = getARGV("-lagrange" , 1); 
   
   string whichPartitioner=getARGV("-partitioner", "parmetis");
 
-  bool plotAll=  usedARGV("-plot") != -1;
+  bool help        =  usedARGV("-help")        != -1;
+  bool plotAll     =  usedARGV("-plot")        != -1;
+  bool pointbc     =  usedARGV("-pointbc")     != -1;
+  bool bodyforce   =  usedARGV("-bodyforce")   != -1; 
+  bool tractionbc  =  usedARGV("-tractionbc")  != -1;    
+  bool dirichletbc =  usedARGV("-dirichletbc") !=  1; 
+  
+  
+//==============================================================================   
+// Help message on the screen
+//==============================================================================
+
+if(help){
+
+ cout <<"\n\n================================================================================\n";
+ cout <<"                       ----YOU ACTIVATED THE HELP OPTION----\n";
+ cout <<"                      Please read the messages below carefully\n";
+ cout <<"================================================================================\n";
+ 
+if(dirichletbc){
+ cout <<"\n\n/***********************************IMPORTANT***********************************\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* Using Dirichlet BC  please edit the file 'varfmatsolve.edp'                  *\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* 1. Edit  \"Dlabel\"  i.e.  the  [int]   vector   of  labels  that contain your *\n";
+ cout <<"*    Dirichlet border. So  if your borderis labled 1 Dlabel = [1], if you have *\n";
+ cout <<"*    two Dirichlet border 4 & 5 then  Dlabel = [4,5].                          *\n"; 
+ cout <<"*                                                                              *\n";
+ cout <<"* 2. Edit  \"Dvalue\" i.e  the [real] vector defined by Dirichlet  values. Since *\n";
+ cout <<"*    you are solving a "+spc+"D problem, each label will need  "+spc+" Dirichlet  values.  *\n"; 
+ cout <<"*    So e.g. Dlabel=[1] you can use Dvalue=[1.,0.], meaning u1=1, and u2=0     *\n"; 
+ cout <<"*                                                                              *\n";
+ cout <<"*******************************************************************************/\n\n";
+} 
+
+if(bodyforce){
+ cout <<"\n\n/***********************************IMPORTANT***********************************\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* Using bodyforce within the problem please edit the file 'varfmatsolve.edp'   *\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* 1. Edit macro  \"BF\"  i.e. and provide three components of  bodyforce. Note   *\n";
+ cout <<"*    that the macro accepts real or functional values.                         *\n"; 
+ cout <<"*                                                                              *\n";
+ cout <<"*******************************************************************************/\n\n";
+}
+
+
+if(pointbc){
+ cout <<"\n\n/***********************************IMPORTANT***********************************\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* Using Dirichlet BC on  point please edit the file 'varfmatsolve.edp'         *\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* 1. Edit  \"Dpointlab\" i.e. the  [int]   vector of  labels  that contain your  *\n";
+ cout <<"*    Dirichlet Point. So if your point is on line 4 Dpointlab = [4].           *\n";
+ cout <<"*                                                                              *\n"; 
+ cout <<"* 2. Edit  \"PnV\" i.e  the [real] vector defined by [x,y,u1,u2]. Here (x,y) &   *\n";
+ cout <<"*    (u1,u2) are coordinates and deformation values of the Dirichlet point.    *\n"; 
+ cout <<"*                                                                              *\n";
+ cout <<"*******************************************************************************/\n\n";
+}
+
+
+}
+
 
 //==============================================================================
 // Building the macros.edp file
@@ -68,7 +141,7 @@ if(spc==2){
  w << "  macro init(i)[i, i]// EOM                   // Vector field initialization\n";
  w << "  macro divergence(i)(dx(i)+dy(i#1))// EOM    // Divergence function\n";
  w << "  macro epsilon(i) [dx(i), dy(i#1),\n"; 
- w << "                   (dy(i)+dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n";
+ w << "                   (dy(i)+dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n\n";
   
 }
 if(spc==3){
@@ -80,14 +153,41 @@ if(spc==3){
  w << "  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),\n"; 
  w << "                   (dz(i#1)+dy(i#2))/sqrt(2.0),\n"; 
  w << "                   (dz(i) + dx(i#2))/sqrt(2.0),\n";
- w << "                   (dy(i) + dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n";
+ w << "                   (dy(i) + dx(i#1))/sqrt(2.0)]//EOM  // Strain definition\n\n";
 
 }
 
-w << "  macro  partitioner()"+whichPartitioner+"// EOM          // Mesh partitioner\n";
+w << "  macro  partitioner()"+whichPartitioner+"// EOM          // Mesh partitioner\n\n";
+
+if(pointbc){
+
+ w << "  macro Pointbc(Dpointlab,Wh,A,b,PnV){\n";
+ w << "    int count=0;\n";
+ w << "    meshN Th=Wh.Th;\n";
+ 
+ if(spc==2){
+   w << "    varf vlabs(def(u),def(v)) = on( Dpointlab, u=-1*(x==PnV[0] && y==PnV[1]),\n";
+   w << "                                  u1 = -1*(x==PnV[0] && y==PnV[1]) );\n";
+ }
+ if(spc==3){
+   w << "    varf vlabs(def(u),def(v)) = on( Dpointlab, u=-1*(x==PnV[0] && y==PnV[1] && z==PnV[2]),\n";
+   w << "                                  u1 = -1*(x==PnV[0] && y==PnV[1] && z==PnV[2] ),\n";
+   w << "                                  u2 = -1*(x==PnV[0] && y==PnV[1] && z==PnV[2] )  );\n";
+ }
+ 
+ w << "    real[int] absc=vlabs(0,Wh);\n";
+ w << "    for (int i=0; i<Wh.ndof; i++){\n";
+ w << "      if(abs(-1e+30-absc(i))==0 ){\n";
+ w << "        A(i,i)=tgv;\n";
+ w << "        b[i]=PnV["+spc+"+count]*tgv;\n"; 
+ w << "        count++;\n";   
+ w << "         if(count=="+spc+") break;\n";
+ w << "      }\n";
+ w << "    }\n\n";
+ w << "  } //EOM\n"; 
+}
 
 }  
-
 
 //==============================================================================
 // Building the meshPartitioning.edp file
@@ -158,6 +258,33 @@ w <<"***************************************************************************
 
 
 w <<"//==============================================================================\n";
+w <<"// -------Dirichlet and Neumann conditions-------//\n";
+w <<"//==============================================================================\n\n";
+
+if(dirichletbc){
+  w <<"//---Surface---//\n";
+  w <<"int [int]   Dlabel=[2];			// Vector containing Dirichlet labels \n";
+  if(spc==2)
+    w <<"real[int]   Dvalue=[0.,0.];		// Vector containing Dirichlet values \n\n";
+  if(spc==3) 
+    w <<"real[int]   Dvalue=[0.,0.,0.];		// Vector containing Dirichlet values \n\n"; 
+}
+if(pointbc){
+  w <<"//---Point---//\n";
+  w <<"int [int]   Dpointlab=[2];		// Vector containing Dirichlet labels\n";
+  w <<"real[int]   PnV=[0., 0., 0., 0.];	// [x, y, u1, u2]\n\n";
+}
+
+if(bodyforce){
+  w <<"//---Body force---//\n";
+  if(spc==2)
+    w <<"macro BF[0,fy]	//EOM\n"; 
+  if(spc==3)
+    w <<"macro BF[0,fy,0]	//EOM\n";   
+}
+
+w <<"\n\n";
+w <<"//==============================================================================\n";
 w <<"// -------Variation formulation-------//\n";
 w <<"//==============================================================================\n\n";
 
@@ -168,14 +295,21 @@ w <<"	= intN(Th)(\n";
 w <<"			lambda*divergence(u)*divergence(v)\n";
 w <<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n";
 w <<"		  )\n";
-w <<"	+ intN(Th)(fy*v1)                     // Force component in y\n";
-if(spc==2)
- w <<"	+ on(Dlabel,u=0,u1=0);                // Dirichlet cond. on\n\n";
-if(spc==3)
- w <<"	+ on(Dlabel,u=0,u1=0,u2=0);           // Dirichlet cond. on\n\n"; 
+
+if(bodyforce){
+w <<"	+ intN(Th)(BF'*def(v))                     	// Force component\n";
+}
+
+if(dirichletbc){
+  if(spc==2)
+    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);		// Dirichlet cond. on\n\n";
+  if(spc==3)
+    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Dirichlet cond. on\n\n";
+}
+
 
 	  	     
-		    
+w <<"\n\n";		    
 w <<"//==============================================================================\n";
 w <<"//  -------Local Au=b assembly and solving-------//\n";
 w <<"//==============================================================================\n\n";	
@@ -197,6 +331,24 @@ w <<"      real[int]    b = elast(0,Vh);\n";
 w <<" mpiBarrier(mpiCommWorld);\n";
 w <<" if(mpirank==0)cout << \"RHS assembly ended in :----------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
 
+
+if(pointbc){
+
+w <<"//-----Additional assembly for A & b--------//\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" t0 = mpiWtime(); \n";
+w <<" if(mpirank==0)cout << \"Point Dirichlet assembly began\\n\";\n";
+w <<"      Pointbc(Dpointlab,Vh,ALoc,b,PnV);\n";
+w <<" mpiBarrier(mpiCommWorld);\n";
+w <<" if(mpirank==0)cout << \"Point Dirichlet assembly ended in :----------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
+}
+
+
+w <<" //------------Memory optimization-----------------//\n";
+if(pointbc)
+  w <<"Dpointlab.resize(0); PnV.resize(0);\n";
+if(dirichletbc)
+  w <<"Dlabel.resize(0); Dvalue.resize(0);\n";  
 
 w <<"//------------Sharing with PETSc------------------//\n";
 w <<" mpiBarrier(mpiCommWorld);\n";

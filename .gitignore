@@ -8,6 +8,6 @@
 *.pvd
 
 ## PARALLEL VERSION FILES ##
-macro.edp
+macros.edp
 meshPartitioning.edp
 varfmatsolve.edp
