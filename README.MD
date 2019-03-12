@@ -68,19 +68,33 @@ These are commandline flags/options that control your simulation. You can think 
 ## What all options do I have in [OptionsA] ? ##
 
 Here is the list of options that are available. 
-
 ```
--dimension [int]		Accepts values 2 or 3. Use 3 if your problem is 3D. Default is 2 for 2D problem.
-```
-```
--partitioner [sting]		Mesh partitioner to be used. Options are "metis" "parmetis" "scotch" or "ptstoch".
+-help		[bool]		To activate helping message on the terminal. Recommended flag ON by default.
 ```
 ```
--partitioner parmetis		Mesh partitioner is parmetis. Additional option active '-parmetis_worker [int]'.
+-pointbc	[bool]		To activate Dirichlet boundary condition on point.
+``` 
+``` 
+-bodyforce	[bool]		To activate volumetric source term (body force).
+``` 
+```
+-dirichletbc	[bool]		To activate Dirichlet boundary condition.
+``` 
+```
+-tractionbc	[bool]		To activate traction boundary condition (Neumann). 
 ```
 ```
--lagrange    [int]      	Lagrange order used for building FE space. 1 for P1 or 2 for P2. Defaut is P1. 
+-dimension	[int]		Accepts values 2 or 3. Use 3 if your problem is 3D. Default is 2 for 2D problem.
 ```
 ```
--plot        [bool]             Use -plot to activate plotting using medit. Default is false.
+-partitioner	[sting]		Mesh partitioner to be used. Options are "metis" "parmetis" "scotch" or "ptstoch".
+```
+```
+-partitioner	parmetis	Mesh partitioner is parmetis. Additional option active '-parmetis_worker [int]'.
+```
+```
+-lagrange	[int]		Lagrange order used for building FE space. 1 for P1 or 2 for P2. Defaut is P1. 
+```
+```
+-plot		[bool]		Use -plot to activate plotting using paraview. Default is false.
 ```

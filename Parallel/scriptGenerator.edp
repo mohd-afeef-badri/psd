@@ -15,14 +15,14 @@
 /*
   -dimension   [int]	  Accepts values 2 or 3. Default 2. 2 for 2D 3 for 3D.
   
+  -lagrange    [int]      Lagrange order used for building FE space. Options are 
+  			  1 for P1 or 2 for P2. Defaut is P1.  
+  
   -partitioner [sting]    Mesh partitioner to be used. Options are "metis"
   			  "parmetis" "scotch" or "ptstoch".
   			
   -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
   			  active '-parmetis_worker [int]'.			
-  			
-  -lagrange    [int]      Lagrange order used for building FE space. Options are 
-  			  1 for P1 or 2 for P2. Defaut is P1.
   			  
   -help        [bool]     To activate helping message on the terminal.  			  
   			  
@@ -71,7 +71,15 @@ if(help){
  cout <<"\n\n================================================================================\n";
  cout <<"                       ----YOU ACTIVATED THE HELP OPTION----\n";
  cout <<"                      Please read the messages below carefully\n";
- cout <<"================================================================================\n";
+ cout <<"================================================================================\n\n";
+ 
+ cout << " According to the flags provided you are solving:\n\n";
+ cout << "   # A "+spc+"D problem.\n";
+ cout << "   # With";if(!bodyforce)cout<<"out";cout<<" given bodyforce.\n";
+ cout << "   # With";if(!tractionbc)cout<<"out";cout<<" given traction boundary condition.\n";
+ cout << "   # With";if(!dirichletbc)cout<<"out";cout<<" given Dirichlet boundary condition on surface.\n"; 
+ cout << "   # With";if(!pointbc)cout<<"out";cout<<" given Dirichlet boundary condition on a point.\n"; 
+ cout << "\n"; 
  
 if(dirichletbc){
  cout <<"\n\n/***********************************IMPORTANT***********************************\n";
@@ -79,8 +87,8 @@ if(dirichletbc){
  cout <<"* Using Dirichlet BC  please edit the file 'varfmatsolve.edp'                  *\n";
  cout <<"*                                                                              *\n";
  cout <<"* 1. Edit  \"Dlabel\"  i.e.  the  [int]   vector   of  labels  that contain your *\n";
- cout <<"*    Dirichlet border. So  if your borderis labled 1 Dlabel = [1], if you have *\n";
- cout <<"*    two Dirichlet border 4 & 5 then  Dlabel = [4,5].                          *\n"; 
+ cout <<"*    Dirichlet border. So  if your border is labeled 1 Dlabel=[1], if you have *\n";
+ cout <<"*    two Dirichlet borders 4 & 5 then  Dlabel = [4,5].                         *\n"; 
  cout <<"*                                                                              *\n";
  cout <<"* 2. Edit  \"Dvalue\" i.e  the [real] vector defined by Dirichlet  values. Since *\n";
  cout <<"*    you are solving a "+spc+"D problem, each label will need  "+spc+" Dirichlet  values.  *\n"; 
@@ -94,7 +102,7 @@ if(bodyforce){
  cout <<"*                                                                              *\n";
  cout <<"* Using bodyforce within the problem please edit the file 'varfmatsolve.edp'   *\n";
  cout <<"*                                                                              *\n";
- cout <<"* 1. Edit macro  \"BF\"  i.e. and provide three components of  bodyforce. Note   *\n";
+ cout <<"* 1. Edit macro  \"BF\"       and provide three components of  bodyforce. Note   *\n";
  cout <<"*    that the macro accepts real or functional values.                         *\n"; 
  cout <<"*                                                                              *\n";
  cout <<"*******************************************************************************/\n\n";
@@ -114,6 +122,22 @@ if(pointbc){
  cout <<"*                                                                              *\n";
  cout <<"*******************************************************************************/\n\n";
 }
+
+if(tractionbc){
+ cout <<"\n\n/***********************************IMPORTANT***********************************\n";
+ cout <<"*                                                                              *\n";
+ cout <<"* Using Neumann BC  please edit the file 'varfmatsolve.edp'                    *\n";
+ cout <<"*                                                                              *\n"; 
+ cout <<"* 1. Edit  \"Tlabel\"  i.e.  the  [int]   vector   of  labels  that contain your *\n";
+ cout <<"*    traction border. So  if your borders is labeled 1 Tlabel=[1], if you have *\n";
+ cout <<"*    two traction borders 4 & 5 then  Tlabel = [4,5].                          *\n"; 
+ cout <<"*                                                                              *\n";
+ 
+ cout <<"* 1. Edit macro \"T\" and provide three components of  traction on the boundary. *\n";
+ cout <<"*                                                                              *\n";
+ cout <<"*                                                                              *\n";  
+ cout <<"*******************************************************************************/\n\n";
+} 
 
 
 }
@@ -161,6 +185,7 @@ w << "  macro  partitioner()"+whichPartitioner+"// EOM          // Mesh partitio
 
 if(pointbc){
 
+ w << "  //------------Point BC macro------------------//\n";
  w << "  macro Pointbc(Dpointlab,Wh,A,b,PnV){\n";
  w << "    int count=0;\n";
  w << "    meshN Th=Wh.Th;\n";
@@ -184,7 +209,8 @@ if(pointbc){
  w << "         if(count=="+spc+") break;\n";
  w << "      }\n";
  w << "    }\n\n";
- w << "  } //EOM\n"; 
+ w << "  } //EOM\n";
+ w << "  //--------------------------------------------//\n";  
 }
 
 }  
@@ -278,9 +304,18 @@ if(pointbc){
 if(bodyforce){
   w <<"//---Body force---//\n";
   if(spc==2)
-    w <<"macro BF[0,fy]	//EOM\n"; 
+    w <<"macro BF [0,fy]				//EOM\n\n"; 
   if(spc==3)
-    w <<"macro BF[0,fy,0]	//EOM\n";   
+    w <<"macro BF [0,fy,0]				//EOM\n\n";   
+}
+
+if(tractionbc){
+  w <<"//---Neumann---//\n";
+  w <<"int [int]   Tlabel=[2];			// Vector containing Neumann labels \n";
+  if(spc==2)
+    w <<"macro T [0,1]				//EOM\n"; 
+  if(spc==3)
+    w <<"macro T [0,1,0]			//EOM\n"; 
 }
 
 w <<"\n\n";
@@ -296,15 +331,16 @@ w <<"			lambda*divergence(u)*divergence(v)\n";
 w <<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n";
 w <<"		  )\n";
 
-if(bodyforce){
-w <<"	+ intN(Th)(BF'*def(v))                     	// Force component\n";
-}
+if(bodyforce)
+  w <<"	+ intN(Th)(BF'*def(v))                     	// Body force (volumetric source)\n";
+if(tractionbc)
+  w <<"	+ intN1(Th,Tlabel)(T'*def(v))			// Traction force (Neumann BC)\n";
 
 if(dirichletbc){
   if(spc==2)
-    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);		// Dirichlet cond. on\n\n";
+    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);		// Displacement (Dirichlet BC)\n\n";
   if(spc==3)
-    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Dirichlet cond. on\n\n";
+    w <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Displacement (Dirichlet BC)\n\n";
 }
 
 
@@ -348,7 +384,11 @@ w <<" //------------Memory optimization-----------------//\n";
 if(pointbc)
   w <<"Dpointlab.resize(0); PnV.resize(0);\n";
 if(dirichletbc)
-  w <<"Dlabel.resize(0); Dvalue.resize(0);\n";  
+  w <<"Dlabel.resize(0); Dvalue.resize(0);\n";
+if(tractionbc)
+  w <<"Tlabel.resize(0);\n";    
+w <<"\n\n";		    
+
 
 w <<"//------------Sharing with PETSc------------------//\n";
 w <<" mpiBarrier(mpiCommWorld);\n";
