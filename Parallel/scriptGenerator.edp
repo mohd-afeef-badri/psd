@@ -74,11 +74,14 @@ if(help){
  cout <<"================================================================================\n\n";
  
  cout << " According to the flags provided you are solving:\n\n";
- cout << "   # A "+spc+"D problem.\n";
+ cout << "   # A "+spc+"D problem.\n"; 
  cout << "   # With";if(!bodyforce)cout<<"out";cout<<" given bodyforce.\n";
  cout << "   # With";if(!tractionbc)cout<<"out";cout<<" given traction boundary condition.\n";
  cout << "   # With";if(!dirichletbc)cout<<"out";cout<<" given Dirichlet boundary condition on surface.\n"; 
- cout << "   # With";if(!pointbc)cout<<"out";cout<<" given Dirichlet boundary condition on a point.\n"; 
+ cout << "   # With";if(!pointbc)cout<<"out";cout<<" given Dirichlet boundary condition on a point.\n";
+ cout << "   # With mesh "+ThName+".\n\n";
+ cout << " WARNING!!! If something doesnot look right consider rerunning with correct flags";
+ cout << " ";   
  cout << "\n"; 
  
 if(dirichletbc){
