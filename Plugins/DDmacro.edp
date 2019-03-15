@@ -329,4 +329,28 @@ macro PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection, restrictionIntersecti
     bool excluded = false;
     buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, emptyRealArray, 1)
 }// EOM
+
+//==============================================================================
+// -------Exporting Pvd from Vtu's------- 
+//==============================================================================
+
+macro exportpvd(name, mesh, sol, fforder, withsur, nameData, comm)
+savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, withsurfacemesh=withsur, order = fforder, dataname=nameData);
+
+if(mpiRank(comm) == 0) {
+    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
+    pvd << "<?xml version=\"1.0\"?>\n";
+    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
+    pvd << "         byte_order=\"LittleEndian\"\n";
+    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
+    pvd << "  <Collection>\n";
+    for(int i = 0; i < mpiSize(comm); ++i) {
+        pvd << "    <DataSet timestep=\"0\" group=\"\" part=\"" << i << "\"\n";
+        pvd << "             file=\""; pvd << name << "_" << i << "_" << mpiSize(comm) << ".vtu\"/>\n";
+    }
+    pvd << "  </Collection>\n";
+    pvd << "</VTKFile>\n";}
+    system("mv "+name+"_"+mpisize+".pvd .");    
+}
+// EOM
  

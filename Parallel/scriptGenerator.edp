@@ -513,34 +513,33 @@ writevarfmatsolve
 
 
 if(plotAll){
-  system("mkdir -p VTKs");
+  system("mkdir -p VTUs");
    
   writevarfmatsolve
   <<"//==============================================================================\n"
   <<"// -------Plotting with paraview-------//\n"
   <<"//==============================================================================\n\n"
 
-  <<"load  \"iovtk\"                       // Loading the vtk viz module\n"
-  <<"int[int] vtkorder=[1,1,1];            // Solution export order\n"
-
+  <<"load  \"../Plugins/iovtk\"                       // Loading the vtk viz module\n"
 
   <<"//------------Paraview plotting------------------//\n"
   <<" mpiBarrier(mpiCommWorld);\n"
   <<" t0 = mpiWtime(); \n"
-  <<" if(mpirank==0)cout << \"Post-processing began\\n\";\n";
+  <<" if(mpirank==0)cout << \"Post-processing began\\n\";\n"
 
+  <<" 	int[int] vtuorder=[1,1,1];			// Solution export order\n" 
+  <<"	string   namevtu=\"VTUs/Displacements\";	// Name of PV files\n"
+  <<"	string   namedata=\"Displacements\";		// Name of export data\n"
+  <<"	bool     withsur=true;				// Export surface mesh\n";
+  
   if(spc==2)
      writevarfmatsolve
-     <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,0],\n"; 
+     <<"      exportpvd(namevtu, Th, [u,u1,0], vtuorder, withsur, namedata, mpiCommWorld);\n"; 
   if(spc==3)
      writevarfmatsolve
-     <<"      savevtk(\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\"+mpirank+\".vtk\",Th,[u,u1,u2],\n";    
+     <<"      exportpvd(namevtu, Th, [u,u1,u2], vtuorder, withsur, namedata, mpiCommWorld);\n";    
   
-  writevarfmatsolve   
-  <<"      order=vtkorder,dataname=\"Displacement\");\n"
-  <<"      if(mpirank==0)  \n"
-  <<"          exec(\"pvpython  ../Plugins/pvdwriter.py \\\"VTKs/Displacements-MpiSize_\"+mpisize+\"-Mpi_\\\"  \"+mpisize+\"\");\n"
-    
+  writevarfmatsolve       
   <<" mpiBarrier(mpiCommWorld);\n"
   <<" if(mpirank==0)cout << \"Post-processing ended in :--------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n"; 
   
