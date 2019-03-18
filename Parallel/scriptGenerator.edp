@@ -36,6 +36,7 @@
   
   -tractionbc  [bool]     To activate traction boundary condition (Neumann).  
 
+  -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
 
 */
 
@@ -58,9 +59,10 @@
   bool plotAll     =  usedARGV("-plot")        != -1;
   bool pointbc     =  usedARGV("-pointbc")     != -1;
   bool bodyforce   =  usedARGV("-bodyforce")   != -1; 
-  bool tractionbc  =  usedARGV("-tractionbc")  != -1;    
+  bool tractionbc  =  usedARGV("-tractionbc")  != -1; 
+  bool Sequential  =  usedARGV("-sequential")  != -1;      
   bool dirichletbc =  usedARGV("-dirichletbc") !=  1; 
-  
+
   
 //==============================================================================   
 // Help message on the screen
@@ -183,34 +185,51 @@ writemacros
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
 <<"\n";
+  
 
-if(spc==2)
+if(spc==2){
 writemacros
 <<"  func Pk = [P"+lag+",P"+lag+"];\t			// Finite element space\n"
 <<"  macro  partitioner()"+Partitioner+"\t		// Mesh partitioner used\n"
 <<"  macro dimension() 2				// Two-dimensional problem\n"
-<<"  macro def(i)[i, i#1]				// Vector field definition\n"
 <<"  macro init(i)[i, i]				// Vector field initialization\n"
+<<"  macro def(i)[i, i#1]				// Vector field definition\n"
 <<"  macro divergence(i)(dx(i) + dy(i#1))		// Divergence function\n"
 <<"  macro epsilon(i) [dx(i), dy(i#1),\n" 
-<<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition\n"
-<<"\n";
-  
+<<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+if(Sequential)
+writemacros
+<<"  macro meshN()mesh				// Two-dimensional problem\n"
+<<"  macro intN()int2d				// Two-dimensional integral\n"
+<<"  macro intN1()int1d				// One-dimensional integral\n"
+<<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader\n"
+<<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader\n";
+}
 
 
-if(spc==3)
+
+if(spc==3){
 writemacros
 <<"  func Pk = [P"+lag+",P"+lag+",P"+lag+"];\t\t\t	// Finite element space\n"
 <<"  macro  partitioner()"+Partitioner+"\t		// Mesh partitioner used\n"
+<<"  macro init(i) [i,   i,   i]			// Vector field initialization\n"
 <<"  macro dimension() 3				// Three-dimensional problem\n"
 <<"  macro def(i)  [i, i#1, i#2]			// Vector field definition\n"
-<<"  macro init(i) [i,   i,   i]			// Vector field initialization\n"
 <<"  macro divergence(i) (dx(i)+dy(i#1)+dz(i#2))	// Divergence function\n"
 <<"  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),\n"
 <<"                   (dz(i#1)+dy(i#2))/sqrt(2.0),\n"
 <<"                   (dz(i) + dx(i#2))/sqrt(2.0),\n"
-<<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition\n"
-<<"\n";
+<<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+if(Sequential)
+writemacros
+<<"  load \"msh3\"				// Loading 3D mesh\n"
+<<"  macro meshN()mesh3				// Three-dimensional problem\n"
+<<"  macro intN()int3d				// Three-dimensional integral\n"
+<<"  macro intN1()int2d				// Two-dimensional integral\n"
+<<"  macro readmeshN()readmesh3			// Three-dimensional problem\n"
+<<"  macro gmshloadN()gmshload3			// Three-dimensional 'msh' reader\n";
+}
+
 
 
 
@@ -256,6 +275,11 @@ writemacros
 
 }
 
+if(!Sequential)
+writemacros
+<<"  load    \"PETSc\"				// PETSc plugin activated\n"
+<<"  include \"../Plugins/DDmacro.edp\"		// All domain decomposition macros\n";
+
 }  
 
 //==============================================================================
@@ -278,14 +302,22 @@ writemeshPartitioning
 
 if(spc==2)
 writemeshPartitioning 
-<<"meshN Th = square(1, 1);                   // This is a dummy mesh for now\n";
+<<"meshN Th = square(1, 1);		// This is a dummy mesh for now\n";
 
 if(spc==3)
 writemeshPartitioning 
-<<"meshN Th = cube(1, 1, 1);                 // This is a dummy mesh for now\n";
+<<"meshN Th = cube(1, 1, 1);		// This is a dummy mesh for now\n";
 
 writemeshPartitioning 
-<<"fespace Vh(Th, Pk);                        // Local mixed FE space\n"
+<<"fespace Vh(Th, Pk);			// Local mixed FE space\n";
+
+if(Sequential)
+writemeshPartitioning
+<<"load \"gmsh\"				// Load meshes from gmsh\n"
+<<"Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded\n\n";
+
+if(!Sequential)
+writemeshPartitioning
 <<"int[int] arrayIntersection;                // Ranks of neighboring subdomains\n"
 <<"int[int][int] restrictionIntersection(0);  // Local-to-neighbors renumbering\n"
 <<"real[int] D;                               // Partition of unity\n"
@@ -309,7 +341,7 @@ writemeshPartitioning
 <<"mpiBarrier(mpiCommWorld);\n"
 <<"t0 = mpiWtime(); \n"
 <<"if(mpirank==0)"
-<<"cout << \"Mesh partitioning with \"<< Stringification(partitioner) <<\" began\\n\";\n\n"
+<<"cout << \"Mesh partitioning with \"<< Stringification(partitioner)<<\"\\n\";\n\n"
       
 <<"    PartThAndBuildCommunication();\n\n"
 
@@ -443,8 +475,10 @@ writevarfmatsolve
 <<"//==============================================================================\n"
 <<"//  -------Local Au=b assembly and solving-------//\n"
 <<"//==============================================================================\n"	
-<<"\n"
-        
+<<"\n";
+
+if(!Sequential){
+writevarfmatsolve       
 <<"//------------Assembly for A------------------//\n"
 <<" mpiBarrier(mpiCommWorld);\n"
 <<" t0 = mpiWtime(); \n"
@@ -548,5 +582,40 @@ if(plotAll){
 
 writevarfmatsolve
 <<"if(mpirank==0)cout << \"--------------------------------------------------------------------------\\n\\n\";\n\n";
+}
+
+if(Sequential){
+writevarfmatsolve
+<<"Vh<real> def(u);				// Defining LHS\n"
+<<"matrix<real> A = elast(Vh,Vh);			// Assembly for A\n"
+<<"real[int]    b = elast(0,Vh);			// Assembly for b\n"
+<<"set(A,solver=CG);				// Solver setup\n"
+<<"u[]=A^-1*b;					// Solving\n\n";
+
+if(plotAll){
+  system("mkdir -p VTUs");
+   
+  writevarfmatsolve
+  <<"//==============================================================================\n"
+  <<"// -------Plotting with paraview-------//\n"
+  <<"//==============================================================================\n\n"
+
+  <<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module\n"
+  <<"int[int] vtuorder=[1,1,1];			// Solution export order\n"; 
+  
+  if(spc==2)
+     writevarfmatsolve
+     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],\n"; 
+  if(spc==3)
+     writevarfmatsolve
+     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],\n"; 
+  
+  writevarfmatsolve       
+  <<"		order=vtuorder,dataname=\"Displacement\");";
+	  
+}
+
+}
+
 
 }
