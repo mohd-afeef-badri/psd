@@ -1,47 +1,10 @@
-# ff++ solid mechanics solver #
+#A parallel/sequential ff++ solid mechanics solver #
 
-Solid mechanics solver modules developed within DSL language FreeFem++. 
-
-
-## Command line arguments ##
-
-The sequential solvers can be run on linux/windows platforms and can be used with command line options  to control the solver.
-
-### How to run the solver ? ###
-
-```
-FreeFem++ main.edp -v 0 -nw [Options]
-```
-
-Options:
-```
--nx [int]				Controls the mesh size (total border nodes in x).
-```
-```
--ny [int]				Controls the mesh size (total border nodes in y).
-```
-```
--r [real]				Controls the radius of circle.
-```
-```
--ex [real]				Convert square mesh to a rectangular one via elongation in x.
-```
-```
--ey [real]				Convert square mesh to a rectangular one via elongation in y.
-```
-```
--s [int]				Splitting a triangle within the mesh in four.
-```
-
-
-
-
-
-# Parallel ff++ solid mechanics solver #
+Solid mechanics solver modules wrapped around FreeFem++ for discretization, and PETSc for linear algebra/Preconditioning. 
 
 ## How to run the solver ? ##
 
-The parallel solvers can be run on linux platforms and can be used with command line options  to control the solver.
+The parallel/sequential solvers can be run on linux platforms and can be used with command line options  to control the solver.
 
 ### Step 1 ? ###
 
@@ -51,15 +14,20 @@ ff-mpirun -np 1 scriptGenerator.edp -v 0 -nw [OptionsA]
 ```
 
 ### Step 2 ? ###
+For parallel:
+```
+ff-mpirun -np $NP main.edp -v 0 -nw [OptionsB]
 
 ```
-ff-mpirun -np $NP scriptGenerator.edp -v 0 -nw [OptionsB]
+For sequential:
+```
+FreeFem++ main.edp -v 0 -nw [OptionsB]
 
 ```
 
 ## What is $NP ? ##
 
-$NP are the number of processes that you will use for performing the simulation. 
+$NP are the number of processes that you will use for performing the simulation in parallel. 
 
 ## What is [OptionsA] ? ##
 
@@ -67,7 +35,10 @@ These are commandline flags/options that control your simulation. You can think 
 
 ## What all options do I have in [OptionsA] ? ##
 
-Here is the list of options that are available. 
+Here is the list of options that are available.
+```
+-sequential	[bool]		To solve via a sequential solver. Default is false.
+``` 
 ```
 -help		[bool]		To activate helping message on the terminal. Recommended flag ON by default.
 ```
