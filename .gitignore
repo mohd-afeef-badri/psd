@@ -7,10 +7,11 @@
 *.vtu
 *.pvd
 
-## PARALLEL VERSION FILES ##
+## PARALLEL/SEQUENTIAL VERSION FILES ##
 macros.edp
 meshPartitioning.edp
 varfmatsolve.edp
+parameters.edp
 
 ## SHARED OBJECT FILES ##
 *.o

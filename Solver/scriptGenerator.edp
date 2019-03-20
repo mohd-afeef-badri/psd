@@ -45,7 +45,7 @@
 //==============================================================================
 
   include "getARGV.idp"    	// Enables importing commandline arguments
-  include "parameters.edp"  	//Control parameters, propeties, etc..
+  //include "parameters.edp"  	//Control parameters, propeties, etc..
 
 //==============================================================================
 // All variables
@@ -58,10 +58,12 @@
   bool help        =  usedARGV("-help")        != -1;
   bool plotAll     =  usedARGV("-plot")        != -1;
   bool pointbc     =  usedARGV("-pointbc")     != -1;
-  bool bodyforce   =  usedARGV("-bodyforce")   != -1; 
+  bool bodyforce   =  usedARGV("-bodyforce")   != -1;
+  bool nonlinear   =  usedARGV("-nonlinear")   != -1;   
   bool tractionbc  =  usedARGV("-tractionbc")  != -1; 
   bool Sequential  =  usedARGV("-sequential")  != -1;      
-  bool dirichletbc =  usedARGV("-dirichletbc") !=  1; 
+  bool dirichletbc =  usedARGV("-dirichletbc") !=  1;
+
 
   
 //==============================================================================   
@@ -85,7 +87,6 @@ cout
 <<"   # With"<<(tractionbc ? "" : "out")<<" traction boundary condition.\n"
 <<"   # With"<<(dirichletbc ? "" : "out")<<" Dirichlet boundary condition on surface.\n"
 <<"   # With"<<(pointbc ? "" : "out")<<" Dirichlet boundary condition on a point.\n"
-<<"   # With mesh "+ThName+".\n"
 <<"   # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.\n"
 <<"\n";
 
@@ -93,7 +94,22 @@ cout
 cout
 <<" WARNING If something doesn't look right consider rerunning with correct flags.\n"
 <<"\n"; 
- 
+
+cout 
+<<"\n"
+<<"/***********************************IMPORTANT***********************************\n"
+<<"*                                                                              *\n"
+<<"* To change the mesh and the material parameters edit 'parameters.edp'         *\n"
+<<"*                                                                              *\n"
+<<"* 1. Edit  <<ThName>> the [string] name of your mesh  file  with  location. By *\n"
+<<"*    default it is ThName= <<../Meshes/2D/Meshes/bar2D>> .			  *\n"
+<<"*                                                                              *\n"
+<<"* 2. Edit <<E,nu,f1,f2,f3>>  of [real] type representing the materials modulus *\n"
+<<"*    of elasticity, poissions ratio, body forces f1,f2,f3 in x,y,z directions. *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"\n";
+
 if(dirichletbc)
 cout 
 <<"\n"
@@ -197,6 +213,17 @@ writemacros
 <<"  macro divergence(i)(dx(i) + dy(i#1))		// Divergence function\n"
 <<"  macro epsilon(i) [dx(i), dy(i#1),\n" 
 <<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+
+if(nonlinear)
+writemacros
+<<"  macro grad(i)[dx(i), dy(i)]			// Two-dimensional gradient\n"
+<<"  macro sxx(i)(lambda*divergence(i)+2*mu*dx(i))	// Sigma_xx\n"
+<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy\n"
+<<"  macro sxy(i)(mu*((dy(i)+dx(i#1))))			// Sigma_yx=Sigma_xy\n"
+<<"  macro sig(i) [sxx(i),syy(i),2*sqrt(2.0)*sxy(i)] 	// Sigma\n"
+<<"  macro Hplus(i)(0.5*(sig(i)'*epsilon(i)))		// Hplus (elastic energy)\n";
+   
+  
 if(Sequential)
 writemacros
 <<"  macro meshN()mesh				// Two-dimensional problem\n"
@@ -220,6 +247,14 @@ writemacros
 <<"                   (dz(i#1)+dy(i#2))/sqrt(2.0),\n"
 <<"                   (dz(i) + dx(i#2))/sqrt(2.0),\n"
 <<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+
+if(nonlinear)
+writemacros
+<<"  macro grad(i)[dx(i), dy(i), dz(i)]			// Three-dimensional gradient\n"
+<<"  macro sxx(i)(lambda*divergence(i)+2*mu*dx(i))	// Sigma_xx\n"
+<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy\n"
+<<"  macro szz(i)(lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz\n";
+
 if(Sequential)
 writemacros
 <<"  load \"msh3\"				// Loading 3D mesh\n"
@@ -282,6 +317,72 @@ writemacros
 
 }  
 
+
+//==============================================================================
+// Building the parameters.edp file
+//==============================================================================
+
+{ofstream  writemeshParameters("parameters.edp");
+
+writemeshParameters
+<<"										   \n"
+<<"/***********************************Parameters**********************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------FEM mesh to be loaded (Un-partitioned)------- 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"string ThName = \"../Meshes/"+spc+"D/Meshes/bar2D\";  	// Mesh file name  \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Material properties------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"real mu,lambda,t0 "<<(bodyforce ? ",f2" : "")<<";				   \n"
+<<"{										   \n"
+<<"real E=200.e9,				//Modulus of Elasticity - [Pa]	   \n"
+<<"	nu=0.3;					// Poisson ratio - [-]		   \n"
+<<"	 									   \n"
+<<"mu= E/(2.*(1.+nu));								   \n"
+<<"lambda = E*nu/((1.+nu)*(1.-2.*nu));						   \n"
+<<"	 									   \n"
+<<"	 									   \n"
+<<(bodyforce ? "f2=8.e3*(-9.81);				// Rho*g" : "")<<" \n"
+<<"	 									   \n"
+<<"}	 									   \n"
+<<"	 									   \n"
+<<"	 									   \n";
+
+if(nonlinear)
+writemeshParameters
+<<"//==============================================================================\n"
+<<"// -------Nonlinear parameters------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"	 									   \n"
+<<"real Gc =2.7,								   \n"
+<<"	lo,									   \n"
+<<"	lfac=2,									   \n"
+<<"	maxtr = 0.03,								   \n"
+<<"	tr = 1e-5,								   \n"
+<<"	dtr = 1e-5;								   \n"
+<<"	 									   \n";
+
+}
+
+
 //==============================================================================
 // Building the meshPartitioning.edp file
 //==============================================================================
@@ -289,7 +390,7 @@ writemacros
 {ofstream  writemeshPartitioning("meshPartitioning.edp");
 
 writemeshPartitioning
-<<"\n"
+<<"										   \n"
 <<"/*****************************Mesh And Partitioning*****************************\n"
 <<"*                                                                              *\n"
 <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n"
@@ -298,7 +399,7 @@ writemeshPartitioning
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n";
+<<"										   \n";
 
 if(spc==2)
 writemeshPartitioning 
@@ -359,6 +460,7 @@ writemeshPartitioning
 {ofstream  writevarfmatsolve("varfmatsolve.edp");
 
 writevarfmatsolve
+<<"										   \n"
 <<"/**************Variational formulation, solving, & post-proc *******************\n"
 <<"*                                                                              *\n"
 <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n"
@@ -367,13 +469,12 @@ writevarfmatsolve
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n"
-
-
+<<"										   \n"
+<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Dirichlet and Neumann conditions-------//\n"
+<<"// -------Dirichlet and Neumann conditions-------				   \n"
 <<"//==============================================================================\n"
-<<"\n";
+<<"										   \n";
 
 
 if(dirichletbc){
@@ -409,11 +510,11 @@ writevarfmatsolve
 
 if(spc==2)
 writevarfmatsolve
-<<"macro BF [0,fy]				//EOM\n\n"; 
+<<"macro BF [0,f2]				//EOM\n\n"; 
 
 if(spc==3)
 writevarfmatsolve
-<<"macro BF [0,fy,0]				//EOM\n\n"; 
+<<"macro BF [0,f2,0]				//EOM\n\n"; 
       
 }
 
@@ -434,28 +535,75 @@ writevarfmatsolve
 }
 
 
+if(!nonlinear){
+
 writevarfmatsolve
-<<"\n"
+<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Variation formulation-------//\n"
+<<"// -------Variation formulation linear-------				   \n"
 <<"//==============================================================================\n"
-<<"\n"
+<<"										   \n"
+<<"										   \n";
 
-
+writevarfmatsolve
 <<"varf elast(def(u),def(v))\n"
-<<"	= intN(Th)(\n"
+<<"	= intN(Th,qforder=3)(\n"
 <<"			lambda*divergence(u)*divergence(v)\n"
 <<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n"
 <<"		  )\n";
 
 if(bodyforce)
 writevarfmatsolve
-<<"	+ intN(Th)(BF'*def(v))			// Body force   (volumetric)\n";
+<<"	+ intN(Th,qforder=2)(BF'*def(v))		// Body force   (volumetric)\n";
 
 
 if(tractionbc)
 writevarfmatsolve
-<<"	+ intN1(Th,Tlabel)(T'*def(v))		// Traction force (Neumann BC)\n";
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))		// Traction force (Neumann BC)\n";
+
+if(dirichletbc){
+
+if(spc==2)
+writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);	// Displacement (Dirichlet)\n\n";
+
+if(spc==3)
+writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Displacement (Dirichlet)\n\n";
+
+}
+}
+
+if(nonlinear){
+
+writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation nonlinear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"Vh<real> def(u), def(uold);		// Defining displacement variables	   \n"
+<<"										   \n"
+<<"fespace Vh1(Th,P1);			// FEspace for damage field		   \n"
+<<"	Vh1 phi,phiold;			// Damage field				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"varf elast(def(u),def(v))							   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"			    )							   \n";
+
+if(bodyforce)
+writevarfmatsolve
+<<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
+
+if(tractionbc)
+writevarfmatsolve
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
 
 if(dirichletbc){
 
@@ -470,15 +618,130 @@ writevarfmatsolve
 }
 
 
-writevarfmatsolve	  	     
-<<"\n"
+writevarfmatsolve
+<<"varf phase(phi,q)								\n"
+<<"	= intN(Th,qforder=3)(							\n"
+<<"			(Gc*lo*(grad(phi)'*grad(q))) +				\n"
+<<"			( ((Gc/lo)  + 2.*Hplus(u))*phi*q )			\n"
+<<"			    )							\n"
+<<"	+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )					\n"
+<<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)  \n";
+
+}
+
+
+if(nonlinear){
+
+writevarfmatsolve
+<<"										   \n"
 <<"//==============================================================================\n"
-<<"//  -------Local Au=b assembly and solving-------//\n"
-<<"//==============================================================================\n"	
-<<"\n";
+<<"// -------Nonlinear parameter calulations-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"{										   \n"
+<<" fespace Vh0(Th,P0);								   \n"
+<<" Vh0 size1=hTriangle;							   \n"
+<<" lo=size1[].min;								   \n"
+<<" lo=lo*lfac;									   \n"
+<<"}										   \n"
+
+
+<<"//==============================================================================\n"
+<<"// -------Nonlinear loop-------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"while (tr <= maxtr){								   \n"
+<<"										   \n"
+<<"	if (tr >=5e-3)								   \n"
+<<"		dtr = 1e-5;							   \n"
+<<"										   \n"
+<<"	int  iter  = 1;								   \n"
+<<"	real toll  = 1e-3,							   \n"
+<<"	     err1  = 1,								   \n"
+<<"	     err2  = 1;								   \n"
+<<"										   \n"
+<<"	cout <<  \"  Applied traction \" << tr <<endl;				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"	while (err1 > toll && err1 > toll){					   \n"
+<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
+<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
+<<"		set(A,solver=CG);			// Solver setup		   \n"
+<<"		u[]=A^-1*b;				// Solve		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		matrix<real> A1 = phase(Vh1,Vh1);	// Assembly for A	   \n"
+<<"		real[int]    b1 = phase(0,Vh1);		// Assembly for b	   \n"
+<<"		set(A1,solver=CG);			// Solver setup		   \n"
+<<"		phi[]=A1^-1*b1;				// Solve		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		uold[]=uold[]-u[];						   \n"
+<<"		phiold[]=phiold[]-phi[]; 					   \n"
+<<"		err1=sqrt( int2d(Th) ( (uold)^2 )  );				   \n"
+<<"		err2=sqrt( int2d(Th) ( (phiold)^2 )  );				   \n"
+<<"		cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1   \n"
+<<"		<<\"  error in phi \"<< err2<<endl;				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		phiold[]=phi[];							   \n"
+<<"		uold[]=u[];							   \n"
+<<"										   \n"
+<<"		iter++;								   \n"
+<<"										   \n"
+<<"		if(err1 < toll && err1 < toll){					   \n"
+<<"			cout.scientific << \" Solution converged after \"<<        \n"
+<<"			iter <<endl;						   \n"	
+<<"			plot(phi,fill=1,value=1);				   \n"
+<<"		}								   \n"
+<<"	} 									   \n"
+<<"	tr+=dtr;								   \n"
+<<"}										   \n"
+<<"										   \n"	
+<<"										   \n"	
+<<"										   \n";
+
+if(plotAll){
+  system("mkdir -p VTUs");
+   
+  writevarfmatsolve
+  <<"//==============================================================================\n"
+  <<"// -------Plotting with paraview-------					     \n"
+  <<"//==============================================================================\n"
+  <<"										     \n"
+  <<"										     \n"
+  <<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	     \n"
+  <<"int[int] vtuorder=[1,1,1];			// Solution export order	     \n" 
+  <<"										     \n" 
+  <<"										     \n"; 
+      
+  if(spc==2)
+     writevarfmatsolve
+     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],phi,			     \n"; 
+  if(spc==3)
+     writevarfmatsolve
+     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],phi,		     \n"; 
+  
+  writevarfmatsolve       
+  <<"		order=vtuorder,dataname=\"Displacement\");			     \n"
+  <<"										     \n"; 	  
+}
+ 
+}
+
+if(!nonlinear){
 
 if(!Sequential){
 writevarfmatsolve       
+<<"										   \n"	
+<<"//==============================================================================\n"
+<<"//  -------Local Au=b assembly and solving-------				   \n"
+<<"//==============================================================================\n"	
+<<"										   \n"
+<<"										   \n"
 <<"//------------Assembly for A------------------//\n"
 <<" mpiBarrier(mpiCommWorld);\n"
 <<" t0 = mpiWtime(); \n"
@@ -543,7 +806,7 @@ writevarfmatsolve
 <<"      set(A,sparams =\" \");            // Solver setup-Petsc\n"
 <<"      u[]=A^-1*b;                     // Solving\n"
 <<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"Solving with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";	    
+<<" if(mpirank==0)cout << \"Solving with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";
 
 
 if(plotAll){
@@ -582,10 +845,17 @@ if(plotAll){
 
 writevarfmatsolve
 <<"if(mpirank==0)cout << \"--------------------------------------------------------------------------\\n\\n\";\n\n";
+
 }
 
 if(Sequential){
-writevarfmatsolve
+writevarfmatsolve       
+<<"										   \n"	
+<<"//==============================================================================\n"
+<<"//  -------Local Au=b assembly and solving-------				   \n"
+<<"//==============================================================================\n"	
+<<"										   \n"
+<<"										   \n"
 <<"Vh<real> def(u);				// Defining LHS\n"
 <<"matrix<real> A = elast(Vh,Vh);			// Assembly for A\n"
 <<"real[int]    b = elast(0,Vh);			// Assembly for b\n"
@@ -613,6 +883,8 @@ if(plotAll){
   writevarfmatsolve       
   <<"		order=vtuorder,dataname=\"Displacement\");";
 	  
+}
+
 }
 
 }
