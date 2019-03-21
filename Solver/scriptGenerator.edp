@@ -1,19 +1,19 @@
-/*******************************************************************************
-*									       *
-* Date:	   04/03/2019							       *
-* Type:    Execution file						       *
-* Comment: This main file generates three files: macro.edp, varfmatsolve.edp,  *
-*          and   meshPartitioning.edp.  Commandline  arguments  controls  the  *
-*          generated file nature.	 		       		       *
-* To run : ff-mpirun -np 1 main.edp -v 0 -ns -nw			       *
-*									       *
-*******************************************************************************/
+/**************************************************************************************
+*									       	      *
+* Date:	   04/03/2019							              *
+* Type:    Execution file						              *
+* Comment: This main file generates three edp files: macros, parameters, varfmatsolve *
+*          and meshPartitioning. Commandline arguments controls the nature of the ge- *
+*          nerated file. One is advised to carefully go through these arguments.      *
+* To run : ff-mpirun -np 1 main.edp -v 0 -ns -nw [ARGUMENTS]		              *
+*									              *
+**************************************************************************************/
 
-//==============================================================================
-// All command line argument descriptions
-//==============================================================================
+//=====================================================================================
+// ------All command line argument descriptions [ARGUMENTS]------
+//=====================================================================================
 /*
-  -dimension   [int]	  Accepts values 2 or 3. Default 2. 2 for 2D 3 for 3D.
+  -dimension   [int]	  Accepts values 2 or 3.  2 for 2D 3 for 3D. Default 2.
   
   -lagrange    [int]      Lagrange order used for building FE space. Options are 
   			  1 for P1 or 2 for P2. Defaut is P1.  
@@ -24,32 +24,34 @@
   -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
   			  active '-parmetis_worker [int]'.			
   			  
-  -help        [bool]     To activate helping message on the terminal.  			  
+  -help        [bool]     To activate helping message on the terminal. Default OFF. 			  
   			  
-  -plot        [bool]     To activate plotting routine. Default is false.
+  -plot        [bool]     To activate plotting routine. Default OFF.
   
-  -pointbc     [bool]     To activate Dirichlet boundary condition on point.
+  -pointbc     [bool]     To activate Dirichlet boundry condition on point. Default OFF.
   
-  -bodyforce   [bool]     To activate volumetric source term (body force).
+  -nonlinear   [bool]     To activate non-linear mechanics (Crack). Default OFF.
   
-  -dirichletbc [bool]     To activate Dirichlet boundary condition.
+  -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
   
-  -tractionbc  [bool]     To activate traction boundary condition (Neumann).  
+  -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
+  
+  -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF. 
 
   -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
 
 */
 
-//==============================================================================
-// All files to be included
-//==============================================================================
+//=====================================================================================
+// ------All files to be included------
+//=====================================================================================
 
   include "getARGV.idp"    	// Enables importing commandline arguments
-  //include "parameters.edp"  	//Control parameters, propeties, etc..
 
-//==============================================================================
-// All variables
-//==============================================================================
+//=====================================================================================
+// ------All variables------
+//=====================================================================================
+
   int spc = getARGV("-dimension", 2);
   int lag = getARGV("-lagrange" , 1); 
   
@@ -57,6 +59,7 @@
 
   bool help        =  usedARGV("-help")        != -1;
   bool plotAll     =  usedARGV("-plot")        != -1;
+  bool debug       =  usedARGV("-debug")       != -1;
   bool pointbc     =  usedARGV("-pointbc")     != -1;
   bool bodyforce   =  usedARGV("-bodyforce")   != -1;
   bool nonlinear   =  usedARGV("-nonlinear")   != -1;   
@@ -64,55 +67,46 @@
   bool Sequential  =  usedARGV("-sequential")  != -1;      
   bool dirichletbc =  usedARGV("-dirichletbc") !=  1;
 
-
-  
-//==============================================================================   
+//=====================================================================================   
 // Help message on the screen
-//==============================================================================
+//=====================================================================================
 
-if(help){
-
-cout 
-<<"\n"
+if(help){cout
+<<"										   \n"
 <<"================================================================================\n"
-<<"                       ----YOU ACTIVATED THE HELP OPTION----\n"
-<<"                      Please read the messages below carefully\n"
+<<"                       ----YOU ACTIVATED THE HELP OPTION----			   \n"
+<<"                      Please read the messages below carefully		   \n"
 <<"================================================================================\n"
-<<"\n";
-
- 
-cout 
-<<" According to the flags provided You are solving A "+spc+"D problem.\n\n"
-<<"   # With"<<(bodyforce ? "" : "out")<<" bodyforce acting on the volume.\n"
-<<"   # With"<<(tractionbc ? "" : "out")<<" traction boundary condition.\n"
-<<"   # With"<<(dirichletbc ? "" : "out")<<" Dirichlet boundary condition on surface.\n"
-<<"   # With"<<(pointbc ? "" : "out")<<" Dirichlet boundary condition on a point.\n"
-<<"   # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.\n"
-<<"\n";
-
-
-cout
-<<" WARNING If something doesn't look right consider rerunning with correct flags.\n"
-<<"\n"; 
-
-cout 
-<<"\n"
+<<"										   \n"
+<<"										   \n"
+<<" According to the flags provided You are solving A "+spc+"D problem.		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  # With"<<(bodyforce ? "" : "out")<<" bodyforce acting on the volume.	   \n"
+<<"  # With"<<(tractionbc ? "" : "out")<<" traction boundary condition.	   	   \n"
+<<"  # With"<<(dirichletbc ? "" : "out")<<" Dirichlet boundary condition on surface\n"
+<<"  # With"<<(pointbc ? "" : "out")<<" Dirichlet boundary condition on a point.   \n"
+<<"  # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.		   \n"
+<<"										   \n"
+<<"										   \n"
+<<" WARNING If something doesn't look right consider rerunning with correct flags. \n"
+<<"										   \n" 
+<<"										   \n"
 <<"/***********************************IMPORTANT***********************************\n"
 <<"*                                                                              *\n"
 <<"* To change the mesh and the material parameters edit 'parameters.edp'         *\n"
 <<"*                                                                              *\n"
 <<"* 1. Edit  <<ThName>> the [string] name of your mesh  file  with  location. By *\n"
-<<"*    default it is ThName= <<../Meshes/2D/Meshes/bar2D>> .			  *\n"
+<<"*    default it is ThName= <<../Meshes/2D/Meshes/bar2D>> .                     *\n"
 <<"*                                                                              *\n"
 <<"* 2. Edit <<E,nu,f1,f2,f3>>  of [real] type representing the materials modulus *\n"
 <<"*    of elasticity, poissions ratio, body forces f1,f2,f3 in x,y,z directions. *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n";
+<<"										   \n";
 
-if(dirichletbc)
-cout 
-<<"\n"
+if(dirichletbc)cout 
+<<"										   \n"
 <<"/***********************************IMPORTANT***********************************\n"
 <<"*                                                                              *\n"
 <<"* Using Dirichlet BC  please edit the file 'varfmatsolve.edp'                  *\n"
@@ -126,13 +120,10 @@ cout
 <<"*    you can use Dvalue=[1.,0.], meaning u1=1, and u2=0                        *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n"; 
+<<"										   \n";
 
- 
-
-if(bodyforce)
-cout 
-<<"\n"
+if(bodyforce)cout
+<<"										   \n"
 <<"/***********************************IMPORTANT***********************************\n"
 <<"*                                                                              *\n"
 <<"* Using bodyforce within the problem please edit the file 'varfmatsolve.edp'   *\n"
@@ -141,14 +132,10 @@ cout
 <<"*    the macro accepts real or functional values.                              *\n" 
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n"; 
+<<"										   \n";
 
-
-
-
-if(pointbc)
-cout 
-<<"\n"
+if(pointbc)cout
+<<"										   \n"
 <<"/***********************************IMPORTANT***********************************\n"
 <<"*                                                                              *\n"
 <<"* Using Dirichlet BC on  point please edit the file 'varfmatsolve.edp'         *\n"
@@ -160,13 +147,11 @@ cout
 <<"*    (u1,u2) are coordinates and deformation values of the Dirichlet point.    *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n"; 
-
-
+<<"										   \n";
 
 if(tractionbc)
 cout 
-<<"\n"
+<<"										   \n"
 <<"/***********************************IMPORTANT***********************************\n"
 <<"*                                                                              *\n"
 <<"* Using Neumann BC  please edit the file 'varfmatsolve.edp'                    *\n"
@@ -178,20 +163,18 @@ cout
 <<"* 1. Edit macro <<T>> & provide three components of  traction on the boundary. *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n";  
+<<"										   \n";
 
+} //-- [if loop terminator] help ended --//
 
-}
-
-
-//==============================================================================
+//=====================================================================================
 // Building the macros.edp file
-//==============================================================================
+//=====================================================================================
    
 {ofstream  writemacros("macros.edp");
 
 writemacros
-<<"\n"
+<<"										   \n"
 <<"/******************************Userdefined macros*******************************\n"
 <<"*                                                                              *\n"
 <<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n"
@@ -200,127 +183,178 @@ writemacros
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"\n";
+<<"										   \n";
   
 
-if(spc==2){
-writemacros
-<<"  func Pk = [P"+lag+",P"+lag+"];\t			// Finite element space\n"
-<<"  macro  partitioner()"+Partitioner+"\t		// Mesh partitioner used\n"
-<<"  macro dimension() 2				// Two-dimensional problem\n"
-<<"  macro init(i)[i, i]				// Vector field initialization\n"
-<<"  macro def(i)[i, i#1]				// Vector field definition\n"
-<<"  macro divergence(i)(dx(i) + dy(i#1))		// Divergence function\n"
-<<"  macro epsilon(i) [dx(i), dy(i#1),\n" 
-<<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+if(spc==2){writemacros
+<<"										   \n"
+<<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
+<<"										   \n"
+<<"  macro partitioner "+Partitioner+"\t\t	// Mesh partitioner used   	   \n"
+<<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n"
+<<"  macro init (i) [ i ,  i  ]			// Vect. field initialize  	   \n"
+<<"  macro dimension 2      			// Two-dimensional problem 	   \n"
+<<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n"
+<<"										   \n"
+<<"//--------------------Divergence and epsilion macros--------------------------//\n"
+<<"										   \n"
+<<"  macro divergence(i)(dx(i) + dy(i#1))		// Divergence function     \n"
+<<"  macro epsilon(i) [dx(i), dy(i#1),						   \n" 
+<<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition	   \n";
 
-if(nonlinear)
-writemacros
-<<"  macro grad(i)[dx(i), dy(i)]			// Two-dimensional gradient\n"
-<<"  macro sxx(i)(lambda*divergence(i)+2*mu*dx(i))	// Sigma_xx\n"
-<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy\n"
-<<"  macro sxy(i)(mu*((dy(i)+dx(i#1))))			// Sigma_yx=Sigma_xy\n"
-<<"  macro sig(i) [sxx(i),syy(i),2*sqrt(2.0)*sxy(i)] 	// Sigma\n"
-<<"  macro Hplus(i)(0.5*(sig(i)'*epsilon(i)))		// Hplus (elastic energy)\n";
+if(nonlinear)writemacros
+<<"										   \n"
+<<"//---------------------------Non-linear macros--------------------------------//\n"
+<<"										   \n"
+<<"  macro grad (i) [ dx(i), dy(i) ]				// 2d gradient     \n"
+<<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )	// Sigma_xx	   \n"
+<<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )	// Sigma_yy	   \n"
+<<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )			// Sigma_yx	   \n"
+<<"  macro sig  (i) [ sxx(i), syy(i), 2*sqrt(2.0)*sxy(i) ] 	// Sigma	   \n"
+<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
+<<"										   \n";
    
   
-if(Sequential)
-writemacros
-<<"  macro meshN()mesh				// Two-dimensional problem\n"
-<<"  macro intN()int2d				// Two-dimensional integral\n"
-<<"  macro intN1()int1d				// One-dimensional integral\n"
-<<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader\n"
-<<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader\n";
-}
+if(Sequential)writemacros
+<<"										   \n"
+<<"//--------------------Sequential remapping macros-----------------------------//\n"
+<<"										   \n"
+<<"  macro meshN()mesh				// Two-dimensional problem	   \n"
+<<"  macro intN()int2d				// Two-dimensional integral	   \n"
+<<"  macro intN1()int1d				// One-dimensional integral	   \n"
+<<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader   \n"
+<<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader	   \n"
+<<"										   \n";
+
+} //-- [if loop terminator] space==2 ended --//
 
 
 
-if(spc==3){
-writemacros
-<<"  func Pk = [P"+lag+",P"+lag+",P"+lag+"];\t\t\t	// Finite element space\n"
-<<"  macro  partitioner()"+Partitioner+"\t		// Mesh partitioner used\n"
-<<"  macro init(i) [i,   i,   i]			// Vector field initialization\n"
-<<"  macro dimension() 3				// Three-dimensional problem\n"
-<<"  macro def(i)  [i, i#1, i#2]			// Vector field definition\n"
-<<"  macro divergence(i) (dx(i)+dy(i#1)+dz(i#2))	// Divergence function\n"
-<<"  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),\n"
-<<"                   (dz(i#1)+dy(i#2))/sqrt(2.0),\n"
-<<"                   (dz(i) + dx(i#2))/sqrt(2.0),\n"
-<<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition\n";
+if(spc==3){writemacros
+<<"										   \n"
+<<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
+<<"										   \n"
+<<"  macro Pk [P"+lag+",P"+lag+",P"+lag+"]\t\t		// Finite element space	   \n"
+<<"  macro partitioner "+Partitioner+"\t		// Mesh partitioner used   \n"
+<<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
+<<"  macro dimension   3				// Three-D problem	   \n"
+<<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n"
+<<"										   \n"
+<<"//--------------------Divergence and epsilion macros--------------------------//\n"
+<<"										   \n"
+<<"  macro divergence(i) (dx(i)+dy(i#1)+dz(i#2))	// Divergence function	   \n"
+<<"  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),					   \n"
+<<"                   (dz(i#1)+dy(i#2))/sqrt(2.0),				   \n"
+<<"                   (dz(i) + dx(i#2))/sqrt(2.0),				   \n"
+<<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition	   \n"
+<<"										   \n";
 
-if(nonlinear)
-writemacros
-<<"  macro grad(i)[dx(i), dy(i), dz(i)]			// Three-dimensional gradient\n"
-<<"  macro sxx(i)(lambda*divergence(i)+2*mu*dx(i))	// Sigma_xx\n"
-<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy\n"
-<<"  macro szz(i)(lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz\n";
+if(nonlinear)writemacros
+<<"										   \n"
+<<"//--------------------------Non-linear macros---------------------------------//\n"
+<<"										   \n"
+<<"  macro grad(i)[dx(i), dy(i), dz(i)]			// Three-D gradient	   \n"
+<<"  macro sxx(i)( lambda*divergence(i)+2*mu*dx(i) )	// Sigma_xx		   \n"
+<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy		   \n"
+<<"  macro szz(i)(lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz		   \n"
+<<"										   \n";
 
-if(Sequential)
-writemacros
-<<"  load \"msh3\"				// Loading 3D mesh\n"
-<<"  macro meshN()mesh3				// Three-dimensional problem\n"
-<<"  macro intN()int3d				// Three-dimensional integral\n"
-<<"  macro intN1()int2d				// Two-dimensional integral\n"
-<<"  macro readmeshN()readmesh3			// Three-dimensional problem\n"
-<<"  macro gmshloadN()gmshload3			// Three-dimensional 'msh' reader\n";
-}
+if(Sequential)writemacros
+<<"										   \n"
+<<"//---------------------Sequential remapping macros----------------------------//\n"
+<<"										   \n"
+<<"  load \"msh3\"				// Loading 3D mesh		   \n"
+<<"  macro meshN()mesh3				// Three-dimensional problem	   \n"
+<<"  macro intN()int3d				// Three-dimensional integral	   \n"
+<<"  macro intN1()int2d				// Two-dimensional integral	   \n"
+<<"  macro readmeshN()readmesh3			// Three-dimensional problem	   \n"
+<<"  macro gmshloadN()gmshload3			// Three-dimensional 'msh' reader  \n"
+<<"										   \n";
+
+} //-- [if loop terminator] space==3 ended --//
 
 
 
 
 
-if(pointbc){
-
-writemacros
-<<"\n"
-<<"  //------------Point BC macro------------------//\n"
-<<"  macro Pointbc(Dpointlab,Wh,A,b,PnV){\n"
-<<"    int count=0;\n"
-<<"    meshN Th=Wh.Th;\n"
-<<"\n";
-
+if(pointbc){writemacros
+<<"										   \n"
+<<"//----------------------------Point BC macro----------------------------------//\n"
+<<"										   \n"
+<<"  macro Pointbc(Dpointlab,Wh,A,b,PnV){					   \n"
+<<"    int count=0;								   \n"
+<<"    meshN Th=Wh.Th;								   \n"
+<<"										   \n";
  
-if(spc==2)
-writemacros 
-<<"    varf vlabs(def(u),def(v)) = on( Dpointlab, u=-1*(x==PnV[0] && y==PnV[1]),\n"
-<<"                                  u1 = -1*(x==PnV[0] && y==PnV[1]) );\n"
-<<"\n";
+if(spc==2)writemacros
+<<"										   \n"
+<<"	varf vlabs(def(u),def(v)) 						   \n"
+<<"	= on( Dpointlab, 							   \n"
+<<"		u  = -1*( x==PnV[0] && y==PnV[1] ),   				   \n"
+<<"		u1 = -1*( x==PnV[0] && y==PnV[1] )				   \n"
+<<"	     );									   \n"
+<<"										   \n";
 
 if(spc==3)
 writemacros
-<<"    varf vlabs(def(u),def(v)) = on( Dpointlab, u=-1*(x==PnV[0] && y==PnV[1] && z==PnV[2]),\n"
-<<"                                  u1 = -1*(x==PnV[0] && y==PnV[1] && z==PnV[2] ),\n"
-<<"                                  u2 = -1*(x==PnV[0] && y==PnV[1] && z==PnV[2] )  );\n"
-<<"\n";
+<<"										   \n"
+<<"    varf vlabs(def(u),def(v)) 						   \n"
+<<"	= on( Dpointlab, 							   \n"
+<<"		u  = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),	  	   \n"
+<<"		u1 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),	   	   \n"
+<<"		u2 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ) 	   	   \n"
+<<"	    );									   \n"
+<<"										   \n";
 
-
-writemacros  
-<<"    real[int] absc=vlabs(0,Wh);\n"
-<<"    for (int i=0; i<Wh.ndof; i++){\n"
-<<"      if(abs(-1e+30-absc(i))==0 ){\n"
-<<"        A(i,i)=tgv;\n"
-<<"        b[i]=PnV["+spc+"+count]*tgv;\n"
-<<"        count++;\n"
-<<"         if(count=="+spc+") break;\n"
-<<"      }\n"
-<<"    }\n"
-<<"  }\n"
-<<"  //--------------------------------------------//\n"
-<<"\n"; 
-
-}
-
-if(!Sequential)
 writemacros
-<<"  load    \"PETSc\"				// PETSc plugin activated\n"
-<<"  include \"../Plugins/DDmacro.edp\"		// All domain decomposition macros\n";
+<<"										   \n"
+<<"    real[int] absc=vlabs(0,Wh);						   \n"
+<<"										   \n"
+<<"    for (int i=0; i<Wh.ndof; i++){						   \n"
+<<"      if(abs(-1e+30-absc(i))==0 ){						   \n"
+<<"        A(i,i)=tgv;								   \n"
+<<"        b[i]=PnV["+spc+"+count]*tgv;						   \n"
+<<"        count++;								   \n"
+<<"         if(count=="+spc+") break;						   \n"
+<<"      }									   \n"
+<<"    }									   \n"
+<<"  }										   \n"
+<<"										   \n"
+<<"										   \n";
 
-}  
+} //-- [if loop terminator] pointbc ended --//
+
+if(!Sequential)writemacros
+<<"										   \n"
+<<"//-----------------------------------Timing macros----------------------------//\n"
+<<"										   \n"
+<<"  macro MPItimerbegin(str1,t0){						   \n"
+<<"      mpiBarrier(mpiCommWorld);						   \n"
+<<"      t0 = mpiWtime();							   \n"
+<<"      if(mpirank==0)								   \n"
+<<"      cout << \"\"+str1+\" began\\n\";					   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"  macro MPItimerend(str1,t0){						   \n"
+<<"      mpiBarrier(mpiCommWorld);						   \n"
+<<"      if(mpirank==0)								   \n"
+<<"      cout.scientific << \"It took [ \"<< mpiWtime()-t0 			   \n"
+<<"           << \" ] seconds to finish \" +str1+\"\\n\\n\";			   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"//---------------------------Paralle functions------------------------------//  \n"
+<<"										   \n"
+<<"  load    \"PETSc\"				// PETSc plugin activated	   \n"
+<<"  include \"../Plugins/DDmacro.edp\"		// Domain decomposition macros 	   \n"
+<<"										   \n"
+<<"										   \n";
+
+} //-- [ostream terminator]  macros.edp closed --//  
 
 
-//==============================================================================
+//=====================================================================================
 // Building the parameters.edp file
-//==============================================================================
+//=====================================================================================
 
 {ofstream  writemeshParameters("parameters.edp");
 
@@ -342,7 +376,7 @@ writemeshParameters
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"string ThName = \"../Meshes/"+spc+"D/Meshes/bar2D\";  	// Mesh file name  \n"
+<<"string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  	// Mesh file name  \n"
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -353,21 +387,21 @@ writemeshParameters
 <<"										   \n"
 <<"real mu,lambda,t0 "<<(bodyforce ? ",f2" : "")<<";				   \n"
 <<"{										   \n"
-<<"real E=200.e9,				//Modulus of Elasticity - [Pa]	   \n"
-<<"	nu=0.3;					// Poisson ratio - [-]		   \n"
+<<"real E  = 200.e9,				//Modulus of Elasticity - [Pa]	   \n"
+<<"     nu = 0.3  ;				// Poisson ratio - [-]		   \n"
 <<"	 									   \n"
-<<"mu= E/(2.*(1.+nu));								   \n"
+<<"mu     = E/(2.*(1.+nu));							   \n"
 <<"lambda = E*nu/((1.+nu)*(1.-2.*nu));						   \n"
 <<"	 									   \n"
 <<"	 									   \n"
-<<(bodyforce ? "f2=8.e3*(-9.81);				// Rho*g" : "")<<" \n"
+<<(bodyforce ? "f2 = 8.e3*(-9.81);				// Rho*g" : "")<<" \n"
 <<"	 									   \n"
 <<"}	 									   \n"
 <<"	 									   \n"
 <<"	 									   \n";
 
-if(nonlinear)
-writemeshParameters
+if(nonlinear)writemeshParameters
+<<"	 									   \n"
 <<"//==============================================================================\n"
 <<"// -------Nonlinear parameters------- 		 			   \n"
 <<"//==============================================================================\n"
@@ -380,12 +414,12 @@ writemeshParameters
 <<"	dtr = 1e-5;								   \n"
 <<"	 									   \n";
 
-}
+} //-- [ostream terminator]  parameters.edp closed --//
 
 
-//==============================================================================
+//=====================================================================================
 // Building the meshPartitioning.edp file
-//==============================================================================
+//=====================================================================================
   
 {ofstream  writemeshPartitioning("meshPartitioning.edp");
 
@@ -401,61 +435,65 @@ writemeshPartitioning
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(spc==2)
-writemeshPartitioning 
-<<"meshN Th = square(1, 1);		// This is a dummy mesh for now\n";
+if(spc==2)writemeshPartitioning
+<<"										   \n"
+<<"meshN Th = square(1, 1);		// This is a dummy mesh for now		   \n";
 
-if(spc==3)
-writemeshPartitioning 
-<<"meshN Th = cube(1, 1, 1);		// This is a dummy mesh for now\n";
+if(spc==3)writemeshPartitioning
+<<"										   \n"
+<<"meshN Th = cube(1, 1, 1);		// This is a dummy mesh for now		   \n";
 
-writemeshPartitioning 
-<<"fespace Vh(Th, Pk);			// Local mixed FE space\n";
-
-if(Sequential)
 writemeshPartitioning
-<<"load \"gmsh\"				// Load meshes from gmsh\n"
-<<"Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded\n\n";
+<<"										   \n"
+<<"fespace Vh(Th, Pk);			// Local mixed FE space			   \n";
 
-if(!Sequential)
-writemeshPartitioning
-<<"int[int] arrayIntersection;                // Ranks of neighboring subdomains\n"
-<<"int[int][int] restrictionIntersection(0);  // Local-to-neighbors renumbering\n"
-<<"real[int] D;                               // Partition of unity\n"
-<<"\n"
+if(Sequential)writemeshPartitioning
+<<"										   \n"
+<<"load \"gmsh\"				// Load meshes from gmsh	   \n"
+<<"Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded		   \n"
+<<"										   \n";
 
+if(!Sequential)writemeshPartitioning
+<<"										   \n"
+<<"int[int] arrayIntersection;                // Ranks of neighboring subdomains   \n"
+<<"int[int][int] restrictionIntersection(0);  // Local-to-neighbors renumbering    \n"
+<<"real[int] D;                               // Partition of unity		   \n"
+<<"										   \n"
+<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Function building the restriction matrix and partion of unity-------//\n"
-<<"//==============================================================================\n\n"
-<<"func int PartThAndBuildCommunication(){\n"
-<<"  int s = getARGV(\"-split\", 1);                    // refinement factor\n\n"
+<<"// -------Function building the restriction matrix and partion of unity-------  \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"func int PartThAndBuildCommunication(){					   \n"
+<<"										   \n"
+<<"  int s = getARGV(\"-split\", 1);                    // refinement factor	   \n"
+<<"										   \n"
+<<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
+<<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection,			   \n" 
+<<"      restrictionIntersection, Vh, Pk, mpiCommWorld)				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  return 0;									   \n"
+<<"										   \n"
+<<"}										   \n"
+<<"										   \n"
+<<"MPItimerbegin(\"Mesh Partitioning\",t0)					   \n"				   
+<<"										   \n"     
+<<"    PartThAndBuildCommunication();						   \n"
+<<"										   \n"
+<<"MPItimerend(\"Mesh Partitioning\",t0)					   \n"
+<<"										   \n";
 
-<<"  load \"gmsh\"                                      // Load meshes from gmsh\n"
-<<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded\n\n"
-
-<<"  PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection,\n" 
-<<"      restrictionIntersection, Vh, Pk, mpiCommWorld)\n\n"
-
-<<"  return 0;\n"
-<<"}\n\n"
-
-<<"mpiBarrier(mpiCommWorld);\n"
-<<"t0 = mpiWtime(); \n"
-<<"if(mpirank==0)"
-<<"cout << \"Mesh partitioning with \"<< Stringification(partitioner)<<\"\\n\";\n\n"
-      
-<<"    PartThAndBuildCommunication();\n\n"
-
-<<"mpiBarrier(mpiCommWorld);\n"
-<<"if(mpirank==0)"
-<<"cout << \"Mesh partitioning  ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";
-
-}
+} //-- [ostream terminator]  meshpartitioning.edp closed --//
 
 
-//==============================================================================
+//=====================================================================================
 // Building the varfmatsolve.edp file
-//==============================================================================
+//=====================================================================================
 
 {ofstream  writevarfmatsolve("varfmatsolve.edp");
 
@@ -476,68 +514,59 @@ writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n";
 
+if(dirichletbc){writevarfmatsolve
+<<"										   \n"
+<<"//---Surface---//								   \n"
+<<"int [int]   Dlabel = [2];		// Vector containing Dirichlet labels 	   \n"
+<<"										   \n";
 
-if(dirichletbc){
+if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"real[int]   Dvalue =[0.,0.];		// Vector containing Dirichlet values	   \n"
+<<"										   \n";
 
-writevarfmatsolve
-<<"//---Surface---//\n"
-<<"int [int]   Dlabel=[2];			// Vector containing Dirichlet labels \n";
+if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"real[int]   Dvalue=[0.,0.,0.];	// Vector containing Dirichlet values	   \n" 
+<<"										   \n";
 
-if(spc==2)
-writevarfmatsolve
-<<"real[int]   Dvalue=[0.,0.];		// Vector containing Dirichlet values \n\n";
+}  //-- [if loop terminator] dirichletbc ended --//
 
-if(spc==3) 
-writevarfmatsolve
-<<"real[int]   Dvalue=[0.,0.,0.];		// Vector containing Dirichlet values \n\n"; 
+if(pointbc)writevarfmatsolve
+<<"										   \n"
+<<"//---Point---//								   \n"
+<<"int [int]   Dpointlab=[2];		// Vector containing Dirichlet labels	   \n"
+<<"real[int]   PnV=[0., 0., 0., 0.];	// [x, y, u1, u2]			   \n"
+<<"										   \n";
 
-}
+if(bodyforce){writevarfmatsolve
+<<"										   \n"
+<<"//---Body force---//								   \n";
 
+if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"macro BF [0,f2]			// Two component body forces	   	   \n"; 
 
-if(pointbc){
-
-writevarfmatsolve
-<<"//---Point---//\n"
-<<"int [int]   Dpointlab=[2];		// Vector containing Dirichlet labels\n"
-<<"real[int]   PnV=[0., 0., 0., 0.];	// [x, y, u1, u2]\n\n";
-
-}
-
-if(bodyforce){
-
-writevarfmatsolve
-<<"//---Body force---//\n";
-
-if(spc==2)
-writevarfmatsolve
-<<"macro BF [0,f2]				//EOM\n\n"; 
-
-if(spc==3)
-writevarfmatsolve
-<<"macro BF [0,f2,0]				//EOM\n\n"; 
+if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"macro BF [0,f2,0]			// Three component body forces	   	   \n"; 
       
-}
+}  //-- [if loop terminator] bodyforce ended --//
 
-if(tractionbc){
+if(tractionbc){writevarfmatsolve
+<<"										   \n"
+<<"//---Neumann---//								   \n"
+<<"int [int]   Tlabel=[2];		// Vector containing Neumann labels	   \n";
 
-writevarfmatsolve
-<<"//---Neumann---//\n"
-<<"int [int]   Tlabel=[2];			// Vector containing Neumann labels \n";
+if(spc==2)writevarfmatsolve
+<<"macro T [0,1]			// Two component traction forces	   \n"; 
 
-if(spc==2)
-writevarfmatsolve
-<<"macro T [0,1]				//EOM\n"; 
+if(spc==3)writevarfmatsolve
+<<"macro T [0,1,0]			// Three component traction forces	   \n"; 
 
-if(spc==3)
-writevarfmatsolve
-<<"macro T [0,1,0]			//EOM\n"; 
+}   //-- [if loop terminator] tractionbc ended --//
 
-}
-
-
-if(!nonlinear){
-
-writevarfmatsolve
+if(!nonlinear){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation linear-------				   \n"
@@ -546,37 +575,46 @@ writevarfmatsolve
 <<"										   \n";
 
 writevarfmatsolve
-<<"varf elast(def(u),def(v))\n"
-<<"	= intN(Th,qforder=3)(\n"
-<<"			lambda*divergence(u)*divergence(v)\n"
-<<"			+2.*mu*( epsilon(u)'*epsilon(v) )\n"
-<<"		  )\n";
+<<"										   \n"
+<<"varf elast(def(u),def(v))							   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			lambda*divergence(u)*divergence(v)			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n"
+<<"		  )								   \n";
 
-if(bodyforce)
-writevarfmatsolve
-<<"	+ intN(Th,qforder=2)(BF'*def(v))		// Body force   (volumetric)\n";
+if(bodyforce)writevarfmatsolve
+<<"										   \n"
+<<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
 
 
-if(tractionbc)
-writevarfmatsolve
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))		// Traction force (Neumann BC)\n";
+if(tractionbc)writevarfmatsolve
+<<"										   \n"
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
 
 if(dirichletbc){
 
-if(spc==2)
-writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);	// Displacement (Dirichlet)\n\n";
+if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"	+ on( Dlabel, 				// Displacement (Dirichlet)	   \n"
+<<"		u  = Dvalue[0],							   \n"
+<<"		u1 = Dvalue[1]							   \n"
+<<"	    );		   		   		   			   \n"
+<<"										   \n";
 
-if(spc==3)
-writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Displacement (Dirichlet)\n\n";
+if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"	+ on(Dlabel,				// Displacement (Dirichlet)	   \n"
+<<"		u  = Dvalue[0],							   \n"
+<<"		u1 = Dvalue[1],							   \n"
+<<"		u2 = Dvalue[2]			   				   \n"
+<<"	    );		   							   \n"
+<<"										   \n";
 
-}
-}
+}  //-- [if loop terminator] dirichletbc ended --//
 
-if(nonlinear){
+}  //-- [if loop terminator] !nonlinear ended --//
 
-writevarfmatsolve
+if(nonlinear){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation nonlinear-------				   \n"
@@ -597,42 +635,38 @@ writevarfmatsolve
 <<"			+2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"			    )							   \n";
 
-if(bodyforce)
-writevarfmatsolve
+if(bodyforce)writevarfmatsolve
 <<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
 
-if(tractionbc)
-writevarfmatsolve
+if(tractionbc)writevarfmatsolve
 <<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
 
 if(dirichletbc){
 
-if(spc==2)
-writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);	// Displacement (Dirichlet)\n\n";
+if(spc==2)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);	// Displacement (Dirichlet)	   \n"
+<<"										   \n";
 
-if(spc==3)
-writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2]);	// Displacement (Dirichlet)\n\n";
+if(spc==3)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
+<<"				,u2=Dvalue[2]);	// Displacement (Dirichlet)	   \n"
+<<"										   \n";
 
-}
-
-
-writevarfmatsolve
-<<"varf phase(phi,q)								\n"
-<<"	= intN(Th,qforder=3)(							\n"
-<<"			(Gc*lo*(grad(phi)'*grad(q))) +				\n"
-<<"			( ((Gc/lo)  + 2.*Hplus(u))*phi*q )			\n"
-<<"			    )							\n"
-<<"	+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )					\n"
-<<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)  \n";
-
-}
-
-
-if(nonlinear){
+}  //-- [if loop terminator] dirichletbc ended --//
 
 writevarfmatsolve
+<<"										   \n"
+<<"varf phase(phi,q)								   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			(Gc*lo*(grad(phi)'*grad(q))) +				   \n"
+<<"			( ((Gc/lo)  + 2.*Hplus(u))*phi*q )			   \n"
+<<"			    )							   \n"
+<<"	+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )					   \n"
+<<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)     \n";
+
+}  //-- [if loop terminator] nonlinear ended --//
+
+if(nonlinear){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Nonlinear parameter calulations-------				   \n"
@@ -645,8 +679,8 @@ writevarfmatsolve
 <<" lo=size1[].min;								   \n"
 <<" lo=lo*lfac;									   \n"
 <<"}										   \n"
-
-
+<<"										   \n"
+<<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Nonlinear loop-------						   \n"
 <<"//==============================================================================\n"
@@ -655,18 +689,12 @@ writevarfmatsolve
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
+<<"	cout <<  \"  Applied traction \" << tr <<endl;				   \n"
+<<"										   \n"
 <<"	if (tr >=5e-3)								   \n"
 <<"		dtr = 1e-5;							   \n"
 <<"										   \n"
-<<"	int  iter  = 1;								   \n"
-<<"	real toll  = 1e-3,							   \n"
-<<"	     err1  = 1,								   \n"
-<<"	     err2  = 1;								   \n"
-<<"										   \n"
-<<"	cout <<  \"  Applied traction \" << tr <<endl;				   \n"
-<<"										   \n"
-<<"										   \n"
-<<"	while (err1 > toll && err1 > toll){					   \n"
+<<"	for(int iter=0; iter<500; iter++){					   \n"
 <<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
 <<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
 <<"		set(A,solver=CG);			// Solver setup		   \n"
@@ -681,8 +709,8 @@ writevarfmatsolve
 <<"										   \n"
 <<"		uold[]=uold[]-u[];						   \n"
 <<"		phiold[]=phiold[]-phi[]; 					   \n"
-<<"		err1=sqrt( int2d(Th) ( (uold)^2 )  );				   \n"
-<<"		err2=sqrt( int2d(Th) ( (phiold)^2 )  );				   \n"
+<<"		real err1=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
+<<"		real err2=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
 <<"		cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1   \n"
 <<"		<<\"  error in phi \"<< err2<<endl;				   \n"
 <<"										   \n"
@@ -692,10 +720,11 @@ writevarfmatsolve
 <<"										   \n"
 <<"		iter++;								   \n"
 <<"										   \n"
-<<"		if(err1 < toll && err1 < toll){					   \n"
+<<"		if(err1 < 1e-2 && err1 < 1e-2){					   \n"
 <<"			cout.scientific << \" Solution converged after \"<<        \n"
 <<"			iter <<endl;						   \n"	
 <<"			plot(phi,fill=1,value=1);				   \n"
+<<"			break;							   \n"
 <<"		}								   \n"
 <<"	} 									   \n"
 <<"	tr+=dtr;								   \n"
@@ -704,190 +733,191 @@ writevarfmatsolve
 <<"										   \n"	
 <<"										   \n";
 
-if(plotAll){
-  system("mkdir -p VTUs");
-   
-  writevarfmatsolve
-  <<"//==============================================================================\n"
-  <<"// -------Plotting with paraview-------					     \n"
-  <<"//==============================================================================\n"
-  <<"										     \n"
-  <<"										     \n"
-  <<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	     \n"
-  <<"int[int] vtuorder=[1,1,1];			// Solution export order	     \n" 
-  <<"										     \n" 
-  <<"										     \n"; 
+if(plotAll){writevarfmatsolve
+<<"										   \n"	  
+<<"//==============================================================================\n"
+<<"// -------Plotting with paraview-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	   \n"
+<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n" 
+<<"										   \n" 
+<<"										   \n"; 
       
-  if(spc==2)
-     writevarfmatsolve
-     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],phi,			     \n"; 
-  if(spc==3)
-     writevarfmatsolve
-     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],phi,		     \n"; 
+if(spc==2)writevarfmatsolve
+<<"										   \n"    
+<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],phi,			   \n"; 
+
+if(spc==3)writevarfmatsolve
+<<"										   \n" 
+<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],phi,		     	   \n"; 
   
-  writevarfmatsolve       
-  <<"		order=vtuorder,dataname=\"Displacement\");			     \n"
-  <<"										     \n"; 	  
-}
+writevarfmatsolve       
+<<"		order=vtuorder,dataname=\"Displacement\");			   \n"
+<<"										   \n"; 
+  
+system("mkdir -p VTUs");	  
+
+}  //-- [if loop terminator] plotAll ended --//
  
-}
+}  //-- [if loop terminator] nonlinear ended --//
 
 if(!nonlinear){
 
-if(!Sequential){
-writevarfmatsolve       
+if(!Sequential){writevarfmatsolve      
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  -------Local Au=b assembly and solving-------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
 <<"										   \n"
-<<"//------------Assembly for A------------------//\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" t0 = mpiWtime(); \n"
-<<" if(mpirank==0)cout << \"Matrix assembly began\\n\";\n"
-<<"      matrix<real> ALoc = elast(Vh,Vh);\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"Matrix assembly ended in :-------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n"
+<<"//-----------------Assembly for A-----------------//				   \n"
+<<"										   \n"
+<<"MPItimerbegin(\"Matrix Assembly\",t0)					   \n"				   
+<<"										   \n"     
+<<"    matrix<real> ALoc = elast(Vh,Vh);					   \n"
+<<"										   \n"
+<<"MPItimerend(\"Matrix Assembly\",t0)					 	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//-----------------Assembly for b-----------------//				   \n"
+<<"										   \n"
+<<"MPItimerbegin(\"RHS Assembly\",t0)						   \n"				   
+<<"										   \n"     
+<<"      real[int]    b = elast(0,Vh);						   \n"
+<<"										   \n" 
+<<"MPItimerend(\"RHS Assembly\",t0)					 	   \n"    
+<<"										   \n"
+<<"										   \n";
 
-
-<<"//------------Assembly for b------------------//\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" t0 = mpiWtime(); \n"
-<<" if(mpirank==0)cout << \"RHS assembly began\\n\";\n"
-<<"      real[int]    b = elast(0,Vh);\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"RHS assembly ended in :----------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
-
-
-if(pointbc){
-
-writevarfmatsolve
-<<"//-----Additional assembly for A & b--------//\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" t0 = mpiWtime(); \n"
-<<" if(mpirank==0)cout << \"Point Dirichlet assembly began\\n\";\n"
-<<"      Pointbc(Dpointlab,Vh,ALoc,b,PnV);\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"Point Dirichlet assembly ended in :----------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n";
-
-}
-
+if(pointbc)writevarfmatsolve
+<<"//---------Additional assembly for A & b----------//				   \n"
+<<"										   \n"
+<<"MPItimerbegin(\"Point Dirichlet Assembly\",t0)				   \n"				   
+<<"										   \n"     
+<<"      Pointbc(Dpointlab,Vh,ALoc,b,PnV);					   \n"
+<<"										   \n"        
+<<"MPItimerend(\"Point Dirichlet Assembly\",t0)				 	   \n"
+<<"										   \n"
+<<"										   \n";
 
 writevarfmatsolve
-<<" //------------Memory optimization-----------------//\n";
-if(pointbc)
-writevarfmatsolve
-<<"Dpointlab.resize(0); PnV.resize(0);\n";
-if(dirichletbc)
-writevarfmatsolve
-<<"Dlabel.resize(0); Dvalue.resize(0);\n";
-if(tractionbc)
-writevarfmatsolve
-<<"Tlabel.resize(0);\n"; 
+<<"										   \n"
+<<" //------------Memory optimization-----------------//			   \n"
+<<"										   \n";
+
+if(pointbc)writevarfmatsolve
+<<"										   \n"
+<<"Dpointlab.resize(0); PnV.resize(0);						   \n"
+<<"										   \n";
+
+if(dirichletbc)writevarfmatsolve
+<<"										   \n"
+<<"Dlabel.resize(0); Dvalue.resize(0);						   \n"
+<<"										   \n";
+
+if(tractionbc)writevarfmatsolve
+<<"										   \n"
+<<"Tlabel.resize(0);								   \n"
+<<"										   \n"; 
    
-writevarfmatsolve 
-<<"\n\n"		    
-<<"//------------Sharing with PETSc------------------//\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" t0 = mpiWtime(); \n"
-<<" if(mpirank==0)cout << \"Sharing with PETSc began\\n\";\n"
-<<"      dmatrix A(ALoc, arrayIntersection,\n"
-<<"                restrictionIntersection, D, bs = "+spc+");// Distributed matrix\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"Sharing with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n\n\n"
-
-
+writevarfmatsolve
+<<"										   \n"
+<<"										   \n"
+<<"//---------------PETSc Assembly---------------------//			   \n"
+<<"										   \n"
+<<"MPItimerbegin(\"PETSc Assembly\",t0)				   		   \n"
+<<"										   \n"
+<<"      dmatrix A(ALoc, arrayIntersection,					   \n"
+<<"                restrictionIntersection, D, bs = "+spc+");// Distributed matrix \n"
+<<"										   \n"
+<<"MPItimerend(\"PETSc Assembly\",t0)					 	   \n"
+<<"										   \n"
+<<"										   \n"
 <<"//------------PETSc solving------------------//\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" t0 = mpiWtime(); \n"
-<<" if(mpirank==0)cout << \"Solving with PETSc began\\n\";\n"
-<<"      Vh<real> def(u);\n"
-<<"      set(A,sparams =\" \");            // Solver setup-Petsc\n"
-<<"      u[]=A^-1*b;                     // Solving\n"
-<<" mpiBarrier(mpiCommWorld);\n"
-<<" if(mpirank==0)cout << \"Solving with PETSc ended in :----------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n";
+<<"										   \n"
+<<"MPItimerbegin(\"PETSc Solving\",t0)				   		   \n"
+<<"										   \n"
+<<"      Vh<real> def(u);							   \n"
+<<"      set(A,sparams =\" \");            // Solver setup-Petsc		   \n"
+<<"      u[]=A^-1*b;                       // Solving				   \n"
+<<"										   \n"        
+<<"MPItimerend(\"PETSc Solving\",t0)					 	   \n"
+<<"										   \n";
 
-
-if(plotAll){
-  system("mkdir -p VTUs");
-   
-  writevarfmatsolve
-  <<"//==============================================================================\n"
-  <<"// -------Plotting with paraview-------//\n"
-  <<"//==============================================================================\n\n"
-
-  <<"load  \"../Plugins/iovtk\"                       // Loading the vtk viz module\n"
-
-  <<"//------------Paraview plotting------------------//\n"
-  <<" mpiBarrier(mpiCommWorld);\n"
-  <<" t0 = mpiWtime(); \n"
-  <<" if(mpirank==0)cout << \"Post-processing began\\n\";\n"
-
-  <<" 	int[int] vtuorder=[1,1,1];			// Solution export order\n" 
-  <<"	string   namevtu=\"VTUs/Displacements\";	// Name of PV files\n"
-  <<"	string   namedata=\"Displacements\";		// Name of export data\n"
-  <<"	bool     withsur=true;				// Export surface mesh\n";
+if(plotAll){writevarfmatsolve
+<<"										   \n"        
+<<"										   \n"          
+<<"//==============================================================================\n"
+<<"// -------Plotting with paraview-------//					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"          
+<<"load  \"../Plugins/iovtk\"                       // Loading the vtk viz module  \n"
+<<"										   \n"
+<<"MPItimerbegin(\"Paraview Plotting\",t0)			   		   \n"
+<<"										   \n"
+<<" 	int[int] vtuorder=[1,1,1];			// Solution export order   \n" 
+<<"	string   namevtu=\"VTUs/Displacements\";	// Name of PV files	   \n"
+<<"	string   namedata=\"Displacements\";		// Name of export data	   \n"
+<<"	bool     withsur=true;				// Export surface mesh	   \n";
   
-  if(spc==2)
-     writevarfmatsolve
-     <<"      exportpvd(namevtu, Th, [u,u1,0], vtuorder, withsur, namedata, mpiCommWorld);\n"; 
-  if(spc==3)
-     writevarfmatsolve
-     <<"      exportpvd(namevtu, Th, [u,u1,u2], vtuorder, withsur, namedata, mpiCommWorld);\n";    
+if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"     exportpvd(namevtu, Th,[u,u1,0], vtuorder, withsur, namedata, mpiCommWorld);\n"; 
+
+if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"     exportpvd(namevtu, Th,[u,u1,u2], vtuorder, withsur,namedata, mpiCommWorld);\n";    
   
-  writevarfmatsolve       
-  <<" mpiBarrier(mpiCommWorld);\n"
-  <<" if(mpirank==0)cout << \"Post-processing ended in :--------------------->\"<< mpiWtime()-t0 <<\"\\n*\\n\";\n\n"; 
-  
-
-}
-
-writevarfmatsolve
-<<"if(mpirank==0)cout << \"--------------------------------------------------------------------------\\n\\n\";\n\n";
-
-}
-
-if(Sequential){
 writevarfmatsolve       
+<<"										   \n"        
+<<"MPItimerend(\"Paraview Plotting\",t0)				 	   \n"
+<<"										   \n";
+  
+  system("mkdir -p VTUs");
+
+}  //-- [if loop terminator] plotAll ended --//
+
+}  //-- [if loop terminator] !Sequential ended --//
+
+if(Sequential){writevarfmatsolve    
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  -------Local Au=b assembly and solving-------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"										   \n"
-<<"Vh<real> def(u);				// Defining LHS\n"
-<<"matrix<real> A = elast(Vh,Vh);			// Assembly for A\n"
-<<"real[int]    b = elast(0,Vh);			// Assembly for b\n"
-<<"set(A,solver=CG);				// Solver setup\n"
-<<"u[]=A^-1*b;					// Solving\n\n";
+<<"Vh<real> def(u);			// Defining LHS				   \n"
+<<"matrix<real> A = elast(Vh,Vh);	// Assembly for A	 		   \n"
+<<"real[int]    b = elast(0,Vh);	// Assembly for b	 		   \n"
+<<"set(A,solver=CG);			// Solver setup			 	   \n"
+<<"u[]=A^-1*b;				// Solving				   \n"
+<<"										   \n";
 
-if(plotAll){
-  system("mkdir -p VTUs");
-   
-  writevarfmatsolve
-  <<"//==============================================================================\n"
-  <<"// -------Plotting with paraview-------//\n"
-  <<"//==============================================================================\n\n"
-
-  <<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module\n"
-  <<"int[int] vtuorder=[1,1,1];			// Solution export order\n"; 
+if(plotAll){writevarfmatsolve
+<<"										   \n"	
+<<"//==============================================================================\n"
+<<"// -------Plotting with paraview-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"	
+<<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	   \n"
+<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n"; 
   
-  if(spc==2)
-     writevarfmatsolve
-     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],\n"; 
-  if(spc==3)
-     writevarfmatsolve
-     <<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],\n"; 
+if(spc==2)writevarfmatsolve
+<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],				   \n";
+ 
+if(spc==3)writevarfmatsolve     
+<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],				   \n"; 
   
-  writevarfmatsolve       
-  <<"		order=vtuorder,dataname=\"Displacement\");";
+writevarfmatsolve       
+<<"		order=vtuorder,dataname=\"Displacement\");			   \n";
+  
+system("mkdir -p VTUs");
 	  
-}
+}  //-- [if loop terminator] plotAll ended --//
 
-}
+}  //-- [if loop terminator] Sequential ended --//
 
-}
+}  //-- [if loop terminator] !nonlinear ended --//
 
-
-}
+} //-- [ostream terminator]  varfmatsolve.edp closed --//
