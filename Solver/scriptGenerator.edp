@@ -813,6 +813,9 @@ if(nonlinear){writevarfmatsolve
 <<"// -------Nonlinear parameter calulations-------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
+<<"										   \n";
+
+if(Sequential)writevarfmatsolve
 <<"										   \n"
 <<"{										   \n"
 <<" fespace Vh0(Th,P0);								   \n"
@@ -820,13 +823,32 @@ if(nonlinear){writevarfmatsolve
 <<" lo=size1[].min;								   \n"
 <<" lo=lo*lfac;									   \n"
 <<"}										   \n"
+<<"										   \n";
+
+if(!Sequential)writevarfmatsolve
+<<"										   \n"
+<<"{										   \n"
+<<" real himlocal,himGlobal;							   \n"
+<<" fespace Vh0(Th,P0);								   \n"
+<<" Vh0 size1=hTriangle;							   \n"
+<<" himlocal=size1[].min;							   \n"
+<<"										   \n"
+<<" mpiAllReduce(himlocal,himGlobal,mpiCommWorld,mpiMIN);			   \n"
+<<"										   \n"
+<<" lo=himGlobal*lfac;								   \n"
+<<"}										   \n"
+<<"										   \n";
+
+writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Nonlinear loop-------						   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"										   \n"
+<<"										   \n";
+
+if(Sequential)writevarfmatsolve
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
@@ -873,6 +895,61 @@ if(nonlinear){writevarfmatsolve
 <<"										   \n"	
 <<"										   \n"	
 <<"										   \n";
+
+
+if(!Sequential)writevarfmatsolve
+<<"										   \n"
+<<"while (tr <= maxtr){								   \n"
+<<"										   \n"
+<<"	if(mpirank==0)cout <<  \"  Applied traction \" << tr <<endl;		   \n"
+<<"										   \n"
+<<"	if (tr >=5e-3)								   \n"
+<<"		dtr = 1e-5;							   \n"
+<<"										   \n"
+<<"	for(int iter=0; iter<500; iter++){					   \n"
+<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
+<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
+<<"		set(A,solver=CG);			// Solver setup		   \n"
+<<"		u[]=A^-1*b;				// Solve		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		matrix<real> A1 = phase(Vh1,Vh1);	// Assembly for A	   \n"
+<<"		real[int]    b1 = phase(0,Vh1);		// Assembly for b	   \n"
+<<"		set(A1,solver=CG);			// Solver setup		   \n"
+<<"		phi[]=A1^-1*b1;				// Solve		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		uold[]=uold[]-u[];						   \n"
+<<"		phiold[]=phiold[]-phi[]; 					   \n"
+<<"		real err1=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
+<<"		real err2=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
+<<"										   \n"
+<<"		if(mpirank==0)							   \n"
+<<"		cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1   \n"
+<<"		<<\"  error in phi \"<< err2<<endl;				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		phiold[]=phi[];							   \n"
+<<"		uold[]=u[];							   \n"
+<<"										   \n"
+<<"		iter++;								   \n"
+<<"										   \n"
+<<"		if(err1 < 1e-2 && err1 < 1e-2){					   \n"
+<<"										   \n"
+<<"			if(mpirank==0)						   \n"
+<<"			cout.scientific << \" Solution converged after \"<<        \n"
+<<"			iter <<endl;						   \n"	
+<<"			plot(phi,fill=1,value=1);				   \n"
+<<"			break;							   \n"
+<<"		}								   \n"
+<<"	} 									   \n"
+<<"	tr+=dtr;								   \n"
+<<"}										   \n"
+<<"										   \n"	
+<<"										   \n"	
+<<"										   \n";
+
+
 
 if(plotAll){writevarfmatsolve
 <<"										   \n"	  
