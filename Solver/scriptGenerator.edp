@@ -191,10 +191,16 @@ if(spc==2){writemacros
 <<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
 <<"										   \n"
 <<"  macro partitioner "+Partitioner+"\t\t	// Mesh partitioner used   	   \n"
+<<"  macro dimension 2      			// Two-dimensional problem 	   \n"
+<<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n";
+
+if(!nonlinear)writemacros
+<<"										   \n"
 <<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n"
 <<"  macro init (i) [ i ,  i  ]			// Vect. field initialize  	   \n"
-<<"  macro dimension 2      			// Two-dimensional problem 	   \n"
-<<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n"
+<<"										   \n";
+
+writemacros
 <<"										   \n"
 <<"//--------------------Divergence and epsilion macros--------------------------//\n"
 <<"										   \n"
@@ -206,6 +212,11 @@ if(nonlinear)writemacros
 <<"										   \n"
 <<"//---------------------------Non-linear macros--------------------------------//\n"
 <<"										   \n"
+<<"  macro def2  (i) [ i , i#1 ]				// Vect. field 	   \n"
+<<"  macro init2 (i) [ i ,  i  ]				// Vect. initialize\n"
+<<"  macro def  (i)   i						// Scalar field    \n"
+<<"  macro init (i)   i						// Initialize  	   \n"
+<<"  macro Zk         P1             				// FE space	   \n"
 <<"  macro grad (i) [ dx(i), dy(i) ]				// 2d gradient     \n"
 <<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )	// Sigma_xx	   \n"
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )	// Sigma_yy	   \n"
@@ -236,9 +247,16 @@ if(spc==3){writemacros
 <<"										   \n"
 <<"  macro Pk [P"+lag+",P"+lag+",P"+lag+"]\t\t		// Finite element space	   \n"
 <<"  macro partitioner "+Partitioner+"\t		// Mesh partitioner used   \n"
+<<"  macro dimension   3				// Three-D problem	   \n";
+
+
+if(!nonlinear)writemacros
+<<"										   \n"
 <<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
-<<"  macro dimension   3				// Three-D problem	   \n"
 <<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n"
+<<"										   \n";
+
+writemacros
 <<"										   \n"
 <<"//--------------------Divergence and epsilion macros--------------------------//\n"
 <<"										   \n"
@@ -253,6 +271,11 @@ if(nonlinear)writemacros
 <<"										   \n"
 <<"//--------------------------Non-linear macros---------------------------------//\n"
 <<"										   \n"
+<<"  macro init2(i) [i,   i,   i]			// Vect. field initialize  \n"
+<<"  macro def2(i)  [i, i#1, i#2]			// Vect. field definition  \n"
+<<"  macro def  (i)   i						// Scalar field    \n"
+<<"  macro init (i)   i						// Initialize  	   \n"
+<<"  macro Zk         P1             				// FE space	   \n"
 <<"  macro grad(i)[dx(i), dy(i), dz(i)]			// Three-D gradient	   \n"
 <<"  macro sxx(i)( lambda*divergence(i)+2*mu*dx(i) )	// Sigma_xx		   \n"
 <<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy		   \n"
@@ -433,60 +456,179 @@ writemeshPartitioning
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
+<<"										   \n"
 <<"										   \n";
 
-if(spc==2)writemeshPartitioning
-<<"										   \n"
-<<"meshN Th = square(1, 1);		// This is a dummy mesh for now		   \n";
+//-----------------------------SEQUENTIAL------------------------------------------//
 
-if(spc==3)writemeshPartitioning
+if(Sequential){writemeshPartitioning
 <<"										   \n"
-<<"meshN Th = cube(1, 1, 1);		// This is a dummy mesh for now		   \n";
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Loading the FE mesh-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" load \"gmsh\"				// Load meshes from gmsh	   \n"
+<<" meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Building the FE spaces-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
+<<"										   \n";
+
+}
+
+//-------------------------------PARALLEL------------------------------------------//
+
+if(!Sequential){writemeshPartitioning
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Loading the FE mesh-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" meshN   Th = DummyMesh;			// This is a dummy mesh for now	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Building the FE spaces-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
 
 writemeshPartitioning
 <<"										   \n"
-<<"fespace Vh(Th, Pk);			// Local mixed FE space			   \n";
-
-if(Sequential)writemeshPartitioning
-<<"										   \n"
-<<"load \"gmsh\"				// Load meshes from gmsh	   \n"
-<<"Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded		   \n"
+<<" fespace Vh   ( Th , Pk );			// Local mixed FE space		   \n"
 <<"										   \n";
 
-if(!Sequential)writemeshPartitioning
+if(nonlinear)writemeshPartitioning
 <<"										   \n"
-<<"int[int] arrayIntersection;                // Ranks of neighboring subdomains   \n"
-<<"int[int][int] restrictionIntersection(0);  // Local-to-neighbors renumbering    \n"
-<<"real[int] D;                               // Partition of unity		   \n"
+<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
+<<"										   \n";
+
+writemeshPartitioning
 <<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Domian decomposition suppoprt-------  				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<" int[int] arrayIntersectionP;                // Ranks of neighboring subdomains \n"
+<<" int[int][int] restrictionIntersectionP(0);  // Local-to-neighbors renumbering  \n"
+<<" real[int] DP;                               // Partition of unity		   \n"
+<<"										   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<" int[int] arrayIntersectionZ;                // Ranks of neighboring subdomains \n"
+<<" int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering  \n"
+<<" real[int] DZ;                               // Partition of unity		   \n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Function building the restriction matrix and partion of unity-------  \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"func int PartThAndBuildCommunication(){					   \n"
-<<"										   \n"
-<<"  int s = getARGV(\"-split\", 1);                    // refinement factor	   \n"
+<<" func int PartThAndBuildCommunication(){					   \n"
 <<"										   \n"
 <<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
 <<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded	   \n"
 <<"										   \n"
+<<"										   \n";
+
+if(!nonlinear)writemeshPartitioning
 <<"										   \n"
-<<"  PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection,			   \n" 
-<<"      restrictionIntersection, Vh, Pk, mpiCommWorld)				   \n"
+<<"  PETScMPIBuild(								   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionP		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix	   	   \n"
+<<"		   Vh				, // Local FE space name	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			  // MPI world		   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
 <<"										   \n"
+<<"  fespace Ph(ThGlobal, P0);							   \n"
+<<"  	     Ph part;								   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  if(mpirank == 0)								   \n"
+<<"	partitionerSeq(part[], ThGlobal, mpisize);				   \n"
+<<"										   \n"
+<<"  partitionerPar(part[], ThGlobal, mpiCommWorld, mpisize);			   \n"
+<<"										   \n"
+<<"  PETScMPIBuildWithPartitioning(						   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   part[]			, // Partitions			   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionZ		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionZ	, // Restriction matrix	   	   \n"
+<<"		   Vh1				, // Local FE space name	   \n"
+<<"		   Zk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			  // MPI world		   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n"
+<<"  ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded	   \n"
+<<"										   \n"
+<<"  PETScMPIBuildEdgeWithPartitioning(						   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   part[]			, // Partitions			   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionP		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix	   	   \n"
+<<"		   Vh				, // Local FE space name	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			, // MPI world		   	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   def2				, // Scalar definition	   	   \n"
+<<"		   init2		  	  // Scalar initilization   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
 <<"										   \n"
 <<"  return 0;									   \n"
 <<"										   \n"
-<<"}										   \n"
+<<" }										   \n"
 <<"										   \n"
-<<"MPItimerbegin(\"Mesh Partitioning\",t0)					   \n"				   
+<<" MPItimerbegin(\"Mesh Partitioning\",t0)					   \n"				   
 <<"										   \n"     
 <<"    PartThAndBuildCommunication();						   \n"
 <<"										   \n"
-<<"MPItimerend(\"Mesh Partitioning\",t0)					   \n"
+<<" MPItimerend(\"Mesh Partitioning\",t0)					   \n"
 <<"										   \n";
+
+}
 
 } //-- [ostream terminator]  meshpartitioning.edp closed --//
 
@@ -621,14 +763,13 @@ if(nonlinear){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"Vh<real> def(u), def(uold);		// Defining displacement variables	   \n"
+<<"Vh<real>  def2(u), def2(uold);		// Defining displacement variables \n"
 <<"										   \n"
-<<"fespace Vh1(Th,P1);			// FEspace for damage field		   \n"
-<<"	Vh1 phi,phiold;			// Damage field				   \n"
-<<"										   \n"
+<<"Vh1<real> phi,phiold;			// Damage field			   \n"
 <<"										   \n"
 <<"										   \n"
-<<"varf elast(def(u),def(v))							   \n"
+<<"										   \n"
+<<"varf elast(def2(u),def2(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
 <<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
@@ -636,10 +777,10 @@ if(nonlinear){writevarfmatsolve
 <<"			    )							   \n";
 
 if(bodyforce)writevarfmatsolve
-<<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
+<<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force   (volumetric)	   \n";
 
 if(tractionbc)writevarfmatsolve
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
 
 if(dirichletbc){
 
@@ -829,8 +970,8 @@ writevarfmatsolve
 <<"										   \n"
 <<"MPItimerbegin(\"PETSc Assembly\",t0)				   		   \n"
 <<"										   \n"
-<<"      dmatrix A(ALoc, arrayIntersection,					   \n"
-<<"                restrictionIntersection, D, bs = "+spc+");// Distributed matrix \n"
+<<"      dmatrix A(ALoc, arrayIntersectionP,					   \n"
+<<"                restrictionIntersectionP, DP, bs = "+spc+");// Distributed matrix \n"
 <<"										   \n"
 <<"MPItimerend(\"PETSc Assembly\",t0)					 	   \n"
 <<"										   \n"

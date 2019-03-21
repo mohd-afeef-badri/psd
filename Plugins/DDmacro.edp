@@ -49,21 +49,23 @@ cout << "***********************************************************************
 exit(1);
 ENDIFMACRO
 IFMACRO(dimension,2)
-macro meshN()mesh// EOM             // two-dimensional problem
-macro bbN()bb2// EOM                // two-dimensional bounding box
-macro intN()int2d// EOM             // two-dimensional integral
-macro intN1()int1d// EOM            // one-dimensional integral
-macro readmeshN()readmesh// EOM     // two-dimensional 'mesh' reader
-macro gmshloadN()gmshload// EOM     // two-dimensional 'msh' reader
+macro meshN()mesh			// two-dimensional problem
+macro bbN()bb2				// two-dimensional bounding box
+macro intN()int2d			// two-dimensional integral
+macro intN1()int1d			// one-dimensional integral
+macro readmeshN()readmesh		// two-dimensional 'mesh' reader
+macro gmshloadN()gmshload		// two-dimensional 'msh' reader
+macro DummyMesh()square(1,1)		// two-dimensional dummymesh
 ENDIFMACRO
 IFMACRO(dimension,3)
 load "msh3"
-macro meshN()mesh3// EOM            // three-dimensional problem
-macro bbN()bb3// EOM                // three-dimensional bounding box
-macro intN()int3d// EOM             // three-dimensional integral
-macro intN1()int2d// EOM            // two-dimensional integral
-macro readmeshN()readmesh3// EOM    // three-dimensional problem
-macro gmshloadN()gmshload3// EOM    // three-dimensional 'msh' reader
+macro meshN()mesh3			// three-dimensional problem
+macro bbN()bb3				// three-dimensional bounding box
+macro intN()int3d			// three-dimensional integral
+macro intN1()int2d			// two-dimensional integral
+macro readmeshN()readmesh3		// three-dimensional problem
+macro gmshloadN()gmshload3		// three-dimensional 'msh' reader
+macro DummyMesh()cube(1,1,1)		// two-dimensional dummymesh
 ENDIFMACRO
 
 
@@ -329,6 +331,24 @@ macro PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection, restrictionIntersecti
     bool excluded = false;
     buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, emptyRealArray, 1)
 }// EOM
+
+macro PETScMPIBuildWithPartitioning(Th, ThGlobal, part, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm) {
+    meshN ThBorder;
+    int fakeInterface = -111111;
+    int overlap = 1;
+    bool excluded = false;
+    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, part, 1)
+}// EOM
+
+
+macro PETScMPIBuildEdgeWithPartitioning(Th, ThGlobal, part, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm, PkPart, defPart, initPart) {
+    meshN ThBorder;
+    int fakeInterface = -111111;
+    int overlap = 1;
+    bool excluded = false;
+    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, PkPart, defPart, initPart, part, 1)
+}// EOM
+
 
 //==============================================================================
 // -------Exporting Pvd from Vtu's------- 
