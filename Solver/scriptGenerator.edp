@@ -61,6 +61,7 @@
   bool plotAll     =  usedARGV("-plot")        != -1;
   bool debug       =  usedARGV("-debug")       != -1;
   bool pointbc     =  usedARGV("-pointbc")     != -1;
+  bool timelog     =  usedARGV("-timelog")     !=  1;
   bool bodyforce   =  usedARGV("-bodyforce")   != -1;
   bool nonlinear   =  usedARGV("-nonlinear")   != -1;   
   bool tractionbc  =  usedARGV("-tractionbc")  != -1; 
@@ -585,7 +586,7 @@ if(nonlinear)writemeshPartitioning
 <<"		   ThGlobal			, // Global mesh		   \n"
 <<"		   part[]			, // Partitions			   \n"
 <<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
-<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   DZ				, // Partition of unity	   	   \n"
 <<"		   arrayIntersectionZ		, // Neighbour ranks	   	   \n"
 <<"		   restrictionIntersectionZ	, // Restriction matrix	   	   \n"
 <<"		   Vh1				, // Local FE space name	   \n"
@@ -839,16 +840,12 @@ if(!Sequential)writevarfmatsolve
 <<"}										   \n"
 <<"										   \n";
 
-writevarfmatsolve
+if(Sequential){writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Nonlinear loop-------						   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n";
-
-if(Sequential)writevarfmatsolve
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
@@ -883,7 +880,7 @@ if(Sequential)writevarfmatsolve
 <<"										   \n"
 <<"		iter++;								   \n"
 <<"										   \n"
-<<"		if(err1 < 1e-2 && err1 < 1e-2){					   \n"
+<<"		if(err1 < 1e-2 && err2 < 1e-2){					   \n"
 <<"			cout.scientific << \" Solution converged after \"<<        \n"
 <<"			iter <<endl;						   \n"	
 <<"			plot(phi,fill=1,value=1);				   \n"
@@ -896,8 +893,71 @@ if(Sequential)writevarfmatsolve
 <<"										   \n"	
 <<"										   \n";
 
+if(plotAll){writevarfmatsolve
+<<"										   \n"	  
+<<"//==============================================================================\n"
+<<"// -------Plotting with paraview-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n" 
+<<"										   \n" 
+<<"										   \n"; 
+      
+if(spc==2)writevarfmatsolve
+<<"										   \n"    
+<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,0],phi,				   \n"; 
 
-if(!Sequential)writevarfmatsolve
+if(spc==3)writevarfmatsolve
+<<"										   \n" 
+<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,u2],phi,			     	   \n"; 
+  
+writevarfmatsolve       
+<<"		order=vtuorder,dataname=\"U phi\");				   \n"
+<<"										   \n"; 
+  
+system("mkdir -p VTUs");	  
+
+}  //-- [if loop terminator] plotAll ended --//
+
+}  //-- [if loop terminator] Sequential ended --//
+
+if(!Sequential){writevarfmatsolve
+<<"										   \n"
+<<"										   \n"	  
+<<"//==============================================================================\n"
+<<"// -------Sparsity conservation-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"varf DUMMY(uu,vv) =int2d(Th,qforder=1)(uu*vv);				   \n"
+<<"										   \n"
+<<"matrix<real> MatDUMMY = DUMMY(Vh, Vh);					   \n"
+<<"dmatrix A(MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP);	   \n"
+<<"MatDUMMY.resize(0,0);							   \n"
+<<"										   \n"
+<<"matrix<real> MatDUMMY1 = DUMMY(Vh1, Vh1);					   \n"
+<<"dmatrix A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);	   \n"
+<<"MatDUMMY1.resize(0,0);							   \n"
+<<"										   \n"
+<<"matrix<real> ALoc, ALoc1;							   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Nonlinear loop-------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+if(plotAll)writevarfmatsolve
+<<"										   \n"
+<<" //------Plotting--------//							   \n"
+<<"  exportBegin(\"VTUs/Solution\", mpiCommWorld);				   \n"
+<<"  int iterout=0;				      // Loop Counter		   \n"
+<<"										   \n";
+
+writevarfmatsolve
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
@@ -907,77 +967,101 @@ if(!Sequential)writevarfmatsolve
 <<"		dtr = 1e-5;							   \n"
 <<"										   \n"
 <<"	for(int iter=0; iter<500; iter++){					   \n"
-<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
-<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
-<<"		set(A,solver=CG);			// Solver setup		   \n"
-<<"		u[]=A^-1*b;				// Solve		   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Matrix Assembly U\",t0)\n" : " "           	    )
+<<"		 ALoc = elast(Vh,Vh);			// Assembly for A	   \n"
+<<(timelog ? "	MPItimerend(\"Matrix Assembly U\",t0)\n" : " "           	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"RHS Assembly U\",t0)\n" : " "           	    )
+<<"		 real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
+<<(timelog ? "	MPItimerend(\"RHS Assembly U\",t0)\n" : " "           	  	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"PETSc Assembly U\",t0)\n" : " "           	    )
+<<"		 changeOperator(A, ALoc);				   	   \n"
+<<"		 set(A,sparams =\" \");			// Solver setup		   \n"
+<<(timelog ? "	MPItimerend(\"PETSc Assembly U\",t0)\n" : " "          	  	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Solving U\",t0)\n" : " "         	  	    )
+<<"		 u[]=A^-1*b;				// Solve		   \n"
+<<(timelog ? "	MPItimerend(\"Solving U\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
-<<"		matrix<real> A1 = phase(Vh1,Vh1);	// Assembly for A	   \n"
-<<"		real[int]    b1 = phase(0,Vh1);		// Assembly for b	   \n"
-<<"		set(A1,solver=CG);			// Solver setup		   \n"
-<<"		phi[]=A1^-1*b1;				// Solve		   \n"
+<<(timelog ? "	MPItimerbegin(\"Matrix Assembly PHI\",t0)\n" : " "           	    )
+<<"		 ALoc1 = phase(Vh1,Vh1);		// Assembly for A	   \n"
+<<(timelog ? "	MPItimerend(\"Matrix Assembly PHI\",t0)\n" : " "       	  	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"RHS Assembly PHI\",t0)\n" : " "           	    )
+<<"		 real[int]    b1 = phase(0,Vh1);	// Assembly for b	   \n"
+<<(timelog ? "	MPItimerend(\"RHS Assembly PHI\",t0)\n" : " "           	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"PETSc Assembly PHI\",t0)\n" : " "           	    )
+<<"		 changeOperator(A1, ALoc1);					   \n"
+<<"		 set(A1,sparams =\" \");		// Solver setup		   \n"
+<<(timelog ? "	MPItimerend(\"PETSc Assembly PHI\",t0)\n" : " "           	    )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Solving PHI\",t0)\n" : " "    		       	    )
+<<"		 phi[]=A1^-1*b1;				// Solve	   \n"
+<<(timelog ? "	MPItimerend(\"Solving PHI\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
-<<"		uold[]=uold[]-u[];						   \n"
-<<"		phiold[]=phiold[]-phi[]; 					   \n"
-<<"		real err1=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
-<<"		real err2=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
+<<"		uold[]   =uold[]-u[];						   \n"
+<<"		phiold[] =phiold[]-phi[]; 					   \n"
+<<"										   \n"
+<<"		uold[]     .*= DP;						   \n"
+<<"		phiold[]   .*= DZ;						   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		real err1Gather,err2Gather;					   \n"
+<<"		real err1Loc=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
+<<"		real err2Loc=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
+<<"										   \n"
+<<"		mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);		   \n"
+<<"		mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);		   \n"
 <<"										   \n"
 <<"		if(mpirank==0)							   \n"
-<<"		cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1   \n"
-<<"		<<\"  error in phi \"<< err2<<endl;				   \n"
+<<"		cout << \" Iter \" << iter<< \"  error in u \"			   \n"
+<<"		     << err1Gather <<\" error in phi \"<< err2Gather<<endl;	   \n"
 <<"										   \n"
 <<"										   \n"
 <<"		phiold[]=phi[];							   \n"
 <<"		uold[]=u[];							   \n"
 <<"										   \n"
+<<"										   \n"
 <<"		iter++;								   \n"
 <<"										   \n"
-<<"		if(err1 < 1e-2 && err1 < 1e-2){					   \n"
+<<"		if(err1Gather < 1e-1 && err2Gather < 1e-1){			   \n"
 <<"										   \n"
 <<"			if(mpirank==0)						   \n"
 <<"			cout.scientific << \" Solution converged after \"<<        \n"
-<<"			iter <<endl;						   \n"	
-<<"			plot(phi,fill=1,value=1);				   \n"
+<<"			iter <<endl;						   \n"
+<<"										   \n";
+
+if(plotAll)writevarfmatsolve
+<<"										   \n"
+<<"			exportTimeStep2(\"VTUs/Solution\", Th, [u,u1,0],phi, 	   \n"
+<<" 					iterout, mpiCommWorld);			   \n"
+<<"										   \n";
+
+if(debug)writevarfmatsolve
+<<"										   \n"				
+<<"			plotMPI(Th, phi[], \"Damage\", Zk, def, real, 2, 0)	   \n"
+<<"										   \n";
+
+writevarfmatsolve
 <<"			break;							   \n"
 <<"		}								   \n"
 <<"	} 									   \n"
 <<"	tr+=dtr;								   \n"
 <<"}										   \n"
 <<"										   \n"	
-<<"										   \n"	
 <<"										   \n";
 
-
-
-if(plotAll){writevarfmatsolve
-<<"										   \n"	  
-<<"//==============================================================================\n"
-<<"// -------Plotting with paraview-------					   \n"
-<<"//==============================================================================\n"
+if(plotAll)writevarfmatsolve
 <<"										   \n"
-<<"										   \n"
-<<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	   \n"
-<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n" 
-<<"										   \n" 
-<<"										   \n"; 
-      
-if(spc==2)writevarfmatsolve
-<<"										   \n"    
-<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],phi,			   \n"; 
+<<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
+<<"										   \n";
 
-if(spc==3)writevarfmatsolve
-<<"										   \n" 
-<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],phi,		     	   \n"; 
-  
-writevarfmatsolve       
-<<"		order=vtuorder,dataname=\"Displacement\");			   \n"
-<<"										   \n"; 
-  
-system("mkdir -p VTUs");	  
-
-}  //-- [if loop terminator] plotAll ended --//
+}  //-- [if loop terminator] !Sequential ended --//
  
 }  //-- [if loop terminator] nonlinear ended --//
 
@@ -1070,14 +1154,12 @@ if(plotAll){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"          
-<<"load  \"../Plugins/iovtk\"                       // Loading the vtk viz module  \n"
 <<"										   \n"
 <<"MPItimerbegin(\"Paraview Plotting\",t0)			   		   \n"
 <<"										   \n"
 <<" 	int[int] vtuorder=[1,1,1];			// Solution export order   \n" 
-<<"	string   namevtu=\"VTUs/Displacements\";	// Name of PV files	   \n"
-<<"	string   namedata=\"Displacements\";		// Name of export data	   \n"
+<<"	string   namevtu=\"VTUs/Solution\";		// Name of PV files	   \n"
+<<"	string   namedata=\"U\";			// Name of export data	   \n"
 <<"	bool     withsur=true;				// Export surface mesh	   \n";
   
 if(spc==2)writevarfmatsolve
@@ -1118,17 +1200,16 @@ if(plotAll){writevarfmatsolve
 <<"// -------Plotting with paraview-------					   \n"
 <<"//==============================================================================\n"
 <<"										   \n"	
-<<"load  \"../Plugins/iovtk\"			// Loading the vtk viz module	   \n"
 <<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n"; 
   
 if(spc==2)writevarfmatsolve
-<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,0],				   \n";
+<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,0],				   \n";
  
 if(spc==3)writevarfmatsolve     
-<<"savevtk(\"VTUs/Displacements-Seq.vtu\",Th,[u,u1,u2],				   \n"; 
+<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,u2],				   \n"; 
   
 writevarfmatsolve       
-<<"		order=vtuorder,dataname=\"Displacement\");			   \n";
+<<"		order=vtuorder,dataname=\"U\");					   \n";
   
 system("mkdir -p VTUs");
 	  
@@ -1137,5 +1218,7 @@ system("mkdir -p VTUs");
 }  //-- [if loop terminator] Sequential ended --//
 
 }  //-- [if loop terminator] !nonlinear ended --//
+
+
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//
