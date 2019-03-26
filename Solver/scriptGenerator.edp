@@ -62,6 +62,7 @@
   bool debug       =  usedARGV("-debug"      ) != -1;
   bool pointbc     =  usedARGV("-pointbc"    ) != -1;
   bool timelog     =  usedARGV("-timelog"    ) != -1;
+  bool timelogG    =  usedARGV("-timelogG"   ) != -1;
   bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
   bool nonlinear   =  usedARGV("-nonlinear"  ) != -1;   
   bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
@@ -469,7 +470,13 @@ writemeshParameters
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
-<<"real mu,lambda"<<(timelog ? ",t0" : "")<<" "<<(bodyforce ? ",f2" : "")<<";	   \n"
+<<"real	 mu		// Lame parameter					   \n"
+<<"	,lambda		// Lame parameter					   \n"
+<<(bodyforce ? "	,f2		// Force in Y\n"    : ""		    )
+<<(timelog   ? "	,t0		// Time variable\n" : ""		    )
+<<(timelogG  ? "	,t1		// Time variable\n" : ""		    )
+<<";	   									   \n"
+<<"										   \n"
 <<"{										   \n"
 <<"real E  = 200.e9,				//Modulus of Elasticity - [Pa]	   \n"
 <<"     nu = 0.3  ;				// Poisson ratio - [-]		   \n"
@@ -529,7 +536,8 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
+<<(timelogG ? "	timerbegin(\"Solver\",t1)\n" : " "         		  	    )
+<<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
 <<" 		load \"gmsh\"					// Load  gmsh	   \n"
 <<" 		meshN Th = gmshloadN(\"\"+ThName+\".msh\");\t	// Mesh loaded	   \n"
 <<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : " "     		      	    )
@@ -685,7 +693,8 @@ writemeshPartitioning
 <<"										   \n"
 <<" }										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
+<<(timelogG ? "	MPItimerbegin(\"Solver\",t1)\n" : " " 	         	 	    )
+<<(timelog  ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"    PartThAndBuildCommunication();						   \n"
 <<(timelog ? "	MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"										   \n"
@@ -965,7 +974,7 @@ if(Sequential){writevarfmatsolve
 <<"	tr+=dtr;								   \n"
 <<"}										   \n"
 <<"										   \n"	
-<<"										   \n"	
+<<"										   \n"
 <<"										   \n";
 
 if(plotAll){writevarfmatsolve
@@ -992,6 +1001,7 @@ if(spc==3)writevarfmatsolve
 writevarfmatsolve       
 <<"		order=vtuorder,dataname=\"U phi\");				   \n"
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "   	        	    )
+<<(timelogG ? "	timerend(\"Solver\",t1)\n" : " "	   	        	    )	
 <<"										   \n"; 
   
 system("mkdir -p VTUs");	  
@@ -1139,6 +1149,7 @@ writevarfmatsolve
 if(plotAll)writevarfmatsolve
 <<"										   \n"
 <<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
+<<(timelogG ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
@@ -1252,7 +1263,8 @@ if(spc==3)writevarfmatsolve
   
 writevarfmatsolve       
 <<"										   \n"        
-<<(timelog ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
+<<(timelog  ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
+<<(timelogG ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
   
   system("mkdir -p VTUs");
@@ -1304,7 +1316,8 @@ writevarfmatsolve
 <<"			  order=vtuorder		,			   \n"
 <<"			  dataname=\"U\"					   \n"
 <<"		       );				   			   \n"
-<<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		   )	
+<<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		   )
+<<(timelogG ? "	timerend  (\"Solver\",t1)\n" : " "  	         	  	    )	
 <<"										   \n";
   
 system("mkdir -p VTUs");
