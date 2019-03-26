@@ -10,7 +10,7 @@
 **************************************************************************************/
 
 //=====================================================================================
-// ------All command line argument descriptions [ARGUMENTS]------
+// ------ All command line argument descriptions [ARGUMENTS] ------
 //=====================================================================================
 /*
   -dimension   [int]	  Accepts values 2 or 3.  2 for 2D 3 for 3D. Default 2.
@@ -43,13 +43,13 @@
 */
 
 //=====================================================================================
-// ------All files to be included------
+// ------ All files to be included ------ 
 //=====================================================================================
 
   include "getARGV.idp"    	// Enables importing commandline arguments
 
 //=====================================================================================
-// ------All variables------
+// ------ All variables ------ 
 //=====================================================================================
 
   int spc = getARGV("-dimension", 2);
@@ -57,19 +57,19 @@
   
   string Partitioner=getARGV("-partitioner", "parmetis");
 
-  bool help        =  usedARGV("-help")        != -1;
-  bool plotAll     =  usedARGV("-plot")        != -1;
-  bool debug       =  usedARGV("-debug")       != -1;
-  bool pointbc     =  usedARGV("-pointbc")     != -1;
-  bool timelog     =  usedARGV("-timelog")     !=  1;
-  bool bodyforce   =  usedARGV("-bodyforce")   != -1;
-  bool nonlinear   =  usedARGV("-nonlinear")   != -1;   
-  bool tractionbc  =  usedARGV("-tractionbc")  != -1; 
-  bool Sequential  =  usedARGV("-sequential")  != -1;      
+  bool help        =  usedARGV("-help"       ) != -1;
+  bool plotAll     =  usedARGV("-plot"       ) != -1;
+  bool debug       =  usedARGV("-debug"      ) != -1;
+  bool pointbc     =  usedARGV("-pointbc"    ) != -1;
+  bool timelog     =  usedARGV("-timelog"    ) != -1;
+  bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
+  bool nonlinear   =  usedARGV("-nonlinear"  ) != -1;   
+  bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
+  bool Sequential  =  usedARGV("-sequential" ) != -1;      
   bool dirichletbc =  usedARGV("-dirichletbc") !=  1;
 
 //=====================================================================================   
-// Help message on the screen
+// ------ Help message on the screen ------ 
 //=====================================================================================
 
 if(help){cout
@@ -83,10 +83,10 @@ if(help){cout
 <<" According to the flags provided You are solving A "+spc+"D problem.		   \n"
 <<"										   \n"
 <<"										   \n"
-<<"  # With"<<(bodyforce ? "" : "out")<<" bodyforce acting on the volume.	   \n"
-<<"  # With"<<(tractionbc ? "" : "out")<<" traction boundary condition.	   	   \n"
-<<"  # With"<<(dirichletbc ? "" : "out")<<" Dirichlet boundary condition on surface\n"
-<<"  # With"<<(pointbc ? "" : "out")<<" Dirichlet boundary condition on a point.   \n"
+<<"  # With"<<(bodyforce   ? "" : "out")<<" bodyforce acting on the volume.	   \n"
+<<"  # With"<<(tractionbc  ? "" : "out")<<" traction boundary condition.   	   \n"
+<<"  # With"<<(dirichletbc ? "" : "out")<<" Dirichlet surface boundary condition.  \n"
+<<"  # With"<<(pointbc     ? "" : "out")<<" Dirichlet point boundary condition.    \n"
 <<"  # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.		   \n"
 <<"										   \n"
 <<"										   \n"
@@ -169,7 +169,54 @@ cout
 } //-- [if loop terminator] help ended --//
 
 //=====================================================================================
-// Building the macros.edp file
+// ------ Building the main.edp file ------ 
+//=====================================================================================
+
+{ofstream  writemain("main.edp");
+
+writemain
+<<"										   \n"
+<<"/**********************************Main file************************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running scriptGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         scriptGenerator, details of which are present in scriptGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------ Module files load and include ------ 				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+if(Sequential)writemain
+<<"										   \n"
+<<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
+<<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
+<<" include \"macros.edp\"\t		// User-defined macro file	 	   \n"
+<<" include \"mesh.edp\"      	 	// Loading mesh 	   		   \n"
+<<" include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b	   		   \n"    
+<<"										   \n";
+
+if(!Sequential)writemain
+<<"										   \n"
+<<" load    \"PETSc\"			// PETSc plugin activated		   \n"
+<<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
+<<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
+<<" include \"macros.edp\"\t		// User-defined macro file	 	   \n"
+<<" include \"../Plugins/DDmacro.edp\"	// Domain decomposition macros 	  	   \n"
+<<" include \"meshPartitioning.edp\"  	// Loading mesh 	   		   \n"
+<<" include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b	   		   \n"    
+<<"										   \n";
+
+} //-- [ostream terminator]  main.edp closed --//
+
+
+//=====================================================================================
+// ------ Building the macros.edp file ------ 
 //=====================================================================================
    
 {ofstream  writemacros("macros.edp");
@@ -299,8 +346,6 @@ if(Sequential)writemacros
 
 
 
-
-
 if(pointbc){writemacros
 <<"										   \n"
 <<"//----------------------------Point BC macro----------------------------------//\n"
@@ -348,9 +393,13 @@ writemacros
 
 } //-- [if loop terminator] pointbc ended --//
 
-if(!Sequential)writemacros
+
+if(timelog){writemacros
 <<"										   \n"
 <<"//-----------------------------------Timing macros----------------------------//\n"
+<<"										   \n";
+
+if(!Sequential)writemacros
 <<"										   \n"
 <<"  macro MPItimerbegin(str1,t0){						   \n"
 <<"      mpiBarrier(mpiCommWorld);						   \n"
@@ -366,18 +415,29 @@ if(!Sequential)writemacros
 <<"           << \" ] seconds to finish \" +str1+\"\\n\\n\";			   \n"
 <<"  }//									   \n"
 <<"										   \n"
-<<"//---------------------------Paralle functions------------------------------//  \n"
+<<"										   \n";
+
+if(Sequential)writemacros
 <<"										   \n"
-<<"  load    \"PETSc\"				// PETSc plugin activated	   \n"
-<<"  include \"../Plugins/DDmacro.edp\"		// Domain decomposition macros 	   \n"
+<<"  macro timerbegin(str1,t0){							   \n"
+<<"      t0 = clock();								   \n"
+<<"      cout << \"\"+str1+\" began\\n\";					   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"  macro timerend(str1,t0){							   \n"
+<<"      cout.scientific << \"It took [ \"<< clock()-t0 			   \n"
+<<"           << \" ] seconds to finish \" +str1+\"\\n\\n\";			   \n"
+<<"  }//									   \n"
 <<"										   \n"
 <<"										   \n";
+
+} //-- [if loop terminator] timelog ended --//
 
 } //-- [ostream terminator]  macros.edp closed --//  
 
 
 //=====================================================================================
-// Building the parameters.edp file
+// ------ Building the parameters.edp file ------ 
 //=====================================================================================
 
 {ofstream  writemeshParameters("parameters.edp");
@@ -409,14 +469,13 @@ writemeshParameters
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
-<<"real mu,lambda,t0 "<<(bodyforce ? ",f2" : "")<<";				   \n"
+<<"real mu,lambda"<<(timelog ? ",t0" : "")<<" "<<(bodyforce ? ",f2" : "")<<";	   \n"
 <<"{										   \n"
 <<"real E  = 200.e9,				//Modulus of Elasticity - [Pa]	   \n"
 <<"     nu = 0.3  ;				// Poisson ratio - [-]		   \n"
 <<"	 									   \n"
 <<"mu     = E/(2.*(1.+nu));							   \n"
 <<"lambda = E*nu/((1.+nu)*(1.-2.*nu));						   \n"
-<<"	 									   \n"
 <<"	 									   \n"
 <<(bodyforce ? "f2 = 8.e3*(-9.81);				// Rho*g" : "")<<" \n"
 <<"	 									   \n"
@@ -433,7 +492,7 @@ if(nonlinear)writemeshParameters
 <<"real Gc =2.7,								   \n"
 <<"	lo,									   \n"
 <<"	lfac=2,									   \n"
-<<"	maxtr = 0.03,								   \n"
+<<"	maxtr = 1e-3,								   \n"
 <<"	tr = 1e-5,								   \n"
 <<"	dtr = 1e-5;								   \n"
 <<"	 									   \n";
@@ -442,10 +501,10 @@ if(nonlinear)writemeshParameters
 
 
 //=====================================================================================
-// Building the meshPartitioning.edp file
+// ------ Building the meshPartitioning.edp file ------ 
 //=====================================================================================
   
-{ofstream  writemeshPartitioning("meshPartitioning.edp");
+{ofstream  writemeshPartitioning(Sequential ? "mesh.edp" : "meshPartitioning.edp" );
 
 writemeshPartitioning
 <<"										   \n"
@@ -470,8 +529,10 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<" load \"gmsh\"				// Load meshes from gmsh	   \n"
-<<" meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Global mesh loaded		   \n"
+<<(timelog ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
+<<" 		load \"gmsh\"					// Load  gmsh	   \n"
+<<" 		meshN Th = gmshloadN(\"\"+ThName+\".msh\");\t	// Mesh loaded	   \n"
+<<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : " "     		      	    )
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -479,7 +540,9 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n";
+<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n"
+<<"	    Vh<real> def(u);			// Defining LHS			   \n"
+<<"										   \n";
 
 if(nonlinear)writemeshPartitioning
 <<"										   \n"
@@ -622,11 +685,10 @@ writemeshPartitioning
 <<"										   \n"
 <<" }										   \n"
 <<"										   \n"
-<<" MPItimerbegin(\"Mesh Partitioning\",t0)					   \n"				   
-<<"										   \n"     
+<<(timelog ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"    PartThAndBuildCommunication();						   \n"
+<<(timelog ? "	MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"										   \n"
-<<" MPItimerend(\"Mesh Partitioning\",t0)					   \n"
 <<"										   \n";
 
 }
@@ -635,7 +697,7 @@ writemeshPartitioning
 
 
 //=====================================================================================
-// Building the varfmatsolve.edp file
+// ------ Building the varfmatsolve.edp file ------ 
 //=====================================================================================
 
 {ofstream  writevarfmatsolve("varfmatsolve.edp");
@@ -855,16 +917,29 @@ if(Sequential){writevarfmatsolve
 <<"		dtr = 1e-5;							   \n"
 <<"										   \n"
 <<"	for(int iter=0; iter<500; iter++){					   \n"
-<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
-<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
-<<"		set(A,solver=CG);			// Solver setup		   \n"
-<<"		u[]=A^-1*b;				// Solve		   \n"
+
+<<(timelog ? "	timerbegin(\"Matrix Assembly U\",t0)\n" : " "           	    )
+<<"			matrix<real> A = elast(Vh,Vh);		// Assembly for A   \n"
+<<(timelog ? "	timerend  (\"Matrix Assembly U\",t0)\n" : " "           	    )
+<<(timelog ? "	timerbegin(\"RHS Assembly U\",t0)\n" : " " 	          	    )
+<<"			real[int]    b = elast(0,Vh);		// Assembly for b   \n"
+<<(timelog ? "	timerend  (\"RHS Assembly U\",t0)\n" : " "  	         	    )
+<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " " 	        	  	    )
+<<"			set(A,solver=CG);			// Solver setup	   \n"
+<<"			u[]=A^-1*b;				// Solve	   \n"
+<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " " 	        	  	    )
 <<"										   \n"
 <<"										   \n"
-<<"		matrix<real> A1 = phase(Vh1,Vh1);	// Assembly for A	   \n"
-<<"		real[int]    b1 = phase(0,Vh1);		// Assembly for b	   \n"
-<<"		set(A1,solver=CG);			// Solver setup		   \n"
-<<"		phi[]=A1^-1*b1;				// Solve		   \n"
+<<(timelog ? "	timerbegin(\"Matrix Assembly PHI\",t0)\n" : " "           	    )
+<<"			matrix<real> A1 = phase(Vh1,Vh1);	// Assembly for A   \n"
+<<(timelog ? "	timerend  (\"Matrix Assembly PHI\",t0)\n" : " "           	    )
+<<(timelog ? "	timerbegin(\"RHS Assembly PHI\",t0)\n" : " " 	          	    )
+<<"			real[int]    b1 = phase(0,Vh1);		// Assembly for b   \n"
+<<(timelog ? "	timerend  (\"RHS Assembly U\",t0)\n" : " "  	         	    )
+<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " " 	        	  	    )
+<<"			set(A1,solver=CG);			// Solver setup	   \n"
+<<"			phi[]=A1^-1*b1;				// Solve	   \n"
+<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " " 	        	  	    )
 <<"										   \n"
 <<"										   \n"
 <<"		uold[]=uold[]-u[];						   \n"
@@ -900,7 +975,9 @@ if(plotAll){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n" 
+<<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "   	        	    )
+<<"		load \"../Plugins/iovtk\"				  	   \n" 
+<<"		int[int] vtuorder=[1,1,1];		// Solution export order   \n" 
 <<"										   \n" 
 <<"										   \n"; 
       
@@ -914,6 +991,7 @@ if(spc==3)writevarfmatsolve
   
 writevarfmatsolve       
 <<"		order=vtuorder,dataname=\"U phi\");				   \n"
+<<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "   	        	    )
 <<"										   \n"; 
   
 system("mkdir -p VTUs");	  
@@ -969,11 +1047,11 @@ writevarfmatsolve
 <<"	for(int iter=0; iter<500; iter++){					   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Matrix Assembly U\",t0)\n" : " "           	    )
-<<"		 ALoc = elast(Vh,Vh);			// Assembly for A	   \n"
+<<"		 ALoc = elast(Vh,Vh);			// Assembly bilinear	   \n"
 <<(timelog ? "	MPItimerend(\"Matrix Assembly U\",t0)\n" : " "           	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"RHS Assembly U\",t0)\n" : " "           	    )
-<<"		 real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
+<<"		 real[int]    b = elast(0,Vh);		// Assembly linear	   \n"
 <<(timelog ? "	MPItimerend(\"RHS Assembly U\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"PETSc Assembly U\",t0)\n" : " "           	    )
@@ -982,16 +1060,16 @@ writevarfmatsolve
 <<(timelog ? "	MPItimerend(\"PETSc Assembly U\",t0)\n" : " "          	  	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Solving U\",t0)\n" : " "         	  	    )
-<<"		 u[]=A^-1*b;				// Solve		   \n"
+<<"		 u[]=A^-1*b;				// Solve u		   \n"
 <<(timelog ? "	MPItimerend(\"Solving U\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Matrix Assembly PHI\",t0)\n" : " "           	    )
-<<"		 ALoc1 = phase(Vh1,Vh1);		// Assembly for A	   \n"
+<<"		 ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   \n"
 <<(timelog ? "	MPItimerend(\"Matrix Assembly PHI\",t0)\n" : " "       	  	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"RHS Assembly PHI\",t0)\n" : " "           	    )
-<<"		 real[int]    b1 = phase(0,Vh1);	// Assembly for b	   \n"
+<<"		 real[int]    b1 = phase(0,Vh1);	// Assembly linear	   \n"
 <<(timelog ? "	MPItimerend(\"RHS Assembly PHI\",t0)\n" : " "           	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"PETSc Assembly PHI\",t0)\n" : " "           	    )
@@ -1000,7 +1078,7 @@ writevarfmatsolve
 <<(timelog ? "	MPItimerend(\"PETSc Assembly PHI\",t0)\n" : " "           	    )
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Solving PHI\",t0)\n" : " "    		       	    )
-<<"		 phi[]=A1^-1*b1;				// Solve	   \n"
+<<"		 phi[]=A1^-1*b1;			// Solve phi	  	   \n"
 <<(timelog ? "	MPItimerend(\"Solving PHI\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
@@ -1038,8 +1116,10 @@ writevarfmatsolve
 
 if(plotAll)writevarfmatsolve
 <<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : " "           	    )
 <<"			exportTimeStep2(\"VTUs/Solution\", Th, [u,u1,0],phi, 	   \n"
 <<" 					iterout, mpiCommWorld);			   \n"
+<<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : " "       	    	    )
 <<"										   \n";
 
 if(debug)writevarfmatsolve
@@ -1076,32 +1156,28 @@ if(!Sequential){writevarfmatsolve
 <<"										   \n"
 <<"//-----------------Assembly for A-----------------//				   \n"
 <<"										   \n"
-<<"MPItimerbegin(\"Matrix Assembly\",t0)					   \n"				   
-<<"										   \n"     
-<<"    matrix<real> ALoc = elast(Vh,Vh);					   \n"
 <<"										   \n"
-<<"MPItimerend(\"Matrix Assembly\",t0)					 	   \n"
+<<(timelog ? "	MPItimerbegin(\"Matrix Assembly\",t0)\n" : " "           	    )
+<<"    matrix<real> ALoc = elast(Vh,Vh);		// Assembly bilinear	   \n"
+<<(timelog ? "	MPItimerend  (\"Matrix Assembly\",t0)\n" : " "       	    	    )
 <<"										   \n"
 <<"										   \n"
 <<"//-----------------Assembly for b-----------------//				   \n"
 <<"										   \n"
-<<"MPItimerbegin(\"RHS Assembly\",t0)						   \n"				   
-<<"										   \n"     
-<<"      real[int]    b = elast(0,Vh);						   \n"
-<<"										   \n" 
-<<"MPItimerend(\"RHS Assembly\",t0)					 	   \n"    
 <<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"RHS Assembly\",t0)\n" : " "          	 	    )
+<<"      real[int]    b = elast(0,Vh);			// Assembly linear	   \n"
+<<(timelog ? "	MPItimerend  (\"RHS Assembly\",t0)\n" : " "       	    	    )
 <<"										   \n";
 
 if(pointbc)writevarfmatsolve
+<<"										   \n"
 <<"//---------Additional assembly for A & b----------//				   \n"
 <<"										   \n"
-<<"MPItimerbegin(\"Point Dirichlet Assembly\",t0)				   \n"				   
-<<"										   \n"     
-<<"      Pointbc(Dpointlab,Vh,ALoc,b,PnV);					   \n"
-<<"										   \n"        
-<<"MPItimerend(\"Point Dirichlet Assembly\",t0)				 	   \n"
 <<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Point Dirichlet Assembly\",t0)\n" : " "  	    )
+<<"      Pointbc(Dpointlab,Vh,ALoc,b,PnV);		// Assembly linear	   \n"
+<<(timelog ? "	MPItimerend(\"Point Dirichlet Assembly\",t0)\n" : " "        	    )
 <<"										   \n";
 
 writevarfmatsolve
@@ -1126,26 +1202,30 @@ if(tractionbc)writevarfmatsolve
    
 writevarfmatsolve
 <<"										   \n"
-<<"										   \n"
 <<"//---------------PETSc Assembly---------------------//			   \n"
 <<"										   \n"
-<<"MPItimerbegin(\"PETSc Assembly\",t0)				   		   \n"
 <<"										   \n"
-<<"      dmatrix A(ALoc, arrayIntersectionP,					   \n"
-<<"                restrictionIntersectionP, DP, bs = "+spc+");// Distributed matrix \n"
+<<(timelog ? "	MPItimerbegin(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<"      dmatrix A				// Distributed matrix 		   \n"
+<<"		  ( ALoc			, 				   \n"
+<<"		    arrayIntersectionP		,				   \n"
+<<"                 restrictionIntersectionP	,				   \n"
+<<" 		    DP				,				   \n"
+<<" 		    bs = "+spc+" 						   \n"
+<<"		  );								   \n"
+<<(timelog ? "	MPItimerend(\"PETSc Assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
-<<"MPItimerend(\"PETSc Assembly\",t0)					 	   \n"
+<<"										   \n"
+<<"//------------PETSc solving------------------//				   \n"
 <<"										   \n"
 <<"										   \n"
-<<"//------------PETSc solving------------------//\n"
-<<"										   \n"
-<<"MPItimerbegin(\"PETSc Solving\",t0)				   		   \n"
-<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"PETSc Solving\",t0)\n" : " "  	    		   )
 <<"      Vh<real> def(u);							   \n"
 <<"      set(A,sparams =\" \");            // Solver setup-Petsc		   \n"
 <<"      u[]=A^-1*b;                       // Solving				   \n"
-<<"										   \n"        
-<<"MPItimerend(\"PETSc Solving\",t0)					 	   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerend(\"PETSc Solving\",t0)\n" : " "  	    		   )
+<<"										   \n"       
 <<"										   \n";
 
 if(plotAll){writevarfmatsolve
@@ -1155,8 +1235,8 @@ if(plotAll){writevarfmatsolve
 <<"// -------Plotting with paraview-------//					   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"MPItimerbegin(\"Paraview Plotting\",t0)			   		   \n"
 <<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Paraview Plotting\",t0)\n" : " "       		    )
 <<" 	int[int] vtuorder=[1,1,1];			// Solution export order   \n" 
 <<"	string   namevtu=\"VTUs/Solution\";		// Name of PV files	   \n"
 <<"	string   namedata=\"U\";			// Name of export data	   \n"
@@ -1172,7 +1252,7 @@ if(spc==3)writevarfmatsolve
   
 writevarfmatsolve       
 <<"										   \n"        
-<<"MPItimerend(\"Paraview Plotting\",t0)				 	   \n"
+<<(timelog ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
 <<"										   \n";
   
   system("mkdir -p VTUs");
@@ -1187,11 +1267,17 @@ if(Sequential){writevarfmatsolve
 <<"//  -------Local Au=b assembly and solving-------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"Vh<real> def(u);			// Defining LHS				   \n"
-<<"matrix<real> A = elast(Vh,Vh);	// Assembly for A	 		   \n"
-<<"real[int]    b = elast(0,Vh);	// Assembly for b	 		   \n"
-<<"set(A,solver=CG);			// Solver setup			 	   \n"
-<<"u[]=A^-1*b;				// Solving				   \n"
+<<(timelog ? "	timerbegin(\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
+<<(timelog ? "	timerend  (\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
+<<(timelog ? "	timerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " "  	    		   	   )
+<<"		set(A,solver=CG);			// Solver setup		   \n"
+<<"		u[]=A^-1*b;				// Solving		   \n"
+<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
+<<"										   \n"
 <<"										   \n";
 
 if(plotAll){writevarfmatsolve
@@ -1199,17 +1285,27 @@ if(plotAll){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"	
-<<"int[int] vtuorder=[1,1,1];			// Solution export order	   \n"; 
+<<"										   \n"
+<<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "  	    		   )
+<<"		load \"../Plugins/iovtk\"				  	   \n" 	
+<<"		int[int] vtuorder=[1,1,1];		// Solution export order   \n"; 
   
 if(spc==2)writevarfmatsolve
-<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,0],				   \n";
+<<"		savevtk( \"VTUs/Solution-Seq.vtu\"	,			   \n"
+<<"			  Th				,			   \n"
+<<"			  [u,u1,0]			,			   \n";
  
 if(spc==3)writevarfmatsolve     
-<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,u2],				   \n"; 
+<<"		savevtk(\"VTUs/Solution-Seq.vtu\"	,			   \n"
+<<"			  Th				,			   \n"
+<<"			  [u,u1,u2]			,			   \n"; 
   
 writevarfmatsolve       
-<<"		order=vtuorder,dataname=\"U\");					   \n";
+<<"			  order=vtuorder		,			   \n"
+<<"			  dataname=\"U\"					   \n"
+<<"		       );				   			   \n"
+<<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		   )	
+<<"										   \n";
   
 system("mkdir -p VTUs");
 	  

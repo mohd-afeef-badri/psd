@@ -12,6 +12,8 @@ macros.edp
 meshPartitioning.edp
 varfmatsolve.edp
 parameters.edp
+mesh.edp
+main.edp
 
 ## SHARED OBJECT FILES ##
 *.o
