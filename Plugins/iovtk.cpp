@@ -46,7 +46,7 @@
 #include <cmath>
 #include <complex>
 using namespace std;
-
+/*
 using namespace std;
 #include "error.hpp"
 #include "AFunction.hpp"
@@ -72,6 +72,8 @@ using namespace std;
 #include "msh3.hpp"
 // #include "GQuadTree.hpp"
 // #include "lex.hpp"
+ */
+#include "ff++.hpp"
 #include <set>
 #include <vector>
 #include <list>
@@ -571,11 +573,8 @@ void VTU_WRITE_MESH (FILE *fp, const Mesh &Th, bool binary, int datasize, bool s
 	// fprintf(fp,"</Piece>\n");
 	// fprintf(fp,"</UnstructuredGrid>\n");
 	// fprintf(fp,"</VTKFile>\n");
-
-
 	
-		
-	//---------------------------------- LABELS WITH VTU -------------------------------------------//
+		//---------------------------------- LABELS WITH VTU -------------------------------------------//
 	fprintf(fp, "<CellData Scalars=\"Label\">\n");
 	if (binary) {
 		fprintf(fp, "<DataArray type=\"Int32\" Name=\"Label\" format=\"binary\">\n");	
@@ -873,6 +872,51 @@ void VTU_WRITE_MESH (FILE *fp, const Mesh3 &Th, bool binary, int datasize, bool 
 	// fprintf(fp,"</Piece>\n");
 	// fprintf(fp,"</UnstructuredGrid>\n");
 	// fprintf(fp,"</VTKFile>\n");
+	
+		//---------------------------------- LABELS WITH VTU -------------------------------------------//
+	fprintf(fp, "<CellData Scalars=\"Label\">\n");
+	if (binary) {
+		fprintf(fp, "<DataArray type=\"Int32\" Name=\"Label\" format=\"binary\">\n");		
+		int label;
+
+		for (int it = 0; it < Th.nt; it++) {
+			const Tet &K(Th.elements[it]);
+			label = K.lab;
+			if (!bigEndian) {SwapBytes((char *)&label, sizeof(int), 1);}
+
+			fwrite(&label, sizeof(int), 1, fp);
+		}
+
+		if (surface) {
+			for (int ibe = 0; ibe < Th.nbe; ibe++) {
+				const Triangle3 &K(Th.be(ibe));
+				label = K.lab;
+				if (!bigEndian) {SwapBytes((char *)&label, sizeof(int), 1);}
+
+				fwrite(&label, sizeof(int), 1, fp);
+			}
+		}
+	} else {
+		fprintf(fp, "<DataArray type=\"Int32\" Name=\"Label\" format=\"ascii\">\n");	
+		int label;
+
+		for (int it = 0; it < Th.nt; it++) {
+			const Tet &K(Th.elements[it]);
+			label = K.lab;
+			fprintf(fp, "%d\n", label);
+		}
+
+		if (surface) {
+			for (int ibe = 0; ibe < Th.nbe; ibe++) {
+				const Triangle3 &K(Th.be(ibe));
+				label = K.lab;
+				fprintf(fp, "%d\n", label);
+			}
+		}
+	}
+	fprintf(fp, "\n</DataArray>\n");
+	fprintf(fp, "</CellData>\n");
+	//---------------------------------- LABELS WITH VTU -------------------------------------------//	
 }
 
 /*

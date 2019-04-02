@@ -355,7 +355,6 @@ macro PETScMPIBuildEdgeWithPartitioning(Th, ThGlobal, part, s, D, arrayIntersect
 //==============================================================================
 
 macro exportpvd(name, mesh, sol, fforder, withsur, nameData, comm)
-load  "./iovtk"				   
 savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, withsurfacemesh=withsur, order = fforder, dataname=nameData);
 
 if(mpiRank(comm) == 0) {
@@ -376,7 +375,6 @@ if(mpiRank(comm) == 0) {
 // EOM
 
 macro exportpvd2(name, mesh, sol, sol1, fforder, withsur, nameData, comm)
-load  "./iovtk"				   
 savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol1, withsurfacemesh=withsur, order = fforder, dataname=nameData);
 
 if(mpiRank(comm) == 0) {
@@ -398,7 +396,6 @@ if(mpiRank(comm) == 0) {
 
 macro exportBegin(name, comm)
 system("mkdir -p VTUs");
-load "./iovtk"
 if(mpiRank(comm) == 0) {
     ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
     pvd << "<?xml version=\"1.0\"?>\n";

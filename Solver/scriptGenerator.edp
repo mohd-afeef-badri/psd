@@ -193,8 +193,11 @@ writemain
 <<"										   \n"
 <<"										   \n";
 
-if(Sequential)writemain
+if(pointbc)writemain
 <<"										   \n"
+<<" load    \"../Plugins/iovtk\"	// Paraview support files		   \n"
+
+if(Sequential)writemain
 <<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
 <<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
 <<" include \"macros.edp\"\t		// User-defined macro file	 	   \n"
@@ -203,7 +206,6 @@ if(Sequential)writemain
 <<"										   \n";
 
 if(!Sequential)writemain
-<<"										   \n"
 <<" load    \"PETSc\"			// PETSc plugin activated		   \n"
 <<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
 <<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
@@ -985,7 +987,6 @@ if(plotAll){writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "   	        	    )
-<<"		load \"../Plugins/iovtk\"				  	   \n" 
 <<"		int[int] vtuorder=[1,1,1];		// Solution export order   \n" 
 <<"										   \n" 
 <<"										   \n"; 
@@ -1021,11 +1022,11 @@ if(!Sequential){writevarfmatsolve
 <<"varf DUMMY(uu,vv) =int2d(Th,qforder=1)(uu*vv);				   \n"
 <<"										   \n"
 <<"matrix<real> MatDUMMY = DUMMY(Vh, Vh);					   \n"
-<<"dmatrix A(MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP);	   \n"
+<<"Mat A(MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP);	   \n"
 <<"MatDUMMY.resize(0,0);							   \n"
 <<"										   \n"
 <<"matrix<real> MatDUMMY1 = DUMMY(Vh1, Vh1);					   \n"
-<<"dmatrix A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);	   \n"
+<<"Mat A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);	   \n"
 <<"MatDUMMY1.resize(0,0);							   \n"
 <<"										   \n"
 <<"matrix<real> ALoc, ALoc1;							   \n"
@@ -1217,7 +1218,7 @@ writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"PETSc Assembly\",t0)\n" : " "  	    		   )
-<<"      dmatrix A				// Distributed matrix 		   \n"
+<<"      Mat A				// Distributed matrix 		   \n"
 <<"		  ( ALoc			, 				   \n"
 <<"		    arrayIntersectionP		,				   \n"
 <<"                 restrictionIntersectionP	,				   \n"
@@ -1299,7 +1300,6 @@ if(plotAll){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "  	    		   )
-<<"		load \"../Plugins/iovtk\"				  	   \n" 	
 <<"		int[int] vtuorder=[1,1,1];		// Solution export order   \n"; 
   
 if(spc==2)writevarfmatsolve
