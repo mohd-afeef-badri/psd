@@ -62,7 +62,6 @@
   bool debug       =  usedARGV("-debug"      ) != -1;
   bool pointbc     =  usedARGV("-pointbc"    ) != -1;
   bool timelog     =  usedARGV("-timelog"    ) != -1;
-  bool timelogG    =  usedARGV("-timelogG"   ) != -1;
   bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
   bool nonlinear   =  usedARGV("-nonlinear"  ) != -1;   
   bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
@@ -193,26 +192,26 @@ writemain
 <<"										   \n"
 <<"										   \n";
 
-if(pointbc)writemain
+if(plotAll)writemain
 <<"										   \n"
-<<" load    \"../Plugins/iovtk\"	// Paraview support files		   \n"
+<<"  load    \"../Plugins/iovtk\"\t	// Paraview support files		   \n";
 
 if(Sequential)writemain
-<<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
-<<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
-<<" include \"macros.edp\"\t		// User-defined macro file	 	   \n"
-<<" include \"mesh.edp\"      	 	// Loading mesh 	   		   \n"
-<<" include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b	   		   \n"    
+<<"  include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
+<<"  include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
+<<"  include \"macros.edp\"\t		// User-defined macro file	 	   \n"
+<<"  include \"mesh.edp\"      	 	// Loading mesh 	   		   \n"
+<<"  include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b		   \n"    
 <<"										   \n";
 
 if(!Sequential)writemain
-<<" load    \"PETSc\"			// PETSc plugin activated		   \n"
-<<" include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
-<<" include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
-<<" include \"macros.edp\"\t		// User-defined macro file	 	   \n"
-<<" include \"../Plugins/DDmacro.edp\"	// Domain decomposition macros 	  	   \n"
-<<" include \"meshPartitioning.edp\"  	// Loading mesh 	   		   \n"
-<<" include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b	   		   \n"    
+<<"  load    \"PETSc\"			// PETSc plugin activated		   \n"
+<<"  include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
+<<"  include \"parameters.edp\"\t  	// Control parameters, propeties, etc..    \n"
+<<"  include \"macros.edp\"\t		// User-defined macro file	 	   \n"
+<<"  include \"../Plugins/DDmacro.edp\"	// Domain decomposition macros 	  	   \n"
+<<"  include \"meshPartitioning.edp\"  	// Loading mesh 	   		   \n"
+<<"  include \"varfmatsolve.edp\"       	// Varf. and x=A^-1*b	   	   \n"    
 <<"										   \n";
 
 } //-- [ostream terminator]  main.edp closed --//
@@ -331,6 +330,14 @@ if(nonlinear)writemacros
 <<"  macro sxx(i)( lambda*divergence(i)+2*mu*dx(i) )	// Sigma_xx		   \n"
 <<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy		   \n"
 <<"  macro szz(i)(lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz		   \n"
+<<"  macro sxy(i)( mu*(dy(i) + dx(i#1)) )		// Sigma_xx		   \n"
+<<"  macro sxz(i)( mu*(dz(i) + dx(i#2)) )		// Sigma_xx		   \n"
+<<"  macro syz(i)( mu*(dz(i#1) + dy(i#2)) )		// Sigma_xx		   \n"
+<<"  macro sig  (i) [ sxx(i), syy(i), szz(i), 					   \n"
+<<"		      2*sqrt(2.0)*syz(i),					   \n"
+<<"		      2*sqrt(2.0)*sxz(i), 					   \n"
+<<"		      2*sqrt(2.0)*sxy(i)] 		// Sigma	   	   \n"
+<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
 <<"										   \n";
 
 if(Sequential)writemacros
@@ -405,17 +412,17 @@ if(timelog){writemacros
 if(!Sequential)writemacros
 <<"										   \n"
 <<"  macro MPItimerbegin(str1,t0){						   \n"
-<<"      mpiBarrier(mpiCommWorld);						   \n"
-<<"      t0 = mpiWtime();							   \n"
-<<"      if(mpirank==0)								   \n"
-<<"      cout << \"\"+str1+\" began\\n\";					   \n"
+<<"    mpiBarrier(mpiCommWorld);						   \n"
+<<"    t0 = mpiWtime();							   	   \n"
+<<"    if(mpirank==0)								   \n"
+<<"    cout << \"\"+str1+\" began\\n\";					   	   \n"
 <<"  }//									   \n"
 <<"										   \n"
 <<"  macro MPItimerend(str1,t0){						   \n"
-<<"      mpiBarrier(mpiCommWorld);						   \n"
-<<"      if(mpirank==0)								   \n"
-<<"      cout.scientific << \"It took [ \"<< mpiWtime()-t0 			   \n"
-<<"           << \" ] seconds to finish \" +str1+\"\\n\\n\";			   \n"
+<<"    mpiBarrier(mpiCommWorld);						   \n"
+<<"    if(mpirank==0)								   \n"
+<<"    cout.scientific << \"It took [ \"<< mpiWtime()-t0 			   \n"
+<<"      << \" ] seconds to finish \" +str1+\"\\n\\n\";				   \n"
 <<"  }//									   \n"
 <<"										   \n"
 <<"										   \n";
@@ -423,13 +430,13 @@ if(!Sequential)writemacros
 if(Sequential)writemacros
 <<"										   \n"
 <<"  macro timerbegin(str1,t0){							   \n"
-<<"      t0 = clock();								   \n"
-<<"      cout << \"\"+str1+\" began\\n\";					   \n"
+<<"    t0 = clock();								   \n"
+<<"    cout << \"\"+str1+\" began\\n\";						   \n"
 <<"  }//									   \n"
 <<"										   \n"
 <<"  macro timerend(str1,t0){							   \n"
-<<"      cout.scientific << \"It took [ \"<< clock()-t0 			   \n"
-<<"           << \" ] seconds to finish \" +str1+\"\\n\\n\";			   \n"
+<<"    cout.scientific << \"It took [ \"<< clock()-t0 				   \n"
+<<"      << \" ] seconds to finish \" +str1+\"\\n\\n\";				   \n"
 <<"  }//									   \n"
 <<"										   \n"
 <<"										   \n";
@@ -463,7 +470,7 @@ writemeshParameters
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  	// Mesh file name  \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  // Mesh file name \n"
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -472,11 +479,11 @@ writemeshParameters
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
-<<"real	 mu		// Lame parameter					   \n"
-<<"	,lambda		// Lame parameter					   \n"
-<<(bodyforce ? "	,f2		// Force in Y\n"    : ""		    )
-<<(timelog   ? "	,t0		// Time variable\n" : ""		    )
-<<(timelogG  ? "	,t1		// Time variable\n" : ""		    )
+<<"  real mu		// Lame parameter					   \n"
+<<"      ,lambda\t	// Lame parameter					   \n"
+<<(bodyforce ? "      ,f2		// Force in Y\n"    : ""		    )
+<<(timelog   ? "      ,t0		// Time variable\n" : ""		    )
+<<(timelog  ? "      ,t1		// Time variable\n" : ""		    )
 <<";	   									   \n"
 <<"										   \n"
 <<"{										   \n"
@@ -538,7 +545,7 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<(timelogG ? "	timerbegin(\"Solver\",t1)\n" : " "         		  	    )
+<<(timelog  ? "	timerbegin(\"Solver\",t1)\n" : " "         		  	    )
 <<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
 <<" 		load \"gmsh\"					// Load  gmsh	   \n"
 <<" 		meshN Th = gmshloadN(\"\"+ThName+\".msh\");\t	// Mesh loaded	   \n"
@@ -695,7 +702,7 @@ writemeshPartitioning
 <<"										   \n"
 <<" }										   \n"
 <<"										   \n"
-<<(timelogG ? "	MPItimerbegin(\"Solver\",t1)\n" : " " 	         	 	    )
+<<(timelog ? "	MPItimerbegin(\"Solver\",t1)\n" : " " 	         	 	    )
 <<(timelog  ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"    PartThAndBuildCommunication();						   \n"
 <<(timelog ? "	MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
@@ -955,8 +962,8 @@ if(Sequential){writevarfmatsolve
 <<"										   \n"
 <<"		uold[]=uold[]-u[];						   \n"
 <<"		phiold[]=phiold[]-phi[]; 					   \n"
-<<"		real err1=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
-<<"		real err2=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
+<<"		real err1=sqrt( intN(Th) ( (uold)^2 )  );			   \n"
+<<"		real err2=sqrt( intN(Th) ( (phiold)^2 )  );			   \n"
 <<"		cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1   \n"
 <<"		<<\"  error in phi \"<< err2<<endl;				   \n"
 <<"										   \n"
@@ -1002,7 +1009,7 @@ if(spc==3)writevarfmatsolve
 writevarfmatsolve       
 <<"		order=vtuorder,dataname=\"U phi\");				   \n"
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "   	        	    )
-<<(timelogG ? "	timerend(\"Solver\",t1)\n" : " "	   	        	    )	
+<<(timelog ? "	timerend(\"Solver\",t1)\n" : " "	   	        	    )	
 <<"										   \n"; 
   
 system("mkdir -p VTUs");	  
@@ -1019,7 +1026,7 @@ if(!Sequential){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"varf DUMMY(uu,vv) =int2d(Th,qforder=1)(uu*vv);				   \n"
+<<"varf DUMMY(uu,vv) =intN(Th,qforder=1)(uu*vv);				   \n"
 <<"										   \n"
 <<"matrix<real> MatDUMMY = DUMMY(Vh, Vh);					   \n"
 <<"Mat A(MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP);	   \n"
@@ -1101,8 +1108,8 @@ writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<"		real err1Gather,err2Gather;					   \n"
-<<"		real err1Loc=sqrt( int2d(Th) ( (uold)^2 )  );			   \n"
-<<"		real err2Loc=sqrt( int2d(Th) ( (phiold)^2 )  );			   \n"
+<<"		real err1Loc=sqrt( intN(Th) ( (uold)^2 )  );			   \n"
+<<"		real err2Loc=sqrt( intN(Th) ( (phiold)^2 )  );			   \n"
 <<"										   \n"
 <<"		mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);		   \n"
 <<"		mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);		   \n"
@@ -1128,8 +1135,9 @@ writevarfmatsolve
 if(plotAll)writevarfmatsolve
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : " "           	    )
-<<"			exportTimeStep2(\"VTUs/Solution\", Th, [u,u1,0],phi, 	   \n"
-<<" 					iterout, mpiCommWorld);			   \n"
+<<"			exportTimeStep2(\"VTUs/Solution\",Th,  			  \n"
+<<(spc==2 ? "		\t[u,u1,0],phi,\n" : "		\t[u,u1,u2],phi,\n" 	    )
+<<"			iterout, mpiCommWorld);			   \n"
 <<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : " "       	    	    )
 <<"										   \n";
 
@@ -1150,7 +1158,7 @@ writevarfmatsolve
 if(plotAll)writevarfmatsolve
 <<"										   \n"
 <<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
-<<(timelogG ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
+<<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
@@ -1265,7 +1273,7 @@ if(spc==3)writevarfmatsolve
 writevarfmatsolve       
 <<"										   \n"        
 <<(timelog  ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
-<<(timelogG ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
+<<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
   
   system("mkdir -p VTUs");
@@ -1317,7 +1325,7 @@ writevarfmatsolve
 <<"			  dataname=\"U\"					   \n"
 <<"		       );				   			   \n"
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		   )
-<<(timelogG ? "	timerend  (\"Solver\",t1)\n" : " "  	         	  	    )	
+<<(timelog ? "	timerend  (\"Solver\",t1)\n" : " "  	         	  	    )	
 <<"										   \n";
   
 system("mkdir -p VTUs");
