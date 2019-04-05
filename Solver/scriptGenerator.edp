@@ -58,8 +58,9 @@
   string Partitioner=getARGV("-partitioner", "parmetis");
 
   bool help        =  usedARGV("-help"       ) != -1;
-  bool plotAll     =  usedARGV("-plot"       ) != -1;
   bool debug       =  usedARGV("-debug"      ) != -1;
+  bool plotAll     =  usedARGV("-plot"       ) != -1;
+  bool pipegnu     =  usedARGV("-pipegnu"    ) != -1;  
   bool pointbc     =  usedARGV("-pointbc"    ) != -1;
   bool timelog     =  usedARGV("-timelog"    ) != -1;
   bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
@@ -67,6 +68,10 @@
   bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
   bool Sequential  =  usedARGV("-sequential" ) != -1;      
   bool dirichletbc =  usedARGV("-dirichletbc") !=  1;
+  
+  
+  int labelDirichlet=2; 
+  if(nonlinear)labelDirichlet=1;
 
 //=====================================================================================   
 // ------ Help message on the screen ------ 
@@ -194,7 +199,12 @@ writemain
 
 if(plotAll)writemain
 <<"										   \n"
-<<"  load    \"../Plugins/iovtk\"\t	// Paraview support files		   \n";
+<<"  load	\"../Plugins/iovtk\"		// Paraview support files	   \n";
+
+if(pipegnu)writemain
+<<"  load	\"pipe\"\t			// Piping activated		   \n"
+<<"  include \"../Plugins/macroTools.edp\"	// Important macros		   \n";
+
 
 if(Sequential)writemain
 <<"  include \"getARGV.idp\"\t		// Enables commandline arguments	   \n"
@@ -271,7 +281,7 @@ if(nonlinear)writemacros
 <<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )	// Sigma_xx	   \n"
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )	// Sigma_yy	   \n"
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )			// Sigma_yx	   \n"
-<<"  macro sig  (i) [ sxx(i), syy(i), 2*sqrt(2.0)*sxy(i) ] 	// Sigma	   \n"
+<<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ] 	// Sigma	   \n"
 <<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
 <<"										   \n";
    
@@ -312,9 +322,9 @@ writemacros
 <<"										   \n"
 <<"  macro divergence(i) (dx(i)+dy(i#1)+dz(i#2))	// Divergence function	   \n"
 <<"  macro epsilon(i) [dx(i), dy(i#1), dz(i#2),					   \n"
-<<"                   (dz(i#1)+dy(i#2))/sqrt(2.0),				   \n"
-<<"                   (dz(i) + dx(i#2))/sqrt(2.0),				   \n"
-<<"                   (dy(i) + dx(i#1))/sqrt(2.0)]	// Strain definition	   \n"
+<<"                   (dz(i#1) + dy(i#2))/sqrt(2.0),				   \n"
+<<"                   (dz( i ) + dx(i#2))/sqrt(2.0),				   \n"
+<<"                   (dy( i ) + dx(i#1))/sqrt(2.0)]	// Strain definition	   \n"
 <<"										   \n";
 
 if(nonlinear)writemacros
@@ -327,16 +337,16 @@ if(nonlinear)writemacros
 <<"  macro init (i)   i						// Initialize  	   \n"
 <<"  macro Zk         P1             				// FE space	   \n"
 <<"  macro grad(i)[dx(i), dy(i), dz(i)]			// Three-D gradient	   \n"
-<<"  macro sxx(i)( lambda*divergence(i)+2*mu*dx(i) )	// Sigma_xx		   \n"
-<<"  macro syy(i)(lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy		   \n"
-<<"  macro szz(i)(lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz		   \n"
+<<"  macro sxx(i)( lambda*divergence(i)+2*mu*dx( i ))	// Sigma_xx		   \n"
+<<"  macro syy(i)( lambda*divergence(i)+2*mu*dy(i#1))	// Sigma_yy		   \n"
+<<"  macro szz(i)( lambda*divergence(i)+2*mu*dz(i#2))	// Sigma_zz		   \n"
 <<"  macro sxy(i)( mu*(dy(i) + dx(i#1)) )		// Sigma_xx		   \n"
 <<"  macro sxz(i)( mu*(dz(i) + dx(i#2)) )		// Sigma_xx		   \n"
 <<"  macro syz(i)( mu*(dz(i#1) + dy(i#2)) )		// Sigma_xx		   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), szz(i), 					   \n"
-<<"		      2*sqrt(2.0)*syz(i),					   \n"
-<<"		      2*sqrt(2.0)*sxz(i), 					   \n"
-<<"		      2*sqrt(2.0)*sxy(i)] 		// Sigma	   	   \n"
+<<"		      sqrt(2.0)*syz(i),						   \n"
+<<"		      sqrt(2.0)*sxz(i), 					   \n"
+<<"		      sqrt(2.0)*sxy(i)] 		// Sigma	   	   \n"
 <<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
 <<"										   \n";
 
@@ -469,8 +479,19 @@ writemeshParameters
 <<"// -------FEM mesh to be loaded (Un-partitioned)------- 			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
+<<"										   \n";
+
+
+if(!nonlinear)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  // Mesh file name \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  // Mesh file name \n";
+
+if(nonlinear)writemeshParameters
+<<"										   \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/square-crack\";  // Mesh file name\n";
+
+
+writemeshParameters
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -483,8 +504,8 @@ writemeshParameters
 <<"      ,lambda\t	// Lame parameter					   \n"
 <<(bodyforce ? "      ,f2		// Force in Y\n"    : ""		    )
 <<(timelog   ? "      ,t0		// Time variable\n" : ""		    )
-<<(timelog  ? "      ,t1		// Time variable\n" : ""		    )
-<<";	   									   \n"
+<<(timelog   ? "      ,t1		// Time variable\n" : ""		    )
+<<"       ;	   								   \n"
 <<"										   \n"
 <<"{										   \n"
 <<"real E  = 200.e9,				//Modulus of Elasticity - [Pa]	   \n"
@@ -493,11 +514,14 @@ writemeshParameters
 <<"mu     = E/(2.*(1.+nu));							   \n"
 <<"lambda = E*nu/((1.+nu)*(1.-2.*nu));						   \n"
 <<"	 									   \n"
-<<(bodyforce ? "f2 = 8.e3*(-9.81);				// Rho*g" : "")<<" \n"
+<<(bodyforce ? "f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
+<<" 										   \n"
 <<"	 									   \n"
 <<"}	 									   \n"
 <<"	 									   \n"
 <<"	 									   \n";
+
+
 
 if(nonlinear)writemeshParameters
 <<"	 									   \n"
@@ -505,13 +529,15 @@ if(nonlinear)writemeshParameters
 <<"// -------Nonlinear parameters------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
-<<"real Gc =2.7,								   \n"
-<<"	lo,									   \n"
-<<"	lfac=2,									   \n"
-<<"	maxtr = 1e-3,								   \n"
-<<"	tr = 1e-5,								   \n"
-<<"	dtr = 1e-5;								   \n"
-<<"	 									   \n";
+<<"real Gc    = 2.7  ,								   \n"
+<<"	lfac  = 2.0  ,								   \n"
+<<"	maxtr = 9e-3 ,								   \n"
+<<"	tr    = 1e-5 ,								   \n"
+<<"	dtr   = 1e-5 ,								   \n"
+<<"	lo           ;								   \n"
+<<"	 									   \n"
+<<"	lambda = 121.15e3 ;							   \n"
+<<"	mu     = 80.77e3  ;							   \n";
 
 } //-- [ostream terminator]  parameters.edp closed --//
 
@@ -558,7 +584,6 @@ if(Sequential){writemeshPartitioning
 <<"										   \n"
 <<"										   \n"
 <<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n"
-<<"	    Vh<real> def(u);			// Defining LHS			   \n"
 <<"										   \n";
 
 if(nonlinear)writemeshPartitioning
@@ -740,17 +765,17 @@ writevarfmatsolve
 if(dirichletbc){writevarfmatsolve
 <<"										   \n"
 <<"//---Surface---//								   \n"
-<<"int [int]   Dlabel = [2];		// Vector containing Dirichlet labels 	   \n"
+<<"int [int]   Dlabel = ["+labelDirichlet+"];	// Vector of Dirichlet labels 	   \n"
 <<"										   \n";
 
 if(spc==2)writevarfmatsolve
 <<"										   \n"
-<<"real[int]   Dvalue =[0.,0.];		// Vector containing Dirichlet values	   \n"
+<<"real[int]   Dvalue = [0.,0.];	// Vector containing Dirichlet values	   \n"
 <<"										   \n";
 
 if(spc==3)writevarfmatsolve
 <<"										   \n"
-<<"real[int]   Dvalue=[0.,0.,0.];	// Vector containing Dirichlet values	   \n" 
+<<"real[int]   Dvalue = [0.,0.,0.];	// Vector containing Dirichlet values	   \n" 
 <<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
@@ -844,9 +869,9 @@ if(nonlinear){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"Vh<real>  def2(u), def2(uold);		// Defining displacement variables \n"
+<<"  Vh  def2(u) , def2(uold);		// Defining displacement variables 	   \n"
 <<"										   \n"
-<<"Vh1<real> phi,phiold;			// Damage field			   \n"
+<<"  Vh1 phi , phiold;			// Damage field			   	   \n"
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
@@ -858,7 +883,7 @@ if(nonlinear){writevarfmatsolve
 <<"			    )							   \n";
 
 if(bodyforce)writevarfmatsolve
-<<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force   (volumetric)	   \n";
+<<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
 
 if(tractionbc)writevarfmatsolve
 <<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
@@ -866,7 +891,8 @@ if(tractionbc)writevarfmatsolve
 if(dirichletbc){
 
 if(spc==2)writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]);	// Displacement (Dirichlet)	   \n"
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1])	// Displacement (Dirichlet)	   \n"
+<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
 <<"										   \n";
 
 if(spc==3)writevarfmatsolve
@@ -875,6 +901,16 @@ if(spc==3)writevarfmatsolve
 <<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
+
+
+if(pipegnu)writevarfmatsolve
+<<"										   \n"
+<<"varf elastNoDirc(def2(u),def2(v))						   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"			    );							   \n";
 
 writevarfmatsolve
 <<"										   \n"
@@ -898,12 +934,25 @@ if(nonlinear){writevarfmatsolve
 
 if(Sequential)writevarfmatsolve
 <<"										   \n"
-<<"{										   \n"
-<<" fespace Vh0(Th,P0);								   \n"
-<<" Vh0 size1=hTriangle;							   \n"
-<<" lo=size1[].min;								   \n"
-<<" lo=lo*lfac;									   \n"
+<<"{  										   \n"
+<<"  fespace  Vh0( Th , P0) ;							   \n"
+<<"    Vh0 size1=hTriangle  ;							   \n"
+<<"										   \n"
+<<"  lo = size1[].min       ;							   \n"
+<<"  lo = lo*lfac           ;							   \n"
 <<"}										   \n"
+<<"										   \n";
+
+if(pipegnu)
+writevarfmatsolve
+<<"										   \n"
+<<"  Vh def2(fr)			;	// P1 Variables for force  	   \n"
+<<"					;					   \n"
+<<"  pstream pgnuplot(\"gnuplot\")  	;					   \n"
+<<"  system(\"rm force.data\")      	;					   \n"
+<<"					;					   \n"
+<<"  int[int] ldof(1)			;					   \n"
+<<"  ExtractDofBorderP1(2,Vh,ldof)	;					   \n"
 <<"										   \n";
 
 if(!Sequential)writevarfmatsolve
@@ -932,7 +981,7 @@ if(Sequential){writevarfmatsolve
 <<"	cout <<  \"  Applied traction \" << tr <<endl;				   \n"
 <<"										   \n"
 <<"	if (tr >=5e-3)								   \n"
-<<"		dtr = 1e-5;							   \n"
+<<"		dtr = 1e-6;							   \n"
 <<"										   \n"
 <<"	for(int iter=0; iter<500; iter++){					   \n"
 
@@ -943,7 +992,7 @@ if(Sequential){writevarfmatsolve
 <<"			real[int]    b = elast(0,Vh);		// Assembly for b   \n"
 <<(timelog ? "	timerend  (\"RHS Assembly U\",t0)\n" : " "  	         	    )
 <<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " " 	        	  	    )
-<<"			set(A,solver=CG);			// Solver setup	   \n"
+<<"			set(A,solver=UMFPACK);			// Solver setup	   \n"
 <<"			u[]=A^-1*b;				// Solve	   \n"
 <<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " " 	        	  	    )
 <<"										   \n"
@@ -955,7 +1004,7 @@ if(Sequential){writevarfmatsolve
 <<"			real[int]    b1 = phase(0,Vh1);		// Assembly for b   \n"
 <<(timelog ? "	timerend  (\"RHS Assembly U\",t0)\n" : " "  	         	    )
 <<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " " 	        	  	    )
-<<"			set(A1,solver=CG);			// Solver setup	   \n"
+<<"			set(A1,solver=UMFPACK);			// Solver setup	   \n"
 <<"			phi[]=A1^-1*b1;				// Solve	   \n"
 <<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " " 	        	  	    )
 <<"										   \n"
@@ -973,7 +1022,47 @@ if(Sequential){writevarfmatsolve
 <<"										   \n"
 <<"		iter++;								   \n"
 <<"										   \n"
-<<"		if(err1 < 1e-2 && err2 < 1e-2){					   \n"
+<<"		if(err1 < 1e-5 && err2 < 1e-5){					   \n"
+<<"										   \n";
+
+if(pipegnu)writevarfmatsolve
+<<"										   \n"
+<<"		  matrix And = elastNoDirc(Vh,Vh);				   \n"
+<<"		  fr[]=And*u[];							   \n"
+<<"										   \n"
+<<"		  real forcetot  = 0. ; 					   \n"
+<<"		  for(int i = 0; i < ldof.n; ++i)				   \n"
+<<"		    forcetot = forcetot + fr1[][ldof[i]];			   \n"
+<<"										   \n"
+<<"		  { ofstream ff(\"force.data\",append);			  	   \n"
+<<"		    ff << tr << \"	\" << forcetot*1e-3 << endl; 		   \n"
+<<"		  }								   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"		  { 							   	   \n"
+<<"		    pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\"	;\\n\";    \n"
+<<"		    pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  \n"
+<<"		    pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    \n"
+<<"		    pgnuplot <<\"set grid x y 				;\\n\";    \n"
+<<"		    pgnuplot <<\"set xrange [0:.008] 			;\\n\";    \n"
+<<"		    pgnuplot <<\"set yrange [0:.9] 			;\\n\";    \n"
+<<"		    pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   \n"
+<<"		    pgnuplot <<\"set ylabel \\\" Force (kN)\\\"		;\\n\";    \n"
+<<"		    pgnuplot <<\"set key left 				;\\n\";    \n"
+<<"		    pgnuplot <<\"plot					\" 	   \n"
+<<"			     <<\"    \\\"force.data\\\"			\" 	   \n"
+<<"			     <<\"	   u ($1):($2) w lp pt 6 ps 2 t \\\"   FEM\\\",\"\n"
+//<<"			     <<\"	  \\\"ambati.data\\\"		\" 	   \n"
+//<<"			     <<\"	   u ($1):($2) w lp lt 5 pt 4 ps 2 lw 2 t \\\"Ref\\\"	\" 	   \n"
+<<"			     <<\"					\\n\"; 	   \n" 
+<<"		    flush(pgnuplot);					   	   \n"
+<<"		  }							  	   \n"
+<<"										   \n"
+<<"										   \n";
+
+writevarfmatsolve
+<<"										   \n"
 <<"			cout.scientific << \" Solution converged after \"<<        \n"
 <<"			iter <<endl;						   \n"	
 <<"			plot(phi,fill=1,value=1);				   \n"
@@ -1009,7 +1098,7 @@ if(spc==3)writevarfmatsolve
 writevarfmatsolve       
 <<"		order=vtuorder,dataname=\"U phi\");				   \n"
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "   	        	    )
-<<(timelog ? "	timerend(\"Solver\",t1)\n" : " "	   	        	    )	
+<<(timelog ? "	timerend  (\"Solver\",t1)\n" : " "	   	        	    )	
 <<"										   \n"; 
   
 system("mkdir -p VTUs");	  
@@ -1143,7 +1232,7 @@ if(plotAll)writevarfmatsolve
 
 if(debug)writevarfmatsolve
 <<"										   \n"				
-<<"			plotMPI(Th, phi[], \"Damage\", Zk, def, real, 2, 0)	   \n"
+<<"			plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Zk, def, real, 2, 0)	   \n"
 <<"										   \n";
 
 writevarfmatsolve
