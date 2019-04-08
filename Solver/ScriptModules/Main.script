@@ -28,7 +28,7 @@ if(!Sequential)writemain
 if(plotAll)writemain
 <<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
 
-if()writemain
+if(pipegnu)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n"
 <<"  include \"../Plugins/MacroTools.edp\"              // Important macros	   \n";
 
