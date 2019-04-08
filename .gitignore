@@ -8,12 +8,15 @@
 *.pvd
 
 ## PARALLEL/SEQUENTIAL VERSION FILES ##
-macros.edp
-meshPartitioning.edp
-varfmatsolve.edp
-parameters.edp
-mesh.edp
-main.edp
+Main.edp
+Mesh.edp
+Macros.edp
+Parameters.edp
+PostProcessor.edp
+MeshPartitioning.edp
+VariationalFormulations.edp
+LinearFormBuilderAndSolver.edp
+BoundaryAndSourceConditions.edp
 
 ## SHARED OBJECT FILES ##
 *.o

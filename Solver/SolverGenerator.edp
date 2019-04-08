@@ -1,0 +1,95 @@
+/**************************************************************************************
+*									       	      *
+* Date:	   04/03/2019							              *
+* Type:    Execution file						              *
+* Comment: Once executed this file generates following edp files: Main, Macros, Mesh, *
+*          MeshPartitioning,   VariationalFormulations,   BoundaryAndSourceConditions *
+*          Parameters,  LinearFormBuilderAndSolver, and PostProcessor. All these .edp * 
+*          files combine  together to form  a fully tailored  solid mechanics solver. *
+*	   Commandline flags  are  used to controls the nature of the generated file. *
+*          One   is    advised     to   carefully   go   through   these   arguments. *
+* To run : ff-mpirun -np 1 Main.edp -v 0 -ns -nw [ARGUMENTS]		              *
+*									              *
+**************************************************************************************/
+
+//=====================================================================================
+// ------ All command line argument descriptions [ARGUMENTS] ------
+//=====================================================================================
+/*
+  -dimension   [int]	  Accepts values 2 or 3.  2 for 2D 3 for 3D. Default 2.
+  
+  -lagrange    [int]      Lagrange order used for building FE space. Options are 
+  			  1 for P1 or 2 for P2. Defaut is P1.  
+  
+  -partitioner [sting]    Mesh partitioner to be used. Options are "metis"
+  			  "parmetis" "scotch" or "ptstoch".
+  			
+  -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
+  			  active '-parmetis_worker [int]'.			
+  			  
+  -help        [bool]     To activate helping message on the terminal. Default OFF. 
+  			  
+  -plot        [bool]     To activate plotting routine. Default OFF.
+
+  -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
+  
+  -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.  			   
+
+  -pointbc     [bool]     To activate Dirichlet boundry condition on point. Default OFF.
+  
+  -nonlinear   [bool]     To activate non-linear mechanics (Crack). Default OFF.
+  
+  -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
+  
+  -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
+  
+  -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF. 
+
+  -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
+
+*/
+
+//=====================================================================================
+// ------ All files to be included ------ 
+//=====================================================================================
+
+  include "getARGV.idp"    	// Enables importing commandline arguments
+
+//=====================================================================================
+// ------ All variables ------ 
+//=====================================================================================
+
+  int spc = getARGV("-dimension", 2);
+  int lag = getARGV("-lagrange" , 1); 
+  
+  string Partitioner=getARGV("-partitioner", "parmetis");
+
+  bool help        =  usedARGV("-help"       ) != -1;
+  bool debug       =  usedARGV("-debug"      ) != -1;
+  bool plotAll     =  usedARGV("-plot"       ) != -1;
+  bool pipegnu     =  usedARGV("-pipegnu"    ) != -1;  
+  bool pointbc     =  usedARGV("-pointbc"    ) != -1;
+  bool timelog     =  usedARGV("-timelog"    ) != -1;
+  bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
+  bool nonlinear   =  usedARGV("-nonlinear"  ) != -1;   
+  bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
+  bool Sequential  =  usedARGV("-sequential" ) != -1;      
+  bool dirichletbc =  usedARGV("-dirichletbc") !=  1;
+  
+  
+  int labelDirichlet=2; 
+  if(nonlinear)labelDirichlet=1;
+
+//=====================================================================================
+// ------ All scriptfiles ------ 
+//=====================================================================================
+
+  include "./ScriptModules/Help.script"
+  include "./ScriptModules/Main.script"
+  include "./ScriptModules/Mesh.script"
+  include "./ScriptModules/Macros.script"
+  include "./ScriptModules/Parameters.script"
+  include "./ScriptModules/BoundaryAndSourceConditions.script"
+  include "./ScriptModules/VariationalFormulation.script"
+  include "./ScriptModules/LinearFormBuilderAndSolver.script"  
+  include "./ScriptModules/PostProcessor.script"

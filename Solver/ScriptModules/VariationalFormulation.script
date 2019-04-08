@@ -1,0 +1,128 @@
+//=====================================================================================
+// ------ Building the VariationalFormulations.edp file ------ 
+//=====================================================================================
+
+{ofstream  writevarfmatsolve("VariationalFormulations.edp");
+
+writevarfmatsolve
+<<"										   \n"
+<<"/**************************Variational formulation******************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n"
+<<"										   \n";
+
+if(!nonlinear){writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation linear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+writevarfmatsolve
+<<"										   \n"
+<<"varf elast(def(u),def(v))							   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			lambda*divergence(u)*divergence(v)			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n"
+<<"		  )								   \n";
+
+if(bodyforce)writevarfmatsolve
+<<"										   \n"
+<<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
+
+
+if(tractionbc)writevarfmatsolve
+<<"										   \n"
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
+
+if(dirichletbc){
+
+if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"	+ on( Dlabel, 				// Displacement (Dirichlet)	   \n"
+<<"		u  = Dvalue[0],							   \n"
+<<"		u1 = Dvalue[1]							   \n"
+<<"	    );		   		   		   			   \n"
+<<"										   \n";
+
+if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"	+ on(Dlabel,				// Displacement (Dirichlet)	   \n"
+<<"		u  = Dvalue[0],							   \n"
+<<"		u1 = Dvalue[1],							   \n"
+<<"		u2 = Dvalue[2]			   				   \n"
+<<"	    );		   							   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] dirichletbc ended --//
+
+}  //-- [if loop terminator] !nonlinear ended --//
+
+if(nonlinear){writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation nonlinear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"  Vh  def2(u) , def2(uold)  ;	// Defining displacement FE variables 	   \n"
+<<"  Vh1 phi , phiold          ;	// Damage field	FE variables	   	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"varf elast(def2(u),def2(v))							   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"			    )							   \n";
+
+if(bodyforce)writevarfmatsolve
+<<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
+
+if(tractionbc)writevarfmatsolve
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+
+if(dirichletbc){
+
+if(spc==2)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1])	// Displacement (Dirichlet)	   \n"
+<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
+<<"										   \n";
+
+if(spc==3)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
+<<"				,u2=Dvalue[2]);	// Displacement (Dirichlet)	   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] dirichletbc ended --//
+
+
+if(pipegnu)writevarfmatsolve
+<<"										   \n"
+<<"varf elastNoDirc(def2(u),def2(v))						   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"			    );							   \n";
+
+writevarfmatsolve
+<<"										   \n"
+<<"varf phase(phi,q)								   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			(Gc*lo*(grad(phi)'*grad(q))) +				   \n"
+<<"			( ((Gc/lo)  + 2.*Hplus(u))*phi*q )			   \n"
+<<"			    )							   \n"
+<<"	+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )					   \n"
+<<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)     \n";
+
+}  //-- [if loop terminator] nonlinear ended --//
+
+} //-- [ostream terminator]  varfmatsolve.edp closed --//

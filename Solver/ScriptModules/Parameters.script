@@ -1,0 +1,84 @@
+//=====================================================================================
+// ------ Building the Parameters.edp file ------ 
+//=====================================================================================
+
+{ofstream  writemeshParameters("Parameters.edp");
+
+writemeshParameters
+<<"										   \n"
+<<"/***********************************Parameters**********************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------FEM mesh to be loaded (Un-partitioned)------- 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+
+if(!nonlinear)writemeshParameters
+<<"										   \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  // Mesh file name \n";
+
+if(nonlinear)writemeshParameters
+<<"										   \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/square-crack\";  // Mesh file name\n";
+
+
+writemeshParameters
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Material properties------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  real mu		// Lame parameter					   \n"
+<<"      ,lambda\t	// Lame parameter					   \n"
+<<(bodyforce ? "      ,f2		// Force in Y\n"    : ""		    )
+<<(timelog   ? "      ,t0		// Time variable\n" : ""		    )
+<<(timelog   ? "      ,t1		// Time variable\n" : ""		    )
+<<"       ;	   								   \n"
+<<"										   \n"
+<<"{										   \n"
+<<"real E  = 200.e9,				//Modulus of Elasticity - [Pa]	   \n"
+<<"     nu = 0.3  ;				// Poisson ratio - [-]		   \n"
+<<"	 									   \n"
+<<"mu     = E/(2.*(1.+nu));							   \n"
+<<"lambda = E*nu/((1.+nu)*(1.-2.*nu));						   \n"
+<<"	 									   \n"
+<<(bodyforce ? "f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
+<<" 										   \n"
+<<"	 									   \n"
+<<"}	 									   \n"
+<<"	 									   \n"
+<<"	 									   \n";
+
+
+
+if(nonlinear)writemeshParameters
+<<"	 									   \n"
+<<"//==============================================================================\n"
+<<"// -------Nonlinear parameters------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"	 									   \n"
+<<"real Gc    = 2.7  ,								   \n"
+<<"	lfac  = 2.0  ,								   \n"
+<<"	maxtr = 9e-3 ,								   \n"
+<<"	tr    = 1e-5 ,								   \n"
+<<"	dtr   = 1e-5 ,								   \n"
+<<"	lo           ;								   \n"
+<<"	 									   \n"
+<<"	lambda = 121.15e3 ;							   \n"
+<<"	mu     = 80.77e3  ;							   \n";
+
+} //-- [ostream terminator]  parameters.edp closed --//

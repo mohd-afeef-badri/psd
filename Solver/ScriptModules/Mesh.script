@@ -1,0 +1,195 @@
+//=====================================================================================
+// ------ Building the MeshPartitioning.edp or Mesh.edp file ------ 
+//=====================================================================================
+  
+{ofstream  writemeshPartitioning(Sequential ? "Mesh.edp" : "MeshPartitioning.edp" );
+
+writemeshPartitioning
+<<"										   \n"
+<<"/*****************************Mesh And Partitioning*****************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n"
+<<"										   \n";
+
+//-----------------------------SEQUENTIAL------------------------------------------//
+
+if(Sequential){writemeshPartitioning
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Loading the FE mesh-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<(timelog  ? "	timerbegin(\"Solver\",t1)\n" : " "         		  	    )
+<<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
+<<" 		load \"gmsh\"					// Load  gmsh	   \n"
+<<" 		meshN Th = gmshloadN(\"\"+ThName+\".msh\");\t	// Mesh loaded	   \n"
+<<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : " "     		      	    )
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Building the FE spaces-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
+<<"										   \n";
+
+}
+
+//-------------------------------PARALLEL------------------------------------------//
+
+if(!Sequential){writemeshPartitioning
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Loading the FE mesh-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" meshN   Th = DummyMesh;			// This is a dummy mesh for now	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Building the FE spaces-------  					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<" fespace Vh   ( Th , Pk );			// Local mixed FE space		   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Domian decomposition suppoprt-------  				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<" int[int] arrayIntersectionP;                // Ranks of neighboring subdomains \n"
+<<" int[int][int] restrictionIntersectionP(0);  // Local-to-neighbors renumbering  \n"
+<<" real[int] DP;                               // Partition of unity		   \n"
+<<"										   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<" int[int] arrayIntersectionZ;                // Ranks of neighboring subdomains \n"
+<<" int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering  \n"
+<<" real[int] DZ;                               // Partition of unity		   \n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Function building the restriction matrix and partion of unity-------  \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<" func int PartThAndBuildCommunication(){					   \n"
+<<"										   \n"
+<<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
+<<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded	   \n"
+<<"										   \n"
+<<"										   \n";
+
+if(!nonlinear)writemeshPartitioning
+<<"										   \n"
+<<"  PETScMPIBuild(								   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionP		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix	   	   \n"
+<<"		   Vh				, // Local FE space name	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			  // MPI world		   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n";
+
+if(nonlinear)writemeshPartitioning
+<<"										   \n"
+<<"  fespace Ph(ThGlobal, P0);							   \n"
+<<"  	     Ph part;								   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  if(mpirank == 0)								   \n"
+<<"	partitionerSeq(part[], ThGlobal, mpisize);				   \n"
+<<"										   \n"
+<<"  partitionerPar(part[], ThGlobal, mpiCommWorld, mpisize);			   \n"
+<<"										   \n"
+<<"  PETScMPIBuildWithPartitioning(						   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   part[]			, // Partitions			   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DZ				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionZ		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionZ	, // Restriction matrix	   	   \n"
+<<"		   Vh1				, // Local FE space name	   \n"
+<<"		   Zk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			  // MPI world		   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n"
+<<"  ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded	   \n"
+<<"										   \n"
+<<"  PETScMPIBuildEdgeWithPartitioning(						   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   part[]			, // Partitions			   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionP		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix	   	   \n"
+<<"		   Vh				, // Local FE space name	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			, // MPI world		   	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   def2				, // Scalar definition	   	   \n"
+<<"		   init2		  	  // Scalar initilization   	   \n"
+<<"		  )		   						   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n";
+
+writemeshPartitioning
+<<"										   \n"
+<<"  return 0;									   \n"
+<<"										   \n"
+<<" }										   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Solver\",t1)\n" : " " 	         	 	    )
+<<(timelog  ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
+<<"    PartThAndBuildCommunication();						   \n"
+<<(timelog ? "	MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
+<<"										   \n"
+<<"										   \n";
+
+}
+
+} //-- [ostream terminator]  meshpartitioning.edp closed --//

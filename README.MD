@@ -9,19 +9,19 @@ The parallel/sequential solvers can be run on linux platforms and can be used wi
 ### Step 1 ? ###
 
 ```
-ff-mpirun -np 1 scriptGenerator.edp -v 0 -nw [OptionsA]
+ff-mpirun -np 1 SolverGenerator.edp -v 0 -nw [OptionsA]
 
 ```
 
 ### Step 2 ? ###
 For parallel:
 ```
-ff-mpirun -np $NP main.edp -v 0 -nw [OptionsB]
+ff-mpirun -np $NP Main.edp -v 0 -nw [OptionsB]
 
 ```
 For sequential:
 ```
-FreeFem++ main.edp -v 0 -nw [OptionsB]
+FreeFem++ Main.edp -v 0 -nw [OptionsB]
 
 ```
 
@@ -68,4 +68,7 @@ Here is the list of options that are available.
 ```
 ```
 -plot		[bool]		Use -plot to activate plotting using paraview. Default is false.
+```
+```
+-pipegnu	[bool]		Use -pipegnu to activate realtime pipe plotting using GnuPlot. Default is false.
 ```

@@ -12,8 +12,8 @@ usage:
 
 
 clean:
-	rm *.pvd VTUs/* mesh.edp main.edp macros.edp varfmatsolve.edp meshPartitioning.edp parameters.edp
-
+	rm *.pvd VTUs/* Mesh.edp Main.edp Macros.edp VariationalFormulations.edp BoundaryAndSourceConditions.edp LinearFormBuilderAndSolver.edp Parameters.edp PostProcessor.edp MeshPartitioning.edp
+ 
 cleanvtu:
 	rm *.pvd VTUs/*
 

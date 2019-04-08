@@ -1,0 +1,234 @@
+//=====================================================================================
+// ------ Building the Macros.edp file ------ 
+//=====================================================================================
+   
+{ofstream  writemacros("Macros.edp");
+
+writemacros
+<<"										   \n"
+<<"/******************************Userdefined macros*******************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n";
+  
+
+if(spc==2){writemacros
+<<"										   \n"
+<<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
+<<"										   \n"
+<<"  macro partitioner "+Partitioner+"\t\t	// Mesh partitioner used   	   \n"
+<<"  macro dimension 2      			// Two-dimensional problem 	   \n"
+<<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n";
+
+if(!nonlinear)writemacros
+<<"										   \n"
+<<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n"
+<<"  macro init (i) [ i ,  i  ]			// Vect. field initialize  	   \n"
+<<"										   \n";
+
+writemacros
+<<"										   \n"
+<<"//--------------------Divergence and epsilion macros--------------------------//\n"
+<<"										   \n"
+<<"  macro divergence(i)(dx(i) + dy(i#1))		// Divergence function     \n"
+<<"  macro epsilon(i) [dx(i), dy(i#1),						   \n" 
+<<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition	   \n";
+
+if(nonlinear)writemacros
+<<"										   \n"
+<<"//---------------------------Non-linear macros--------------------------------//\n"
+<<"										   \n"
+<<"  macro def2  (i) [ i , i#1 ]				// Vect. field 	   \n"
+<<"  macro init2 (i) [ i ,  i  ]				// Vect. initialize\n"
+<<"  macro def  (i)   i						// Scalar field    \n"
+<<"  macro init (i)   i						// Initialize  	   \n"
+<<"  macro Zk         P1             				// FE space	   \n"
+<<"  macro grad (i) [ dx(i), dy(i) ]				// 2d gradient     \n"
+<<"										   \n"
+<<"//-------------------------Stess (Sigma) macros-------------------------------//\n"
+<<"										   \n"
+<<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )	// Sigma_xx	   \n"
+<<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )	// Sigma_yy	   \n"
+<<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )			// Sigma_yx	   \n"
+<<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ] 	// Sigma	   \n"
+<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
+<<"										   \n";
+   
+  
+if(Sequential)writemacros
+<<"										   \n"
+<<"//--------------------Sequential remapping macros-----------------------------//\n"
+<<"										   \n"
+<<"  macro meshN()mesh				// Two-dimensional problem	   \n"
+<<"  macro intN()int2d				// Two-dimensional integral	   \n"
+<<"  macro intN1()int1d				// One-dimensional integral	   \n"
+<<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader   \n"
+<<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader	   \n"
+<<"										   \n";
+
+} //-- [if loop terminator] space==2 ended --//
+
+
+
+if(spc==3){writemacros
+<<"										   \n"
+<<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
+<<"										   \n"
+<<"  macro Pk [P"+lag+",P"+lag+",P"+lag+"]\t\t		// Finite element space	   \n"
+<<"  macro partitioner "+Partitioner+"\t		// Mesh partitioner used   \n"
+<<"  macro dimension   3				// Three-D problem	   \n";
+
+
+if(!nonlinear)writemacros
+<<"										   \n"
+<<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
+<<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n"
+<<"										   \n";
+
+writemacros
+<<"										   \n"
+<<"//--------------------Divergence and epsilion macros--------------------------//\n"
+<<"										   \n"
+<<"  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )	// Divergence macro\n"
+<<"  macro epsilon   (i) [ dx( i ) , dy(i#1) , dz(i#2) ,			   \n"
+<<"                       (dz(i#1) + dy(i#2))/sqrt(2.0),			   \n"
+<<"                       (dz( i ) + dx(i#2))/sqrt(2.0),			   \n"
+<<"                       (dy( i ) + dx(i#1))/sqrt(2.0)]	// Strain macro    \n"
+<<"										   \n";
+
+if(nonlinear)writemacros
+<<"										   \n"
+<<"//--------------------------Non-linear macros---------------------------------//\n"
+<<"										   \n"
+<<"  macro grad  (i)  [ dx(i), dy(i), dz(i) ]	// Three-D gradient	   	   \n"
+<<"  macro init2 (i)  [   i  ,   i  ,   i   ]	// Vect. field initialize  	   \n"
+<<"  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]	// Vect. field definition  	   \n"
+<<"  macro def   (i)		i		// Scalar field   	   \n"
+<<"  macro init  (i)		i		// Initialize  		   \n"
+<<"  macro Zk		        P1            	// FE space	   		   \n"
+<<"										   \n"
+<<"//-------------------------Stess (Sigma) macros-------------------------------//\n"
+<<"										   \n"
+<<"  macro sxx (i) ( lambda*divergence(i)+2*mu*dx( i ) )	// Sigma_xx	   \n"
+<<"  macro syy (i) ( lambda*divergence(i)+2*mu*dy(i#1) )	// Sigma_yy	   \n"
+<<"  macro szz (i) ( lambda*divergence(i)+2*mu*dz(i#2) )	// Sigma_zz	   \n"
+<<"  macro sxy (i) (     mu*( dy( i ) + dx(i#1) )      )	// Sigma_xy	   \n"
+<<"  macro sxz (i) (     mu*( dz( i ) + dx(i#2) )      )	// Sigma_xz	   \n"
+<<"  macro syz (i) (     mu*( dz(i#1) + dy(i#2) )      )	// Sigma_yz	   \n"
+<<"  macro sig (i) [     sxx(i), syy(i), szz(i)        ,			   \n"
+<<"                         sqrt(2.0) * syz(i)         ,			   \n"
+<<"                         sqrt(2.0) * sxz(i)         ,			   \n"
+<<"                         sqrt(2.0) * sxy(i)         ]	// Sigma   	   \n"
+<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )	// Hplus   	   \n"
+<<"										   \n";
+
+if(Sequential)writemacros
+<<"										   \n"
+<<"//---------------------Sequential remapping macros----------------------------//\n"
+<<"										   \n"
+<<"  load \"msh3\"				// Loading 3D mesh		   \n"
+<<"  macro meshN()mesh3				// Three-dimensional problem	   \n"
+<<"  macro intN()int3d				// Three-dimensional integral	   \n"
+<<"  macro intN1()int2d				// Two-dimensional integral	   \n"
+<<"  macro readmeshN()readmesh3			// Three-dimensional problem	   \n"
+<<"  macro gmshloadN()gmshload3			// Three-dimensional 'msh' reader  \n"
+<<"										   \n";
+
+} //-- [if loop terminator] space==3 ended --//
+
+
+
+if(pointbc){writemacros
+<<"										   \n"
+<<"//----------------------------Point BC macro----------------------------------//\n"
+<<"										   \n"
+<<"  macro Pointbc(Dpointlab,Wh,A,b,PnV){					   \n"
+<<"    int count=0;								   \n"
+<<"    meshN Th=Wh.Th;								   \n"
+<<"										   \n";
+ 
+if(spc==2)writemacros
+<<"										   \n"
+<<"	varf vlabs(def(u),def(v)) 						   \n"
+<<"	= on( Dpointlab, 							   \n"
+<<"		u  = -1*( x==PnV[0] && y==PnV[1] ),   				   \n"
+<<"		u1 = -1*( x==PnV[0] && y==PnV[1] )				   \n"
+<<"	     );									   \n"
+<<"										   \n";
+
+if(spc==3)
+writemacros
+<<"										   \n"
+<<"    varf vlabs(def(u),def(v)) 						   \n"
+<<"	= on( Dpointlab, 							   \n"
+<<"		u  = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),	  	   \n"
+<<"		u1 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),	   	   \n"
+<<"		u2 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ) 	   	   \n"
+<<"	    );									   \n"
+<<"										   \n";
+
+writemacros
+<<"										   \n"
+<<"    real[int] absc=vlabs(0,Wh);						   \n"
+<<"										   \n"
+<<"    for (int i=0; i<Wh.ndof; i++){						   \n"
+<<"      if(abs(-1e+30-absc(i))==0 ){						   \n"
+<<"        A(i,i)=tgv;								   \n"
+<<"        b[i]=PnV["+spc+"+count]*tgv;						   \n"
+<<"        count++;								   \n"
+<<"         if(count=="+spc+") break;						   \n"
+<<"      }									   \n"
+<<"    }									   \n"
+<<"  }										   \n"
+<<"										   \n"
+<<"										   \n";
+
+} //-- [if loop terminator] pointbc ended --//
+
+
+if(timelog){writemacros
+<<"										   \n"
+<<"//-----------------------------------Timing macros----------------------------//\n"
+<<"										   \n";
+
+if(!Sequential)writemacros
+<<"										   \n"
+<<"  macro MPItimerbegin(str1,t0){						   \n"
+<<"    mpiBarrier(mpiCommWorld);						   \n"
+<<"    t0 = mpiWtime();							   	   \n"
+<<"    if(mpirank==0)								   \n"
+<<"    cout << \"\"+str1+\" began\\n\";					   	   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"  macro MPItimerend(str1,t0){						   \n"
+<<"    mpiBarrier(mpiCommWorld);						   \n"
+<<"    if(mpirank==0)								   \n"
+<<"    cout.scientific << \"It took [ \"<< mpiWtime()-t0 			   \n"
+<<"      << \" ] seconds to finish \" +str1+\"\\n\\n\";				   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"										   \n";
+
+if(Sequential)writemacros
+<<"										   \n"
+<<"  macro timerbegin(str1,t0){							   \n"
+<<"    t0 = clock();								   \n"
+<<"    cout << \"\"+str1+\" began\\n\";						   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"  macro timerend(str1,t0){							   \n"
+<<"    cout.scientific << \"It took [ \"<< clock()-t0 				   \n"
+<<"      << \" ] seconds to finish \" +str1+\"\\n\\n\";				   \n"
+<<"  }//									   \n"
+<<"										   \n"
+<<"										   \n";
+
+} //-- [if loop terminator] timelog ended --//
+
+} //-- [ostream terminator]  macros.edp closed --//  
+

@@ -1,0 +1,15 @@
+//-----------------------------User-defined macros--------------------------//
+
+//==============================================================================
+// -------Extacting degrees of freedom of a border P1------- 
+//==============================================================================
+macro ExtractDofBorderP1(labs,Wh,doflabs){    
+	meshN Th=Wh.Th;
+    	varf vlabsneg(def2(fr),def2(q)) = on(labs,fr1=-1);        
+    	real[int] absc=vlabsneg(0,Wh);
+    	doflabs.resize(Wh.ndof);
+    	doflabs=0:Wh.ndof-1;    	
+    	sort(absc,doflabs);    	
+    	absc= absc? 1:0;    	  
+    	doflabs.resize(absc.sum+0.5);
+} // 
