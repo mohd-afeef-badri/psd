@@ -41,8 +41,7 @@ if(Sequential)writesolver
 <<"										   \n"
 <<"										   \n";
 
-if(pipegnu)
-writesolver
+if(pipegnu)writesolver
 <<"										   \n"
 <<"  matrix  And			;	// PostProcessing		   \n"
 <<"										   \n"
@@ -203,7 +202,16 @@ if(!Sequential){writesolver
 <<"  MatDUMMY1.resize(0,0);							   \n"
 <<"										   \n"
 <<"  matrix     ALoc, ALoc1			;				   \n"
-<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n"
+<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n";
+
+if(pipegnu)writesolver
+<<"										   \n"
+<<"  matrix	 MatDUMMY2 = DUMMY(Vh, Vh);					   \n"
+<<"  Mat A2(MatDUMMY2, arrayIntersectionP, restrictionIntersectionP, DP);  	   \n"
+<<"  MatDUMMY2.resize(0,0);							   \n"
+<<"										   \n";
+
+writesolver
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -233,7 +241,7 @@ writesolver
 <<(timelog ? "	MPItimerend(\"RHS Assembly U\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
-<<"  for(int iter=0; iter<500; iter++){						   \n"
+<<"  for(int iter=0; iter<1000; iter++){					   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Matrix Assembly U\",t0)\n" : " "           	    )
 <<"    ALoc = elast(Vh,Vh);			// Assembly bilinear	  	   \n"
@@ -293,12 +301,55 @@ writesolver
 <<"										   \n"
 <<"    iter++;								   	   \n"
 <<"										   \n"
-<<"    if(err1Gather < 1e-1 && err2Gather < 1e-1){			   	   \n"
+<<"    if(err1Gather < 1e-3 && err2Gather < 1e-3){			   	   \n"
+<<"										   \n"
 <<"										   \n"
 <<"      if(mpirank==0)						   		   \n"
 <<"        cout.scientific << \" Solution converged after \"		           \n"
 <<"                        <<  iter <<endl;					   \n"
 <<"										   \n";
+
+if(pipegnu)writesolver
+<<"	And = elastNoDirc(Vh,Vh);						   \n"
+<<"	changeOperator(A2, And);						   \n"
+<<"	fr[]=And*u[];								   \n"
+<<"										   \n"
+<<"	fr[].*= DP;								   \n"
+<<"										   \n"
+<<"	real forcetot  = 0.,forcetotGath  = 0. ;				   \n"
+<<"		for(int i = 0; i < ldof.n; ++i)					   \n"
+<<"		forcetot = forcetot + fr1[][ldof[i]];				   \n"
+<<"										   \n"
+<<"	mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);		   \n"
+<<"										   \n"
+<<"	if(mpirank==0){								   \n"
+<<"	{ ofstream ff(\"force.data\",append);					   \n"
+<<"		ff << tr << \"	\" << forcetotGath*1e-3 << endl;			   \n"
+<<"	}									   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"      { 							   	   	   \n"
+<<"	   pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\"	;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  	   \n"
+<<"	   pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set grid x y 				;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set xrange [0:.008] 			;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set yrange [0:.9] 			;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   	   \n"
+<<"	   pgnuplot <<\"set ylabel \\\" Force (kN)\\\"		;\\n\";    	   \n"
+<<"	   pgnuplot <<\"set key left 				;\\n\";    	   \n"
+<<"	   pgnuplot <<\"plot					\" 	   	   \n"
+<<"		    <<\"    \\\"force.data\\\"			\" 	   	   \n"
+<<"		    <<\"	   u ($1):($2) w lp pt 6 ps 2 t \\\"   FEM\\\",\"  \n"
+<<"		    <<\"     \\\"ambati.data\\\"		\" 	  	   \n"
+<<"		    <<\"	   u ($1):($2) w lp lt 5 pt 4 ps 2  t \\\"Ref\\\"\"\n"
+<<"		    <<\"					\\n\"; 	   	   \n" 
+<<"        flush(pgnuplot);					   	   	   \n"
+<<"       }							  	   	   \n"
+<<"	  }								   	   \n"
+<<"									   	   \n";
 
 if(plotAll)writesolver
 <<"										   \n"

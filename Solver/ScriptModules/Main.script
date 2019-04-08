@@ -38,8 +38,8 @@ if(Sequential)writemain
 <<"  include \"Parameters.edp\"                         // Parameters & propeties  \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
 <<"  include \"Mesh.edp\"                               // Loading mesh 	   \n"
-<<"  include \"BoundaryAndSourceConditions.edp\"        // Boundary Conditions 	   \n"
-<<"  include \"VariationalFormulations.edp\"            // Variational Formulations\n"
+<<"  include \"BoundaryAndSourceConditions.edp\"        // Boundary conditions 	   \n"
+<<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 
 if(!Sequential)writemain
@@ -48,8 +48,8 @@ if(!Sequential)writemain
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
 <<"  include \"../Plugins/DDmacro.edp\"                 // Domain decomp macros    \n"
 <<"  include \"MeshPartitioning.edp\"                   // Loading mesh 	   \n"
-<<"  include \"BoundaryAndSourceConditions.edp\"	// Boundary Conditions	   \n"
-<<"  include \"VariationalFormulations.edp\"		// Variational Formulations\n"
+<<"  include \"BoundaryAndSourceConditions.edp\"        // Boundary conditions	   \n"
+<<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 
 if(plotAll)writemain
