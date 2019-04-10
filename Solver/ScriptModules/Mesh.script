@@ -2,7 +2,7 @@
 // ------ Building the MeshPartitioning.edp or Mesh.edp file ------ 
 //=====================================================================================
   
-{ofstream  writemeshPartitioning(Sequential ? "Mesh.edp" : "MeshPartitioning.edp" );
+{ofstream  writemeshPartitioning("MeshAndFeSpace.edp");
 
 writemeshPartitioning
 <<"										   \n"
@@ -27,11 +27,11 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog  ? "	timerbegin(\"Solver\",t1)\n" : " "         		  	    )
-<<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : " "         	  	    )
-<<" 		load \"gmsh\"					// Load  gmsh	   \n"
-<<" 		meshN Th = gmshloadN(\"\"+ThName+\".msh\");\t	// Mesh loaded	   \n"
-<<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : " "     		      	    )
+<<(timelog  ? "	timerbegin(\"Solver\",t1)\n" : ""         		  	    )
+<<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : ""         	  	    )
+<<"  load \"gmsh\"					// Load  gmsh	   	   \n"
+<<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Mesh loaded	   	   \n"
+<<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : ""     		      	    )
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -39,11 +39,9 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n"
-<<"										   \n";
+<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n";
 
 if(nonlinear)writemeshPartitioning
-<<"										   \n"
 <<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
 <<"										   \n";
 

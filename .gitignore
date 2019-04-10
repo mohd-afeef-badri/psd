@@ -9,11 +9,10 @@
 
 ## PARALLEL/SEQUENTIAL VERSION FILES ##
 Main.edp
-Mesh.edp
 Macros.edp
 Parameters.edp
 PostProcessor.edp
-MeshPartitioning.edp
+MeshAndFeSpace.edp
 VariationalFormulations.edp
 LinearFormBuilderAndSolver.edp
 BoundaryAndSourceConditions.edp

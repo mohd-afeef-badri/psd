@@ -12,7 +12,7 @@ usage:
 
 
 clean:
-	rm *.pvd VTUs/* Mesh.edp Main.edp Macros.edp VariationalFormulations.edp BoundaryAndSourceConditions.edp LinearFormBuilderAndSolver.edp Parameters.edp PostProcessor.edp MeshPartitioning.edp
+	rm *.pvd VTUs/* force.data  MeshAndFeSpace.edp Main.edp Macros.edp VariationalFormulations.edp BoundaryAndSourceConditions.edp LinearFormBuilderAndSolver.edp Parameters.edp PostProcessor.edp
  
 cleanvtu:
 	rm *.pvd VTUs/*

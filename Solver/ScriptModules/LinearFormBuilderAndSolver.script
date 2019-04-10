@@ -80,14 +80,14 @@ if(Sequential){writesolver
 <<"  cout <<  \"  Applied traction \" << tr <<endl;				   \n"
 <<"										   \n"
 <<"  if (tr >=5e-3)								   \n"
-<<"    dtr = 1e-5;								   \n"
+<<"    dtr = 1e-6;								   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"RHS Assembly U\",t0)\n" : "" 	          	    )
 <<"  b = elast(0,Vh);				// Assembly for b (once / NL loop) \n"
 <<(timelog ? "	timerend  (\"RHS Assembly U\",t0)\n" : ""  	         	    )
 <<"										   \n"
 <<"										   \n"
-<<"  for(int iter=0; iter<1000; iter++){					   \n"
+<<"  for(int iter=0; iter<100; iter++){					   	   \n"
 
 <<(timelog ? "	timerbegin(\"Matrix Assembly U\",t0)\n" : ""	           	    )
 <<"    A = elast(Vh,Vh);				// Assembly for A   	   \n"
@@ -121,9 +121,7 @@ if(Sequential){writesolver
 <<"    phiold[]=phi[];								   \n"
 <<"    uold[]=u[];								   \n"
 <<"										   \n"
-<<"    iter++;									   \n"
-<<"										   \n"
-<<"    if(err1 < 1e-5 && err2 < 1e-5){						   \n"
+<<"    if(err1 < 1e-2 && err2 < 1e-2){						   \n"
 <<"										   \n";
 
 if(pipegnu)writesolver
@@ -152,9 +150,9 @@ if(pipegnu)writesolver
 <<"	   pgnuplot <<\"set key left 				;\\n\";    	   \n"
 <<"	   pgnuplot <<\"plot					\" 	   	   \n"
 <<"		    <<\"    \\\"force.data\\\"			\" 	   	   \n"
-<<"		    <<\"	   u ($1):($2) w lp pt 6 ps 2 t \\\"   FEM\\\",\"  \n"
+<<"		    <<\"	   u 1:2 w lp pt 6 ps 2 t \\\"   FEM\\\",\"  	   \n"
 <<"		    <<\"     \\\"ambati.data\\\"		\" 	  	   \n"
-<<"		    <<\"	   u ($1):($2) w lp lt 5 pt 4 ps 2  t \\\"Ref\\\"\"\n"
+<<"		    <<\"	   u 1:2 w lp lt -1 pt 4 ps 2  t \\\"Ref\\\"\"	   \n"
 <<"		    <<\"					\\n\"; 	   	   \n" 
 <<"        flush(pgnuplot);					   	   	   \n"
 <<"       }							  	   	   \n"
@@ -234,7 +232,7 @@ writesolver
 <<"  if(mpirank==0)cout <<  \"  Applied traction \" << tr <<endl;		   \n"
 <<"										   \n"
 <<"  if (tr >=5e-3)								   \n"
-<<"    dtr = 1e-5;								   \n"
+<<"    dtr = 1e-6;								   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"RHS Assembly U\",t0)\n" : ""           	            )
 <<"    b = elast(0,Vh);				// Assembly linear	 	   \n"
@@ -301,7 +299,7 @@ writesolver
 <<"										   \n"
 <<"    iter++;								   	   \n"
 <<"										   \n"
-<<"    if(err1Gather < 1e-3 && err2Gather < 1e-3){			   	   \n"
+<<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n"
 <<"										   \n"
 <<"										   \n"
 <<"      if(mpirank==0)						   		   \n"
