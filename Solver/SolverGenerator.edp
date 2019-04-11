@@ -41,9 +41,11 @@
   
   -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
   
+  -supercomp   [bool]	  To be used when using a cluster/supercomputer. Default OFF.   
+    
   -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
   
-  -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF. 
+  -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF.
 
   -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
 
@@ -71,7 +73,8 @@
   bool pointbc     =  usedARGV("-pointbc"    ) != -1;
   bool timelog     =  usedARGV("-timelog"    ) != -1;
   bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
-  bool nonlinear   =  usedARGV("-nonlinear"  ) != -1;   
+  bool nonlinear   =  usedARGV("-nonlinear"  ) != -1; 
+  bool supercomp   =  usedARGV("-supercomp"  ) != -1;       
   bool tractionbc  =  usedARGV("-tractionbc" ) != -1; 
   bool Sequential  =  usedARGV("-sequential" ) != -1;      
   bool dirichletbc =  usedARGV("-dirichletbc") !=  1;

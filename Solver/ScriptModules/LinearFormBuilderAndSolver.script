@@ -41,18 +41,22 @@ if(Sequential)writesolver
 <<"										   \n"
 <<"										   \n";
 
-if(pipegnu)writesolver
+if(pipegnu){writesolver
+<<"  system(\"rm force.data\")      	;					   \n"
 <<"										   \n"
 <<"  matrix  And			;	// PostProcessing		   \n"
 <<"										   \n"
 <<"  Vh def2(fr)			;	// P1 Variables for force  	   \n"
 <<"										   \n"
-<<"  pstream pgnuplot(\"gnuplot\")  	;					   \n"
-<<"  system(\"rm force.data\")      	;					   \n"
-<<"										   \n"
 <<"  int[int]  ldof( 1 )		;					   \n"
 <<"  ExtractDofBorderP1(2,Vh,ldof)	;					   \n"
 <<"										   \n";
+
+if(!supercomp)writesolver
+<<"  pstream pgnuplot(\"gnuplot\")  	;					   \n";
+}
+
+
 
 if(!Sequential)writesolver
 <<"										   \n"
@@ -239,7 +243,7 @@ writesolver
 <<(timelog ? "	MPItimerend(\"RHS Assembly U\",t0)\n" : " "           	  	    )
 <<"										   \n"
 <<"										   \n"
-<<"  for(int iter=0; iter<1000; iter++){					   \n"
+<<"  for(int iter=0; iter<100; iter++){					   	   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Matrix Assembly U\",t0)\n" : " "           	    )
 <<"    ALoc = elast(Vh,Vh);			// Assembly bilinear	  	   \n"
@@ -297,8 +301,6 @@ writesolver
 <<"    uold[]=u[];							   	   \n"
 <<"										   \n"
 <<"										   \n"
-<<"    iter++;								   	   \n"
-<<"										   \n"
 <<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n"
 <<"										   \n"
 <<"										   \n"
@@ -307,7 +309,7 @@ writesolver
 <<"                        <<  iter <<endl;					   \n"
 <<"										   \n";
 
-if(pipegnu)writesolver
+if(pipegnu){writesolver
 <<"	And = elastNoDirc(Vh,Vh);						   \n"
 <<"	changeOperator(A2, And);						   \n"
 <<"	fr[]=And*u[];								   \n"
@@ -322,10 +324,12 @@ if(pipegnu)writesolver
 <<"										   \n"
 <<"	if(mpirank==0){								   \n"
 <<"	{ ofstream ff(\"force.data\",append);					   \n"
-<<"		ff << tr << \"	\" << forcetotGath*1e-3 << endl;			   \n"
+<<"		ff << tr << \"	\" << forcetotGath*1e-3 << endl;		   \n"
 <<"	}									   \n"
 <<"										   \n"
-<<"										   \n"
+<<"										   \n";
+
+if(!supercomp)writesolver
 <<"										   \n"
 <<"										   \n"
 <<"      { 							   	   	   \n"
@@ -345,9 +349,13 @@ if(pipegnu)writesolver
 <<"		    <<\"	   u ($1):($2) w lp lt 5 pt 4 ps 2  t \\\"Ref\\\"\"\n"
 <<"		    <<\"					\\n\"; 	   	   \n" 
 <<"        flush(pgnuplot);					   	   	   \n"
-<<"       }							  	   	   \n"
+<<"       }							  	   	   \n";
+
+writesolver
+<<"										   \n"
 <<"	  }								   	   \n"
 <<"									   	   \n";
+}  //-- [if loop terminator] !pipegnu ended --//
 
 if(plotAll)writesolver
 <<"										   \n"
