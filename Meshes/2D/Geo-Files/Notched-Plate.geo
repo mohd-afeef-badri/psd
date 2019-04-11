@@ -3,18 +3,18 @@
 //
 // NOTE: Use the -format msh2 format to genrate the mesh
 
-lc = 1.0;
+lc = 2.5;
 WidthPlate=65.0;
 HeightPlate=120.0;
-eps=1e-4;
+eps=1e-3;
 
 Point(1) = {0.0 , 0.0 , 0.0 , lc};
 Point(2) = {WidthPlate , 0.0 , 0.0 , lc};
 Point(3) = {WidthPlate , HeightPlate , 0.0 , lc};
 Point(4) = {0.0 , HeightPlate , 0.0 , lc};
-Point(5) = {36.5 , 51, 0.0 , lc};
-Point(6) = {36.5 , 41 , 0.0 , lc};
-Point(7) = {36.5 , 31 , 0.0 , lc};
+Point(5) = {36.5 , 61, 0.0 , lc};
+Point(6) = {36.5 , 51 , 0.0 , lc};
+Point(7) = {36.5 , 41 , 0.0 , lc};
 Point(8) = {0 , 65+eps , 0.0 , lc};
 Point(9) = {0 , 65-eps , 0.0 , lc};
 Point(10) = {10 , 65 , 0.0 , lc};
@@ -53,3 +53,5 @@ Physical Curve("other") = {2, 4, 7};
 Physical Curve("mid") = {5,6};
 //+
 Physical Surface("sur") = {1};
+//+
+Physical Curve("notch") = {9, 8};
