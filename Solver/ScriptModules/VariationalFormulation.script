@@ -65,7 +65,7 @@ if(spc==3)writevarfmatsolve
 
 }  //-- [if loop terminator] !nonlinear ended --//
 
-if(nonlinear){writevarfmatsolve
+if(nonlinear)if(!vectorial){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation nonlinear-------				   \n"
@@ -124,5 +124,54 @@ writevarfmatsolve
 <<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)     \n";
 
 }  //-- [if loop terminator] nonlinear ended --//
+
+
+if(nonlinear)if(vectorial){writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation nonlinear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"										   \n"
+<<"  Vh  def(u) , def(uold)  ;	// Defining vectorial FE variables 		   \n"
+<<"										   \n"
+<<"varf elast(def(u),def(v))							   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - uold"+spc+")*(1 - uold"+spc+") + 1e-6)*		   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"					+					   \n"
+<<"			(Gc*lo*(grad(u"+spc+")'*grad(v"+spc+"))) +		   \n"
+<<"			( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )	   \n"
+<<"			    )							   \n"
+<<"	+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )			   \n"
+<<"	+ on(4,u"+spc+"=1)			// Already Cracked (Dirichlet)     \n";
+
+if(dirichletbc){
+
+if(spc==2)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1])	// Displacement (Dirichlet)	   \n"
+<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
+<<"										   \n";
+
+if(spc==3)writevarfmatsolve
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
+<<"				,u2=Dvalue[2]);	// Displacement (Dirichlet)	   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] dirichletbc ended --//
+
+
+if(pipegnu)writevarfmatsolve
+<<"										   \n"
+<<"varf elastNoDirc([u1,u2],[v1,v2])						   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			((1 - uold2)*(1 - uold2) + 1e-6)*			   \n"
+<<"			(lambda*divergence(u)*divergence(v)			   \n"
+<<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
+<<"			    );							   \n";
+
+}  //-- [if loop terminator] nonlinear vectorial ended --//
+
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//

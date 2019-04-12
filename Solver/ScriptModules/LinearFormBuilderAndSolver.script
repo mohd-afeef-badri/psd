@@ -56,7 +56,10 @@ if(!supercomp)writesolver
 <<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n";
 }
 
-
+if(debug)if(vectorial)writesolver
+<<"										   \n"
+<<"  VhPlt phi;									   \n"
+<<"										   \n";
 
 if(!Sequential)writesolver
 <<"										   \n"
@@ -197,7 +200,9 @@ if(!Sequential){writesolver
 <<"										   \n"
 <<"  matrix	 MatDUMMY = DUMMY(Vh, Vh);					   \n"
 <<"  Mat A(MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP);	 	   \n"
-<<"  MatDUMMY.resize(0,0);							   \n"
+<<"  MatDUMMY.resize(0,0);							   \n";
+
+if(!vectorial)writesolver
 <<"										   \n"
 <<"  matrix	 MatDUMMY1 = DUMMY(Vh1, Vh1);					   \n"
 <<"  Mat A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
@@ -205,6 +210,11 @@ if(!Sequential){writesolver
 <<"										   \n"
 <<"  matrix     ALoc, ALoc1			;				   \n"
 <<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n";
+
+if(vectorial)writesolver
+<<"										   \n"
+<<"  matrix     ALoc				;				   \n"
+<<"  real[int]  b(Vh.ndof)			;				   \n";
 
 if(pipegnu)writesolver
 <<"										   \n"
@@ -258,7 +268,9 @@ writesolver
 <<(timelog ? "	MPItimerbegin(\"Solving U\",t0)\n" : " "         	  	    )
 <<"    u[]=A^-1*b;				// Solve u			   \n"
 <<(timelog ? "	MPItimerend(\"Solving U\",t0)\n" : " "           	  	    )
-<<"										   \n"
+<<"										   \n";
+
+if(!vectorial)writesolver
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Matrix Assembly PHI\",t0)\n" : " "           	    )
 <<"    ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   		   \n"
@@ -303,6 +315,34 @@ writesolver
 <<"										   \n"
 <<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n"
 <<"										   \n"
+<<"										   \n"
+<<"      if(mpirank==0)						   		   \n"
+<<"        cout.scientific << \" Solution converged after \"		           \n"
+<<"                        <<  iter <<endl;					   \n"
+<<"										   \n";
+
+
+if(vectorial)writesolver
+<<"										   \n"
+<<"    phi=u"+spc+";								   \n"
+<<"										   \n"
+<<"    uold[]   = uold[]-u[]		;					   \n"
+<<"										   \n"
+<<"    uold[]     .*= DP		;					   \n"
+<<"										   \n"
+<<"    real err1Gather;								   \n"
+<<"    real err1Loc=sqrt( intN(Th) ( (uold)^2 )  );				   \n"
+<<"										   \n"
+<<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
+<<"										   \n"
+<<"    if(mpirank==0)							      	   \n"
+<<"      cout << \" Iter \" << iter<< \"  error in (u,phi) \"		   	   \n"
+<<"           << err1Gather << endl;	   	  				   \n"
+<<"    									   	   \n"
+<<"    uold[]=u[];							   	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"    if(err1Gather < 1e-2){						   	   \n"
 <<"										   \n"
 <<"      if(mpirank==0)						   		   \n"
 <<"        cout.scientific << \" Solution converged after \"		           \n"
@@ -357,7 +397,7 @@ writesolver
 <<"									   	   \n";
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)writesolver
+if(plotAll)if(!vectorial)writesolver
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
 <<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   			   \n"
@@ -366,9 +406,23 @@ if(plotAll)writesolver
 <<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
 <<"										   \n";
 
-if(debug)writesolver
+if(plotAll)if(vectorial)writesolver
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
+<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   			   \n"
+<<(spc==2 ? "      \t[u,u1,0],u2,\n" : "      \t[u,u1,u2],u3,\n" 	    	    )
+<<"      iterout, mpiCommWorld);			   			   \n"
+<<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
+<<"										   \n";
+
+if(debug)if(!vectorial)writesolver
 <<"										   \n"				
 <<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Zk, def, real, 2, 0)		   \n"
+<<"										   \n";
+
+if(debug)if(vectorial)writesolver
+<<"										   \n"				
+<<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Pltk, def0, real, 2, 0)		   \n"
 <<"										   \n";
 
 writesolver

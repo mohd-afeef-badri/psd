@@ -40,7 +40,9 @@
   -nonlinear   [bool]     To activate non-linear mechanics (Crack). Default OFF.
   
   -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
-  
+
+  -vectorial   [bool]	  To generate vectorial space solver for non-linear. Default OFF.  
+    
   -supercomp   [bool]	  To be used when using a cluster/supercomputer. Default OFF.   
     
   -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
@@ -72,6 +74,7 @@
   bool pipegnu     =  usedARGV("-pipegnu"    ) != -1;  
   bool pointbc     =  usedARGV("-pointbc"    ) != -1;
   bool timelog     =  usedARGV("-timelog"    ) != -1;
+  bool vectorial   =  usedARGV("-vectorial"  ) != -1;  
   bool bodyforce   =  usedARGV("-bodyforce"  ) != -1;
   bool nonlinear   =  usedARGV("-nonlinear"  ) != -1; 
   bool supercomp   =  usedARGV("-supercomp"  ) != -1;       

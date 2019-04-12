@@ -66,14 +66,20 @@ if(!Sequential){writemeshPartitioning
 <<"										   \n"
 <<"										   \n";
 
+
 writemeshPartitioning
 <<"										   \n"
 <<" fespace Vh   ( Th , Pk );			// Local mixed FE space		   \n"
 <<"										   \n";
 
-if(nonlinear)writemeshPartitioning
+if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"										   \n"
 <<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
+<<"										   \n";
+
+if(nonlinear)if(vectorial)writemeshPartitioning
+<<"										   \n"
+<<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n"
 <<"										   \n";
 
 writemeshPartitioning
@@ -92,7 +98,7 @@ writemeshPartitioning
 <<"										   \n"
 <<"										   \n";
 
-if(nonlinear)writemeshPartitioning
+if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"										   \n"
 <<" int[int] arrayIntersectionZ;                // Ranks of neighboring subdomains \n"
 <<" int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering  \n"
@@ -129,7 +135,7 @@ if(!nonlinear)writemeshPartitioning
 <<"		  )		   						   \n"
 <<"										   \n";
 
-if(nonlinear)writemeshPartitioning
+if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"										   \n"
 <<"  fespace Ph(ThGlobal, P0);							   \n"
 <<"  	     Ph part;								   \n"
@@ -173,6 +179,21 @@ if(nonlinear)writemeshPartitioning
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
+<<"										   \n";
+
+if(nonlinear)if(vectorial)writemeshPartitioning
+<<"										   \n"
+<<"  PETScMPIBuild(								   \n"
+<<"		   Th				, // Local  mesh		   \n"
+<<"		   ThGlobal			, // Global mesh		   \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor		   \n"
+<<"		   DP				, // Partition of unity	   	   \n"
+<<"		   arrayIntersectionP		, // Neighbour ranks	   	   \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix	   	   \n"
+<<"		   Vh				, // Local FE space name	   \n"
+<<"		   Pk				, // Vectorial FE space	   	   \n"
+<<"		   mpiCommWorld			  // MPI world		   	   \n"
+<<"		  )		   						   \n"
 <<"										   \n";
 
 writemeshPartitioning
