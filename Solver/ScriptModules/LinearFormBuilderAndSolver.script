@@ -44,9 +44,17 @@ if(Sequential)writesolver
 if(pipegnu){writesolver
 <<"  system(\"rm force.data\")      	;					   \n"
 <<"										   \n"
-<<"  matrix  And			;	// PostProcessing		   \n"
+<<"  matrix  And			;	// PostProcessing		   \n";
+
+if(vectorial)writesolver
+<<"  Vh def(fr) 			;	// Variables for force  	   \n"
 <<"										   \n"
-<<"  Vh def2(fr)			;	// P1 Variables for force  	   \n"
+<<"  int[int]  ldof( 1 )			;				   \n"
+<<"  ExtractDofBorderVectorial(2,Vh,ldof)	;				   \n"
+<<"										   \n";
+
+if(!vectorial)writesolver
+<<"  Vh def2(fr)			;	// Variables for force  	   \n"
 <<"										   \n"
 <<"  int[int]  ldof( 1 )		;					   \n"
 <<"  ExtractDofBorderP1(2,Vh,ldof)	;					   \n"

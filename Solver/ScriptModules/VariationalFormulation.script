@@ -164,7 +164,7 @@ if(spc==3)writevarfmatsolve
 
 if(pipegnu)writevarfmatsolve
 <<"										   \n"
-<<"varf elastNoDirc([u1,u2],[v1,v2])						   \n"
+<<"varf elastNoDirc([u,u1,u2],[v,v1,v2])					   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
 <<"			((1 - uold2)*(1 - uold2) + 1e-6)*			   \n"
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
