@@ -145,7 +145,7 @@ if(nonlinear)if(vectorial){writevarfmatsolve
 <<"			( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )	   \n"
 <<"			    )							   \n"
 <<"	+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )			   \n"
-<<"	+ on(4,u"+spc+"=1)			// Already Cracked (Dirichlet)     \n";
+<<"	+ on(4,u"+spc+" = 1)                        // Already Cracked (Dirichlet) \n";
 
 if(dirichletbc){
 

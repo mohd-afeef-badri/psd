@@ -27,11 +27,11 @@ if(Sequential){writemeshPartitioning
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog  ? "	timerbegin(\"Solver\",t1)\n" : ""         		  	    )
-<<(timelog  ? "	timerbegin(\"Mesh Loading\",t0)\n" : ""         	  	    )
+<<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""         		  	    )
+<<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""         	  	    )
 <<"  load \"gmsh\"					// Load  gmsh	   	   \n"
 <<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Mesh loaded	   	   \n"
-<<(timelog ? "	timerend  (\"Mesh Loading\",t0)\n" : ""     		      	    )
+<<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""     		      	    )
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -77,7 +77,7 @@ if(nonlinear)if(!vectorial)writemeshPartitioning
 <<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
 <<"										   \n";
 
-if(nonlinear)if(vectorial)writemeshPartitioning
+if(nonlinear)if(vectorial)if(debug)writemeshPartitioning
 <<"										   \n"
 <<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n"
 <<"										   \n";
@@ -202,10 +202,10 @@ writemeshPartitioning
 <<"										   \n"
 <<" }										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Solver\",t1)\n" : " " 	         	 	    )
-<<(timelog  ? "	MPItimerbegin(\"Mesh Partitioning\",t0)\n" : " "           	    )
-<<"    PartThAndBuildCommunication();						   \n"
-<<(timelog ? "	MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
+<<(timelog ? "  MPItimerbegin(\"Solver\",t1)\n" : "" 	         	 	    )
+<<(timelog ? "  MPItimerbegin(\"Mesh Partitioning\",t0)\n" : ""           	    )
+<<"  PartThAndBuildCommunication();						   \n"
+<<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
 <<"										   \n"
 <<"										   \n";
 

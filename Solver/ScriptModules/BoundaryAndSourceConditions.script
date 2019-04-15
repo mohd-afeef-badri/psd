@@ -24,18 +24,13 @@ writebc
 if(dirichletbc){writebc
 <<"										   \n"
 <<"//---Surface---//								   \n"
-<<"  int [int]   Dlabel = ["+labelDirichlet+"];	// Vector of Dirichlet labels 	   \n"
-<<"										   \n";
+<<"  int [int]   Dlabel = ["+labelDirichlet+"];	// Vector of Dirichlet labels 	   \n";
 
 if(spc==2)writebc
-<<"										   \n"
-<<"  real[int]   Dvalue = [0.,0.];	// Vector of Dirichlet values	 	   \n"
-<<"										   \n";
+<<"  real[int]   Dvalue = [0.,0.];	// Vector of Dirichlet values	 	   \n";
 
 if(spc==3)writebc
-<<"										   \n"
-<<"  real[int]   Dvalue = [0.,0.,0.];	// Vector of Dirichlet values		   \n" 
-<<"										   \n";
+<<"  real[int]   Dvalue = [0.,0.,0.];	// Vector of Dirichlet values		   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 

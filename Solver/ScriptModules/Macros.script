@@ -24,13 +24,14 @@ if(spc==2){writemacros
 <<"  macro partitioner "+Partitioner+"\t\t	// Mesh partitioner used   	   \n"
 <<"  macro dimension 2      			// Two-dimensional problem 	   \n";
 
-if(vectorial)
-if(nonlinear)writemacros
-<<"  macro Pk [P"+lag+",P"+lag+",P"+lag+"]\t\t		// Finite element space	   \n"
+if(vectorial)if(nonlinear)writemacros
+<<"  macro Pk       [ P"+lag+", P"+lag+" , P"+lag+"  ]	\t// Finite element space  \n"
 <<"  macro def  (i) [ i , i#1, i#2 ]		// Vect. field definition  	   \n"
-<<"  macro init (i) [ i ,  i ,  i  ]		// Vect. field initialize  	   \n"
+<<"  macro init (i) [ i ,  i ,  i  ]		// Vect. field initialize  	   \n";
+
+if(vectorial)if(nonlinear)if(plotAll)writemacros
 <<"  macro Pltk         P1             		// FE space	   	 	   \n"
-<<"  macro def0 (i)  	   i 			// Vect. field definition  	   \n";
+<<"  macro def0 (i)  	 i 			// Vect. field definition  	   \n";
 
 if(!vectorial){writemacros
 <<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n";
@@ -57,20 +58,20 @@ if(nonlinear)if(!vectorial)writemacros
 <<"										   \n"
 <<"  macro def2  (i) [ i , i#1 ]				// Vect. field 	   \n"
 <<"  macro init2 (i) [ i ,  i  ]				// Vect. initialize\n"
-<<"  macro def  (i)   i						// Scalar field    \n"
-<<"  macro init (i)   i						// Initialize  	   \n"
-<<"  macro Zk         P1             				// FE space	   \n";
+<<"  macro def   (i)     i					// Scalar field    \n"
+<<"  macro init  (i)     i					// Initialize  	   \n"
+<<"  macro Zk            P1            				// FE space	   \n";
 
 if(nonlinear)writemacros
-<<"  macro grad (i) [ dx(i), dy(i) ]				// 2d gradient     \n"
+<<"  macro grad  (i) [ dx(i) , dy(i) ]             // 2d gradient     		   \n"
 <<"										   \n"
 <<"//-------------------------Stess (Sigma) macros-------------------------------//\n"
 <<"										   \n"
-<<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )	// Sigma_xx	   \n"
-<<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )	// Sigma_yy	   \n"
-<<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )			// Sigma_yx	   \n"
-<<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ] 	// Sigma	   \n"
-<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))			// Hplus   	   \n"
+<<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )     // Sigma_xx	   \n"
+<<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy	   \n"
+<<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx	   \n"
+<<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ]        // Sigma	   \n"
+<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
 <<"										   \n";
    
   

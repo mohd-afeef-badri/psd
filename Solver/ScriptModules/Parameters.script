@@ -42,15 +42,15 @@ writemeshParameters
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
-<<"  real   mu                             // Lame parameter			   \n"
-<<"        ,lambda                         // Lame parameter			   \n"
-<<(bodyforce ? "      ,f2		// Force in Y\n"    : ""		    )
-<<(timelog   ? "      ,t0		// Time variable\n" : ""		    )
-<<(timelog   ? "      ,t1		// Time variable\n" : ""		    )
-<<"        ;	   								   \n"
+<<"  real    mu                         // Lame parameter			   \n"
+<<"         ,lambda                     // Lame parameter			   \n"
+<<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
+<<(timelog   ? "         ,t0                         // Time variable \n" : ""	    )
+<<(timelog   ? "         ,t1                         // Time variable \n" : ""	    )
+<<"         ;	   								   \n"
 <<"										   \n"
 <<"{										   \n"
-<<"  real E  = 200.e9  ,			//Modulus of Elasticity - [Pa]	   \n"
+<<"  real E  = 200.e9  ,			// Modulus of Elasticity - [Pa]	   \n"
 <<"       nu = 0.3     ;			// Poisson ratio - [-]		   \n"
 <<"	 									   \n"
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
