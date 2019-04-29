@@ -98,7 +98,8 @@ if(spc==2)writevarfmatsolve
 
 if(spc==3)writevarfmatsolve
 <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
-<<"				,u2=Dvalue[2]);	// Displacement (Dirichlet)	   \n"
+<<"				,u2=Dvalue[2])	// Displacement (Dirichlet)	   \n"
+<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
 <<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
@@ -156,7 +157,8 @@ if(spc==2)writevarfmatsolve
 
 if(spc==3)writevarfmatsolve
 <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
-<<"				,u2=Dvalue[2]);	// Displacement (Dirichlet)	   \n"
+<<"				,u2=Dvalue[2])	// Displacement (Dirichlet)	   \n"
+<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
 <<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//

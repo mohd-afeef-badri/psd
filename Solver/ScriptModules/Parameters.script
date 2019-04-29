@@ -26,11 +26,11 @@ writemeshParameters
 
 if(!nonlinear)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar"+spc+"D\";  // Mesh file name \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar\";  // Mesh file name 	   \n";
 
 if(nonlinear)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/square-crack\";  // Mesh file name\n";
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/tensile-crack\"; // Mesh file name\n";
 
 
 writemeshParameters

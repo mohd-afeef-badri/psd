@@ -330,7 +330,7 @@ if(vectorial){writesolver
 <<"    uold[] .*= DP            ;						   \n"
 <<"										   \n";
 
-if(plotAll)writesolver
+if(plotAll || debug)writesolver
 <<"    phi = u"+spc+";								   \n";
 
 writesolver
