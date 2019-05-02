@@ -23,3 +23,6 @@ BoundaryAndSourceConditions.edp
 
 ## PLOTTING DATA FILES ##
 *.data
+
+## FILES FOR CLUSTER ##
+launch.sh
