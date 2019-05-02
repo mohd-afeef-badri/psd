@@ -2,6 +2,9 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
+if(plotAll)
+  system("mkdir -p VTUs");
+
 {ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
@@ -60,7 +63,7 @@ if(!Sequential){writePostProcessor
 <<"										   \n";
 if(plotAll)writePostProcessor
 <<"										   \n"
-<<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
+//<<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
 <<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
 

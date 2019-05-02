@@ -64,7 +64,7 @@ if(!supercomp)writesolver
 <<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n";
 }
 
-if(debug)if(vectorial)writesolver
+if(debug || plotAll)if(vectorial)writesolver
 <<"										   \n"
 <<"  VhPlt phi;									   \n"
 <<"										   \n";
@@ -240,8 +240,8 @@ writesolver
 if(plotAll)writesolver
 <<"										   \n"
 <<" //------Plotting--------//							   \n"
-<<"  exportBegin(\"VTUs/Solution\", mpiCommWorld);				   \n"
-<<"  int iterout = 0;				      // Loop Counter		   \n"
+//<<"  exportBegin(\"VTUs/Solution\", mpiCommWorld);				   \n"
+<<"  int iterout = 0, iterout1=0;		      // Loop Counter		   \n"
 <<"										   \n";
 
 writesolver
@@ -405,20 +405,44 @@ writesolver
 
 if(plotAll)if(!vectorial)writesolver
 <<"										   \n"
+<<"	iterout++;								   \n"
+<<"										   \n"
+<<"	if(int(iterout%10)==0){							   \n"
 <<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
-<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   			   \n"
+//<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
+//<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
+//<<"      iterout, mpiCommWorld);			   			   \n"
+<<" 	int[int] vtuorder=[1,1,1,1];			// Solution export order   \n" 
+<<"	string   namevtu=\"VTUs/Solution\"+iterout1+\"\";// Name of PV files	   \n"
+<<"	string   namedata=\"U Phi\";			// Name of export data	   \n"
+<<"	bool     withsur=true;				// Export surface mesh	   \n"
+<<"	exportpvd2(namevtu, Th,			 		   		   \n"
 <<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
-<<"      iterout, mpiCommWorld);			   			   \n"
+<<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
 <<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
+<<"	iterout1++;								   \n"
+<<"	}									   \n"
 <<"										   \n";
 
 if(plotAll)if(vectorial)writesolver
 <<"										   \n"
+<<"	iterout++;								   \n"
+<<"										   \n"
+<<"	if(int(iterout%10)==0){							   \n"
 <<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
-<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   			   \n"
-<<(spc==2 ? "      \t[u,u1,0],u2,\n" : "      \t[u,u1,u2],u3,\n" 	    	    )
-<<"      iterout, mpiCommWorld);			   			   \n"
+//<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
+//<<(spc==2 ? "      \t[u,u1,0],u2,\n" : "      \t[u,u1,u2],u3,\n" 	    	    )
+//<<"      iterout, mpiCommWorld);			   			   \n"
+<<" 	int[int] vtuorder=[1,1,1,1];			// Solution export order   \n" 
+<<"	string   namevtu=\"VTUs/Solution\"+iterout1+\"\";// Name of PV files	   \n"
+<<"	string   namedata=\"U Phi\";			// Name of export data	   \n"
+<<"	bool     withsur=true;				// Export surface mesh	   \n"
+<<"	exportpvd2(namevtu, Th,			 		   		   \n"
+<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
+<<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
 <<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
+<<"	iterout1++;								   \n"
+<<"	}									   \n"
 <<"										   \n";
 
 if(debug)if(!vectorial)writesolver

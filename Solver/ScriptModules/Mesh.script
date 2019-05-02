@@ -77,7 +77,7 @@ if(nonlinear)if(!vectorial)writemeshPartitioning
 <<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
 <<"										   \n";
 
-if(nonlinear)if(vectorial)if(debug)writemeshPartitioning
+if(nonlinear)if(vectorial)if(debug || plotAll)writemeshPartitioning
 <<"										   \n"
 <<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n"
 <<"										   \n";
