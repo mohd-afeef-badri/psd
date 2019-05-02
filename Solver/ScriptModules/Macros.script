@@ -71,7 +71,12 @@ if(nonlinear)writemacros
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy	   \n"
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx	   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ]        // Sigma	   \n"
-<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
+//<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
+<<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0] 		   \n"
+<<"                                     + epsilon(i)[1]*epsilon(i)[1] ) 	   \n"
+<<"                   + lambda*epsilon(i)[0]*epsilon(i)[1] 		           \n"
+<<"                   + mu*epsilon(i)[2]*epsilon(i)[2] 		  	           \n"
+<<"                  )                                           // Hplus   	   \n"
 <<"										   \n";
    
   
@@ -155,7 +160,17 @@ if(nonlinear)writemacros
 <<"                         sqrt(2.0) * syz(i)         ,			   \n"
 <<"                         sqrt(2.0) * sxz(i)         ,			   \n"
 <<"                         sqrt(2.0) * sxy(i)         ]	// Sigma   	   \n"
-<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )	// Hplus   	   \n"
+//<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )	// Hplus   	   \n"
+<<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0] 		   \n"
+<<"                                     + epsilon(i)[1]*epsilon(i)[1] 	 	   \n"
+<<"                                     + epsilon(i)[2]*epsilon(i)[2] ) 	   \n"
+<<"                   + lambda*(epsilon(i)[0]*epsilon(i)[1] 		           \n"
+<<"                   +         epsilon(i)[0]*epsilon(i)[2] 		           \n"
+<<"                   +         epsilon(i)[1]*epsilon(i)[2] )		           \n"
+<<"                   + mu*(epsilon(i)[5]*epsilon(i)[5] 	  	           \n"
+<<"                   +     epsilon(i)[4]*epsilon(i)[4] 	  	           \n"
+<<"                   +     epsilon(i)[3]*epsilon(i)[3] )	  	           \n"
+<<"                  )                                           // Hplus   	   \n"
 <<"										   \n";
 
 if(Sequential)writemacros
