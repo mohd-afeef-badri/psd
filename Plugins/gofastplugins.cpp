@@ -162,10 +162,6 @@ long lapack_zheev (KNM<Complex> *const &A, KN<double> *const &vp, KNM<Complex> *
 	return info;
 }
 
-double GFPadd( long no1,double no2)
-{
-  return no1+no2;
-}
   
 double GFPmaxintwoP1(KN<double> *const & f, KN<double> *const & f1)   
 {
@@ -176,10 +172,272 @@ double GFPmaxintwoP1(KN<double> *const & f, KN<double> *const & f1)
   return 0.0;
 }
 
-  
+
+template<class K>
+class DecompEnergy_Op : public E_F0mps {
+    public:
+        Expression ex					;
+        Expression ey					;
+        Expression exy					;
+        Expression Hp					;
+        Expression Hm					;                
+        Expression Hout					;
+        Expression lambda				;  
+        Expression mu					;                    
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        DecompEnergy_Op(const basicAC_F0& args		, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		,
+        		Expression param8		        		        				        		        		
+        		) : 
+        		ex     (param1)			, 
+        		ey     (param2)			, 
+        		exy    (param3)			,  
+        		Hp     (param4)			,
+        		Hm     (param5)			, 
+        		Hout   (param6)			,
+        		lambda (param7)			,
+        		mu     (param8)	        		        				        		        		 
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type DecompEnergy_Op<K>::name_param[] = { };
+
+template<class K>
+class DecompEnergy : public OneOperator {
+    public:
+        DecompEnergy() : OneOperator(atype<long>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>() 	,
+        			     atype<double>()	,
+        			     atype<double>()  
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new DecompEnergy_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6]),
+            				  t[7]->CastTo(args[7])            				              				  
+            				  );
+        }
+};
+
+template<class K>
+AnyType DecompEnergy_Op<K>::operator()(Stack stack) const {
+    KN<K>* in1  = GetAny<KN<K>*>((*ex)(stack))		;
+    KN<K>* in2  = GetAny<KN<K>*>((*ey)(stack))		;
+    KN<K>* in3  = GetAny<KN<K>*>((*exy)(stack))		;
+    KN<K>* out1 = GetAny<KN<K>*>((*Hp)(stack))		;
+    KN<K>* out2 = GetAny<KN<K>*>((*Hm)(stack))		;
+    KN<K>* out3 = GetAny<KN<K>*>((*Hout)(stack))	;        
+    double lm   = GetAny<double>((*lambda)(stack))	;
+    double muw  = GetAny<double>((*mu)(stack))		;
+
+    KNM<double> Amat(2,2);
+    KN<double>  eval(2);
+    double d1,d2;
+
+    intblas n = 2;
+    char JOBZ = 'N', UPLO = 'U';
+    intblas info, lw = -1;
+    KN<double> w(1);
+    dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+    lw = w[0];
+    w.resize(lw);
+	    
+    for(int j = 0; j < in1->n; ++j){
+        out1->operator[](j) = max(0.,double(in1->operator[](j)+in2->operator[](j)));
+        out1->operator[](j) = 0.5*lm*out1->operator[](j)*out1->operator[](j);
+        out2->operator[](j) = min(0.,double(in1->operator[](j)+in2->operator[](j)));
+        out2->operator[](j) = 0.5*lm*out2->operator[](j)*out2->operator[](j);
+        Amat(0,0)=in1->operator[](j); 
+        Amat(0,1)=in3->operator[](j);
+        Amat(1,1)=in2->operator[](j);
+	dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+        //lapack_dsyevAlone (&Amat, &eval);
+        d1=max(0.,eval[0]);
+        d2=max(0.,eval[1]);
+        out1->operator[](j) += muw*(d1*d1 + d2*d2);
+        d1=min(0.,eval[0]);
+        d2=min(0.,eval[1]);
+        out2->operator[](j) += muw*(d1*d1 + d2*d2);
+        out3->operator[](j) = max(out3->operator[](j),out1->operator[](j));
+     }     
+    return 0L;
+}
+
+
+
+
+
+
+template<class K>
+class DecompEnergy3_Op : public E_F0mps {
+    public:
+        Expression exx					;
+        Expression eyy					;
+        Expression ezz					;        
+        Expression exy					;
+        Expression exz					;
+        Expression eyz					;
+        Expression Hp					;
+        Expression Hm					;                
+        Expression Hout					;
+        Expression prpty				;  
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        DecompEnergy3_Op(const basicAC_F0& args		, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		,
+        		Expression param8		,
+        		Expression param9		,
+        		Expression param10		
+        		) : 
+        		exx    (param1)			, 
+        		eyy    (param2)			, 
+        		ezz    (param3)			,
+        		exy    (param4)			, 
+        		exz    (param5)			, 
+        		eyz    (param6)			,         		  
+        		Hp     (param7)			,
+        		Hm     (param8)			, 
+        		Hout   (param9)			,
+        		prpty  (param10)		
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type DecompEnergy3_Op<K>::name_param[] = { };
+
+template<class K>
+class DecompEnergy3 : public OneOperator {
+    public:
+        DecompEnergy3() : OneOperator(atype<long>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>() 	,
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>() 	,        			     
+        			     atype<KN<K>*>() 	        			     
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new DecompEnergy3_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6]),
+            				  t[7]->CastTo(args[7]),
+            				  t[8]->CastTo(args[8]),
+            				  t[9]->CastTo(args[9])				  
+            				  );
+        }
+};
+
+template<class K>
+AnyType DecompEnergy3_Op<K>::operator()(Stack stack) const {
+    KN<K>* in1  = GetAny<KN<K>*>((*exx)(stack))		;
+    KN<K>* in2  = GetAny<KN<K>*>((*eyy)(stack))		;
+    KN<K>* in3  = GetAny<KN<K>*>((*ezz)(stack))		;
+    KN<K>* in4  = GetAny<KN<K>*>((*exy)(stack))		;
+    KN<K>* in5  = GetAny<KN<K>*>((*exz)(stack))		;
+    KN<K>* in6  = GetAny<KN<K>*>((*eyz)(stack))		;    
+    KN<K>* out1 = GetAny<KN<K>*>((*Hp)(stack))		;
+    KN<K>* out2 = GetAny<KN<K>*>((*Hm)(stack))		;
+    KN<K>* out3 = GetAny<KN<K>*>((*Hout)(stack))	;
+    KN<K>* par = GetAny<KN<K>*>((*prpty)(stack))	;                    
+
+    KNM<double> Amat(3,3);
+    KN<double>  eval(3);
+    double d1,d2,d3;
+    double lm=par->operator[](0);
+    double muw=par->operator[](1);
+
+    intblas n = 3;
+    char JOBZ = 'N', UPLO = 'U';
+    intblas info, lw = -1;
+    KN<double> w(1);
+    dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+    lw = w[0];
+    w.resize(lw);
+	    
+    for(int j = 0; j < in1->n; ++j){
+        out1->operator[](j) = max( 0. , double(in1->operator[](j)+in2->operator[](j)+in3->operator[](j)) );
+        out1->operator[](j) = 0.5*lm*out1->operator[](j)*out1->operator[](j);
+        out2->operator[](j) = min( 0. , double(in1->operator[](j)+in2->operator[](j)+in3->operator[](j)) );
+        out2->operator[](j) = 0.5*lm*out2->operator[](j)*out2->operator[](j);
+        Amat(0,0)=in1->operator[](j); 
+        Amat(1,1)=in2->operator[](j);
+        Amat(2,2)=in3->operator[](j);
+        Amat(0,1)=in4->operator[](j);
+        Amat(0,2)=in5->operator[](j);
+        Amat(1,2)=in6->operator[](j);                                
+	dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+        //lapack_dsyevAlone (&Amat, &eval);
+        d1=max(0.,eval[0]);
+        d2=max(0.,eval[1]);
+        d3=max(0.,eval[2]);
+        out1->operator[](j) += muw*(d1*d1 + d2*d2 + d3*d3);
+        d1=min(0.,eval[0]);
+        d2=min(0.,eval[1]);
+        d3=min(0.,eval[2]);
+        out2->operator[](j) += muw*(d1*d1 + d2*d2 + d3*d3);
+        out3->operator[](j) = max(out3->operator[](j),out1->operator[](j));
+     }     
+    return 0L;
+}  
 static void InitFF()
 {
-  Global.Add("GFPadd","(",new OneOperator2<double, long,double>(GFPadd));
+  Global.Add("GFPDecompEnergy3D", "(", new DecompEnergy3<double>);
+  Global.Add("GFPDecompEnergy2D", "(", new DecompEnergy<double>);
   Global.Add("GFPmaxintwoFEfields","(",new OneOperator2_<double,KN<double>*, KN<double>*>(GFPmaxintwoP1));		
   Global.Add("GFPeigen", "(", new OneOperator3_<long, KNM<double> *, KN<double> *, KNM<double> *>(lapack_dsyev));
   Global.Add("GFPeigenAlone", "(", new OneOperator2_<long, KNM<double> *, KN<double> *>(lapack_dsyevAlone));  
