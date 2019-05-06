@@ -75,6 +75,8 @@ if(nonlinear)if(!vectorial){writevarfmatsolve
 <<"  Vh  def2(u) , def2(uold)  ;	// Defining displacement FE variables 	   \n"
 <<"  Vh1 phi , phiold          ;	// Damage field	FE variables	   	   \n"
 <<"										   \n"
+<<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
+<<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
 <<"										   \n"
 <<"varf elast(def2(u),def2(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
@@ -119,9 +121,11 @@ writevarfmatsolve
 <<"varf phase(phi,q)								   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
 <<"			(Gc*lo*(grad(phi)'*grad(q))) +				   \n"
-<<"			( ((Gc/lo)  + 2.*Hplus(u))*phi*q )			   \n"
+<<(energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*H)*phi*q )\n"         : "" 		    )
+<<(!energydecomp ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(u))*phi*q )\n"  : "" 		    )
 <<"			    )							   \n"
-<<"	+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )					   \n"
+<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*H*q  )\n"         : "" 	    	    )
+<<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : "" 	    	    )
 <<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)     \n";
 
 }  //-- [if loop terminator] nonlinear ended --//

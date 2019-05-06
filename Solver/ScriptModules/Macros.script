@@ -62,23 +62,57 @@ if(nonlinear)if(!vectorial)writemacros
 <<"  macro init  (i)     i					// Initialize  	   \n"
 <<"  macro Zk            P1            				// FE space	   \n";
 
-if(nonlinear)writemacros
-<<"  macro grad  (i) [ dx(i) , dy(i) ]             // 2d gradient     		   \n"
+if(nonlinear)if(!energydecomp)writemacros
 <<"										   \n"
-<<"//-------------------------Stess (Sigma) macros-------------------------------//\n"
+<<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
+/*
 <<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )     // Sigma_xx	   \n"
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy	   \n"
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx	   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ]        // Sigma	   \n"
-//<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
+<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
+*/
 <<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0] 		   \n"
 <<"                                     + epsilon(i)[1]*epsilon(i)[1] ) 	   \n"
 <<"                   + lambda*epsilon(i)[0]*epsilon(i)[1] 		           \n"
 <<"                   + mu*epsilon(i)[2]*epsilon(i)[2] 		  	           \n"
 <<"                  )                                           // Hplus   	   \n"
 <<"										   \n";
-   
+
+if(nonlinear)if(energydecomp)writemacros
+<<"										   \n"
+<<"//------------------------------Hplus macros----------------------------------//\n"
+<<"										   \n"
+<<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
+<<"    fespace WWh0(Th,P0);							   \n"
+<<"    WWh0 e1,e2,e3,ud;							   \n"
+<<"    e1=dx(u); e2=dy(u1);							   \n"
+<<"    ud[] = e1[] + e2[];							   \n"
+<<"    e3 = max(0.,ud);								   \n"
+<<"    Hplus = 0.5*lambda*(e3*e3);						   \n"
+<<"    e3 = min(0.,ud);								   \n"
+<<"    Hminus = 0.5*lambda*(e3*e3);						   \n"
+<<"    e3=0.5*(dx(u1)+dy(u));							   \n"
+<<"    real[int] eval(2),eval1(2);						   \n"
+<<"    real[int,int] A(2,2);							   \n"
+<<"    for(int i=0; i< Wh0.ndof; i++){ 						   \n"
+<<"      A(0,0)= e1[][i];							   \n"
+<<"      A(0,1)= e3[][i];							   \n"
+<<"      A(1,1)= e2[][i];							   \n"
+<<"      GFPeigenAlone (A, eval);						   \n"
+<<"      eval1[0]=max(0.,eval[0]);						   \n"
+<<"      eval1[1]=max(0.,eval[1]);						   \n"
+<<"      eval[0]=min(0.,eval[0]);						   \n"
+<<"      eval[1]=min(0.,eval[1]);						   \n"
+<<"      Hplus[][i] +=mu*(eval1[0]*eval1[0] + eval1[1]*eval1[1]);		   \n"
+<<"      Hminus[][i]+=mu*(eval[0]*eval[0] + eval[1]*eval[1]);			   \n"
+<<"    }									   \n"
+<<"    GFPmaxintwoFEfields(H[],Hplus[]);					   \n"
+<<"  }//									   \n"
+<<"										   \n";
+
+
   
 if(Sequential)writemacros
 <<"										   \n"
@@ -146,10 +180,9 @@ if(nonlinear)if(!vectorial)writemacros
 
 if(nonlinear)writemacros
 <<"										   \n"
-<<"  macro grad  (i)  [ dx(i), dy(i), dz(i) ]	// Three-D gradient	   	   \n"
+<<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
-<<"//-------------------------Stess (Sigma) macros-------------------------------//\n"
-<<"										   \n"
+/*
 <<"  macro sxx (i) ( lambda*divergence(i)+2*mu*dx( i ) )	// Sigma_xx	   \n"
 <<"  macro syy (i) ( lambda*divergence(i)+2*mu*dy(i#1) )	// Sigma_yy	   \n"
 <<"  macro szz (i) ( lambda*divergence(i)+2*mu*dz(i#2) )	// Sigma_zz	   \n"
@@ -160,7 +193,8 @@ if(nonlinear)writemacros
 <<"                         sqrt(2.0) * syz(i)         ,			   \n"
 <<"                         sqrt(2.0) * sxz(i)         ,			   \n"
 <<"                         sqrt(2.0) * sxy(i)         ]	// Sigma   	   \n"
-//<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )	// Hplus   	   \n"
+<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )	// Hplus   	   \n"
+*/
 <<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0] 		   \n"
 <<"                                     + epsilon(i)[1]*epsilon(i)[1] 	 	   \n"
 <<"                                     + epsilon(i)[2]*epsilon(i)[2] ) 	   \n"

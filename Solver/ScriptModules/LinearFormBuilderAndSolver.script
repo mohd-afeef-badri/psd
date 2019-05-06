@@ -110,6 +110,9 @@ if(Sequential){writesolver
 <<(timelog ? "    timerend  (\"Solving U\",t0)\n"         : ""         	  	    )
 <<"										   \n"
 <<"										   \n"
+<<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
+<<"										   \n"
+<<"										   \n"
 <<(timelog ? "    timerbegin(\"Matrix Assembly PHI\",t0)\n" : ""           	    )
 <<"    A1 = phase(Vh1,Vh1);			// Assembly for A1 (for phi)  	   \n"
 <<(timelog ? "    timerend  (\"Matrix Assembly PHI\",t0)\n" : ""           	    )
@@ -275,6 +278,9 @@ writesolver
 <<"										   \n";
 
 if(!vectorial)writesolver
+<<"										   \n"
+<<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
+<<"										   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"Matrix Assembly PHI\",t0)\n" : ""           	    )
 <<"    ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   		   \n"

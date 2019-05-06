@@ -28,6 +28,9 @@ if(!Sequential)writemain
 if(plotAll)writemain
 <<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
 
+if(nonlinear)if(energydecomp)writemain
+<<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
+
 if(pipegnu)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n"
 <<"  include \"../Plugins/MacroTools.edp\"              // Important macros	   \n";
