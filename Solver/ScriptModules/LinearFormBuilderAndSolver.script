@@ -352,6 +352,7 @@ writesolver
 <<"    									   	   \n"
 <<"    uold[] = u[];							   	   \n"
 <<"										   \n"
+<<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
 <<"										   \n"
 <<"    if(err1Gather < 1e-2){						   	   \n"
 <<"										   \n"

@@ -140,6 +140,9 @@ if(nonlinear)if(vectorial){writevarfmatsolve
 <<"										   \n"
 <<"  Vh  def(u) , def(uold)  ;	// Defining vectorial FE variables 		   \n"
 <<"										   \n"
+<<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
+<<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
+<<"										   \n"
 <<"varf elast(def(u),def(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
 <<"			((1 - uold"+spc+")*(1 - uold"+spc+") + 1e-6)*		   \n"
@@ -147,9 +150,13 @@ if(nonlinear)if(vectorial){writevarfmatsolve
 <<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"					+					   \n"
 <<"			(Gc*lo*(grad(u"+spc+")'*grad(v"+spc+"))) +		   \n"
-<<"			( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )	   \n"
+<<(!energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )\n": "" )
+<<(energydecomp   ? "\t\t\t( ((Gc/lo)  + 2.*H)*u"+spc+"*v"+spc+" )\n"          : "" )
+//<<"			( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )	   \n"
 <<"			    )							   \n"
-<<"	+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )			   \n"
+<<(!energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )\n": ""     )
+<<(energydecomp   ? "\t+ intN(Th,qforder=2)(  2.*H*v"+spc+"  )\n"          : ""     )
+//<<"	+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )			   \n"
 <<"	+ on(4,u"+spc+" = 1)                        // Already Cracked (Dirichlet) \n";
 
 if(dirichletbc){

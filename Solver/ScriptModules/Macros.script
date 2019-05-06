@@ -87,13 +87,16 @@ if(nonlinear)if(energydecomp)writemacros
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
 <<"    fespace WWh0(Th,P0);							   \n"
 <<"    WWh0 e1,e2,e3,ud;							   \n"
+<<(!vectorial ? "    e1=dx(u); e2=dy(u1);\n"        : ""  	    		    )
+<<(vectorial  ? "    e1=dx(uold); e2=dy(uold1);\n"  : ""  	    		    )  
 <<"    e1=dx(u); e2=dy(u1);							   \n"
 <<"    ud[] = e1[] + e2[];							   \n"
 <<"    e3 = max(0.,ud);								   \n"
 <<"    Hplus = 0.5*lambda*(e3*e3);						   \n"
 <<"    e3 = min(0.,ud);								   \n"
 <<"    Hminus = 0.5*lambda*(e3*e3);						   \n"
-<<"    e3=0.5*(dx(u1)+dy(u));							   \n"
+<<(!vectorial ? "    e3=0.5*(dx(u1)+dy(u));\n"        : ""  	    		    )
+<<(vectorial  ? "    e3=0.5*(dx(uold1)+dy(uold));\n"  : ""  	    		    )
 <<"    real[int] eval(2),eval1(2);						   \n"
 <<"    real[int,int] A(2,2);							   \n"
 <<"    for(int i=0; i< Wh0.ndof; i++){ 						   \n"
