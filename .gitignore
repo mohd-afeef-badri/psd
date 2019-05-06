@@ -26,3 +26,6 @@ BoundaryAndSourceConditions.edp
 
 ## FILES FOR CLUSTER ##
 launch.sh
+
+## TEST  FILE ##
+test*
