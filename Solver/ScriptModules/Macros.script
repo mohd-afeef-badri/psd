@@ -126,6 +126,7 @@ if(Sequential)writemacros
 <<"  macro intN1()int1d				// One-dimensional integral	   \n"
 <<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader   \n"
 <<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader	   \n"
+<<"  macro grad(i) [dx(i),dy(i)]		// two-dimensional gradient	   \n"
 <<"										   \n";
 
 } //-- [if loop terminator] space==2 ended --//
@@ -220,6 +221,7 @@ if(Sequential)writemacros
 <<"  macro intN1()int2d				// Two-dimensional integral	   \n"
 <<"  macro readmeshN()readmesh3			// Three-dimensional problem	   \n"
 <<"  macro gmshloadN()gmshload3			// Three-dimensional 'msh' reader  \n"
+<<"  macro grad(i)[dx(i),dy(i),dz(i)]		// three-dimensional gradient	   \n"
 <<"										   \n";
 
 } //-- [if loop terminator] space==3 ended --//

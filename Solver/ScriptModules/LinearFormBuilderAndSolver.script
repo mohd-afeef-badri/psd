@@ -42,9 +42,8 @@ if(Sequential)writesolver
 <<"										   \n";
 
 if(pipegnu){writesolver
-<<"  system(\"rm force.data\")      	;					   \n"
 <<"										   \n"
-<<"  matrix  And			;	// PostProcessing		   \n";
+;//<<"  matrix  And			;	// PostProcessing		   \n";
 
 if(vectorial)writesolver
 <<"  Vh def(fr) 			;	// Variables for force  	   \n"
@@ -79,6 +78,26 @@ if(!Sequential)writesolver
 <<"  mpiAllReduce(himlocal,himGlobal,mpiCommWorld,mpiMIN)   ;			   \n"
 <<"  lo = himGlobal*lfac                                    ;			   \n"
 <<"}										   \n";
+
+if(pipegnu)if(!supercomp)writesolver
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot piping -------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  system(\"rm force.data\")      	;					   \n"
+<<"										   \n"
+<<"  pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\";\\n\";   	 	   \n"
+<<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
+<<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
+<<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xrange [0:.008] 			;\\n\";    		   \n"
+<<"  pgnuplot <<\"set yrange [0:.9] 			;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   		   \n"
+<<"  pgnuplot <<\"set ylabel \\\" Force (kN)\\\"	;\\n\";  	  	   \n"
+<<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
+<<"										   \n";
 
 if(Sequential){writesolver
 <<"										   \n"
@@ -142,12 +161,16 @@ if(Sequential){writesolver
 
 if(pipegnu)writesolver
 <<"										   \n"
+<<"	real forcetot  = 0.;							   \n"
+<<"	forcetot = intN1(Th,2)(lambda*divergence(u)+2.*mu*dy(u1));		   \n"       
+/*
 <<"      And = elastNoDirc(Vh,Vh);						   \n"
 <<"      fr[] = And*u[];							   \n"
 <<"										   \n"
 <<"      real forcetot  = 0. ; 							   \n"
 <<"      for(int i = 0; i < ldof.n; ++i)					   \n"
 <<"        forcetot = forcetot + fr1[][ldof[i]];				   \n"
+*/
 <<"										   \n"
 <<"      { ofstream ff(\"force.data\",append);				  	   \n"
 <<"        ff << tr << \"	\" << forcetot*1e-3 << endl; 			   \n"
@@ -155,15 +178,6 @@ if(pipegnu)writesolver
 <<"										   \n"
 <<"										   \n"
 <<"      { 							   	   	   \n"
-<<"	   pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\"	;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  	   \n"
-<<"	   pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set grid x y 				;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set xrange [0:.008] 			;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set yrange [0:.9] 			;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   	   \n"
-<<"	   pgnuplot <<\"set ylabel \\\" Force (kN)\\\"		;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set key left 				;\\n\";    	   \n"
 <<"	   pgnuplot <<\"plot					\" 	   	   \n"
 <<"		    <<\"    \\\"force.data\\\"			\" 	   	   \n"
 <<"		    <<\"	   u 1:2 w lp pt 6 ps 2 t \\\"   FEM\\\",\"  	   \n"
@@ -189,7 +203,7 @@ writesolver
 <<"      break;							   		   \n"
 <<"    }									   \n"
 <<"  } 										   \n"
-<<"	tr+ = dtr;								   \n"
+<<"	tr += dtr;								   \n"
 <<"}										   \n"
 <<"										   \n"	
 <<"										   \n"
@@ -224,12 +238,14 @@ if(vectorial)writesolver
 <<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n";
 
+/*
 if(pipegnu)writesolver
 <<"										   \n"
 <<"  matrix	 MatDUMMY2 = DUMMY(Vh, Vh);					   \n"
 <<"  Mat A2(MatDUMMY2, arrayIntersectionP, restrictionIntersectionP, DP);  	   \n"
 <<"  MatDUMMY2.resize(0,0);							   \n"
 <<"										   \n";
+*/
 
 writesolver
 <<"										   \n"
@@ -363,6 +379,10 @@ writesolver
 }  //-- [if loop terminator] vectorial ended --//
 
 if(pipegnu){writesolver
+<<"										   \n"
+<<"	real forcetot  = 0., forcetotGath  = 0. ;				   \n"
+<<"	forcetot = intN1(Th,2)(lambda*divergence(u)+2.*mu*dy(u1));		   \n" 
+/*
 <<"	And = elastNoDirc(Vh,Vh);						   \n"
 <<"	changeOperator(A2, And);						   \n"
 <<"	fr[] = And*u[];								   \n"
@@ -372,6 +392,8 @@ if(pipegnu){writesolver
 <<"	real forcetot  = 0.,forcetotGath  = 0. ;				   \n"
 <<"		for(int i = 0; i < ldof.n; ++i)					   \n"
 <<"		forcetot = forcetot + fr1[][ldof[i]];				   \n"
+<<"										   \n"
+*/
 <<"										   \n"
 <<"	mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);		   \n"
 <<"										   \n"
@@ -386,15 +408,6 @@ if(!supercomp)writesolver
 <<"										   \n"
 <<"										   \n"
 <<"      { 							   	   	   \n"
-<<"	   pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\"	;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  	   \n"
-<<"	   pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set grid x y 				;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set xrange [0:.008] 			;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set yrange [0:.9] 			;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   	   \n"
-<<"	   pgnuplot <<\"set ylabel \\\" Force (kN)\\\"		;\\n\";    	   \n"
-<<"	   pgnuplot <<\"set key left 				;\\n\";    	   \n"
 <<"	   pgnuplot <<\"plot					\" 	   	   \n"
 <<"		    <<\"    \\\"force.data\\\"			\" 	   	   \n"
 <<"		    <<\"	   u ($1):($2) w lp pt 6 ps 2 t \\\"   FEM\\\",\"  \n"
