@@ -203,7 +203,7 @@ writesolver
 <<"      break;							   		   \n"
 <<"    }									   \n"
 <<"  } 										   \n"
-<<"	tr+ = dtr;								   \n"
+<<"	tr += dtr;								   \n"
 <<"}										   \n"
 <<"										   \n"	
 <<"										   \n"
