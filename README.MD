@@ -46,6 +46,9 @@ Here is the list of options that are available.
 -pointbc	[bool]		To activate Dirichlet boundary condition on point.
 ``` 
 ``` 
+-dynamic	[bool]		To activate dynamic solver.
+``` 
+``` 
 -bodyforce	[bool]		To activate volumetric source term (body force).
 ``` 
 ```
