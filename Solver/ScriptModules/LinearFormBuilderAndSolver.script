@@ -580,18 +580,35 @@ if(Sequential)if(!dynamic){writesolver
 <<"//  -------Local Au=b assembly and solving-------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
+<<"  Vh  def(u)   ;	// Defining vectorial FE variables 			   \n"
+<<"										   \n"
+<<"  //-----------------Assembly for A-----------------//			   \n"
+<<"										   \n"
 <<(timelog ? "	timerbegin(\"Matrix Assembly\",t0)\n" : " "  	    		   )
 <<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
 <<(timelog ? "	timerend  (\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Assembly for b-----------------//			   \n"
+<<"										   \n"
 <<(timelog ? "	timerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
 <<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
 <<(timelog ? "	timerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Solving du=A^-1*b--------------//			   \n"
+<<"										   \n"
 <<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " "  	    		   	   )
 <<"		set(A,solver=CG);			// Solver setup		   \n"
 <<"		u[] = A^-1*b;				// Solving		   \n"
 <<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
-<<"										   \n"
 <<"										   \n";
+
+if(debug)writesolver
+<<"										   \n"
+<<"  //-----------------debug  plotting---------------//			   \n"
+<<"										   \n"
+<<"  plot (u,wait=0, cmm= \"solution\")  ;				   \n"
+<<"										   \n";
+
 
 }  //-- [if loop terminator] Sequential Not Dynamic ended --//
 
