@@ -68,4 +68,14 @@ if(spc==3)writebc
 
 }   //-- [if loop terminator] tractionbc ended --//
 
+
+if(dynamic){writebc
+<<"										   \n"
+<<"//---dynamic loading function---//						   \n"
+<<"										   \n"
+<<"  real tt;									   \n"
+<<"  func tr = (tt <= 0.8 ? real(1.*tt/0.8) : 0. );    // Traction tr		   \n"
+<<"										   \n";
+}   //-- [if loop terminator] dynamic ended --//
+
 } //-- [ostream terminator]  varfmatsolve.edp closed --//

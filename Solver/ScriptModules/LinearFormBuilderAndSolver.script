@@ -572,7 +572,7 @@ writesolver
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential){writesolver    
+if(Sequential)if(!dynamic){writesolver    
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  -------Local Au=b assembly and solving-------				   \n"
@@ -591,7 +591,87 @@ if(Sequential){writesolver
 <<"										   \n"
 <<"										   \n";
 
-}  //-- [if loop terminator] Sequential ended --//
+}  //-- [if loop terminator] Sequential Not Dynamic ended --//
+
+
+if(Sequential)if(dynamic){writesolver    
+<<"										   \n";
+
+if(plotAll)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------Paraview plotting support-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int[int] vtuorder = [1,1,1];                       // Solution export order   \n"
+<<"  string   namedata = \"U\";			     // Name of export data	   \n"
+<<"  bool     withsur  = true;							   \n"
+<<"										   \n";
+
+writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------Dynamic loop for linear assembly and solving-------		   \n"
+<<"//==============================================================================\n"	
+<<"										   \n"
+<<"for(int j=0; j<50; j++){							   \n"
+<<"										   \n"
+<<"  cout << \" Time iteration at t :\" << t << \" (s) \"<< endl;		   \n"
+<<"										   \n"
+<<"  tt  = t-real(alpf*dt);                            // tt update for loading    \n"
+<<"										   \n"
+<<"  //-----------------Assembly for A-----------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	timerbegin(\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<"  matrix<real> A = elastodynamics(Vh,Vh,tgv=-1);   // Assembly for A            \n"
+<<(timelog ? "	timerend  (\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Assembly for b-----------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	timerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"  real[int]    b = elastodynamics(0,Vh,tgv=-1);    // Assembly for b	           \n"
+<<(timelog ? "	timerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Solving du=A^-1*b--------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " "  	    		   	   )
+<<"  set(A,solver=UMFPACK);                           // Solver setup		   \n"
+<<"   du[] = A^-1*b;                                   // Solving		   \n"
+<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
+<<"										   \n";
+
+if(debug)writesolver
+<<"										   \n"
+<<"  //-----------------Move mesh plotting------------//			   \n"
+<<"										   \n"
+<<"  mesh ThMoved = movemesh(Th, [x + du, y + du1]) ;				   \n"
+<<"  plot (ThMoved,wait=0)                          ;				   \n"
+<<"										   \n";
+
+writesolver
+<<"										   \n"
+<<"  //-----------------updating variables------------//			   \n"
+<<"										   \n"
+<<"  updateVariables(du,uold,vold,aold)						   \n"
+<<"  										   \n";
+
+if(plotAll)writesolver
+<<"										   \n"
+<<"  //-----------------Paraview plotting-------------//			   \n"
+<<"										   \n"
+<<"  string   namevtu=\"VTUs/Solution\"+j+\".vtu\";        // Name of PV files     \n"
+<<"  savevtk(namevtu, Th,[uold,uold1,0], order=vtuorder, dataname=namedata );	   \n"
+<<"										   \n";
+
+writesolver
+<<"										   \n"
+<<"  //-----------------updating time----------------//				   \n"
+<<"										   \n"
+<<"  t=t+dt;									   \n"
+<<"}										   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] Sequential Dynamic ended --//
 
 }  //-- [if loop terminator] !nonlinear ended --//
 

@@ -116,7 +116,7 @@ if(Sequential){writePostProcessor
 <<"										   \n"	
 <<"										   \n";
 
-if(plotAll){writePostProcessor
+if(plotAll)if(!dynamic){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"

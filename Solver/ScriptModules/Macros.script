@@ -19,8 +19,10 @@ writemacros
 
 if(spc==2){writemacros
 <<"										   \n"
-<<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
-<<"										   \n"
+<<"//------------------------- Essential Macros ---------------------------------//\n"
+<<"										   \n";
+
+if(!Sequential)writemacros
 <<"  macro partitioner "+Partitioner+"\t\t	// Mesh partitioner used   	   \n"
 <<"  macro dimension 2      			// Two-dimensional problem 	   \n";
 
@@ -38,7 +40,10 @@ if(!vectorial){writemacros
 
 if(!nonlinear)writemacros
 <<"										   \n"
-<<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n"
+<<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n";
+
+if(!nonlinear)if(!Sequential)writemacros
+<<"										   \n"
 <<"  macro init (i) [ i ,  i  ]			// Vect. field initialize  	   \n"
 <<"										   \n";
 
@@ -136,7 +141,9 @@ if(Sequential)writemacros
 if(spc==3){writemacros
 <<"										   \n"
 <<"//--------------------Macros needed by DDmacro.idp----------------------------//\n"
-<<"										   \n"
+<<"										   \n";
+
+if(!Sequential)writemacros
 <<"  macro partitioner "+Partitioner+"\t		// Mesh partitioner used   \n"
 <<"  macro dimension   3				// Three-D problem	   \n";
 
@@ -154,7 +161,10 @@ if(!vectorial){writemacros
 
 if(!nonlinear)writemacros
 <<"										   \n"
-<<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n"
+<<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n";
+
+if(!nonlinear)if(!Sequential)writemacros
+<<"										   \n"
 <<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
 <<"										   \n";
 
@@ -314,6 +324,25 @@ if(Sequential)writemacros
 <<"										   \n";
 
 } //-- [if loop terminator] timelog ended --//
+
+if(dynamic)writemacros
+<<"										   \n"
+<<"//------------------------------update macros---------------------------------//\n"
+<<"										   \n"
+<<"  macro updateVariables(du,uold,vold,aold){					   \n"
+<<"    										   \n"
+<<"    fespace Vloc(Th,Pk)  ;							   \n"
+<<"    Vloc def(aloc)       ;							   \n"
+<<"										   \n"
+<<"    for (int i=0; i< Vh.ndof; i++){						   \n"
+<<"      aloc[][i] =   (du[][i]-uold[][i]-dt*vold[][i])/beta/(dt*dt)               \n"
+<<"                  - (1.-2.*beta)/2./beta*aold[][i]                          ;   \n"
+<<"      vold[][i] = vold[][i] + dt*((1.-gamma)*aold[][i] + gamma*aloc[][i])   ;   \n"
+<<"      aold[][i]= aloc[][i]  ;						   \n"
+<<"      uold[][i]= du[][i]    ;						   \n"
+<<"    }									   \n"
+<<"  }//									   \n"
+<<"										   \n";
 
 } //-- [ostream terminator]  macros.edp closed --//  
 

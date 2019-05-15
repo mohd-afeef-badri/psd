@@ -32,6 +32,8 @@
   -plot        [bool]     To activate plotting routine. Default OFF.
 
   -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
+
+  -dynamic     [bool]	  To activate dynamic solver. Default OFF.  			   
   
   -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.  			   
 
