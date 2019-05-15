@@ -31,6 +31,9 @@ if(plotAll)writemain
 if(nonlinear)if(energydecomp)writemain
 <<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
 
+if(dynamic)writemain
+<<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
+
 if(pipegnu)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n";
 //<<"  include \"../Plugins/MacroTools.edp\"              // Important macros	   \n";

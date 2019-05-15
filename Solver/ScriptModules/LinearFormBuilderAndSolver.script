@@ -644,15 +644,16 @@ if(debug)writesolver
 <<"										   \n"
 <<"  //-----------------Move mesh plotting------------//			   \n"
 <<"										   \n"
-<<"  mesh ThMoved = movemesh(Th, [x + du, y + du1]) ;				   \n"
-<<"  plot (ThMoved,wait=0)                          ;				   \n"
+<<"  mesh ThMoved = movemesh(Th, [x + du, y + du1]) ; 				   \n"
+<<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;				   \n"
 <<"										   \n";
 
 writesolver
 <<"										   \n"
 <<"  //-----------------updating variables------------//			   \n"
 <<"										   \n"
-<<"  updateVariables(du,uold,vold,aold)						   \n"
+<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
+//<<"  updateVariables(du,uold,vold,aold)					   \n"
 <<"  										   \n";
 
 if(plotAll)writesolver

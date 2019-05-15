@@ -174,6 +174,99 @@ double GFPmaxintwoP1(KN<double> *const & f, KN<double> *const & f1)
 
 
 template<class K>
+class updatedynamic_Op : public E_F0mps {
+    public:
+        Expression du					;
+        Expression uold					;
+        Expression vold					;
+        Expression aold					;
+        Expression beta					;                
+        Expression gamma				;
+        Expression dt					;  
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        updatedynamic_Op(const basicAC_F0& args		, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		
+        		) : 
+        		du     (param1)			, 
+        		uold   (param2)			, 
+        		vold   (param3)			,  
+        		aold   (param4)			,
+        		beta   (param5)			, 
+        		gamma  (param6)			,
+        		dt     (param7)			
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type updatedynamic_Op<K>::name_param[] = { };
+
+
+template<class K>
+class updatedynamic : public OneOperator {
+    public:
+        updatedynamic() : OneOperator(atype<long>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<double>()	,
+        			     atype<double>()	,        			     
+        			     atype<double>()  
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new updatedynamic_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6])           				              				  
+            				  );
+        }
+};
+
+
+template<class K>
+AnyType updatedynamic_Op<K>::operator()(Stack stack) const {
+    KN<K>* vec1 = GetAny<KN<K>*>((*du)(stack))		;
+    KN<K>* vec2 = GetAny<KN<K>*>((*uold)(stack))	;
+    KN<K>* vec3 = GetAny<KN<K>*>((*vold)(stack))	;
+    KN<K>* vec4 = GetAny<KN<K>*>((*aold)(stack))	;        
+    double bet   = GetAny<double>((*beta)(stack))	;
+    double gam  = GetAny<double>((*gamma)(stack))	;
+    double ddt  = GetAny<double>((*dt)(stack))		;
+
+    double anew						;
+    
+    for(int j = 0; j < vec1->n; ++j){           
+      anew = (vec1->operator[](j)-vec2->operator[](j)-ddt*vec3->operator[](j))/bet/(ddt*ddt) - (1.-2.*bet)/2./bet*vec4->operator[](j);        
+      vec3->operator[](j) = vec3->operator[](j) + ddt*((1.-gam)*vec4->operator[](j) + gam*anew);    
+      vec4->operator[](j)= anew;						   
+      vec2->operator[](j)= vec1->operator[](j);	       
+     }     
+    return 0L;
+}
+
+template<class K>
 class DecompEnergy_Op : public E_F0mps {
     public:
         Expression ex					;
@@ -436,6 +529,7 @@ AnyType DecompEnergy3_Op<K>::operator()(Stack stack) const {
 }  
 static void InitFF()
 {
+  Global.Add("GFPUpdateDynamic", "(", new updatedynamic<double>);
   Global.Add("GFPDecompEnergy3D", "(", new DecompEnergy3<double>);
   Global.Add("GFPDecompEnergy2D", "(", new DecompEnergy<double>);
   Global.Add("GFPmaxintwoFEfields","(",new OneOperator2_<double,KN<double>*, KN<double>*>(GFPmaxintwoP1));		

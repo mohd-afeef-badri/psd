@@ -34,7 +34,7 @@ if(nonlinear)if(!dynamic)writemeshParameters
 
 if(dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/mesh2d\"; // Mesh file name	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar-dynamic\"; // Mesh file name  \n";
 
 
 writemeshParameters
