@@ -93,8 +93,8 @@ if(dynamic)writemeshParameters
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"real rho  = 1.0  ,								   \n"
-<<"     etam = 0.0  ,								   \n"
-<<"     etak = 0.0  ,								   \n"
+<<"     etam = 0.001,								   \n"
+<<"     etak = 0.001,								   \n"
 <<"     alpm = 0.2  ,								   \n"
 <<"     alpf = 0.4  ,								   \n"
 <<"     tmax = 4.0  ,								   \n"
@@ -103,9 +103,24 @@ if(dynamic)writemeshParameters
 <<"	 									   \n"
 <<"real gamma = 0.5 + alpf - alpm         ,					   \n"
 <<"     beta  = (1./4.)*(gamma+0.5)^2     ;					   \n"
-<<"	 									   \n"
 <<"     lambda = 576.9230769  ;			// E=1000. & nu=0.3		   \n"
-<<"     mu     = 384.6153846  ;			// E=1000. & nu=0.3		   \n";
+<<"     mu     = 384.6153846  ;			// E=1000. & nu=0.3		   \n"
+<<"	 									   \n"
+<<"real[int] c(11);								   \n"
+<<"	 									   \n"
+<<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt        ;\n"
+<<"  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt               ;\n"
+<<"  c[2] =   2.*mu*(1.-alpf) + 2.*mu*etak*gamma*(1-alpf)/beta/dt                 ;\n"
+<<"  c[3] =   rho*(1.-alpm)/beta/dt + etam*rho*(1-gamma*(1-alpf)/beta)            ;\n"
+<<"  c[4] =   rho*( (1.-alpm)*(1.-2.*beta)/2./beta - alpm + etam*dt*(1.-alpf)*(1.-gamma/2/beta))   ;\n"
+<<"  c[5] =   lambda*alpf -    lambda*etak*gamma*(1.-alpf)/beta/dt                ;\n"
+<<"  c[6] =   2*mu*alpf   -    2.*mu*etak*gamma*(1.-alpf)/beta/dt                 ;\n"
+<<"  c[7] =   etak*lambda*(gamma*(1.-alpf)/beta - 1)                              ;\n"
+<<"  c[8] =   etak*lambda*dt*(1.-alpf)*((1.-2*beta)/2./beta - (1.-gamma))         ;\n"
+<<"  c[9] =   etak*2*mu*(gamma*(1.-alpf)/beta -1)                                 ;\n"
+<<"  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))            ;\n"
+<<"	 									   \n";
+
 
 
 } //-- [ostream terminator]  parameters.edp closed --//
