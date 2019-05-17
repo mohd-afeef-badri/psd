@@ -625,12 +625,10 @@ if(pipegnu)if(!supercomp)writesolver
 <<"										   \n"
 <<"  real Ec				;  // To store damping energy		   \n"
 <<"										   \n"
-<<"  pgnuplot <<\"set title  \\\"Time = \"+t+\" (s)\\\" ;\\n\";   	 	   \n"
+<<"  pgnuplot <<\"set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";\\n\"; \n"
 <<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
 <<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
 <<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
-//<<"  pgnuplot <<\"set xrange [0:.008] 			;\\n\";    		   \n"
-//<<"  pgnuplot <<\"set yrange [0:.9] 			;\\n\";    		   \n"
 <<"  pgnuplot <<\"set xlabel \\\" Time     \\\"	;\\n\";	   		   	   \n"
 <<"  pgnuplot <<\"set ylabel \\\" Energies \\\"	;\\n\";  	  	   	   \n"
 <<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
@@ -654,7 +652,9 @@ writesolver
 <<"//  -------Dynamic loop for linear assembly and solving-------		   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"for(int j=0; j<50; j++){							   \n"
+<<"  int j=0;									   \n"
+<<"										   \n"
+<<"while (t <= tmax){								   \n"
 <<"										   \n"
 <<"  cout << \" Time iteration at t :\" << t << \" (s) \"<< endl;		   \n"
 <<"										   \n"
@@ -680,11 +680,19 @@ writesolver
 <<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
 <<"										   \n";
 
-if(debug)writesolver
+if(debug)if(spc==2)writesolver
 <<"										   \n"
 <<"  //-----------------Move mesh plotting------------//			   \n"
 <<"										   \n"
-<<"  mesh ThMoved = movemesh(Th, [x + du, y + du1]) ; 				   \n"
+<<"  meshN ThMoved = movemesh(Th, [x + du, y + du1]) ; 				   \n"
+<<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;				   \n"
+<<"										   \n";
+
+if(debug)if(spc==3)writesolver
+<<"										   \n"
+<<"  //-----------------Move mesh plotting------------//			   \n"
+<<"										   \n"
+<<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ; 	   \n"
 <<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;				   \n"
 <<"										   \n";
 
@@ -750,7 +758,7 @@ writesolver
 <<"										   \n"
 <<"  //-----------------updating time----------------//				   \n"
 <<"										   \n"
-<<"  t=t+dt;									   \n"
+<<"  t += dt; j++;								   \n"
 <<"}										   \n"
 <<"										   \n";
 
