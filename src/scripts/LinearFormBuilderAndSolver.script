@@ -41,11 +41,10 @@ if(Sequential)writesolver
 <<"										   \n"
 <<"										   \n";
 
-if(pipegnu){writesolver
+if(pipegnu)if(!supercomp)writesolver
 <<"										   \n"
-;//<<"  matrix  And			;	// PostProcessing		   \n";
-
 /*
+<<"  matrix  And			;	// PostProcessing		   \n";
 if(vectorial)writesolver
 <<"  Vh def(fr) 			;	// Variables for force  	   \n"
 <<"										   \n"
@@ -60,10 +59,26 @@ if(!vectorial)writesolver
 <<"  ExtractDofBorderP1(2,Vh,ldof)	;					   \n"
 <<"										   \n";
 */
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot piping -------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
+<<"										   \n"
+<<"  system(\"rm force.data\")      	;					   \n"
+<<"										   \n"
+<<"  pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\";\\n\";   	 	   \n"
+<<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
+<<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
+<<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xrange [0:.008] 			;\\n\";    		   \n"
+<<"  pgnuplot <<\"set yrange [0:.9] 			;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   		   \n"
+<<"  pgnuplot <<\"set ylabel \\\" Force (kN)\\\"	;\\n\";  	  	   \n"
+<<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
+<<"										   \n";
 
-if(!supercomp)writesolver
-<<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n";
-}
 
 if(debug || plotAll)if(vectorial)writesolver
 <<"										   \n"
@@ -81,25 +96,6 @@ if(!Sequential)writesolver
 <<"  lo = himGlobal*lfac                                    ;			   \n"
 <<"}										   \n";
 
-if(pipegnu)if(!supercomp)writesolver
-<<"										   \n"
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Gnuplot piping -------						   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  system(\"rm force.data\")      	;					   \n"
-<<"										   \n"
-<<"  pgnuplot <<\"set title  \\\"Traction = \"+tr+\"\\\";\\n\";   	 	   \n"
-<<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
-<<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
-<<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
-<<"  pgnuplot <<\"set xrange [0:.008] 			;\\n\";    		   \n"
-<<"  pgnuplot <<\"set yrange [0:.9] 			;\\n\";    		   \n"
-<<"  pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   		   \n"
-<<"  pgnuplot <<\"set ylabel \\\" Force (kN)\\\"	;\\n\";  	  	   \n"
-<<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
-<<"										   \n";
 
 if(Sequential){writesolver
 <<"										   \n"
@@ -616,6 +612,31 @@ if(debug)writesolver
 if(Sequential)if(dynamic){writesolver    
 <<"										   \n";
 
+
+if(pipegnu)if(!supercomp)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot piping -------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
+<<"										   \n"
+<<"  system(\"rm energies.data\")      	;					   \n"
+<<"										   \n"
+<<"  real Ec				;  // To store damping energy		   \n"
+<<"										   \n"
+<<"  pgnuplot <<\"set title  \\\"Time = \"+t+\" (s)\\\" ;\\n\";   	 	   \n"
+<<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
+<<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
+<<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
+//<<"  pgnuplot <<\"set xrange [0:.008] 			;\\n\";    		   \n"
+//<<"  pgnuplot <<\"set yrange [0:.9] 			;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xlabel \\\" Time     \\\"	;\\n\";	   		   	   \n"
+<<"  pgnuplot <<\"set ylabel \\\" Energies \\\"	;\\n\";  	  	   	   \n"
+<<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
+<<"										   \n";
+
+
 if(plotAll)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -682,6 +703,48 @@ if(plotAll)writesolver
 <<"  string   namevtu=\"VTUs/Solution\"+j+\".vtu\";        // Name of PV files     \n"
 <<"  savevtk(namevtu, Th,[uold,uold1,0], order=vtuorder, dataname=namedata );	   \n"
 <<"										   \n";
+
+
+
+if(pipegnu){writesolver
+<<"										   \n"
+<<"  //-----------------Gnuplot plotting--------------//			   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  real Ek =intN(Th)(0.5*(vold*vold+vold1*vold1));				   \n"
+<<"  real El =intN(Th)(0.5*(lambda*divergence(uold)*divergence(uold) 		   \n"
+<<"                         + 2. * mu * epsilon(uold)'*epsilon(uold))	 	   \n"
+<<"                    );							   \n"
+<<"       Ec += dt*intN(Th)(							   \n"
+<<"	                      (etam*rho) *def(vold)'*def(vold)			   \n"
+<<"                         + (etak*lambda)*(divergence(vold)*divergence(vold))	   \n"
+<<"			    + (etak* 2.*mu)*(epsilon(vold)'*epsilon(vold))	   \n"
+<<"                         );							   \n"
+<<"										   \n"
+<<"   ofstream ff(\"energies.data\",append);{					   \n"
+<<"        ff<< t << \"  \" << Ek << \"  \"<< El << \"  \" << Ec <<endl;	   \n"
+<<"   }										   \n"
+<<"										   \n";
+
+if(!supercomp)writesolver
+<<"										   \n"
+<<"										   \n"
+<<"      { 							   	   	   \n"
+<<"	   pgnuplot <<\"plot					\" 	   	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	           \n"
+<<"		    <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\",\" 	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($3) w lp lw 2  pt 7 ps 2 t \\\"E.E\\\",\"	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($4) w lp lw 2 pt 7 ps 2 t \\\"D.E\\\",\" 	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($3+$2+$4) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"     \n"
+<<"		    <<\"					\\n\"; 	   	   \n" 
+<<"        flush(pgnuplot);					   	   	   \n"
+<<"       }							  	   	   \n";
+}  //-- [if loop terminator]  pipegnu ended --//
+
+
 
 writesolver
 <<"										   \n"
