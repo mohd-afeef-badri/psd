@@ -1,10 +1,10 @@
 #  PSD: a Parallel Structural Dynamics solver #
 
-![markdownimage](/data/images/markdownimage.png)
+![](/data/images/markdownimage.png)
 
-PSD is a solid mechanics solver modules wrapped around [FreeFem++](https://freefem.org/) for discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear* mechanics and *nonlinear* mechanics problems. Besides these *hybrid-phase field fracture mechanics* models has also been incorporated within PSD. PSD uses sate-of-the art domain-decomposition paradigm for parallel computing and all solvers are  proven to scale quasi-optimally.
+PSD is a solid mechanics solver modules wrapped around [FreeFem++](https://freefem.org/) for discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear* mechanics and *nonlinear* mechanics problems. Besides these *hybrid-phase field fracture mechanics* models has also been incorporated within PSD. PSD uses sate-of-the art domain-decomposition paradigm for parallel computing and all solvers are  proven to scale quasi-optimally. It also includes a squential solver which does not require [PETSc](https://www.mcs.anl.gov/petsc/) . 
 
-PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 2D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html) .mesh format or [Gmsh's](http://gmsh.info/) .msh format. PSD post processing is done via .vtk and .vtu files of the [ParaView](https://www.paraview.org/) platform. 
+PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 2D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. PSD post processing is done via `.vtk` and `.vtu` files of the [ParaView](https://www.paraview.org/) platform. 
 
 
 
@@ -13,8 +13,10 @@ PSD works for two and three dimensional problems only. Unstructured meshes (tria
 PSD is built to work with Linux platforms.
 
 **Dependencies** 
+
 - automake
 - FreeFemm++
+- PETSc       (optional)
 - gmsh
 - gnuplot	(optional)
 - C++
@@ -38,7 +40,8 @@ autoreconf -i
 ```
 make FFINSTALLDIR=/usr/local/bin/ GMSH=~/usr/local/bin/gmsh
 ```
-*Note* variable `FFINSTALLDIR` can be changed to the FreeFem++ local path if installed locally. Similarly variable `GMSH` can be changed for Gmsh.
+*Note* variable `FFINSTALLDIR` can be changed to the [FreeFem++](https://freefem.org/) local path if installed locally. Similarly variable `GMSH` can be changed for [Gmsh](http://gmsh.info/).
+
 - Install PSD
 ```
 make install
@@ -52,55 +55,46 @@ The parallel/sequential solvers can be run on Linux platforms and can be used wi
 ### Step 1 ? ###
 
 ```
-ff-mpirun -np 1 SolverGenerator.edp -v 0 -nw [OptionsA]
+FreeFem++ SolverGenerator.edp -v 0 -nw [OptionsA]
 
 ```
 
 ### Step 2 ? ###
 For parallel:
 ```
-ff-mpirun -np **NP** Main.edp -v 0 -nw [OptionsB]
+ff-mpirun -np $N Main.edp -v 0 -nw
 
 ```
 For sequential:
 ```
-FreeFem++ Main.edp -v 0 -nw [OptionsB]
+FreeFem++ Main.edp -v 0 -nw
 
 ```
 
-## What is $NP ? ##
+## What is $N ? ##
 
-**NP** is the number of processes that you will use for performing the simulation in parallel. 
+**N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel. 
 
 ## What is [OptionsA] ? ##
 
-These are commandline flags/options that control your simulation. You can think of it as a way to talk to the solver.
+These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver.
 
 ## What all options do I have in [OptionsA] ? ##
 
-Here is the list of options that are available.
+Here is a table that lists out all the options that are available.
 
-- `-sequential	[bool]`	  To solve via a sequential solver. Default is false.
-
-- `-help	[bool]`	 To activate helping message on the terminal. Recommended flag.
-
-- `-pointbc	[bool]`	To activate Dirichlet boundary condition on point.
-
-- `-dynamic	[bool]`	To activate dynamic solver.
-
-- `-bodyforce	[bool]`	To activate volumetric source term (body force).
-
-- `-dirichletbc	[bool]`	To activate Dirichlet boundary condition.
-
-- `-tractionbc	[bool]`	To activate traction boundary condition (Neumann). 
-
-- `-dimension	[int]`	Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.
-
-- `-partitioner	[sting]` Mesh partitioner could be "metis" "parmetis" "scotch" or "ptstoch".
-
-- `-lagrange	[int]`	Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. 
-
-- `-plot	[bool]`	Use -plot to activate plotting using paraview. Default is false.
-
-- `-pipegnu	[bool]`	Use to activate realtime pipe plotting using GnuPlot. Default is false.
+| Option         | Type      | Comment                                                      |
+| -------------- | --------- | :----------------------------------------------------------- |
+| `-help`        | `[bool]`  | To activate helping message on the terminal.  Recommended flag. |
+| -dimension     | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
+| `-sequential`  | `[bool]`  | To solve via a sequential solver.   Default is false.        |
+| -lagrange      | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. |
+| `-dirichletbc` | `[bool]`  | To activate Dirichlet boundary condition.                    |
+| -bodyforce     | `[bool]`  | To activate volumetric source term (body force).             |
+| -tractionbc    | `[bool]`  | To activate traction boundary condition (Neumann).           |
+| -pointbc       | `[bool]`  | To activate Dirichlet boundary condition on point.           |
+| -partitioner   | `[sting]` | Mesh partitioner could be "metis" "parmetis" "scotch" or "ptstoch". |
+| -dynamic       | `[bool]`  | To activate dynamic solver.                                  |
+| -plot          | `[bool]`  | Use -plot to activate plotting using paraview. Default is false. |
+| -pipegnu       | `[bool]`  | Use to activate realtime pipe plotting using GnuPlot. Default is false. |
 
