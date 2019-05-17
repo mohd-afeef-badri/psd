@@ -5,7 +5,7 @@ all-local: bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic
 	@echo " Finished Creating 2D meshes  !!!!!!"
 	@echo "  			  "
 	@echo "  			  "		
-	@echo " Comilation list $(LIST_COMPILE)"
+	@echo " Compilation list $(LIST_COMPILE)"
 	@echo " gmsh used  $(GMSH)"
 
 bar.msh:

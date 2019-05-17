@@ -1,4 +1,4 @@
-SUBDIRS=meshes/2D/Geo-Files meshes/3D/Geo-Files images
+SUBDIRS=meshes/2D/Geo-Files meshes/3D/Geo-Files
 EXTRA_DIST=   	      \
 ./meshes/2D/Geo-Files/bar.geo \
 ./meshes/2D/Geo-Files/bar-dynamic.geo \
@@ -7,6 +7,5 @@ EXTRA_DIST=   	      \
 ./meshes/2D/Geo-Files/tensile-crack.geo\
 ./meshes/3D/Geo-Files/bar.geo\
 ./meshes/3D/Geo-Files/tensile-crack.geo\
-./meshes/3D/Geo-Files/bar-dynamic.geo\
-./images/markdownimage.png
+./meshes/3D/Geo-Files/bar-dynamic.geo
 
