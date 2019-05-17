@@ -1,7 +1,12 @@
-#  PSD: Parallel Structural Dynamics #
+#  PSD: a Parallel Structural Dynamics solver #
+
+![markdownimage](/data/images/markdownimage.png)
+
 PSD is a solid mechanics solver modules wrapped around [FreeFem++](https://freefem.org/) for discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear* mechanics and *nonlinear* mechanics problems. Besides these *hybrid-phase field fracture mechanics* models has also been incorporated within PSD. PSD uses sate-of-the art domain-decomposition paradigm for parallel computing and all solvers are  proven to scale quasi-optimally.
 
 PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 2D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html) .mesh format or [Gmsh's](http://gmsh.info/) .msh format. PSD post processing is done via .vtk and .vtu files of the [ParaView](https://www.paraview.org/) platform. 
+
+
 
 ## Installation ##
 
@@ -76,7 +81,7 @@ These are commandline flags/options that control your simulation. You can think 
 Here is the list of options that are available.
 
 - `-sequential	[bool]`	  To solve via a sequential solver. Default is false.
- 
+
 - `-help	[bool]`	 To activate helping message on the terminal. Recommended flag.
 
 - `-pointbc	[bool]`	To activate Dirichlet boundary condition on point.
