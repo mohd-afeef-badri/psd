@@ -28,7 +28,7 @@ if(help){cout
 <<"* To change the mesh and the material parameters edit 'Parameters.edp'         *\n"
 <<"*                                                                              *\n"
 <<"* 1. Edit  <<ThName>> the [string] name of your mesh  file  with  location. By *\n"
-<<"*    default it is ThName= <<../Meshes/2D/Meshes/bar2D>> .                     *\n"
+<<"*    default it is ThName= <<../Meshes/2D/bar>> .	                          *\n"
 <<"*                                                                              *\n"
 <<"* 2. Edit <<E,nu,f1,f2,f3>>  of [real] type representing the materials modulus *\n"
 <<"*    of elasticity, poissions ratio, body forces f1,f2,f3 in x,y,z directions. *\n"

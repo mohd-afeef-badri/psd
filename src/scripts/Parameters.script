@@ -26,15 +26,15 @@ writemeshParameters
 
 if(!nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar\";  // Mesh file name 	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh file name 	   \n";
 
 if(nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/tensile-crack\"; // Mesh file name\n";
+<<"  string ThName = \"../Meshes/"+spc+"D/tensile-crack\"; // Mesh file name\n";
 
 if(dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/Meshes/bar-dynamic\"; // Mesh file name  \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh file name  \n";
 
 
 writemeshParameters
