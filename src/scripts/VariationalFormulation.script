@@ -192,7 +192,7 @@ if(pipegnu)writevarfmatsolve
 }  //-- [if loop terminator] nonlinear vectorial ended --//
 
 
-if(dynamic)if(Sequential){writevarfmatsolve
+if(dynamic){writevarfmatsolve
 <<"										   \n"
 <<"										   \n"
 <<"//==============================================================================\n"

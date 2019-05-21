@@ -488,7 +488,7 @@ writesolver
 
 if(!nonlinear){
 
-if(!Sequential){writesolver      
+if(!Sequential)if(!dynamic){writesolver      
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  -------Local Au=b assembly and solving-------				   \n"
@@ -764,6 +764,190 @@ writesolver
 
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
+
+//*******************//
+if(!Sequential)if(dynamic){writesolver    
+<<"										   \n";
+
+
+if(pipegnu)if(!supercomp)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot piping -------						   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
+<<"										   \n"
+<<"  system(\"rm energies.data\")      	;					   \n"
+<<"										   \n"
+<<"  real[int] E(3),EG(3)		;  // To store Energies E1-Ke E2-El E3-D   \n"
+<<"										   \n"
+<<"  pgnuplot <<\"set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";\\n\"; \n"
+<<"  pgnuplot <<\"set termoption font \\\"Arial-Bold,20\\\";\\n\";  		   \n"
+<<"  pgnuplot <<\"set format x \\\"%.1t\\\"		;\\n\";    		   \n"
+<<"  pgnuplot <<\"set grid x y 				;\\n\";    		   \n"
+<<"  pgnuplot <<\"set xlabel \\\" Time     \\\"	;\\n\";	   		   	   \n"
+<<"  pgnuplot <<\"set ylabel \\\" Energies \\\"	;\\n\";  	  	   	   \n"
+<<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
+<<"										   \n";
+
+
+if(plotAll)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------Paraview plotting support-------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int[int] vtuorder = [1,1,1];                       // Solution export order   \n"
+<<"  bool     withsur  = true;							   \n"
+<<"  string   namedata=\"U\";			// Name of export data	   	   \n"
+<<"										   \n";
+
+writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------Variables for linear assembly and solving-------			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<" matrix       ALoc    ;							   \n"
+<<" real[int]    b(Vh.ndof);							   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
+<<"  matrix  MatDUMMY  = DUMMY(Vh, Vh)                                    ;	   \n"
+<<"  Mat  A( MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
+<<"  MatDUMMY.resize(0,0)                                                 ;	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------Dynamic loop for linear assembly and solving-------		   \n"
+<<"//==============================================================================\n"	
+<<"										   \n"
+<<"  int j=0;									   \n"
+<<"										   \n"
+<<"while (t <= tmax){								   \n"
+<<"										   \n"
+<<"  cout << \" Time iteration at t :\" << t << \" (s) \"<< endl;		   \n"
+<<"										   \n"
+<<"  tt  = t-real(alpf*dt);                            // tt update for loading    \n"
+<<"										   \n"
+<<"  //-----------------Assembly for A-----------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Matrix Assembly\",t0)\n" : " "  	    	   )
+<<"  ALoc = elastodynamics(Vh,Vh,tgv=-1);   // Assembly for A          	           \n"
+<<(timelog ? "	MPItimerend  (\"Matrix Assembly\",t0)\n" : " "  	    	   )
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<"  changeOperator(A, ALoc);			 				   \n"
+<<(timelog ? "	MPItimerend(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Assembly for b-----------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"  b = elastodynamics(0,Vh,tgv=-1);    // Assembly for b	           	   \n"
+<<(timelog ? "	MPItimerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<"										   \n"
+<<"  //-----------------Solving du=A^-1*b--------------//			   \n"
+<<"										   \n"
+<<(timelog ? "	MPItimerbegin(\"Solving U\",t0)\n" : " "  	    	   	   )
+<<"  set(A,sparams =\" \");                           // Solver setup		   \n"
+<<"   du[] = A^-1*b;                                   // Solving		   \n"
+<<(timelog ? "	MPItimerend  (\"Solving U\",t0)\n" : " "  	   		   )
+<<"										   \n";
+
+if(debug)if(spc==2)writesolver
+<<"										   \n"
+<<"  //-----------------Move mesh plotting------------//			   \n"
+<<"										   \n"
+<<"  meshN ThMoved = movemesh(Th, [x + du, y + du1]) ; 				   \n"
+<<"  plotMPI (ThMoved,du[],\"t = \"+t+\" (s)\",Pk, def, real, 2, 0)  ;		   \n"
+<<"										   \n";
+
+if(debug)if(spc==3)writesolver
+<<"										   \n"
+<<"  //-----------------Move mesh plotting------------//			   \n"
+<<"										   \n"
+<<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ; 	   \n"
+<<"  plotMPI (ThMoved,du[],\"t = \"+t+\" (s)\",Pk, def, real, 3, 0)  ;		   \n"
+<<"										   \n";
+
+writesolver
+<<"										   \n"
+<<"  //-----------------updating variables------------//			   \n"
+<<"										   \n"
+<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
+//<<"  updateVariables(du,uold,vold,aold)					   \n"
+<<"  										   \n";
+
+
+if(plotAll)writesolver
+<<"										   \n"
+<<"										   \n"
+<<"	string   namevtu=\"VTUs/Solution\"+j+\"\";// Name of PV files	    	   \n"
+<<"	exportpvd(namevtu, Th,			 		   		   \n"
+<<(spc==2 ? "      \t[du,du1,0],\n" : "      \t[du,du1,du2],\n" 	    	    )
+<<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
+<<"										   \n";
+
+
+
+
+if(pipegnu){writesolver
+<<"										   \n"
+<<"  //-----------------Gnuplot plotting--------------//			   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  E[0] =intN(Th)(0.5*(vold*vold+vold1*vold1));				   \n"
+<<"  E[1] =intN(Th)(0.5*(lambda*divergence(uold)*divergence(uold) 		   \n"
+<<"                         + 2. * mu * epsilon(uold)'*epsilon(uold))	 	   \n"
+<<"                    );							   \n"
+<<"  E[2] += dt*intN(Th)(							   \n"
+<<"		         (etam*rho) *def(vold)'*def(vold)			   \n"
+<<"		         + (etak*lambda)*(divergence(vold)*divergence(vold))	   \n"
+<<"		         + (etak* 2.*mu)*(epsilon(vold)'*epsilon(vold))	   	   \n"
+<<"		         );							   \n"
+<<"										   \n"
+<<"    mpiAllReduce(E[0],EG[0],mpiCommWorld,mpiSUM);				   \n"
+<<"    mpiAllReduce(E[1],EG[1],mpiCommWorld,mpiSUM);				   \n"
+<<"    mpiAllReduce(E[2],EG[2],mpiCommWorld,mpiSUM);				   \n"
+<<"										   \n"
+<<"										   \n"
+<<"   if(mpirank==0)								   \n"
+<<"   {ofstream ff(\"energies.data\",append);					   \n"
+<<"        ff<< t << \"  \" << EG[0] << \"  \"<< EG[1] << \"  \" << EG[2] <<endl;  \n"
+<<"   }										   \n"
+<<"										   \n";
+
+if(!supercomp)writesolver
+<<"										   \n"
+<<"	 if(mpirank==0)								   \n"
+<<"      { 							   	   	   \n"
+<<"	   pgnuplot <<\"plot					\" 	   	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	           \n"
+<<"		    <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\",\" 	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($3) w lp lw 2  pt 7 ps 2 t \\\"E.E\\\",\"	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($4) w lp lw 2 pt 7 ps 2 t \\\"D.E\\\",\" 	   \n"
+<<"		    <<\"\\\"energies.data\\\"		\" 	   	   	   \n"
+<<"		    <<\"u ($1):($3+$2+$4) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"     \n"
+<<"		    <<\"					\\n\"; 	   	   \n" 
+<<"        flush(pgnuplot);					   	   	   \n"
+<<"       }							  	   	   \n";
+}  //-- [if loop terminator]  pipegnu ended --//
+
+
+
+writesolver
+<<"										   \n"
+<<"  //-----------------updating time----------------//				   \n"
+<<"										   \n"
+<<"  t += dt; j++;								   \n"
+<<"}										   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] Sequential Dynamic ended --//
 }  //-- [if loop terminator] !nonlinear ended --//
 
 if(!plotAll)if(!Sequential)writesolver
