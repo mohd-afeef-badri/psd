@@ -1,6 +1,7 @@
 SUBDIRS = src data 
 EXTRA_DIST=README.MD
 
+
 install-exec-local:
 	@mkdir -p ${prefix}/PSD
 	@mkdir -p ${prefix}/PSD/Meshes		
@@ -19,5 +20,14 @@ install-exec-local:
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	
 	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD/Solver/SolverGenerator.edp
 	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.
-	@cp  ./man/* ${prefix}/PSD/Doc/.			
-			
+	@cp  ./man/* ${prefix}/PSD/Doc/.
+	@echo "  			  "
+	@echo " Finished installing"
+	@echo "==========================================================================="
+	@echo "  ->   It is adviced to do a make check 					  "
+	@echo "==========================================================================="
+	
+check: 				
+	@echo "  			  "
+	@cp  ./data/Makefile1 ${prefix}/PSD/Solver/Makefile
+	@cd ${prefix}/PSD/Solver && make check && rm Makefile
