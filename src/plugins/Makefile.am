@@ -4,7 +4,7 @@ all-local: gofastplugins.so iovtk.so  MatrixPlotter.so
 	@echo "  			  "
 	@echo " Finished installing plugins !!!!!!"
 	@echo "  			  "
-	@echo " Comilation list $(LIST_COMPILE)"
+	@echo " Compilation list $(LIST_COMPILE)"
 	@echo " ff-c++ used  $(FFINSTALLDIR)"
 	@echo " Corresponds to FreeFEM  $(FFINSTALLDIR)FreeFem++"
 

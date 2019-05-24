@@ -24,7 +24,7 @@ install-exec-local:
 	@echo "  			  "
 	@echo " Finished installing"
 	@echo "==========================================================================="
-	@echo "  ->   It is adviced to do a make check 					  "
+	@echo "  ->   It is advised to do a make check 					  "
 	@echo "==========================================================================="
 	
 check: 				
