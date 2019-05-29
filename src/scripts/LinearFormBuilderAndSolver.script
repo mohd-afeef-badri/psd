@@ -217,16 +217,23 @@ if(!Sequential){writesolver
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
+/************************OLD METHOD*************************************************   
 <<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
 <<"  matrix  MatDUMMY  = DUMMY(Vh, Vh)                                    ;	   \n"
 <<"  Mat  A( MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
 <<"  MatDUMMY.resize(0,0)                                                 ;	   \n";
+/************************OLD METHOD*************************************************/
+<<"  Mat  A( Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)   ; 	   \n";
+
 
 if(!vectorial)writesolver
 <<"										   \n"
+/************************OLD METHOD*************************************************   
 <<"  matrix	 MatDUMMY1 = DUMMY(Vh1, Vh1);					   \n"
 <<"  Mat A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
 <<"  MatDUMMY1.resize(0,0);							   \n"
+/************************OLD METHOD*************************************************/
+<<"  Mat A1( Vh1.ndof, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
 <<"										   \n"
 <<"  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear	   \n";
@@ -813,10 +820,13 @@ writesolver
 <<" real[int]    b(Vh.ndof);							   \n"
 <<"										   \n"
 <<"										   \n"
+/************************OLD METHOD*************************************************   
 <<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
 <<"  matrix  MatDUMMY  = DUMMY(Vh, Vh)                                    ;	   \n"
 <<"  Mat  A( MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
 <<"  MatDUMMY.resize(0,0)                                                 ;	   \n"
+/**********************************************************************************/
+<<"  Mat  A(Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
 <<"										   \n"
 <<"										   \n"
 <<"										   \n"
