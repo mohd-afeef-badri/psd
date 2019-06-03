@@ -385,8 +385,12 @@ writesolver
 
 if(pipegnu){writesolver
 <<"										   \n"
+<<"										   \n"
+<<"	for(int i=0; i<DP.n; i++) 						   \n"
+<<"	  Dspc[][i]=DP[i];							   \n"
+<<"										   \n"
 <<"	real forcetot  = 0., forcetotGath  = 0. ;				   \n"
-<<"	forcetot = intN1(Th,2)(lambda*divergence(u)+2.*mu*dy(u1));		   \n" 
+<<"	forcetot = intN1(Th,2)(  Dspc*(lambda*divergence(u)+2.*mu*dy(u1)) );	   \n" 
 /*
 <<"	And = elastNoDirc(Vh,Vh);						   \n"
 <<"	changeOperator(A2, And);						   \n"

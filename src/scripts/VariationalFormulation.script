@@ -72,8 +72,13 @@ if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"  Vh  def2(u) , def2(uold)  ;	// Defining displacement FE variables 	   \n"
-<<"  Vh1 phi , phiold          ;	// Damage field	FE variables	   	   \n"
+<<"  Vh  def2(u)    ,    // FE variable for displacement			   \n"
+<<"      def2(uold) ,    // FE variable for previous displacement		   \n"
+<<"      def2(Dspc) ;    // FE variables for partition of unity 	   	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  Vh1 phi       ,     // FE variable for phase field 			   \n"
+<<"      phiold    ;     // FE variable for previous iteration phase field	   \n"
 <<"										   \n"
 <<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
 <<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
