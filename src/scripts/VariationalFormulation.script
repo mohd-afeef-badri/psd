@@ -146,7 +146,9 @@ if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"  Vh  def(u) , def(uold)  ;	// Defining vectorial FE variables 		   \n"
+<<"  Vh  def(u)    ,    // FE vectorial variable for [u,\phi]			   \n"
+<<"      def(uold) ,    // FE vectorial variable for old [u,\phi] 		   \n"
+<<"      def(Dspc) ;    // FE vectorial variables for partition of unity    	   \n"
 <<"										   \n"
 <<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
 <<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
