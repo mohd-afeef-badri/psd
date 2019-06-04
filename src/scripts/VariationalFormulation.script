@@ -74,11 +74,12 @@ if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"  Vh  def2(u)    ,    // FE variable for displacement			   \n"
 <<"      def2(uold) ,    // FE variable for previous displacement		   \n"
-<<"      def2(Dspc) ;    // FE variables for partition of unity 	   	   \n"
+<<"      def2(DPspc);    // FE variables for partition of unity 	   	   \n"
 <<"										   \n"
 <<"										   \n"
 <<"  Vh1 phi       ,     // FE variable for phase field 			   \n"
-<<"      phiold    ;     // FE variable for previous iteration phase field	   \n"
+<<"      phiold    ,     // FE variable for previous iteration phase field	   \n"
+<<"      DZspc     ;     // FE variables for partition of unity 	   	   \n"
 <<"										   \n"
 <<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
 <<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
@@ -148,7 +149,7 @@ if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"  Vh  def(u)    ,    // FE vectorial variable for [u,\phi]			   \n"
 <<"      def(uold) ,    // FE vectorial variable for old [u,\phi] 		   \n"
-<<"      def(Dspc) ;    // FE vectorial variables for partition of unity    	   \n"
+<<"      def(DPspc);    // FE vectorial variables for partition of unity    	   \n"
 <<"										   \n"
 <<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
 <<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
@@ -211,7 +212,7 @@ if(dynamic){writevarfmatsolve
 <<"      def(uold)  ,      // Previous iteration displacement FE field		   \n"
 <<"      def(vold)  ,      // Previous iteration velocity FE field		   \n"
 <<"      def(aold)  ,      // Previous iteration acceleration FE field		   \n"
-<<"      def(Dspc)  ;      // Partition of unity field for integral		   \n"
+<<"      def(DPspc) ;      // Partition of unity field for integral		   \n"
 <<"										   \n"
 <<"varf elastodynamics( def(du) , def(v) )					   \n"
 <<"										   \n"

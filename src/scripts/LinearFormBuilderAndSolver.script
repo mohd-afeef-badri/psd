@@ -34,6 +34,11 @@ if(Sequential)writesolver
 <<"}										   \n"
 <<"										   \n"
 <<"										   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Defining the matrices and vectors -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
 <<"  matrix  A, A1				;  				   \n"
 <<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n"
 <<"										   \n"
@@ -41,7 +46,7 @@ if(Sequential)writesolver
 
 if(pipegnu)if(!supercomp)writesolver
 <<"										   \n"
-/*
+/************************OLD METHOD*************************************************
 <<"  matrix  And			;	// PostProcessing		   \n";
 if(vectorial)writesolver
 <<"  Vh def(fr) 			;	// Variables for force  	   \n"
@@ -56,7 +61,7 @@ if(!vectorial)writesolver
 <<"  int[int]  ldof( 1 )		;					   \n"
 <<"  ExtractDofBorderP1(2,Vh,ldof)	;					   \n"
 <<"										   \n";
-*/
+/************************OLD METHOD*************************************************/  
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Gnuplot piping -------						   \n"
@@ -77,23 +82,27 @@ if(!vectorial)writesolver
 <<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
 <<"										   \n";
 
-if(pipegnu)writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Partition of unity for integrals -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  for(int i=0; i<DP.n; i++) 							   \n"
-<<"    Dspc[][i]=DP[i];								   \n"
-<<"										   \n";
-
 
 if(debug || plotAll)if(vectorial)writesolver
 <<"										   \n"
 <<"  VhPlt phi;									   \n"
 <<"										   \n";
 
-if(!Sequential)writesolver
+if(!Sequential){writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Partition of unity for integrals -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  for(int i=0; i<DP.n; i++) 							   \n"
+<<"    DPspc[][i]=DP[i];							   \n";
+
+if(!vectorial)writesolver
+<<"										   \n"
+<<"  for(int i=0; i<DZ.n; i++) 							   \n"
+<<"    DZspc[][i]=DZ[i];							   \n";
+
+writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- L_o calculation in parallel -------				   \n"
@@ -106,6 +115,7 @@ if(!Sequential)writesolver
 <<"  mpiAllReduce(himlocal,himGlobal,mpiCommWorld,mpiMIN)   ;			   \n"
 <<"  lo = himGlobal*lfac                                    ;			   \n"
 <<"}										   \n";
+}
 
 
 if(Sequential){writesolver
@@ -117,23 +127,26 @@ if(Sequential){writesolver
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
-<<"  cout <<  \"  Applied traction \" << tr << endl;				   \n"
+<<"  cout <<  \"-------------------------------------------------------\\n\" 	   \n"
+<<"       <<  \"Applied traction \" << tr << \"\\n\" << endl;			   \n"
 <<"										   \n"
 <<"  if (tr >= 5e-3)								   \n"
 <<"    dtr = 1e-6;								   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"RHS Assembly U\",t0)\n" : "" 	          	    )
+<<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : "" 	          	    )
 <<"  b = elast(0,Vh);				// Assembly for b (once / NL loop) \n"
-<<(timelog ? "  timerend  (\"RHS Assembly U\",t0)\n" : ""  	         	    )
+<<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""  	         	    )
 <<"										   \n"
 <<"										   \n"
 <<"  for(int iter=0; iter<100; iter++){					   	   \n"
 <<"										   \n"
-<<(timelog ? "    timerbegin(\"Matrix Assembly U\",t0)\n" : ""	           	    )
+<<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""	       	    )
 <<"    A = elast(Vh,Vh);				// Assembly for A (for u)   \n"
-<<(timelog ? "    timerend  (\"Matrix Assembly U\",t0)\n" : ""	           	    )
+<<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""	            )
+<<"										   \n"
+<<"										   \n"
 <<(timelog ? "    timerbegin(\"Solving U\",t0)\n"         : ""         	  	    )
-//<<"    set(A,solver=UMFPACK);				// Solver setup	   	   \n"
+<<"    set(A,solver=CG);				// Solver setup	   	   \n"
 <<"    u[] = A^-1*b;				// Solve u	   		   \n"
 <<(timelog ? "    timerend  (\"Solving U\",t0)\n"         : ""         	  	    )
 <<"										   \n"
@@ -141,14 +154,18 @@ if(Sequential){writesolver
 <<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "    timerbegin(\"Matrix Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""           	    )
 <<"    A1 = phase(Vh1,Vh1);			// Assembly for A1 (for phi)  	   \n"
-<<(timelog ? "    timerend  (\"Matrix Assembly PHI\",t0)\n" : ""           	    )
-<<(timelog ? "    timerbegin(\"RHS Assembly PHI\",t0)\n" : "" 	          	    )
+<<(timelog ? "    timerend  (\"matrix assembly for PHI\",t0)\n" : ""           	    )
+<<"										   \n"
+<<"										   \n"
+<<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : "" 	            )
 <<"    b1 = phase(0,Vh1);				// Assembly for b (for phi)\n"
-<<(timelog ? "    timerend  (\"RHS Assembly U\",t0)\n" : ""  	         	    )
+<<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""  	            )
+<<"										   \n"
+<<"										   \n"
 <<(timelog ? "    timerbegin(\"Solving U\",t0)\n" : "" 	        	  	    )
-//<<"    set(A1,solver=UMFPACK);			// Solver setup	   \n"
+<<"    set(A1,solver=CG);			// Solver setup	   \n"
 <<"    phi[] = A1^-1*b1;				// Solve	   	   \n"
 <<(timelog ? "    timerend  (\"Solving U\",t0)\n" : "" 	        	  	    )
 <<"										   \n"
@@ -158,9 +175,9 @@ if(Sequential){writesolver
 <<"    real err1 = sqrt( intN(Th,qforder=3) ( uold^2   )  )     ;		   \n"
 <<"    real err2 = sqrt( intN(Th,qforder=3) ( phiold^2 )  )     ;		   \n"
 <<"										   \n"
-<<"    cout.scientific << \" Iter \" << iter<< \"  error in u \"<< err1		   \n"
-<<"                    <<\"  error in phi \"<< err2 << endl;			   \n"
-<<"										   \n"
+<<"      cout.scientific << \"NL iteration number :  [ \"  << iter 	   	   \n"
+<<"      << \" ]\\nL2 error in [u,phi] :  [ \"    << err1  			   \n"
+<<"      << \" , \" <<  err2 << \" ]\"      << endl;	   			   \n"
 <<"										   \n"
 <<"    phiold[] = phi[]  ;							   \n"
 <<"    uold[]   = u[]    ;							   \n"
@@ -171,15 +188,16 @@ if(Sequential){writesolver
 if(pipegnu)writesolver
 <<"										   \n"
 <<"	real forcetot  = 0.;							   \n"
-<<"	forcetot = intN1(Th,qforder=3,2)(lambda*divergence(u)+2.*mu*dy(u1));	   \n"       
-/*
+<<"	forcetot = intN1(Th,qforder=3,2)(lambda*divergence(u)+2.*mu*dy(u1));	   \n"
+<<"										   \n"       
+/************************OLD METHOD*************************************************   
 <<"      And = elastNoDirc(Vh,Vh);						   \n"
 <<"      fr[] = And*u[];							   \n"
 <<"										   \n"
 <<"      real forcetot  = 0. ; 							   \n"
 <<"      for(int i = 0; i < ldof.n; ++i)					   \n"
 <<"        forcetot = forcetot + fr1[][ldof[i]];				   \n"
-*/
+/************************OLD METHOD*************************************************/
 <<"										   \n"
 <<"      { ofstream ff(\"force.data\",append);				  	   \n"
 <<"        ff << tr << \"	\" << forcetot*1e-3 << endl; 			   \n"
@@ -224,7 +242,7 @@ if(!Sequential){writesolver
 <<"										   \n"
 <<"										   \n"	  
 <<"//==============================================================================\n"
-<<"// ------- Sparsity conservation -------					   \n"
+<<"// ------- Sparsity conservation and defining matrices and vectors -------	   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
@@ -254,14 +272,14 @@ if(vectorial)writesolver
 <<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n";
 
-/*
+/************************OLD METHOD*************************************************   
 if(pipegnu)writesolver
 <<"										   \n"
 <<"  matrix	 MatDUMMY2 = DUMMY(Vh, Vh);					   \n"
 <<"  Mat A2(MatDUMMY2, arrayIntersectionP, restrictionIntersectionP, DP);  	   \n"
 <<"  MatDUMMY2.resize(0,0);							   \n"
 <<"										   \n";
-*/
+/************************OLD METHOD*************************************************/
 
 writesolver
 <<"										   \n"
@@ -283,30 +301,32 @@ writesolver
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
-<<"  if(mpirank==0)cout <<  \"  Applied traction \" << tr << endl;		   \n"
+<<"  if(mpirank==0)								   \n"
+<<"   cout.scientific<<\"-----------------------------------------------------\\n\"\n"
+<<"   <<  \"Applied traction \" << tr << \"\\n\" << endl;	   		   \n"
 <<"										   \n"
 <<"  if (tr >= 5e-3)								   \n"
 <<"    dtr = 1e-6;								   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"RHS Assembly U\",t0)\n" : ""           	            )
+<<(timelog ? "  MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""       	            )
 <<"  b = elast(0,Vh);				// Assembly linear	 	   \n"
-<<(timelog ? "  MPItimerend  (\"RHS Assembly U\",t0)\n" : ""           	  	    )
+<<(timelog ? "  MPItimerend  (\"RHS assembly for U\",t0)\n" : ""       	  	    )
 <<"										   \n"
 <<"  for(int iter=0; iter<100; iter++){					   	   \n"
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"Matrix Assembly U\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""         	    )
 <<"    ALoc = elast(Vh,Vh);			// Assembly bilinear	  	   \n"
-<<(timelog ? "    MPItimerend  (\"Matrix Assembly U\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""          	    )
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"PETSc Assembly U\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
 <<"    changeOperator(A, ALoc);				   	   		   \n"
 <<"    set(A,sparams =\" \");			// Solver setup		   	   \n"
-<<(timelog ? "    MPItimerend  (\"PETSc Assembly U\",t0)\n" : ""       	  	    )
+<<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"Solving U\",t0)\n" : " "         	  	    )
+<<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "         	  	    )
 <<"    u[] = A^-1*b;	                         // Solve u			   \n"
-<<(timelog ? "    MPItimerend  (\"Solving U\",t0)\n" : " "           	  	    )
+<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "           	  	    )
 <<"										   \n";
 
 if(!vectorial)writesolver
@@ -314,41 +334,39 @@ if(!vectorial)writesolver
 <<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"Matrix Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""        	    )
 <<"    ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   		   \n"
-<<(timelog ? "    MPItimerend  (\"Matrix Assembly PHI\",t0)\n" : ""    	  	    )
+<<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""    	  	    )
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"RHS Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerbegin(\"RHS assembly for PHI\",t0)\n" : ""           	    )
 <<"    b1 = phase(0,Vh1);	// Assembly linear	   			   \n"
-<<(timelog ? "    MPItimerend  (\"RHS Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerend  (\"RHS assembly for PHI\",t0)\n" : ""           	    )
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"PETSc Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"    changeOperator(A1, ALoc1);					  	   \n"
 <<"    set(A1,sparams =\" \");		// Solver setup		   		   \n"
-<<(timelog ? "    MPItimerend  (\"PETSc Assembly PHI\",t0)\n" : ""           	    )
+<<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"Solving PHI\",t0)\n" : ""    		       	    )
+<<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""    		       	    )
 <<"    phi[] = A1^-1*b1;		// Solve phi	  	   		   \n"
-<<(timelog ? "    MPItimerend  (\"Solving PHI\",t0)\n" : ""           	  	    )
+<<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""           	  	    )
 <<"										   \n"
 <<"    uold[]   = uold[]-u[]		;					   \n"
 <<"    phiold[] = phiold[]-phi[]	; 					   \n"
 <<"										   \n"
-<<"    uold[]     .*= DP		;					   \n"
-<<"    phiold[]   .*= DZ		;					   \n"
 <<"										   \n"
 <<"										   \n"
 <<"    real err1Gather,err2Gather;						   \n"
-<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( (uold)^2 )  );			   \n"
-<<"    real err2Loc=sqrt( intN(Th,qforder=3) ( (phiold)^2 )  );			   \n"
+<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2   )  );		   \n"
+<<"    real err2Loc=sqrt( intN(Th,qforder=3) ( DZspc*(phiold)^2 )  );		   \n"
 <<"										   \n"
 <<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
 <<"    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);			   \n"
 <<"										   \n"
 <<"    if(mpirank==0)							      	   \n"
-<<"      cout.scientific << \" Iter \" << iter << \"  error in u \"	   	   \n"
-<<"      << err1Gather <<\" error in phi \"<< err2Gather << endl;	   	   \n"
-<<"										   \n"
+<<"      cout.scientific << \"NL iteration number :  [ \"  << iter 	   	   \n"
+<<"      << \" ]\\nL2 error in [u,phi] :  [ \"    << err1Gather  		   \n"
+<<"      << \" , \" <<  err2Gather << \" ]\"      << endl;	   		   \n"
 <<"										   \n"
 <<"    phiold[]=phi[];							   	   \n"
 <<"    uold[]=u[];							   	   \n"
@@ -356,16 +374,12 @@ if(!vectorial)writesolver
 <<"										   \n"
 <<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n"
 <<"										   \n"
-<<"										   \n"
-<<"      if(mpirank==0)						   		   \n"
-<<"        cout  << \" Solution converged after \" << iter << endl;	           \n"
 <<"										   \n";
 
 
 if(vectorial){writesolver
 <<"										   \n"
 <<"    uold[]   = uold[]-u[]    ;						   \n"
-<<"    uold[] .*= DP            ;						   \n"
 <<"										   \n";
 
 if(plotAll || debug)writesolver
@@ -374,13 +388,13 @@ if(plotAll || debug)writesolver
 writesolver
 <<"										   \n"
 <<"										   \n"
-<<"    real err1Gather                                          ;		   \n"
-<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( (uold)^2 )  )    ;		   \n"
-<<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)     ;		   \n"
+<<"    real err1Gather                                                ;		   \n"
+<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2 )  )    ;		   \n"
+<<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;		   \n"
 <<"										   \n"
 <<"    if(mpirank==0)							      	   \n"
-<<"      cout.scientific << \" Iteration :  \" << iter 		   		   \n"
-<<"      << \" L2 error in [u,phi] \" << err1Gather << endl;			   \n"
+<<"      cout.scientific << \"NL iteration number :  [ \" << iter    		   \n"
+<<"      << \" ]\\nL2  error  in  [U]  :  [ \" << err1Gather << \" ]\"<<endl;	   \n"
 <<"    									   	   \n"
 <<"    uold[] = u[];							   	   \n"
 <<"										   \n"
@@ -388,8 +402,6 @@ writesolver
 <<"										   \n"
 <<"    if(err1Gather < 1e-2){						   	   \n"
 <<"										   \n"
-<<"      if(mpirank==0)						   		   \n"
-<<"        cout  << \" Solution converged after \" << iter << endl;	           \n"
 <<"										   \n";
 
 }  //-- [if loop terminator] vectorial ended --//
@@ -397,8 +409,9 @@ writesolver
 if(pipegnu){writesolver
 <<"										   \n"
 <<"	real forcetot  = 0., forcetotGath  = 0. ;				   \n"
-<<"	forcetot = intN1(Th,qforder=3,2)(Dspc*(lambda*divergence(u)+2.*mu*dy(u1)));\n" 
-/*
+<<"	forcetot=intN1(Th,qforder=3,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1))); \n"
+<<"										   \n"
+/************************OLD METHOD*************************************************
 <<"	And = elastNoDirc(Vh,Vh);						   \n"
 <<"	changeOperator(A2, And);						   \n"
 <<"	fr[] = And*u[];								   \n"
@@ -409,7 +422,7 @@ if(pipegnu){writesolver
 <<"		for(int i = 0; i < ldof.n; ++i)					   \n"
 <<"		forcetot = forcetot + fr1[][ldof[i]];				   \n"
 <<"										   \n"
-*/
+/************************OLD METHOD*************************************************/
 <<"										   \n"
 <<"	mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);		   \n"
 <<"										   \n"
@@ -444,7 +457,7 @@ if(plotAll)if(!vectorial)writesolver
 <<"	iterout++;								   \n"
 <<"										   \n"
 <<"	if(int(iterout%10)==0){							   \n"
-<<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
+<<(timelog ? "	MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
 //<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
 //<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
 //<<"      iterout, mpiCommWorld);			   			   \n"
@@ -455,7 +468,7 @@ if(plotAll)if(!vectorial)writesolver
 <<"	exportpvd2(namevtu, Th,			 		   		   \n"
 <<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
 <<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
-<<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
+<<(timelog ? "	MPItimerend  (\"post-processing\",t0)\n" : ""       	    	    )
 <<"	iterout1++;								   \n"
 <<"	}									   \n"
 <<"										   \n";
@@ -465,7 +478,7 @@ if(plotAll)if(vectorial)writesolver
 <<"	iterout++;								   \n"
 <<"										   \n"
 <<"	if(int(iterout%10)==0){							   \n"
-<<(timelog ? "	MPItimerbegin(\"Post-Processing\",t0)\n" : ""           	    )
+<<(timelog ? "	MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
 //<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
 //<<(spc==2 ? "      \t[u,u1,0],u2,\n" : "      \t[u,u1,u2],u3,\n" 	    	    )
 //<<"      iterout, mpiCommWorld);			   			   \n"
@@ -476,7 +489,7 @@ if(plotAll)if(vectorial)writesolver
 <<"	exportpvd2(namevtu, Th,			 		   		   \n"
 <<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
 <<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
-<<(timelog ? "	MPItimerend  (\"Post-Processing\",t0)\n" : ""       	    	    )
+<<(timelog ? "	MPItimerend  (\"post-processing\",t0)\n" : ""       	    	    )
 <<"	iterout1++;								   \n"
 <<"	}									   \n"
 <<"										   \n";
@@ -516,26 +529,26 @@ if(!Sequential)if(!dynamic){writesolver
 <<"//-----------------Assembly for A-----------------//				   \n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Matrix Assembly\",t0)\n" : " "           	    )
+<<(timelog ? "	MPItimerbegin(\"matrix Assembly\",t0)\n" : " "           	    )
 <<"  matrix	ALoc = elast(Vh,Vh);		// Assembly bilinear		   \n"
-<<(timelog ? "	MPItimerend  (\"Matrix Assembly\",t0)\n" : " "       	    	    )
+<<(timelog ? "	MPItimerend  (\"matrix Assembly\",t0)\n" : " "       	    	    )
 <<"										   \n"
 <<"										   \n"
 <<"//-----------------Assembly for b-----------------//				   \n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"RHS Assembly\",t0)\n" : " "          	 	    )
+<<(timelog ? "	MPItimerbegin(\"RHS assembly\",t0)\n" : " "          	 	    )
 <<"	real[int]    b = elast(0,Vh);			// Assembly linear	   \n"
-<<(timelog ? "	MPItimerend  (\"RHS Assembly\",t0)\n" : " "       	    	    )
+<<(timelog ? "	MPItimerend  (\"RHS assembly\",t0)\n" : " "       	    	    )
 <<"										   \n";
 
 if(pointbc)writesolver
 <<"										   \n"
 <<"//---------Additional assembly for A & b----------//				   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Point Dirichlet Assembly\",t0)\n" : " "  	    )
+<<(timelog ? "	MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : " "  	    )
 <<"  Pointbc(Dpointlab,Vh,ALoc,b,PnV);			// Assembly linear	   \n"
-<<(timelog ? "	MPItimerend(\"Point Dirichlet Assembly\",t0)\n" : " "        	    )
+<<(timelog ? "	MPItimerend(\"point Dirichlet assembly\",t0)\n" : " "        	    )
 <<"										   \n";
 
 writesolver
@@ -563,7 +576,7 @@ writesolver
 <<"//---------------PETSc Assembly---------------------//			   \n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerbegin(\"PETSc assembly\",t0)\n" : " "  	    		   )
 <<"      Mat A				// Distributed matrix 		   	   \n"
 <<"		  ( ALoc			, 				   \n"
 <<"		    arrayIntersectionP		,				   \n"
@@ -571,18 +584,18 @@ writesolver
 <<" 		    DP				,				   \n"
 <<" 		    bs = "+spc+" 						   \n"
 <<"		  );								   \n"
-<<(timelog ? "	MPItimerend(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerend(\"PETSc assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"										   \n"
 <<"//------------PETSc solving------------------//				   \n"
 <<"										   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"PETSc Solving\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerbegin(\"PETSc solving\",t0)\n" : " "  	    		   )
 <<"      Vh<real> def(u);							   \n"
 <<"      set(A,sparams =\" \");            // Solver setup-Petsc		   \n"
 <<"      u[] = A^-1*b;                     // Solving				   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerend(\"PETSc Solving\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerend(\"PETSc solving\",t0)\n" : " "  	    		   )
 <<"										   \n"       
 <<"										   \n";
 
@@ -598,22 +611,22 @@ if(Sequential)if(!dynamic){writesolver
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"matrix assembly\",t0)\n" : " "  	    		   )
 <<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
-<<(timelog ? "	timerend  (\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerend  (\"matrix assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
-<<(timelog ? "	timerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " "  	    		   	   )
+<<(timelog ? "	timerbegin(\"solving U\",t0)\n" : " "  	    		   	   )
 <<"		set(A,solver=CG);			// Solver setup		   \n"
 <<"		u[] = A^-1*b;				// Solving		   \n"
-<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
+<<(timelog ? "	timerend  (\"solving U\",t0)\n" : " "  	   	 		   )
 <<"										   \n";
 
 if(debug)writesolver
@@ -674,28 +687,28 @@ writesolver
 <<"										   \n"
 <<"while (t <= tmax){								   \n"
 <<"										   \n"
-<<"  cout << \" Time iteration at t :\" << t << \" (s) \"<< endl;		   \n"
+<<"  cout.scientific << \"Time iteration at t :\" << t << \" (s) \"<< endl;	   \n"
 <<"										   \n"
 <<"  tt  = t-real(alpf*dt);                            // tt update for loading    \n"
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"matrix assembly\",t0)\n" : " "  	    		   )
 <<"  matrix<real> A = elastodynamics(Vh,Vh,tgv=-1);   // Assembly for A            \n"
-<<(timelog ? "	timerend  (\"Matrix Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerend  (\"matrix assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"  real[int]    b = elastodynamics(0,Vh,tgv=-1);    // Assembly for b	           \n"
-<<(timelog ? "	timerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"Solving U\",t0)\n" : " "  	    		   	   )
+<<(timelog ? "	timerbegin(\"solving U\",t0)\n" : " "  	    		   	   )
 <<"  set(A,solver=UMFPACK);                           // Solver setup		   \n"
 <<"   du[] = A^-1*b;                                   // Solving		   \n"
-<<(timelog ? "	timerend  (\"Solving U\",t0)\n" : " "  	   	 		   )
+<<(timelog ? "	timerend  (\"solving U\",t0)\n" : " "  	   	 		   )
 <<"										   \n";
 
 if(debug)if(spc==2)writesolver
@@ -781,7 +794,6 @@ writesolver
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
 
-//*******************//
 if(!Sequential)if(dynamic){writesolver    
 <<"										   \n";
 
@@ -815,7 +827,7 @@ if(pipegnu)writesolver
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  for(int i=0; i<DP.n; i++) 							   \n"
-<<"    Dspc[][i]=DP[i];								   \n"
+<<"    DPspc[][i]=DP[i];							   \n"
 <<"										   \n"
 <<"										   \n";
 
@@ -860,32 +872,32 @@ writesolver
 <<"while (t <= tmax){								   \n"
 <<"										   \n"
 <<"  if(mpirank==0)								   \n"
-<<"    cout << \" Time iteration at t :\" << t << \" (s) \"<< endl;		   \n"
+<<"    cout.scientific << \"Time iteration at t :\" << t << \" (s) \"<< endl;	   \n"
 <<"										   \n"
 <<"  tt  = t-real(alpf*dt);                            // tt update for loading    \n"
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Matrix Assembly\",t0)\n" : " "  	    	   )
+<<(timelog ? "	MPItimerbegin(\"matrix assembly\",t0)\n" : " "  	    	   )
 <<"  ALoc = elastodynamics(Vh,Vh,tgv=-1);   // Assembly for A          	           \n"
-<<(timelog ? "	MPItimerend  (\"Matrix Assembly\",t0)\n" : " "  	    	   )
+<<(timelog ? "	MPItimerend  (\"matrix assembly\",t0)\n" : " "  	    	   )
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerbegin(\"PETSc assembly\",t0)\n" : " "  	    		   )
 <<"  changeOperator(A, ALoc);			 				   \n"
-<<(timelog ? "	MPItimerend(\"PETSc Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerend(\"PETSc assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"  b = elastodynamics(0,Vh,tgv=-1);    // Assembly for b	           	   \n"
-<<(timelog ? "	MPItimerend  (\"RHS Assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"Solving U\",t0)\n" : " "  	    	   	   )
+<<(timelog ? "	MPItimerbegin(\"solving U\",t0)\n" : " "  	    	   	   )
 <<"  set(A,sparams =\" \");                           // Solver setup		   \n"
 <<"   du[] = A^-1*b;                                   // Solving		   \n"
-<<(timelog ? "	MPItimerend  (\"Solving U\",t0)\n" : " "  	   		   )
+<<(timelog ? "	MPItimerend  (\"solving U\",t0)\n" : " "  	   		   )
 <<"										   \n";
 
 if(debug)if(spc==2)writesolver
@@ -930,10 +942,10 @@ if(pipegnu){writesolver
 <<"  //-----------------Gnuplot plotting--------------//			   \n"
 <<"										   \n"
 <<"										   \n"
-<<"  E[0] =intN(Th,qforder=3)( 0.5*Dspc*(vold*vold+vold1*vold1));		   \n"
-<<"  E[1] =intN(Th,qforder=3)( 0.5*Dspc*(lambda*divergence(uold)*divergence(uold)  \n"
+<<"  E[0] =intN(Th,qforder=3)( 0.5*DPspc*(vold*vold+vold1*vold1));		   \n"
+<<"  E[1] =intN(Th,qforder=3)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
 <<"                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );	   \n"
-<<"  E[2] += dt*intN(Th,qforder=3)( Dspc*(					   \n"
+<<"  E[2] += dt*intN(Th,qforder=3)( DPspc*(					   \n"
 <<"		                  (etam*rho) *def(vold)'*def(vold)		   \n"
 <<"		               +  (etak*lambda)*(divergence(vold)*divergence(vold))\n"
 <<"		               +  (etak* 2.*mu)*(epsilon(vold)'*epsilon(vold))	   \n"
