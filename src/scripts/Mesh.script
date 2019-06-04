@@ -14,18 +14,15 @@ writemeshPartitioning
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"										   \n"
 <<"										   \n";
 
 //-----------------------------SEQUENTIAL------------------------------------------//
 
 if(Sequential){writemeshPartitioning
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Loading the FE mesh-------  					   \n"
+<<"// ------- The finite element mesh -------  					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""         		  	    )
 <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""         	  	    )
@@ -33,17 +30,17 @@ if(Sequential){writemeshPartitioning
 <<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Mesh loaded	   	   \n"
 <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""     		      	    )
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Building the FE spaces-------  					   \n"
+<<"// ------- The finite element spaces -------  				   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)	   \n";
 
 if(nonlinear)writemeshPartitioning
-<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
-<<"										   \n";
+<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n";
+
+if(nonlinear)if(energydecomp)writemeshPartitioning
+<<" fespace Wh0  ( Th , P0 );			// Energy decomposition field	   \n";
 
 }
 
@@ -51,73 +48,55 @@ if(nonlinear)writemeshPartitioning
 
 if(!Sequential){writemeshPartitioning
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Loading the FE mesh-------  					   \n"
+<<"// ------- The finite element mesh -------  					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<" meshN   Th = DummyMesh;			// This is a dummy mesh for now	   \n"
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Building the FE spaces-------  					   \n"
+<<"// ------- The finite element spaces -------  				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"										   \n";
-
-
-writemeshPartitioning
-<<"										   \n"
-<<" fespace Vh   ( Th , Pk );			// Local mixed FE space		   \n"
-<<"										   \n";
+<<" fespace Vh     ( Th , Pk );			// Local mixed FE space		   \n";
 
 if(nonlinear)if(!vectorial)writemeshPartitioning
-<<"										   \n"
-<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space	   \n"
-<<"										   \n";
+<<" fespace Vh1    ( Th , Zk );			// Damage field	FE space	   \n";
+
+if(nonlinear)if(energydecomp)writemeshPartitioning
+<<" fespace Wh0    ( Th , P0 );			// Energy decomposition field	   \n";
 
 if(nonlinear)if(vectorial)if(debug || plotAll)writemeshPartitioning
-<<"										   \n"
-<<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n"
-<<"										   \n";
+<<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n";
 
 writemeshPartitioning
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Domian decomposition suppoprt-------  				   \n"
+<<"// ------- Domian decomposition suppoprt variables -------  			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n";
-
-writemeshPartitioning
 <<"										   \n"
 <<" int[int] arrayIntersectionP;                // Ranks of neighboring subdomains \n"
 <<" int[int][int] restrictionIntersectionP(0);  // Local-to-neighbors renumbering  \n"
-<<" real[int] DP;                               // Partition of unity		   \n"
-<<"										   \n"
-<<"										   \n";
+<<" real[int] DP;                               // Partition of unity		   \n";
+
 
 if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"										   \n"
 <<" int[int] arrayIntersectionZ;                // Ranks of neighboring subdomains \n"
 <<" int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering  \n"
-<<" real[int] DZ;                               // Partition of unity		   \n"
-<<"										   \n"
-<<"										   \n";
+<<" real[int] DZ;                               // Partition of unity		   \n";
+
 
 writemeshPartitioning
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Function building the restriction matrix and partion of unity-------  \n"
+<<"// ---- Function for building the restriction matrix and partion of unity ----  \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<" func int PartThAndBuildCommunication(){					   \n"
 <<"										   \n"
 <<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
 <<"  meshN ThGlobal = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh loaded	   \n"
-<<"										   \n"
 <<"										   \n";
 
 if(!nonlinear)writemeshPartitioning

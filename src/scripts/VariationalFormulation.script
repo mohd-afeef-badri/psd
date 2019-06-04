@@ -14,7 +14,6 @@ writevarfmatsolve
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"										   \n"
 <<"										   \n";
 
 if(!nonlinear)if(!dynamic){writevarfmatsolve
@@ -22,10 +21,6 @@ if(!nonlinear)if(!dynamic){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"// -------Variation formulation linear-------				   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n";
-
-writevarfmatsolve
 <<"										   \n"
 <<"varf elast(def(u),def(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
@@ -68,9 +63,8 @@ if(spc==3)writevarfmatsolve
 if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Variation formulation nonlinear-------				   \n"
+<<"// -------Finite element variables -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<"  Vh  def2(u)    ,    // FE variable for displacement			   \n"
 <<"      def2(uold) ,    // FE variable for previous displacement		   \n"
@@ -79,10 +73,20 @@ if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"  Vh1 phi       ,     // FE variable for phase field 			   \n"
 <<"      phiold    ,     // FE variable for previous iteration phase field	   \n"
-<<"      DZspc     ;     // FE variables for partition of unity 	   	   \n"
+<<"      DZspc     ;     // FE variables for partition of unity 	   	   \n";
+
+if(energydecomp)writevarfmatsolve
 <<"										   \n"
-<<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
-<<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
+<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
+<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
+<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
+
+writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation nonlinear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
 <<"										   \n"
 <<"varf elast(def2(u),def2(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
@@ -113,7 +117,7 @@ if(spc==3)writevarfmatsolve
 }  //-- [if loop terminator] dirichletbc ended --//
 
 
-/*
+/************************OLD METHOD*************************************************
 if(pipegnu)writevarfmatsolve
 <<"										   \n"
 <<"varf elastNoDirc(def2(u),def2(v))						   \n"
@@ -122,7 +126,7 @@ if(pipegnu)writevarfmatsolve
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
 <<"			+2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"			    );							   \n";
-*/
+/************************OLD METHOD*************************************************/  
 
 
 writevarfmatsolve
@@ -135,7 +139,7 @@ writevarfmatsolve
 <<"			    )							   \n"
 <<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*H*q  )\n"         : "" 	    	    )
 <<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : "" 	    	    )
-<<"	+ on(4,phi=1);				// Already Cracked (Dirichlet)     \n";
+<<"	+ on(4,phi=1);				  //  Cracked (Dirichlet)   	   \n";
 
 }  //-- [if loop terminator] nonlinear ended --//
 
@@ -143,16 +147,30 @@ writevarfmatsolve
 if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Variation formulation nonlinear-------				   \n"
+<<"// ------- Finite element variables -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<"  Vh  def(u)    ,    // FE vectorial variable for [u,\phi]			   \n"
 <<"      def(uold) ,    // FE vectorial variable for old [u,\phi] 		   \n"
-<<"      def(DPspc);    // FE vectorial variables for partition of unity    	   \n"
+<<"      def(DPspc);    // FE vectorial variables for partition of unity    	   \n";
+
+if(energydecomp)writevarfmatsolve
 <<"										   \n"
-<<(energydecomp ? "  fespace Wh0(Th,P0);\n"  : "\n" 	    	    		    )
-<<(energydecomp ? "  Wh0 H, Hplus,Hminus;\n" : "\n" 	    	    		    )
+<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
+<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
+<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
+
+
+if(debug || plotAll)writevarfmatsolve
+<<"										   \n"
+<<"  VhPlt phi     ;    // FE variable for plotting phi				   \n";
+
+
+writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Variation formulation nonlinear -------				   \n"
+<<"//==============================================================================\n"
 <<"										   \n"
 <<"varf elast(def(u),def(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
@@ -163,12 +181,10 @@ if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
 <<"			(Gc*lo*(grad(u"+spc+")'*grad(v"+spc+"))) +		   \n"
 <<(!energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )\n": "" )
 <<(energydecomp   ? "\t\t\t( ((Gc/lo)  + 2.*H)*u"+spc+"*v"+spc+" )\n"          : "" )
-//<<"			( ((Gc/lo)  + 2.*Hplus(uold))*u"+spc+"*v"+spc+" )	   \n"
 <<"			    )							   \n"
 <<(!energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )\n": ""     )
 <<(energydecomp   ? "\t+ intN(Th,qforder=2)(  2.*H*v"+spc+"  )\n"          : ""     )
-//<<"	+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"+spc+"  )			   \n"
-<<"	+ on(4,u"+spc+" = 1)                        // Already Cracked (Dirichlet) \n";
+<<"	+ on(4,u"+spc+" = 1)                          // Cracked (Dirichlet)	   \n";
 
 if(dirichletbc){
 
@@ -186,7 +202,7 @@ if(spc==3)writevarfmatsolve
 }  //-- [if loop terminator] dirichletbc ended --//
 
 
-/*
+/************************OLD METHOD*************************************************
 if(pipegnu)writevarfmatsolve
 <<"										   \n"
 <<"varf elastNoDirc([u,u1,u2],[v,v1,v2])					   \n"
@@ -195,24 +211,26 @@ if(pipegnu)writevarfmatsolve
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
 <<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"			    );							   \n";
-*/
+/************************OLD METHOD*************************************************/  
 
 }  //-- [if loop terminator] nonlinear vectorial ended --//
 
 
 if(dynamic){writevarfmatsolve
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Variation formulation dynamic linear-------			   \n"
+<<"// -------Finite element variables -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<"  Vh  def(du)    ,      // Displacement FE field				   \n"
 <<"      def(uold)  ,      // Previous iteration displacement FE field		   \n"
 <<"      def(vold)  ,      // Previous iteration velocity FE field		   \n"
 <<"      def(aold)  ,      // Previous iteration acceleration FE field		   \n"
 <<"      def(DPspc) ;      // Partition of unity field for integral		   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation dynamic linear-------			   \n"
+<<"//==============================================================================\n"
 <<"										   \n"
 <<"varf elastodynamics( def(du) , def(v) )					   \n"
 <<"										   \n"
@@ -236,7 +254,7 @@ if(dynamic){writevarfmatsolve
 <<"    + (epsilon(aold)'*epsilon(v))*c[10]					   \n"
 <<"  )										   \n"
 <<"										   \n"
-/*
+/************************OLD METHOD*************************************************
 <<"    = intN(Th,qforder=3)							   \n"
 <<"  (										   \n"
 <<"										   \n"
@@ -287,7 +305,7 @@ if(dynamic){writevarfmatsolve
 <<"     + (etak*dt*(1.-alpf)*(1.-2*beta)/2./beta*2.*mu)*(epsilon(aold)'*epsilon(v))\n"
 <<"										   \n"
 <<"  )										   \n"
-*/
+/************************OLD METHOD*************************************************/  
 <<"										   \n"
 <<"    + intN1(Th,qforder=3,"+labRface+")					   \n"
 <<"  (										   \n"

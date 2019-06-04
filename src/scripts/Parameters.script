@@ -15,36 +15,29 @@ writemeshParameters
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
 <<"										   \n"
-<<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------FEM mesh to be loaded (Un-partitioned)------- 			   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n";
+<<"// ------- FEM mesh to be loaded (Un-partitioned) ------- 			   \n"
+<<"//==============================================================================\n";
 
 
 if(!nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh file name 	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh file name 	   	   \n";
 
 if(nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/tensile-crack\"; // Mesh file name\n";
+<<"  string ThName = \"../Meshes/"+spc+"D/tensile-crack\"; // Mesh file name	   \n";
 
 if(dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh file name  \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh file name  	   \n";
 
 
 writemeshParameters
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Material properties------- 		 			   \n"
+<<"// ------- Material properties ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n"
 <<"										   \n"
 <<"  real    mu                         // Lame parameter			   \n"
 <<"         ,lambda                     // Lame parameter			   \n"
@@ -63,16 +56,14 @@ writemeshParameters
 <<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
 <<" 										   \n"
 <<"	 									   \n"
-<<"}	 									   \n"
-<<"	 									   \n"
-<<"	 									   \n";
+<<"}	 									   \n";
 
 
 
 if(nonlinear)writemeshParameters
 <<"	 									   \n"
 <<"//==============================================================================\n"
-<<"// -------Nonlinear parameters------- 		 			   \n"
+<<"// ------- Nonlinear parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"real Gc    = 2.7  ,								   \n"
@@ -86,10 +77,21 @@ if(nonlinear)writemeshParameters
 <<"     mu     = 80.77e3  ;							   \n";
 
 
+if(nonlinear)if(plotAll)writemeshParameters
+<<"	 									   \n"
+<<"//==============================================================================\n"
+<<"// ------- Plotting support variables ------- 	 			   \n"
+<<"//==============================================================================\n"
+<<"	 									   \n"
+<<"  int iterout  = 0 ,               // Loop Counter			    	   \n"
+<<"      iterout1 = 0 ;		      // Loop Counter				   \n"
+<<"										   \n";
+
+
 if(dynamic)writemeshParameters
 <<"	 									   \n"
 <<"//==============================================================================\n"
-<<"// -------Dynamic parameters------- 		 			   	   \n"
+<<"// ------- Dynamic parameters ------- 	 			   	   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"real rho  = 1.0  ,								   \n"

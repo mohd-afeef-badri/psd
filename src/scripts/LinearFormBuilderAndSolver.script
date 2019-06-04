@@ -34,14 +34,12 @@ if(Sequential)writesolver
 <<"}										   \n"
 <<"										   \n"
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Defining the matrices and vectors -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  matrix  A, A1				;  				   \n"
 <<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n"
-<<"										   \n"
 <<"										   \n";
 
 if(pipegnu)if(!supercomp)writesolver
@@ -64,7 +62,7 @@ if(!vectorial)writesolver
 /************************OLD METHOD*************************************************/  
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Gnuplot piping -------						   \n"
+<<"// ------- Gnuplot pipeing -------						   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
@@ -80,12 +78,6 @@ if(!vectorial)writesolver
 <<"  pgnuplot <<\"set xlabel \\\" Displacement \\\"	;\\n\";	   		   \n"
 <<"  pgnuplot <<\"set ylabel \\\" Force (kN)\\\"	;\\n\";  	  	   \n"
 <<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
-<<"										   \n";
-
-
-if(debug || plotAll)if(vectorial)writesolver
-<<"										   \n"
-<<"  VhPlt phi;									   \n"
 <<"										   \n";
 
 if(!Sequential){writesolver
@@ -120,9 +112,8 @@ writesolver
 
 if(Sequential){writesolver
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Nonlinear loop -------						   \n"
+<<"// ------- Traction loading loop -------					   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
@@ -240,11 +231,9 @@ writesolver
 
 if(!Sequential){writesolver
 <<"										   \n"
-<<"										   \n"	  
 <<"//==============================================================================\n"
 <<"// ------- Sparsity conservation and defining matrices and vectors -------	   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 /************************OLD METHOD*************************************************   
 <<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
@@ -283,46 +272,43 @@ if(pipegnu)writesolver
 
 writesolver
 <<"										   \n"
-<<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Nonlinear loop-------						   \n"
+<<"// -------  Traction loading loop  -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n";
-
-if(plotAll)writesolver
-<<"										   \n"
-<<" //------Plotting--------//							   \n"
-//<<"  exportBegin(\"VTUs/Solution\", mpiCommWorld);				   \n"
-<<"  int iterout = 0, iterout1=0;		      // Loop Counter		   \n"
-<<"										   \n";
-
-writesolver
 <<"										   \n"
 <<"while (tr <= maxtr){								   \n"
 <<"										   \n"
 <<"  if(mpirank==0)								   \n"
-<<"   cout.scientific<<\"-----------------------------------------------------\\n\"\n"
-<<"   <<  \"Applied traction \" << tr << \"\\n\" << endl;	   		   \n"
+<<"  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
+<<"  <<  \"Applied traction \" << tr << \"\\n\" << endl;	   		   \n"
 <<"										   \n"
 <<"  if (tr >= 5e-3)								   \n"
 <<"    dtr = 1e-6;								   \n"
 <<"										   \n"
+<<"  //--------------------Assembly for linear----------------------//		   \n"
+<<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""       	            )
-<<"  b = elast(0,Vh);				// Assembly linear	 	   \n"
+<<"  b = elast(0,Vh);							 	   \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly for U\",t0)\n" : ""       	  	    )
+<<"										   \n"
+<<"  //-----------------------Nonlinear loop------------------------//		   \n"
 <<"										   \n"
 <<"  for(int iter=0; iter<100; iter++){					   	   \n"
 <<"										   \n"
+<<"    //----------------Assembly for bilinear----------------------//	 	   \n"
+<<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""         	    )
-<<"    ALoc = elast(Vh,Vh);			// Assembly bilinear	  	   \n"
+<<"    ALoc = elast(Vh,Vh);						  	   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""          	    )
 <<"										   \n"
+<<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
 <<"    changeOperator(A, ALoc);				   	   		   \n"
-<<"    set(A,sparams =\" \");			// Solver setup		   	   \n"
+<<"    set(A,sparams =\" \");						   	   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
+<<"										   \n"
+<<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "         	  	    )
 <<"    u[] = A^-1*b;	                         // Solve u			   \n"
@@ -331,30 +317,39 @@ writesolver
 
 if(!vectorial)writesolver
 <<"										   \n"
+<<"    //---------------Energy decomposition phase-------------------//	   	   \n"
+<<"										   \n"
 <<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
 <<"										   \n"
+<<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""        	    )
 <<"    ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   		   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""    	  	    )
 <<"										   \n"
+<<"    //----------------Assembly for linear------------------------//	 	   \n"
+<<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"RHS assembly for PHI\",t0)\n" : ""           	    )
 <<"    b1 = phase(0,Vh1);	// Assembly linear	   			   \n"
 <<(timelog ? "    MPItimerend  (\"RHS assembly for PHI\",t0)\n" : ""           	    )
+<<"										   \n"
+<<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"    changeOperator(A1, ALoc1);					  	   \n"
 <<"    set(A1,sparams =\" \");		// Solver setup		   		   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"										   \n"
+<<"    //-------------Linear system solving phase-------------------//		   \n"
+<<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""    		       	    )
 <<"    phi[] = A1^-1*b1;		// Solve phi	  	   		   \n"
 <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""           	  	    )
 <<"										   \n"
+<<"    //------------------Error calculation------------------------//		   \n"
+<<"										   \n"
 <<"    uold[]   = uold[]-u[]		;					   \n"
 <<"    phiold[] = phiold[]-phi[]	; 					   \n"
-<<"										   \n"
-<<"										   \n"
 <<"										   \n"
 <<"    real err1Gather,err2Gather;						   \n"
 <<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2   )  );		   \n"
@@ -364,45 +359,45 @@ if(!vectorial)writesolver
 <<"    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);			   \n"
 <<"										   \n"
 <<"    if(mpirank==0)							      	   \n"
-<<"      cout.scientific << \"NL iteration number :  [ \"  << iter 	   	   \n"
-<<"      << \" ]\\nL2 error in [u,phi] :  [ \"    << err1Gather  		   \n"
-<<"      << \" , \" <<  err2Gather << \" ]\"      << endl;	   		   \n"
+<<"    cout.scientific << \"NL iteration number :  [ \"  << iter 	   	   \n"
+<<"    << \" ]\\nL2 error in [u,phi] :  [ \"    << err1Gather  		 	   \n"
+<<"    << \" , \" <<  err2Gather << \" ]\"      << endl;	   		   \n"
+<<"										   \n"
+<<"    //--------------------Solution update-------------------------//		   \n"
 <<"										   \n"
 <<"    phiold[]=phi[];							   	   \n"
 <<"    uold[]=u[];							   	   \n"
 <<"										   \n"
-<<"										   \n"
-<<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n"
-<<"										   \n"
-<<"										   \n";
+<<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){			   	   \n";
 
 
 if(vectorial){writesolver
 <<"										   \n"
-<<"    uold[]   = uold[]-u[]    ;						   \n"
-<<"										   \n";
-
-if(plotAll || debug)writesolver
-<<"    phi = u"+spc+";								   \n";
+<<"    //------------------Error calculation------------------------//		   \n"
+<<"										   \n"
+<<"    uold[]   = uold[]-u[]    ;						   \n";
 
 writesolver
-<<"										   \n"
 <<"										   \n"
 <<"    real err1Gather                                                ;		   \n"
 <<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2 )  )    ;		   \n"
 <<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;		   \n"
 <<"										   \n"
 <<"    if(mpirank==0)							      	   \n"
-<<"      cout.scientific << \"NL iteration number :  [ \" << iter    		   \n"
-<<"      << \" ]\\nL2  error  in  [U]  :  [ \" << err1Gather << \" ]\"<<endl;	   \n"
-<<"    									   	   \n"
+<<"    cout.scientific << \"NL iteration number :  [ \" << iter    		   \n"
+<<"    << \" ]\\nL2  error  in  [U]  :  [ \" << err1Gather << \" ]\" <<endl;	   \n"
+<<"										   \n"
+<<"    //--------------------Solution update-------------------------//		   \n"
+<<"										   \n"
 <<"    uold[] = u[];							   	   \n"
+<<"										   \n"
+<<"    //---------------Energy decomposition phase-------------------//	  	   \n"
 <<"										   \n"
 <<(energydecomp ? "    DecomposeElasticEnergy(Hplus,Hminus,H)\n"  : "\n"  	    )
 <<"										   \n"
-<<"    if(err1Gather < 1e-2){						   	   \n"
+<<"    //--------------- Convergence conditional---------------------//	  	   \n"
 <<"										   \n"
-<<"										   \n";
+<<"    if(err1Gather < 1e-2){						   	   \n";
 
 }  //-- [if loop terminator] vectorial ended --//
 
@@ -430,11 +425,9 @@ if(pipegnu){writesolver
 <<"	{ ofstream ff(\"force.data\",append);					   \n"
 <<"		ff << tr << \"	\" << forcetotGath*1e-3 << endl;		   \n"
 <<"	}									   \n"
-<<"										   \n"
 <<"										   \n";
 
 if(!supercomp)writesolver
-<<"										   \n"
 <<"										   \n"
 <<"      { 							   	   	   \n"
 <<"	   pgnuplot <<\"plot					\" 	   	   \n"
@@ -454,57 +447,82 @@ writesolver
 
 if(plotAll)if(!vectorial)writesolver
 <<"										   \n"
-<<"	iterout++;								   \n"
+<<"      iterout++;								   \n"
 <<"										   \n"
-<<"	if(int(iterout%10)==0){							   \n"
-<<(timelog ? "	MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
-//<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
-//<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
-//<<"      iterout, mpiCommWorld);			   			   \n"
-<<" 	int[int] vtuorder=[1,1,1,1];			// Solution export order   \n" 
-<<"	string   namevtu=\"VTUs/Solution\"+iterout1+\"\";// Name of PV files	   \n"
-<<"	string   namedata=\"U Phi\";			// Name of export data	   \n"
-<<"	bool     withsur=true;				// Export surface mesh	   \n"
-<<"	exportpvd2(namevtu, Th,			 		   		   \n"
-<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
-<<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
-<<(timelog ? "	MPItimerend  (\"post-processing\",t0)\n" : ""       	    	    )
-<<"	iterout1++;								   \n"
+<<"      if(int(iterout%10)==0){						   \n"
+<<"										   \n"
+<<"        //-----------------Paraview plotting----------------------//  	   \n"
+<<"										   \n"
+<<(timelog ? "        MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
+<<"										   \n"
+<<"        int[int] vtuorder=[1,1,1,1];						   \n" 
+<<"        string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
+<<"        string   namedata=\"U Phi\";						   \n"
+<<"        bool     withsur=true;						   \n"
+<<"										   \n"
+<<"        exportpvd2(  namevtu            , 					   \n"
+<<"                     Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t     [u,u1,0]\t\t,\n" : "\t\t     [u,u1,u2]\t\t,\n" 	   	    )
+<<"                     phi                ,				   	   \n"
+<<"                     vtuorder           ,				   	   \n"
+<<"                     withsur            ,				   	   \n"
+<<"                     namedata           ,				   	   \n"
+<<"                     mpiCommWorld       				   	   \n"
+<<"                  );			       				   	   \n"
+<<"										   \n"
+<<(timelog ? "        MPItimerend  (\"post-processing\",t0)\n" : ""    	    	    )
+<<"        iterout1++;								   \n"
 <<"	}									   \n"
 <<"										   \n";
 
 if(plotAll)if(vectorial)writesolver
 <<"										   \n"
-<<"	iterout++;								   \n"
+<<"      iterout++;								   \n"
 <<"										   \n"
-<<"	if(int(iterout%10)==0){							   \n"
-<<(timelog ? "	MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
-//<<"      exportTimeStep2(\"VTUs/Solution\",Th, 		   		   \n"
-//<<(spc==2 ? "      \t[u,u1,0],u2,\n" : "      \t[u,u1,u2],u3,\n" 	    	    )
-//<<"      iterout, mpiCommWorld);			   			   \n"
-<<" 	int[int] vtuorder=[1,1,1,1];			// Solution export order   \n" 
-<<"	string   namevtu=\"VTUs/Solution\"+iterout1+\"\";// Name of PV files	   \n"
-<<"	string   namedata=\"U Phi\";			// Name of export data	   \n"
-<<"	bool     withsur=true;				// Export surface mesh	   \n"
-<<"	exportpvd2(namevtu, Th,			 		   		   \n"
-<<(spc==2 ? "      \t[u,u1,0],phi,\n" : "      \t[u,u1,u2],phi,\n" 	    	    )
-<<"     vtuorder, withsur, namedata, mpiCommWorld);				   \n" 
-<<(timelog ? "	MPItimerend  (\"post-processing\",t0)\n" : ""       	    	    )
-<<"	iterout1++;								   \n"
-<<"	}									   \n"
-<<"										   \n";
+<<"      if(int(iterout%10)==0){						   \n"
+<<"										   \n"
+<<"        //-----------------Paraview plotting----------------------//  	   \n"
+<<"										   \n"
+<<(timelog ? "        MPItimerbegin(\"post-processing\",t0)\n" : ""           	    )
+<<"										   \n"
+<<"        int[int] vtuorder=[1,1,1,1];						   \n" 
+<<"        string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
+<<"        string   namedata=\"U Phi\";						   \n"
+<<"        bool     withsur=true;						   \n"
+<<"										   \n"
+<<"        exportpvd2(  namevtu            , 					   \n"
+<<"                     Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t     [u,u1,0]\t\t,\n" : "\t\t     [u,u1,u2]\t\t,\n" 	   	    )
+<<"                     phi                ,				   	   \n"
+<<"                     vtuorder           ,				   	   \n"
+<<"                     withsur            ,				   	   \n"
+<<"                     namedata           ,				   	   \n"
+<<"                     mpiCommWorld       				   	   \n"
+<<"                  );			       				   	   \n"
+<<"										   \n"
+<<(timelog ? "        MPItimerend  (\"post-processing\",t0)\n" : ""    	    	    )
+<<"										   \n"
+<<"        iterout1++;								   \n"
+<<"      }									   \n";
+
+
+if(plotAll || debug)if(vectorial)writesolver
+<<"										   \n"
+<<"      //-----------------Debug glut plotting----------------------//  	   \n"
+<<"										   \n"
+<<"      phi = u"+spc+";							   \n";
 
 if(debug)if(!vectorial)writesolver
-<<"										   \n"				
-<<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Zk, def, real, 2, 0)		   \n"
-<<"										   \n";
+<<"										   \n"
+<<"      //-----------------Debug glut plotting----------------------//  	   \n"
+<<"										   \n"
+<<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Zk, def, real, 2, 0)		   \n";
 
 if(debug)if(vectorial)writesolver
-<<"										   \n"				
-<<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Pltk, def0, real, 2, 0)		   \n"
-<<"										   \n";
+<<"      plotMPI(Th, phi[],\"Tr-\"+tr+\"\", Pltk, def0, real, 2, 0)		   \n";
 
 writesolver
+<<"										   \n"
 <<"      break;									   \n"
 <<"    }									   \n"
 <<"  } 									  	   \n"
@@ -522,9 +540,8 @@ if(!nonlinear){
 if(!Sequential)if(!dynamic){writesolver      
 <<"										   \n"	
 <<"//==============================================================================\n"
-<<"//  -------Local Au=b assembly and solving-------				   \n"
+<<"//  ------- Local Au=b assembly and solving -------				   \n"
 <<"//==============================================================================\n"	
-<<"										   \n"
 <<"										   \n"
 <<"//-----------------Assembly for A-----------------//				   \n"
 <<"										   \n"
@@ -647,7 +664,7 @@ if(Sequential)if(dynamic){writesolver
 if(pipegnu)if(!supercomp)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Gnuplot piping -------						   \n"
+<<"// ------- Gnuplot pipeing -------						   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
@@ -669,7 +686,7 @@ if(pipegnu)if(!supercomp)writesolver
 if(plotAll)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"//  -------Paraview plotting support-------					   \n"
+<<"//  ------- Paraview plotting support -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  int[int] vtuorder = [1,1,1];                       // Solution export order   \n"
@@ -680,7 +697,7 @@ if(plotAll)writesolver
 writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"//  -------Dynamic loop for linear assembly and solving-------		   \n"
+<<"//  ------- Dynamic loop for linear assembly and solving -------		   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
 <<"  int j=0;									   \n"
@@ -801,7 +818,7 @@ if(!Sequential)if(dynamic){writesolver
 if(pipegnu)if(!supercomp)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Gnuplot piping -------						   \n"
+<<"// ------- Gnuplot pipeing -------						   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"  pstream pgnuplot(\"gnuplot -p\")  	;					   \n"
@@ -846,7 +863,7 @@ if(plotAll)writesolver
 writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"//  -------Variables for linear assembly and solving-------			   \n"
+<<"//  -------Defining the FE linear system matrix and vector-------		   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
 <<" matrix       ALoc    ;							   \n"
