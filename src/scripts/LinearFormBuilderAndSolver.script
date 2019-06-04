@@ -18,15 +18,13 @@ writesolver
 <<"										   \n";
 
 if(nonlinear){writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Nonlinear parameter calculations -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n";
 
 if(Sequential)writesolver
-<<"//----- Lo calculation ----//						   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- L_o calculation -------						   \n"
+<<"//==============================================================================\n"
 <<"										   \n"
 <<"{  										   \n"
 <<"  fespace  Vh0( Th , P0)    ;						   \n"
@@ -79,6 +77,16 @@ if(!vectorial)writesolver
 <<"  pgnuplot <<\"set key left 				;\\n\";    		   \n"
 <<"										   \n";
 
+if(pipegnu)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Partition of unity for integrals -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  for(int i=0; i<DP.n; i++) 							   \n"
+<<"    Dspc[][i]=DP[i];								   \n"
+<<"										   \n";
+
 
 if(debug || plotAll)if(vectorial)writesolver
 <<"										   \n"
@@ -86,7 +94,10 @@ if(debug || plotAll)if(vectorial)writesolver
 <<"										   \n";
 
 if(!Sequential)writesolver
-<<"//------------- Lo calculation in parallel -------------//			   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- L_o calculation in parallel -------				   \n"
+<<"//==============================================================================\n"
 <<"										   \n"
 <<"{ real himlocal,himGlobal                                ;			   \n"
 <<"  fespace Vh0(Th,P0)                                     ;			   \n"
@@ -384,10 +395,6 @@ writesolver
 }  //-- [if loop terminator] vectorial ended --//
 
 if(pipegnu){writesolver
-<<"										   \n"
-<<"										   \n"
-<<"	for(int i=0; i<DP.n; i++) 						   \n"
-<<"	  Dspc[][i]=DP[i];							   \n"
 <<"										   \n"
 <<"	real forcetot  = 0., forcetotGath  = 0. ;				   \n"
 <<"	forcetot = intN1(Th,qforder=3,2)(Dspc*(lambda*divergence(u)+2.*mu*dy(u1)));\n" 
@@ -801,6 +808,18 @@ if(pipegnu)if(!supercomp)writesolver
 <<"										   \n";
 
 
+if(pipegnu)writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Partion of unity for integrals -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  for(int i=0; i<DP.n; i++) 							   \n"
+<<"    Dspc[][i]=DP[i];								   \n"
+<<"										   \n"
+<<"										   \n";
+
+
 if(plotAll)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -909,10 +928,6 @@ if(plotAll)writesolver
 if(pipegnu){writesolver
 <<"										   \n"
 <<"  //-----------------Gnuplot plotting--------------//			   \n"
-<<"										   \n"
-<<"										   \n"
-<<"  for(int i=0; i<DP.n; i++) 							   \n"
-<<"    Dspc[][i]=DP[i];								   \n"
 <<"										   \n"
 <<"										   \n"
 <<"  E[0] =intN(Th,qforder=3)( 0.5*Dspc*(vold*vold+vold1*vold1));		   \n"
