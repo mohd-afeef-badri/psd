@@ -143,7 +143,7 @@ if(nonlinear)if(energydecomp)if(spc==3)writemacros
 <<"										   \n"
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
 <<"    fespace WWh0(Th,P0);							   \n"
-<<"    WWh0 e1,e2,e3;								   \n"
+<<"    WWh0 e1,e2,e3,e4,e5,e6;							   \n"
 <<"										   \n"
 <<"    real[int] par(2);							   \n"
 <<"    par[0] = lambda ;							   \n"
@@ -154,9 +154,9 @@ if(nonlinear)if(energydecomp)if(spc==3)writemacros
 <<(!vectorial ? "    e5=0.5*(dz(u)+dx(u2));\n"        : ""  	    		    )
 <<(!vectorial ? "    e6=0.5*(dz(u1)+dy(u2));\n"       : ""  	    		    )
 <<(vectorial  ? "    e1=dx(uold); e2=dy(uold1); e3=dy(uold2);\n"  : ""  	    )
-<<(!vectorial ? "    e4=0.5*(dx(uold1)+dy(uold));\n"        : ""  		    )
-<<(!vectorial ? "    e5=0.5*(dz(uold)+dx(uold2));\n"        : ""  		    )
-<<(!vectorial ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"       : ""  		    )
+<<(vectorial ? "    e4=0.5*(dx(uold1)+dy(uold));\n"        : ""  		    )
+<<(vectorial ? "    e5=0.5*(dz(uold)+dx(uold2));\n"        : ""  		    )
+<<(vectorial ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"       : ""  		    )
 <<"										   \n"
 <<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],Hplus[],Hminus[],H[],par);  \n"
 <<"  }//									   \n" 
