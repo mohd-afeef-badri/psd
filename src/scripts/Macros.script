@@ -71,13 +71,13 @@ if(nonlinear)if(!energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
-/*
+/************************OLD METHOD*************************************************
 <<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )     // Sigma_xx	   \n"
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy	   \n"
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx	   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), sqrt(2.0)*sxy(i) ]        // Sigma	   \n"
 <<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus   	   \n"
-*/
+/************************OLD METHOD*************************************************/  
 <<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0] 		   \n"
 <<"                                     + epsilon(i)[1]*epsilon(i)[1] ) 	   \n"
 <<"                   + lambda*epsilon(i)[0]*epsilon(i)[1] 		           \n"
@@ -85,10 +85,11 @@ if(nonlinear)if(!energydecomp)writemacros
 <<"                  )                                           // Hplus   	   \n"
 <<"										   \n";
 
+
+/************************OLD METHOD*************************************************
 if(nonlinear)if(energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
-<<"										   \n"
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
 <<"    fespace WWh0(Th,P0);							   \n"
 <<"    WWh0 e1,e2,e3,ud;							   \n"
@@ -118,9 +119,48 @@ if(nonlinear)if(energydecomp)writemacros
 <<"    }									   \n"
 <<"    GFPmaxintwoFEfields(H[],Hplus[]);					   \n"
 <<"  }//									   \n"
+/************************OLD METHOD*************************************************/
+
+if(nonlinear)if(energydecomp)if(spc==2)writemacros
+<<"										   \n"
+<<"//------------------------------Hplus macros----------------------------------//\n"
+<<"										   \n"
+<<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
+<<"    fespace WWh0(Th,P0);							   \n"
+<<"    WWh0 e1,e2,e3;								   \n"
+<<(!vectorial ? "    e1=dx(u); e2=dy(u1);\n"        : ""  	    		    )
+<<(vectorial  ? "    e1=dx(uold); e2=dy(uold1);\n"  : ""  	    		    )
+<<(!vectorial ? "    e3=0.5*(dx(u1)+dy(u));\n"        : ""  	    		    )
+<<(vectorial  ? "    e3=0.5*(dx(uold1)+dy(uold));\n"  : ""  	    		    )
+<<"    GFPDecompEnergy2D(e1[],e2[],e3[],Hplus[],Hminus[],H[],lambda,mu);	   \n"
+<<"  }//									   \n" 
 <<"										   \n";
 
 
+if(nonlinear)if(energydecomp)if(spc==3)writemacros
+<<"										   \n"
+<<"//------------------------------Hplus macros----------------------------------//\n"
+<<"										   \n"
+<<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
+<<"    fespace WWh0(Th,P0);							   \n"
+<<"    WWh0 e1,e2,e3;								   \n"
+<<"										   \n"
+<<"    real[int] par(2);							   \n"
+<<"    par[0] = lambda ;							   \n"
+<<"    par[1] = mu     ;							   \n"
+<<"										   \n"
+<<(!vectorial ? "    e1=dx(u); e2=dy(u1); e3=dy(u2);\n"        : ""  		    )
+<<(!vectorial ? "    e4=0.5*(dx(u1)+dy(u));\n"        : ""  	    		    )
+<<(!vectorial ? "    e5=0.5*(dz(u)+dx(u2));\n"        : ""  	    		    )
+<<(!vectorial ? "    e6=0.5*(dz(u1)+dy(u2));\n"       : ""  	    		    )
+<<(vectorial  ? "    e1=dx(uold); e2=dy(uold1); e3=dy(uold2);\n"  : ""  	    )
+<<(!vectorial ? "    e4=0.5*(dx(uold1)+dy(uold));\n"        : ""  		    )
+<<(!vectorial ? "    e5=0.5*(dz(uold)+dx(uold2));\n"        : ""  		    )
+<<(!vectorial ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"       : ""  		    )
+<<"										   \n"
+<<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],Hplus[],Hminus[],H[],par);  \n"
+<<"  }//									   \n" 
+<<"										   \n";
   
 if(Sequential)writemacros
 <<"										   \n"

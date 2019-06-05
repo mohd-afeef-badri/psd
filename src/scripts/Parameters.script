@@ -84,9 +84,8 @@ if(nonlinear)if(plotAll)writemeshParameters
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"  int iterout  = 0 ,               // Loop Counter			    	   \n"
-<<"      iterout1 = 0 ;		      // Loop Counter				   \n"
+<<"      iterout1 = 0 ;               // Loop Counter				   \n"
 <<"										   \n";
-
 
 if(dynamic)writemeshParameters
 <<"	 									   \n"
