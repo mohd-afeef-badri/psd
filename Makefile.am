@@ -20,12 +20,15 @@ install-exec-local:
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	
 	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD/Solver/SolverGenerator.edp
 	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.
-	@cp  ./man/* ${prefix}/PSD/Doc/.
+	@cp  ./man/*.html ${prefix}/PSD/Doc/.
+	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
 	@echo "  			  "
 	@echo " Finished installing"
 	@echo "==========================================================================="
 	@echo "  ->   It is advised to do a make check 					  "
 	@echo "==========================================================================="
+	@echo "  			  "
+	@echo "  			  "
 	
 check: 				
 	@echo "  			  "
