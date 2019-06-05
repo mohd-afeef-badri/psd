@@ -23,12 +23,11 @@ install-exec-local:
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
 	@echo "  			  "
-	@echo " Finished installing"
+	@echo " Finished installing							  "
 	@echo "==========================================================================="
 	@echo "  ->   It is advised to do a make check 					  "
 	@echo "==========================================================================="
-	@echo "  			  "
-	@echo "  			  "
+	@echo "  									  "
 	
 check: 				
 	@echo "  			  "

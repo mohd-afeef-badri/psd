@@ -16,35 +16,37 @@ writemeshParameters
 <<"*******************************************************************************/\n"
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- FEM mesh to be loaded (Un-partitioned) ------- 			   \n"
+<<"// ------- Mesh parameters (Un-partitioned) ------- 				   \n"
 <<"//==============================================================================\n";
 
 
 if(!nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh file name 	   	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh  name 	   	   \n";
 
 if(nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/tensile-crack\"; // Mesh file name	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/tensile-crack\"; // Mesh  name	   \n";
 
 if(dynamic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh file name  	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh  name  	   \n";
 
 
 writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Material properties ------- 		 			   \n"
+<<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  real    mu                         // Lame parameter			   \n"
-<<"         ,lambda                     // Lame parameter			   \n"
+<<"  real    mu                        // Lame parameter			   \n"
+<<"         ,lambda                    // Lame parameter			   \n"
 <<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
 <<(timelog   ? "         ,t0                         // Time variable \n" : ""	    )
 <<(timelog   ? "         ,t1                         // Time variable \n" : ""	    )
-<<"         ;	   								   \n"
+<<"         ;	   								   \n";
+
+if(!nonlinear)if(!dynamic)writemeshParameters
 <<"										   \n"
 <<"{										   \n"
 <<"  real E  = 200.e9  ,			// Modulus of Elasticity - [Pa]	   \n"
@@ -55,59 +57,86 @@ writemeshParameters
 <<"	 									   \n"
 <<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
 <<" 										   \n"
-<<"	 									   \n"
 <<"}	 									   \n";
 
 
 
-if(nonlinear)writemeshParameters
+if(nonlinear){writemeshParameters
+<<" 										   \n"
+<<"  lambda = 121.15e3 ;							   \n"
+<<"  mu     = 80.77e3  ;							   \n"
 <<"	 									   \n"
 <<"//==============================================================================\n"
 <<"// ------- Nonlinear parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
-<<"real Gc    = 2.7  ,								   \n"
-<<"     lfac  = 2.0  ,								   \n"
-<<"     maxtr = 7e-3 ,								   \n"
-<<"     tr    = 1e-5 ,								   \n"
-<<"     dtr   = 1e-5 ,								   \n"
-<<"     lo           ;								   \n"
-<<"	 									   \n"
-<<"     lambda = 121.15e3 ;							   \n"
-<<"     mu     = 80.77e3  ;							   \n";
+<<"  real Gc    = 2.7  ,							   \n"
+<<"       lfac  = 2.0  ,							   \n"
+<<"       maxtr = 7e-3 ,							   \n"
+<<"       tr    = 1e-5 ,							   \n"
+<<"       dtr   = 1e-5 ,							   \n"
+<<"       lo           ;							   \n";
 
 
-if(nonlinear)if(plotAll)writemeshParameters
+
+if(plotAll)writemeshParameters
 <<"	 									   \n"
 <<"//==============================================================================\n"
-<<"// ------- Plotting support variables ------- 	 			   \n"
+<<"// ------- Paraview plotting parameters ------- 	 			   \n"
 <<"//==============================================================================\n"
+<<"	 									   \n"
+<<"  int[int] vtuorder=[1,1,1,1];						   \n" 
+<<"  string   namedata=\"U Phi\";						   \n"
+<<"  bool     withsur=true;						  	   \n"
 <<"	 									   \n"
 <<"  int iterout  = 0 ,               // Loop Counter			    	   \n"
-<<"      iterout1 = 0 ;               // Loop Counter				   \n"
-<<"										   \n";
+<<"      iterout1 = 0 ;               // Loop Counter				   \n";
 
-if(dynamic)writemeshParameters
+if(pipegnu)if(!supercomp)writemeshParameters 
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot pipeing parameters ------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  system(\"rm force.data\");							   \n"
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\");						   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  pgnuplot 									   \n"
+<<"  <<\" set title  \\\"Traction = \"+tr+\"\\\";			\\n\"      \n"
+<<"  <<\" set termoption font \\\"Arial-Bold,20\\\";		\\n\"		   \n"
+<<"  <<\" set xrange [0:.008]; set yrange [0:.9];		\\n\"    	   \n"
+<<"  <<\" set xlabel \\\" Displacement \\\";			\\n\"	   	   \n"
+<<"  <<\" set ylabel \\\" Force (kN)\\\";			\\n\"  	  	   \n"
+<<"  <<\" set grid x y;    set key left;			\\n\"; 	   	   \n";
+
+}
+
+
+
+if(dynamic){writemeshParameters
+<<"	 									   \n"
+<<"  lambda = 576.9230769  ;           // E=1000. & nu=0.3			   \n"
+<<"  mu     = 384.6153846  ;           // E=1000. & nu=0.3			   \n"
 <<"	 									   \n"
 <<"//==============================================================================\n"
 <<"// ------- Dynamic parameters ------- 	 			   	   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
-<<"real rho  = 1.0  ,								   \n"
-<<"     etam = 0.01 ,								   \n"
-<<"     etak = 0.01 ,								   \n"
-<<"     alpm = 0.2  ,								   \n"
-<<"     alpf = 0.4  ,								   \n"
-<<"     tmax = 4.0  ,								   \n"
-<<"     t    = 0.08 ,								   \n"
-<<"     dt   = 0.08 ;								   \n"
+<<"  real rho  = 1.0  ,								   \n"
+<<"       etam = 0.01 ,								   \n"
+<<"       etak = 0.01 ,								   \n"
+<<"       alpm = 0.2  ,								   \n"
+<<"       alpf = 0.4  ,								   \n"
+<<"       tmax = 4.0  ,								   \n"
+<<"       t    = 0.08 ,								   \n"
+<<"       dt   = 0.08 ;								   \n"
 <<"	 									   \n"
-<<"real gamma = 0.5 + alpf - alpm         ,					   \n"
-<<"     beta  = (1./4.)*(gamma+0.5)^2     ;					   \n"
-<<"     lambda = 576.9230769  ;			// E=1000. & nu=0.3		   \n"
-<<"     mu     = 384.6153846  ;			// E=1000. & nu=0.3		   \n"
+<<"  real gamma = 0.5 + alpf - alpm         ,					   \n"
+<<"       beta  = (1./4.)*(gamma+0.5)^2     ;					   \n"
 <<"	 									   \n"
-<<"real[int] c(11);								   \n"
+<<"  real[int] c(11);								   \n"
 <<"	 									   \n"
 <<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt        ;\n"
 <<"  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt               ;\n"
@@ -122,6 +151,40 @@ if(dynamic)writemeshParameters
 <<"  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))            ;\n"
 <<"	 									   \n";
 
+if(plotAll)writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  ------- Paraview plotting parameters -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int[int] vtuorder = [1,1,1] ;                      // Solution export order   \n"
+<<"  string   namedata = \"U\"     ;			     // Name of export data\n"
+<<"  bool     withsur  = true    ;                      // With surfaces	   \n"
+<<"  int      iterout  = 0       ;                      // Loop counter		   \n";
 
+
+if(pipegnu)if(!supercomp)writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot pipeing parameters  -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  system(\"rm energies.data\");						   \n"
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\");						   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  pgnuplot 									   \n"
+<<"  <<\" set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";	\\n\"	   \n"
+<<"  <<\" set termoption font \\\"Arial-Bold,20\\\";    	    \t\t\\n\"		   \n"
+<<"  <<\" set format x \\\"%.1t\\\";				    \t\t\\n\"    	   \n"
+<<"  <<\" set xlabel \\\" Time     \\\";			    \t\t\\n\"	   	   \n"
+<<"  <<\" set ylabel \\\" Energies \\\";			    \t\t\\n\"  	  	   \n"
+<<"  <<\" set grid x y; set key left;					\\n\"; 	   \n"
+<<"										   \n"
+<<(Sequential ? "  real Ek,El,Ec;" : "  real[int] E(3),EG(3);"			    )
+<<"  // To store damping energy		   					   \n";
+
+}
 
 } //-- [ostream terminator]  parameters.edp closed --//
