@@ -19,6 +19,9 @@ Notched-Plate.msh:
 
 tensile-crack.msh:
 	$(GMSH) -2 tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0		
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
 
 sparsity.msh:
 	$(GMSH) -2  sparsity.geo -o sparsity.msh -format msh2 -v 0				

@@ -3,7 +3,7 @@
 //
 // NOTE: Use the -format msh2 format to genrate the mesh
 
-lc = 1.0/31.0;
+lc = 1.0/2.0;
 lengthBar=1.0;
 eps=1e-4;
 
@@ -13,7 +13,7 @@ Point(3) = {lengthBar , 1.0 , 0.0 , lc};
 Point(4) = {0.0 , 1.0 , 0.0 , lc};
 Point(5) = {0.0 , 0.5+eps , 0.0 , lc};
 Point(6) = {0.0 , 0.5-eps , 0.0 , lc};
-Point(7) = {0.5 , 0.5 , 0.0 , lc/2};
+Point(7) = {0.5 , 0.5 , 0.0 , lc};
 //+
 Line(1) = {1, 2};
 //+
