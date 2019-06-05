@@ -36,25 +36,26 @@ if(dynamic)writemain
 
 if(pipegnu)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n";
-//<<"  include \"../Plugins/MacroTools.edp\"              // Important macros	   \n";
 
 
 if(Sequential)writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"
-<<"  include \"Parameters.edp\"                         // Parameters & propeties  \n"
+<<"  include \"ControlParameters.edp\"                  // Parameters & propeties  \n"
+<<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
 <<"  include \"MeshAndFeSpace.edp\"                     // Define Mesh and FE space\n"
-<<"  include \"BoundaryAndSourceConditions.edp\"        // Boundary conditions 	   \n"
+<<"  include \"FemParameters.edp\"                      // Fem Parameters          \n"
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 
 if(!Sequential)writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"
-<<"  include \"Parameters.edp\"                         // Parameters & propeties  \n"
+<<"  include \"ControlParameters.edp\"                  // Parameters & propeties  \n"
+<<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
 <<"  include \"../Plugins/DDmacro.edp\"                 // Domain decomp macros    \n"
 <<"  include \"MeshAndFeSpace.edp\"                     // Define Mesh and FE space\n"
-<<"  include \"BoundaryAndSourceConditions.edp\"        // Boundary conditions	   \n"
+<<"  include \"FemParameters.edp\"                      // Fem Parameters          \n"
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 

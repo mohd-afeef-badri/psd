@@ -63,27 +63,6 @@ if(spc==3)writevarfmatsolve
 if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Finite element variables -------					   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  Vh  def2(u)    ,    // FE variable for displacement			   \n"
-<<"      def2(uold) ,    // FE variable for previous displacement		   \n"
-<<"      def2(DPspc);    // FE variables for partition of unity 	   	   \n"
-<<"										   \n"
-<<"										   \n"
-<<"  Vh1 phi       ,     // FE variable for phase field 			   \n"
-<<"      phiold    ,     // FE variable for previous iteration phase field	   \n"
-<<"      DZspc     ;     // FE variables for partition of unity 	   	   \n";
-
-if(energydecomp)writevarfmatsolve
-<<"										   \n"
-<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
-<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
-<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
-
-writevarfmatsolve
-<<"										   \n"
-<<"//==============================================================================\n"
 <<"// -------Variation formulation nonlinear-------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
@@ -147,28 +126,6 @@ writevarfmatsolve
 if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// ------- Finite element variables -------					   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  Vh  def(u)    ,    // FE vectorial variable for [u,\phi]			   \n"
-<<"      def(uold) ,    // FE vectorial variable for old [u,\phi] 		   \n"
-<<"      def(DPspc);    // FE vectorial variables for partition of unity    	   \n";
-
-if(energydecomp)writevarfmatsolve
-<<"										   \n"
-<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
-<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
-<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
-
-
-if(debug || plotAll)writevarfmatsolve
-<<"										   \n"
-<<"  VhPlt phi     ;    // FE variable for plotting phi				   \n";
-
-
-writevarfmatsolve
-<<"										   \n"
-<<"//==============================================================================\n"
 <<"// ------- Variation formulation nonlinear -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
@@ -217,16 +174,6 @@ if(pipegnu)writevarfmatsolve
 
 
 if(dynamic){writevarfmatsolve
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// -------Finite element variables -------					   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  Vh  def(du)    ,      // Displacement FE field				   \n"
-<<"      def(uold)  ,      // Previous iteration displacement FE field		   \n"
-<<"      def(vold)  ,      // Previous iteration velocity FE field		   \n"
-<<"      def(aold)  ,      // Previous iteration acceleration FE field		   \n"
-<<"      def(DPspc) ;      // Partition of unity field for integral		   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation dynamic linear-------			   \n"

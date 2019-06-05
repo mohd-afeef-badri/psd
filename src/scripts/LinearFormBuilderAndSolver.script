@@ -16,8 +16,7 @@ writesolver
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(nonlinear){writesolver
-<<"										   \n";
+if(nonlinear){
 
 if(Sequential)writesolver
 <<"										   \n"
@@ -30,14 +29,7 @@ if(Sequential)writesolver
 <<"  Vh0 size1 = hTriangle     ;						   \n"
 <<"  lo = size1[].min          ;						   \n"
 <<"  lo = lo*lfac              ;						   \n"
-<<"}										   \n"
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Defining the matrices and vectors -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  matrix  A, A1				;  				   \n"
-<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n";
+<<"}										   \n";
 
 /************************OLD METHOD*************************************************
 if(pipegnu)if(!supercomp)writesolver
@@ -58,21 +50,7 @@ if(!vectorial)writesolver
 <<"										   \n";
 /************************OLD METHOD*************************************************/ 
 
-if(!Sequential){writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Partition of unity for integrals -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  for(int i=0; i<DP.n; i++) 							   \n"
-<<"    DPspc[][i]=DP[i];							   \n";
-
-if(!vectorial)writesolver
-<<"										   \n"
-<<"  for(int i=0; i<DZ.n; i++) 							   \n"
-<<"    DZspc[][i]=DZ[i];							   \n";
-
-writesolver
+if(!Sequential)writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- L_o calculation in parallel -------				   \n"
@@ -85,7 +63,6 @@ writesolver
 <<"  mpiAllReduce(himlocal,himGlobal,mpiCommWorld,mpiMIN)   ;			   \n"
 <<"  lo = himGlobal*lfac                                    ;			   \n"
 <<"}										   \n";
-}
 
 
 if(Sequential){writesolver
@@ -177,9 +154,7 @@ if(pipegnu)writesolver
 <<"	   pgnuplot <<\"plot \\\"force.data\\\"u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\"\n"
 //<<"		    <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"   \n"
 <<"        flush(pgnuplot);					   	   	   \n"
-<<"       }							  	   	   \n"
-<<"									   	   \n"
-<<"									   	   \n";
+<<"       }							  	   	   \n";
 
 writesolver
 <<"										   \n"
@@ -196,55 +171,11 @@ writesolver
 <<"    }									   \n"
 <<"  } 										   \n"
 <<"	tr += dtr;								   \n"
-<<"}										   \n"
-<<"										   \n"	
-<<"										   \n"
-<<"										   \n";
+<<"}										   \n";
 
 }  //-- [if loop terminator] Sequential ended --//
 
 if(!Sequential){writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Sparsity conservation and defining matrices and vectors -------	   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-/************************OLD METHOD*************************************************   
-<<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
-<<"  matrix  MatDUMMY  = DUMMY(Vh, Vh)                                    ;	   \n"
-<<"  Mat  A( MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
-<<"  MatDUMMY.resize(0,0)                                                 ;	   \n";
-/************************OLD METHOD*************************************************/
-<<"  Mat  A( Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)   ; 	   \n";
-
-
-if(!vectorial)writesolver
-<<"										   \n"
-/************************OLD METHOD*************************************************   
-<<"  matrix	 MatDUMMY1 = DUMMY(Vh1, Vh1);					   \n"
-<<"  Mat A1(MatDUMMY1, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
-<<"  MatDUMMY1.resize(0,0);							   \n"
-/************************OLD METHOD*************************************************/
-<<"  Mat A1( Vh1.ndof, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
-<<"										   \n"
-<<"  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear	   \n"
-<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear	   \n";
-
-if(vectorial)writesolver
-<<"										   \n"
-<<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
-<<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n";
-
-/************************OLD METHOD*************************************************   
-if(pipegnu)writesolver
-<<"										   \n"
-<<"  matrix	 MatDUMMY2 = DUMMY(Vh, Vh);					   \n"
-<<"  Mat A2(MatDUMMY2, arrayIntersectionP, restrictionIntersectionP, DP);  	   \n"
-<<"  MatDUMMY2.resize(0,0);							   \n"
-<<"										   \n";
-/************************OLD METHOD*************************************************/
-
-writesolver
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------  Traction loading loop  -------					   \n"
@@ -771,33 +702,6 @@ writesolver
 
 
 if(!Sequential)if(dynamic){writesolver    
-<<"										   \n";
-
-if(pipegnu)writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Partion of unity for integrals -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  for(int i=0; i<DP.n; i++) 							   \n"
-<<"    DPspc[][i]=DP[i];							   \n";
-
-writesolver
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"//  ------- Defining the FE linear system matrix and vector -------		   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<" matrix       ALoc    ;							   \n"
-<<" real[int]    b(Vh.ndof);							   \n"
-<<"										   \n"
-/************************OLD METHOD*************************************************   
-<<"  varf DUMMY(uu,vv) = intN(Th,qforder = 1)(uu*vv)                      ;	   \n"
-<<"  matrix  MatDUMMY  = DUMMY(Vh, Vh)                                    ;	   \n"
-<<"  Mat  A( MatDUMMY, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
-<<"  MatDUMMY.resize(0,0)                                                 ;	   \n"
-/**********************************************************************************/
-<<"  Mat  A(Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------		   \n"

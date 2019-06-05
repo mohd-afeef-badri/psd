@@ -1,0 +1,162 @@
+//=====================================================================================
+// ------ Building the Parameters.edp file ------ 
+//=====================================================================================
+
+{ofstream  writFemParameters("FemParameters.edp");
+
+writFemParameters
+<<"										   \n"
+<<"/***********************************Parameters**********************************\n"
+<<"*                                                                              *\n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
+<<"*         in order to  control this  file please change flag arguments of  the *\n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
+<<"*         or in the README.MD file.                                            *\n"
+<<"*                                                                              *\n"
+<<"*******************************************************************************/\n"
+<<"										   \n";
+
+if(nonlinear)if(!vectorial)if(!dynamic){writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Finite element variables -------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  Vh  def2(u)    ,    // FE variable for displacement			   \n"
+<<"      def2(uold) ,    // FE variable for previous displacement		   \n"
+<<"      def2(DPspc);    // FE variables for partition of unity 	   	   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  Vh1 phi       ,     // FE variable for phase field 			   \n"
+<<"      phiold    ,     // FE variable for previous iteration phase field	   \n"
+<<"      DZspc     ;     // FE variables for partition of unity 	   	   \n";
+
+if(energydecomp)writFemParameters
+<<"										   \n"
+<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
+<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
+<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
+}
+
+
+
+if(nonlinear)if(vectorial)if(!dynamic){writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Finite element variables -------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  Vh  def(u)    ,    // FE vectorial variable for [u,\phi]			   \n"
+<<"      def(uold) ,    // FE vectorial variable for old [u,\phi] 		   \n"
+<<"      def(DPspc);    // FE vectorial variables for partition of unity    	   \n";
+
+if(energydecomp)writFemParameters
+<<"										   \n"
+<<"  Wh0 H         ,    // FE variable for stress history 			   \n"
+<<"      Hplus     ,    // FE variable for tensile stress history		   \n"
+<<"      Hminus    ;    // FE variable for compressive stress history		   \n";
+
+
+if(debug || plotAll)writFemParameters
+<<"										   \n"
+<<"  VhPlt phi     ;    // FE variable for plotting phi				   \n";
+}
+
+if(dynamic){writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Finite element variables -------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  Vh  def(du)    ,      // Displacement FE field				   \n"
+<<"      def(uold)  ,      // Previous iteration displacement FE field		   \n"
+<<"      def(vold)  ,      // Previous iteration velocity FE field		   \n"
+<<"      def(aold)  ,      // Previous iteration acceleration FE field		   \n"
+<<"      def(DPspc) ;      // Partition of unity field for integral		   \n"
+<<"										   \n";
+}
+
+
+
+if(nonlinear){
+
+if(Sequential){
+
+writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Fem matrices and vectors -------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  matrix  A, A1				;  				   \n"
+<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)	;				   \n";
+}
+
+if(!Sequential){
+
+writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------  Fem matrices and vectors -------	   				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  Mat  A( Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)   ; 	   \n";
+
+if(!vectorial)writFemParameters
+<<"										   \n"
+<<"  Mat A1( Vh1.ndof, arrayIntersectionZ, restrictionIntersectionZ, DZ);  	   \n"
+<<"										   \n"
+<<"  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear	   \n"
+<<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear	   \n";
+
+if(vectorial)writFemParameters
+<<"										   \n"
+<<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
+<<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n";
+
+
+writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Partition of unity for integrals -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  for(int i=0; i<DP.n; i++) 							   \n"
+<<"    DPspc[][i]=DP[i];							   \n";
+
+if(!vectorial)writFemParameters
+<<"										   \n"
+<<"  for(int i=0; i<DZ.n; i++) 							   \n"
+<<"    DZspc[][i]=DZ[i];							   \n";
+}
+
+}
+
+
+if(dynamic)if(!Sequential){
+
+if(pipegnu)writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Partion of unity for integrals -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  for(int i=0; i<DP.n; i++) 							   \n"
+<<"    DPspc[][i]=DP[i];							   \n";
+
+writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  -------  Fem matrices and vectors -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  matrix       ALoc    ;							   \n"
+<<"  real[int]    b(Vh.ndof);							   \n"
+<<"										   \n"
+<<"  Mat  A(Vh.ndof, arrayIntersectionP, restrictionIntersectionP, DP)  ; 	   \n"
+<<"										   \n";
+
+} 
+
+
+} //-- [ostream terminator]  parameters.edp closed --//
