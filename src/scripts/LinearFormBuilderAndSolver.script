@@ -145,16 +145,13 @@ if(pipegnu)writesolver
 <<"        forcetot = forcetot + fr1[][ldof[i]];				   \n"
 /************************OLD METHOD*************************************************/
 <<"										   \n"
-<<"      { ofstream ff(\"force.data\",append);				  	   \n"
-<<"        ff << tr << \"	\" << forcetot*1e-3 << endl; 			   \n"
-<<"      }									   \n"
+<<"      ofstream ff(\"force.data\",append);				  	   \n"
+<<"      ff << tr << \"	\" << forcetot*1e-3 << endl; 			  	   \n"
 <<"										   \n"
-<<"										   \n"
-<<"      { 							   	   	   \n"
-<<"	   pgnuplot <<\"plot \\\"force.data\\\"u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\"\n"
-//<<"		    <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"   \n"
-<<"        flush(pgnuplot);					   	   	   \n"
-<<"       }							  	   	   \n";
+<<"	 pgnuplot								   \n"
+<<"      <<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"FEM\\\"\\n\";	   \n"
+//<<"    <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"   	   \n"
+<<"      flush(pgnuplot);					   	   	   \n";
 
 writesolver
 <<"										   \n"

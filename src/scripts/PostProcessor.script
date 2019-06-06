@@ -34,7 +34,6 @@ if(plotAll){writePostProcessor
 <<"										   \n"
 <<"										   \n"
 <<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "   	        	    )
-<<"		int[int] vtuorder=[1,1,1];		// Solution export order   \n" 
 <<"										   \n" 
 <<"										   \n"; 
       

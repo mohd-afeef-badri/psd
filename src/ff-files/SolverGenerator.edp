@@ -103,7 +103,6 @@
   include "./ScriptModules/FemParameters.script"      
   include "./ScriptModules/OtherParameters.script"    
   include "./ScriptModules/ControlParameters.script"
-  include "./ScriptModules/BoundaryAndSourceConditions.script"
   include "./ScriptModules/VariationalFormulation.script"
   include "./ScriptModules/LinearFormBuilderAndSolver.script"  
   include "./ScriptModules/PostProcessor.script"
