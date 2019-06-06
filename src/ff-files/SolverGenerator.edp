@@ -106,3 +106,10 @@
   include "./ScriptModules/VariationalFormulation.script"
   include "./ScriptModules/LinearFormBuilderAndSolver.script"  
   include "./ScriptModules/PostProcessor.script"
+  
+//=====================================================================================
+// ------ Generates VTU folder ------ 
+//=====================================================================================
+  
+if(plotAll)
+  system("mkdir -p VTUs");  

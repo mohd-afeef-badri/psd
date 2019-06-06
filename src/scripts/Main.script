@@ -59,7 +59,7 @@ if(!Sequential)writemain
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 
-if(plotAll)if(!dynamic)writemain
+if(plotAll)if(!dynamic)if(!nonlinear)writemain
 <<"  include \"PostProcessor.edp\"                      // Post Processing   	   \n";        
 
 } //-- [ostream terminator]  main.edp closed --//

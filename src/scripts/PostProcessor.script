@@ -2,10 +2,7 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
-if(plotAll)
-  system("mkdir -p VTUs");
-
-{ofstream  writePostProcessor("PostProcessor.edp");
+if(!nonlinear)if(!dynamic)if(plotAll){ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
 <<"										   \n"
@@ -20,70 +17,11 @@ writePostProcessor
 <<"										   \n"
 <<"										   \n";
 
-if(nonlinear){writePostProcessor
-<<"										   \n"
-<<"										   \n";
-if(Sequential){writePostProcessor
-<<"										   \n"
-<<"										   \n";
-if(plotAll){writePostProcessor
-<<"										   \n"	  
-<<"//==============================================================================\n"
-<<"// -------Plotting with paraview-------					   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n"
-<<(timelog ? "	timerbegin(\"Post-Processing\",t0)\n" : " "   	        	    )
-<<"										   \n" 
-<<"										   \n"; 
-      
-if(spc==2)writePostProcessor
-<<"										   \n"    
-<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,0],phi,				   \n"; 
-
-if(spc==3)writePostProcessor
-<<"										   \n" 
-<<"savevtk(\"VTUs/Solution-Seq.vtu\",Th,[u,u1,u2],phi,			     	   \n"; 
-  
-writePostProcessor       
-<<"		order=vtuorder,dataname=\"U phi\");				   \n"
-<<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "   	        	    )
-<<(timelog ? "	timerend  (\"Solver\",t1)\n" : " "	   	        	    )	
-<<"										   \n"; 
-  
-system("mkdir -p VTUs");	  
-
-}  //-- [if loop terminator] plotAll ended --//
-
-}  //-- [if loop terminator] Sequential ended --//
-
 if(!Sequential){writePostProcessor
-<<"										   \n"
-<<"										   \n";
-if(plotAll)writePostProcessor
-<<"										   \n"
-//<<"  exportEnd(\"VTUs/Solution\", mpiCommWorld);				   \n"
-<<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
-<<"										   \n";
-
-}  //-- [if loop terminator] !Sequential ended --//
- 
-}  //-- [if loop terminator] nonlinear ended --//
-
-
-if(!nonlinear){
-
-if(!Sequential){writePostProcessor      
-<<"										   \n"	 
-<<"										   \n";
-
-if(plotAll){writePostProcessor
 <<"										   \n"        
-<<"										   \n"          
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"Paraview Plotting\",t0)\n" : " "       		    )
 <<" 	int[int] vtuorder=[1,1,1];			// Solution export order   \n" 
@@ -104,18 +42,9 @@ writePostProcessor
 <<(timelog  ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
 <<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
-  
-  system("mkdir -p VTUs");
-
-}  //-- [if loop terminator] plotAll ended --//
-
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential){writePostProcessor    
-<<"										   \n"	
-<<"										   \n";
-
-if(plotAll)if(!dynamic){writePostProcessor
+if(Sequential){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"
@@ -141,13 +70,6 @@ writePostProcessor
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		    )
 <<(timelog ? "	timerend  (\"Solver\",t1)\n" : " "  	         	  	    )	
 <<"										   \n";
-  
-system("mkdir -p VTUs");
-	  
-}  //-- [if loop terminator] plotAll ended --//
-
 }  //-- [if loop terminator] Sequential ended --//
-
-}  //-- [if loop terminator] !nonlinear ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//
