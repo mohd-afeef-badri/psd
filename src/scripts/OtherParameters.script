@@ -23,7 +23,7 @@ if(timelog)writemeshParameters
 <<"// ------- Time logging parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
-<<"  real[int] t0,t1;								   \n";
+<<"  real t0,t1;								   \n";
 
 if(!Sequential){
 
