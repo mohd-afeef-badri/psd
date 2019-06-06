@@ -23,13 +23,7 @@ iovtk.so:
 
 clean-local:
 	@echo "  			  "
-	@echo "  			  "
-	@echo " Removing linking files ......."
+	@echo " Removing linking files ..."
 	@echo "  			  "
 	@echo "  			  "
 	rm  -f *~  *.so *.o
-	@echo "  			  "
-	@echo "  			  "
-	@echo " Finished removing !!!!!!!!"
-	@echo "  			  "
-	@echo "  			  "		

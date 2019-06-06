@@ -1,6 +1,21 @@
 SUBDIRS = src data 
 EXTRA_DIST=README.MD
 
+AUTOMAKE_LIST=autom4te.cache \
+config.h \
+config.status \
+configure \
+install-sh \
+missing \
+Makefile \
+Makefile.in \
+aclocal.m4 \
+config.h.in \
+config.log \
+stamp-h1 \
+.swp 
+
+
 
 install-exec-local:
 	@mkdir -p ${prefix}/PSD
@@ -33,3 +48,18 @@ check:
 	@echo "  			  "
 	@cp  ./data/Makefile1 ${prefix}/PSD/Solver/Makefile
 	@cd ${prefix}/PSD/Solver && make check && rm Makefile
+	@echo "  			  "
+	@echo "==========================================================================="
+	@echo "  ->   Finshed checking the solver, you are all set			  "
+	@echo "==========================================================================="
+	@echo "  									  "	
+	
+clean-automake:
+	@echo "  			  "
+	rm  -rf ${AUTOMAKE_LIST}
+	rm  -rf ./data/Makefile ./data/Makefile.in
+	rm  -rf ./data/meshes/2D/Geo-Files/Makefile ./data/meshes/2D/Geo-Files/Makefile.in
+	rm  -rf ./data/meshes/3D/Geo-Files/Makefile ./data/meshes/3D/Geo-Files/Makefile.in
+	rm  -rf ./src/Makefile ./src/Makefile.in
+	rm  -rf ./src/plugins/Makefile ./src/plugins/Makefile.in
+																

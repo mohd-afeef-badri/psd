@@ -21,20 +21,14 @@ install-exec-local:
 	@mkdir -p ../Meshes
 	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
-	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.	
-#	@mv bar.msh ../Meshes/bar.msh
-#	@mv tensile-crack.msh ../Meshes/tensile-crack.msh
+	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
 	
 clean-local:
 	@echo "  			  "
 	@echo "  			  "
-	@echo " Removing useless files ......."
+	@echo " Removing mesh files ......"
 	@echo "  			  "
 	@echo "  			  "
 	rm -f *~ *.msh
 	rm -rf ../Meshes
-	@echo "  			  "
-	@echo "  			  "
-	@echo " Finished removing !!!!!!!!"
-	@echo "  			  "
 	@echo "  			  "		
