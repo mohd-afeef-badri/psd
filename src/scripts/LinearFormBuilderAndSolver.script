@@ -586,8 +586,14 @@ writesolver
 <<"      set(A,sparams =\" \");            					   \n"
 <<"      u[] = A^-1*b;                     					   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerend(\"PETSc solving\",t0)\n" : " "  	    		   )
-<<"										   \n";
+<<(timelog ? "	MPItimerend(\"PETSc solving\",t0)\n" : " "  	    		   );
+
+
+if(debug)writesolver
+<<"										   \n"
+<<"//-----------------Debug glut plotting----------------------//  	  	   \n"
+<<"										   \n"
+<<"      plotMPI(Th, u[],\"displacement\", Pk, def, real, 2, 0)		 	   \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 
