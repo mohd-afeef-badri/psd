@@ -1,0 +1,120 @@
+
+//==============================================================================
+// -------Exporting plots in parallel------- 
+//==============================================================================
+
+macro exportpvd(name, mesh, sol, fforder, withsur, nameData, comm)
+savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, withsurfacemesh=withsur, order = fforder, dataname=nameData);
+
+if(mpiRank(comm) == 0) {
+    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
+    pvd << "<?xml version=\"1.0\"?>\n";
+    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
+    pvd << "         byte_order=\"LittleEndian\"\n";
+    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
+    pvd << "  <Collection>\n";
+    for(int i = 0; i < mpiSize(comm); ++i) {
+        pvd << "    <DataSet timestep=\"0\" group=\"\" part=\"" << i << "\"\n";
+        pvd << "             file=\""; pvd << name << "_" << i << "_" << mpiSize(comm) << ".vtu\"/>\n";
+    }
+    pvd << "  </Collection>\n";
+    pvd << "</VTKFile>\n";}
+    system("mv "+name+"_"+mpisize+".pvd .");    
+}
+// EOM
+
+macro exportpvd2(name, mesh, sol, sol1, fforder, withsur, nameData, comm)
+savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol1, withsurfacemesh=withsur, order = fforder, dataname=nameData);
+
+if(mpiRank(comm) == 0) {
+    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
+    pvd << "<?xml version=\"1.0\"?>\n";
+    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
+    pvd << "         byte_order=\"LittleEndian\"\n";
+    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
+    pvd << "  <Collection>\n";
+    for(int i = 0; i < mpiSize(comm); ++i) {
+        pvd << "    <DataSet timestep=\"0\" group=\"\" part=\"" << i << "\"\n";
+        pvd << "             file=\""; pvd << name << "_" << i << "_" << mpiSize(comm) << ".vtu\"/>\n";
+    }
+    pvd << "  </Collection>\n";
+    pvd << "</VTKFile>\n";}
+    system("mv "+name+"_"+mpisize+".pvd .");    
+}
+// EOM
+
+macro exportBegin(name, comm)
+system("mkdir -p VTUs");
+if(mpiRank(comm) == 0) {
+    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
+    pvd << "<?xml version=\"1.0\"?>\n";
+    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
+    pvd << "         byte_order=\"LittleEndian\"\n";
+    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
+    pvd << "  <Collection>\n";
+}
+// EOM
+
+macro exportTimeStep(name, mesh, sol, fforder, ts, comm)
+savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, order = fforder);
+
+if(mpiRank(comm) == 0) {
+    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
+    for(int ijk = 0; ijk < mpiSize(comm); ++ijk) {
+        pvd << "    <DataSet timestep=\"" + int(ts) + "\" group=\"\" part=\"" << ijk << "\"\n";
+        pvd << "             file=\""; pvd << name << "_" << int(ts) << "_" << ijk << "_" << mpiSize(comm) << ".vtu\"/>\n";
+    }
+}
+// EOM
+
+macro exportTimeStep2(name, mesh, sol, sol2, ts, comm)
+int[int] vtuorder=[1,1,1,1];
+savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol2, order = vtuorder);
+
+if(mpiRank(comm) == 0) {
+    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
+    for(int ijk = 0; ijk < mpiSize(comm); ++ijk) {
+        pvd << "    <DataSet timestep=\"" + int(ts) + "\" group=\"\" part=\"" << ijk << "\"\n";
+        pvd << "             file=\""; pvd << name << "_" << int(ts) << "_" << ijk << "_" << mpiSize(comm) << ".vtu\"/>\n";
+    }
+}
+// EOM
+
+macro exportEnd(name, comm)
+if(mpiRank(comm) == 0) {
+    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
+    pvd << "  </Collection>\n";
+    pvd << "</VTKFile>\n";}
+    system("mv "+name+"_"+mpisize+".pvd .");    
+}
+// EOM
+    
+    
+macro plotMPI(Th, u, legend, Pk, def, K, d, w)
+    if(mpirank == 0) {
+        meshN ThCurrent = Th;
+        meshN[int] meshTab(mpisize);
+        fespace Xh(ThCurrent, Pk);
+        Xh<K>[int] def(uTab)(mpisize);
+        uTab[0][] = u;
+        meshTab[0] = Th;
+        mpiRequest[int] rq(mpisize - 1);
+        for(int i = 1; i < mpisize; ++i)
+            Irecv(processor(i, mpiCommWorld, rq[i - 1]), meshTab[i]);
+        for(int i = 1; i < mpisize; ++i)
+            mpiWaitAny(rq);
+        for(int i = 1; i < mpisize; ++i) {
+            ThCurrent = meshTab[i];
+            Irecv(processor(i, mpiCommWorld, rq[i - 1]), uTab[i][]);
+        }
+        for(int i = 1; i < mpisize; ++i)
+            mpiWaitAny(rq);
+        plot(uTab, wait = w, fill = 1, value = 1, cmm = legend);
+    }
+    else {
+        mpiRequest[int] rq(2);
+        Isend(processor(0, rq[0]), Th);
+        Isend(processor(0, rq[1]), u);
+        mpiWait(rq[0]);
+        mpiWait(rq[1]);
+    }// EOM

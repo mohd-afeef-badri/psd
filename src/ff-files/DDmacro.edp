@@ -101,10 +101,12 @@ macro bb3(boundingMesh, overshoot, ThGlobal)
 // -------Partition macro------- 
 //==============================================================================
 
-macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank, size, s, overlap, D, Wh, P, arrayIntersection, restrictionIntersection, comm, fakeInterface, PkPart, defPart, initPart, bs)
+macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank, size, s, overlap, D, Wh, P, intersection, comm, fakeInterface, PkPart, defPart, initPart, bs)
         meshName = trunc(globalName, abs(part - rank) < 0.1, label = fakeInterface);
         mpiBarrier(comm);
         real timerPartition = mpiWtime();
+        intersection.resize(1);
+        intersection[0].resize(0);
         {
             fespace PhLocal(meshName, P0);
             PhLocal overshoot = hTriangle;
@@ -118,10 +120,10 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
             meshN neighbors = trunc(globalName, suppSmooth > 0.001);
             fespace Oh(neighbors, P0);
             Oh partOverlap = part;
-            Unique(partOverlap[], arrayIntersection, remove = rank);
+            Unique(partOverlap[], intersection[0], remove = rank);
         }
         fespace VhLocal(meshName, P1);
-        VhLocal[int] partitionIntersection(arrayIntersection.n);
+        VhLocal[int] partitionIntersection(intersection[0].n);
         if(s > 1) {
             globalName = trunc(globalName, suppSmooth > 0.001, split = s);
             supp = abs(part - rank) < 0.1;
@@ -130,20 +132,20 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
         }
         globalName = trunc(globalName, suppSmooth > 0.001, label = 9999);
         real eps = intN(globalName)(1.0);
-        real[int] epsTab(arrayIntersection.n);
-        mpiRequest[int] rq(2 * arrayIntersection.n);
+        real[int] epsTab(intersection[0].n);
+        mpiRequest[int] rq(2 * intersection[0].n);
         if(mpiSize(comm) == size) {
-            for(int j = 0; j < arrayIntersection.n; ++j)
-                Irecv(processor(arrayIntersection[j], comm, rq[j]), epsTab[j]);
-            for(int j = 0; j < arrayIntersection.n; ++j)
-                Isend(processor(arrayIntersection[j], comm, rq[arrayIntersection.n + j]), eps);
+            for(int j = 0; j < intersection[0].n; ++j)
+                Irecv(processor(intersection[0][j], comm, rq[j]), epsTab[j]);
+            for(int j = 0; j < intersection[0].n; ++j)
+                Isend(processor(intersection[0][j], comm, rq[intersection[0].n + j]), eps);
         }
         else
             epsTab = 1.0e+30;
         supp = supp;
         suppSmooth = suppSmooth;
         meshName = trunc(globalName, suppSmooth > 0.501, label = fakeInterface);
-        if(!removeZeros && (fakeInterface != -111111 || overlap != -1)) {
+        if(!removeZeros && (fakeInterface != -111111 || overlap != 1)) {
             if(suppSmooth[].min < 0.501)
                 borderName = trunc(globalName, (suppSmooth > (overlap - 0.999) / (2 * overlap)) && (suppSmooth < 0.501), label = (abs(fakeInterface) + 1) * 100);
         }
@@ -152,26 +154,24 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
         VhGlobal phi = 0;
         part = part;
         int numberIntersection = 0;
-        for(int k = 0; k < 2 * arrayIntersection.n; ++k)
+        for(int k = 0; k < 2 * intersection[0].n; ++k)
             mpiWaitAny(rq);
-        for(int i = 0; i < arrayIntersection.n; ++i) {
-            PhGlobal suppPartition = abs(arrayIntersection[i] - part) < 0.1;
+        for(int i = 0; i < intersection[0].n; ++i) {
+            PhGlobal suppPartition = abs(intersection[0][i] - part) < 0.1;
             AddLayers(globalName, suppPartition[], overlap, phi[]);
             if(min(eps, epsTab[i]) > 0.0) {
-                real intersection = intN(globalName)(phi) / min(eps, epsTab[i]);
-                if(intersection > 1.0e-6) {
+                if(intN(globalName)(phi) / min(eps, epsTab[i]) > 1.0e-6) {
                     partitionIntersection[numberIntersection] = phi;
                     if(!trueRestrict)
                         sum[] += partitionIntersection[numberIntersection][];
-                    arrayIntersection[numberIntersection++] = arrayIntersection[i];
+                    intersection[0][numberIntersection++] = intersection[0][i];
                 }
             }
         }
-        if(numberIntersection != arrayIntersection.n)
-            arrayIntersection.resize(numberIntersection);
-        restrictionIntersection.resize(numberIntersection);
+        if(numberIntersection != intersection[0].n)
+            intersection[0].resize(numberIntersection);
+        intersection.resize(1 + numberIntersection);
         meshN[int] meshIntersection(numberIntersection);
-        
         for(int i = 0; i < numberIntersection; ++i) {
             meshIntersection[i] = trunc(meshName, partitionIntersection[i] > 1.0e-6, label = 9999);
             if(!removeZeros) {
@@ -180,8 +180,8 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
                 R.thresholding(1.0e-10);
                 real[int] C;
                 int[int] I;
-                [I, restrictionIntersection[i], C] = R;
-                restrictionIntersection[i].resize(R.nbcoef);
+                [I, intersection[1 + i], C] = R;
+                intersection[1 + i].resize(R.nbcoef);
             }
         }
         partitionIntersection.resize(0);
@@ -191,9 +191,9 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
             khi = abs(part - rank) < 0.1;
             VhLocal sigma = part;
             for(int i = 0; i < numberIntersection; ++i) {
-                if(rank < arrayIntersection[i]) {
+                if(rank < intersection[0][i]) {
                     for(int j = 0; j < VhLocal.ndof; ++j) {
-                        if(khi[][j] > 0.9 && abs(sigma[][j] - arrayIntersection[i]) < 0.1)
+                        if(khi[][j] > 0.9 && abs(sigma[][j] - intersection[0][i]) < 0.1)
                             khi[][j] = 0.0;
                     }
                 }
@@ -206,9 +206,9 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
                 mpiRequest[int] rq(2 * numberIntersection);
                 for(int i = 0; i < numberIntersection; ++i) {
                     ThIntersection = meshIntersection[i];
-                    Irecv(processor(arrayIntersection[i], comm, rq[i]), recv[i][]);
+                    Irecv(processor(intersection[0][i], comm, rq[i]), recv[i][]);
                     send[i] = khi;
-                    Isend(processor(arrayIntersection[i], comm, rq[numberIntersection + i]), send[i][]);
+                    Isend(processor(intersection[0][i], comm, rq[numberIntersection + i]), send[i][]);
                 }
                 meshName = trunc(meshName, khi > 1.0e-6, label = 9999);
                 khi = khi;
@@ -227,7 +227,7 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
                     }
                 }
                 skip.sort;
-                restrictionIntersection.resize(numberIntersection - skip.n);
+                intersection.resize(1 + numberIntersection - skip.n);
                 int j = 0;
                 for(int i = 0; i < numberIntersection; ++i) {
                     bool skipped = false;
@@ -243,14 +243,14 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
                         R.thresholding(1.0e-10);
                         real[int] C;
                         int[int] I;
-                        [I, restrictionIntersection[i - j], C] = R;
-                        restrictionIntersection[i - j].resize(R.nbcoef);
-                        arrayIntersection[i - j] = arrayIntersection[i];
+                        [I, intersection[1 + i - j], C] = R;
+                        intersection[1 + i - j].resize(R.nbcoef);
+                        intersection[0][i - j] = intersection[0][i];
                     }
                 }
                 numberIntersection -= skip.n;
-                arrayIntersection.resize(numberIntersection);
-                if(fakeInterface != -111111 || overlap != -1) {
+                intersection[0].resize(numberIntersection);
+                if(fakeInterface != -111111 || overlap != 1) {
                     PhGlobal suppPartition = khi > 0.1;
                     AddLayers(globalName, suppPartition[], 1, phi[]);
                     borderName = trunc(globalName, phi > 0.001 && phi < 0.501, label = (abs(fakeInterface) + 1) * 100);
@@ -273,24 +273,25 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
 // -------Building the resctriction and communication MPI patterns------- 
 //==============================================================================
 
-macro buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, PkPart, defPart, initPart,  userPartitioning, bs)
+macro buildEdgePeriodic(Th, ThBorder, fakeInterface, s, overlap, intersection, D, P, comm, excluded, PkPart, defPart, initPart, labPeriodic, userPartitioning, bs)
 {
     real timing = mpiWtime();
-    if(mpisize > 1 && !excluded) {
+    fespace WhLocal(Th, P);
+    if(mpiSize(comm) > 1 && !excluded) {
+        meshN ThGlobal = Th;
         fespace PhGlobal(ThGlobal, P0);
         fespace VhGlobal(ThGlobal, P1);
         PhGlobal partGlobal;
-        if(userPartitioning.n != PhGlobal.ndof) {
+        if(userPartitioning.n != PhGlobal.ndof || labPeriodic.n > 0) {
             timing = mpiWtime();
-            meshN ThGlobalPeriodic;
             if(mpiRank(comm) == 0) {
                 if(verbosity > 0)
                     cout.scientific << " --- global mesh of " << ThGlobal.nt << " elements (prior to refinement) partitioned with " << Stringification(partitioner);
-                    
+
                     partitionerSeq(partGlobal[], ThGlobal, mpiSize(comm));
-                
+                    
             }
-                partitionerPar(partGlobal[], ThGlobal, comm, mpiSize(comm));               
+                partitionerPar(partGlobal[], ThGlobal, comm, mpiSize(comm));
             if(mpiRank(comm) == 0 && verbosity > 0)
                 cout.scientific << " (in " << mpiWtime() - timing << ")" << endl;
             timing = mpiWtime();
@@ -305,170 +306,48 @@ ENDIFMACRO
 IFMACRO(!removeZeros)
         bool removeZeros = trueRestrict && overlap == 1 && usedARGV("-remove_zeros") != -1;
 ENDIFMACRO
-        partition(Th, ThBorder, ThGlobal, PhGlobal, VhGlobal, partGlobal, mpiRank(comm), mpiSize(comm), s, overlap, D, Wh, P, arrayIntersection, restrictionIntersection, comm, fakeInterface, PkPart, defPart, initPart, bs)
+        partition(Th, ThBorder, ThGlobal, PhGlobal, VhGlobal, partGlobal, mpiRank(comm), mpiSize(comm), s, overlap, D, WhLocal, P, intersection, comm, fakeInterface, PkPart, defPart, initPart, bs)
     }
-    else if(mpisize == 1) {
-        if(s <= 1)
-            Th = ThGlobal;
-        else
-            Th = trunc(ThGlobal, 1, split = s);
-        D.resize(Wh.ndof);
+    else if(mpiSize(comm) == 1) {
+        if(s > 1)
+            Th = trunc(Th, 1, split = s);
+        D.resize(WhLocal.ndof);
         D = 1.0;
     }
     mpiBarrier(mpiCommWorld);
     if(verbosity > 0 && mpirank == 0) cout.scientific << " --- partition of unity built (in " << mpiWtime() - timing << ")" << endl;
 }// EOM
 
-/*
-macro build(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded) {
-    real[int] emptyRealArray(0);
-    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init,  emptyRealArray, 1)
-}// EOM
-*/
-macro PETScMPIBuild(Th, ThGlobal, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm) {
-    real[int] emptyRealArray(0);
-    meshN ThBorder;
-    int fakeInterface = -111111;
-    int overlap = 1;
-    bool excluded = false;
-    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, emptyRealArray, 1)
-}// EOM
-
-macro PETScMPIBuildWithPartitioning(Th, ThGlobal, part, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm) {
-    meshN ThBorder;
-    int fakeInterface = -111111;
-    int overlap = 1;
-    bool excluded = false;
-    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, P, def, init, part, 1)
-}// EOM
-
-
-macro PETScMPIBuildEdgeWithPartitioning(Th, ThGlobal, part, s, D, arrayIntersection, restrictionIntersection, Wh, P, comm, PkPart, defPart, initPart) {
-    meshN ThBorder;
-    int fakeInterface = -111111;
-    int overlap = 1;
-    bool excluded = false;
-    buildEdgePeriodic(Th, ThBorder, ThGlobal, fakeInterface, s, overlap, D, arrayIntersection, restrictionIntersection, Wh, P, comm, excluded, PkPart, defPart, initPart, part, 1)
-}// EOM
-
-
 //==============================================================================
-// -------Exporting Pvd from Vtu's------- 
+// ------- Build macro ------- 
 //==============================================================================
 
-macro exportpvd(name, mesh, sol, fforder, withsur, nameData, comm)
-savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, withsurfacemesh=withsur, order = fforder, dataname=nameData);
+macro PETScMPIBuild(Th, s, intersection, D, P, comm) {
+    int[int] emptyArray(0);
+    real[int] emptyRealArray(0);
+    meshN ThBorder;
+    int fakeInterface = -111111;
+    int overlap = 1;
+    bool excluded = false;
+    buildEdgePeriodic(Th, ThBorder, fakeInterface, s, overlap, intersection, D, P, comm, excluded, P, def, init, emptyArray, emptyRealArray, 1)
+}// EOM
 
-if(mpiRank(comm) == 0) {
-    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
-    pvd << "<?xml version=\"1.0\"?>\n";
-    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
-    pvd << "         byte_order=\"LittleEndian\"\n";
-    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
-    pvd << "  <Collection>\n";
-    for(int i = 0; i < mpiSize(comm); ++i) {
-        pvd << "    <DataSet timestep=\"0\" group=\"\" part=\"" << i << "\"\n";
-        pvd << "             file=\""; pvd << name << "_" << i << "_" << mpiSize(comm) << ".vtu\"/>\n";
-    }
-    pvd << "  </Collection>\n";
-    pvd << "</VTKFile>\n";}
-    system("mv "+name+"_"+mpisize+".pvd .");    
-}
-// EOM
+macro PETScMPIBuildWithPartitioning(Th, part, s, intersection, D, P, comm) {
+    meshN ThBorder;
+    int[int] emptyArray(0);
+    int fakeInterface = -111111;   
+    int overlap = 1;
+    bool excluded = false;        
+    buildEdgePeriodic(Th, ThBorder, fakeInterface, s, overlap, intersection, D, P, comm, excluded, P, def, init, emptyArray, part, 1)
+}// EOM
 
-macro exportpvd2(name, mesh, sol, sol1, fforder, withsur, nameData, comm)
-savevtk(name + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol1, withsurfacemesh=withsur, order = fforder, dataname=nameData);
 
-if(mpiRank(comm) == 0) {
-    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
-    pvd << "<?xml version=\"1.0\"?>\n";
-    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
-    pvd << "         byte_order=\"LittleEndian\"\n";
-    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
-    pvd << "  <Collection>\n";
-    for(int i = 0; i < mpiSize(comm); ++i) {
-        pvd << "    <DataSet timestep=\"0\" group=\"\" part=\"" << i << "\"\n";
-        pvd << "             file=\""; pvd << name << "_" << i << "_" << mpiSize(comm) << ".vtu\"/>\n";
-    }
-    pvd << "  </Collection>\n";
-    pvd << "</VTKFile>\n";}
-    system("mv "+name+"_"+mpisize+".pvd .");    
-}
-// EOM
+macro PETScMPIBuildEdgeWithPartitioning(Th, part, s, intersection, D, P, comm, PkPart, defPart, initPart) {
+    meshN ThBorder;
+    int fakeInterface = -111111; 
+    int overlap = 1;          
+    int[int] emptyArray(0);
+    bool excluded = false;            
+    buildEdgePeriodic(Th, ThBorder, fakeInterface, s, overlap, intersection, D, P, comm, excluded, PkPart, defPart, initPart, emptyArray, part, 1)
+}// EOM
 
-macro exportBegin(name, comm)
-system("mkdir -p VTUs");
-if(mpiRank(comm) == 0) {
-    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd");
-    pvd << "<?xml version=\"1.0\"?>\n";
-    pvd << "<VTKFile type=\"Collection\" version=\"0.1\"\n";
-    pvd << "         byte_order=\"LittleEndian\"\n";
-    pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
-    pvd << "  <Collection>\n";
-}
-// EOM
-
-macro exportTimeStep(name, mesh, sol, fforder, ts, comm)
-savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, order = fforder);
-
-if(mpiRank(comm) == 0) {
-    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
-    for(int ijk = 0; ijk < mpiSize(comm); ++ijk) {
-        pvd << "    <DataSet timestep=\"" + int(ts) + "\" group=\"\" part=\"" << ijk << "\"\n";
-        pvd << "             file=\""; pvd << name << "_" << int(ts) << "_" << ijk << "_" << mpiSize(comm) << ".vtu\"/>\n";
-    }
-}
-// EOM
-
-macro exportTimeStep2(name, mesh, sol, sol2, ts, comm)
-int[int] vtuorder=[1,1,1,1];
-savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol2, order = vtuorder);
-
-if(mpiRank(comm) == 0) {
-    ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
-    for(int ijk = 0; ijk < mpiSize(comm); ++ijk) {
-        pvd << "    <DataSet timestep=\"" + int(ts) + "\" group=\"\" part=\"" << ijk << "\"\n";
-        pvd << "             file=\""; pvd << name << "_" << int(ts) << "_" << ijk << "_" << mpiSize(comm) << ".vtu\"/>\n";
-    }
-}
-// EOM
-
-macro exportEnd(name, comm)
-if(mpiRank(comm) == 0) {
-    {ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
-    pvd << "  </Collection>\n";
-    pvd << "</VTKFile>\n";}
-    system("mv "+name+"_"+mpisize+".pvd .");    
-}
-// EOM
-    
-    
-macro plotMPI(Th, u, legend, Pk, def, K, d, w)
-    if(mpirank == 0) {
-        meshN ThCurrent = Th;
-        meshN[int] meshTab(mpisize);
-        fespace Xh(ThCurrent, Pk);
-        Xh<K>[int] def(uTab)(mpisize);
-        uTab[0][] = u;
-        meshTab[0] = Th;
-        mpiRequest[int] rq(mpisize - 1);
-        for(int i = 1; i < mpisize; ++i)
-            Irecv(processor(i, mpiCommWorld, rq[i - 1]), meshTab[i]);
-        for(int i = 1; i < mpisize; ++i)
-            mpiWaitAny(rq);
-        for(int i = 1; i < mpisize; ++i) {
-            ThCurrent = meshTab[i];
-            Irecv(processor(i, mpiCommWorld, rq[i - 1]), uTab[i][]);
-        }
-        for(int i = 1; i < mpisize; ++i)
-            mpiWaitAny(rq);
-        plot(uTab, wait = w, fill = 1, value = 1, cmm = legend);
-    }
-    else {
-        mpiRequest[int] rq(2);
-        Isend(processor(0, rq[0]), Th);
-        Isend(processor(0, rq[1]), u);
-        mpiWait(rq[0]);
-        mpiWait(rq[1]);
-    }// EOM
- 

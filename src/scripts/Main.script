@@ -48,16 +48,20 @@ if(Sequential)writemain
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 
-if(!Sequential)writemain
+if(!Sequential){writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"
 <<"  include \"ControlParameters.edp\"                  // Parameters & propeties  \n"
 <<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
-<<"  include \"../Plugins/DDmacro.edp\"                 // Domain decomp macros    \n"
+<<"  include \"../Plugins/DDmacro.edp\"                 // Domain decomp macros    \n";
+if(debug)writemain
+<<"  include \"../Plugins/DDplotMacro.edp\"             // Domain decomp plotting  \n";
+writemain
 <<"  include \"MeshAndFeSpace.edp\"                     // Define Mesh and FE space\n"
 <<"  include \"FemParameters.edp\"                      // Fem Parameters          \n"
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
+}
 
 if(plotAll)if(!dynamic)if(!nonlinear)writemain
 <<"  include \"PostProcessor.edp\"                      // Post Processing   	   \n";        

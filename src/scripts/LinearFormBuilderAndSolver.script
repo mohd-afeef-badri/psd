@@ -571,7 +571,6 @@ writesolver
 <<(timelog ? "	MPItimerbegin(\"PETSc assembly\",t0)\n" : " "  	    		   )
 <<"      Mat A						 		   	   \n"
 <<"		  ( ALoc			, 				   \n"
-<<"		    arrayIntersectionP		,				   \n"
 <<"                 restrictionIntersectionP	,				   \n"
 <<" 		    DP				,				   \n"
 <<" 		    bs = "+spc+" 						   \n"
@@ -593,7 +592,7 @@ if(debug)writesolver
 <<"										   \n"
 <<"//-----------------Debug glut plotting----------------------//  	  	   \n"
 <<"										   \n"
-<<"      plotMPI(Th, u[],\"displacement\", Pk, def, real, 2, 0)		 	   \n";
+<<"      plotMPI(Th, u[],\"displacement\", Pk, def, real, 2, 1)		 	   \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 

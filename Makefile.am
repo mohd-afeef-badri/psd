@@ -16,6 +16,9 @@ stamp-h1 \
 .swp 
 
 
+ff = $(FFINSTALLDIR)FreeFem++
+ffmpirun = $(FFINSTALLDIR)ff-mpirun
+
 
 install-exec-local:
 	@mkdir -p ${prefix}/PSD
@@ -32,6 +35,7 @@ install-exec-local:
 	@cp  ./src/plugins/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
 	@cp  ./src/plugins/MatrixPlotter.so ${prefix}/PSD/Plugins/MatrixPlotter.so
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD/Plugins/DDmacro.edp
+	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	
 	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD/Solver/SolverGenerator.edp
 	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.
@@ -40,14 +44,51 @@ install-exec-local:
 	@echo "  			  "
 	@echo " Finished installing							  "
 	@echo "==========================================================================="
-	@echo "  ->   It is advised to do a make check 					  "
+	@echo "  ->   It is advised to check the solver for that do:			  "
+	@echo "  			  						  "
+	@echo "  			  						  "			
+	@echo "  	make check FFINSTALLDIR=/your/FreeFem/Install/Directory/	  "
+	@echo "  			  						  "	
+	@echo "  			  						  "				
 	@echo "==========================================================================="
 	@echo "  									  "
 	
 check: 				
 	@echo "  			  "
-	@cp  ./data/Makefile1 ${prefix}/PSD/Solver/Makefile
-	@cd ${prefix}/PSD/Solver && make check && rm Makefile
+	cd ${prefix}/PSD/Solver &&  \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
+	${ff} Main.edp -glut $(FFINSTALLDIR)ffglut   -v 10 -ns -nw   && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
+	${ff} Main.edp -glut $(FFINSTALLDIR)ffglut  -v 10 -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff} SolverGenerator.edp    -v 10  -dimension 2 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	${ff} Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	${ff} Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 2 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff} SolverGenerator.edp    -v 10  -dimension 2 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
+	${ff} Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
+	${ff} Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 2 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	${ff}  SolverGenerator.edp    -v 10  -dimension 3 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
+	${ffmpirun} -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw
+	rm  -rf *.edp	
 	@echo "  			  "
 	@echo "==========================================================================="
 	@echo "  ->   Finshed checking the solver, you are all set			  "
