@@ -504,8 +504,8 @@ writesolver
 <<"  tr += dtr;									   \n"
 <<"}										   \n"
 <<"										   \n"
-<<"if(mpirank==0)							      	   \n"
-<<"cout << \" all operations ended, they \";		   			   \n"
+<<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
@@ -778,7 +778,7 @@ writesolver
 <<"										   \n"
 <<"}										   \n"
 <<"										   \n"
-<<"cout << \" all operations ended, they \";	   				   \n"
+<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
@@ -944,8 +944,8 @@ if(plotAll)writesolver
 writesolver
 <<"}										   \n"
 <<"										   \n"
-<<"if(mpirank==0)								   \n"
-<<"cout << \" all operations ended, they \";	   				   \n"
+<<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
