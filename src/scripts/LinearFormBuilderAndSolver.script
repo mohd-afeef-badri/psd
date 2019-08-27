@@ -136,8 +136,8 @@ writesolver
 <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : "" 	       	  	    )
 <<"    uold[]    = uold[]-u[]                         ;				   \n"
 <<"    phiold[]  = phiold[]-phi[]                     ;				   \n"
-<<"    real err1 = sqrt( intN(Th,qforder=3) ( uold^2   )  )     ;		   \n"
-<<"    real err2 = sqrt( intN(Th,qforder=3) ( phiold^2 )  )     ;		   \n"
+<<"    real err1 = sqrt( intN(Th,qforder=2) ( uold^2   )  )     ;		   \n"
+<<"    real err2 = sqrt( intN(Th,qforder=2) ( phiold^2 )  )     ;		   \n"
 <<(timelog ? "    timerend  (\"NL error checking\",t0)\n" : "" 	       	  	    )
 <<"										   \n"
 <<"    //--------------------Solution update-------------------------//		   \n"
@@ -157,7 +157,7 @@ if(pipegnu){writesolver
 <<"										   \n"
 <<(timelog ? "      timerbegin(\"force calculation\",t0)\n" : ""      	  	    )
 <<"      real forcetot  = 0.;							   \n"
-<<"      forcetot = intN1(Th,qforder=3,2)(lambda*divergence(u)+2.*mu*dy(u1));	   \n"
+<<"      forcetot = intN1(Th,qforder=2,2)(lambda*divergence(u)+2.*mu*dy(u1));	   \n"
 /************************OLD METHOD*************************************************   
 <<"      And = elastNoDirc(Vh,Vh);						   \n"
 <<"      fr[] = And*u[];							   \n"
@@ -317,8 +317,8 @@ writesolver
 <<"    uold[]   = uold[]-u[]		;					   \n"
 <<"    phiold[] = phiold[]-phi[]	; 					   \n"
 <<"    real err1Gather,err2Gather;						   \n"
-<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2   )  );		   \n"
-<<"    real err2Loc=sqrt( intN(Th,qforder=3) ( DZspc*(phiold)^2 )  );		   \n"
+<<"    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2   )  );		   \n"
+<<"    real err2Loc=sqrt( intN(Th,qforder=2) ( DZspc*(phiold)^2 )  );		   \n"
 <<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
 <<"    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);			   \n"
 <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : "" 	       	    )
@@ -342,7 +342,7 @@ if(vectorial){writesolver
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : "" 	       	    )
 <<"    uold[]   = uold[]-u[]                                          ;		   \n"
 <<"    real err1Gather                                                ;		   \n"
-<<"    real err1Loc=sqrt( intN(Th,qforder=3) ( DPspc*(uold)^2 )  )    ;		   \n"
+<<"    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;		   \n"
 <<"    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;		   \n"
 <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : "" 	       	    )
 <<"										   \n"
@@ -393,7 +393,7 @@ if(pipegnu){writesolver
 <<"										   \n"
 <<(timelog ? "      MPItimerbegin(\"force calculation\",t0)\n" : ""           	    )
 <<"      real forcetot  = 0., forcetotGath  = 0. ;				   \n"
-<<"      forcetot=intN1(Th,qforder=3,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));\n"
+<<"      forcetot=intN1(Th,qforder=2,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));\n"
 <<"      mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);		   \n"
 <<"      if(mpirank==0){							   \n"
 <<"        ofstream ff(\"force.data\",append);					   \n"
@@ -727,10 +727,10 @@ if(pipegnu){writesolver
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : " "     		   )
-<<"  Ek =intN(Th,qforder=3)(0.5*(vold*vold+vold1*vold1));			   \n"
-<<"  El =intN(Th,qforder=3)(0.5*(lambda*divergence(uold)*divergence(uold) 	   \n"
+<<"  Ek =intN(Th,qforder=2)(0.5*(vold*vold+vold1*vold1));			   \n"
+<<"  El =intN(Th,qforder=2)(0.5*(lambda*divergence(uold)*divergence(uold) 	   \n"
 <<"                         + 2. * mu * epsilon(uold)'*epsilon(uold)) );	   \n"
-<<"  Ec += dt*intN(Th,qforder=3)(						   \n"
+<<"  Ec += dt*intN(Th,qforder=2)(						   \n"
 <<"                           (etam*rho) *def(vold)'*def(vold)			   \n"
 <<"                         + (etak*lambda)*(divergence(vold)*divergence(vold))	   \n"
 <<"                         + (etak* 2.*mu)*(epsilon(vold)'*epsilon(vold)) );	   \n"
@@ -887,10 +887,10 @@ if(pipegnu){writesolver
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"Energy calculations\",t0)\n" : " "      	   )
-<<"  E[0] =intN(Th,qforder=3)( 0.5*DPspc*(vold*vold+vold1*vold1));		   \n"
-<<"  E[1] =intN(Th,qforder=3)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
+<<"  E[0] =intN(Th,qforder=2)( 0.5*DPspc*(vold*vold+vold1*vold1));		   \n"
+<<"  E[1] =intN(Th,qforder=2)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
 <<"                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );	   \n"
-<<"  E[2] += dt*intN(Th,qforder=3)( DPspc*(					   \n"
+<<"  E[2] += dt*intN(Th,qforder=2)( DPspc*(					   \n"
 <<"		                  (etam*rho) *def(vold)'*def(vold)		   \n"
 <<"		               +  (etak*lambda)*(divergence(vold)*divergence(vold))\n"
 <<"		               +  (etak* 2.*mu)*(epsilon(vold)'*epsilon(vold))	   \n"
