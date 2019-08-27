@@ -67,8 +67,11 @@
 
   int spc = getARGV("-dimension", 2);
   int lag = getARGV("-lagrange" , 1); 
-  
+ 
+  string Solver=getARGV("-solver", "cg"); 
   string Partitioner=getARGV("-partitioner", "parmetis");
+  string Preconditioner=getARGV("-preconditioner", "jacobi");
+  string SubPreconditioner=getARGV("-subpreconditioner", "ilu");    
 
   bool help         =  usedARGV("-help"        ) != -1;
   bool debug        =  usedARGV("-debug"       ) != -1;
