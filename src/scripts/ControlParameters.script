@@ -87,15 +87,15 @@ if(quasistatic)writemeshParameters
 <<"// ------- Solver parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  real tol      = 1.e-5 ; 		// tolerance of the NR procedure	   \n"
-<<"  int npas      = 2000  ,  		// number of pseudo-time steps		   \n"
-<<"      iterMaxNR = 10    ; 		// maximum # of iterations for the NR loop \n"
+<<"  real tol      = 1.e-5 ; 		// Tolerance of the NR procedure	   \n"
+<<"  int npas      = 2000  ,  		// # of pseudo-time steps		   \n"
+<<"      iterMaxNR = 10    ; 		// Max # of iterations for the NR loop     \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Loading parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"  real Duimp = 2.e-7, 		// Imposed displacement variation	   \n"
-<<"       duimp        ;		//  Dummy Imposed displacement variation   \n";
+<<"       duimp        ;		// Dummy Imposed displacement variation    \n";
 
 
 if(nonlinear){writemeshParameters
@@ -149,7 +149,7 @@ if(dynamic){writemeshParameters
 }
 
 
-if(dirichletbc){writemeshParameters
+if(dirichletbc)if(!quasistatic){writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Dirichlet boundary-condition parameters-------			   \n"
