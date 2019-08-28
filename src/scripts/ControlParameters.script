@@ -73,13 +73,13 @@ if(quasistatic)writemeshParameters
 <<"         ;	   								   \n"
 <<"										   \n"
 <<"{										   \n"
-<<"  real E  = 100.e6  ,			// Modulus of Elasticity - [Pa]	   \n"
-<<"       nu = 0.2     ;			// Poisson ratio - [-]		   \n"
+<<"  real E  = 100.e6  ,              // Modulus of Elasticity - [Pa]	   	   \n"
+<<"       nu = 0.2     ;              // Poisson ratio - [-]		   	   \n"
 <<"	 									   \n"
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
 <<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
 <<"	 									   \n"
-<<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
+<<(bodyforce ? "  f2 = 8.e3*(-9.81);              // Rho*g" : ""	   	   )
 <<" 										   \n"
 <<"}	 									   \n"
 <<"										   \n"
@@ -87,15 +87,16 @@ if(quasistatic)writemeshParameters
 <<"// ------- Solver parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  real tol      = 1.e-5 ; 		// Tolerance of the NR procedure	   \n"
-<<"  int npas      = 2000  ,  		// # of pseudo-time steps		   \n"
-<<"      iterMaxNR = 10    ; 		// Max # of iterations for the NR loop     \n"
+<<"  real tol      = 1.e-5 ;          // Tolerance of the NR procedure	   	   \n"
+<<"										   \n"
+<<"  int npas      = 2000  ,          // # of pseudo-time steps		   	   \n"
+<<"      iterMaxNR = 10    ;          // Max # of iterations for the NR loop       \n"
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Loading parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"  real Duimp = 2.e-7, 		// Imposed displacement variation	   \n"
-<<"       duimp        ;		// Dummy Imposed displacement variation    \n";
+<<"  real Duimp = 2.e-7,              // Imposed displacement variation		   \n"
+<<"       duimp        ;              // Dummy Imposed displacement variation      \n";
 
 
 if(nonlinear){writemeshParameters
