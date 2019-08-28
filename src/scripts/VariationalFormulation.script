@@ -16,7 +16,7 @@ writevarfmatsolve
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(!nonlinear)if(!dynamic){writevarfmatsolve
+if(!nonlinear)if(!dynamic)if(!quasistatic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation linear-------				   \n"
@@ -269,5 +269,32 @@ if(dynamic){writevarfmatsolve
 <<"										   \n";
 
 }  //-- [if loop terminator] dynamic Sequential ended --//
+
+if(quasistatic){writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation linear-------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"varf varIncr(def(du), def(v))						   \n"
+<<"	= intN(Th,qforder=3)(							   \n"
+<<"			(1-damage) * stress(du,lambdafield,mufield)' * epsilon(v)  \n"
+<<"			    )							   \n"
+<<"     - intN(Th,qforder=2)( 					                   \n"
+<<"                     (1-damage) * stress(u,lambdafield,mufield)' * epsilon(v)   \n"
+<<"			    )							   \n";
+
+if(bodyforce)writevarfmatsolve
+<<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
+
+if(tractionbc)writevarfmatsolve
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+
+if(dirichletbc)writevarfmatsolve
+<<"	+ on(4, du=duimp)  							   \n"
+<<"    	+ on(2, du=0    )   							   \n"
+<<"	+ on(5, du1=0   ) ;   							   \n";
+
+}  //-- [if loop terminator] dquasistatic ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//

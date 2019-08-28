@@ -147,4 +147,25 @@ if(!supercomp)writemeshParameters
 
 }
 
+if(pipegnu)if(quasistatic){writemeshParameters 
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot pipeing parameters ------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  system(\"rm output.data\");						   \n"
+<<"										   \n";
+
+if(!supercomp)writemeshParameters
+<<"  pstream pgnuplot(\"gnuplot -p\");						   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  pgnuplot 									   \n"
+<<"  <<\" set title  \\\" Force-Displacement-Curve\\\";		\\n\"              \n"
+<<"  <<\" set termoption font \\\"Arial-Bold,20\\\";		\\n\"		   \n"
+<<"  <<\" set xlabel \\\" Displacement \\\";			\\n\"	   	   \n"
+<<"  <<\" set ylabel \\\" Force (N)\\\";			\\n\"  	  	   \n"
+<<"  <<\" set grid x y;    set key left;			\\n\"; 	   	   \n";
+}
+
 } //-- [ostream terminator]  parameters.edp closed --//

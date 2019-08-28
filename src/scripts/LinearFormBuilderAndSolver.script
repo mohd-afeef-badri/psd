@@ -514,7 +514,7 @@ writesolver
  
 }  //-- [if loop terminator] nonlinear ended --//
 
-if(!nonlinear){
+if(!nonlinear)if(!quasistatic){
 
 if(!Sequential)if(!dynamic){writesolver      
 <<"										   \n"	
@@ -952,6 +952,165 @@ writesolver
 
 }  //-- [if loop terminator] !Sequential Dynamic ended --//
 }  //-- [if loop terminator] !nonlinear ended --//
+
+
+
+if(quasistatic){writesolver
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  ------- Variable initilization -------		  			   \n"
+<<"//==============================================================================\n"	   
+<<"										   \n"
+<<"      def(u)        = init(0.) ;						   \n"
+<<"      intVar[]      = kappa0 ;		   				   \n"
+<<"      mufield[]     = mu     ;    	   	 				   \n"
+<<"      lambdafield[] = lambda ;        					   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  ------- Quasistatic loop for linear assembly and solving -------		   \n"
+<<"//==============================================================================\n"	
+<<"										   \n"
+<<"  for (int n = 0; n < npas; n++){ 		// Time loop			   \n"
+<<"										   \n"
+<<"    if(mpirank == 0){							   \n"
+<<"      cout << \"==============================\" << endl ;			   \n"
+<<"      cout << \"Time step =\" << n << endl ;				 	   \n"
+<<"    }									   \n"
+<<"										   \n"
+<<"  //----------------Variable initilization------------------//		   \n"
+<<"										   \n"
+<<"    real err     = 100.     ;						   \n"
+<<"    def(Du)      = init(0.) ;						   \n"
+<<"    int i        = 0        ;						   \n"
+<<"										   \n"
+<<"  //---------------Nonlinear Newton-Rapsons loop------------------//		   \n"
+<<"										   \n"
+<<"   while(err >= tol & i<= iterMaxNR){         			           \n"
+<<"										   \n"
+<<"    //----------Adjust Dirichlet boundary conditions--------------//		   \n"
+<<"										   \n"
+<<"     if (n==0) duimp = 0. ; else duimp = Duimp ;				   \n"
+<<"     if (n>=0 & i>=1) duimp = 0.;						   \n"
+<<"										   \n"
+<<"    //----------------Assembly for bilinear----------------------//	 	   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""         	    )
+<<"     ALoc = varIncr(Vh,Vh);							   \n"
+<<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""          	    )
+<<"										   \n"
+<<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
+<<"     changeOperator(A, ALoc);						   \n"
+<<"     set(A,sparams =\"  -ksp_rtol 1e-15 \");			// Solver setup	   \n"
+<<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
+<<"										   \n"
+<<"    //--------------------Assembly for linear---------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""                  )
+<<"     b = varIncr(0,Vh);							   \n"
+<<(timelog ? "    MPItimerend  (\"RHS assembly for U\",t0)\n" : ""        	    )
+<<"										   \n"
+<<"    //-------------Linear system solving phase-------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "         	  	    )
+<<"     du[] = A^-1*b;								   \n"
+<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "           	  	    )
+<<"										   \n"
+<<"    //-------------Intermediate solution update-------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : " "      	  	    )
+<<"     Du[]  += du[]  ; 							   \n"
+<<"     Du1[] += du1[] ; 							   \n"
+<<"     u[]   += du[]  ; 							   \n"
+<<"     u1[]  += du1[] ; 							   \n"
+<<"										   \n"
+<<"     e11 = epsilon(u)[0] ;							   \n"
+<<"     e22 = epsilon(u)[1] ;							   \n"
+<<"     e12 = epsilon(u)[2]/sqrt(2.) ;						   \n"
+<<"										   \n"
+<<"     ep1=0.5*(e11+e22+sqrt((e11-e22)^2+4*e12^2));				   \n"
+<<"     ep2=0.5*(e11+e22-sqrt((e11-e22)^2+4*e12^2));				   \n"
+<<"										   \n"
+<<"     eqStrain = sqrt((max(0,ep1))^2 + (max(0,ep2))^2)  ;  // Mazars Eq strain   \n"
+<<"										   \n"
+<<"     intVar = (intVar < eqStrain ? eqStrain : intVar);			   \n"
+<<"										   \n"
+<<"     damage = 1-(kappa0/intVar)*exp(-(intVar-kappa0)/(kappac-kappa0));	   \n"
+<<"     damage = floor(100000.*damage)/100000. ;				   \n"
+<<(timelog ? "    MPItimerend  (\"solution update\",t0)\n" : " "      	  	    )
+<<"										   \n"
+<<"    //------------------Error calculation------------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : "" 	       	    )
+<<"     b = varIncr(0,Vh) ;							   \n"
+<<"     b = b .* DP;             // *************check**********		   \n"
+<<"										   \n"
+<<"     {									   \n"
+<<"     real err1Loc, err1Gather ;						   \n"
+<<"     err1Loc = b.l2 ;							   \n"
+<<"     err1Loc = err1Loc*err1Loc ;						   \n"
+<<"     mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
+<<"	err = sqrt(err1Gather) ;						   \n"
+<<"     }									   \n"
+<<"										   \n"
+<<"     if(mpirank == 0) 							   \n"
+<<"     cout << \"--- iteration =\" << i << \", NR error =\" << err << endl ;	   \n"
+<<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : "" 	       	    )
+<<"										   \n"
+<<"     i++ ;									   \n"
+<<"  }										   \n"
+<<"										   \n"
+<<"										   \n";
+
+
+if(pipegnu){writesolver
+<<"										   \n"
+<<"										   \n"
+<<"  //-------------------Force calculation-----------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "      MPItimerbegin(\"force calculation\",t0)\n" : ""           	    )
+<<"  real ForceXloc , ForceXGather ;						   \n"
+<<"  ForceXloc = intN1(Th,4,qforder=2)(                                            \n"
+<<"                          DPspc*(1-damage)* stress(u,lambdafield,mufield)[0]    \n"
+<<"				     );						   \n"
+<<"										   \n"
+<<"  mpiAllReduce(ForceXloc,ForceXGather,mpiCommWorld,mpiSUM);			   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  if(mpirank==0){								   \n"
+<<"   ofstream outputFile(\"output.data\", append);				   \n"
+<<"   outputFile << n*Duimp << \" \" << ForceXGather << endl;			   \n"
+<<"										   \n"
+<<" 										   \n";
+
+if(!supercomp)writesolver
+<<"										   \n"
+<<"  //---------------Gnuplot pipeping-------------//				   \n"
+<<"										   \n"
+<<"     pgnuplot <<\"plot\"		 				   	   \n"
+<<"     <<\"\\\"output.data\\\"\" 	   	           			   \n"
+<<"     <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\" \" 	   		   \n"
+<<"     <<\"\\n\"; 	   	   						   \n" 
+<<"     flush(pgnuplot);					   	   	   \n";
+
+writesolver
+<<" }										   \n"
+<<(timelog ? "      MPItimerend  (\"force calculation\",t0)\n" : ""           	    );
+
+}  //-- [if loop terminator]  pipegnu ended --//
+
+writesolver
+<<"}										   \n"
+<<"										   \n"
+<<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
+<<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "	   	        	    )
+<<"										   \n"
+<<"//-------------------------------THE END------------------------------//	   \n";
+}
+
+
 
 if(!plotAll)if(!nonlinear)if(!dynamic)if(!Sequential)writesolver
 <<"										   \n"

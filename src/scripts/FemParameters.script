@@ -177,10 +177,6 @@ if(quasistatic){writFemParameters
 <<"      eqStrain    ,    //  Equivalent strain	 				   \n"
 <<"      lambdafield ,    //  lambda						   \n"
 <<"      mufield     ;    //  mu	 					   \n"
-<<"										   \n"
-<<"      intVar[]      = kappa0 ;		   				   \n"
-<<"      mufield[]     = mu     ;    	   	 				   \n"
-<<"      lambdafield[] = lambda ;        					   \n"
 <<"										   \n";
 
 if(!Sequential)writFemParameters

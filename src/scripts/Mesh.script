@@ -69,6 +69,9 @@ if(nonlinear)if(energydecomp)writemeshPartitioning
 if(nonlinear)if(vectorial)if(debug || plotAll)writemeshPartitioning
 <<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space	   \n";
 
+if(quasistatic)writemeshPartitioning
+<<" fespace Wh0    ( Th , P0 );			// stress/strain/damage FE space   \n";
+
 writemeshPartitioning
 <<"										   \n"
 <<"//==============================================================================\n"
