@@ -20,7 +20,7 @@ writemeshParameters
 <<"//==============================================================================\n";
 
 
-if(!nonlinear)if(!dynamic)writemeshParameters
+if(!nonlinear)if(!dynamic)if(!quasistatic)writemeshParameters
 <<"										   \n"
 <<"  string ThName = \"../Meshes/"+spc+"D/bar\";  // Mesh  name 	   	   \n";
 
@@ -32,8 +32,11 @@ if(dynamic)writemeshParameters
 <<"										   \n"
 <<"  string ThName = \"../Meshes/"+spc+"D/bar-dynamic\"; // Mesh  name  	   \n";
 
+if(quasistatic)writemeshParameters
+<<"										   \n"
+<<"  string ThName = \"../Meshes/"+spc+"D/square\"; // Mesh  name  	  	   \n";
 
-if(!nonlinear)if(!dynamic)writemeshParameters
+if(!nonlinear)if(!dynamic)if(!quasistatic)writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
@@ -55,6 +58,44 @@ if(!nonlinear)if(!dynamic)writemeshParameters
 <<" 										   \n"
 <<"}	 									   \n";
 
+
+if(quasistatic)writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Material parameters ------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  real    mu                        // Lame parameter			   \n"
+<<"         ,lambda                    // Lame parameter			   \n"
+<<"         ,kappa0 = 1.e-4            // Damage initiation threshold		   \n"
+<<"         ,kappac = 1.e-3            // Critical strain level			   \n"
+<<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
+<<"         ;	   								   \n"
+<<"										   \n"
+<<"{										   \n"
+<<"  real E  = 100.e6  ,			// Modulus of Elasticity - [Pa]	   \n"
+<<"       nu = 0.2     ;			// Poisson ratio - [-]		   \n"
+<<"	 									   \n"
+<<"  mu     = E/(2.*(1.+nu))            ;					   \n"
+<<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
+<<"	 									   \n"
+<<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
+<<" 										   \n"
+<<"}	 									   \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Solver parameters ------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  real tol      = 1.e-5 ; 		// tolerance of the NR procedure	   \n"
+<<"  int npas      = 2000  ,  		// number of pseudo-time steps		   \n"
+<<"      iterMaxNR = 10    ; 		// maximum # of iterations for the NR loop \n"
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Loading parameters ------- 		 			   \n"
+<<"//==============================================================================\n"
+<<"  real Duimp = 2.e-7, 		// Imposed displacement variation	   \n"
+<<"       duimp        ;		//  Dummy Imposed displacement variation   \n";
 
 
 if(nonlinear){writemeshParameters
