@@ -85,7 +85,8 @@
   bool nonlinear    =  usedARGV("-nonlinear"   ) != -1; 
   bool supercomp    =  usedARGV("-supercomp"   ) != -1;       
   bool tractionbc   =  usedARGV("-tractionbc"  ) != -1; 
-  bool Sequential   =  usedARGV("-sequential"  ) != -1;      
+  bool Sequential   =  usedARGV("-sequential"  ) != -1;
+  bool quasistatic  =  usedARGV("-quasistatic" ) != -1;          
   bool dirichletbc  =  usedARGV("-dirichletbc" ) !=  1;
   bool energydecomp =  usedARGV("-energydecomp") != -1;  
   
