@@ -142,9 +142,9 @@ if(quasistatic)writemacros
 <<"//-----------------------Stess calculation macro------------------------------//\n"
 <<"										   \n"
 <<"  macro stress(i,lambdaVal,muVal)					 	   \n"
-<<"     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2*muVal*epsilon(i)[0],		   \n"
-<<"     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2*muVal*epsilon(i)[1] ,		   \n"
-<<"     2*muVal*epsilon(i)[2]]// 						   \n"
+<<"     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[0],	   \n"
+<<"     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1] ,	   \n"
+<<"     2.*muVal*epsilon(i)[2]]// 						   \n"
 <<"										   \n";
   
 if(Sequential)writemacros

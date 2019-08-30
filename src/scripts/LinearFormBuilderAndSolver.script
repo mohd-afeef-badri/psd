@@ -962,7 +962,7 @@ if(quasistatic){writesolver
 <<"//==============================================================================\n"	   
 <<"										   \n"
 <<"      duimp         = 0.       ;						   \n"
-<<"      def(u)        = init(0.) ;						   \n"
+//<<"    def(u)        = init(0.) ;						   \n"
 <<"      intVar[]      = kappa0   ;		   				   \n"
 <<"      mufield[]     = mu       ;    	   	 				   \n"
 <<"      lambdafield[] = lambda   ;        					   \n"
