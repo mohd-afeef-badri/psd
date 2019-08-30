@@ -961,6 +961,7 @@ if(quasistatic){writesolver
 <<"//  ------- Variable initilization -------		  			   \n"
 <<"//==============================================================================\n"	   
 <<"										   \n"
+<<"      duimp         = 0.       ;						   \n"
 <<"      def(u)        = init(0.) ;						   \n"
 <<"      intVar[]      = kappa0   ;		   				   \n"
 <<"      mufield[]     = mu       ;    	   	 				   \n"
@@ -988,8 +989,7 @@ if(quasistatic){writesolver
 <<"										   \n"
 <<"    //----------Adjust Dirichlet boundary conditions--------------//		   \n"
 <<"										   \n"
-<<"     if (n==0) duimp = 0. ; else duimp = Duimp ;				   \n"
-<<"     if (n>=0 & i>=1) duimp = 0.;						   \n"
+<<"     if (i>=1) duimp = 0.;							   \n"
 <<"										   \n"
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
@@ -1043,13 +1043,11 @@ if(quasistatic){writesolver
 <<"     b = varIncr(0,Vh) ;							   \n"
 <<"     b = b .* DP;             // *************check**********		   \n"
 <<"										   \n"
-<<"     {									   \n"
 <<"     real err1Loc, err1Gather ;						   \n"
 <<"     err1Loc = b.l2 ;							   \n"
 <<"     err1Loc = err1Loc*err1Loc ;						   \n"
 <<"     mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
-<<"	err = sqrt(err1Gather) ;						   \n"
-<<"     }									   \n"
+<<"     err = sqrt(err1Gather) ;						   \n"
 <<"										   \n"
 <<"     if(mpirank == 0) 							   \n"
 <<"     cout << \"--- iteration =\" << i << \", NR error =\" << err << endl ;	   \n"
@@ -1058,42 +1056,34 @@ if(quasistatic){writesolver
 <<"     i++ ;									   \n"
 <<"  }										   \n"
 <<"										   \n"
-<<"										   \n";
+<<"  duimp = Duimp ;								   \n";
 
 
 if(pipegnu){writesolver
 <<"										   \n"
-<<"										   \n"
 <<"  //-------------------Force calculation-----------------------//		   \n"
 <<"										   \n"
-<<(timelog ? "      MPItimerbegin(\"force calculation\",t0)\n" : ""           	    )
-<<"  real ForceXloc , ForceXGather ;						   \n"
-<<"  ForceXloc = intN1(Th,4,qforder=2)(                                            \n"
-<<"                          DPspc*(1-damage)* stress(u,lambdafield,mufield)[0]    \n"
-<<"				     );						   \n"
+<<(timelog ? "  MPItimerbegin(\"force calculation\",t0)\n" : ""           	    )
+<<"   real ForceXloc , ForceXGather ;						   \n"
+<<"   ForceXloc = intN1(Th,4,qforder=2)                                            \n"
+<<"                          (DPspc*(1-damage)*stress(u,lambdafield,mufield)[0]);  \n"
+<<"   mpiAllReduce(ForceXloc,ForceXGather,mpiCommWorld,mpiSUM);			   \n"
 <<"										   \n"
-<<"  mpiAllReduce(ForceXloc,ForceXGather,mpiCommWorld,mpiSUM);			   \n"
-<<"										   \n"
-<<"										   \n"
-<<"  if(mpirank==0){								   \n"
-<<"   ofstream outputFile(\"output.data\", append);				   \n"
-<<"   outputFile << n*Duimp << \" \" << ForceXGather << endl;			   \n"
-<<"										   \n"
-<<" 										   \n";
+<<"   if(mpirank==0){								   \n"
+<<"     ofstream outputFile(\"output.data\", append);				   \n"
+<<"     outputFile << n*Duimp << \" \" << ForceXGather << endl;			   \n";
 
 if(!supercomp)writesolver
-<<"										   \n"
-<<"  //---------------Gnuplot pipeping-------------//				   \n"
-<<"										   \n"
-<<"     pgnuplot <<\"plot\"		 				   	   \n"
-<<"     <<\"\\\"output.data\\\"\" 	   	           			   \n"
-<<"     <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\" \" 	   		   \n"
-<<"     <<\"\\n\"; 	   	   						   \n" 
+<<"     pgnuplot 								   \n"
+<<"      <<\"plot\"		 				   		   \n"
+<<"      <<\"\\\"output.data\\\"\" 	   	           			   \n"
+<<"      <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 notitle\" 	  			   \n"
+<<"      <<\"\\n\"; 	   	   						   \n" 
 <<"     flush(pgnuplot);					   	   	   \n";
 
 writesolver
-<<" }										   \n"
-<<(timelog ? "      MPItimerend  (\"force calculation\",t0)\n" : ""           	    );
+<<"   }										   \n"
+<<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""           	    );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
