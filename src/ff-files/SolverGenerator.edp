@@ -75,6 +75,7 @@
 
   bool help         =  usedARGV("-help"        ) != -1;
   bool debug        =  usedARGV("-debug"       ) != -1;
+  bool useGFP       =  usedARGV("-useGFP"      ) != -1;  
   bool plotAll      =  usedARGV("-plot"        ) != -1;
   bool dynamic      =  usedARGV("-dynamic"     ) != -1;    
   bool pipegnu      =  usedARGV("-pipegnu"     ) != -1;  

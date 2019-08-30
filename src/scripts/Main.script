@@ -28,6 +28,9 @@ if(!Sequential)writemain
 if(plotAll)writemain
 <<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
 
+if(useGFP)writemain
+<<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
+
 if(nonlinear)if(energydecomp)writemain
 <<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
 

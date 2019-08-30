@@ -1036,7 +1036,12 @@ if(quasistatic){writesolver
 <<"     e11 = epsilon(u)[0] ;							   \n"
 <<"     e22 = epsilon(u)[1] ;							   \n"
 <<"     e12 = epsilon(u)[2]/sqrt(2.) ;						   \n"
-<<"										   \n"
+<<"										   \n";
+
+if(useGFP){writesolver
+<<"     GFPMazarsDamageUpdate(e11[],e22[],e12[],intVar[],damage[],kappa0,kappac);  \n";
+}
+else{ writesolver
 <<"     ep1=0.5*(e11+e22+sqrt((e11-e22)^2+4*e12^2));				   \n"
 <<"     ep2=0.5*(e11+e22-sqrt((e11-e22)^2+4*e12^2));				   \n"
 <<"										   \n"
@@ -1045,7 +1050,11 @@ if(quasistatic){writesolver
 <<"     intVar = (intVar < eqStrain ? eqStrain : intVar);			   \n"
 <<"										   \n"
 <<"     damage = 1-(kappa0/intVar)*exp(-(intVar-kappa0)/(kappac-kappa0));	   \n"
-<<"     damage = floor(100000.*damage)/100000. ;				   \n"
+<<"     damage = floor(100000.*damage)/100000. ;				   \n";
+}
+
+writesolver
+<<"										   \n"
 <<(timelog ? "    MPItimerend  (\"solution update\",t0)\n" : " "      	  	    )
 <<"										   \n"
 <<"  }										   \n"
