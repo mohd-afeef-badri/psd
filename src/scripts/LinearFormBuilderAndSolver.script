@@ -971,12 +971,10 @@ if(quasistatic){writesolver
 <<"//  ------- Quasistatic loop for linear assembly and solving -------		   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"  for (int n = 0; n < npas; n++){ 		// Time loop			   \n"
+<<"  for (int n = 0; n < npas; n++){ 						   \n"
 <<"										   \n"
-<<"    if(mpirank == 0){							   \n"
-<<"      cout << \"==============================\" << endl ;			   \n"
-<<"      cout << \"Time step =\" << n << endl ;				 	   \n"
-<<"    }									   \n"
+<<"    if(mpirank == 0)							           \n"
+<<"      cout <<\"============ \"<<\"Time step \"<< n <<\" ============ \\n\";	   \n"
 <<"										   \n"
 <<"  //----------------Variable initilization------------------//		   \n"
 <<"										   \n"
@@ -1001,7 +999,7 @@ if(quasistatic){writesolver
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
 <<"     changeOperator(A, ALoc);						   \n"
-<<"     set(A,sparams =\"  -ksp_rtol 1e-15 \");			// Solver setup	   \n"
+<<"     set(A,sparams =\"  -ksp_rtol 1e-15 \");					   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
 <<"										   \n"
 <<"    //--------------------Assembly for linear---------------------//		   \n"
@@ -1012,13 +1010,13 @@ if(quasistatic){writesolver
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "         	  	    )
+<<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : ""         	  	    )
 <<"     du[] = A^-1*b;								   \n"
-<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "           	  	    )
+<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : ""           	  	    )
 <<"										   \n"
 <<"    //-------------Intermediate solution update-------------------//		   \n"
 <<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : " "      	  	    )
+<<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""      	  	    )
 <<"     u[]   += du[]  ; 							   \n"
 <<"     u1[]  += du1[] ; 							   \n"
 <<"										   \n"
