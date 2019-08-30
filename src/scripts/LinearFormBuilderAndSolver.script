@@ -976,18 +976,37 @@ if(quasistatic){writesolver
 <<"    if(mpirank == 0)							           \n"
 <<"      cout <<\"============ \"<<\"Time step \"<< n <<\" ============ \\n\";	   \n"
 <<"										   \n"
-<<"  //----------------Variable initilization------------------//		   \n"
-<<"										   \n"
-<<"    real err     = 100.     ;						   \n"
-<<"    int i        = 0        ;						   \n"
-<<"										   \n"
 <<"  //---------------Nonlinear Newton-Rapsons loop------------------//		   \n"
 <<"										   \n"
-<<"   while(err >= tol & i<= iterMaxNR){         			           \n"
+<<"   for (int i = 0; i <= iterMaxNR; i++){         			           \n"
 <<"										   \n"
 <<"    //----------Adjust Dirichlet boundary conditions--------------//		   \n"
 <<"										   \n"
 <<"     if (i>=1) duimp = 0.;							   \n"
+<<"										   \n"
+<<"    //--------------------Assembly for linear---------------------//		   \n"
+<<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""                  )
+<<"     b = varIncr(0,Vh);							   \n"
+<<(timelog ? "    MPItimerend  (\"RHS assembly for U\",t0)\n" : ""        	    )
+<<"										   \n"
+<<"    //------------------Error calculation------------------------//		   \n"
+<<"										   \n"
+<<"     if(i>0){							           \n"
+<<(timelog ? "       MPItimerbegin(\"NL error checking\",t0)\n" : "" 	       	    )
+<<"        b = b .* DP					 ;			   \n"
+<<"        real errLoc, err				 ;			   \n"
+<<"        errLoc = b.l2 				 ;			   \n"
+<<"        errLoc = errLoc*errLoc 			 ;			   \n"
+<<"        mpiAllReduce(errLoc,err,mpiCommWorld,mpiSUM)  ;			   \n"
+<<"        err = sqrt(err) 				 ;			   \n"
+<<"										   \n"
+<<"        if(mpirank == 0) 							   \n"
+<<"        cout << \"    iteration =\" << i << \", NR error =\" << err << endl ;   \n"
+<<(timelog ? "       MPItimerend (\"NL error checking\",t0)\n" : "" 	       	    )
+<<"       if(err <= tol) break;						   \n"
+<<"     }									   \n"
+
 <<"										   \n"
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
@@ -1001,12 +1020,6 @@ if(quasistatic){writesolver
 <<"     changeOperator(A, ALoc);						   \n"
 <<"     set(A,sparams =\"  -ksp_rtol 1e-15 \");					   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
-<<"										   \n"
-<<"    //--------------------Assembly for linear---------------------//		   \n"
-<<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""                  )
-<<"     b = varIncr(0,Vh);							   \n"
-<<(timelog ? "    MPItimerend  (\"RHS assembly for U\",t0)\n" : ""        	    )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
@@ -1035,24 +1048,9 @@ if(quasistatic){writesolver
 <<"     damage = floor(100000.*damage)/100000. ;				   \n"
 <<(timelog ? "    MPItimerend  (\"solution update\",t0)\n" : " "      	  	    )
 <<"										   \n"
-<<"    //------------------Error calculation------------------------//		   \n"
-<<"										   \n"
-<<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : "" 	       	    )
-<<"     b = varIncr(0,Vh) ;							   \n"
-<<"     b = b .* DP;             // *************check**********		   \n"
-<<"										   \n"
-<<"     real err1Loc, err1Gather ;						   \n"
-<<"     err1Loc = b.l2 ;							   \n"
-<<"     err1Loc = err1Loc*err1Loc ;						   \n"
-<<"     mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);			   \n"
-<<"     err = sqrt(err1Gather) ;						   \n"
-<<"										   \n"
-<<"     if(mpirank == 0) 							   \n"
-<<"     cout << \"--- iteration =\" << i << \", NR error =\" << err << endl ;	   \n"
-<<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : "" 	       	    )
-<<"										   \n"
-<<"     i++ ;									   \n"
 <<"  }										   \n"
+<<"										   \n"
+<<"  //----------Adjust Dirichlet boundary conditions--------------//		   \n"
 <<"										   \n"
 <<"  duimp = Duimp ;								   \n";
 
