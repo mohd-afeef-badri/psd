@@ -164,7 +164,6 @@ if(quasistatic){writFemParameters
 <<"										   \n"
 <<"  Vh  def(u)      ,    // Current displacement		   		   \n"
 <<"      def(du)     ,    // Incremental displacement (du{n})       		   \n"
-<<"      def(Du)     ,    // Incremental displacement (u{n}-u{n-1}) 		   \n"
 <<"      def(DPspc)  ;    // Partition of unity 	   			   \n"
 <<"										   \n"
 <<"  Wh0 e11         ,    //  11 component of strain				   \n"
