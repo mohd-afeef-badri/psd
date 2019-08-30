@@ -526,12 +526,110 @@ AnyType DecompEnergy3_Op<K>::operator()(Stack stack) const {
         out3->operator[](j) = max(out3->operator[](j),out1->operator[](j));
      }     
     return 0L;
-}  
+}
+
+template<class K>
+class MazarsDamageUpdate_Op : public E_F0mps {
+    public:
+        Expression e11					;
+        Expression e22					;
+        Expression e12					;
+        Expression intvar				;
+        Expression damage				;                
+        Expression kappa0				;
+        Expression kappaC				;  
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        MazarsDamageUpdate_Op(const basicAC_F0& args	, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		        		        				        		        		
+        		) : 
+        		e11    (param1)			, 
+        		e22    (param2)			, 
+        		e12    (param3)			,  
+        		intvar (param4)			,
+        		damage (param5)			, 
+        		kappa0 (param6)			,
+        		kappaC (param7)			
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type MazarsDamageUpdate_Op<K>::name_param[] = { };
+
+template<class K>
+class MazarsDamageUpdate : public OneOperator {
+    public:
+        MazarsDamageUpdate() : OneOperator(atype<long>(), 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
+        			     atype<double>()	,
+        			     atype<double>() 	        			     
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new MazarsDamageUpdate_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6])			  
+            				  );
+        }
+};
+
+template<class K>
+AnyType MazarsDamageUpdate_Op<K>::operator()(Stack stack) const {
+    KN<K>* Ex   = GetAny<KN<K>*>((*e11)(stack))		;
+    KN<K>* Ey   = GetAny<KN<K>*>((*e22)(stack))		;
+    KN<K>* Exy  = GetAny<KN<K>*>((*e12)(stack))		;
+    KN<K>* out1 = GetAny<KN<K>*>((*intvar)(stack))	;
+    KN<K>* out2 = GetAny<KN<K>*>((*damage)(stack))	;
+    double K0   = GetAny<double>((*kappa0)(stack))	;
+    double Kc   = GetAny<double>((*kappaC)(stack))	;
+
+    double tmp1,tmp2,tmpep1,tmpep2,tmpeqStrain;
+    
+        
+    for(int j = 0; j < Ex->n; ++j){
+       tmp1=Ex->operator[](j)+Ey->operator[](j);
+       tmp2=sqrt(pow((Ex->operator[](j)-Ey->operator[](j)),2)+4.*pow((Exy->operator[](j)),2));
+       tmpep1=0.5*(tmp1+tmp2); tmpep2=0.5*(tmp1-tmp2);
+       tmpeqStrain=sqrt(pow((max(0.,tmpep1)),2) + pow((max(0.,tmpep2)),2))  ;
+       
+       out1->operator[](j) = (out1->operator[](j) < tmpeqStrain ? tmpeqStrain : out1->operator[](j));
+       out2->operator[](j) = 1.-(K0/out1->operator[](j))*exp(-(out1->operator[](j)-K0)/(Kc-K0));       
+       out2->operator[](j) = floor(100000.*out2->operator[](j))/100000. ;       
+     }     
+    return 0L;
+}
+ 
 static void InitFF()
 {
   Global.Add("GFPUpdateDynamic", "(", new updatedynamic<double>);
   Global.Add("GFPDecompEnergy3D", "(", new DecompEnergy3<double>);
   Global.Add("GFPDecompEnergy2D", "(", new DecompEnergy<double>);
+  Global.Add("GFPMazarsDamageUpdate", "(", new MazarsDamageUpdate<double>);  
   Global.Add("GFPmaxintwoFEfields","(",new OneOperator2_<double,KN<double>*, KN<double>*>(GFPmaxintwoP1));		
   Global.Add("GFPeigen", "(", new OneOperator3_<long, KNM<double> *, KN<double> *, KNM<double> *>(lapack_dsyev));
   Global.Add("GFPeigenAlone", "(", new OneOperator2_<long, KNM<double> *, KN<double> *>(lapack_dsyevAlone));  
