@@ -8,7 +8,7 @@
 *          files combine  together to form  a fully tailored  solid mechanics solver. *
 *	   Commandline flags  are  used to controls the nature of the generated file. *
 *          One   is    advised     to   carefully   go   through   these   arguments. *
-* To run : ff-mpirun -np 1 Main.edp -v 0 -ns -nw [ARGUMENTS]		              *
+* To run : FreeFem++ SolverGenerator -v 0 -ns -nw [ARGUMENTS]		              *
 *									              *
 **************************************************************************************/
 
@@ -33,11 +33,17 @@
 
   -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
 
-  -dynamic     [bool]	  To activate dynamic solver. Default OFF.  			   
+  -dynamic     [bool]	  To activate dynamic solver. Default OFF.
   
-  -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.  			   
+  -useGFP      [bool]	  To activate use of GoFastPlugins. A suite of c++ plugins.
+  
+  -timelog     [bool]	  To setup time logging for various phases of the solver.  
 
-  -pointbc     [bool]     To activate Dirichlet boundry condition on point. Default OFF.
+  -useRCM      [bool]	  To activate mesh level renumbering via Reverse Cuthill Mckee.   
+  
+  -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.
+
+  -pointbc     [bool]     To activate Dirichlet boundary condition on point. Default OFF.
   
   -nonlinear   [bool]     To activate non-linear mechanics (Crack). Default OFF.
   
@@ -50,7 +56,11 @@
   -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
   
   -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF.
+  
+  -quasistatic [bool]     To activate quasi-static damage mechanics module.Default OFF.  
 
+  -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
+  
   -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
 
 */
@@ -73,6 +83,7 @@
   string Preconditioner=getARGV("-preconditioner", "jacobi");
   string SubPreconditioner=getARGV("-subpreconditioner", "ilu");    
 
+  bool RCM          =  usedARGV("-useRCM"      ) !=  1;
   bool help         =  usedARGV("-help"        ) != -1;
   bool debug        =  usedARGV("-debug"       ) != -1;
   bool useGFP       =  usedARGV("-useGFP"      ) != -1;  
