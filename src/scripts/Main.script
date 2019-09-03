@@ -40,6 +40,8 @@ if(dynamic)writemain
 if(pipegnu)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n";
 
+if(version<4.4)writemain
+<<"  load    \"thresholdings\"                          // Remove non-zeros	   \n";
 
 if(Sequential)writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"

@@ -3,7 +3,7 @@
 //==============================================================================
 // -------Loading global ff-fuctions------- 
 //==============================================================================
-load "thresholdings"		// ff++ function to remove nonzeros
+
 searchMethod = 1;		// Interpolation search method upgrade
 
 //==============================================================================
@@ -162,8 +162,7 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
             if(min(eps, epsTab[i]) > 0.0) {
                 if(intN(globalName)(phi) / min(eps, epsTab[i]) > 1.0e-6) {
                     partitionIntersection[numberIntersection] = phi;
-                    if(!trueRestrict)
-                        sum[] += partitionIntersection[numberIntersection][];
+                    sum[] += partitionIntersection[numberIntersection][];
                     intersection[0][numberIntersection++] = intersection[0][i];
                 }
             }
@@ -187,85 +186,11 @@ macro partition(meshName, borderName, globalName, PhGlobal, VhGlobal, part, rank
         partitionIntersection.resize(0);
         fespace WhPart(meshName, PkPart);
         WhPart defPart(func2vec);
-        if(trueRestrict) {
-            khi = abs(part - rank) < 0.1;
-            VhLocal sigma = part;
-            for(int i = 0; i < numberIntersection; ++i) {
-                if(rank < intersection[0][i]) {
-                    for(int j = 0; j < VhLocal.ndof; ++j) {
-                        if(khi[][j] > 0.9 && abs(sigma[][j] - intersection[0][i]) < 0.1)
-                            khi[][j] = 0.0;
-                    }
-                }
-            }
-            if(mpiSize(comm) == size && removeZeros) {
-                meshN ThIntersection;
-                fespace PhIntersection(ThIntersection, P0);
-                PhIntersection[int] recv(numberIntersection);
-                PhIntersection[int] send(numberIntersection);
-                mpiRequest[int] rq(2 * numberIntersection);
-                for(int i = 0; i < numberIntersection; ++i) {
-                    ThIntersection = meshIntersection[i];
-                    Irecv(processor(intersection[0][i], comm, rq[i]), recv[i][]);
-                    send[i] = khi;
-                    Isend(processor(intersection[0][i], comm, rq[numberIntersection + i]), send[i][]);
-                }
-                meshName = trunc(meshName, khi > 1.0e-6, label = 9999);
-                khi = khi;
-                int[int] skip(0);
-                for(int k = 0; k < 2 * numberIntersection; ++k) {
-                    int i = mpiWaitAny(rq);
-                    if(i < numberIntersection) {
-                        ThIntersection = meshIntersection[i];
-                        PhIntersection intersection = send[i] > 1.0e-6 && recv[i] > 1.0e-6;
-                        if(intersection[].l2 > 1.0e-6)
-                            meshIntersection[i] = trunc(meshIntersection[i], intersection  > 1.0e-6, label = 9999);
-                        else {
-                            skip.resize(skip.n + 1);
-                            skip[skip.n - 1] = i;
-                        }
-                    }
-                }
-                skip.sort;
-                intersection.resize(1 + numberIntersection - skip.n);
-                int j = 0;
-                for(int i = 0; i < numberIntersection; ++i) {
-                    bool skipped = false;
-                    if(j < skip.n) {
-                        if(skip[j] == i) {
-                            ++j;
-                            skipped = true;
-                        }
-                    }
-                    if(!skipped) {
-                        fespace WhIntersection(meshIntersection[i], P);
-                        matrix R = interpolate(WhIntersection, Wh);
-                        R.thresholding(1.0e-10);
-                        real[int] C;
-                        int[int] I;
-                        [I, intersection[1 + i - j], C] = R;
-                        intersection[1 + i - j].resize(R.nbcoef);
-                        intersection[0][i - j] = intersection[0][i];
-                    }
-                }
-                numberIntersection -= skip.n;
-                intersection[0].resize(numberIntersection);
-                if(fakeInterface != -111111 || overlap != 1) {
-                    PhGlobal suppPartition = khi > 0.1;
-                    AddLayers(globalName, suppPartition[], 1, phi[]);
-                    borderName = trunc(globalName, phi > 0.001 && phi < 0.501, label = (abs(fakeInterface) + 1) * 100);
-                }
-            }
-        }
-        else
-            khi[] = khi[] ./= sum[];
+        khi[] = khi[] ./= sum[];
         defPart(func2vec) = initPart(khi);
         D.resize(Wh.ndof);
         D = func2vec[];
-        if(trueRestrict && ((WhPart.ndof % meshName.nt) == 0)) {
-            defPart(func2vec) = initPart(abs(part - rank) < 0.1);
-            D = func2vec[];
-        }// EOM
+// EOM
 
 
 
