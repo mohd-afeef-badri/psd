@@ -114,8 +114,10 @@ These are a set of commandline flags/options that control your simulation. You c
 | Option         | Type      | Comment                                                      |
 | -------------- | --------- | :----------------------------------------------------------- |
 | `-help`        | `[bool]`  | To activate helping message on the terminal.  Recommended flag. |
-| `-plot`        | `[bool]`  | Use -plot to activate plotting using paraview. Default is false. |
+| `-plot`        | `[bool]`  | Use -plot to activate plotting using ParaView. Default is false. |
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
+| `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of c++ plugins.  |
+| `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
 | `-pointbc`     | `[bool]`  | To activate Dirichlet boundary condition on point.           |
 | `-dynamic`     | `[bool]`  | To activate dynamic solver.                                  |
 | `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). Default is false. |
@@ -127,6 +129,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-sequential`  | `[bool]`  | To solve via a sequential solver.   Default is false.        |
 | `-tractionbc`  | `[bool]`  | To activate traction boundary condition (Neumann).           |
 | `-dirichletbc` | `[bool]`  | To activate Dirichlet boundary condition.                    |
+| `-quasistatic` | `[bool]`  | To activate quasi-static damage mechanics module.            |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
 |  		 | 	     |                     					    |
 | `-lagrange`    | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. |
