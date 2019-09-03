@@ -265,7 +265,7 @@ if(!Sequential){writesolver
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
 <<"    changeOperator(A, ALoc);				   	   		   \n"
-<<"    set(A,sparams =\" \");						   	   \n"
+<<"    set(A,sparams =\"  -ksp_type cg  \");				   	   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
@@ -505,7 +505,7 @@ writesolver
 <<"}										   \n"
 <<"										   \n"
 <<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
-<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : ""    		    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
@@ -522,113 +522,97 @@ if(!Sequential)if(!dynamic){writesolver
 <<"//  ------- Local Au=b assembly and solving -------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"//-----------------Assembly for A-----------------//				   \n"
+<<"//--------------Assembly for bilinear--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"matrix Assembly\",t0)\n" : " "           	    )
-<<"  matrix	ALoc = elast(Vh,Vh);						   \n"
-<<(timelog ? "	MPItimerend  (\"matrix Assembly\",t0)\n" : " "       	    	    )
+<<(timelog ? "	MPItimerbegin(\"matrix Assembly\",t0)\n" : ""           	    )
+<<"  matrix	ALoc = elast(Vh,Vh,solver=CG);					   \n"
+<<(timelog ? "	MPItimerend  (\"matrix Assembly\",t0)\n" : ""       	    	    )
 <<"										   \n"
-<<"//-----------------Assembly for b-----------------//				   \n"
+<<"//---------------Assembly for linear---------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"RHS assembly\",t0)\n" : " "          	 	    )
-<<"	real[int]    b = elast(0,Vh);						   \n"
-<<(timelog ? "	MPItimerend  (\"RHS assembly\",t0)\n" : " "       	    	    )
-<<"										   \n";
+<<(timelog ? "	MPItimerbegin(\"RHS assembly\",t0)\n" : ""          	 	    )
+<<"  real[int]    b = elast(0,Vh);						   \n"
+<<(timelog ? "	MPItimerend  (\"RHS assembly\",t0)\n" : ""       	    	    );
 
 if(pointbc)writesolver
 <<"										   \n"
 <<"//---------Additional assembly for A & b----------//				   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : " "  	    )
+<<(timelog ? "	MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : ""  	    )
 <<"  Pointbc(Dpointlab,Vh,ALoc,b,PnV);						   \n"
-<<(timelog ? "	MPItimerend(\"point Dirichlet assembly\",t0)\n" : " "        	    )
-<<"										   \n";
+<<(timelog ? "	MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""        	    );
 
 writesolver
 <<"										   \n"
-<<" //------------Memory optimization-----------------//			   \n"
-<<"										   \n";
+<<" //------------Memory optimization-----------------//			   \n";
 
 if(pointbc)writesolver
 <<"										   \n"
-<<"  Dpointlab.resize(0); PnV.resize(0);					   \n"
-<<"										   \n";
+<<"  Dpointlab.resize(0); PnV.resize(0);					   \n";
 
 if(dirichletbc)writesolver
 <<"										   \n"
-<<"  Dlabel.resize(0); Dvalue.resize(0);					   \n"
-<<"										   \n";
+<<"  Dlabel.resize(0); Dvalue.resize(0);					   \n";
 
 if(tractionbc)writesolver
 <<"										   \n"
-<<"  Tlabel.resize(0);								   \n"
-<<"										   \n"; 
+<<"  Tlabel.resize(0);								   \n";
    
 writesolver
 <<"										   \n"
 <<"//---------------PETSc Assembly---------------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"PETSc assembly\",t0)\n" : " "  	    		   )
-<<"      Mat A						 		   	   \n"
-<<"		  ( ALoc			, 				   \n"
-<<"                 restrictionIntersectionP	,				   \n"
-<<" 		    DP				,				   \n"
-<<" 		    bs = "+spc+" 						   \n"
-<<"		  );								   \n"
-<<(timelog ? "	MPItimerend(\"PETSc assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	MPItimerbegin(\"PETSc assembly\",t0)\n" : ""  	    		    )
+<<"  Mat A (ALoc, restrictionIntersectionP, DP, bs = "+spc+");			   \n"
+<<(timelog ? "	MPItimerend(\"PETSc assembly\",t0)\n" : ""  	    		    )
 <<"										   \n"
-<<"//------------PETSc solving------------------//				   \n"
+<<"//---------------PETSc solving---------------------//			   \n"
 <<"										   \n"
-<<"										   \n"
-<<(timelog ? "	MPItimerbegin(\"PETSc solving\",t0)\n" : " "  	    		   )
-<<"      Vh<real> def(u);							   \n"
-<<"      set(A,sparams =\" \");            					   \n"
-<<"      u[] = A^-1*b;                     					   \n"
-<<"										   \n"
-<<(timelog ? "	MPItimerend(\"PETSc solving\",t0)\n" : " "  	    		   );
+<<(timelog ? "	MPItimerbegin(\"PETSc solving\",t0)\n" : ""  	    		   )
+<<"  set(A,sparams =\" -ksp_type cg \");					   \n"
+<<"  u[] = A^-1*b;                     						   \n"
+<<(timelog ? "	MPItimerend(\"PETSc solving\",t0)\n" : ""  	    		   );
 
 
 if(debug)writesolver
 <<"										   \n"
-<<"//-----------------Debug glut plotting----------------------//  	  	   \n"
+<<"//-------------Debug glut plotting------------------//  		  	   \n"
 <<"										   \n"
-<<"      plotMPI(Th, u[],\"displacement\", Pk, def, real, 2, 1)		 	   \n";
+<<"  plotMPI(Th, u[],\"displacement\", Pk, def, real, 2, 1)		 	   \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 
 if(Sequential)if(!dynamic){writesolver    
 <<"										   \n"	
 <<"//==============================================================================\n"
-<<"//  -------Local Au=b assembly and solving-------				   \n"
+<<"//  ------- Local Au=b assembly and solving -------				   \n"
 <<"//==============================================================================\n"	
 <<"										   \n"
-<<"  Vh  def(u)   ;	// Defining vectorial FE variables 			   \n"
+<<"//--------------Assembly for bilinear--------------//			   \n"
 <<"										   \n"
-<<"  //-----------------Assembly for A-----------------//			   \n"
+<<(timelog ? "	timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
+<<"  matrix A = elast(Vh,Vh,solver=CG);						   \n"
+<<(timelog ? "	timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"matrix assembly\",t0)\n" : " "  	    		   )
-<<"		matrix<real> A = elast(Vh,Vh);		// Assembly for A	   \n"
-<<(timelog ? "	timerend  (\"matrix assembly\",t0)\n" : " "  	    		   )
+<<"//---------------Assembly for linear---------------//			   \n"
 <<"										   \n"
-<<"  //-----------------Assembly for b-----------------//			   \n"
-<<"										   \n"
-<<(timelog ? "	timerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
-<<"		real[int]    b = elast(0,Vh);		// Assembly for b	   \n"
-<<(timelog ? "	timerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "	timerbegin(\"RHS assembly\",t0)\n" : ""  	    		   )
+<<"  real[int]    b = elast(0,Vh);						   \n"
+<<(timelog ? "	timerend  (\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "	timerbegin(\"solving U\",t0)\n" : " "  	    		   	   )
-<<"		set(A,solver=CG);			// Solver setup		   \n"
-<<"		u[] = A^-1*b;				// Solving		   \n"
-<<(timelog ? "	timerend  (\"solving U\",t0)\n" : " "  	   	 		   )
-<<"										   \n";
+<<(timelog ? "	timerbegin(\"solving U\",t0)\n" : ""  	    		   	   )
+<<"  set(A,solver=CG);						   		   \n"
+<<"  u[] = A^-1*b;								   \n"
+<<(timelog ? "	timerend  (\"solving U\",t0)\n" : ""  	   	 		   );
+
 
 if(debug)writesolver
 <<"										   \n"
-<<"  //-----------------debug  glut plotting---------------//			   \n"
+<<"  //--------------debug glut plotting---------------//			   \n"
 <<"										   \n"
-<<"  plot (u,wait=0, cmm= \"solution\")  ;				   	   \n";
+<<"  plot (u, wait=1, fill=1, value=1, cmm= \"solution\");		   	   \n";
 
 
 }  //-- [if loop terminator] Sequential Not Dynamic ended --//
@@ -651,22 +635,22 @@ if(Sequential)if(dynamic){writesolver
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"  matrix<real> A = elastodynamics(Vh,Vh,tgv=-1);   			           \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"  real[int]    b = elastodynamics(0,Vh,tgv=-1);    			           \n"
-<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : " "  	    		   	   )
+<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""  	    		   	   )
 <<"  set(A,solver=UMFPACK);                           				   \n"
 <<"   du[] = A^-1*b;                                   				   \n"
-<<(timelog ? "  timerend  (\"solving U\",t0)\n" : " "  	   	 		   )
+<<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""  	   	 		   )
 <<"										   \n";
 
 if(debug)if(spc==2)writesolver
@@ -687,16 +671,16 @@ writesolver
 <<"										   \n"
 <<"  //-----------------updating variables------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : " "  	       	   )
+<<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""  	    	   	   )
 <<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
 //<<"  updateVariables(du,uold,vold,aold)					   \n"
-<<(timelog ? "  timerend  (\"updating variables\",t0)\n" : " "  	   	   );
+<<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""  	   		   );
 
 if(plotAll)if(spc==2)writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : " "	  	       	   )
+<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";  		           \n"
 <<"  savevtk  (  namevtu               ,					   \n"
 <<"              Th                    ,					   \n"
@@ -704,14 +688,14 @@ if(plotAll)if(spc==2)writesolver
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
 <<"           );  								   \n"
-<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : " "  	   		   );
+<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
 
 
 if(plotAll)if(spc==3)writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : " "	  	       	   )
+<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";  		           \n"
 <<"  savevtk  (  namevtu               ,					   \n"
 <<"              Th                    ,					   \n"
@@ -719,14 +703,14 @@ if(plotAll)if(spc==3)writesolver
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
 <<"           );  								   \n"
-<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : " "  	   		   );
+<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
 
 
 if(pipegnu){writesolver
 <<"										   \n"
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : " "     		   )
+<<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : ""     		   )
 <<"  Ek =intN(Th,qforder=2)(0.5*(vold*vold+vold1*vold1));			   \n"
 <<"  El =intN(Th,qforder=2)(0.5*(lambda*divergence(uold)*divergence(uold) 	   \n"
 <<"                         + 2. * mu * epsilon(uold)'*epsilon(uold)) );	   \n"
@@ -758,7 +742,7 @@ if(!supercomp)writesolver
 
 writesolver
 <<"										   \n"
-<<(timelog ? "  timerend(\"Energy calculations\",t0)\n" : " "     		   );
+<<(timelog ? "  timerend(\"Energy calculations\",t0)\n" : ""     		   );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
@@ -778,7 +762,7 @@ writesolver
 <<"										   \n"
 <<"}										   \n"
 <<"										   \n"
-<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : ""    		    )
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
@@ -804,26 +788,26 @@ if(!Sequential)if(dynamic){writesolver
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : " "  	    	   )
-<<"  ALoc = elastodynamics(Vh,Vh,tgv=-1);   		         	           \n"
-<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : " "  	    	   )
+<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""  		    	   )
+<<"  ALoc = elastodynamics(Vh,Vh);   			         	           \n"
+<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""  	  	  	   )
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""  	    		   )
 <<"  changeOperator(A, ALoc);			 				   \n"
-<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"RHS assembly\",t0)\n" : " "  	    		   )
-<<"  b = elastodynamics(0,Vh,tgv=-1);    			           	   \n"
-<<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : " "  	    		   )
+<<(timelog ? "  MPItimerbegin(\"RHS assembly\",t0)\n" : ""  	    		   )
+<<"  b = elastodynamics(0,Vh);    				           	   \n"
+<<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"solving U\",t0)\n" : " "  	    	   	   )
-<<"  set(A,sparams =\" \");                           				   \n"
+<<(timelog ? "  MPItimerbegin(\"solving U\",t0)\n" : ""  	    	   	   )
+<<"  set(A,sparams =\"  -ksp_type cg  \");             				   \n"
 <<"  du[] = A^-1*b;                                   				   \n"
-<<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : " "  	   		   )
+<<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""  	   		   )
 <<"										   \n";
 
 if(debug)if(spc==2)writesolver
@@ -844,17 +828,17 @@ writesolver
 <<"										   \n"
 <<"  //-----------------updating variables------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : " "      		   )
+<<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : ""      		   )
 <<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
 //<<"  updateVariables(du,uold,vold,aold)					   \n"
-<<(timelog ? "  MPItimerend(\"updating variables\",t0)\n" : " "      		   );
+<<(timelog ? "  MPItimerend(\"updating variables\",t0)\n" : ""      		   );
 
 
 if(plotAll)if(spc==2)writesolver
 <<"										   \n"
 <<"  //-----------------ParaView plotting--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : " "      		   )
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
 <<"  exportpvd(    namevtu      ,						   \n"
 <<"                Th           ,						   \n"
@@ -864,13 +848,13 @@ if(plotAll)if(spc==2)writesolver
 <<"                namedata     ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
 <<"           );				 		   		   \n"
-<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : " "      		   );
+<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(plotAll)if(spc==3)writesolver
 <<"										   \n"
 <<"  //-----------------ParaView plotting--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : " "      		   )
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
 <<"  exportpvd( namevtu      ,							   \n"
 <<"                Th           ,						   \n"
@@ -880,7 +864,7 @@ if(plotAll)if(spc==3)writesolver
 <<"                namedata     ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
 <<"           );				 		   		   \n"
-<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : " "      		   );
+<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(pipegnu){writesolver
 <<"										   \n"
@@ -924,7 +908,7 @@ if(!supercomp)writesolver
 writesolver
 <<"										   \n"
 <<"   }							  	   		   \n"
-<<(timelog ? "   MPItimerend(\"Energy calculations\",t0)\n" : " "      		   );
+<<(timelog ? "   MPItimerend(\"Energy calculations\",t0)\n" : ""      		   );
 }  //-- [if loop terminator]  pipegnu ended --//
 
 
@@ -945,8 +929,8 @@ writesolver
 <<"}										   \n"
 <<"										   \n"
 <<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
-<<(timelog ? "cout << \" all operations ended, they \";\n" : " "    		    )
-<<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "	   	        	    )
+<<(timelog ? "cout << \" all operations ended, they \";\n" : ""    		    )
+<<(timelog ? "MPItimerend  (\"solver\",t1)\n" : ""	   	        	    )
 <<"										   \n"
 <<"//-------------------------------THE END------------------------------//	   \n"; 
 
@@ -1018,7 +1002,7 @@ if(quasistatic){writesolver
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""           	    )
 <<"     changeOperator(A, ALoc);						   \n"
-<<"     set(A,sparams =\"  -ksp_rtol 1e-15 \");					   \n"
+<<"     set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");			   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""   	  	    )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
