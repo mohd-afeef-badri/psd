@@ -61,11 +61,6 @@ if(energydecomp)writFemParameters
 <<"  Wh0 H         ,    // Stress history 			   		   \n"
 <<"      Hplus     ,    // Tensile stress history		   		   \n"
 <<"      Hminus    ;    // Compressive stress history		   		   \n";
-
-
-if(debug || plotAll)writFemParameters
-<<"										   \n"
-<<"  VhPlt phi     ;    //  plotting phi					   \n";
 }
 
 if(dynamic){writFemParameters
