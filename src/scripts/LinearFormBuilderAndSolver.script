@@ -92,7 +92,7 @@ if(Sequential){writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""	       	    )
-<<"    A = elast(Vh,Vh);							   \n"
+<<"    A = elast(Vh,Vh,solver=CG);						   \n"
 <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""	            )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
@@ -115,7 +115,7 @@ writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""           	    )
-<<"    A1 = phase(Vh1,Vh1);						  	   \n"
+<<"    A1 = phase(Vh1,Vh1,solver=CG);					  	   \n"
 <<(timelog ? "    timerend  (\"matrix assembly for PHI\",t0)\n" : ""           	    )
 <<"										   \n"
 <<"    //--------------------Assembly for linear----------------------//	   \n"
@@ -258,7 +258,7 @@ if(!Sequential){writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""         	    )
-<<"    ALoc = elast(Vh,Vh);						  	   \n"
+<<"    ALoc = elast(Vh,Vh,solver=CG);					  	   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""          	    )
 <<"										   \n"
 <<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
@@ -272,8 +272,7 @@ if(!Sequential){writesolver
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "         	  	    )
 <<"    u[] = A^-1*b;	                         				   \n"
-<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "           	  	    )
-<<"										   \n";
+<<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "           	  	    );
 
 if(!vectorial){
 if(energydecomp)writesolver
@@ -289,26 +288,26 @@ writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""        	    )
-<<"    ALoc1 = phase(Vh1,Vh1);		// Assembly bilinear	   		   \n"
+<<"    ALoc1 = phase(Vh1,Vh1,solver=CG);			   		   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""    	  	    )
 <<"										   \n"
 <<"    //----------------Assembly for linear------------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"RHS assembly for PHI\",t0)\n" : ""           	    )
-<<"    b1 = phase(0,Vh1);	// Assembly linear	   			   \n"
+<<"    b1 = phase(0,Vh1);				   			   \n"
 <<(timelog ? "    MPItimerend  (\"RHS assembly for PHI\",t0)\n" : ""           	    )
 <<"										   \n"
 <<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"    changeOperator(A1, ALoc1);					  	   \n"
-<<"    set(A1,sparams =\" \");					   		   \n"
+<<"    set(A1,sparams =\"  -ksp_type cg  \");			   		   \n"
 <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""         	    )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""    		       	    )
-<<"    phi[] = A1^-1*b1;		// Solve phi	  	   		   \n"
+<<"    phi[] = A1^-1*b1;				  	   		   \n"
 <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""           	  	    )
 <<"										   \n"
 <<"    //------------------Error calculation------------------------//		   \n"
@@ -636,13 +635,13 @@ if(Sequential)if(dynamic){writesolver
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
-<<"  matrix<real> A = elastodynamics(Vh,Vh,tgv=-1);   			           \n"
+<<"  matrix  A = elastodynamics(Vh,Vh,solver=CG);	 		           \n"
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""  	    		   )
-<<"  real[int]    b = elastodynamics(0,Vh,tgv=-1);    			           \n"
+<<"  real[int]    b = elastodynamics(0,Vh);	    			           \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
