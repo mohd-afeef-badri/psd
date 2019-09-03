@@ -28,6 +28,7 @@ if(Sequential){writemeshPartitioning
 <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""         	  	    )
 <<"  load \"gmsh\"					// Load  gmsh	   	   \n"
 <<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Mesh loaded	   	   \n"
+<<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : "" 	         	 		    );
 <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""     		      	    )
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -82,7 +83,7 @@ writemeshPartitioning
 <<"										   \n"
 <<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
 <<"  Th = gmshloadN(\"\"+ThName+\".msh\");    		// Global mesh loaded	   \n"
-<<"										   \n";
+<<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : "" 	         	 		    );
 
 if(!nonlinear)writemeshPartitioning
 <<"										   \n"
@@ -117,6 +118,7 @@ if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"		  )		   						   \n"
 <<"										   \n"
 <<"  Th = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded	 	   \n"
+<<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : "" 	         	 		    )
 <<"										   \n"
 <<"  PETScMPIBuildEdgeWithPartitioning(						   \n"
 <<"		   Th				, // Local  mesh		   \n"
