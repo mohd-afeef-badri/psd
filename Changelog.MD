@@ -8,18 +8,76 @@ All notable changes to PSD solver will be documented in this file.
 - New MPI plotting routine `plotJustMeshMPI()`.
 
 ### Changed
+- Better documentation via `.md` and `.html` files.
 - Better plotting support for `PlotMPI()`.
 - Moved to FreeFEM 4.4.
 
-## [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2) - 2019-04-08
+
+
+## [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6) - 2019-06-11
 ### Added
-- New meshes `Notched-plate` , `square-crack`.
-- New fracture mechanics module.
-- New `-nonlinear` flag to activate phase-field model for brittle fracture.
-- New `-timelog` for time logging the solver.
+- Dynamic linear solver in 2D and 3D  parallel/sequential.
+- New finite element variable for partition of unity-- for fixing integrals.
+
 
 
 ### Changed
+- Better documentation via `.md` and `.html` files.
+- Correct quadrature order for faster computations.
+- Major changes/splitting of `.script` files.
+
+### Removed
+- Removed the `BoundaryAndSourceConditions.script` merged with `ControlParameters.script`.
+
+### Bugs
+- Bug in integrals fixed.
+
+## [1.5](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5) - 2019-05-29
+### Added
+- Dynamic linear solver in 2D and 3D  sequential.
+- New meshes for dynamics tests `bar-dynamic.msh`.
+- Checking modules `make check`.
+- Faster sparsity pattern calculations. 
+
+### Changed
+- Better documentation via `.md` and `.html` files.
+- Major restructuring of the codes. 
+- Moved to `automake` for solver installation.
+- Mesh building via `make`.
+
+### Removed
+- Removed the manufactured solution codes.
+
+
+
+## [1.4](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4) - 2019-05-14
+### Added
+- Fully vectorial finite element solver for phase-filed `-vectorial`.
+- New `-supercomp` for avoiding xterm issues on super computers.
+- New `MatViz()` function for matrix sparsity visualization.
+- Introduced `GFP` plugin support (Go Fast Plugins). 
+
+### Changed
+- Elastic energy decomposition is now optional `-energydecomp`.
+- Force calculation using integrals (Thanks to G.Rastiello).
+
+## [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3) - 2019-04-08
+### Added
+- New meshes in 2D/3D`Notched-plate` , `square-crack`, etc.
+- New fracture mechanics module.
+- New `-nonlinear` flag to activate phase-field model for brittle fracture.
+- New `-timelog` for time logging the solver.
+- New `-pipegnu` for GNUplot piping.
+
+
+### Changed
+- Scripting now performed using `.script` files:
+	- `BoundaryAndSourceConditions.script `
+	- `LinearFormBuilderAndSolver.script  `
+	- `Macros.script  ` 
+	- `Main.script  ` 
+	- `VariationalFormulation.script  ` 
+	- ....
 - Move to FreeFEM version 4.0.
 - Move to PETSc version 3.11.
 
@@ -39,9 +97,8 @@ All notable changes to PSD solver will be documented in this file.
 - More advance README.MD.
 - Sequential solver now merged within scripting via flag `-sequential`.
 - Move to FreeFEM version 3.62.
+- Moved manufactured solutions to `validation-test` folder.
 
-### Removed
-- Removed the manufactured solution codes.
 
 ## [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1) - 2019-03-04
 ### Added
@@ -66,4 +123,7 @@ All notable changes to PSD solver will be documented in this file.
 | [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0)        |8a8ecb2746b7da792073358c60df33bae647f788 | 
 | [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1)        |a667e6085ba1f92f8dd619bd40e18f85c593bc0a |
 | [1.2](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2)        |e48b7b3a30c05ad4c343efa6a17fee386031f437 |
-| 1.3        |39f4324550365849852c5264b8d4535aae05e30d |
+| [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3)        |39f4324550365849852c5264b8d4535aae05e30d |
+| [1.4](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4)        |f51f678630eb9b2fed355e5cedf976ce8b5fa341 |
+| [1.5](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5)        |07293ba09a69d3d6a16278220a0b4a7a9f318f96 |
+| [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6)        |f359dd049fb1ddde376e8ad8e5177c663e430418 |
