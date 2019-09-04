@@ -1,5 +1,5 @@
 SUBDIRS = src data 
-EXTRA_DIST=README.MD
+EXTRA_DIST=README.MD Changelog.MD
 
 AUTOMAKE_LIST=autom4te.cache \
 config.h \
