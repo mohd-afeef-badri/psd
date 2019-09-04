@@ -49,6 +49,6 @@ All notable changes to PSD solver will be documented in this file.
 
 | Version    | Git tag                                 | 
 | ---------- | ----------------------------------------|
-| 1.0        |31a119124c93dbd8000f9a188a0d61dd2dee86b2 | 
+| 1.0        |8a8ecb2746b7da792073358c60df33bae647f788 | 
 | 1.1        |a667e6085ba1f92f8dd619bd40e18f85c593bc0a |
 | 1.2        |e48b7b3a30c05ad4c343efa6a17fee386031f437 |
