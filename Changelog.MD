@@ -11,10 +11,10 @@ All notable changes to PSD solver will be documented in this file.
 - Better plotting support for `PlotMPI()`.
 - Moved to FreeFEM 4.4.
 
-## 1.2 - 2019-03-18
+## [1.2](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2) - 2019-03-18
 ### Added
-- Support for Gmsh's `.msh`  or Medit's `.mesh` meshes.
-- Advance to 3D.
+- Support for Gmsh's `.msh`  or Medit's `.mesh` meshes in folder `Meshes`.
+- Advance to 3D physics.
 - New MPI based parallel solver linear elasticity.
 - New approach for solver generation via scripting (PhD thesis MA Badri) with `scriptGenerator.edp`.
 - Integrated Domain decomposition macro (PhD thesis MA Badri).
@@ -30,20 +30,20 @@ All notable changes to PSD solver will be documented in this file.
 ### Removed
 - Removed the manufactured solution codes.
 
-## 1.1 - 2019-03-04
+## [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1) - 2019-03-04
 ### Added
-- New manufactured solution for linear elasticity in 2D.
+- Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).
+- More cases of manufactured solution for linear elasticity in 2D.
 - Added README.MD for explaining the solver.
-- New test case of constrained bar in 2D.
 - ParaView plotting activated.
 
 ### Changed
 - Moved to Tuleap git hosting from CEA.
+- Separate folder of manufactured solutions and the linear elastic solver.
 
-## 1.0 - 2019-02-15
+## [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0) - 2019-02-15
 ### Added
-- Initial FreeFEM files for sequential linear elasticity in 2D.
-- Method of manufactured solution for linear elasticity in 2D.
+- Initial FreeFEM files  Method of manufactured solution for linear elasticity in 2D.
 
 ## Version git tags ##
 
