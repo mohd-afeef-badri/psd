@@ -630,20 +630,20 @@ if(Sequential)if(dynamic){writesolver
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
-<<"  matrix  A = elastodynamics(Vh,Vh,solver=CG);	 		           \n"
+<<"  A = elastodynamics(Vh,Vh,solver=CG);		 		           \n"
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""  	    		   )
-<<"  real[int]    b = elastodynamics(0,Vh);	    			           \n"
+<<"  b = elastodynamics(0,Vh);			    			           \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""  	    		   	   )
 <<"  set(A,solver=UMFPACK);                           				   \n"
-<<"   du[] = A^-1*b;                                   				   \n"
+<<"  du[] = A^-1*b;                                   				   \n"
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""  	   	 		   )
 <<"										   \n";
 
@@ -666,8 +666,8 @@ writesolver
 <<"  //-----------------updating variables------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""  	    	   	   )
-<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
-//<<"  updateVariables(du,uold,vold,aold)					   \n"
+<<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
+<<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : "" 	   )
 <<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""  	   		   );
 
 if(plotAll)if(spc==2)writesolver
@@ -822,9 +822,11 @@ writesolver
 <<"										   \n"
 <<"  //-----------------updating variables------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : ""      		   )
-<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);			   \n"
+//<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);		   \n"
 //<<"  updateVariables(du,uold,vold,aold)					   \n"
+<<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : ""      		   )
+<<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
+<<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : "" 	   )
 <<(timelog ? "  MPItimerend(\"updating variables\",t0)\n" : ""      		   );
 
 
@@ -864,7 +866,7 @@ if(pipegnu){writesolver
 <<"										   \n"
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"Energy calculations\",t0)\n" : " "      	   )
+<<(timelog ? "  MPItimerbegin(\"Energy calculations\",t0)\n" : ""	      	   )
 <<"  E[0] =intN(Th,qforder=2)( 0.5*DPspc*(vold*vold+vold1*vold1));		   \n"
 <<"  E[1] =intN(Th,qforder=2)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
 <<"                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );	   \n"

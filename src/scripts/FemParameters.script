@@ -134,8 +134,17 @@ if(!vectorial)writFemParameters
 }
 
 
-if(dynamic)if(!Sequential){
+if(dynamic){
+if(Sequential)writFemParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Fem matrices and vectors -------					   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  matrix  A			;						   \n"
+<<"  real[int]  b(Vh.ndof)	;						   \n";
 
+if(!Sequential){
 if(pipegnu)writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -156,6 +165,7 @@ writFemParameters
 <<"										   \n"
 <<"  Mat  A(Vh.ndof, restrictionIntersectionP, DP)  ; 	 			   \n"
 <<"										   \n";
+}
 
 }
 

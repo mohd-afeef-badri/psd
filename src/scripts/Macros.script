@@ -375,12 +375,12 @@ if(Sequential)writemacros
 
 } //-- [if loop terminator] timelog ended --//
 
-/*
-if(dynamic)writemacros
+
+if(dynamic)if(!useGFP)writemacros
 <<"										   \n"
 <<"//------------------------------update macros---------------------------------//\n"
 <<"										   \n"
-<<"  macro updateVariables(du,uold,vold,aold){					   \n"
+<<"  macro updateVariables(du,uold,vold,aold,beta,gamma,dt){			   \n"
 <<"    										   \n"
 <<"    fespace Vloc(Th,Pk)  ;							   \n"
 <<"    Vloc def(aloc)       ;							   \n"
@@ -394,7 +394,7 @@ if(dynamic)writemacros
 <<"    }									   \n"
 <<"  }//									   \n"
 <<"										   \n";
-*/
+
 
 } //-- [ostream terminator]  macros.edp closed --//  
 
