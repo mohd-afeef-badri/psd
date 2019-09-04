@@ -3,11 +3,13 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+- New  mesh reordering via Reverse Cuthill-Mackee via `-useRCM`. 
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
 - New GFP plugin for Mazar's damage update for 2D problems `GFPMazarsDamageUpdate(...)`.
 - New MPI plotting routine `plotJustMeshMPI()`.
 
 ### Changed
+- Using GFP becomes optional `-useGFP`.
 - Better documentation via `.md` and `.html` files.
 - Better plotting support for `PlotMPI()`.
 - Moved to FreeFEM 4.4.
