@@ -23,9 +23,16 @@ if(!nonlinear)if(!dynamic)if(!quasistatic){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"varf elast(def(u),def(v))							   \n"
-<<"	= intN(Th,qforder=3)(							   \n"
+<<"	= intN(Th,qforder=3)(							   \n";
+
+if(fastmethod)writevarfmatsolve
 <<"			lambda*divergence(u)*divergence(v)			   \n"
-<<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n"
+<<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n";
+
+if(!fastmethod)writevarfmatsolve
+<<"			 epsilon(u)'*Mt*epsilon(v)				   \n";
+
+writevarfmatsolve
 <<"		  )								   \n";
 
 if(bodyforce)writevarfmatsolve

@@ -89,7 +89,7 @@
   bool useGFP       =  usedARGV("-useGFP"      ) != -1;  
   bool plotAll      =  usedARGV("-plot"        ) != -1;
   bool dynamic      =  usedARGV("-dynamic"     ) != -1;    
-  bool pipegnu      =  usedARGV("-pipegnu"     ) != -1;  
+  bool pipegnu      =  usedARGV("-pipegnu"     ) != -1;
   bool pointbc      =  usedARGV("-pointbc"     ) != -1;
   bool timelog      =  usedARGV("-timelog"     ) != -1;
   bool vectorial    =  usedARGV("-vectorial"   ) != -1;  
@@ -97,6 +97,7 @@
   bool nonlinear    =  usedARGV("-nonlinear"   ) != -1; 
   bool supercomp    =  usedARGV("-supercomp"   ) != -1;       
   bool tractionbc   =  usedARGV("-tractionbc"  ) != -1; 
+  bool fastmethod   =  usedARGV("-fastmethod"  ) != -1;       
   bool Sequential   =  usedARGV("-sequential"  ) != -1;
   bool quasistatic  =  usedARGV("-quasistatic" ) != -1;          
   bool dirichletbc  =  usedARGV("-dirichletbc" ) !=  1;

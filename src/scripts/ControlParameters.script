@@ -36,12 +36,14 @@ if(quasistatic)writemeshParameters
 <<"										   \n"
 <<"  string ThName = \"../Meshes/"+spc+"D/square\"; // Mesh  name  	  	   \n";
 
-if(!nonlinear)if(!dynamic)if(!quasistatic)writemeshParameters
+if(!nonlinear)if(!dynamic)if(!quasistatic){writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"										   \n";
+
+if(fastmethod)writemeshParameters
 <<"  real    mu                        // Lame parameter			   \n"
 <<"         ,lambda                    // Lame parameter			   \n"
 <<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
@@ -58,6 +60,34 @@ if(!nonlinear)if(!dynamic)if(!quasistatic)writemeshParameters
 <<" 										   \n"
 <<"}	 									   \n";
 
+if(!fastmethod){writemeshParameters
+<<(bodyforce ? "  real f2= 8.e3*(-9.81);                     // Force in Y\n" : "" )
+<<"										   \n"
+<<"  real a1,a2,a3        ;                     // Building material tensor	   \n"
+<<"{										   \n"
+<<"  real E  = 200.e9     ,                     // Modulus of Elasticity - [Pa]	   \n"
+<<"       nu = 0.3        ;                     // Poisson ratio - [-]		   \n"
+<<"	 									   \n"
+<<"       a1 = E*(1.-nu)/((1.+nu)*(1.-2.*nu))   ;				   \n"
+<<"       a2 = a1*nu/(1.-nu)                    ;				   \n"
+<<"       a3 = E/(2*(1.+nu))                    ;				   \n"
+<<"}	 									   \n";
+
+if(spc==2)writemeshParameters
+<<"										   \n"
+<<"  macro Mt   [[ a1 ,  a2 , 0 ],						   \n"
+<<"              [ a2 ,  a1 , 0 ],						   \n"
+<<"              [ 0  ,  0  , a3]]               // Material tensor		   \n";
+
+if(spc==3)writemeshParameters
+<<"										   \n"
+<<"  macro Mt   [[ a1 ,  a2 , a2 , 0  , 0  , 0 ],				   \n"
+<<"              [ a2 ,  a1 , a2 , 0  , 0  , 0 ],				   \n"
+<<"              [ a2 ,  a2 , a1 , 0  , 0  , 0 ],     				   \n"
+<<"              [ 0  ,  0  , 0  , a3 , 0  , 0 ],      				   \n"
+<<"              [ 0  ,  0  , 0  , 0  , a3 , 0 ],     				   \n"
+<<"              [ 0  ,  0  , 0  , 0  , 0  , a3]]// Material tensor		   \n";
+}}
 
 if(quasistatic)writemeshParameters
 <<"										   \n"
