@@ -7,13 +7,14 @@ All notable changes to PSD solver will be documented in this file.
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
 - New GFP plugin for Mazar's damage update for 2D problems `GFPMazarsDamageUpdate(...)`.
 - New MPI plotting routine `plotJustMeshMPI()`.
+- New option `-fastmethod` to switich back to defualt variational formulation.
 
 ### Changed
+- Changed variational formulation now using $\epsilon(u):A:\epsilon(v)$.
 - Using GFP becomes optional `-useGFP`.
 - Better documentation via `.md` and `.html` files.
 - Better plotting support for `PlotMPI()`.
 - Moved to FreeFEM 4.4.
-
 
 
 ## [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6) - 2019-06-11
