@@ -5,7 +5,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Added
 - New  mesh reordering via Reverse Cuthill-Mackee via `-useRCM`. 
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
-- New GFP plugin for Mazar's damage update for 2D problems `GFPMazarsDamageUpdate(...)`.
+- New GFP plugin for Mazar's damage update for 2D/3D problems `GFPMazarsDamageUpdate(...)`.
 - New MPI plotting routine `plotJustMeshMPI()`.
 - New option `-fastmethod` to switich back to defualt variational formulation.
 

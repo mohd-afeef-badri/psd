@@ -1,7 +1,5 @@
 # What is comping up
 
-## [TODO] 2D Quasistatic damage via GFP
-## [TODO] 3D Quasistatic damage via GFP
 ## [TODO] GFP single function for Energy decomposition
 ## [TODO] Strain Vectorization
 ## [TODO] New variational formulations $\epsilon(u):A:\epsilon(v)$ instead of $\sigma(u):\epsilion(v)$
@@ -11,5 +9,9 @@
 ## [TODO] Introduce non-lineaity for dynamics
 ## [TODO] Newton rapsons for dynamics
 ## [TODO] Higher order quadrature formulations
+
+## [DONE] 2D/3D Quasistatic damage via GFP 
+	- Idea is to take  Bruno/Giuseppe's serial solver and  parallelize the solver.
+	- As EigenValue alaysis of each element is required to get the principal directions there is a need to implement c++ GFP macros.
 
  
