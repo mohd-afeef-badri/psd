@@ -616,8 +616,6 @@ AnyType MazarsDamageUpdate_Op<K>::operator()(Stack stack) const {
 
     int tempindex=Ex->n/out1->n;
     tempindex = tempindex/3 + 1;
-    
-    cout << tempindex << endl;
     double tmpeqStrain; 
     
     

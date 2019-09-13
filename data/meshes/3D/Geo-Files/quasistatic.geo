@@ -50,6 +50,8 @@ Physical Surface("top-sur") = {14};
 //+
 Physical Surface("bot-sur") = {20};
 //+
-Physical Surface("side-surfaces") = {16, 24};
+Physical Surface("front") = {16};
+//+
+Physical Surface("back") = {24};
 //+
 Physical Volume("vol") = {26};

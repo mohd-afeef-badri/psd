@@ -185,6 +185,10 @@ if(vectorial)if(nonlinear)if(plotAll || debug)writemacros
 <<"  macro Pltk         P1             		// FE space	   	 	   \n"
 <<"  macro def0 (i)  	 i 			// Vect. field definition  	   \n";
 
+if(quasistatic)if(useGFP)writemacros
+<<"  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector	   \n"
+<<"  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition       \n";
+
 if(!vectorial){writemacros
 <<"  macro Pk [P"+lag+",P"+lag+",P"+lag+"]\t\t		// Finite element space	   \n";
 
@@ -193,7 +197,6 @@ if(!nonlinear)writemacros
 <<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n";
 
 if(!nonlinear)if(!Sequential)writemacros
-<<"										   \n"
 <<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
 <<"										   \n";
 
@@ -248,6 +251,21 @@ if(nonlinear)if(!energydecomp)writemacros
 <<"                   +     epsilon(i)[4]*epsilon(i)[4] 	  	           \n"
 <<"                   +     epsilon(i)[3]*epsilon(i)[3] )	  	           \n"
 <<"                  )                                           // Hplus   	   \n"
+<<"										   \n";
+
+if(quasistatic)writemacros
+<<"										   \n"
+<<"//-----------------------Stess calculation macro------------------------------//\n"
+<<"										   \n"
+<<"  macro stress(i,lambdaVal,muVal)					 	   \n"
+<<"  [										   \n"
+<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[0],\n"
+<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[1],\n"
+<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[2],\n"
+<<"   2.*muVal*epsilon(i)[3], 							   \n"
+<<"   2.*muVal*epsilon(i)[4],							   \n"
+<<"   2.*muVal*epsilon(i)[5] 							   \n"
+<<"  ]//		 	 						   \n"
 <<"										   \n";
 
 if(nonlinear)if(energydecomp)writemacros
