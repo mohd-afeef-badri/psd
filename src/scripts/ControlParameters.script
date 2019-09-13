@@ -34,7 +34,7 @@ if(dynamic)writemeshParameters
 
 if(quasistatic)writemeshParameters
 <<"										   \n"
-<<"  string ThName = \"../Meshes/"+spc+"D/square\"; // Mesh  name  	  	   \n";
+<<"  string ThName = \"../Meshes/"+spc+"D/quasistatic\"; // Mesh  name    	   \n";
 
 if(!nonlinear)if(!dynamic)if(!quasistatic){writemeshParameters
 <<"										   \n"
