@@ -1019,8 +1019,8 @@ if(quasistatic){writesolver
 if(useGFP){writesolver
 <<"										   \n"
 <<"     defStrain(strain) = [epsilon(u)[0]          ,                              \n"
-<<"                          epsilon(u)[1]          ,				   \n"
-<<"                          epsilon(u)[2]/sqrt(2.) ];  			   \n"
+<<"                          epsilon(u)[2]/sqrt(2.) ,				   \n"
+<<"                          epsilon(u)[1] ];  					   \n"
 <<"										   \n"
 <<"     GFPMazarsDamageUpdate(strain[],intVar[],damage[],kappa0,kappac); 	   \n";
 }

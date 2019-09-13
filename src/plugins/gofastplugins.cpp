@@ -614,27 +614,52 @@ AnyType MazarsDamageUpdate_Op<K>::operator()(Stack stack) const {
     return 0L;
 */    
 
+    int tempindex=Ex->n/out1->n;
+    tempindex = tempindex/3 + 1;
     
-    double tmpeqStrain;
+    cout << tempindex << endl;
+    double tmpeqStrain; 
     
-    KNM<double> Amat(2,2)   ;				// Amat is infact strain matrix
-    KN<double>  eval(2)     ;				// To store eigenvalues
-    intblas n = 2;					// Blas integer
+    
+    KNM<double> Amat(tempindex,tempindex)   ;		// Amat is infact strain matrix
+    KN<double>  eval(tempindex)             ;		// To store eigenvalues
+    intblas n = tempindex                   ;		// Blas integer
     char JOBZ = 'N', UPLO = 'U';			// Upper triangular
     intblas info, lw = -1;
     KN<double> w(1);
     dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
     lw = w[0];
     w.resize(lw);
+    
+
   
     for(int j = 0; j < out1->n; ++j){
+    
+        for (int ii=0 ; ii<tempindex; ii++ )
+    	for (int jj=ii; jj<tempindex; jj++ )
+    		Amat(ii,jj)=Ex->operator[]((tempindex+1)*j+(ii+jj)) ;    
+   	 
+    /*
+        //--------------------------------------------------------------------------
+        //  -------- OLD LOGIC -----------
+        //--------------------------------------------------------------------------
         Amat(0,0)=Ex->operator[](3*j+0) ; 				// Strain xx
+        Amat(0,1)=Ex->operator[](3*j+2);       				// Strain xy        
         Amat(1,1)=Ex->operator[](3*j+1) ;				// Strain yy 
-        Amat(0,1)=Ex->operator[](3*j+2);       			// Strain xy
+   */
         
 	dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);  // Calculate Eigenvalues--> eval	
 	
+	tmpeqStrain=0;
+	for (int ii=0 ; ii<tempindex; ii++ )
+		tmpeqStrain += pow((max(0.,eval[ii])),2);
+	tmpeqStrain=sqrt(tmpeqStrain);
+    /*
+        //--------------------------------------------------------------------------
+        //  -------- OLD LOGIC -----------
+        //--------------------------------------------------------------------------	
 	tmpeqStrain=sqrt(pow((max(0.,eval[0])),2) + pow((max(0.,eval[1])),2))  ; 
+    */	
         out1->operator[](j) = (out1->operator[](j) < tmpeqStrain ? tmpeqStrain : out1->operator[](j));	
         out2->operator[](j) = 1.-(K0/out1->operator[](j))*exp(-(out1->operator[](j)-K0)/(Kc-K0));       
         out2->operator[](j) = floor(100000.*out2->operator[](j))/100000. ;
