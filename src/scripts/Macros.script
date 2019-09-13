@@ -35,6 +35,10 @@ if(vectorial)if(nonlinear)if(plotAll || debug)writemacros
 <<"  macro Pltk         P1             		// FE space	   	 	   \n"
 <<"  macro def0 (i)  	 i 			// Vect. field definition  	   \n";
 
+if(quasistatic)if(useGFP)writemacros
+<<"  macro Sk           [ P0, P0 , P0  ]            // Third order strain vector   \n"
+<<"  macro defStrain(i) [ i , i#1, i#2 ]            // Vect. field definition  	   \n";
+
 if(!vectorial){writemacros
 <<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n";
 

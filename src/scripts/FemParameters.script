@@ -179,21 +179,24 @@ if(quasistatic){writFemParameters
 <<"      def(du)     ,    // Incremental displacement (du{n})       		   \n"
 <<"      def(DPspc)  ;    // Partition of unity 	   			   \n"
 <<"										   \n"
-<<"  Wh0 e11         ,    //  11 component of strain				   \n"
-<<"      e22         ,    //  22 component of strain				   \n"
-<<"      e12         ,    //  12 component of strain				   \n";
+<<"  Wh0 damage      ,    //  Isotropic damage					   \n"
+<<"      intVar      ,    //  Internal variable		   			   \n";
 
 if(!useGFP)writFemParameters
+<<"      e11         ,    //  11 component of strain				   \n"
+<<"      e22         ,    //  22 component of strain				   \n"
+<<"      e12         ,    //  12 component of strain 				   \n"
 <<"      ep1         ,    //  1st principal strain component (in x)		   \n"
 <<"      ep2         ,    //  2nd principal strain component (in y)		   \n"
 <<"      eqStrain    ,    //  Equivalent strain	 				   \n";
 
-writFemParameters
-<<"      damage      ,    //  Isotropic damage 					   \n"
-<<"      intVar      ,    //  Internal variable		   			   \n"
+writFemParameters	
 <<"      lambdafield ,    //  lambda						   \n"
 <<"      mufield     ;    //  mu	 					   \n"
 <<"										   \n";
+
+if(useGFP)writFemParameters
+<<"  VhStr defStrain(strain)     ;    //  Stain defenition			   \n";
 
 if(!Sequential)writFemParameters
 <<"										   \n"

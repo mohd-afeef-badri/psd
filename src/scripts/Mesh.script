@@ -73,6 +73,9 @@ if(nonlinear)if(vectorial)if(debug || plotAll)writemeshPartitioning
 if(quasistatic)writemeshPartitioning
 <<" fespace Wh0    ( Th , P0 );			// stress/strain/damage FE space   \n";
 
+if(quasistatic)if(useGFP)writemeshPartitioning
+<<" fespace VhStr  ( Th , Sk );			// stress/strain/damage FE space   \n";
+
 writemeshPartitioning
 <<"										   \n"
 <<"//==============================================================================\n"
