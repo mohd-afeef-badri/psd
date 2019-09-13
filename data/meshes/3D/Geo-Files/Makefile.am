@@ -1,6 +1,6 @@
-LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo   
+LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo   
 	
-all-local: bar.msh tensile-crack.msh bar-dynamic.msh   
+all-local: bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  
 	@echo "  			  "
 	@echo " Finished Creating 3D meshes  !!!!!!"
 	@echo "  			  "
@@ -10,6 +10,9 @@ all-local: bar.msh tensile-crack.msh bar-dynamic.msh
 
 tensile-crack.msh:
 	$(GMSH) -3  tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
+	
+quasistatic.msh:
+	$(GMSH) -3 quasistatic.geo -o quasistatic.msh -format msh2 -v 0	
 
 bar.msh:
 	$(GMSH) -3 bar.geo -o bar.msh -format msh2 -v 0
@@ -20,6 +23,7 @@ bar-dynamic.msh:
 install-exec-local:
 	@mkdir -p ../Meshes
 	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.		
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
 	
