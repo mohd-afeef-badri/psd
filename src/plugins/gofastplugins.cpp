@@ -531,7 +531,9 @@ AnyType DecompEnergy3_Op<K>::operator()(Stack stack) const {
 template<class K>
 class MazarsDamageUpdate_Op : public E_F0mps {
     public:
-        Expression St					;
+        Expression e11					;
+        Expression e22					;
+        Expression e12					;
         Expression intvar				;
         Expression damage				;                
         Expression kappa0				;
@@ -546,13 +548,17 @@ class MazarsDamageUpdate_Op : public E_F0mps {
         		Expression param2		, 
         		Expression param3		, 
         		Expression param4		,
-        		Expression param5		        		        				        		        		
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		        		        				        		        		
         		) : 
-        		St     (param1)			, 
-        		intvar (param2)			,
-        		damage (param3)			, 
-        		kappa0 (param4)			,
-        		kappaC (param5)			
+        		e11    (param1)			, 
+        		e22    (param2)			, 
+        		e12    (param3)			,  
+        		intvar (param4)			,
+        		damage (param5)			, 
+        		kappa0 (param6)			,
+        		kappaC (param7)			
         		{
             		args.SetNameParam(n_name_param	, 
             				  name_param	, 
@@ -573,6 +579,8 @@ class MazarsDamageUpdate : public OneOperator {
         			     atype<KN<K>*>()	, 
         			     atype<KN<K>*>()	, 
         			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
         			     atype<double>()	,
         			     atype<double>() 	        			     
         			     ) {}
@@ -583,89 +591,176 @@ class MazarsDamageUpdate : public OneOperator {
             				  t[1]->CastTo(args[1]), 
             				  t[2]->CastTo(args[2]), 
             				  t[3]->CastTo(args[3]),
-            				  t[4]->CastTo(args[4])		  
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6])			  
             				  );
         }
 };
 
 template<class K>
 AnyType MazarsDamageUpdate_Op<K>::operator()(Stack stack) const {
-    KN<K>* Ex   = GetAny<KN<K>*>((*St)(stack))		;
+    KN<K>* Ex   = GetAny<KN<K>*>((*e11)(stack))		;
+    KN<K>* Ey   = GetAny<KN<K>*>((*e22)(stack))		;
+    KN<K>* Exy  = GetAny<KN<K>*>((*e12)(stack))		;
     KN<K>* out1 = GetAny<KN<K>*>((*intvar)(stack))	;
     KN<K>* out2 = GetAny<KN<K>*>((*damage)(stack))	;
     double K0   = GetAny<double>((*kappa0)(stack))	;
     double Kc   = GetAny<double>((*kappaC)(stack))	;
 
-/* 
-//--------------------------------------------------------------------------------------------------
-//      --------------- NO LAPACK WORKING METHOD -------------------------
-//--------------------------------------------------------------------------------------------------
     double tmp1,tmp2,tmpep1,tmpep2,tmpeqStrain;
-           
+    
+        
     for(int j = 0; j < Ex->n; ++j){
        tmp1=Ex->operator[](j)+Ey->operator[](j);
        tmp2=sqrt(pow((Ex->operator[](j)-Ey->operator[](j)),2)+4.*pow((Exy->operator[](j)),2));
        tmpep1=0.5*(tmp1+tmp2); tmpep2=0.5*(tmp1-tmp2);
-       tmpeqStrain=sqrt(pow((max(0.,tmpep1)),2) + pow((max(0.,tmpep2)),2))  ;       
+       tmpeqStrain=sqrt(pow((max(0.,tmpep1)),2) + pow((max(0.,tmpep2)),2))  ;
+       
        out1->operator[](j) = (out1->operator[](j) < tmpeqStrain ? tmpeqStrain : out1->operator[](j));
        out2->operator[](j) = 1.-(K0/out1->operator[](j))*exp(-(out1->operator[](j)-K0)/(Kc-K0));       
        out2->operator[](j) = floor(100000.*out2->operator[](j))/100000. ;       
      }     
     return 0L;
-*/    
+}
 
-    int tempindex=Ex->n/out1->n;
-    tempindex = tempindex/3 + 1;
-    double tmpeqStrain; 
-    
-    
-    KNM<double> Amat(tempindex,tempindex)   ;		// Amat is infact strain matrix
-    KN<double>  eval(tempindex)             ;		// To store eigenvalues
-    intblas n = tempindex                   ;		// Blas integer
-    char JOBZ = 'N', UPLO = 'U';			// Upper triangular
+
+template<class K>
+class MazarsDamageUpdate3_Op : public E_F0mps {
+    public:
+        Expression e11					;
+        Expression e22					;
+        Expression e33					;
+        Expression e32					;
+        Expression e31					;                        
+        Expression e12					;
+        Expression intvar				;
+        Expression damage				;                
+        Expression kappa0				;
+        Expression kappaC				;  
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        MazarsDamageUpdate3_Op(const basicAC_F0& args	, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		,
+        		Expression param7		,
+        		Expression param8		,
+        		Expression param9		,        		        		        		
+        		Expression param10		        		        				        		        		
+        		) : 
+        		e11    (param1)			, 
+        		e22    (param2)			, 
+        		e33    (param3)			,
+        		e32    (param4)			,  
+        		e31    (param5)			,  
+        		e12    (param6)			,          		        		        		  
+        		intvar (param7)			,
+        		damage (param8)			, 
+        		kappa0 (param9)			,
+        		kappaC (param10)			
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type MazarsDamageUpdate3_Op<K>::name_param[] = { };
+
+template<class K>
+class MazarsDamageUpdate3 : public OneOperator {
+    public:
+        MazarsDamageUpdate3() : OneOperator(atype<long>(), 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	,         			             			             			     
+        			     atype<double>()	,
+        			     atype<double>() 	        			     
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new MazarsDamageUpdate3_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5]),
+            				  t[6]->CastTo(args[6]),
+            				  t[7]->CastTo(args[7]),
+            				  t[8]->CastTo(args[8]),
+            				  t[9]->CastTo(args[9])         				  			  			  
+            				  );
+        }
+};
+
+template<class K>
+AnyType MazarsDamageUpdate3_Op<K>::operator()(Stack stack) const {
+    KN<K>* Ex   = GetAny<KN<K>*>((*e11)(stack))		;
+    KN<K>* Ey   = GetAny<KN<K>*>((*e22)(stack))		;
+    KN<K>* Ez   = GetAny<KN<K>*>((*e33)(stack))		;
+    KN<K>* Ezy  = GetAny<KN<K>*>((*e32)(stack))		;
+    KN<K>* Ezx  = GetAny<KN<K>*>((*e31)(stack))		;            
+    KN<K>* Exy  = GetAny<KN<K>*>((*e12)(stack))		;
+    KN<K>* out1 = GetAny<KN<K>*>((*intvar)(stack))	;
+    KN<K>* out2 = GetAny<KN<K>*>((*damage)(stack))	;
+    double K0   = GetAny<double>((*kappa0)(stack))	;
+    double Kc   = GetAny<double>((*kappaC)(stack))	;
+
+    double tmpeqStrain;
+ 
+
+    KNM<double> Amat(3,3);				// Amat is infact strain matrix
+    KN<double>  eval(3);
+    intblas n = 3;
+    char JOBZ = 'N', UPLO = 'U';
     intblas info, lw = -1;
     KN<double> w(1);
     dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
     lw = w[0];
-    w.resize(lw);
+    w.resize(lw);    
     
-
-  
-    for(int j = 0; j < out1->n; ++j){
+    for(int j = 0; j < Ex->n; ++j){
     
-        for (int ii=0 ; ii<tempindex; ii++ )
-    	for (int jj=ii; jj<tempindex; jj++ )
-    		Amat(ii,jj)=Ex->operator[]((tempindex+1)*j+(ii+jj)) ;    
-   	 
-    /*
-        //--------------------------------------------------------------------------
-        //  -------- OLD LOGIC -----------
-        //--------------------------------------------------------------------------
-        Amat(0,0)=Ex->operator[](3*j+0) ; 				// Strain xx
-        Amat(0,1)=Ex->operator[](3*j+2);       				// Strain xy        
-        Amat(1,1)=Ex->operator[](3*j+1) ;				// Strain yy 
-   */
+    	//cout << " EX " << Ex->operator[](j)<<  " Ey " << Ey->operator[](j)<<  " Ez " << Ez->operator[](j)<<endl;
+        Amat(0,0)=Ex->operator[](j); 
+        Amat(1,1)=Ey->operator[](j);
+        Amat(2,2)=Ez->operator[](j);
+        Amat(0,1)=Exy->operator[](j);
+        Amat(0,2)=Ezx->operator[](j);
+        Amat(1,2)=Ezy->operator[](j); 
         
-	dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);  // Calculate Eigenvalues--> eval	
+        //	cout << Amat << endl;                               
+	dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
 	
-	tmpeqStrain=0;
-	for (int ii=0 ; ii<tempindex; ii++ )
-		tmpeqStrain += pow((max(0.,eval[ii])),2);
-	tmpeqStrain=sqrt(tmpeqStrain);
-    /*
-        //--------------------------------------------------------------------------
-        //  -------- OLD LOGIC -----------
-        //--------------------------------------------------------------------------	
-	tmpeqStrain=sqrt(pow((max(0.,eval[0])),2) + pow((max(0.,eval[1])),2))  ; 
-    */	
+    	//cout << " E0 " << eval[0]<< "  E1  "<< eval[1]<< "  E2 "<< eval[2]<< endl;
+	
+	tmpeqStrain=sqrt(pow((max(0.,eval[0])),2) + pow((max(0.,eval[1])),2) +  pow((max(0.,eval[2])),2) )  ; 
+
         out1->operator[](j) = (out1->operator[](j) < tmpeqStrain ? tmpeqStrain : out1->operator[](j));	
         out2->operator[](j) = 1.-(K0/out1->operator[](j))*exp(-(out1->operator[](j)-K0)/(Kc-K0));       
         out2->operator[](j) = floor(100000.*out2->operator[](j))/100000. ;
+        //cout << " damage " << out2->operator[](j) << endl;
     }
          
-    return 0L;       
+    return 0L;
 }
-
 
  
 static void InitFF()
@@ -674,6 +769,7 @@ static void InitFF()
   Global.Add("GFPDecompEnergy3D", "(", new DecompEnergy3<double>);
   Global.Add("GFPDecompEnergy2D", "(", new DecompEnergy<double>);
   Global.Add("GFPMazarsDamageUpdate", "(", new MazarsDamageUpdate<double>);
+  Global.Add("GFPMazarsDamageUpdate3D", "(", new MazarsDamageUpdate3<double>);    
   Global.Add("GFPmaxintwoFEfields","(",new OneOperator2_<double,KN<double>*, KN<double>*>(GFPmaxintwoP1));		
   Global.Add("GFPeigen", "(", new OneOperator3_<long, KNM<double> *, KN<double> *, KNM<double> *>(lapack_dsyev));
   Global.Add("GFPeigenAlone", "(", new OneOperator2_<long, KNM<double> *, KN<double> *>(lapack_dsyevAlone));  

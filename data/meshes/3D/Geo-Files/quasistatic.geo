@@ -3,7 +3,7 @@
 //
 // NOTE: Use the -format msh2 format to genrate the mesh
 
-ls=1/10.;
+ls=1/2.;
 lengthBar=1.0;
 
 Point(1) = {lengthBar, 0, 0, ls};
