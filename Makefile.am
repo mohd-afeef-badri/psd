@@ -53,6 +53,39 @@ install-exec-local:
 	@echo "==========================================================================="
 	@echo "  									  "
 	
+install-Super-Comp:
+	@mkdir -p ${prefix}/PSD-Super-Comp
+	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes		
+	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes/2D
+	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes/3D
+	@mkdir -p ${prefix}/PSD-Super-Comp/Plugins
+	@mkdir -p ${prefix}/PSD-Super-Comp/Solver
+	@mkdir -p ${prefix}/PSD-Super-Comp/Solver/ScriptModules
+	@mkdir -p ${prefix}/PSD-Super-Comp/Doc	
+	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/2D/.	
+	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/3D/.
+	@cp  ./src/plugins/gofastplugins.cpp ${prefix}/PSD-Super-Comp/Plugins/gofastplugins.cpp
+	@cp  ./src/plugins/iovtk.cpp ${prefix}/PSD-Super-Comp/Plugins/iovtk.cpp
+	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDmacro.edp
+	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDplotMacro.edp	
+	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-Super-Comp/Plugins/MacroTools.edp	
+	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD-Super-Comp/Solver/SolverGenerator.edp
+	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
+	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
+	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
+	@echo "  			  "
+	@echo "==========================================================================="
+	@echo " Finished installing the supercomputer copy of PSD			  "
+	@echo "  			  						  "			
+	@echo " ****Note****								  "
+	@echo "  			  						  "			
+	@echo " # You still need to manullay install the plugins in the /plugins folder	  "			
+	@echo " # Once PSD is trasfered on the Super-computer goto the /plugins folder &  "
+	@echo "    $ make plugins 	  						  "	
+	@echo "  			  						  "				
+	@echo "==========================================================================="
+	@echo "  									  "	
+	
 check: 				
 	@echo "  			  "
 	cd ${prefix}/PSD/Solver &&  \
