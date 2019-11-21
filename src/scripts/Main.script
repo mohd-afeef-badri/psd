@@ -65,7 +65,7 @@ writemain
 <<"  include \"LinearFormBuilderAndSolver.edp\"         // Build and solve Ax=b	   \n";
 }
 
-if(plotAll)if(!dynamic)if(!nonlinear)writemain
+if(plotAll)if(!dynamic)if(!soildynamics)if(!nonlinear)writemain
 <<"  include \"PostProcessor.edp\"                      // Post Processing   	   \n";        
 
 } //-- [ostream terminator]  main.edp closed --//
