@@ -682,7 +682,25 @@ if(plotAll)if(spc==2)writesolver
 <<"              [uold,uold1,0]        ,					   \n"
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
+<<"           );  								   \n";
+
+if(plotTime)if(spc==2)writesolver
+<<"										   \n"
+<<"  //-----------------Paraview plotting-------------//			   \n"
+<<"										   \n"
+<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
+<<"  exportTimeStep( namevtu,   			  		           \n"
+<<"                  Th                    ,					   \n"
+<<"                  [uold,uold1,0]        ,					   \n"
+<<"                  vtuorder              ,					   \n"
+<<"                  iterout               ,					   \n"
+<<"                  namedata	 	   ,				    	   \n"
+<<"                  mpiCommWorld		 		   		   \n"
 <<"           );  								   \n"
+<<"										   \n";
+
+
+writesolver
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
 
 
@@ -844,7 +862,24 @@ if(plotAll)if(spc==2)writesolver
 <<"                withsur      ,		 		   		   \n"
 <<"                namedata     ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
-<<"           );				 		   		   \n"
+<<"           );				 		   		   \n";
+
+
+if(plotTime)if(spc==2)writesolver
+<<"										   \n"
+<<"  //-----------------Paraview plotting-------------//			   \n"
+<<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
+<<"  exportTimeStep( namevtu,   			  		           \n"
+<<"                  Th                    ,					   \n"
+<<"                  [uold,uold1,0]        ,					   \n"
+<<"                  vtuorder              ,					   \n"
+<<"                  iterout               ,					   \n"
+<<"                  namedata	 	   ,				    	   \n"
+<<"                  mpiCommWorld		 		   		   \n"
+<<"           );  								   \n";
+
+writesolver
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(plotAll)if(spc==3)writesolver
@@ -916,7 +951,7 @@ writesolver
 <<"										   \n"
 <<"  t += dt; 									   \n";
 
-if(plotAll)writesolver
+if(plotAll || plotTime)writesolver
 <<"										   \n"
 <<"  //-----------updating iteration count-----------//				   \n"
 <<"										   \n"
@@ -924,6 +959,8 @@ if(plotAll)writesolver
 
 writesolver
 <<"}										   \n"
+<<"										   \n"
+<<(plotTime ? "exportEnd(namevtu, mpiCommWorld)\n" : " "	   	 	    )
 <<"										   \n"
 <<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""    		    )

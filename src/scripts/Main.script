@@ -25,7 +25,7 @@ writemain
 if(!Sequential)writemain
 <<"  load    \"PETSc\"                                  // PETSc plugin activated  \n";
 
-if(plotAll)writemain
+if(plotAll || plotTime)writemain
 <<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
 
 if(useGFP)writemain
@@ -39,6 +39,9 @@ if(pipegnu)writemain
 
 if(version<4.4)writemain
 <<"  load    \"thresholdings\"                          // Remove non-zeros	   \n";
+
+if(debug || plotAll || plotTime)writemain
+<<"  include \"../Plugins/DDplotMacro.edp\"             // Domain decomp plotting  \n";
 
 if(Sequential)writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"
@@ -56,8 +59,7 @@ if(!Sequential){writemain
 <<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
 <<"  include \"../Plugins/DDmacro.edp\"                 // Domain decomp macros    \n";
-if(debug || plotAll)writemain
-<<"  include \"../Plugins/DDplotMacro.edp\"             // Domain decomp plotting  \n";
+
 writemain
 <<"  include \"MeshAndFeSpace.edp\"                     // Define Mesh and FE space\n"
 <<"  include \"FemParameters.edp\"                      // Fem Parameters          \n"

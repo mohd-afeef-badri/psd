@@ -167,7 +167,7 @@ if(soildynamics){writemeshParameters
 <<"  c[9] =   rho* (1.-alpf)*dt*(1.-gamma/(2.*beta))                              ;\n"
 <<"	 									   \n";
 
-if(plotAll)writemeshParameters
+if(plotAll || plotTime)writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"//  ------- Paraview plotting parameters -------				   \n"
@@ -178,32 +178,10 @@ if(plotAll)writemeshParameters
 <<"  bool     withsur  = true    ;                      // With surfaces	   \n"
 <<"  int      iterout  = 0       ;                      // Loop counter		   \n";
 
-
-if(pipegnu){writemeshParameters
+if(plotTime)writemeshParameters
+<<"  string   namevtu=\"VTUs/Result\";                      // Name of vtu         \n"
 <<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Gnuplot pipeing parameters  -------				   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<(Sequential ? "  real Ek,El,Ec;" : "  real[int] E(3),EG(3);"			    )
-<<"  // To store damping energy		   					   \n"
-<<"										   \n"
-<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
-<<"  system(\"rm energies.data\");						   \n";
-
-if(!supercomp)writemeshParameters
-<<"										   \n"
-<<"  pstream pgnuplot(\"gnuplot -p\");						   \n"
-<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
-<<"  pgnuplot 									   \n"
-<<"  <<\" set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";	\\n\"	   \n"
-<<"  <<\" set termoption font \\\"Arial-Bold,20\\\";    	    \t\t\\n\"	   \n"
-<<"  <<\" set format x \\\"%.1t\\\";				    \t\t\\n\"      \n"
-<<"  <<\" set xlabel \\\" Time     \\\";			    \t\t\\n\"	   \n"
-<<"  <<\" set ylabel \\\" Energies \\\";			    \t\t\\n\"  	   \n"
-<<"  <<\" set grid x y; set key left;					\\n\"; 	   \n"
-<<"										   \n";
-}
+<<"  exportBegin(namevtu, mpiCommWorld)					           \n";
 
 }
 
