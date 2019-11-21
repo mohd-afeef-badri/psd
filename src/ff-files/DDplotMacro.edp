@@ -55,8 +55,8 @@ if(mpiRank(comm) == 0) {
 }
 // EOM
 
-macro exportTimeStep(name, mesh, sol, fforder, ts, comm)
-savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, order = fforder);
+macro exportTimeStep(name, mesh, sol, fforder, ts, nameData, comm)
+savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, order = fforder , dataname=nameData);
 
 if(mpiRank(comm) == 0) {
     ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
@@ -67,9 +67,9 @@ if(mpiRank(comm) == 0) {
 }
 // EOM
 
-macro exportTimeStep2(name, mesh, sol, sol2, ts, comm)
+macro exportTimeStep2(name, mesh, sol, sol2, ts, nameData,  comm)
 int[int] vtuorder=[1,1,1,1];
-savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol2, order = vtuorder);
+savevtk(name + "_" + int(ts) + "_" + mpiRank(comm) + "_" + mpiSize(comm) + ".vtu", mesh, sol, sol2, order = vtuorder , dataname=nameData);
 
 if(mpiRank(comm) == 0) {
     ofstream pvd(name + "_" + mpiSize(comm) + ".pvd", append);
