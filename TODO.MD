@@ -1,5 +1,6 @@
 # What is comping up
 
+## [TODO] Update tesing in Make check
 ## [TODO] GFP single function for Energy decomposition
 ## [TODO] Strain Vectorization
 ## [TODO] New variational formulations $\epsilon(u):A:\epsilon(v)$ instead of $\sigma(u):\epsilion(v)$
