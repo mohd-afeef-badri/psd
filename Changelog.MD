@@ -5,6 +5,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Added
 - New soil dynamic module `-soildynamics`
 - New paraxial element support in 2D.
+- New timeplotting support `-timepvd`
 
 ### Changed
 - Moved to FreeFEM 4.4.2.

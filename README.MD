@@ -118,6 +118,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
 | `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of c++ plugins.  |
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
+| `-timepvd`     | `[bool]`  | To activate time pvd plotting for ParaView                   |
 | `-pointbc`     | `[bool]`  | To activate Dirichlet boundary condition on point.           |
 | `-dynamic`     | `[bool]`  | To activate dynamic solver.                                  |
 | `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). Default is false. |
@@ -131,6 +132,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-dirichletbc` | `[bool]`  | To activate Dirichlet boundary condition.                    |
 | `-quasistatic` | `[bool]`  | To activate quasi-static damage mechanics module.            |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
+| `-soildynamics`| `[bool]`  | To activate soil dynamics module.		            |
 |  		 | 	     |                     					    |
 | `-lagrange`    | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. |
 | `-dimension`   | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
