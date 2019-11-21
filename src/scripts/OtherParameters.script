@@ -147,6 +147,66 @@ if(!supercomp)writemeshParameters
 
 }
 
+if(soildynamics){writemeshParameters
+<<"	 									   \n"
+<<"//==============================================================================\n"
+<<"// ------- Variational formulation constant parameters -------  	   	   \n"
+<<"//==============================================================================\n"
+<<"	 									   \n"
+<<"  real[int] c(10);								   \n"
+<<"	 									   \n"
+<<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt)                                          ;\n"
+<<"  c[1] =   lambda*(1.-alpf)                                                    ;\n"
+<<"  c[2] =   2.*mu*(1.-alpf)                                                     ;\n"
+<<"  c[3] =   rho*(1.-alpm)/(beta*dt)                                             ;\n"
+<<"  c[4] =   rho*((1.-alpm)/2./beta -1.)                                         ;\n"
+<<"  c[5] =   lambda*alpf                                                         ;\n"
+<<"  c[6] =   2*mu*alpf                                                           ;\n"
+<<"  c[7] =   rho*(1.-alpf)*gamma/beta/dt                                         ;\n"
+<<"  c[8] =   rho* (1.-alpf)*(1.-gamma/beta)                                      ;\n"
+<<"  c[9] =   rho* (1.-alpf)*dt*(1.-gamma/(2.*beta))                              ;\n"
+<<"	 									   \n";
+
+if(plotAll)writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"//  ------- Paraview plotting parameters -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int[int] vtuorder = [1,1,1] ;                      // Solution export order   \n"
+<<"  string   namedata = \"U\"     ;			     // Name of export data\n"
+<<"  bool     withsur  = true    ;                      // With surfaces	   \n"
+<<"  int      iterout  = 0       ;                      // Loop counter		   \n";
+
+
+if(pipegnu){writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Gnuplot pipeing parameters  -------				   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<(Sequential ? "  real Ek,El,Ec;" : "  real[int] E(3),EG(3);"			    )
+<<"  // To store damping energy		   					   \n"
+<<"										   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  system(\"rm energies.data\");						   \n";
+
+if(!supercomp)writemeshParameters
+<<"										   \n"
+<<"  pstream pgnuplot(\"gnuplot -p\");						   \n"
+<<(Sequential ? "" : "  if(mpirank==0)\n"	   				    )
+<<"  pgnuplot 									   \n"
+<<"  <<\" set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";	\\n\"	   \n"
+<<"  <<\" set termoption font \\\"Arial-Bold,20\\\";    	    \t\t\\n\"	   \n"
+<<"  <<\" set format x \\\"%.1t\\\";				    \t\t\\n\"      \n"
+<<"  <<\" set xlabel \\\" Time     \\\";			    \t\t\\n\"	   \n"
+<<"  <<\" set ylabel \\\" Energies \\\";			    \t\t\\n\"  	   \n"
+<<"  <<\" set grid x y; set key left;					\\n\"; 	   \n"
+<<"										   \n";
+}
+
+}
+
 if(pipegnu)if(quasistatic){writemeshParameters 
 <<"										   \n"
 <<"//==============================================================================\n"

@@ -16,7 +16,7 @@ writFemParameters
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(!nonlinear)if(!vectorial)if(!dynamic)if(!quasistatic)writFemParameters
+if(!nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics)if(!quasistatic)writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Finite element variables -------					   \n"
@@ -24,7 +24,7 @@ if(!nonlinear)if(!vectorial)if(!dynamic)if(!quasistatic)writFemParameters
 <<"										   \n"
 <<"  Vh  def(u)    ;    //  Displacement					   \n";
 
-if(nonlinear)if(!vectorial)if(!dynamic){writFemParameters
+if(nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Finite element variables -------					   \n"
@@ -46,7 +46,7 @@ if(energydecomp)writFemParameters
 <<"      Hminus    ;    // Compressive stress history				   \n";
 }
 
-if(nonlinear)if(vectorial)if(!dynamic){writFemParameters
+if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Finite element variables -------					   \n"
@@ -63,7 +63,7 @@ if(energydecomp)writFemParameters
 <<"      Hminus    ;    // Compressive stress history		   		   \n";
 }
 
-if(dynamic){writFemParameters
+if(dynamic || soildynamics){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Finite element variables -------					   \n"
@@ -134,7 +134,7 @@ if(!vectorial)writFemParameters
 }
 
 
-if(dynamic){
+if(dynamic || soildynamics){
 if(Sequential)writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"

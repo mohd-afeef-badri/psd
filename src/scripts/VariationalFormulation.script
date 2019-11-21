@@ -16,7 +16,7 @@ writevarfmatsolve
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(!nonlinear)if(!dynamic)if(!quasistatic){writevarfmatsolve
+if(!nonlinear)if(!dynamic)if(!soildynamics)if(!quasistatic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Variation formulation linear-------				   \n"
@@ -130,7 +130,7 @@ writevarfmatsolve
 }  //-- [if loop terminator] nonlinear ended --//
 
 
-if(nonlinear)if(vectorial)if(!dynamic){writevarfmatsolve
+if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Variation formulation nonlinear -------				   \n"
@@ -273,6 +273,67 @@ if(dynamic){writevarfmatsolve
 <<"         du1 = 0								   \n"
 <<"  )		   								   \n"
 <<";										   \n"
+<<"										   \n";
+
+}  //-- [if loop terminator] dynamic Sequential ended --//
+
+
+
+if(soildynamics){writevarfmatsolve
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// -------Variation formulation soil-dynamics -------			   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"varf elastodynamics( def(du) , def(v) )					   \n"
+<<"										   \n"
+<<"    = intN(Th,qforder=3)							   \n"
+<<"  (										   \n"
+<<"      (def(du)'*def(v))*c[0]							   \n"
+<<"    + (divergence(du)*divergence(v))*c[1]					   \n"
+<<"    + (epsilon(du)'*epsilon(v))*c[2]						   \n"
+<<"  )										   \n"
+<<"										   \n"
+<<"    + intN(Th,qforder=3)							   \n"
+<<"  (										   \n"
+<<"      (def(uold)'*def(v))*c[0]						   \n"
+<<"    + (def(vold)'*def(v))*c[3]						   \n"
+<<"    + (def(aold)'*def(v))*c[4]						   \n"
+<<"    - (divergence(uold)*divergence(v))*c[5]					   \n"
+<<"    - (epsilon(uold)'*epsilon(v))*c[6]					   \n"
+<<"  )										   \n"
+<<"										   \n" 
+<<"    + intN1(Th,qforder=3,PAlabels)						   \n"
+<<"  (										   \n"
+<<"      c[7]*(  PA0(du)'*def(v)  )						   \n" 
+<<"  )										   \n"
+<<"	                              						   \n" 
+<<"    + intN1(Th,qforder=3,PAlabels)				  		   \n"
+<<"  (										   \n"
+<<"      c[7]*(  PA0(uold)'*def(v)  )						   \n"
+<<"    - c[8]*(  PA0(vold)'*def(v)  )						   \n" 
+<<"    - c[9]*(  PA0(aold)'*def(v)  )						   \n" 
+<<"  )										   \n" 
+<<"	                              		   				   \n" 
+<<"    + intN1(Th,qforder=3,LoadLabels)				  		   \n"
+<<"  (										   \n"
+<<"	 rho*(					  				   \n" 
+<<"	       (  cp*(N.x*N.x*0 + N.x*N.y*PALoad)	   			   \n" 
+<<"		 +cs*((1.-N.x*N.x)*0 - N.x*N.y*PALoad))*v 			   \n" 
+<<"	      +(  cp*(N.x*N.y*0 + N.y*N.y*PALoad)	   			   \n" 
+<<"		 +cs*((1.-N.y*N.y)*PALoad - N.x*N.y*0))*v1			   \n" 
+<<"          )									   \n" 
+<<"  )										   \n"
+<<"	                              		   				   \n" 
+<<" /*  //---- uncomment if the load is not on paraxial border ----//		   \n" 
+<<"	                              		   				   \n" 
+<<"    + intN1(Th,qforder=3,LoadLabels)				  		   \n"
+<<"  (										   \n"
+<<"	 load1*v+load2*v1 							   \n"
+<<"  )										   \n"
+<<" */										   \n"
+<<"	                              		   				   \n" 
+<<";	                              		   				   \n" 
 <<"										   \n";
 
 }  //-- [if loop terminator] dynamic Sequential ended --//

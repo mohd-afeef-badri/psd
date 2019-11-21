@@ -398,7 +398,7 @@ if(Sequential)writemacros
 } //-- [if loop terminator] timelog ended --//
 
 
-if(dynamic)if(!useGFP)writemacros
+if(dynamic)if(soildynamics)if(!useGFP)writemacros
 <<"										   \n"
 <<"//------------------------------update macros---------------------------------//\n"
 <<"										   \n"
@@ -417,6 +417,14 @@ if(dynamic)if(!useGFP)writemacros
 <<"  }//									   \n"
 <<"										   \n";
 
+
+if(soildynamics)writemacros
+<<"										   \n"
+<<"//----------------------Paraxial rotation macro-------------------------------//\n"
+<<"  macro PA0(i) 								   \n"
+<<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*((1.- N.x*N.x)*i - N.x*N.y*i#1),	   \n"
+<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(N.x*N.y*i + (1.- N.y*N.y)*i#1)     \n"
+<<"        ]//							                   \n";
 
 } //-- [ostream terminator]  macros.edp closed --//  
 

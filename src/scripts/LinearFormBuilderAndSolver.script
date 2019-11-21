@@ -510,7 +510,7 @@ writesolver
 
 if(!nonlinear)if(!quasistatic){
 
-if(!Sequential)if(!dynamic){writesolver      
+if(!Sequential)if(!dynamic)if(!soildynamics){writesolver      
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------				   \n"
@@ -577,7 +577,7 @@ if(debug)writesolver
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(!dynamic){writesolver    
+if(Sequential)if(!dynamic)if(!soildynamics){writesolver    
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------				   \n"
@@ -613,7 +613,7 @@ if(debug)writesolver
 }  //-- [if loop terminator] Sequential Not Dynamic ended --//
 
 
-if(Sequential)if(dynamic){writesolver    
+if(Sequential)if(dynamic)if(soildynamics){writesolver    
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------		   \n"
@@ -765,7 +765,7 @@ writesolver
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
 
-if(!Sequential)if(dynamic){writesolver    
+if(!Sequential)if(dynamic || soildynamics){writesolver    
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------		   \n"
@@ -1105,12 +1105,12 @@ writesolver
 
 
 
-if(!plotAll)if(!nonlinear)if(!dynamic)if(!Sequential)writesolver
+if(!plotAll)if(!nonlinear)if(!dynamic)if(!soildynamics)if(!Sequential)writesolver
 <<"										   \n"
 <<(timelog ? "MPItimerend(\"solver\",t1)\n" : ""  	         	  	    )
 <<"										   \n";
 
-if(!plotAll)if(!nonlinear)if(!dynamic)if(Sequential)writesolver
+if(!plotAll)if(!nonlinear)if(!dynamic)if(!soildynamics)if(Sequential)writesolver
 <<"										   \n"
 <<(timelog ? "timerend(\"solver\",t1)\n" : ""  	         	  	   	    )
 <<"										   \n";

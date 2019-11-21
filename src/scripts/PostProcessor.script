@@ -2,7 +2,8 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
-if(!nonlinear)if(!dynamic)if(plotAll){ofstream  writePostProcessor("PostProcessor.edp");
+if(!nonlinear)if(!dynamic)if(!soildynamics)if(plotAll){
+ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
 <<"										   \n"
