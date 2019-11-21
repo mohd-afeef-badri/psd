@@ -10,6 +10,7 @@
 ## [TODO] Newton rapsons for dynamics and phase-field
 ## [TODO] Higher order quadrature formulations
 ## [TODO] Extract point filed in MPI.
+## [TODO] Better ParaView export for transient.
 
 ## [DONE] 2D/3D Quasistatic damage via GFP 
 	- Idea is to take  Bruno/Giuseppe's serial solver and  parallelize the solver.

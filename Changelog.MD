@@ -3,6 +3,15 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+- New soil dynamic module `-soildynamics`
+- New paraxial element support in 2D.
+
+### Changed
+- Moved to FreeFEM 4.4.2.
+- Moved to PETSc 13.12.
+
+## [1.7]
+### Added
 - New  mesh reordering via Reverse Cuthill-Mackee via `-useRCM`. 
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
 - New GFP plugin for Mazar's damage update for 2D/3D problems `GFPMazarsDamageUpdate(...)`.
