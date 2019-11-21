@@ -90,6 +90,7 @@
   bool plotAll      =  usedARGV("-plot"         ) != -1;
   bool dynamic      =  usedARGV("-dynamic"      ) != -1;    
   bool pipegnu      =  usedARGV("-pipegnu"      ) != -1;
+  bool plotTime     =  usedARGV("-timepvd"      ) != -1;
   bool pointbc      =  usedARGV("-pointbc"      ) != -1;
   bool timelog      =  usedARGV("-timelog"      ) != -1;
   bool vectorial    =  usedARGV("-vectorial"    ) != -1;  
