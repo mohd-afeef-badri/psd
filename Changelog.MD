@@ -18,6 +18,7 @@ All notable changes to PSD solver will be documented in this file.
 - New GFP plugin for Mazar's damage update for 2D/3D problems `GFPMazarsDamageUpdate(...)`.
 - New MPI plotting routine `plotJustMeshMPI()`.
 - New option `-fastmethod` to switich back to defualt variational formulation.
+- New  make flage for compiling on supercomputer. 
 
 ### Changed
 - Changed variational formulation now using $\epsilon(u):A:\epsilon(v)$.
