@@ -173,15 +173,15 @@ if(plotAll || plotTime)writemeshParameters
 <<"//  ------- Paraview plotting parameters -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  int[int] vtuorder = [1,1,1] ;                      // Solution export order   \n"
-<<"  string   namedata = \"U\"     ;			     // Name of export data\n"
-<<"  bool     withsur  = true    ;                      // With surfaces	   \n"
-<<"  int      iterout  = 0       ;                      // Loop counter		   \n";
+<<"  int[int] vtuorder = [1,1,1]          ;  // Solution export order  		   \n"
+<<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
+<<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
+<<"  int      iterout  = 0                ;  // Loop counter			   \n";
 
-if(plotTime)writemeshParameters
-<<"  string   namevtu=\"VTUs/Result\";                      // Name of vtu         \n"
-<<"										   \n"
-<<"  exportBegin(namevtu, mpiCommWorld)					           \n";
+if(plotTime)if(!Sequential)writemeshParameters
+<<"  string   namevtu  = \"VTUs/Result\";  // File name				   \n"
+<<"  exportBegin(namevtu, mpiCommWorld)					           \n"	
+<<"  					           				   \n";
 
 }
 

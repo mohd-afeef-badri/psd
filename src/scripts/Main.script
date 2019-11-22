@@ -40,7 +40,7 @@ if(pipegnu)writemain
 if(version<4.4)writemain
 <<"  load    \"thresholdings\"                          // Remove non-zeros	   \n";
 
-if(debug || plotAll || plotTime)writemain
+if(debug || plotAll || plotTime)if(!Sequential)writemain
 <<"  include \"../Plugins/DDplotMacro.edp\"             // Domain decomp plotting  \n";
 
 if(Sequential)writemain

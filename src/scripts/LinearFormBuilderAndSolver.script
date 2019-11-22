@@ -671,7 +671,7 @@ writesolver
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : "" 	   )
 <<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""  	   		   );
 
-if(plotAll)if(spc==2)writesolver
+if(plotAll || plotTime)if(spc==2)writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
@@ -683,22 +683,6 @@ if(plotAll)if(spc==2)writesolver
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
 <<"           );  								   \n";
-
-if(plotTime)if(spc==2)writesolver
-<<"										   \n"
-<<"  //-----------------Paraview plotting-------------//			   \n"
-<<"										   \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
-<<"  exportTimeStep( namevtu,   			  		           \n"
-<<"                  Th                    ,					   \n"
-<<"                  [uold,uold1,0]        ,					   \n"
-<<"                  vtuorder              ,					   \n"
-<<"                  iterout               ,					   \n"
-<<"                  namedata	 	   ,				    	   \n"
-<<"                  mpiCommWorld		 		   		   \n"
-<<"           );  								   \n"
-<<"										   \n";
-
 
 writesolver
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
@@ -765,7 +749,7 @@ writesolver
 <<"										   \n"
 <<"  t += dt; 									   \n";
 
-if(plotAll)writesolver
+if(plotAll || plotTime)writesolver
 <<"										   \n"
 <<"  //-----------updating iteration count-----------//				   \n"
 <<"										   \n"
@@ -875,7 +859,7 @@ if(plotTime)if(spc==2)writesolver
 <<"                  [uold,uold1,0]        ,					   \n"
 <<"                  vtuorder              ,					   \n"
 <<"                  iterout               ,					   \n"
-<<"                  namedata	 	   ,				    	   \n"
+<<"                  namedata              ,				    	   \n"
 <<"                  mpiCommWorld		 		   		   \n"
 <<"           );  								   \n";
 
