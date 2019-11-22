@@ -46,8 +46,8 @@ if(debug || plotAll || plotTime)if(!Sequential)writemain
 if(Sequential)writemain
 <<"  include \"getARGV.idp\"                            // Commandline arguments ON\n"
 <<"  include \"ControlParameters.edp\"                  // Parameters & propeties  \n"
-<<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"Macros.edp\"                             // User-defined macros	   \n"
+<<"  include \"OtherParameters.edp\"                    // Other Parameters        \n"
 <<"  include \"MeshAndFeSpace.edp\"                     // Define Mesh and FE space\n"
 <<"  include \"FemParameters.edp\"                      // Fem Parameters          \n"
 <<"  include \"VariationalFormulations.edp\"            // Variational formulations\n"

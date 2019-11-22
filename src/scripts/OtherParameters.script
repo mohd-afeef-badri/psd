@@ -178,9 +178,11 @@ if(plotAll || plotTime)writemeshParameters
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
 
-if(plotTime)if(!Sequential)writemeshParameters
-<<"  string   namevtu  = \"VTUs/Result\";  // File name				   \n"
-<<"  exportBegin(namevtu, mpiCommWorld)					           \n"	
+if(plotTime)writemeshParameters
+<<"  string   namevtu  = \"VTUs/Result\"    ;  // File name			   \n"
+<<"  exportBegin(					           		   \n"
+<<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu"    )
+<<" )					           		 		   \n"	
 <<"  					           				   \n";
 
 }

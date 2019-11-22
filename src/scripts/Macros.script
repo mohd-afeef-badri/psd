@@ -416,14 +416,47 @@ if(dynamic || soildynamics)if(!useGFP)writemacros
 <<"										   \n";
 
 
-if(soildynamics)writemacros
+if(soildynamics){writemacros
 <<"										   \n"
 <<"//----------------------Paraxial rotation macro-------------------------------//\n"
 <<"										   \n"
 <<"  macro PA0(i) 								   \n"
 <<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),	   \n"
-<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
+<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)    	   \n"
 <<"        ]//							                   \n";
+
+if(Sequential)writemacros
+<<"										   \n"
+<<"//----------------------ParaView plotting macro-------------------------------//\n"
+<<"										   \n"
+<<"  macro exportBegin(name)							   \n"
+<<"    system(\"mkdir -p VTUs\");						   \n"
+<<"    {ofstream pvd(name +\".pvd\");	   					   \n"
+<<"      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";				   \n"
+<<"      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";	   \n"
+<<"      pvd << \"         byte_order=\\\"LittleEndian\\\"\\n\";		   \n"
+<<"      pvd << \"         compressor=\\\"vtkZLibDataCompressor\\\">\\n\";	   \n"
+<<"      pvd << \"  <Collection>\\n\"; 						   \n"
+<<"    }//									   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  macro exportEnd(name)							   \n"
+<<"    {ofstream pvd(name +\".pvd\", append);					   \n"
+<<"    pvd << \"  </Collection>\\n\";						   \n"
+<<"    pvd << \"</VTKFile>\\n\";}						   \n"
+<<"    system(\"mv \"+name+\".pvd .\");				       	  	   \n"
+<<"  // 									   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  macro exportTimeStep(name, mesh, sol, forder, iterno, ts, nam )	   	   \n"
+<<"    savevtk(name+\"_\"+int(iterno)+\".vtu\",mesh,sol,order=forder,dataname=nam);\n"
+<<"    ofstream pvd(name +\".pvd\", append);					   \n"
+<<"      pvd << \"    <DataSet timestep=\\\"\" + real(ts) + \"\\\"\\n\";	   \n"
+<<"      pvd << \"             file=\\\"\";					   \n"
+<<"      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";		   \n"
+<<"  // 									   \n"
+<<"										   \n";
+}
 
 } //-- [ostream terminator]  macros.edp closed --//  
 
