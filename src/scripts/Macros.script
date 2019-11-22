@@ -40,15 +40,13 @@ if(quasistatic)if(useGFP)writemacros
 <<"  macro defStrain(i) [ i , i#1, i#2 ]            // Vect. field definition  	   \n";
 
 if(!vectorial){writemacros
-<<"  macro Pk [P"+lag+",P"+lag+"]\t\t		// Finite element space	   	   \n";
+<<"  macro Pk       [ P"+lag+", P"+lag+"  ]\t\t    // Finite element space	   \n";
 
 if(!nonlinear)writemacros
-<<"										   \n"
-<<"  macro def  (i) [ i , i#1 ]			// Vect. field definition  	   \n";
+<<"  macro def  (i) [ i , i#1 ]                // Vect. field definition  	   \n";
 
 if(!nonlinear)if(!Sequential)writemacros
-<<"										   \n"
-<<"  macro init (i) [ i ,  i  ]			// Vect. field initialize  	   \n"
+<<"  macro init (i) [ i ,  i  ]                // Vect. field initialize  	   \n"
 <<"										   \n";
 
 } //-- [if loop terminator] !vectorial ended --//
@@ -155,12 +153,12 @@ if(Sequential)writemacros
 <<"										   \n"
 <<"//--------------------Sequential remapping macros-----------------------------//\n"
 <<"										   \n"
-<<"  macro meshN()mesh				// Two-dimensional problem	   \n"
-<<"  macro intN()int2d				// Two-dimensional integral	   \n"
-<<"  macro intN1()int1d				// One-dimensional integral	   \n"
-<<"  macro readmeshN()readmesh			// Two-dimensional 'mesh' reader   \n"
-<<"  macro gmshloadN()gmshload			// Two-dimensional 'msh' reader	   \n"
-<<"  macro grad(i) [dx(i),dy(i)]		// two-dimensional gradient	   \n"
+<<"  macro meshN()mesh                          // Two-dimensional problem	   \n"
+<<"  macro intN()int2d                          // Two-dimensional integral	   \n"
+<<"  macro intN1()int1d                         // One-dimensional integral	   \n"
+<<"  macro readmeshN()readmesh                  // Two-dimensional 'mesh' reader   \n"
+<<"  macro gmshloadN()gmshload                  // Two-dimensional 'msh' reader	   \n"
+<<"  macro grad(i) [dx(i),dy(i)]                // two-dimensional gradient	   \n"
 <<"										   \n";
 
 } //-- [if loop terminator] space==2 ended --//
@@ -421,6 +419,7 @@ if(dynamic || soildynamics)if(!useGFP)writemacros
 if(soildynamics)writemacros
 <<"										   \n"
 <<"//----------------------Paraxial rotation macro-------------------------------//\n"
+<<"										   \n"
 <<"  macro PA0(i) 								   \n"
 <<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),	   \n"
 <<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
