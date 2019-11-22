@@ -422,8 +422,8 @@ if(soildynamics)writemacros
 <<"										   \n"
 <<"//----------------------Paraxial rotation macro-------------------------------//\n"
 <<"  macro PA0(i) 								   \n"
-<<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*((1.- N.x*N.x)*i - N.x*N.y*i#1),	   \n"
-<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(N.x*N.y*i + (1.- N.y*N.y)*i#1)     \n"
+<<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),	   \n"
+<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
 <<"        ]//							                   \n";
 
 } //-- [ostream terminator]  macros.edp closed --//  
