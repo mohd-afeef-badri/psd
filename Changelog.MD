@@ -11,7 +11,7 @@ All notable changes to PSD solver will be documented in this file.
 - Moved to FreeFEM 4.4.2.
 - Moved to PETSc 13.12.
 
-## [1.7]
+## [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7) - 2019-11-08
 ### Added
 - New  mesh reordering via Reverse Cuthill-Mackee via `-useRCM`. 
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
@@ -141,3 +141,4 @@ All notable changes to PSD solver will be documented in this file.
 | [1.4](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4)        |f51f678630eb9b2fed355e5cedf976ce8b5fa341 |
 | [1.5](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5)        |07293ba09a69d3d6a16278220a0b4a7a9f318f96 |
 | [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6)        |f359dd049fb1ddde376e8ad8e5177c663e430418 |
+| [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7)        |aee9bfec868a70b3d9974d7692bc19f9739ab7dc |
