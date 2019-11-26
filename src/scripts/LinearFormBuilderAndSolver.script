@@ -698,6 +698,20 @@ if(plotTime)if(spc==2)writesolver
 <<"                  namedata              				    	   \n"
 <<"           );  								   \n";
 
+if(plotTime)if(spc==3)writesolver
+<<"										   \n"
+<<"  //-----------------Paraview plotting-------------//			   \n"
+<<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
+<<"  exportTimeStep( namevtu,   			  		           \n"
+<<"                  Th                    ,					   \n"
+<<"                  [uold,uold1,uold2]       ,					   \n"
+<<"                  vtuorder              ,					   \n"
+<<"                  iterout               ,					   \n"
+<<"                  t                     ,					   \n"
+<<"                  namedata              				    	   \n"
+<<"           );  								   \n";
+
 writesolver
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
 
@@ -873,6 +887,21 @@ if(plotTime)if(spc==2)writesolver
 <<"  exportTimeStep( namevtu,   			  		           \n"
 <<"                  Th                    ,					   \n"
 <<"                  [uold,uold1,0]        ,					   \n"
+<<"                  vtuorder              ,					   \n"
+<<"                  iterout               ,					   \n"
+<<"                  t                     ,					   \n"
+<<"                  namedata              ,				    	   \n"
+<<"                  mpiCommWorld		 		   		   \n"
+<<"           );  								   \n";
+
+if(plotTime)if(spc==3)writesolver
+<<"										   \n"
+<<"  //-----------------Paraview plotting-------------//			   \n"
+<<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
+<<"  exportTimeStep( namevtu,   			  		           \n"
+<<"                  Th                    ,					   \n"
+<<"                  [uold,uold1,uold2]    ,					   \n"
 <<"                  vtuorder              ,					   \n"
 <<"                  iterout               ,					   \n"
 <<"                  t                     ,					   \n"

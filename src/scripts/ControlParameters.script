@@ -226,13 +226,22 @@ if(soildynamics){writemeshParameters
 <<"//==============================================================================\n"
 <<"// -------Paraxial boundary-condition parameters-------			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"										   \n";
+
+if(spc==2)writemeshParameters
 <<"  int [int]   PAlabels = [2,4,5];   \t// Vector of Paraxial load	   	   \n"
-<<"										   \n"
-<<"  real tt;									   \n"
-<<"  func PALoad = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );     \n"
-<<"										   \n"
 <<"  int [int]   LoadLabels = [3];   \t// Vector of Paraxial load	   	   \n"
+<<"  real tt;									   \n"
+<<"  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );       \n";
+
+if(spc==3)writemeshParameters
+<<"  int [int]   PAlabels = [1,2,3,5];   \t// Vector of Paraxial load	   	   \n"
+<<"  int [int]   LoadLabels = [4];   \t// Vector of Paraxial load	   	   \n"
+<<"  real tt;									   \n"
+<<"  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );     \n";
+
+
+writemeshParameters
 <<"	 									   \n";
 }
 
