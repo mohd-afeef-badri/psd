@@ -294,7 +294,7 @@ if(soildynamics){writevarfmatsolve
 <<"    + (epsilon(du)'*epsilon(v))*c[2]						   \n"
 <<"  )										   \n"
 <<"										   \n"
-<<"    + intN(Th,qforder=3)							   \n"
+<<"    + intN(Th,qforder=2)							   \n"
 <<"  (										   \n"
 <<"      (def(uold)'*def(v))*c[0]						   \n"
 <<"    + (def(vold)'*def(v))*c[3]						   \n"
@@ -308,7 +308,7 @@ if(soildynamics){writevarfmatsolve
 <<"      c[7]*(  PA0(du)'*def(v)  )						   \n" 
 <<"  )										   \n"
 <<"	                              						   \n" 
-<<"    + intN1(Th,qforder=3,PAlabels)				  		   \n"
+<<"    + intN1(Th,qforder=2,PAlabels)				  		   \n"
 <<"  (										   \n"
 <<"      c[7]*(  PA0(uold)'*def(v)  )						   \n"
 <<"    - c[8]*(  PA0(vold)'*def(v)  )						   \n" 
@@ -317,7 +317,7 @@ if(soildynamics){writevarfmatsolve
 
 if(spc==2)writevarfmatsolve
 <<"	                              		   				   \n" 
-<<"    + intN1(Th,qforder=3,LoadLabels)				  		   \n"
+<<"    + intN1(Th,qforder=2,LoadLabels)				  		   \n"
 <<"  (										   \n"
 <<"	 rho*(					  				   \n" 
 <<"	       (  cp*(N.x*N.x*0 + N.x*N.y*v1in)	   				   \n" 
@@ -329,7 +329,7 @@ if(spc==2)writevarfmatsolve
 
 if(spc==3)writevarfmatsolve
 <<"	                              		   				   \n" 
-<<"    + intN1(Th,qforder=3,LoadLabels)				  		   \n"
+<<"    + intN1(Th,qforder=2,LoadLabels)				  		   \n"
 <<"  (										   \n"
 <<"	 rho*(					  				   \n" 
 <<"	       (  cp*( N.x*N.x*0 + N.x*N.y*v1in + N.x*N.z*0)			   \n" 
@@ -345,7 +345,7 @@ writevarfmatsolve
 <<"	                              		   				   \n" 
 <<" /*  //---- uncomment if the load is not on paraxial border ----//		   \n" 
 <<"	                              		   				   \n" 
-<<"    + intN1(Th,qforder=3,LoadLabels)				  		   \n"
+<<"    + intN1(Th,qforder=2,LoadLabels)				  		   \n"
 <<"  (										   \n"
 <<"	 load1*v+load2*v1 							   \n"
 <<"  )										   \n"
