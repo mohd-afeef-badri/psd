@@ -1,6 +1,6 @@
-LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo   
+LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo  soil.geo   
 	
-all-local: bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  
+all-local: bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  soil.msh  
 	@echo "  			  "
 	@echo " Finished Creating 3D meshes  !!!!!!"
 	@echo "  			  "
@@ -18,7 +18,13 @@ bar.msh:
 	$(GMSH)gmsh -3 bar.geo -o bar.msh -format msh2 -v 0
 
 bar-dynamic.msh:
-	$(GMSH)gmsh -3 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0	
+	$(GMSH)gmsh -3 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
+
+soil.msh:
+	$(GMSH)gmsh -3 soil.geo -o soil.msh -format msh2 -v 0
+	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0
+	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0		
+	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0		
 
 install-exec-local:
 	@mkdir -p ../Meshes
