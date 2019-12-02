@@ -97,8 +97,8 @@ if(dynamic){writemeshParameters
 <<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt        ;\n"
 <<"  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt               ;\n"
 <<"  c[2] =   2.*mu*(1.-alpf) + 2.*mu*etak*gamma*(1-alpf)/beta/dt                 ;\n"
-<<"  c[3] =   rho*(1.-alpm)/beta/dt + etam*rho*(1-gamma*(1-alpf)/beta)            ;\n"
-<<"  c[4] =   rho*( (1.-alpm)*(1.-2.*beta)/2./beta - alpm + etam*dt*(1.-alpf)*(1.-gamma/2/beta))   ;\n"
+<<"  c[3] =   rho*(1.-alpm)/beta/dt - etam*rho*(1-gamma*(1-alpf)/beta)            ;\n"
+<<"  c[4] =   rho*( (1.-alpm)*(1.-2.*beta)/2./beta - alpm - etam*dt*(1.-alpf)*(1.-gamma/2/beta))   ;\n"
 <<"  c[5] =   lambda*alpf -    lambda*etak*gamma*(1.-alpf)/beta/dt                ;\n"
 <<"  c[6] =   2*mu*alpf   -    2.*mu*etak*gamma*(1.-alpf)/beta/dt                 ;\n"
 <<"  c[7] =   etak*lambda*(gamma*(1.-alpf)/beta - 1)                              ;\n"
@@ -107,17 +107,23 @@ if(dynamic){writemeshParameters
 <<"  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))            ;\n"
 <<"	 									   \n";
 
-if(plotAll)writemeshParameters
+if(plotAll || plotTime)writemeshParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"//  ------- Paraview plotting parameters -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  int[int] vtuorder = [1,1,1] ;                      // Solution export order   \n"
-<<"  string   namedata = \"U\"     ;			     // Name of export data\n"
-<<"  bool     withsur  = true    ;                      // With surfaces	   \n"
-<<"  int      iterout  = 0       ;                      // Loop counter		   \n";
+<<"  int[int] vtuorder = [1,1,1]          ;  // Solution export order  		   \n"
+<<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
+<<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
+<<"  int      iterout  = 0                ;  // Loop counter			   \n";
 
+if(plotTime)writemeshParameters
+<<"  string   namevtu  = \"VTUs/Result\"    ;  // File name			   \n"
+<<"  exportBegin(					           		   \n"
+<<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu"    )
+<<" )					           		 		   \n"	
+<<"  					           				   \n";
 
 if(pipegnu){writemeshParameters
 <<"										   \n"
@@ -163,8 +169,8 @@ if(soildynamics){writemeshParameters
 <<"  c[5] =   lambda*alpf                                                         ;\n"
 <<"  c[6] =   2*mu*alpf                                                           ;\n"
 <<"  c[7] =   rho*(1.-alpf)*gamma/beta/dt                                         ;\n"
-<<"  c[8] =   rho* (1.-alpf)*(1.-gamma/beta)                                      ;\n"
-<<"  c[9] =   rho* (1.-alpf)*dt*(1.-gamma/(2.*beta))                              ;\n"
+<<"  c[8] =   rho*(1.-alpf)*(1.-gamma/beta)                                       ;\n"
+<<"  c[9] =   rho*(1.-alpf)*dt*(1.-gamma/(2.*beta))                               ;\n"
 <<"	 									   \n";
 
 if(plotAll || plotTime)writemeshParameters
