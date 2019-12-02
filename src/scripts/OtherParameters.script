@@ -169,7 +169,7 @@ if(soildynamics){writemeshParameters
 <<"  c[5] =   lambda*alpf                                                         ;\n"
 <<"  c[6] =   2*mu*alpf                                                           ;\n"
 <<"  c[7] =   rho*(1.-alpf)*gamma/beta/dt                                         ;\n"
-<<"  c[8] =   rho*(1.-alpf)*(1.-gamma/beta)                                       ;\n"
+<<"  c[8] =   rho*(1.-gamma*(1-alpf)/beta)                                        ;\n"
 <<"  c[9] =   rho*(1.-alpf)*dt*(1.-gamma/(2.*beta))                               ;\n"
 <<"	 									   \n";
 
