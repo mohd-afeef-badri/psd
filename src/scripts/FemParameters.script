@@ -101,17 +101,19 @@ writFemParameters
 <<"// -------  Fem matrices and vectors -------	   				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         	    )
 <<"  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ; 	 		   \n";
 
 if(!vectorial)writFemParameters
 <<"										   \n"
 <<"  Mat A1( Vh1.ndof,  restrictionIntersectionZ, DZ);  			   \n"
+<<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          	    )
 <<"										   \n"
 <<"  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear	   \n";
 
 if(vectorial)writFemParameters
-<<"										   \n"
+<<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          	    )
 <<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n";
 
@@ -163,7 +165,9 @@ writFemParameters
 <<"  matrix       ALoc    ;							   \n"
 <<"  real[int]    b(Vh.ndof);							   \n"
 <<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         	    )
 <<"  Mat  A(Vh.ndof, restrictionIntersectionP, DP)  ; 	 			   \n"
+<<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          	    )
 <<"										   \n";
 }
 
@@ -204,7 +208,9 @@ if(!Sequential)writFemParameters
 <<"// -------  Fem matrices and vectors -------	   				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
+<<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         	    )
 <<"  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ; 	 		   \n"
+<<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          	    )
 <<"										   \n"
 <<"  matrix     ALoc           ;        // Local vectorial matrix for bilinear	   \n"
 <<"  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear  \n"

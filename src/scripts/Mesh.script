@@ -155,6 +155,7 @@ writemeshPartitioning
 <<" }										   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"Solver\",t1)\n" : "" 	         	 	    )
+<<(timelog ? "  if(mpirank==0)cout<<\"\"<<endl;\n" : ""          	 	    )
 <<(timelog ? "  MPItimerbegin(\"Mesh Partitioning\",t0)\n" : ""           	    )
 <<"  PartThAndBuildCommunication();						   \n"
 <<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
