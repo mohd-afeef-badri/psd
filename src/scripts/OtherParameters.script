@@ -60,6 +60,10 @@ if(plotAll)writemeshParameters
 <<"  int iterout  = 0 ,               // Loop Counter			    	   \n"
 <<"      iterout1 = 0 ;               // Loop Counter				   \n";
 
+if(plotAll)if(!Sequential)if(version>4.4)writemeshParameters
+<<"										   \n"
+<<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
+
 if(pipegnu){writemeshParameters 
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -117,6 +121,10 @@ if(plotAll || plotTime)writemeshParameters
 <<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
+
+if(plotAll)if(!Sequential)if(version>4.4)writemeshParameters
+<<"										   \n"
+<<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
 
 if(plotTime)writemeshParameters
 <<"  string   namevtu  = \"VTUs/Result\"    ;  // File name			   \n"
@@ -183,6 +191,10 @@ if(plotAll || plotTime)writemeshParameters
 <<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
+
+if(plotAll)if(!Sequential)if(version>4.4)writemeshParameters
+<<"										   \n"
+<<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
 
 if(plotTime)writemeshParameters
 <<"  string   namevtu  = \"VTUs/Result\"    ;  // File name			   \n"
