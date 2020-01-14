@@ -895,11 +895,14 @@ writesolver
 <<(timelog ? "  MPItimerend(\"updating variables\",t0)\n" : ""      		   );
 
 
-if(plotAll)if(spc==2)writesolver
+if(plotAll)if(spc==2){writesolver
 <<"										   \n"
 <<"  //-----------------ParaView plotting--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   )
+<<"										   \n";
+
+if(version<4.4)writesolver    	
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
 <<"  exportpvd(    namevtu      ,						   \n"
 <<"                Th           ,						   \n"
@@ -910,8 +913,19 @@ if(plotAll)if(spc==2)writesolver
 <<"                mpiCommWorld			 		   		   \n"
 <<"           );				 		   		   \n";
 
+if(version>4.4)writesolver    	
+<<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
+<<"                 Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t [du,du1,0]\t    ,\n" : "\t\t [du,du1,du2]\t ,\n" 	   	    )
+<<"                 order=vtuorder     ,				   	   \n"
+<<"                 dataname=\"U\"       ,				   	   \n"
+<<"                 append=true       					   	   \n"
+<<"              );			       				   	   \n";
 
-if(plotTime)if(spc==2)writesolver
+}
+
+
+if(plotTime)if(version<4.4)if(spc==2)writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
@@ -960,7 +974,7 @@ if(plotAll)if(spc==3)writesolver
 <<"           );				 		   		   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
-if(pipegnu){writesolver
+if(pipegnu)if(!soildynamics){writesolver
 <<"										   \n"
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
@@ -1021,9 +1035,13 @@ if(plotAll || plotTime)writesolver
 
 writesolver
 <<"}										   \n"
-<<"										   \n"
+<<"										   \n";
+
+if(version<4.4)writesolver
 <<(plotTime ? "exportEnd(namevtu, mpiCommWorld)\n" : " "	   	 	    )
-<<"										   \n"
+<<"										   \n";
+
+writesolver
 <<(timelog ? "if(mpirank==0)\n" : " "	   	        	    		    )
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""    		    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : ""	   	        	    )
