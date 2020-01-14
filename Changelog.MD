@@ -10,6 +10,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Changed
 - Moved to FreeFEM 4.4.2.
 - Moved to PETSc 13.12.
+- New simpler way of ploting `savevtk` in parallel with `append` flag for iterative solutions.
 
 ## [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7) - 2019-11-08
 ### Added

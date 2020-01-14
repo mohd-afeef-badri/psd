@@ -432,30 +432,45 @@ writesolver
 
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)if(!vectorial)writesolver
+if(plotAll)if(!vectorial){writesolver
 <<"										   \n"
 <<"  //-------Paraview plotting every nth iteration -----------//  	   	   \n"
 <<"										   \n"
 <<"  iterout++;									   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""              )
-<<"  if(int(iterout%10)==0){							   \n"
+<<"  if(int(iterout%10)==0){							   \n";
+
+if(version<4.4)writesolver
 <<"    string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
 <<"    exportpvd2(  namevtu            , 					   \n"
 <<"                 Th                 ,				   	   \n"
-<<(spc==2 ? "\t\t [u,u1,0]\t\t,\n" : "\t\t [u,u1,u2]\t\t,\n" 	   	    )
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
 <<"                 phi                ,				   	   \n"
 <<"                 vtuorder           ,				   	   \n"
 <<"                 withsur            ,				   	   \n"
 <<"                 namedata           ,				   	   \n"
 <<"                 mpiCommWorld       				   	   	   \n"
-<<"              );			       				   	   \n"
+<<"              );			       				   	   \n";
+
+if(version>4.4)writesolver    	
+<<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
+<<"                 Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n"
+<<"                 order=vtuorder     ,				   	   \n"
+<<"                 dataname=\"U  d\"    ,				   	   \n"
+<<"                 append=true       					   	   \n"
+<<"              );			       				   	   \n";
+
+writesolver
 <<"										   \n"
 <<"    iterout1++;								   \n"
 <<"  }									  	   \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""   	    );
+}
 
-if(plotAll)if(vectorial)writesolver
+if(plotAll)if(vectorial){writesolver
 <<"										   \n"
 <<"  //--------Paraview plotting every nth iteration ----------//  	   	   \n"
 <<"										   \n"
@@ -464,20 +479,37 @@ if(plotAll)if(vectorial)writesolver
 <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""              )
 <<"										   \n"
 <<"  if(int(iterout%10)==0){						 	   \n"
+<<"										   \n"
+<<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
+
+if(version<4.4)writesolver    	
 <<"    string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
 <<"    exportpvd2(  namevtu            , 					   \n"
 <<"                 Th                 ,				   	   \n"
-<<(spc==2 ? "\t\t [u,u1,0]\t\t,\n" : "\t\t [u,u1,u2]\t\t,\n" 	   	    )
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
 <<"                 phi                ,				   	   \n"
 <<"                 vtuorder           ,				   	   \n"
 <<"                 withsur            ,				   	   \n"
 <<"                 namedata           ,				   	   \n"
 <<"                 mpiCommWorld       					   	   \n"
-<<"              );			       				   	   \n"
+<<"              );			       				   	   \n";
+
+if(version>4.4)writesolver    		
+<<"    savevtk(  \"VTUs/Solution.vtu\"   , 					   \n"
+<<"                 Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n"
+<<"                 order=vtuorder     ,				   	   \n"
+<<"                 dataname=\"U  d\"    ,				   	   \n"
+<<"                 append=true       					   	   \n"
+<<"              );			       				   	   \n";
+
+writesolver
 <<"										   \n"
 <<"    iterout1++;								   \n"
 <<"  }										   \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""   	    );
+}
 
 if(debug)if(!vectorial)writesolver
 <<"										   \n"

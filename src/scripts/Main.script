@@ -25,16 +25,20 @@ writemain
 if(!Sequential)writemain
 <<"  load    \"PETSc\"                                  // PETSc plugin activated  \n";
 
-if(plotAll || plotTime)writemain
+if(!Sequential)if(version<4.4)if(plotAll || plotTime)writemain
 <<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
 
-if(useGFP)writemain
+if(Sequential)if(plotAll || plotTime)writemain
+<<"  load    \"../Plugins/iovtk\"                       // Paraview support files  \n";
+
+
+if(useGFP)if(!energydecomp)writemain
 <<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
 
 if(nonlinear)if(energydecomp)writemain
 <<"  load    \"../Plugins/gofastplugins\"               // GoFastPlugins Library   \n";
 
-if(pipegnu)writemain
+if(pipegnu)if(!supercomp)writemain
 <<"  load    \"pipe\"                                   // Piping activated	   \n";
 
 if(version<4.4)writemain

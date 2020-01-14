@@ -53,7 +53,7 @@ if(plotAll)writemeshParameters
 <<"// ------- Paraview plotting parameters ------- 	 			   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
-<<"  int[int] vtuorder=[1,1,1,1];						   \n" 
+<<"  int[int] vtuorder=[1,1];   						   \n" 
 <<"  string   namedata=\"U Phi\";						   \n"
 <<"  bool     withsur=true;						  	   \n"
 <<"	 									   \n"
@@ -113,7 +113,7 @@ if(plotAll || plotTime)writemeshParameters
 <<"//  ------- Paraview plotting parameters -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  int[int] vtuorder = [1,1,1]          ;  // Solution export order  		   \n"
+<<"  int[int] vtuorder = [1]             ;  // Solution export order  		   \n"
 <<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
@@ -179,7 +179,7 @@ if(plotAll || plotTime)writemeshParameters
 <<"//  ------- Paraview plotting parameters -------				   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  int[int] vtuorder = [1,1,1]          ;  // Solution export order  		   \n"
+<<"  int[int] vtuorder = [1]                ;  // Solution export order  	   \n"
 <<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
