@@ -3,6 +3,13 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+
+
+### Changed
+
+
+## [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8) - 2020-01-21
+### Added
 - New soil dynamic module `-soildynamics`
 - New paraxial element support in 2D.
 - New timeplotting support `-timepvd`
