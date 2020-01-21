@@ -716,28 +716,14 @@ if(plotAll)if(spc==2)writesolver
 <<"              dataname=namedata 					    	   \n"
 <<"           );  								   \n";
 
-if(plotTime)if(spc==2)writesolver
+if(plotTime)writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  exportTimeStep( namevtu,   			  		           \n"
 <<"                  Th                    ,					   \n"
-<<"                  [uold,uold1,0]        ,					   \n"
-<<"                  vtuorder              ,					   \n"
-<<"                  iterout               ,					   \n"
-<<"                  t                     ,					   \n"
-<<"                  namedata              				    	   \n"
-<<"           );  								   \n";
-
-if(plotTime)if(spc==3)writesolver
-<<"										   \n"
-<<"  //-----------------Paraview plotting-------------//			   \n"
-<<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
-<<"  exportTimeStep( namevtu,   			  		           \n"
-<<"                  Th                    ,					   \n"
-<<"                  [uold,uold1,uold2]       ,					   \n"
+<<(spc==2 ? "\t\t [uold,uold1,0]\t   ,\n" : "\t\t [uold,uold1,uold2]\t   ,\n" 	   )
 <<"                  vtuorder              ,					   \n"
 <<"                  iterout               ,					   \n"
 <<"                  t                     ,					   \n"
@@ -911,7 +897,8 @@ if(version<4.4)writesolver
 <<"                withsur      ,		 		   		   \n"
 <<"                namedata     ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
-<<"           );				 		   		   \n";
+<<"           );				 		   		   \n"
+<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(version>4.4)writesolver
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
@@ -920,7 +907,8 @@ if(version>4.4)writesolver
 <<"                 order=vtuorder     ,				   	   \n"
 <<"                 dataname=\"U\"       ,				   	   \n"
 <<"                 append=true       					   	   \n"
-<<"              );			       				   	   \n";
+<<"              );			       				   	   \n"
+<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 }
 
@@ -938,7 +926,8 @@ if(plotTime)if(version<4.4)if(spc==2)writesolver
 <<"                  t                     ,					   \n"
 <<"                  namedata              ,				    	   \n"
 <<"                  mpiCommWorld		 		   		   \n"
-<<"           );  								   \n";
+<<"           );  								   \n"
+<<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(plotTime)if(spc==3)writesolver
 <<"										   \n"
@@ -953,16 +942,17 @@ if(plotTime)if(spc==3)writesolver
 <<"                  t                     ,					   \n"
 <<"                  namedata              ,				    	   \n"
 <<"                  mpiCommWorld		 		   		   \n"
-<<"           );  								   \n";
-
-writesolver
+<<"           );  								   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
-if(plotAll)if(spc==3)writesolver
+if(plotAll)if(spc==3){writesolver
 <<"										   \n"
 <<"  //-----------------ParaView plotting--------------//			   \n"
 <<"										   \n"
-<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   )
+<<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   );
+
+if(version<4.4)writesolver
+<<"										   \n"
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
 <<"  exportpvd( namevtu      ,							   \n"
 <<"                Th           ,						   \n"
@@ -971,8 +961,24 @@ if(plotAll)if(spc==3)writesolver
 <<"                withsur      ,		 		   		   \n"
 <<"                namedata     ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
-<<"           );				 		   		   \n"
+<<"           );				 		   		   \n";
+
+if(version>4.4)writesolver
+<<"										   \n"
+<<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
+<<"                 Th                 ,				   	   \n"
+<<(spc==2 ? "\t\t [du,du1,0]\t    ,\n" : "\t\t [du,du1,du2]\t ,\n" 	   	    )
+<<"                 order=vtuorder     ,				   	   \n"
+<<"                 dataname=\"U\"       ,				   	   \n"
+<<"                 append=true       					   	   \n"
+<<"              );			       				   	   \n";
+
+writesolver
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
+
+}
+
+
 
 if(pipegnu)if(!soildynamics){writesolver
 <<"										   \n"
