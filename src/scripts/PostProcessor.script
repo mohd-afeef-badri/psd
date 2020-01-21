@@ -2,7 +2,7 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
-if(!nonlinear)if(!dynamic)if(!soildynamics)if(plotAll){
+if(!nonlinear)if(!dynamic)if(plotAll){
 ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
@@ -18,7 +18,12 @@ writePostProcessor
 <<"										   \n"
 <<"										   \n";
 
-if(!Sequential){writePostProcessor
+if(!Sequential)if(soildynamics)writePostProcessor
+<<"  if(mpirank==0)								   \n"
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"; 
+
+
+if(!Sequential)if(!soildynamics){writePostProcessor
 <<"										   \n"        
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
@@ -45,7 +50,7 @@ writePostProcessor
 <<"										   \n";
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential){writePostProcessor
+if(Sequential)if(!soildynamics){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"

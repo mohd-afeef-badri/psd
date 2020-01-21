@@ -166,7 +166,7 @@ writFemParameters
 <<"  real[int]    b(Vh.ndof);							   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         	    )
-<<"  Mat  A(Vh.ndof, restrictionIntersectionP, DP)  ; 	 			   \n"
+<<"  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;		   \n"
 <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          	    )
 <<"										   \n";
 }

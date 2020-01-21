@@ -663,7 +663,7 @@ if(Sequential)if(dynamic || soildynamics){writesolver
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
-<<"  A = elastodynamics(Vh,Vh,solver=CG);		 		           \n"
+<<"  A = elastodynamics(Vh,Vh,solver=CG,sym=1);		 		           \n"
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"  //-----------------Assembly for b-----------------//			   \n"
@@ -834,7 +834,7 @@ if(!Sequential)if(dynamic || soildynamics){writesolver
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""  		    	   )
-<<"  ALoc = elastodynamics(Vh,Vh);   			         	           \n"
+<<"  ALoc = elastodynamics(Vh,Vh,solver=CG,sym=1);   	        	           \n"
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""  	  	  	   )
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""  	    		   )

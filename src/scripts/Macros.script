@@ -440,7 +440,7 @@ if(Sequential)writemacros
 <<"//----------------------ParaView plotting macro-------------------------------//\n"
 <<"										   \n"
 <<"  macro exportBegin(name)							   \n"
-<<"    system(\"mkdir -p VTUs\");						   \n"
+//<<"    system(\"mkdir -p VTUs\");						   \n"
 <<"    {ofstream pvd(name +\".pvd\");	   					   \n"
 <<"      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";				   \n"
 <<"      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";	   \n"
