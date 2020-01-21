@@ -79,6 +79,7 @@
   int lag = getARGV("-lagrange" , 1); 
  
   string Solver=getARGV("-solver", "cg"); 
+  string PostProcess=getARGV("-postprocess", "u");   
   string Partitioner=getARGV("-partitioner", "parmetis");
   string Preconditioner=getARGV("-preconditioner", "jacobi");
   string SubPreconditioner=getARGV("-subpreconditioner", "ilu");    

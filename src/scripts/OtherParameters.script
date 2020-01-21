@@ -186,15 +186,28 @@ if(plotAll || plotTime)writemeshParameters
 <<"//==============================================================================\n"
 <<"//  ------- Paraview plotting parameters -------				   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
-<<"  int[int] vtuorder = [1]                ;  // Solution export order  	   \n"
+<<"										   \n";
+
+if(version<4.4)writemeshParameters
+<<"  int[int] vtuorder = [1]                ;  // Solution export order            \n"
 <<"  string   namedata = \"U\"              ;  // Name of export data		   \n"
 <<"  bool     withsur  = true             ;  // With surfaces	   		   \n"
 <<"  int      iterout  = 0                ;  // Loop counter			   \n";
 
-if(plotAll)if(!Sequential)if(version>4.4)writemeshParameters
+if(version>4.4){
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writemeshParameters
+<<"  int[int] vtuorder = [1]                ;  // Solution export order            \n";
+
+if(PostProcess=="v" || PostProcess=="a")writemeshParameters
+<<"  int[int] vtuorder = [1,1]              ;  // Solution export order  	   \n";
+
+if(PostProcess=="uva")writemeshParameters
+<<"  int[int] vtuorder = [1,1,1]            ;  // Solution export order  	   \n";
+
+if(plotAll)if(!Sequential)writemeshParameters
 <<"										   \n"
 <<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
+}
 
 if(plotTime)writemeshParameters
 <<"  string   namevtu  = \"VTUs/Result\"    ;  // File name			   \n"

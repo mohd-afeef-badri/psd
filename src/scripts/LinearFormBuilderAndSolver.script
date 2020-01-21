@@ -952,7 +952,6 @@ if(plotAll)if(spc==3){writesolver
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   );
 
 if(version<4.4)writesolver
-<<"										   \n"
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
 <<"  exportpvd( namevtu      ,							   \n"
 <<"                Th           ,						   \n"
@@ -963,15 +962,38 @@ if(version<4.4)writesolver
 <<"                mpiCommWorld			 		   		   \n"
 <<"           );				 		   		   \n";
 
-if(version>4.4)writesolver
-<<"										   \n"
+if(version>4.4){writesolver
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
-<<"                 Th                 ,				   	   \n"
-<<(spc==2 ? "\t\t [du,du1,0]\t    ,\n" : "\t\t [du,du1,du2]\t ,\n" 	   	    )
-<<"                 order=vtuorder     ,				   	   \n"
-<<"                 dataname=\"U\"       ,				   	   \n"
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"                 [uold,uold1,uold2] ,					   \n";
+if(PostProcess=="v")writesolver
+<<"                 [vold,vold1,vold2] ,					   \n";
+if(PostProcess=="a")writesolver
+<<"                 [aold,aold1,aold2] ,					   \n";
+if(PostProcess=="uva")writesolver
+<<"                 [uold,uold1,uold2] ,					   \n"
+<<"                 [vold,vold1,vold2] ,					   \n"
+<<"                 [aold,aold1,aold2] ,					   \n";
+
+writesolver
+<<"                 order=vtuorder     ,				   	   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"                 dataname=\"U\"       ,				   	   \n";
+
+if(PostProcess=="v")writesolver
+<<"                 dataname=\"U  V\" ,					   	   \n";
+if(PostProcess=="a")writesolver
+<<"                 dataname=\"U  A\" ,				 	  	   \n";
+if(PostProcess=="uva")writesolver
+<<"                 dataname=\"U  V  A\" ,				   	   \n";
+
+writesolver
 <<"                 append=true       					   	   \n"
 <<"              );			       				   	   \n";
+}
 
 writesolver
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
@@ -1033,7 +1055,7 @@ writesolver
 <<"										   \n"
 <<"  t += dt; 									   \n";
 
-if(plotAll || plotTime)writesolver
+if(plotAll || plotTime)if(version<4.4)writesolver
 <<"										   \n"
 <<"  //-----------updating iteration count-----------//				   \n"
 <<"										   \n"
