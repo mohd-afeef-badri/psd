@@ -19,8 +19,11 @@ writePostProcessor
 <<"										   \n";
 
 if(!Sequential)if(soildynamics)writePostProcessor
-<<"  if(mpirank==0)								   \n"
-<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"; 
+<<"  if(mpirank==0){								   \n"
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t"+spc+"D\\t"
+<<"\"+mpisize+\"\\\" >>simulation-log.csv\");\n"
+<<"  }										   \n"; 
 
 
 if(!Sequential)if(!soildynamics){writePostProcessor

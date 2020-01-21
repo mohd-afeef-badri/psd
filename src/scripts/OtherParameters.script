@@ -206,7 +206,7 @@ if(PostProcess=="uva")writemeshParameters
 
 if(plotAll)if(!Sequential)writemeshParameters
 <<"										   \n"
-<<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
+<<"  if(mpirank==0)system(\"mkdir -p VTUs\");	    	   			   \n";
 }
 
 if(plotTime)writemeshParameters
