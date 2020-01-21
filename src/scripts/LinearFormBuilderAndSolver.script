@@ -749,7 +749,7 @@ if(plotAll)if(spc==3)writesolver
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
 
 
-if(pipegnu){writesolver
+if(pipegnu)if(!soildynamics){writesolver
 <<"										   \n"
 <<"  //---------------Energy calculations-------------//			   \n"
 <<"										   \n"
