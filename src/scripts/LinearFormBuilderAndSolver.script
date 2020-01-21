@@ -900,16 +900,28 @@ if(version<4.4)writesolver
 <<"           );				 		   		   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
 
-if(version>4.4)writesolver
+if(version>4.4){writesolver
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
-<<"                 Th                 ,				   	   \n"
-<<(spc==2 ? "\t\t [du,du1,0]\t    ,\n" : "\t\t [du,du1,du2]\t ,\n" 	   	    )
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"                 [uold,uold1,0]     ,					   \n";
+if(PostProcess=="v")writesolver
+<<"                 [vold,vold1,0]     ,					   \n";
+if(PostProcess=="a")writesolver 
+<<"                 [aold,aold1,0]     ,					   \n";
+if(PostProcess=="uva")writesolver
+<<"                 [uold,uold1,0]     ,					   \n"
+<<"                 [vold,vold1,0]     ,					   \n"
+<<"                 [aold,aold1,0]     ,					   \n";
+
+writesolver
 <<"                 order=vtuorder     ,				   	   \n"
 <<"                 dataname=\"U\"       ,				   	   \n"
 <<"                 append=true       					   	   \n"
 <<"              );			       				   	   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
-
+}
 }
 
 
