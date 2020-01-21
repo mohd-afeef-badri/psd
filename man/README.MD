@@ -137,6 +137,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-lagrange`    | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. |
 | `-dimension`   | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |  		 | 	     |                     					    |
+| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", or  "uav". |
 | `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)" or "[ptstoch](http://www.labri.fr/perso/pelegrin/scotch/)". |
 
 

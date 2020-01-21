@@ -6,6 +6,7 @@ All notable changes to PSD solver will be documented in this file.
 - New soil dynamic module `-soildynamics`
 - New paraxial element support in 2D.
 - New timeplotting support `-timepvd`
+- New `-postprocess` option for postprocessing `u` , `v`,  `a` , or `uav`. 
 
 ### Changed
 - Moved to FreeFEM 4.4.2.
@@ -13,6 +14,7 @@ All notable changes to PSD solver will be documented in this file.
 - New simpler way of ploting `savevtk` in parallel with `append` flag for iterative solutions.
 - VTU files get stored with a date and time stamp.
 - New way of maintaining a logfile for all simulations (date,time,case,..) in `simulation-log.csv`.
+
 
 ## [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7) - 2019-11-08
 ### Added
