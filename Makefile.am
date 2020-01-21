@@ -72,6 +72,7 @@ install-Super-Comp:
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-Super-Comp/Plugins/MacroTools.edp	
 	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD-Super-Comp/Solver/SolverGenerator.edp
+	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-Super-Comp/Solver/simulation-log.csv	
 	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
 	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
