@@ -657,8 +657,17 @@ if(Sequential)if(dynamic || soildynamics){writesolver
 <<"  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;	   		   \n"
 <<"										   \n"
 <<"  //--------------tt update for loading--------------//			   \n"
-<<"										   \n"
-<<"  tt  = t-real(alpf*dt);                            				   \n"
+<<"										   \n";
+
+if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+writesolver
+<<"  tt  = t-real(alpf*dt);                            				   \n";
+
+if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
+writesolver
+<<"  tt  = t-dt;	                            				   \n";
+
+writesolver
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"
@@ -828,8 +837,17 @@ if(!Sequential)if(dynamic || soildynamics){writesolver
 <<"  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;	   		   \n"
 <<"										   \n"
 <<"  //--------------tt update for loading--------------//			   \n"
-<<"										   \n"
-<<"  tt  = t-real(alpf*dt);                            				   \n"
+<<"										   \n";
+
+if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+writesolver
+<<"  tt  = t-real(alpf*dt);                            				   \n";
+
+if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
+writesolver
+<<"  tt  = t-dt;	                            				   \n";
+
+writesolver
 <<"										   \n"
 <<"  //-----------------Assembly for A-----------------//			   \n"
 <<"										   \n"

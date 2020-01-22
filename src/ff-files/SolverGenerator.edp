@@ -79,10 +79,11 @@
   int lag = getARGV("-lagrange" , 1); 
  
   string Solver=getARGV("-solver", "cg"); 
-  string PostProcess=getARGV("-postprocess", "u");   
+  string PostProcess=getARGV("-postprocess", "u"); 
   string Partitioner=getARGV("-partitioner", "parmetis");
   string Preconditioner=getARGV("-preconditioner", "jacobi");
-  string SubPreconditioner=getARGV("-subpreconditioner", "ilu");    
+  string SubPreconditioner=getARGV("-subpreconditioner", "ilu");
+  string TimeDiscretization=getARGV("-timediscretization", "generalized-alpha");             
 
   bool RCM          =  usedARGV("-useRCM"       ) !=  1;
   bool help         =  usedARGV("-help"         ) != -1;

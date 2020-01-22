@@ -97,12 +97,56 @@ if(dynamic){writemeshParameters
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"  real[int] c(11);								   \n"
-<<"	 									   \n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="generalized-alpha")writemeshParameters
 <<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt        ;\n"
 <<"  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt               ;\n"
 <<"  c[2] =   2.*mu*(1.-alpf) + 2.*mu*etak*gamma*(1-alpf)/beta/dt                 ;\n"
 <<"  c[3] =   rho*(1.-alpm)/beta/dt - etam*rho*(1-gamma*(1-alpf)/beta)            ;\n"
 <<"  c[4] =   rho*( (1.-alpm)*(1.-2.*beta)/2./beta - alpm - etam*dt*(1.-alpf)*(1.-gamma/2/beta))   ;\n"
+<<"  c[5] =   lambda*alpf -    lambda*etak*gamma*(1.-alpf)/beta/dt                ;\n"
+<<"  c[6] =   2*mu*alpf   -    2.*mu*etak*gamma*(1.-alpf)/beta/dt                 ;\n"
+<<"  c[7] =   etak*lambda*(gamma*(1.-alpf)/beta - 1)                              ;\n"
+<<"  c[8] =   etak*lambda*dt*(1.-alpf)*((1.-2*beta)/2./beta - (1.-gamma))         ;\n"
+<<"  c[9] =   etak*2*mu*(gamma*(1.-alpf)/beta -1)                                 ;\n"
+<<"  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))            ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="newmark-beta")writemeshParameters
+<<"  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma/beta/dt        	  		  ;\n"
+<<"  c[1] =   lambda + lambda*etak*gamma/beta/dt               	  		  ;\n"
+<<"  c[2] =   2.*mu + 2.*mu*etak*gamma/beta/dt                 	  		  ;\n"
+<<"  c[3] =   rho/beta/dt - etam*rho*(1-gamma/beta)            	  		  ;\n"
+<<"  c[4] =   rho*( (1.-2.*beta)/2./beta  - etam*dt*(1.-gamma/2/beta))  	  ;\n"
+<<"  c[5] =  -lambda*etak*gamma/beta/dt                		  		  ;\n"
+<<"  c[6] =  -2.*mu*etak*gamma/beta/dt                 		  	  	  ;\n"
+<<"  c[7] =   etak*lambda*(gamma/beta - 1)                              	  ;\n"
+<<"  c[8] =   etak*lambda*dt*((1.-2*beta)/2./beta - (1.-gamma))         	  ;\n"
+<<"  c[9] =   etak*2*mu*(gamma/beta -1)                                 	  ;\n"
+<<"  c[10]=   etak*2*mu*dt*((1.-2*beta)/2./beta -(1.-gamma))            	  ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="central-difference")writemeshParameters
+<<"  c[0] =   rho/(dt*dt) + etam*rho*gamma/dt        	  			  ;\n"
+<<"  c[1] =   lambda + lambda*etak*gamma/dt               	  		  ;\n"
+<<"  c[2] =   2.*mu + 2.*mu*etak*gamma/dt                 	  		  ;\n"
+<<"  c[3] =   rho/dt - etam*rho*(1.-gamma)            	  			  ;\n"
+<<"  c[4] =   rho*( 1./2.  - etam*dt*(1.-gamma/2))  				  ;\n"
+<<"  c[5] =  -lambda*etak*gamma/dt                		  	  	  ;\n"
+<<"  c[6] =  -2.*mu*etak*gamma/dt                 		  	  	  ;\n"
+<<"  c[7] =   etak*lambda*(gamma - 1)                              	  	  ;\n"
+<<"  c[8] =   etak*lambda*dt*(1./2. - (1.-gamma))         	  		  ;\n"
+<<"  c[9] =   etak*2*mu*(gamma -1)                                 	  	  ;\n"
+<<"  c[10]=   etak*2*mu*dt*(1./2. -(1.-gamma))            	  		  ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="hht-alpha")writemeshParameters
+<<"  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt        	  ;\n"
+<<"  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt               ;\n"
+<<"  c[2] =   2.*mu*(1.-alpf) + 2.*mu*etak*gamma*(1-alpf)/beta/dt                 ;\n"
+<<"  c[3] =   rho/beta/dt - etam*rho*(1-gamma*(1-alpf)/beta)            	  ;\n"
+<<"  c[4] =   rho*( (1.-2.*beta)/2./beta  - etam*dt*(1.-alpf)*(1.-gamma/2/beta))  ;\n"
 <<"  c[5] =   lambda*alpf -    lambda*etak*gamma*(1.-alpf)/beta/dt                ;\n"
 <<"  c[6] =   2*mu*alpf   -    2.*mu*etak*gamma*(1.-alpf)/beta/dt                 ;\n"
 <<"  c[7] =   etak*lambda*(gamma*(1.-alpf)/beta - 1)                              ;\n"
@@ -168,12 +212,53 @@ if(soildynamics){writemeshParameters
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"  real[int] c(10);								   \n"
-<<"	 									   \n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="generalized-alpha")writemeshParameters
 <<"  c[0] =   rho*(1.-alpm)/(beta*dt*dt)                                          ;\n"
 <<"  c[1] =   lambda*(1.-alpf)                                                    ;\n"
 <<"  c[2] =   2.*mu*(1.-alpf)                                                     ;\n"
 <<"  c[3] =   rho*(1.-alpm)/(beta*dt)                                             ;\n"
 <<"  c[4] =   rho*((1.-alpm)/2./beta -1.)                                         ;\n"
+<<"  c[5] =   lambda*alpf                                                         ;\n"
+<<"  c[6] =   2*mu*alpf                                                           ;\n"
+<<"  c[7] =   rho*(1.-alpf)*gamma/beta/dt                                         ;\n"
+<<"  c[8] =   rho*(1.-gamma*(1-alpf)/beta)                                        ;\n"
+<<"  c[9] =   rho*(1.-alpf)*dt*(1.-gamma/(2.*beta))                               ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="newmark-beta")writemeshParameters
+<<"  c[0] =   rho/(beta*dt*dt)                                          	  ;\n"
+<<"  c[1] =   lambda                                                    	  ;\n"
+<<"  c[2] =   2.*mu                                                     	  ;\n"
+<<"  c[3] =   rho/(beta*dt)                                             	  ;\n"
+<<"  c[4] =   rho*(1./2./beta -1.)                                         	  ;\n"
+<<"  c[5] =   0.                                                         	  ;\n"
+<<"  c[6] =   0.                                                           	  ;\n"
+<<"  c[7] =   rho*gamma/beta/dt                                         	  ;\n"
+<<"  c[8] =   rho*(1.-gamma/beta)                                        	  ;\n"
+<<"  c[9] =   rho*dt*(1.-gamma/(2.*beta))                               	  ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="central-difference")writemeshParameters
+<<"  c[0] =   rho/(dt*dt)                                          	  	  ;\n"
+<<"  c[1] =   lambda                                                    	  ;\n"
+<<"  c[2] =   2.*mu                                                     	  ;\n"
+<<"  c[3] =   rho/(dt)                                             	  	  ;\n"
+<<"  c[4] =   rho*(1./2. -1.)                                         	  	  ;\n"
+<<"  c[5] =   0.                                                         	  ;\n"
+<<"  c[6] =   0.                                                           	  ;\n"
+<<"  c[7] =   rho*gamma/dt                                         	  	  ;\n"
+<<"  c[8] =   rho*(1.-gamma)                                        	  	  ;\n"
+<<"  c[9] =   rho*dt*(1.-gamma/2.)                               	  	  ;\n"
+<<"	 									   \n";
+
+if(TimeDiscretization=="hht-alpha")writemeshParameters
+<<"  c[0] =   rho/(beta*dt*dt)                                          	  ;\n"
+<<"  c[1] =   lambda*(1.-alpf)                                                    ;\n"
+<<"  c[2] =   2.*mu*(1.-alpf)                                                     ;\n"
+<<"  c[3] =   rho/(beta*dt)                                             	  ;\n"
+<<"  c[4] =   rho*(1./2./beta -1.)                                         	  ;\n"
 <<"  c[5] =   lambda*alpf                                                         ;\n"
 <<"  c[6] =   2*mu*alpf                                                           ;\n"
 <<"  c[7] =   rho*(1.-alpf)*gamma/beta/dt                                         ;\n"

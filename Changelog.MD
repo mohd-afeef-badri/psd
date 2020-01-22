@@ -3,7 +3,7 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
-
+- New time discretization option `-timediscretization`
 
 ### Changed
 
