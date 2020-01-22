@@ -92,13 +92,13 @@ if(Sequential){writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""	       	    )
-<<"    A = elast(Vh,Vh,solver=CG);						   \n"
+<<"    A = elast(Vh,Vh,solver=CG,sym=1);					   \n"
 <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""	            )
 <<"										   \n"
 <<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"solving U\",t0)\n"         : ""         	  	    )
-<<"    set(A,solver=CG);							   \n"
+<<"    set(A,solver=CG,sym=1);							   \n"
 <<"    u[] = A^-1*b;						   		   \n"
 <<(timelog ? "    timerend  (\"solving U\",t0)\n"         : ""         	  	    );
 
@@ -115,7 +115,7 @@ writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""           	    )
-<<"    A1 = phase(Vh1,Vh1,solver=CG);					  	   \n"
+<<"    A1 = phase(Vh1,Vh1,solver=CG,sym=1);				  	   \n"
 <<(timelog ? "    timerend  (\"matrix assembly for PHI\",t0)\n" : ""           	    )
 <<"										   \n"
 <<"    //--------------------Assembly for linear----------------------//	   \n"
@@ -127,7 +127,7 @@ writesolver
 <<"    //-------------Linear system solving phase-------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : "" 	        	  	    )
-<<"    set(A1,solver=CG);							   \n"
+<<"    set(A1,solver=CG,sym=1);							   \n"
 <<"    phi[] = A1^-1*b1;						   	   \n"
 <<(timelog ? "    timerend  (\"solving U\",t0)\n" : "" 	        	  	    )
 <<"										   \n"
@@ -257,7 +257,7 @@ if(!Sequential){writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""         	    )
-<<"    ALoc = elast(Vh,Vh,solver=CG);					  	   \n"
+<<"    ALoc = elast(Vh,Vh,solver=CG,sym=1);				  	   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""          	    )
 <<"										   \n"
 <<"    //-----------PETSc assembly for bilinear---------------------//		   \n"
@@ -287,7 +287,7 @@ writesolver
 <<"    //----------------Assembly for bilinear----------------------//	 	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""        	    )
-<<"    ALoc1 = phase(Vh1,Vh1,solver=CG);			   		   \n"
+<<"    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);			   		   \n"
 <<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""    	  	    )
 <<"										   \n"
 <<"    //----------------Assembly for linear------------------------//	 	   \n"
@@ -551,7 +551,7 @@ if(!Sequential)if(!dynamic)if(!soildynamics){writesolver
 <<"//--------------Assembly for bilinear--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "	MPItimerbegin(\"matrix Assembly\",t0)\n" : ""           	    )
-<<"  matrix	ALoc = elast(Vh,Vh,solver=CG);					   \n"
+<<"  matrix	ALoc = elast(Vh,Vh,solver=CG,sym=1);				   \n"
 <<(timelog ? "	MPItimerend  (\"matrix Assembly\",t0)\n" : ""       	    	    )
 <<"										   \n"
 <<"//---------------Assembly for linear---------------//			   \n"
@@ -618,7 +618,7 @@ if(Sequential)if(!dynamic)if(!soildynamics){writesolver
 <<"//--------------Assembly for bilinear--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "	timerbegin(\"matrix assembly\",t0)\n" : ""  	    		   )
-<<"  matrix A = elast(Vh,Vh,solver=CG);						   \n"
+<<"  matrix A = elast(Vh,Vh,solver=CG,sym=1);					   \n"
 <<(timelog ? "	timerend  (\"matrix assembly\",t0)\n" : ""  	    		   )
 <<"										   \n"
 <<"//---------------Assembly for linear---------------//			   \n"
@@ -630,7 +630,7 @@ if(Sequential)if(!dynamic)if(!soildynamics){writesolver
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "	timerbegin(\"solving U\",t0)\n" : ""  	    		   	   )
-<<"  set(A,solver=CG);						   		   \n"
+<<"  set(A,solver=CG,sym=1);					   		   \n"
 <<"  u[] = A^-1*b;								   \n"
 <<(timelog ? "	timerend  (\"solving U\",t0)\n" : ""  	   	 		   );
 
@@ -684,7 +684,7 @@ writesolver
 <<"  //-----------------Solving du=A^-1*b--------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""  	    		   	   )
-<<"  set(A,solver=UMFPACK);                           				   \n"
+<<"  set(A,solver=CG,sym=1);                           				   \n"
 <<"  du[] = A^-1*b;                                   				   \n"
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""  	   	 		   )
 <<"										   \n";

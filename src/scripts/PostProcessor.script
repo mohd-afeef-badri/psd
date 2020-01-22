@@ -2,7 +2,7 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
-if(!nonlinear)if(!dynamic)if(plotAll){
+if(!nonlinear)if(plotAll){
 ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
@@ -22,11 +22,27 @@ if(!Sequential)if(soildynamics)writePostProcessor
 <<"  if(mpirank==0){								   \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t"+spc+"D\\t"
-<<"\"+mpisize+\"\\\" >>simulation-log.csv\");\n"
-<<"  }										   \n"; 
+<<"\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
+<<"  }										   \n";	
 
+if(Sequential)if(soildynamics)writePostProcessor
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t"+spc+"D\\t"
+<<"Seq.\\\" >>simulation-log.csv\");						   \n";
 
-if(!Sequential)if(!soildynamics){writePostProcessor
+if(!Sequential)if(dynamic)writePostProcessor
+<<"  if(mpirank==0){								   \n"
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t"+spc+"D\\t"
+<<"\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
+<<"  }										   \n";
+
+if(Sequential)if(dynamic)writePostProcessor
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t"+spc+"D\\t"
+<<"Seq.\\\" >>simulation-log.csv\");						   \n";
+
+if(!Sequential)if(!dynamic)if(!soildynamics){writePostProcessor
 <<"										   \n"        
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
@@ -53,7 +69,7 @@ writePostProcessor
 <<"										   \n";
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(!soildynamics){writePostProcessor
+if(Sequential)if(!dynamic)if(!soildynamics){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"
