@@ -441,27 +441,59 @@ if(plotAll)if(!vectorial){writesolver
 <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""              )
 <<"  if(int(iterout%10)==0){							   \n";
 
-if(version<4.4)writesolver
+if(version<4.4){writesolver
 <<"    string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
 <<"    exportpvd2(  namevtu            , 					   \n"
-<<"                 Th                 ,				   	   \n"
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="u" & PostProcess!="phi")writesolver
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
-<<"                 phi                ,				   	   \n"
+<<"                 phi                ,				   	   \n";
+
+
+if(PostProcess=="u")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    );
+
+if(PostProcess=="phi")writesolver
+<<"                 phi                ,				   	   \n";
+
+if(PostProcess=="uphi")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n";
+
+writesolver
 <<"                 vtuorder           ,				   	   \n"
 <<"                 withsur            ,				   	   \n"
 <<"                 namedata           ,				   	   \n"
 <<"                 mpiCommWorld       				   	   	   \n"
 <<"              );			       				   	   \n";
+}
 
-if(version>4.4)writesolver    	
+if(version>4.4){writesolver    	
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
-<<"                 Th                 ,				   	   \n"
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="u" & PostProcess!="phi")writesolver
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
-<<"                 phi                ,				   	   \n"
+<<"                 phi                ,				   	   \n";
+
+
+if(PostProcess=="u")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    );
+
+if(PostProcess=="phi")writesolver
+<<"                 phi                ,				   	   \n";
+
+if(PostProcess=="uphi")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n";
+
+writesolver
 <<"                 order=vtuorder     ,				   	   \n"
 <<"                 dataname=\"U  d\"    ,				   	   \n"
 <<"                 append=true       					   	   \n"
 <<"              );			       				   	   \n";
+}
 
 writesolver
 <<"										   \n"
@@ -482,27 +514,59 @@ if(plotAll)if(vectorial){writesolver
 <<"										   \n"
 <<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
 
-if(version<4.4)writesolver    	
+if(version<4.4){writesolver    	
 <<"    string   namevtu=\"VTUs/Solution\"+iterout1+\"\";			   \n"
 <<"    exportpvd2(  namevtu            , 					   \n"
-<<"                 Th                 ,				   	   \n"
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="u" & PostProcess!="phi")writesolver
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
-<<"                 phi                ,				   	   \n"
+<<"                 phi                ,				   	   \n";
+
+
+if(PostProcess=="u")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    );
+
+if(PostProcess=="phi")writesolver
+<<"                 phi                ,				   	   \n";
+
+if(PostProcess=="uphi")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n";
+
+writesolver
 <<"                 vtuorder           ,				   	   \n"
 <<"                 withsur            ,				   	   \n"
 <<"                 namedata           ,				   	   \n"
 <<"                 mpiCommWorld       					   	   \n"
 <<"              );			       				   	   \n";
+}
 
-if(version>4.4)writesolver    		
+if(version>4.4){writesolver    		
 <<"    savevtk(  \"VTUs/Solution.vtu\"   , 					   \n"
-<<"                 Th                 ,				   	   \n"
+<<"                 Th                 ,				   	   \n";
+
+if(PostProcess!="u" & PostProcess!="phi")writesolver
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
-<<"                 phi                ,				   	   \n"
+<<"                 phi                ,				   	   \n";
+
+
+if(PostProcess=="u")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    );
+
+if(PostProcess=="phi")writesolver
+<<"                 phi                ,				   	   \n";
+
+if(PostProcess=="uphi")writesolver
+<<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n" 	   	    )
+<<"                 phi                ,				   	   \n";
+
+writesolver
 <<"                 order=vtuorder     ,				   	   \n"
 <<"                 dataname=\"U  d\"    ,				   	   \n"
 <<"                 append=true       					   	   \n"
 <<"              );			       				   	   \n";
+}
 
 writesolver
 <<"										   \n"
