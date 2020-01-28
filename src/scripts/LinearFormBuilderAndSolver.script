@@ -712,50 +712,91 @@ writesolver
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : "" 	   )
 <<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""  	   		   );
 
-if(plotAll)if(spc==2)writesolver
+if(plotAll)if(spc==2){writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";  		           \n"
 <<"  savevtk  (  namevtu               ,					   \n"
-<<"              Th                    ,					   \n"
+<<"              Th                    ,					   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"              [uold,uold1,0]        ,					   \n";
+if(PostProcess=="v")writesolver
+<<"              [vold,vold1,0]        ,					   \n";
+if(PostProcess=="a")writesolver 
+<<"              [aold,aold1,0]        ,					   \n";
+if(PostProcess=="uva")writesolver
 <<"              [uold,uold1,0]        ,					   \n"
+<<"              [vold,vold1,0]        ,					   \n"
+<<"              [aold,aold1,0]        ,					   \n";
+
+writesolver
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
-<<"           );  								   \n";
+<<"           );  								   \n"
+<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
+}
 
-if(plotTime)writesolver
+if(plotTime){writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  exportTimeStep( namevtu,   			  		           \n"
-<<"                  Th                    ,					   \n"
+<<"                  Th                    ,					   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<(spc==2 ? "\t\t [uold,uold1,0]\t   ,\n" : "\t\t [uold,uold1,uold2]\t   ,\n" 	   );
+
+if(PostProcess=="v")writesolver
+<<(spc==2 ? "\t\t [vold,vold1,0]\t   ,\n" : "\t\t [vold,vold1,vold2]\t   ,\n" 	   );
+
+if(PostProcess=="a")writesolver
+<<(spc==2 ? "\t\t [aold,aold1,0]\t   ,\n" : "\t\t [aold,aold1,aold2]\t   ,\n" 	   );
+
+if(PostProcess=="uva")writesolver
 <<(spc==2 ? "\t\t [uold,uold1,0]\t   ,\n" : "\t\t [uold,uold1,uold2]\t   ,\n" 	   )
+<<(spc==2 ? "\t\t [vold,vold1,0]\t   ,\n" : "\t\t [vold,vold1,vold2]\t   ,\n" 	   )
+<<(spc==2 ? "\t\t [aold,aold1,0]\t   ,\n" : "\t\t [aold,aold1,aold2]\t   ,\n" 	   );
+
+writesolver
 <<"                  vtuorder              ,					   \n"
 <<"                  iterout               ,					   \n"
 <<"                  t                     ,					   \n"
 <<"                  namedata              				    	   \n"
-<<"           );  								   \n";
-
-writesolver
+<<"           );  								   \n"
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
+}
 
 
-if(plotAll)if(spc==3)writesolver
+if(plotAll)if(spc==3){writesolver
 <<"										   \n"
 <<"  //-----------------Paraview plotting-------------//			   \n"
 <<"										   \n"
 <<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""	  	       	   )
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";  		           \n"
 <<"  savevtk  (  namevtu               ,					   \n"
-<<"              Th                    ,					   \n"
+<<"              Th                    ,					   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"              [uold,uold1,uold2]    ,					   \n";
+if(PostProcess=="v")writesolver
+<<"              [vold,vold1,vold2]    ,					   \n";
+if(PostProcess=="a")writesolver 
+<<"              [aold,aold1,aold2]    ,					   \n";
+if(PostProcess=="uva")writesolver
 <<"              [uold,uold1,uold2]    ,					   \n"
+<<"              [vold,vold1,vold2]    ,					   \n"
+<<"              [aold,aold1,aold2]    ,					   \n";
+
+writesolver
 <<"              order=vtuorder        ,					   \n"
 <<"              dataname=namedata 					    	   \n"
 <<"           );  								   \n"
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""  	   		   );
+}
 
 
 if(pipegnu)if(!soildynamics){writesolver
@@ -906,17 +947,31 @@ if(plotAll)if(spc==2){writesolver
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""      		   )
 <<"										   \n";
 
-if(version<4.4)writesolver    	
+if(version<4.4){writesolver    	
 <<"  string   namevtu=\"VTUs/Solution\"+iterout+\"\";			    	   \n"
-<<"  exportpvd(    namevtu      ,						   \n"
-<<"                Th           ,						   \n"
-<<"                [du,du1,0]   ,						   \n"
-<<"                vtuorder     ,		 		   		   \n"
-<<"                withsur      ,		 		   		   \n"
-<<"                namedata     ,		 		   		   \n"
+<<"  exportpvd(    namevtu       ,						   \n"
+<<"                Th            ,						   \n";
+
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+<<"                 [uold,uold1,0]     ,					   \n";
+if(PostProcess=="v")writesolver
+<<"                 [vold,vold1,0]     ,					   \n";
+if(PostProcess=="a")writesolver 
+<<"                 [aold,aold1,0]     ,					   \n";
+if(PostProcess=="uva")writesolver
+<<"                 [uold,uold1,0]     ,					   \n"
+<<"                 [vold,vold1,0]     ,					   \n"
+<<"                 [aold,aold1,0]     ,					   \n";
+
+writesolver
+<<"                [uold,uold1,0],						   \n"
+<<"                vtuorder      ,		 		   		   \n"
+<<"                withsur       ,		 		   		   \n"
+<<"                namedata      ,		 		   		   \n"
 <<"                mpiCommWorld			 		   		   \n"
 <<"           );				 		   		   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""      		   );
+}
 
 if(version>4.4){writesolver
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,	 				   \n"
