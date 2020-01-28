@@ -2,7 +2,7 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
-if(!nonlinear)if(plotAll){
+if(plotAll){
 ofstream  writePostProcessor("PostProcessor.edp");
 
 writePostProcessor
@@ -42,7 +42,19 @@ if(Sequential)if(dynamic)writePostProcessor
 <<"     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"+spc+"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
 
-if(!Sequential)if(!dynamic)if(!soildynamics){writePostProcessor
+if(!Sequential)if(nonlinear)writePostProcessor
+<<"  if(mpirank==0){								   \n"
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"+spc+"D\\t"
+<<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
+<<"  }										   \n";	
+
+if(Sequential)if(nonlinear)writePostProcessor
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"+spc+"D\\t"
+<<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
+
+if(!Sequential)if(!nonlinear)if(!dynamic)if(!soildynamics){writePostProcessor
 <<"										   \n"        
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
@@ -67,9 +79,17 @@ writePostProcessor
 <<(timelog  ? "	MPItimerend(\"Paraview Plotting\",t0)\n" : " "       		    )
 <<(timelog ? "	MPItimerend(\"Solver\",t1)\n" : " "  	         	  	    )
 <<"										   \n";
+
+writePostProcessor       
+<<"  if(mpirank==0){								   \n"
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"Elasticity\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"+spc+"D\\t"
+<<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
+<<"  }										   \n";
+
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(!dynamic)if(!soildynamics){writePostProcessor
+if(Sequential)if(!nonlinear)if(!dynamic)if(!soildynamics){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"
@@ -95,6 +115,12 @@ writePostProcessor
 <<(timelog ? "	timerend  (\"Post-Processing\",t0)\n" : " "  	    		    )
 <<(timelog ? "	timerend  (\"Solver\",t1)\n" : " "  	         	  	    )	
 <<"										   \n";
+
+writePostProcessor
+<<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
+<<"     system(\"echo \\\"Elasticity\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"+spc+"D\\t"
+<<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
+
 }  //-- [if loop terminator] Sequential ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//

@@ -64,6 +64,10 @@ if(plotAll)if(!Sequential)if(version>4.4)writemeshParameters
 <<"										   \n"
 <<"  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");	    	   \n";
 
+if(plotAll)if(!Sequential)writemeshParameters
+<<"										   \n"
+<<"  if(mpirank==0)system(\"mkdir -p VTUs\");	    	   			   \n";
+
 if(pipegnu){writemeshParameters 
 <<"										   \n"
 <<"//==============================================================================\n"
