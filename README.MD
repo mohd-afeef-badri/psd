@@ -1,6 +1,6 @@
 #  PSD: a Parallel Structural Dynamics solver #
 
-![markdownimage](./misc/markdownimage.png)
+![markdownimage](./man/markdownimage.png)
 
 PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around [FreeFEM](https://freefem.org/) for finite element discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear*  and *nonlinear* solid mechanics problems. Besides these [*hybrid-phase field fracture mechanics*](https://link.springer.com/article/10.1007/s00466-014-1109-y) models have also been incorporated within PSD. For dynamics the [*genralized-$\alpha$ model*](https://hal.archives-ouvertes.fr/hal-00345290/document)  for time discretization is used, this models enable straightforward use of Newmark-$\beta$, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via [*vectorial finite elements*](https://www.sciencedirect.com/science/article/pii/S0022407317309597) for parallel computing and all solvers are  proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.
 
@@ -43,9 +43,9 @@ autoreconf -i
 ```
 make FFINSTALLDIR=/usr/local/bin/ GMSH=/usr/bin/gmsh
 ```
- ![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}Variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. 
+*Note*: Variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. 
 
- ![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}Variable `GMSH` can be changed for [Gmsh](http://gmsh.info/) local path if installed locally.  Use Gmsh version > 4.3.
+*Note*: Variable `GMSH` can be changed for [Gmsh](http://gmsh.info/) local path if installed locally.  Use Gmsh version > 4.3.
 
 - Install PSD
 ```
@@ -73,13 +73,13 @@ The parallel/sequential solvers can be run on Linux platforms and can be used wi
 
 To perform a simulation three steps are involved
 
-**Step 1: Providing the mesh**  
+**Step 1: Providing the mesh**
 
 A valid finite element mesh needs to be provided to the solver. PSD accepts only  unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in  [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. Once you have your mesh please copy the mesh to `Meshes` folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.
 
-![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}There is a native mesher `bmag` within [FreeFEM](https://freefem.org/) which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the `Meshes` folder. 
+*Note*: There is a native mesher `bmag` within [FreeFEM](https://freefem.org/) which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the `Meshes` folder. 
 
-**Step 2: Setting up the solver**  
+**Step 2: Setting up the solver**
 
 Now that the mesh has been loaded. Its time to set up the solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
 
@@ -89,7 +89,7 @@ FreeFem++ SolverGenerator.edp -v 0 -nw -help [Options-PSD]
 
 Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal. 
 
-**Step 3: Launching the solver**  
+**Step 3: Launching the solver**
 
 Now you are all set to run your simulation. To do so you will need to do the run the following in the `terminal`:
 
