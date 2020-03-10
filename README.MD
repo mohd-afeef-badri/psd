@@ -1,8 +1,8 @@
 #  PSD: a Parallel Structural Dynamics solver #
 
-![markdownimage](./markdownimage.png)
+![markdownimage](./misc/markdownimage.png)
 
-PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around [FreeFEM](https://freefem.org/) for finite discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear*  and *nonlinear* solid mechanics problems. Besides these [*hybrid-phase field fracture mechanics*](https://link.springer.com/article/10.1007/s00466-014-1109-y) models have also been incorporated within PSD. For dynamics the [*genralized-$\alpha$ model*](https://hal.archives-ouvertes.fr/hal-00345290/document)  for time discretization is used, this models enable straightforward use of Newmark-$\beta$, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via [*vectorial finite elements*](https://www.sciencedirect.com/science/article/pii/S0022407317309597) for parallel computing and all solvers are  proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.
+PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around [FreeFEM](https://freefem.org/) for finite element discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear*  and *nonlinear* solid mechanics problems. Besides these [*hybrid-phase field fracture mechanics*](https://link.springer.com/article/10.1007/s00466-014-1109-y) models have also been incorporated within PSD. For dynamics the [*genralized-$\alpha$ model*](https://hal.archives-ouvertes.fr/hal-00345290/document)  for time discretization is used, this models enable straightforward use of Newmark-$\beta$, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via [*vectorial finite elements*](https://www.sciencedirect.com/science/article/pii/S0022407317309597) for parallel computing and all solvers are  proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.
 
 Besides the parallel suite, PSD also includes a sequential solver which does not require [PETSc](https://www.mcs.anl.gov/petsc/). 
 
@@ -26,7 +26,7 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 
 - Go ahead and grab the latest copy of PSD. The code is hosted on CEA's internal git [repository](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&hb=devel-dynamic).
 ```
-git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git
+git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources
 ```
 - Autoconf PSD within the  cloned folder
 ```
@@ -43,9 +43,9 @@ autoreconf -i
 ```
 make FFINSTALLDIR=/usr/local/bin/ GMSH=/usr/bin/gmsh
 ```
-*Note*: variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. Similarly variable `GMSH` can be changed for [Gmsh](http://gmsh.info/).
+ ![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}Variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. 
 
-*Note:* Please use the new version of Gmsh (> version 4.3.0) from their official [website](http://gmsh.info/). 
+ ![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}Variable `GMSH` can be changed for [Gmsh](http://gmsh.info/) local path if installed locally.  Use Gmsh version > 4.3.
 
 - Install PSD
 ```
@@ -77,7 +77,7 @@ To perform a simulation three steps are involved
 
 A valid finite element mesh needs to be provided to the solver. PSD accepts only  unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in  [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. Once you have your mesh please copy the mesh to `Meshes` folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.
 
-*Note:*  There is a native mesher `bmag` within [FreeFEM](https://freefem.org/) which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the `Meshes` folder. 
+![markdownimage](./misc/caution1.jpg){:height="2px" width="2px"}There is a native mesher `bmag` within [FreeFEM](https://freefem.org/) which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the `Meshes` folder. 
 
 **Step 2: Setting up the solver**  
 
@@ -103,9 +103,9 @@ if you complied a sequential PSD version
 FreeFem++ Main.edp -v 0 -nw
 ```
 
-*Note*: in the parallel command **$N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel.
+- In the parallel command **$N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel.
 
-*Note* Additional flag `-gult ffglut` may be required while launching the solver, this is in case debug mode is on.
+- Additional flag `-gult ffglut` may be required while launching the solver, this is in case debug mode is on.
 
 *Sit back and be amazed at the speed of the solver.* 
 
