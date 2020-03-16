@@ -41,7 +41,7 @@ autoreconf -i
 - Make PSD directives
 
 ```
-make FFINSTALLDIR=/usr/local/bin/ GMSH=/usr/bin/gmsh
+make FFINSTALLDIR=/usr/local/bin/ GMSH=/usr/bin/
 ```
 *Note*: Variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. 
 
