@@ -46,22 +46,32 @@ if(tractionbc)writevarfmatsolve
 
 if(dirichletbc){
 
-if(spc==2)writevarfmatsolve
+if(spc==2){
+for(int i=0; i<dlb; i++)
+writevarfmatsolve
 <<"										   \n"
 <<"	+ on( Dlabel, 				// Displacement (Dirichlet)	   \n"
 <<"		u  = Dvalue[0],							   \n"
 <<"		u1 = Dvalue[1]							   \n"
+<<"										   \n";
+writevarfmatsolve
 <<"	    );		   		   		   			   \n"
 <<"										   \n";
+}
 
-if(spc==3)writevarfmatsolve
+if(spc==3){
+for(int i=0; i<dlb; i++)
+writevarfmatsolve
 <<"										   \n"
 <<"	+ on(Dlabel,				// Displacement (Dirichlet)	   \n"
 <<"		u  = Dvalue[0],							   \n"
 <<"		u1 = Dvalue[1],							   \n"
 <<"		u2 = Dvalue[2]			   				   \n"
-<<"	    );		   							   \n"
 <<"										   \n";
+writevarfmatsolve
+<<"	    );		   		   		   			   \n"
+<<"										   \n";
+}
 
 }  //-- [if loop terminator] dirichletbc ended --//
 

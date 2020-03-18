@@ -16,10 +16,12 @@
 // ------ All command line argument descriptions [ARGUMENTS] ------
 //=====================================================================================
 /*
+  -dirichletlabels [int]  Number of Dirchlet boundrie.  Default 1.
+
   -dimension   [int]	  Accepts values 2 or 3.  2 for 2D 3 for 3D. Default 2.
   
   -lagrange    [int]      Lagrange order used for building FE space. Options are 
-  			  1 for P1 or 2 for P2. Defaut is P1.  
+  			  1 for P1 or 2 for P2. Defaut is P1.
   
   -partitioner [sting]    Mesh partitioner to be used. Options are "metis"
   			  "parmetis" "scotch" or "ptstoch".
@@ -75,8 +77,10 @@
 // ------ All variables ------ 
 //=====================================================================================
 
+  int dlb = getARGV("-dirichletlabels", 1);
   int spc = getARGV("-dimension", 2);
-  int lag = getARGV("-lagrange" , 1); 
+  int lag = getARGV("-lagrange" , 1);
+
  
   string Solver=getARGV("-solver", "cg"); 
   string PostProcess=getARGV("-postprocess", "u"); 
@@ -98,6 +102,7 @@
   bool vectorial    =  usedARGV("-vectorial"    ) != -1;  
   bool bodyforce    =  usedARGV("-bodyforce"    ) != -1;
   bool nonlinear    =  usedARGV("-nonlinear"    ) != -1; 
+  bool elasticity   =  usedARGV("-Lelasticty"   ) != -1;            
   bool supercomp    =  usedARGV("-supercomp"    ) != -1;       
   bool tractionbc   =  usedARGV("-tractionbc"   ) != -1; 
   bool fastmethod   =  usedARGV("-fastmethod"   ) != -1;       
@@ -105,7 +110,8 @@
   bool quasistatic  =  usedARGV("-quasistatic"  ) != -1;
   bool dirichletbc  =  usedARGV("-dirichletbc"  ) !=  1;
   bool energydecomp =  usedARGV("-energydecomp" ) != -1;  
-  bool soildynamics =  usedARGV("-soildynamics" ) != -1;            
+  bool soildynamics =  usedARGV("-soildynamics" ) != -1;
+
     
   int labelDirichlet=2; 
   if(nonlinear)labelDirichlet=1;
