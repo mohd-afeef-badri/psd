@@ -311,7 +311,7 @@ if(dirichletbc)if(!quasistatic)if(!soildynamics){writemeshParameters
 
 for(int i=1; i<dirichletconditions; i++)
 writemeshParameters
-<<"                        "+labelDirichlet+"\t//  Label for Dirichlet border "+i+"\n";
+<<"                       ,"+labelDirichlet+"\t//  Label for Dirichlet border "+i+"\n";
 
 writemeshParameters
 <<"                       ];							   \n"
@@ -340,12 +340,44 @@ writemeshParameters
 
 }
 
-if(pointbc)writemeshParameters
+if(dirichletpointconditions>=1){writemeshParameters
 <<"										   \n"
-<<"//---Point---//								   \n"
-<<"  int [int]   Dpointlab = [2];		// Vector of Dirichlet labels	   \n"
-<<"  real[int]   PnV = [0., 0., 0., 0.];	// [x, y, u1, u2]		   \n"
+<<"//==============================================================================\n"
+<<"// -------Dirichlet point boundary-condition parameters-------		   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int [int]   Dpointlab = ["+labelDirichlet+"\t// Labels containing point 0     \n";
+
+
+for(int i=1; i<dirichletpointconditions; i++)
+writemeshParameters
+<<"                          ,"+labelDirichlet+"\t//  Labels containing point "+i+"\n";
+
+writemeshParameters
+<<"                          ];							   \n"
 <<"										   \n";
+
+
+if(spc==2){
+writemeshParameters
+<<"  real[int]   PnV = [ 0., 0., 0., 0. // [x, y, u1, u2] of point border 0	   \n";
+for(int i=1; i<dirichletpointconditions; i++)
+writemeshParameters
+<<"                     ,0., 0., 0., 0. // [x, y, u1, u2] of point border "+i+"    \n";
+}
+
+if(spc==3){
+writemeshParameters
+<<"  real[int]   PnV = [ 0., 0., 0., 0., 0., 0.	// [x,y,z,u1,u2,u3] of point 0	   \n";
+for(int i=1; i<dirichletpointconditions; i++)
+writemeshParameters
+<<"                     ,0., 0., 0., 0., 0., 0.	// [x,y,z,u1,u2,u3] of point "+i+"  \n";
+}
+
+writemeshParameters
+<<"                    ];							   \n"
+<<"										   \n";
+}
 
 
 if(tractionconditions>=1){writemeshParameters
@@ -358,7 +390,7 @@ if(tractionconditions>=1){writemeshParameters
 
 for(int i=1; i<tractionconditions; i++)
 writemeshParameters
-<<"                         4		//  Label for traction border "+i+"	   \n";
+<<"                        ,4		//  Label for traction border "+i+"	   \n";
 
 writemeshParameters
 <<"                       ];							   \n"

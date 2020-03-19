@@ -624,7 +624,7 @@ if(!Sequential)if(!dynamic)if(!soildynamics){writesolver
 <<"  real[int]    b = elast(0,Vh);						   \n"
 <<(timelog ? "	MPItimerend  (\"RHS assembly\",t0)\n" : ""       	    	    );
 
-if(pointbc)writesolver
+if(dirichletpointconditions>=1)writesolver
 <<"										   \n"
 <<"//---------Additional assembly for A & b----------//				   \n"
 <<"										   \n"
@@ -636,7 +636,7 @@ writesolver
 <<"										   \n"
 <<" //------------Memory optimization-----------------//			   \n";
 
-if(pointbc)writesolver
+if(dirichletpointconditions>=1)writesolver
 <<"										   \n"
 <<"  Dpointlab.resize(0); PnV.resize(0);					   \n";
 

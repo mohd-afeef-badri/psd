@@ -16,16 +16,21 @@
 // ------ All command line argument descriptions [ARGUMENTS] ------
 //=====================================================================================
 /*
-  -dirichletlabels [int]  Number of Dirchlet boundrie.  Default 1.
 
-  -tractionlabels  [int]  Number of Neumann/traction boundrie.  Default 1.
+  -------------------------------------------------------------------------------------
 
-  -dimension       [int]  Accepts values 2 or 3.  2 for 2D 3 for 3D. Default 2.
+  -dirichletpointconditions [int]  Number of Dirchlet points.  Default 1.
+
+  -dirichletconditions      [int]  Number of Dirchlet boundries.  Default 1.
+
+  -tractionconditions       [int]  Number of Neumann/traction boundrie.  Default 1.
+
+  -dimension                [int]  Dimension of proble. 2 for 2D 3 for 3D. Default 2.
   
-  -lagrange        [int]  Lagrange order used for building FE space. Options are 
-  			  1 for P1 or 2 for P2. Defaut is P1.
+  -lagrange                 [int]  Lagrange order used for building FE space. Options 
+  			           are  1 for P1 or 2 for P2. Defaut is P1.
   
-
+  -------------------------------------------------------------------------------------
 
   -partitioner    [sting] Mesh partitioner to be used. Options are "metis"
   			  "parmetis" "scotch" or "ptstoch".
@@ -33,7 +38,7 @@
   -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
   			  active '-parmetis_worker [int]'.			
  
-
+  -------------------------------------------------------------------------------------
  			  
   -help        [bool]     To activate helping message on the terminal. Default OFF. 
   			  
@@ -83,10 +88,11 @@
 // ------ All variables ------ 
 //=====================================================================================
 
-  int dirichletconditions = getARGV("-dirichletconditions", 1);
-  int tractionconditions  = getARGV("-tractionconditions" , 0);
-  int spc                 = getARGV("-dimension", 2);
-  int lag                 = getARGV("-lagrange" , 1);
+  int dirichletpointconditions = getARGV("-dirichletpointconditions", 0);
+  int dirichletconditions      = getARGV("-dirichletconditions", 1);
+  int tractionconditions       = getARGV("-tractionconditions" , 0);
+  int spc                      = getARGV("-dimension", 2);
+  int lag                      = getARGV("-lagrange" , 1);
 
  
   string Solver=getARGV("-solver", "cg"); 
