@@ -53,18 +53,26 @@ if(bodyforce)writevarfmatsolve
 <<"	+ intN(Th,qforder=2)(BF'*def(v))					   \n";
 
 
-if(tractionbc)writevarfmatsolve
-<<"										   \n"
+if(tractionconditions>=1)if(spc==2)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
 <<"										   \n"
 <<"    //-------------------------------------------------------		   \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
 <<"    //-------------------------------------------------------		   \n"
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))					   \n";
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+")'*def(v))	           \n";
 
-if(dirichletbc){
+if(tractionconditions>=1)if(spc==3)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+",tz"+i+")'*def(v))    \n";
 
-if(spc==2){
-for(int i=0; i<dlb; i++)
+if(spc==2)
+for(int i=0; i<dirichletconditions; i++)
 writevarfmatsolve
 <<"										   \n"
 <<"    //-------------------------------------------------------		   \n"
@@ -75,10 +83,9 @@ writevarfmatsolve
 <<"		u1 = Dvalue["+int((i+1*i)+1)+"]				  	   \n"
 <<"	    )									   \n"
 <<"										   \n";
-}
 
-if(spc==3){
-for(int i=0; i<dlb; i++)
+if(spc==3)
+for(int i=0; i<dirichletconditions; i++)
 writevarfmatsolve
 <<"										   \n"
 <<"    //-------------------------------------------------------		   \n"
@@ -90,13 +97,11 @@ writevarfmatsolve
 <<"		u2 = Dvalue["+int((i+2*i)+2)+"]			   		   \n"
 <<"	    )									   \n"
 <<"										   \n";
-}
+
 
 writevarfmatsolve
 <<";		   		   		   				   \n"
 <<"										   \n";
-
-}  //-- [if loop terminator] dirichletbc ended --//
 
 }  //-- [if loop terminator] !nonlinear ended --//
 
@@ -117,8 +122,28 @@ if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 if(bodyforce)writevarfmatsolve
 <<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
 
-if(tractionbc)writevarfmatsolve
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+
+//if(tractionbc)writevarfmatsolve
+//<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+
+if(tractionconditions>=1)if(spc==2)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+")'*def2(v))	   \n";
+
+if(tractionconditions>=1)if(spc==3)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+",tz"+i+")'*def2(v))   \n";
+
 
 if(dirichletbc){
 
@@ -406,8 +431,27 @@ if(quasistatic){writevarfmatsolve
 if(bodyforce)writevarfmatsolve
 <<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
 
-if(tractionbc)writevarfmatsolve
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+//if(tractionbc)writevarfmatsolve
+//<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)	   \n";
+
+if(tractionconditions>=1)if(spc==2)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+")'*def2(v))	   \n";
+
+if(tractionconditions>=1)if(spc==3)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel["+i+"],qforder=2)(T(tx"+i+",ty"+i+",tz"+i+")'*def2(v))   \n";
+
 
 if(dirichletbc)if(spc==3)writevarfmatsolve
 <<"	+ on(2, du=duimp)  							   \n"

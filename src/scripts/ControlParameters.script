@@ -307,15 +307,38 @@ if(dirichletbc)if(!quasistatic)if(!soildynamics){writemeshParameters
 <<"// -------Dirichlet boundary-condition parameters-------			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  int [int]   Dlabel = ["+labelDirichlet+"];	\t// Vector of Dirichlet labels    \n";
+<<"  int [int]   Dlabel = ["+labelDirichlet+"\t//  Label for Dirichlet border 0    \n";
 
-if(spc==2)writemeshParameters
-<<"										   \n"
-<<"  real[int]   Dvalue = [0.,0.];	// Vector of Dirichlet values	 	   \n";
+for(int i=1; i<dirichletconditions; i++)
+writemeshParameters
+<<"                        "+labelDirichlet+"\t//  Label for Dirichlet border "+i+"\n";
 
-if(spc==3)writemeshParameters
-<<"										   \n"
-<<"  real[int]   Dvalue = [0.,0.,0.];	// Vector of Dirichlet values		   \n";
+writemeshParameters
+<<"                       ];							   \n"
+<<"										   \n";
+
+
+if(spc==2){
+writemeshParameters
+<<"  real[int]   Dvalue = [ 0., 0.	// u1,u2 of Dirichlet border 0	 	   \n";
+for(int i=1; i<dirichletconditions; i++)
+writemeshParameters
+<<"                        ,0., 0.	// u1,u2 of Dirichlet border "+i+" 	   \n";
+}
+
+if(spc==3){
+writemeshParameters
+<<"  real[int]   Dvalue = [ 0., 0., 0.	// u1,u2,u3 of Dirichlet border 0	   \n";
+for(int i=1; i<dirichletconditions; i++)
+writemeshParameters
+<<"                        ,0., 0., 0.	// u1,u2,u3 of Dirichlet border "+i+" 	   \n";
+}
+
+writemeshParameters
+<<"                       ];							   \n"
+<<"										   \n";
+
+}
 
 if(pointbc)writemeshParameters
 <<"										   \n"
@@ -323,21 +346,45 @@ if(pointbc)writemeshParameters
 <<"  int [int]   Dpointlab = [2];		// Vector of Dirichlet labels	   \n"
 <<"  real[int]   PnV = [0., 0., 0., 0.];	// [x, y, u1, u2]		   \n"
 <<"										   \n";
+
+
+if(tractionconditions>=1){writemeshParameters
+<<"										   \n"
+<<"//==============================================================================\n"
+<<"// ------- Neumann/traction boundary-condition parameters -------		   \n"
+<<"//==============================================================================\n"
+<<"										   \n"
+<<"  int [int]   Tlabel = [ 4		//  Label for traction border 1	           \n";                      
+
+for(int i=1; i<tractionconditions; i++)
+writemeshParameters
+<<"                         4		//  Label for traction border "+i+"	   \n";
+
+writemeshParameters
+<<"                       ];							   \n"
+<<"										   \n"
+<<"										   \n";
+
+if(spc==2){
+for(int i=0; i<tractionconditions; i++)
+writemeshParameters
+<<"  real  tx"+i+"=0, ty"+i+"=10.;\t\t\t// Component traction forces on label "+i+"\n";
+
+writemeshParameters
+<<"										   \n"
+<<"  macro T(i,j) [i,j]			// Traction vector	                   \n"; 
 }
 
-if(tractionbc){writemeshParameters
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// ------- Neumann boundary-condition parameters -------			   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"  int [int]   Tlabel = [2];		// Vector containing Neumann labels	   \n";
 
-if(spc==2)writemeshParameters
-<<"  macro T [0,1]			// Two component traction forces	   \n"; 
+if(spc==3){
+for(int i=0; i<tractionconditions; i++)
+writemeshParameters
+<<"  real tx"+i+"=0, ty"+i+"=0, tz"+i+"=0 ;// Component traction  on label "+i+"   \n";
 
-if(spc==3)writemeshParameters
-<<"  macro T [0,1,0]			// Three component traction forces	   \n"; 
+writemeshParameters
+<<"  macro T(i,j,k) [i,j,k]		// Three component traction forces         \n"; 
+}
+
 }
 
 if(dynamic)writemeshParameters
@@ -357,15 +404,17 @@ if(bodyforce){writemeshParameters
 <<"// ------- Bodyforce  parameters -------					   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  real f2 = 8.e3*(-9.81);							   \n";
+<<"  real f1 = 0.;                      // X component body forces	  	   \n"
+<<"  real f2 = 8.e3*(-9.81);            // Y component body forces		   \n";
 
 if(spc==2)writemeshParameters
 <<"										   \n"
-<<"  macro BF [0,f2]			// Two component body forces	   	   \n"; 
+<<"  macro BF [f1,f2]                   // Two component body forces	   	   \n"; 
 
 if(spc==3)writemeshParameters
+<<"  real f3 = 0.;                      // Z component body forces		   \n"
 <<"										   \n"
-<<"  macro BF [0,f2,0]			// Three component body forces	   	   \n"; 
+<<"  macro BF [f1,f2,f3]                // Three component body forces	   	   \n"; 
 }
 
 writemeshParameters
