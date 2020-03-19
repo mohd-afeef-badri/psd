@@ -19,17 +19,27 @@ writevarfmatsolve
 if(!nonlinear)if(!dynamic)if(!soildynamics)if(!quasistatic){writevarfmatsolve
 <<"										   \n"
 <<"//==============================================================================\n"
-<<"// -------Variation formulation linear-------				   \n"
+<<"// -------Variation formulation linear elasticity-------			   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"varf elast(def(u),def(v))							   \n"
-<<"	= intN(Th,qforder=3)(							   \n";
+<<"										   \n"
+<<"varf elast(def(u),def(v)) =							   \n"
+<<"										   \n";
 
 if(fastmethod)writevarfmatsolve
+<<"    //------------------------------------------------------		 	   \n"
+<<"    //  $+int_{\\Omega}(\\lambda:\\nabla(u).\\nabla(v))$	  		   \n"
+<<"    //  $+int_{\\Omega}(2\\mu(\\epsilon(u):\\epsilon(v)))$		  	   \n"
+<<"    //------------------------------------------------------		  	   \n"
+<<"	 intN(Th,qforder=3)(							   \n"
 <<"			lambda*divergence(u)*divergence(v)			   \n"
 <<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n";
 
 if(!fastmethod)writevarfmatsolve
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\Omega}(\\epsilon(u):\\mathbbm(E):\\epsilon(v))$		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	 intN(Th,qforder=3)(							   \n"
 <<"			 epsilon(u)'*Mt*epsilon(v)				   \n";
 
 writevarfmatsolve
@@ -37,12 +47,19 @@ writevarfmatsolve
 
 if(bodyforce)writevarfmatsolve
 <<"										   \n"
-<<"	+ intN(Th,qforder=2)(BF'*def(v))	// Body force   (volumetric)	   \n";
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\Omega}(f.v)$				  		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN(Th,qforder=2)(BF'*def(v))					   \n";
 
 
 if(tractionbc)writevarfmatsolve
 <<"										   \n"
-<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))	// Traction force (Neumann BC)	   \n";
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ intN1(Th,Tlabel,qforder=2)(T'*def(v))					   \n";
 
 if(dirichletbc){
 
@@ -50,12 +67,13 @@ if(spc==2){
 for(int i=0; i<dlb; i++)
 writevarfmatsolve
 <<"										   \n"
-<<"	+ on( Dlabel, 				// Displacement (Dirichlet)	   \n"
-<<"		u  = Dvalue[0],							   \n"
-<<"		u1 = Dvalue[1]							   \n"
-<<"										   \n";
-writevarfmatsolve
-<<"	    );		   		   		   			   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on( Dlabel["+int(i)+"],						   \n"
+<<"		u  = Dvalue["+int(i+1*i)+"],				   	   \n"
+<<"		u1 = Dvalue["+int((i+1*i)+1)+"]				  	   \n"
+<<"	    )									   \n"
 <<"										   \n";
 }
 
@@ -63,15 +81,20 @@ if(spc==3){
 for(int i=0; i<dlb; i++)
 writevarfmatsolve
 <<"										   \n"
-<<"	+ on(Dlabel,				// Displacement (Dirichlet)	   \n"
-<<"		u  = Dvalue[0],							   \n"
-<<"		u1 = Dvalue[1],							   \n"
-<<"		u2 = Dvalue[2]			   				   \n"
-<<"										   \n";
-writevarfmatsolve
-<<"	    );		   		   		   			   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(Dlabel["+int(i)+"],						   \n"
+<<"		u  = Dvalue["+int(i+2*i)+"],					   \n"
+<<"		u1 = Dvalue["+int((i+2*i)+1)+"],				   \n"
+<<"		u2 = Dvalue["+int((i+2*i)+2)+"]			   		   \n"
+<<"	    )									   \n"
 <<"										   \n";
 }
+
+writevarfmatsolve
+<<";		   		   		   				   \n"
+<<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 

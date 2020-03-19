@@ -49,9 +49,7 @@ if(!nonlinear)if(!dynamic)if(!quasistatic)if(!soildynamics){writemeshParameters
 
 if(fastmethod)writemeshParameters
 <<"  real    mu                        // Lame parameter			   \n"
-<<"         ,lambda                    // Lame parameter			   \n"
-<<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
-<<"         ;	   								   \n"
+<<"         ,lambda;                   // Lame parameter			   \n"
 <<"										   \n"
 <<"{										   \n"
 <<"  real E  = 200.e9  ,                // Modulus of Elasticity - [Pa]	  	   \n"
@@ -59,13 +57,9 @@ if(fastmethod)writemeshParameters
 <<"	 									   \n"
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
 <<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
-<<"	 									   \n"
-<<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
-<<" 										   \n"
 <<"}	 									   \n";
 
 if(!fastmethod){writemeshParameters
-<<(bodyforce ? "  real f2= 8.e3*(-9.81);                     // Force in Y\n" : "" )
 <<"										   \n"
 <<"  real a1,a2,a3        ;                // Building material tensor	   	   \n"
 <<"{										   \n"
@@ -103,7 +97,6 @@ if(quasistatic)writemeshParameters
 <<"         ,lambda                    // Lame parameter			   \n"
 <<"         ,kappa0 = 1.e-4            // Damage initiation threshold		   \n"
 <<"         ,kappac = 1.e-3            // Critical strain level			   \n"
-<<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
 <<"         ;	   								   \n"
 <<"										   \n"
 <<"{										   \n"
@@ -112,9 +105,6 @@ if(quasistatic)writemeshParameters
 <<"	 									   \n"
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
 <<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
-<<"	 									   \n"
-<<(bodyforce ? "  f2 = 8.e3*(-9.81);              // Rho*g" : ""	   	   )
-<<" 										   \n"
 <<"}	 									   \n"
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -233,7 +223,6 @@ if(soildynamics){writemeshParameters
 <<"										   \n"
 <<"  real    mu                        // Lame parameter			   \n"
 <<"         ,lambda                    // Lame parameter			   \n"
-<<(bodyforce ? "         ,f2                         // Force in Y    \n" : ""	    )
 <<"         ;	   								   \n"
 <<"										   \n"
 <<"{										   \n"
@@ -242,8 +231,6 @@ if(soildynamics){writemeshParameters
 <<"	 									   \n"
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
 <<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
-<<(bodyforce ? "  f2 = 8.e3*(-9.81);				// Rho*g" : ""	   )
-<<" 										   \n"
 <<"}	 									   \n"
 <<"  real cs   = sqrt(mu/rho)               ,					   \n"
 <<"       cp   = sqrt((lambda+(2.*mu))/rho) ;					   \n"
@@ -369,7 +356,8 @@ if(bodyforce){writemeshParameters
 <<"//==============================================================================\n"
 <<"// ------- Bodyforce  parameters -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n";
+<<"										   \n"
+<<"  real f2 = 8.e3*(-9.81);							   \n";
 
 if(spc==2)writemeshParameters
 <<"										   \n"
