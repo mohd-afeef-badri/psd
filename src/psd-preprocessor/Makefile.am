@@ -8,11 +8,11 @@ all-local: PSD_PreProcess
 
 
 PSD_PreProcess: PSD_PreProcess.o
-	g++ -o PSD_PreProcess PSD_PreProcess.o	
+	$(CXX) -o PSD_PreProcess PSD_PreProcess.o	
 
 
 PSD_PreProcess.o:
-	g++ -c PSD_PreProcess.cpp -std=c++11	
+	$(CXX) -c PSD_PreProcess.cpp -std=c++11	
 
 
 
