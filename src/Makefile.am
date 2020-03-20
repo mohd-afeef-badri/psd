@@ -1,4 +1,4 @@
-SUBDIRS=plugins
+SUBDIRS=plugins psd-preprocessor
 EXTRA_DIST=   	      \
 ./ff-files/DDmacro.edp  \
 ./ff-files/DDplotMacro.edp  \
