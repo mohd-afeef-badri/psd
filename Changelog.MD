@@ -3,10 +3,12 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+- New preproceeing via C++, PSD_PreProcess binary.
 - New time discretization option `-timediscretization`
 
 ### Changed
 - Moved to FreeFEM 4.5.
+- Moved to C++ for preprocessing.
 
 
 ## [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8) - 2020-01-21
