@@ -7,8 +7,9 @@ AC_PREFIX_PROGRAM (program)
 AC_PREFIX_DEFAULT($HOME)
 AC_CONFIG_FILES([
  Makefile
- src/Makefile
+ src/Makefile 
  src/plugins/Makefile
+ src/psd-preprocessor/Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
  data/meshes/3D/Geo-Files/Makefile 

@@ -12,7 +12,7 @@ PSD_PreProcess: PSD_PreProcess.o
 
 
 PSD_PreProcess.o:
-	g++ -c PSD_PreProcess.cpp	
+	g++ -c PSD_PreProcess.cpp -std=c++11	
 
 
 
@@ -21,4 +21,4 @@ clean-local:
 	@echo " Removing linking files ..."
 	@echo "  			  "
 	@echo "  			  "
-	rm  -f *~  PSD_PreProcess *.o
+	rm  -f *~  PSD_PreProcess *.o *.edp

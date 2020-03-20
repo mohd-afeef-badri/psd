@@ -52,8 +52,8 @@ if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 <<"// ------- Finite element variables -------					   \n"
 <<"//==============================================================================\n"
 <<"										   \n"
-<<"  Vh  def(u)    ,    // Vectorial variable for [u,\phi]			   \n"
-<<"      def(uold) ,    // Vectorial variable for old [u,\phi] 			   \n"
+<<"  Vh  def(u)    ,    // Vectorial variable for [u,phi]			   \n"
+<<"      def(uold) ,    // Vectorial variable for old [u,phi] 			   \n"
 <<"      def(DPspc);    // Vectorial variables for partition of unity    	   \n";
 
 if(energydecomp)writFemParameters
