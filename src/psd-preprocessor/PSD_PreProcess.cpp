@@ -177,11 +177,11 @@ int main(int argc, char *argv[]){
   
     string argvdummy  = argv[i]   ;
 
-    if( argv[i] == "-dirichletpointconditions") dirichletpointconditions = stoi(argv[i+1]);
-    if( argv[i] == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
-    if( argv[i] == "-tractionconditions"      ) tractionconditions       = stoi(argv[i+1]);
-    if( argv[i] == "-dimension"               ) spc                      = stoi(argv[i+1]);
-    if( argv[i] == "-lagrange"                ) lag                      = stoi(argv[i+1]);
+    if( argvdummy == "-dirichletpointconditions") dirichletpointconditions = stoi(argv[i+1]);
+    if( argvdummy == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
+    if( argvdummy == "-tractionconditions"      ) tractionconditions       = stoi(argv[i+1]);
+    if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
+    if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
     if( argvdummy == "-useRCM"       ) RCM            = true;      
     if( argvdummy == "-help"         ) help           = true;              
