@@ -2,6 +2,8 @@
 // ------ Building the VariationalFormulations.edp file ------ 
 //=====================================================================================
 
+cout << " building VariationalFormulations.edp"; 
+
 {ofstream  writevarfmatsolve("VariationalFormulations.edp");
 
 writevarfmatsolve
@@ -485,3 +487,5 @@ if(dirichletbc)if(spc==2)writevarfmatsolve
 }  //-- [if loop terminator] dquasistatic ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//
+
+cout << " .................. Done \n";

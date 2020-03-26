@@ -2,10 +2,12 @@
 // ------ Building the Parameters.edp file ------ 
 //=====================================================================================
 
+cout << " building ControlParameters.edp";
+
 {ofstream  writemeshParameters("ControlParameters.edp");
 
 writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"/***********************************Parameters**********************************\n"
 <<"*                                                                              *\n"
 <<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
@@ -14,43 +16,43 @@ writemeshParameters
 <<"*         or in the README.MD file.                                            *\n"
 <<"*                                                                              *\n"
 <<"*******************************************************************************/\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
-<<"// ------- Mesh parameters (Un-partitioned) ------- 				   \n"
+<<"// ------- Mesh parameters (Un-partitioned) -------                             \n"
 <<"//==============================================================================\n";
 
 
 if(!nonlinear)if(!dynamic)if(!quasistatic)if(!soildynamics)writemeshParameters
-<<"										   \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name 	   	   \n";
+<<"                                                                                \n"
+<<"  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name                  \n";
 
 if(nonlinear)if(!dynamic)writemeshParameters
-<<"										   \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name	   \n";
+<<"                                                                                \n"
+<<"  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name         \n";
 
 if(dynamic)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\"; // Mesh  name  	   \n";
 
 if(quasistatic)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name    	   \n";
 
 if(soildynamics)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name            \n";
 
 if(!nonlinear)if(!dynamic)if(!quasistatic)if(!soildynamics){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n";
+<<"                                                                                \n";
 
 if(fastmethod)writemeshParameters
 <<"  real    mu                        // Lame parameter			   \n"
 <<"         ,lambda;                   // Lame parameter			   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"{										   \n"
 <<"  real E  = 200.e9  ,                // Modulus of Elasticity - [Pa]	  	   \n"
 <<"       nu = 0.3     ;                // Poisson ratio - [-]		   	   \n"
@@ -60,7 +62,7 @@ if(fastmethod)writemeshParameters
 <<"}	 									   \n";
 
 if(!fastmethod){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real a1,a2,a3        ;                // Building material tensor	   	   \n"
 <<"{										   \n"
 <<"  real E  = 200.e9     ,                // Modulus of Elasticity - [Pa]	   \n"
@@ -72,13 +74,13 @@ if(!fastmethod){writemeshParameters
 <<"}	 									   \n";
 
 if(spc==2)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  macro Mt   [[ a1 ,  a2 , 0 ],						   \n"
 <<"              [ a2 ,  a1 , 0 ],						   \n"
 <<"              [ 0  ,  0  , a3]]               // Material tensor		   \n";
 
 if(spc==3)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  macro Mt   [[ a1 ,  a2 , a2 , 0  , 0  , 0 ],				   \n"
 <<"              [ a2 ,  a1 , a2 , 0  , 0  , 0 ],				   \n"
 <<"              [ a2 ,  a2 , a1 , 0  , 0  , 0 ],     				   \n"
@@ -88,17 +90,17 @@ if(spc==3)writemeshParameters
 }}
 
 if(quasistatic)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real    mu                        // Lame parameter			   \n"
 <<"         ,lambda                    // Lame parameter			   \n"
 <<"         ,kappa0 = 1.e-4            // Damage initiation threshold		   \n"
 <<"         ,kappac = 1.e-3            // Critical strain level			   \n"
 <<"         ;	   								   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"{										   \n"
 <<"  real E  = 100.e6  ,              // Modulus of Elasticity - [Pa]	   	   \n"
 <<"       nu = 0.2     ;              // Poisson ratio - [-]		   	   \n"
@@ -106,16 +108,16 @@ if(quasistatic)writemeshParameters
 <<"  mu     = E/(2.*(1.+nu))            ;					   \n"
 <<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;					   \n"
 <<"}	 									   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Solver parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real tol      = 1.e-5 ;          // Tolerance of the NR procedure	   	   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  int npas      = 2000  ,          // # of pseudo-time steps		   	   \n"
 <<"      iterMaxNR = 10    ;          // Max # of iterations for the NR loop       \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Loading parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
@@ -124,11 +126,11 @@ if(quasistatic)writemeshParameters
 
 
 if(nonlinear){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real lambda = 121.15e3 ,							   \n"
 <<"       mu     = 80.77e3  ;							   \n"
 <<"	 									   \n"
@@ -147,11 +149,11 @@ if(nonlinear){writemeshParameters
 
 
 if(dynamic){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Material parameters ------- 		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real lambda = 576.9230769  ,           // E=1000. & nu=0.3			   \n"
 <<"       mu     = 384.6153846  ;           // E=1000. & nu=0.3			   \n"
 <<"	 									   \n"
@@ -214,17 +216,17 @@ if(TimeDiscretization=="hht-alpha")writemeshParameters
 
 
 if(soildynamics){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Soil parameters -------    		 			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real rho  = 2500.0 ;              // Density				   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real    mu                        // Lame parameter			   \n"
 <<"         ,lambda                    // Lame parameter			   \n"
 <<"         ;	   								   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"{										   \n"
 <<"  real E  = 6.62e6  ,                // Modulus of Elasticity - [Pa]	   	   \n"
 <<"       nu = 0.45    ;                // Poisson ratio - [-]		   	   \n"
@@ -282,7 +284,7 @@ writemeshParameters
 <<"//==============================================================================\n"
 <<"// -------Paraxial boundary-condition parameters-------			   \n"
 <<"//==============================================================================\n"
-<<"										   \n";
+<<"                                                                                \n";
 
 if(spc==2)writemeshParameters
 <<"  int [int]   PAlabels = [2,4,5];   \t// Vector of Paraxial load	   	   \n"
@@ -302,11 +304,11 @@ writemeshParameters
 }
 
 if(dirichletconditions>=1)if(!quasistatic)if(!soildynamics){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// -------Dirichlet boundary-condition parameters-------			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  int [int]   Dlabel = ["<<labelDirichlet<<"\t//  Label for Dirichlet border 0  \n";
 
 for(int i=1; i<dirichletconditions; i++)
@@ -315,7 +317,7 @@ writemeshParameters
 
 writemeshParameters
 <<"                       ];							   \n"
-<<"										   \n";
+<<"                                                                                \n";
 
 
 if(spc==2){
@@ -336,16 +338,16 @@ writemeshParameters
 
 writemeshParameters
 <<"                       ];							   \n"
-<<"										   \n";
+<<"                                                                                \n";
 
 }
 
 if(dirichletpointconditions>=1){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// -------Dirichlet point boundary-condition parameters-------		   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  int [int]   Dpointlab = ["<<labelDirichlet<<"\t// Labels containing point 0   \n";
 
 
@@ -355,7 +357,7 @@ writemeshParameters
 
 writemeshParameters
 <<"                          ];							   \n"
-<<"										   \n";
+<<"                                                                                \n";
 
 
 if(spc==2){
@@ -376,16 +378,16 @@ writemeshParameters
 
 writemeshParameters
 <<"                    ];							   \n"
-<<"										   \n";
+<<"                                                                                \n";
 }
 
 
 if(tractionconditions>=1){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Neumann/traction boundary-condition parameters -------		   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  int [int]   Tlabel = [ 4		//  Label for traction border 1	           \n";                      
 
 for(int i=1; i<tractionconditions; i++)
@@ -394,8 +396,8 @@ writemeshParameters
 
 writemeshParameters
 <<"                       ];							   \n"
-<<"										   \n"
-<<"										   \n";
+<<"                                                                                \n"
+<<"                                                                                \n";
 
 if(spc==2){
 for(int i=0; i<tractionconditions; i++)
@@ -403,7 +405,7 @@ writemeshParameters
 <<"  real  tx"<<i<<"=0, ty"<<i<<"=10.;\t\t\t// Traction forces on label "<<i<<"    \n";
 
 writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  macro T(i,j) [i,j]			// Traction vector	                   \n"; 
 }
 
@@ -420,32 +422,32 @@ writemeshParameters
 }
 
 if(dynamic)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Neumann boundary-condition parameters -------			   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real tt;									   \n"
 <<"  func tr = (tt <= 0.8 ? real(1.*tt/0.8) : 0. );    // tr is dynamic loading	   \n"
-<<"										   \n";
+<<"                                                                                \n";
 
 
 if(bodyforce){writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Bodyforce  parameters -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  real f1 = 0.;                      // X component body forces	  	   \n"
 <<"  real f2 = 8.e3*(-9.81);            // Y component body forces		   \n";
 
 if(spc==2)writemeshParameters
-<<"										   \n"
+<<"                                                                                \n"
 <<"  macro BF [f1,f2]                   // Two component body forces	   	   \n"; 
 
 if(spc==3)writemeshParameters
 <<"  real f3 = 0.;                      // Z component body forces		   \n"
-<<"										   \n"
+<<"                                                                                \n"
 <<"  macro BF [f1,f2,f3]                // Three component body forces	   	   \n"; 
 }
 
@@ -457,4 +459,7 @@ writemeshParameters
 <<"	 	// TO DO							   \n"
 <<"	 									   \n";
 
-} //-- [ostream terminator]  parameters.edp closed --//
+} //-- [ostream terminator]  ControlParameters.edp closed --//
+
+cout << " ........................ Done \n";
+

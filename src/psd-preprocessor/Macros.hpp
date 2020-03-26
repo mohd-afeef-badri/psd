@@ -1,6 +1,8 @@
 //=====================================================================================
 // ------ Building the Macros.edp file ------ 
 //=====================================================================================
+
+cout << " building Macros.edp";
    
 {ofstream  writemacros("Macros.edp");
 
@@ -469,4 +471,6 @@ if(Sequential)writemacros
 }
 
 } //-- [ostream terminator]  macros.edp closed --//  
+
+cout << " ................................... Done \n";
 

@@ -1,16 +1,16 @@
 /**************************************************************************************
-*									       	      *
-* Author:  Mohd Afeef BADRI							      *
-* Date:	   20/04/2020							              *
-* Type:    Execution file						              *
+*                                                                                     *
+* Author:  Mohd Afeef BADRI                                                           *
+* Date:	   20/04/2020                                                                 *
+* Type:    Execution file                                                             *
 * Comment: Once executed this file generates following edp files: Main, Macros, Mesh, *
 *          MeshPartitioning,   VariationalFormulations,   BoundaryAndSourceConditions *
 *          Parameters,  LinearFormBuilderAndSolver, and PostProcessor. All these .edp * 
 *          files combine  together to form  a fully tailored  solid mechanics solver. *
-*	   Commandline flags  are  used to controls the nature of the generated file. *
+*	   Commandline flags  are  used to controls the nature of the generated file.     *
 *          One   is    advised     to   carefully   go   through   these   arguments. *
-* Compile: Use a g++/icpc compiler C++ compiler				              *
-*									              *
+* Compile: Use a g++/icpc compiler C++ compiler                                       *
+*                                                                                     *
 **************************************************************************************/
 
 //=====================================================================================
@@ -29,7 +29,7 @@
   -dimension                [int]  Dimension of proble. 2 for 2D 3 for 3D. Default 2.
   
   -lagrange                 [int]  Lagrange order used for building FE space. Options 
-  			           are  1 for P1 or 2 for P2. Defaut is P1.
+  			                       are  1 for P1 or 2 for P2. Defaut is P1.
   
   -------------------------------------------------------------------------------------
 
@@ -169,9 +169,9 @@ int main(int argc, char *argv[]){
   int lag                      = getARGV("-lagrange" , 1);
 */
 
-//-----------------------------------------------------------------------------------//
+//=====================================================================================
 //---- Comandline Parameters -----
-//-----------------------------------------------------------------------------------//
+//=====================================================================================
 
   for(int i=0; i<argc; i++){
   
@@ -223,7 +223,18 @@ int main(int argc, char *argv[]){
   int labLface=2;if(spc==3)labLface=1;  
   int labRface=4;if(spc==3)labRface=2;  
 
+//=====================================================================================
+//---- PSD Logo on commandline -----
+//=====================================================================================
 
+  cout << "===================================================================" << endl;
+  cout << "                        ___               __                       " << endl;
+  cout << "                      / __ \\   _____   __/  /                      " << endl;
+  cout << "                     / /_/ /  / ___/ / __  /                       " << endl;
+  cout << "                    / ___ /  (__  ) / /_/ /                        " << endl;
+  cout << "                   /_/      /____/  \\___ /                         " << endl;
+  cout << "                                                                   " << endl;
+  cout << "===================================================================" << endl;
 
   if(testflags){
 
@@ -276,9 +287,9 @@ int main(int argc, char *argv[]){
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;  
   cout << " soildynamics is --------------------> " << soildynamics             << endl;
-
-
   }
+
+  cout << "                                                                   " << endl;
 
 #include "Help.hpp"
 #include "Main.hpp"
@@ -291,81 +302,24 @@ int main(int argc, char *argv[]){
 #include "LinearFormBuilderAndSolver.hpp"   
 #include "PostProcessor.hpp"
 
+  cout << "                                                                   " << endl;
+  cout << "===================================================================" << endl;
+
 if(plotAll)
   system("mkdir -p VTUs");
 
+  cout << "                                                                   " << endl;
+  cout << " PSD solver is now ready to run.                                   " << endl;
+  cout << "                                                                   " << endl;
+  cout << " For a simulation with $ number of processes run your solver with  " << endl;
+  cout << "                                                                   " << endl;
+  cout << "     ff-mpirun -np $ Main.edp                                      " << endl;
+  cout << "                                                                   " << endl;
+  cout << " For a sequential simulation run your solver with                  " << endl;
+  cout << "                                                                   " << endl;
+  cout << "     FreeFem++ Main.edp                                            " << endl;
+  cout << "                                                                   " << endl;
+  cout << "===================================================================" << endl;
+
 return 0;
 }
-/*
-//=====================================================================================
-// ------ All files to be included ------ 
-//=====================================================================================
-
-  include "getARGV.idp"    	// Enables importing commandline arguments
-
-//=====================================================================================
-// ------ All variables ------ 
-//=====================================================================================
-
-
-
- 
-  string Solver=getARGV("-solver", "cg"); 
-  string PostProcess=getARGV("-postprocess", "u"); 
-  string Partitioner=getARGV("-partitioner", "parmetis");
-  string Preconditioner=getARGV("-preconditioner", "jacobi");
-  string SubPreconditioner=getARGV("-subpreconditioner", "ilu");
-  string TimeDiscretization=getARGV("-timediscretization", "generalized-alpha");             
-
-  bool RCM          =  usedARGV("-useRCM"       ) !=  1;
-  bool help         =  usedARGV("-help"         ) != -1;
-  bool debug        =  usedARGV("-debug"        ) != -1;
-  bool useGFP       =  usedARGV("-useGFP"       ) != -1;  
-  bool plotAll      =  usedARGV("-plot"         ) != -1;
-  bool dynamic      =  usedARGV("-dynamic"      ) != -1;    
-  bool pipegnu      =  usedARGV("-pipegnu"      ) != -1;
-  bool plotTime     =  usedARGV("-timepvd"      ) != -1;
-  bool pointbc      =  usedARGV("-pointbc"      ) != -1;
-  bool timelog      =  usedARGV("-timelog"      ) != -1;
-  bool vectorial    =  usedARGV("-vectorial"    ) != -1;  
-  bool bodyforce    =  usedARGV("-bodyforce"    ) != -1;
-  bool nonlinear    =  usedARGV("-nonlinear"    ) != -1; 
-  bool elasticity   =  usedARGV("-Lelasticty"   ) != -1;            
-  bool supercomp    =  usedARGV("-supercomp"    ) != -1;       
-  bool tractionbc   =  usedARGV("-tractionbc"   ) != -1; 
-  bool fastmethod   =  usedARGV("-fastmethod"   ) != -1;       
-  bool Sequential   =  usedARGV("-sequential"   ) != -1;
-  bool quasistatic  =  usedARGV("-quasistatic"  ) != -1;
-  bool dirichletbc  =  usedARGV("-dirichletbc"  ) !=  1;
-  bool energydecomp =  usedARGV("-energydecomp" ) != -1;  
-  bool soildynamics =  usedARGV("-soildynamics" ) != -1;
-
-    
-  int labelDirichlet=2; 
-  if(nonlinear)labelDirichlet=1;
-
-  int labLface=2;if(spc==3)labLface=1;  
-  int labRface=4;if(spc==3)labRface=2;
-
-//=====================================================================================
-// ------ All scriptfiles ------ 
-//=====================================================================================
-
-  include "./ScriptModules/Help.script"
-  include "./ScriptModules/Main.script"
-  include "./ScriptModules/Mesh.script"
-  include "./ScriptModules/Macros.script"
-  include "./ScriptModules/FemParameters.script"      
-  include "./ScriptModules/OtherParameters.script"    
-  include "./ScriptModules/ControlParameters.script"
-  include "./ScriptModules/VariationalFormulation.script"
-  include "./ScriptModules/LinearFormBuilderAndSolver.script"  
-  include "./ScriptModules/PostProcessor.script"
-  
-//=====================================================================================
-// ------ Generates VTU folder ------ 
-//=====================================================================================
-  
-if(plotAll)
-  system("mkdir -p VTUs");  
-*/

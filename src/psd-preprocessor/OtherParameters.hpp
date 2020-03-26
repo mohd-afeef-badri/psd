@@ -2,6 +2,8 @@
 // ------ Building the Parameters.edp file ------ 
 //=====================================================================================
 
+cout << " building OtherParameters.edp"; 
+
 {ofstream  writemeshParameters("OtherParameters.edp");
 
 writemeshParameters
@@ -340,3 +342,5 @@ if(!supercomp)writemeshParameters
 }
 
 } //-- [ostream terminator]  parameters.edp closed --//
+
+cout << " .......................... Done \n";

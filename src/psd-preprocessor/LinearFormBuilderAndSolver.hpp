@@ -2,6 +2,8 @@
 // ------ Building the LinearFormBuilderAndSolver.edp file ------ 
 //=====================================================================================
 
+cout << " building LinearFormBuilderAndSolver.edp";
+
 {ofstream  writesolver("LinearFormBuilderAndSolver.edp");
 
 writesolver
@@ -1292,5 +1294,7 @@ if(!plotAll)if(!nonlinear)if(!dynamic)if(!soildynamics)if(Sequential)writesolver
 <<"										   \n";
 
 
-} //-- [ostream terminator]  varfmatsolve.edp closed --//
+} //-- [ostream terminator]  LinearFormBuilderAndSolver.edp closed --//
+
+cout << " ............... Done \n";
 

@@ -2,6 +2,8 @@
 // ------ Building the PostProcessor.edp file ------ 
 //=====================================================================================
 
+cout << " building PostProcessor.edp"; 
+
 if(plotAll){
 ofstream  writePostProcessor("PostProcessor.edp");
 
@@ -146,3 +148,5 @@ writePostProcessor
 }  //-- [if loop terminator] Sequential ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//
+
+cout << " ............................ Done \n";

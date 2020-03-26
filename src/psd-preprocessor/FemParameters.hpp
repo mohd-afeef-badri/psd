@@ -2,6 +2,8 @@
 // ------ Building the Parameters.edp file ------ 
 //=====================================================================================
 
+cout << " building FemParameters.edp";
+
 {ofstream  writFemParameters("FemParameters.edp");
 
 writFemParameters
@@ -225,4 +227,6 @@ if(!Sequential)writFemParameters
 
 
 
-} //-- [ostream terminator]  parameters.edp closed --//
+} //-- [ostream terminator]  FemParameters.edp closed --//
+
+cout << "     ........................ Done \n";

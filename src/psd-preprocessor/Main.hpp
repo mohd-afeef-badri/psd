@@ -2,10 +2,12 @@
 // ------ Building the main.edp file ------ 
 //=====================================================================================
 
+cout << " building Main.edp";
+
 {ofstream  writemain("Main.edp");
 
 writemain
-<<"										   \n"
+<<"                                                                                \n"
 <<"/**********************************Main file************************************\n"
 <<"*                                                                              *\n"
 <<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
@@ -70,3 +72,4 @@ if(plotAll)writemain
 
 } //-- [ostream terminator]  main.edp closed --//
 
+cout << " ..................................... Done \n";
