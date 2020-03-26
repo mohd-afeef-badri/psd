@@ -21,4 +21,5 @@ clean-local:
 	@echo " Removing linking files ..."
 	@echo "  			  "
 	@echo "  			  "
-	rm  -f *~  PSD_PreProcess *.o *.edp
+	rm  -f *~  PSD_PreProcess *.o *.edp 
+	rm  -rf VTUs 
