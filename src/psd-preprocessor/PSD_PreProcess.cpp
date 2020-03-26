@@ -219,6 +219,7 @@ int main(int argc, char *argv[]){
   
   int labelDirichlet=2; 
   if(nonlinear)labelDirichlet=1;
+  if(nonlinear)dirichletbc=true;
 
   int labLface=2;if(spc==3)labLface=1;  
   int labRface=4;if(spc==3)labRface=2;  

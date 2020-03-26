@@ -1,109 +1,109 @@
-//=====================================================================================
+//=================================================================================================
 // ------ Building the VariationalFormulations.edp file ------ 
-//=====================================================================================
+//=================================================================================================
 
 cout << " building VariationalFormulations.edp"; 
 
 {ofstream  writevarfmatsolve("VariationalFormulations.edp");
 
 writevarfmatsolve
-<<"										   \n"
-<<"/**************************Variational formulation******************************\n"
-<<"*                                                                              *\n"
-<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
-<<"*         in order to  control this  file please change flag arguments of  the *\n"
-<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
-<<"*         or in the README.MD file.                                            *\n"
-<<"*                                                                              *\n"
-<<"*******************************************************************************/\n"
-<<"										   \n";
+<<"                                                                                                \n"
+<<"/**************************Variational formulation******************************                \n"
+<<"*                                                                              *                \n"
+<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *                \n"
+<<"*         in order to  control this  file please change flag arguments of  the *                \n"
+<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *                \n"
+<<"*         or in the README.MD file.                                            *                \n"
+<<"*                                                                              *                \n"
+<<"*******************************************************************************/                \n"
+<<"                                                                                                \n";
 
 if(!nonlinear)if(!dynamic)if(!soildynamics)if(!quasistatic){writevarfmatsolve
-<<"										   \n"
-<<"//==============================================================================\n"
-<<"// -------Variation formulation linear elasticity-------			   \n"
-<<"//==============================================================================\n"
-<<"										   \n"
-<<"										   \n"
-<<"varf elast(def(u),def(v)) =							   \n"
-<<"										   \n";
+<<"                                                                                                \n"
+<<"//==============================================================================                \n"
+<<"// -------Variation formulation linear elasticity-------                                        \n"
+<<"//==============================================================================                \n"
+<<"                                                                                                \n"
+<<"                                                                                                \n"
+<<"varf elast(def(u),def(v)) =                                                                     \n"
+<<"                                                                                                \n";
 
 if(fastmethod)writevarfmatsolve
-<<"    //------------------------------------------------------		 	   \n"
-<<"    //  $+int_{\\Omega}(\\lambda:\\nabla(u).\\nabla(v))$	  		   \n"
-<<"    //  $+int_{\\Omega}(2\\mu(\\epsilon(u):\\epsilon(v)))$		  	   \n"
-<<"    //------------------------------------------------------		  	   \n"
-<<"	 intN(Th,qforder=3)(							   \n"
-<<"			lambda*divergence(u)*divergence(v)			   \n"
-<<"			+2.*mu*( epsilon(u)'*epsilon(v) )			   \n";
+<<"    //------------------------------------------------------                                    \n"
+<<"    //  $+int_{\\Omega}(\\lambda:\\nabla(u).\\nabla(v))$                                        \n"
+<<"    //  $+int_{\\Omega}(2\\mu(\\epsilon(u):\\epsilon(v)))$                                      \n"
+<<"    //------------------------------------------------------                                    \n"
+<<"      intN(Th,qforder=3)(                                                                       \n"
+<<"                     lambda*divergence(u)*divergence(v)                                         \n"
+<<"                   + 2.*mu*( epsilon(u)'*epsilon(v) )                                           \n";
 
 if(!fastmethod)writevarfmatsolve
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $+int_{\\Omega}(\\epsilon(u):\\mathbbm(E):\\epsilon(v))$		   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	 intN(Th,qforder=3)(							   \n"
-<<"			 epsilon(u)'*Mt*epsilon(v)				   \n";
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $+int_{\\Omega}(\\epsilon(u):\\mathbbm(E):\\epsilon(v))$                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"	 intN(Th,qforder=3)(                                                                       \n"
+<<"                     epsilon(u)'*Mt*epsilon(v)                                                  \n";
 
 writevarfmatsolve
-<<"		  )								   \n";
+<<"                     )                                                                          \n";
 
 if(bodyforce)writevarfmatsolve
-<<"										   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $+int_{\\Omega}(f.v)$				  		   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	+ intN(Th,qforder=2)(BF'*def(v))					   \n";
+<<"                                                                                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $+int_{\\Omega}(f.v)$                                                                   \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"     + intN(Th,qforder=2)(BF'*def(v))                                                           \n";
 
 
 if(tractionconditions>=1)if(spc==2)
 for(int i=0; i<tractionconditions; i++)
 writevarfmatsolve
-<<"										   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	+ intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def(v))	   \n";
+<<"                                                                                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"     + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def(v))                      \n";
 
 if(tractionconditions>=1)if(spc==3)
 for(int i=0; i<tractionconditions; i++)
 writevarfmatsolve
-<<"										   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $+int_{\\partial\\Omega_N}(T.v)$   					   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	+ intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))\n";
+<<"                                                                                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"	+ intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))            \n";
 
 if(spc==2)
 for(int i=0; i<dirichletconditions; i++)
 writevarfmatsolve
-<<"										   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	+ on( Dlabel["<<int(i)<<"],						   \n"
-<<"		u  = Dvalue["<<int(i+1*i)<<"],				   	   \n"
-<<"		u1 = Dvalue["<<int((i+1*i)+1)<<"]			 	   \n"
-<<"	    )									   \n"
-<<"										   \n";
+<<"                                                                                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"	+ on( Dlabel["<<int(i)<<"],                                                                \n"
+<<"		u  = Dvalue["<<int(i+1*i)<<"],                                                     \n"
+<<"		u1 = Dvalue["<<int((i+1*i)+1)<<"]                                                  \n"
+<<"	    )                                                                                      \n"
+<<"                                                                                                \n";
 
 if(spc==3)
 for(int i=0; i<dirichletconditions; i++)
 writevarfmatsolve
-<<"										   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
-<<"    //-------------------------------------------------------		   \n"
-<<"	+ on(Dlabel["<<int(i)<<"],						   \n"
-<<"		u  = Dvalue["<<int(i+2*i)<<"],					   \n"
-<<"		u1 = Dvalue["<<int((i+2*i)+1)<<"],				   \n"
-<<"		u2 = Dvalue["<<int((i+2*i)+2)<<"]				   \n"
-<<"	    )									   \n"
-<<"										   \n";
+<<"                                                                                                \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //-------------------------------------------------------                                   \n"
+<<"	+ on(Dlabel["<<int(i)<<"],                                                                 \n"
+<<"		u  = Dvalue["<<int(i+2*i)<<"],                                                     \n"
+<<"		u1 = Dvalue["<<int((i+2*i)+1)<<"],                                                 \n"
+<<"		u2 = Dvalue["<<int((i+2*i)+2)<<"]                                                  \n"
+<<"	    )                                                                                      \n"
+<<"                                                                                                \n";
 
 
 writevarfmatsolve
-<<";		   		   		   				   \n"
-<<"										   \n";
+<<";                                                                                               \n"
+<<"                                                                                                \n";
 
 }  //-- [if loop terminator] !nonlinear ended --//
 
@@ -114,14 +114,22 @@ if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"//==============================================================================\n"
 <<"										   \n"
 <<"										   \n"
-<<"varf elast(def2(u),def2(v))							   \n"
-<<"	= intN(Th,qforder=3)(							   \n"
+<<"varf elast(def2(u),def2(v)) =                                                   \n"
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$\n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	intN(Th,qforder=3)(							   \n"
 <<"			((1 - phiold)*(1 - phiold) + 1e-6)*			   \n"
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
 <<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"			    )							   \n";
 
 if(bodyforce)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    // $+int_{\\Omega}(f.v)$                                                    \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ intN(Th,qforder=2)(BF'*def2(v))	// Body force     (volumetric)	   \n";
 
 
@@ -150,18 +158,35 @@ writevarfmatsolve
 if(dirichletbc){
 
 if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1])	// Displacement (Dirichlet)	   \n"
-<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
-<<"										   \n";
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(2,u1=tr)				// Displacement (Dirichlet)	   \n";
 
 if(spc==3)writevarfmatsolve
-<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
-<<"				,u2=Dvalue[2])	// Displacement (Dirichlet)	   \n"
-<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
-<<"										   \n";
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]                                       \n"
+<<"				,u2=Dvalue[2])	// Displacement (Dirichlet)        \n"
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(2,u1=tr)				// Displacement (Dirichlet)        \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
+
+writevarfmatsolve
+<<";                                                                                \n";
 
 /************************OLD METHOD*************************************************
 if(pipegnu)writevarfmatsolve
@@ -181,11 +206,16 @@ writevarfmatsolve
 <<"	= intN(Th,qforder=3)(							   \n"
 <<"			(Gc*lo*(grad(phi)'*grad(q))) +				   \n"
 <<(energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*H)*phi*q )\n"         : "" 		    )
-<<(!energydecomp ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(u))*phi*q )\n"  : "" 		    )
+<<(!energydecomp ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(u))*phi*q )\n"  : ""               )
 <<"			    )							   \n"
 <<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*H*q  )\n"         : "" 	    	    )
 <<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : "" 	    	    )
-<<"	+ on(4,phi=1);				  //  Cracked (Dirichlet)   	   \n";
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(4,phi=1)             //  Cracked (Dirichlet)                           \n"
+<<";                                                                                \n";
 
 }  //-- [if loop terminator] nonlinear ended --//
 
@@ -198,7 +228,7 @@ if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writevarfmatsolve
 <<"										   \n"
 <<"varf elast(def(u),def(v))							   \n"
 <<"	= intN(Th,qforder=3)(							   \n"
-<<"			((1 - uold"<<spc<<")*(1 - uold"<<spc<<") + 1e-6)*		   \n"
+<<"			((1 - uold"<<spc<<")*(1 - uold"<<spc<<") + 1e-6)*	   \n"
 <<"			(lambda*divergence(u)*divergence(v)			   \n"
 <<"			+ 2.*mu*( epsilon(u)'*epsilon(v) ))			   \n"
 <<"					+					   \n"
@@ -226,23 +256,45 @@ if(energydecomp)writevarfmatsolve
 */
 
 writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(4,u"<<spc<<" = 1)                          // Cracked (Dirichlet)	   \n";
 
 if(dirichletbc){
 
 if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1])	// Displacement (Dirichlet)	   \n"
-<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(2,u1=tr)				// Displacement (Dirichlet)	   \n"
 <<"										   \n";
 
 if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(Dlabel,u=Dvalue[0],u1=Dvalue[1]					   \n"
 <<"				,u2=Dvalue[2])	// Displacement (Dirichlet)	   \n"
-<<"	+ on(2,u1=tr);				// Displacement (Dirichlet)	   \n"
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"	+ on(2,u1=tr)				// Displacement (Dirichlet)	   \n"
 <<"										   \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
+writevarfmatsolve
+<<";                                                                                \n";
 
 /************************OLD METHOD*************************************************
 if(pipegnu)writevarfmatsolve
@@ -344,6 +396,10 @@ if(dynamic){writevarfmatsolve
 <<"     tr * v1                                           // Time dependent loading\n"
 <<"  )										   \n"
 <<"										   \n"
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"    + on                                                                        \n"
 <<"  (										   \n"
 <<"         "<<labLface<<"        ,                        // Constrain  (Dirichlet) \n"
@@ -474,12 +530,20 @@ writevarfmatsolve
 
 
 if(dirichletbc)if(spc==3)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(2, du=duimp)  							   \n"
 <<"    	+ on(1, du=0    )   							   \n"
 <<"	+ on(4, du1=0   )    							   \n"
 <<"    	+ on(5, du2=0   ) ;  							   \n";
 
 if(dirichletbc)if(spc==2)writevarfmatsolve
+<<"										   \n"
+<<"    //-------------------------------------------------------		   \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$   		   \n"
+<<"    //-------------------------------------------------------		   \n"
 <<"	+ on(4, du=duimp)  							   \n"
 <<"    	+ on(2, du=0    )   							   \n"
 <<"	+ on(5, du1=0   ) ;   							   \n";
