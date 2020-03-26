@@ -10,10 +10,10 @@ writevarfmatsolve
 <<"                                                                                                \n"
 <<"/**************************Variational formulation******************************                \n"
 <<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *                \n"
+<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
 <<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *                \n"
-<<"*         or in the README.MD file.                                            *                \n"
+<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
+<<"*         the README.MD file.                                                  *                \n"
 <<"*                                                                              *                \n"
 <<"*******************************************************************************/                \n"
 <<"                                                                                                \n";
@@ -41,7 +41,7 @@ if(!fastmethod)writevarfmatsolve
 <<"    //-------------------------------------------------------                                   \n"
 <<"    //  $+int_{\\Omega}(\\epsilon(u):\\mathbbm(E):\\epsilon(v))$                                \n"
 <<"    //-------------------------------------------------------                                   \n"
-<<"	 intN(Th,qforder=3)(                                                                       \n"
+<<"      intN(Th,qforder=3)(                                                                       \n"
 <<"                     epsilon(u)'*Mt*epsilon(v)                                                  \n";
 
 writevarfmatsolve
@@ -71,7 +71,7 @@ writevarfmatsolve
 <<"    //-------------------------------------------------------                                   \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //-------------------------------------------------------                                   \n"
-<<"	+ intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))            \n";
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))           \n";
 
 if(spc==2)
 for(int i=0; i<dirichletconditions; i++)
@@ -80,10 +80,10 @@ writevarfmatsolve
 <<"    //-------------------------------------------------------                                   \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //-------------------------------------------------------                                   \n"
-<<"	+ on( Dlabel["<<int(i)<<"],                                                                \n"
-<<"		u  = Dvalue["<<int(i+1*i)<<"],                                                     \n"
-<<"		u1 = Dvalue["<<int((i+1*i)+1)<<"]                                                  \n"
-<<"	    )                                                                                      \n"
+<<"     + on( Dlabel["<<int(i)<<"],                                                                \n"
+<<"             u  = Dvalue["<<int(i+1*i)<<"],                                                     \n"
+<<"             u1 = Dvalue["<<int((i+1*i)+1)<<"]                                                  \n"
+<<"         )                                                                                      \n"
 <<"                                                                                                \n";
 
 if(spc==3)
@@ -93,11 +93,11 @@ writevarfmatsolve
 <<"    //-------------------------------------------------------                                   \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //-------------------------------------------------------                                   \n"
-<<"	+ on(Dlabel["<<int(i)<<"],                                                                 \n"
-<<"		u  = Dvalue["<<int(i+2*i)<<"],                                                     \n"
-<<"		u1 = Dvalue["<<int((i+2*i)+1)<<"],                                                 \n"
-<<"		u2 = Dvalue["<<int((i+2*i)+2)<<"]                                                  \n"
-<<"	    )                                                                                      \n"
+<<"     + on(Dlabel["<<int(i)<<"],                                                                 \n"
+<<"             u  = Dvalue["<<int(i+2*i)<<"],                                                     \n"
+<<"             u1 = Dvalue["<<int((i+2*i)+1)<<"],                                                 \n"
+<<"             u2 = Dvalue["<<int((i+2*i)+2)<<"]                                                  \n"
+<<"         )                                                                                      \n"
 <<"                                                                                                \n";
 
 

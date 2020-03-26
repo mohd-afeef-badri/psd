@@ -7,15 +7,15 @@ cout << " building MeshAndFeSpace.edp";
 {ofstream  writemeshPartitioning("MeshAndFeSpace.edp");
 
 writemeshPartitioning
-<<"                                                                                \n"
-<<"/*****************************Mesh And Partitioning*****************************\n"
-<<"*                                                                              *\n"
-<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
-<<"*         in order to  control this  file please change flag arguments of  the *\n"
-<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
-<<"*         or in the README.MD file.                                            *\n"
-<<"*                                                                              *\n"
-<<"*******************************************************************************/\n"
+<<"                                                                                                \n"
+<<"/**************************Variational formulation******************************                \n"
+<<"*                                                                              *                \n"
+<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
+<<"*         in order to  control this  file please change flag arguments of  the *                \n"
+<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
+<<"*         the README.MD file.                                                  *                \n"
+<<"*                                                                              *                \n"
+<<"*******************************************************************************/                \n"
 <<"                                                                                \n";
 
 //-----------------------------SEQUENTIAL------------------------------------------//
