@@ -9,32 +9,32 @@ all-local: bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic
 	@echo " gmsh used  $(GMSH)"
 
 bar.msh:
-	$(GMSH)gmsh -2 bar.geo -o bar.msh -format msh2 -v 0
+	$(GMSH) -2 bar.geo -o bar.msh -format msh2 -v 0
 quasistatic.msh:
-	$(GMSH)gmsh -2 quasistatic.geo -o quasistatic.msh -format msh2 -v 0
+	$(GMSH) -2 quasistatic.geo -o quasistatic.msh -format msh2 -v 0
 	
 bar-dynamic.msh:
-	$(GMSH)gmsh -2 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
+	$(GMSH) -2 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
 	
 Notched-Plate.msh:
-	$(GMSH)gmsh -2 Notched-Plate.geo -o Notched-Plate.msh -format msh2 -v 0
+	$(GMSH) -2 Notched-Plate.geo -o Notched-Plate.msh -format msh2 -v 0
 
 tensile-crack.msh:
-	$(GMSH)gmsh -2 tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
-	$(GMSH)gmsh -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
-	$(GMSH)gmsh -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0		
-	$(GMSH)gmsh -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
+	$(GMSH) -2 tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0		
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
 
 sparsity.msh:
-	$(GMSH)gmsh -2  sparsity.geo -o sparsity.msh -format msh2 -v 0				
+	$(GMSH) -2  sparsity.geo -o sparsity.msh -format msh2 -v 0				
 
 soil.msh:
-	$(GMSH)gmsh -2 soil.geo -o soil.msh -format msh2 -v 0
-	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0
-	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0		
-	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0
-	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0
-	$(GMSH)gmsh -1 soil.msh -o soil.msh -format msh2 -refine -v 0	
+	$(GMSH) -2 soil.geo -o soil.msh -format msh2 -v 0
+	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
+	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0		
+	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
+	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
+	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0	
 	
 install-exec-local:
 	@mkdir -p ../Meshes

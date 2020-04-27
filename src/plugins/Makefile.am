@@ -4,21 +4,15 @@ all-local: gofastplugins.so iovtk.so  MatrixPlotter.so
 	@echo "  			  "
 	@echo " Finished installing plugins !!!!!!"
 	@echo "  			  "
-	@echo " Compilation list $(LIST_COMPILE)"
-	@echo " ff-c++ used  $(FFINSTALLDIR)"
-	@echo " Corresponds to FreeFEM  $(FFINSTALLDIR)FreeFem++"
 
-gofastplugins.so:
-	$(FFINSTALLDIR)ff-c++ -auto gofastplugins.cpp
+gofastplugins.so: gofastplugins.cpp
+	$(FFCXX) -auto gofastplugins.cpp
 	
-MatrixPlotter.so:
-	$(FFINSTALLDIR)ff-c++ -auto MatrixPlotter.cpp
+MatrixPlotter.so: MatrixPlotter.cpp
+	$(FFCXX) -auto MatrixPlotter.cpp
 	
-iovtk.so:
-	$(FFINSTALLDIR)ff-c++ -auto iovtk.cpp	
-
-.cpp.$(DYLIB_SUFFIX): ff-c++
-	 $(FFDIR)/bin/ff-c++ -auto $<
+iovtk.so: iovtk.cpp
+	$(FFCXX) -auto iovtk.cpp
 
 
 clean-local:

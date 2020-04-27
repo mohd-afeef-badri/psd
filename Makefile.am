@@ -13,13 +13,7 @@ aclocal.m4 \
 config.h.in \
 config.log \
 stamp-h1 \
-.swp 
-
-
-ff = $(FFINSTALLDIR)
-ffmpirun = $(FFINSTALLDIR)
-
-GMSH = $(GMSHINSTALLDIR)
+.swp
 
 
 install-exec-local:
@@ -29,7 +23,7 @@ install-exec-local:
 	@mkdir -p ${prefix}/PSD/Meshes/3D
 	@mkdir -p ${prefix}/PSD/Plugins
 	@mkdir -p ${prefix}/PSD/Solver
-	@mkdir -p ${prefix}/PSD/Solver/ScriptModules
+#	@mkdir -p ${prefix}/PSD/Solver/ScriptModules
 	@mkdir -p ${prefix}/PSD/Doc	
 	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD/Meshes/2D/.	
 	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD/Meshes/3D/.
@@ -39,8 +33,10 @@ install-exec-local:
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	
-	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD/Solver/SolverGenerator.edp
-	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.
+#	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD/Solver/SolverGenerator.edp
+	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD/Solver/.
+#	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.	
+	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
 	@echo "  			  "
@@ -67,7 +63,7 @@ install-Super-Comp:
 	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes/3D
 	@mkdir -p ${prefix}/PSD-Super-Comp/Plugins
 	@mkdir -p ${prefix}/PSD-Super-Comp/Solver
-	@mkdir -p ${prefix}/PSD-Super-Comp/Solver/ScriptModules
+#	@mkdir -p ${prefix}/PSD-Super-Comp/Solver/ScriptModules
 	@mkdir -p ${prefix}/PSD-Super-Comp/Doc	
 	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/2D/.	
 	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/3D/.
@@ -76,9 +72,10 @@ install-Super-Comp:
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-Super-Comp/Plugins/MacroTools.edp	
-	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD-Super-Comp/Solver/SolverGenerator.edp
-	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-Super-Comp/Solver/simulation-log.csv	
-	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
+#	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD-Super-Comp/Solver/SolverGenerator.edp
+	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-Super-Comp/Solver/.	
+#	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
+	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-Super-Comp/Solver/PSD_PreProcess
 	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
 	@echo "  			  "
@@ -97,38 +94,38 @@ install-Super-Comp:
 check: 				
 	@echo "  			  "
 	cd ${prefix}/PSD/Solver &&  \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
-	${ff}FreeFem++ Main.edp -glut $(FFINSTALLDIR)ffglut   -v 10 -ns -nw   && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
-	${ff}FreeFem++ Main.edp -glut $(FFINSTALLDIR)ffglut  -v 10 -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++ SolverGenerator.edp    -v 10  -dimension 2 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
+	$(FF) Main.edp -glut $(FFINSTALLDIR)ffglut   -v 10 -ns -nw   && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
+	$(FF) Main.edp -glut $(FFINSTALLDIR)ffglut  -v 10 -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF) SolverGenerator.edp    -v 10  -dimension 2 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	${ff}ff-mpirun Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	${ff}ff-mpirun Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 2 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 2 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++ SolverGenerator.edp    -v 10  -dimension 2 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF) SolverGenerator.edp    -v 10  -dimension 2 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	${ff}ff-mpirun Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	${ff}ff-mpirun Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 2 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 2 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	${ff}FreeFem++  SolverGenerator.edp    -v 10  -dimension 3 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
+	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	${ffmpirun}ff-mpirun -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw
+	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw
 	rm  -rf *.edp	
 	@echo "  			  "
 	@echo "==========================================================================="
