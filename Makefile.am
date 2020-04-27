@@ -16,6 +16,23 @@ stamp-h1 \
 .swp
 
 
+all-local: logo
+	@echo "*============================================================*"
+	@echo " 'make' finished now do 'make check'"
+	@echo "*============================================================*"
+
+logo:
+	@echo ""
+	@echo "*============================================================*"
+	@echo "                        ___               __                  "
+	@echo "                      / __ \\   _____   __/  /                "
+	@echo "                     / /_/ /  / ___/ / __  /                  "
+	@echo "                    / ___ /  (__  ) / /_/ /                   "
+	@echo "                   /_/      /____/  \\___ /                   "
+	@echo "                                                              "
+	@echo "*============================================================*"
+	@echo ""
+
 install-exec-local:
 	@mkdir -p ${prefix}/PSD
 	@mkdir -p ${prefix}/PSD/Meshes		
@@ -41,7 +58,7 @@ install-exec-local:
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
 	@echo "  			  "
 	@echo " Finished installing							  "
-	@echo "==========================================================================="
+	@echo "*============================================================*"
 	@echo "  ->   It is advised to check the solver for that do:			  "
 	@echo "  			  						  "
 	@echo "  			  						  "			
@@ -53,7 +70,7 @@ install-exec-local:
 	@echo " # please use these flags  during  make check as well  "	
 	@echo "  			  						  "
 	@echo "  			  						  "				
-	@echo "==========================================================================="
+	@echo "*============================================================*"
 	@echo "  									  "
 	
 install-Super-Comp:
@@ -79,20 +96,20 @@ install-Super-Comp:
 	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
 	@echo "  			  "
-	@echo "==========================================================================="
+	@echo "*============================================================*"
 	@echo " Finished installing the supercomputer copy of PSD			  "
 	@echo "  			  						  "			
 	@echo " ****Note****								  "
 	@echo "  			  						  "			
-	@echo " # You still need to manullay install the plugins in the /plugins folder	  "			
-	@echo " # Once PSD is trasfered on the Super-computer goto the /plugins folder &  "
+	@echo " # You still need to manullay install the plugins in the plugins folder	  "			
+	@echo " # Once PSD is trasfered on the Super-computer goto the plugins folder &  "
 	@echo "    $ make plugins 	  						  "	
 	@echo "  			  						  "				
-	@echo "==========================================================================="
+	@echo "*============================================================*"
 	@echo "  									  "	
 	
 check: 				
-	@echo "  			  "
+	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
 	$(FF)  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
 	$(FF) Main.edp -glut $(FFINSTALLDIR)ffglut   -v 10 -ns -nw   && \
@@ -127,14 +144,26 @@ check:
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
 	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw
 	rm  -rf *.edp	
-	@echo "  			  "
-	@echo "==========================================================================="
-	@echo "  ->   Finshed checking the solver, you are all set			  "
-	@echo "==========================================================================="
-	@echo "  									  "	
-	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " 'make check' finished now do 'make install'"
+	@echo "*============================================================*"	
+	@echo ""
+
+clean-local:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning files in :"; pwd
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -f *~
+		
 clean-automake:
-	@echo "  			  "
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files
+	@echo "*============================================================*"
+	@echo ""	
 	rm  -rf ${AUTOMAKE_LIST}
 	rm  -rf ./data/Makefile ./data/Makefile.in
 	rm  -rf ./data/meshes/2D/Geo-Files/Makefile ./data/meshes/2D/Geo-Files/Makefile.in
