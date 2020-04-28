@@ -17,37 +17,35 @@ define(SECTION_TITLE,
 AU_ALIAS([ACX_GMSH], [AX_GMSH])
 AC_DEFUN([AX_GMSH], [
 AC_PREREQ(2.50)
-AC_REQUIRE([AC_PROG_CXX])
 AC_ARG_VAR(GMSH,[Gmsh mesher])
-AC_CHECK_PROGS(GMSH, gmsh, $GMSH)
-AC_SUBST(GMSH)
+AC_CHECK_PROG(GMSH,[gmsh],[gmsh],[no])
+dnl AC_CHECK_PROGS(GMSH, gmsh, $GMSH)
+dnl AC_SUBST(GMSH)
 ])dnl ACX_GMSH
 
 AU_ALIAS([ACX_FF], [AX_FF])
 AC_DEFUN([AX_FF], [
 AC_PREREQ(2.50)
-AC_REQUIRE([AC_PROG_CXX])
 AC_ARG_VAR(FF,[FreeFEM compiler command])
-AC_CHECK_PROGS(FF, FreeFem++, $FF)
-AC_SUBST(FF)
+AC_CHECK_PROG(FF,[FreeFem++],[FreeFem++],[no])
 ])dnl ACX_FF
 
 AU_ALIAS([ACX_FFCXX], [AX_FFCXX])
 AC_DEFUN([AX_FFCXX], [
 AC_PREREQ(2.50)
-AC_REQUIRE([AC_PROG_CXX])
 AC_ARG_VAR(FFCXX,[FreeFEM compiler command])
-AC_CHECK_PROGS(FFCXX, ff-c++, $FFCXX)
-AC_SUBST(FFCXX)
+AC_CHECK_PROG(FFCXX,[ff-c++],[ff-c++],[no])
+dnl AC_CHECK_PROGS(FFCXX, ff-c++, $FFCXX)
+dnl AC_SUBST(FFCXX)
 ])dnl ACX_FFCXX
 
 AU_ALIAS([ACX_FFMPI], [AX_FFMPI])
 AC_DEFUN([AX_FFMPI], [
 AC_PREREQ(2.50)
-AC_REQUIRE([AC_PROG_CXX])
 AC_ARG_VAR(FFMPI,[FreeFEM compiler command])
-AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
-AC_SUBST(FFMPI)
+AC_CHECK_PROG(FFMPI,[ff-mpirun],[ff-mpirun],[no])
+dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
+dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
 AC_ARG_WITH(FreeFEM,
@@ -66,12 +64,42 @@ AC_LANG(C++)
 
 SECTION_TITLE([      checking for a Gmsh mesher        ])
 AX_GMSH
+test "$GMSH" == "no" && AC_MSG_ERROR([
+  Required  program  'gmsh'  not   found.
+  If 'gmsh' is not  present  in  /usr/bin 
+  or in /usr/local/bin consider using the
+   '--with-Gmsh=your/Gmsh/path/bin'  flag  
+   with ./configure command. 
+                                   ])
 
 
 SECTION_TITLE([      checking for a FF++ compilers     ])
 AX_FF
+test "$FF" == "no" && AC_MSG_ERROR([
+  Required  program  'FreeFem++'  not  found.
+  If 'FreeFem++' is not  present in  /usr/bin 
+  or in  /usr/local/bin  consider  using  the
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
+  with ./configure command. 
+                                   ])
+
 AX_FFCXX
+test "$FFCXX" == "no" && AC_MSG_ERROR([
+  Required  program   'ff-++'   not    found.
+  If  'ff-++'  is  not  present  in  /usr/bin 
+  or  in  /usr/local/bin consider  using  the
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
+  with ./configure command. 
+                                   ])
+
 AX_FFMPI
+test "$FFMPI" == "no" && AC_MSG_ERROR([
+  Required  program  'ff-mpirun'  not  found.
+  If 'ff-mpirun' is not present  in  /usr/bin 
+  or in  /usr/local/bin  consider  using  the
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
+  with ./configure command. 
+                                   ])
 
 
 SECTION_TITLE([    generating the required makefiles   ])
