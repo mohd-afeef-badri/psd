@@ -161,7 +161,7 @@ clean-local:
 clean-automake:
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Cleaning automake generated files
+	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
 	rm  -rf ${AUTOMAKE_LIST}
@@ -170,4 +170,5 @@ clean-automake:
 	rm  -rf ./data/meshes/3D/Geo-Files/Makefile ./data/meshes/3D/Geo-Files/Makefile.in
 	rm  -rf ./src/Makefile ./src/Makefile.in
 	rm  -rf ./src/plugins/Makefile ./src/plugins/Makefile.in
-																
+	
+proper: clean-automake clean-local
