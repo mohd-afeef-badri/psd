@@ -1,4 +1,4 @@
-AC_INIT([M. A. Badri], [1.0], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.0], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -77,3 +77,16 @@ AC_CONFIG_FILES([
  data/meshes/3D/Geo-Files/Makefile 
 ])
 AC_OUTPUT
+
+SECTION_TITLE([                   status               ])
+
+dnl Print results
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ PSD version $VERSION configured successfully.])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ Using '$prefix' for installation.])
+AC_MSG_RESULT([ Using '$CXX' for C++ compiler.])
+AC_MSG_RESULT([ Building with '$CXXFLAGS' for C++ compiler flags.])
+AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
+AC_MSG_RESULT([ Building with '$LIBS' libraries.])
+AC_MSG_RESULT([])
