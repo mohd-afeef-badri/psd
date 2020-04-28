@@ -37,15 +37,16 @@ autoreconf -i
 ./configure 
 ```
 *Note*:   `./configure` will install PSD in `$HOME/PSD` to change this directory use `--prefix=Your/Own/Path` with `./configure`. 
+*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages intalled in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+```
+./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
+```
 
 - Make PSD directives
 
 ```
-make FFINSTALLDIR=/usr/local/bin/ GMSH=/usr/bin/gmsh
+make
 ```
-*Note*: Variable `FFINSTALLDIR` can be changed to the [FreeFEM](https://freefem.org/) local path if installed locally. 
-
-*Note*: Variable `GMSH` can be changed for [Gmsh](http://gmsh.info/) local path if installed locally.  Use Gmsh version > 4.3.
 
 - Install PSD
 ```
@@ -149,6 +150,6 @@ These are a set of commandline flags/options that control your simulation. You c
 *To report bugs, issues, feature-requests contact:* 
 
 - **mohd-afeef.badri@cea.fr**
-- **mohd-afeef.badri@outlook.com**
+- **mohd-afeef.badri@hotmail.com**
 - **mohd-afeef.badri@etu.univ-nantes.fr** 
 

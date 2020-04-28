@@ -4,11 +4,19 @@ All notable changes to PSD solver will be documented in this file.
 ## Unreleased
 ### Added
 - New preproceeing via C++, PSD_PreProcess binary.
-- New time discretization option `-timediscretization`
+- New examples of using the solver.
+- New time discretization option `-timediscretization`.
+- Automatic identification of FreeFEM and Gmsh during `./configure`.
+- New flags for `--with-FreeFEM=` and `--with-Gmsh=` during `./configure`.
 
 ### Changed
-- Moved to FreeFEM 4.5.
+- Moved to FreeFEM 4.6.
+- Moved to PETSc 13.13.
 - Moved to C++ for preprocessing.
+
+### Removed
+- No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.
+
 
 
 ## [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8) - 2020-01-21
