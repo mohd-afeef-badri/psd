@@ -50,6 +50,16 @@ AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
 AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
+AC_ARG_WITH(FreeFEM,
+	[  --with-FreeFEM=         FreeFEM installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
+	   FF="${withval}/FreeFem++"
+	   FFCXX="${withval}/ff-c++"
+	   FFMPI="${withval}/ff-mpirun")
+	   
+AC_ARG_WITH(Gmsh,
+	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
+	   FF="${withval}/Gmsh")	   
+
 SECTION_TITLE([    checking for a C++  compilers       ])
 AC_PROG_CXX
 AC_LANG(C++)
