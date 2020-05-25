@@ -8,34 +8,34 @@ all-local: bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic
 	@echo ""	
 	@echo " Mesh geo list: $(LIST_COMPILE)"
 
-bar.msh:
+bar.msh: bar.geo
 	$(GMSH) -2 bar.geo -o bar.msh -format msh2 -v 0
 	@echo ""	
 		
-quasistatic.msh:
+quasistatic.msh: quasistatic.geo
 	$(GMSH) -2 quasistatic.geo -o quasistatic.msh -format msh2 -v 0
 	@echo ""		
 	
-bar-dynamic.msh:
+bar-dynamic.msh: bar-dynamic.geo
 	$(GMSH) -2 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
 	@echo ""		
 	
-Notched-Plate.msh:
+Notched-Plate.msh: Notched-Plate.geo
 	$(GMSH) -2 Notched-Plate.geo -o Notched-Plate.msh -format msh2 -v 0
 	@echo ""		
 
-tensile-crack.msh:
+tensile-crack.msh: tensile-crack.geo
 	$(GMSH) -2 tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0		
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
 	@echo ""		
 
-sparsity.msh:
+sparsity.msh: sparsity.geo
 	$(GMSH) -2  sparsity.geo -o sparsity.msh -format msh2 -v 0
 	@echo ""						
 
-soil.msh:
+soil.msh: soil.geo
 	$(GMSH) -2 soil.geo -o soil.msh -format msh2 -v 0
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0		

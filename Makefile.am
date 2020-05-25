@@ -56,22 +56,11 @@ install-exec-local:
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
-	@echo "  			  "
-	@echo " Finished installing							  "
+	@echo ""
 	@echo "*============================================================*"
-	@echo "  ->   It is advised to check the solver for that do:			  "
-	@echo "  			  						  "
-	@echo "  			  						  "			
-	@echo "  	make check 	                      "
-	@echo "  			  						  "	
-	@echo "  			  						  "	
-	@echo " ****Note****						  "	
-	@echo " # If you used the FFINSTALLDIR and GMSH while 'make'  "			
-	@echo " # please use these flags  during  make check as well  "	
-	@echo "  			  						  "
-	@echo "  			  						  "				
+	@echo "  Finished installing PSD version 2.0"
 	@echo "*============================================================*"
-	@echo "  									  "
+	@echo ""
 	
 install-Super-Comp:
 	@mkdir -p ${prefix}/PSD-Super-Comp
@@ -97,7 +86,7 @@ install-Super-Comp:
 	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
 	@echo "  			  "
 	@echo "*============================================================*"
-	@echo " Finished installing the supercomputer copy of PSD			  "
+	@echo " Finished installing  PSD version 2.0			  "
 	@echo "  			  						  "			
 	@echo " ****Note****								  "
 	@echo "  			  						  "			
