@@ -1,6 +1,7 @@
-LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo  soil.geo   
+LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo  soil.geo 
+MESH_FILES  = bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  soil.msh  
 	
-all-local: bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  soil.msh  
+all-local: $(MESH_FILES) 
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Creating 3D meshes in :"; pwd

@@ -1,6 +1,7 @@
 LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo
+MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh quasistatic.msh soil.msh  
 	
-all-local: bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh quasistatic.msh soil.msh  
+all-local: $(MESH_FILES) 
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Creating 2D meshes in :"; pwd
