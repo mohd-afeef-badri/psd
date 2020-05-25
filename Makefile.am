@@ -55,6 +55,7 @@ install-exec-local:
 #	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.	
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
+	@cp  ./man/*.pdf ${prefix}/PSD/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
 	@echo ""
 	@echo "*============================================================*"
@@ -83,6 +84,7 @@ install-Super-Comp:
 #	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-Super-Comp/Solver/PSD_PreProcess
 	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
+	@cp  ./man/*.pdf ${prefix}/PSD-Super-Comp/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
 	@echo "  			  "
 	@echo "*============================================================*"
@@ -99,39 +101,120 @@ install-Super-Comp:
 	
 check: 				
 	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential/Paralle 2D/3D under gravitation body force        "
+	@echo "*============================================================*"
+	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
-	$(FF) Main.edp -glut $(FFINSTALLDIR)ffglut   -v 10 -ns -nw   && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce  -sequential -glut $(FFINSTALLDIR)ffglut   && \
-	$(FF) Main.edp -glut $(FFINSTALLDIR)ffglut  -v 10 -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 2  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3  -bodyforce -glut $(FFINSTALLDIR)ffglut && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF) SolverGenerator.edp    -v 10  -dimension 2 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 &&  \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 &&  \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 &&  \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 &&  \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 -fastmethod &&  \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 -fastmethod &&  \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 -fastmethod &&  \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 -fastmethod &&  \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential/Paralle 2D/3D phase-field fracture mechanics      "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -sequential -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -sequential -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 2 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -nonlinear   -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF) SolverGenerator.edp    -v 10  -dimension 2 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -sequential -dirichletconditions 1 -energydecomp &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -sequential -dirichletconditions 1 -energydecomp &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -dirichletconditions 1 -energydecomp &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -dirichletconditions 1 -energydecomp &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -sequential -dirichletconditions 1 -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -sequential -dirichletconditions 1 -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -dirichletconditions 1 -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -dirichletconditions 1 -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -sequential -dirichletconditions 1 -energydecomp -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -sequential -dirichletconditions 1 -energydecomp -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -nonlinear -dirichletconditions 1 -energydecomp -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -nonlinear -dirichletconditions 1 -energydecomp -useGFP &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential/Paralle 2D/3D Elastodynamics                      "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -dynamic -sequential -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -dynamic -sequential -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -dynamic -sequential -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FF) Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 2 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 2 -dynamic -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw && \
-	$(FF)  SolverGenerator.edp    -v 10  -dimension 3 -dynamic   -glut $(FFINSTALLDIR)ffglut && \
+	$(FFMPI)  -np 2 Main.edp -v 10 -ns -nw &&  \
+	./PSD_PreProcess -dimension 3 -dynamic -dirichletconditions 1 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI) -np 4  Main.edp -v 10 -ksp_type cg -glut $(FFINSTALLDIR)ffglut  -ns -nw
+	$(FFMPI)  -np 2 Main.edp -v 10 -ns -nw
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential/Paralle 2D/3D Soildynamics                        "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -soildynamics -sequential -dirichletconditions 1 &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -soildynamics -sequential -dirichletconditions 1 &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
+	$(FF) Main.edp -v 10 -ns -nw &&  \
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -soildynamics -dirichletconditions 1 &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
+	$(FFMPI) -np 2 Main.edp -v 10 -ns -nw &&  \
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -soildynamics -dirichletconditions 1 &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
+	$(FFMPI) -np 2 Main.edp -v 10 -ns -nw &&  \
 	rm  -rf *.edp	
 	@echo ""
 	@echo "*============================================================*"

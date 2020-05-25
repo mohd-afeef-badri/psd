@@ -2,114 +2,105 @@
 <html>
 <head>
 <meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
-<title>Changelog</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; }
+<title>Changelog.MD</title><link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color: #ffffff; --text-color: #333333; --code-block-bg-color: inherit; }
 html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; tab-size: 4; }
-iframe { margin: auto; }
-a.url { word-break: break-all; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; }
 a:active, a:hover { outline: 0px; }
-.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
-#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 40px; }
-#write.first-line-indent p { text-indent: 2em; }
-#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
-#write.first-line-indent li { margin-left: 2em; }
+.in-text-selection, ::selection { background: rgb(181, 214, 252); text-shadow: none; }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; padding-bottom: 70px; white-space: pre-wrap; overflow-x: visible; }
 .for-image #write { padding-left: 8px; padding-right: 8px; }
 body.typora-export { padding-left: 30px; padding-right: 30px; }
-.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
 @media screen and (max-width: 500px) {
   body.typora-export { padding-left: 0px; padding-right: 0px; }
-  #write { padding-left: 20px; padding-right: 20px; }
   .CodeMirror-sizer { margin-left: 0px !important; }
   .CodeMirror-gutters { display: none !important; }
 }
-#write li > figure:first-child { margin-top: -20px; }
-#write ol, #write ul { position: relative; }
+.typora-export #write { margin: 0px auto; }
+#write > p:first-child, #write > ul:first-child, #write > ol:first-child, #write > pre:first-child, #write > blockquote:first-child, #write > div:first-child, #write > table:first-child { margin-top: 30px; }
+#write li > table:first-child { margin-top: -20px; }
 img { max-width: 100%; vertical-align: middle; }
-button, input, select, textarea { color: inherit; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; }
+input, button, select, textarea { color: inherit; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; }
 input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
-*, ::after, ::before { box-sizing: border-box; }
-#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
-#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
-h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 2; }
-p { orphans: 4; }
+::before, ::after, * { box-sizing: border-box; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write div, #write pre { width: inherit; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6 { position: relative; }
 h1 { font-size: 2rem; }
 h2 { font-size: 1.8rem; }
 h3 { font-size: 1.6rem; }
 h4 { font-size: 1.4rem; }
 h5 { font-size: 1.2rem; }
 h6 { font-size: 1rem; }
-.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+p { -webkit-margin-before: 1rem; -webkit-margin-after: 1rem; -webkit-margin-start: 0px; -webkit-margin-end: 0px; }
+.typora-export p { white-space: normal; }
+.mathjax-block { margin-top: 0px; margin-bottom: 0px; -webkit-margin-before: 0rem; -webkit-margin-after: 0rem; }
 .hidden { display: none; }
-.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: bold; font-style: italic; }
 a { cursor: pointer; }
-sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
-sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
-#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
-figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
-figure > table { margin: 0px !important; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; margin: 4px 0px 0px; }
+#write > figure:first-child { margin-top: 16px; }
+figure { overflow-x: auto; margin: -8px 0px 0px -8px; max-width: calc(100% + 16px); padding: 8px; }
 tr { break-inside: avoid; break-after: auto; }
 thead { display: table-header-group; }
 table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
-table.md-table td { min-width: 32px; }
+table.md-table td { min-width: 80px; }
 .CodeMirror-gutters { border-right: 0px; background-color: inherit; }
-.CodeMirror-linenumber { user-select: none; }
 .CodeMirror { text-align: left; }
 .CodeMirror-placeholder { opacity: 0.3; }
 .CodeMirror pre { padding: 0px 4px; }
 .CodeMirror-lines { padding: 0px; }
 div.hr:focus { cursor: none; }
-#write pre { white-space: pre-wrap; }
-#write.fences-no-line-wrapping pre { white-space: pre; }
-#write pre.ty-contain-cm { white-space: normal; }
+pre { white-space: pre-wrap; }
 .CodeMirror-gutters { margin-right: 4px; }
-.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: var(--code-block-bg-color); position: relative !important; }
 .md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
-#write .md-fences.mock-cm { white-space: pre-wrap; }
-.md-fences.md-fences-with-lineno { padding-left: 0px; }
-#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
-.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
-.CodeMirror-line, twitterwidget { break-inside: avoid; }
-.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
-.footnotes + .footnotes { margin-top: 0px; }
-.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+.md-fences .CodeMirror.CodeMirror-wrap { top: -1.6em; margin-bottom: -1.6em; }
+.md-fences.mock-cm { white-space: pre-wrap; }
+.show-fences-line-number .md-fences { padding-left: 0px; }
+.show-fences-line-number .md-fences.mock-cm { padding-left: 40px; }
+.CodeMirror-line { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; padding-top: 1em; padding-bottom: 1em; }
+.footnotes + .footnotes { margin-top: -1em; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: transparent; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: normal; text-align: left; box-sizing: content-box; direction: ltr; }
 li div { padding-top: 0px; }
 blockquote { margin: 1rem 0px; }
-li .mathjax-block, li p { margin: 0.5rem 0px; }
+li p, li .mathjax-block { margin: 0.5rem 0px; }
 li { margin: 0px; position: relative; }
 blockquote > :last-child { margin-bottom: 0px; }
-blockquote > :first-child, li > :first-child { margin-top: 0px; }
-.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
-#write .footnote-line { white-space: pre-wrap; }
+blockquote > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; }
 @media print {
-  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; }
-  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  html, body { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; }
   .typora-export * { -webkit-print-color-adjust: exact; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid-page; orphans: 2; }
+  p { orphans: 4; }
   html.blink-to-pdf { font-size: 13px; }
-  .typora-export #write { padding-left: 32px; padding-right: 32px; padding-bottom: 0px; break-after: avoid; }
+  .typora-export #write { padding-left: 1cm; padding-right: 1cm; padding-bottom: 0px; break-after: avoid; }
   .typora-export #write::after { height: 0px; }
-  @page { margin: 20mm 0px; }
+  @page { margin: 20mm 0mm; }
 }
 .footnote-line { margin-top: 0.714em; font-size: 0.7em; }
 a img, img a { cursor: pointer; }
-pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
-p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
-p > .md-image:only-child { display: inline-block; width: 100%; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 2.86rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > img:only-child { display: block; margin: auto; }
+p .md-image:only-child { display: inline-block; width: 100%; text-align: center; }
 #write .MathJax_Display { margin: 0.8em 0px 0px; }
-.md-math-block { width: 100%; }
-.md-math-block:not(:empty)::after { display: none; }
-[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: 0px; box-shadow: none; }
-.md-task-list-item { position: relative; list-style-type: none; }
-.task-list-item.md-task-list-item { padding-left: 0px; }
-.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.mathjax-block { white-space: pre; overflow: hidden; width: 100%; }
+p + .mathjax-block { margin-top: -1.143rem; }
+.mathjax-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: none; box-shadow: none; }
+.task-list { list-style-type: none; }
+.task-list-item { position: relative; padding-left: 1em; }
+.task-list-item input { position: absolute; top: 0px; left: 0px; }
 .math { font-size: 1rem; }
 .md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
 .md-toc-content { position: relative; margin-left: 0px; }
-.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc::after, .md-toc-content::after { display: none; }
 .md-toc-item { display: block; color: rgb(65, 131, 196); }
 .md-toc-item a { text-decoration: none; }
-.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner:hover { }
 .md-toc-inner { display: inline-block; cursor: pointer; }
-.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: bold; }
 .md-toc-h2 .md-toc-inner { margin-left: 2em; }
 .md-toc-h3 .md-toc-inner { margin-left: 4em; }
 .md-toc-h4 .md-toc-inner { margin-left: 6em; }
@@ -125,35 +116,35 @@ a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; 
 .footnote-line a:not(.reversefootnote) { color: inherit; }
 .md-attr { display: none; }
 .md-fn-count::after { content: "."; }
-code, pre, samp, tt { font-family: var(--monospace); }
-kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-tag { opacity: 0.5; }
+pre, code, tt { font-family: var(--monospace); }
 .md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
-code { text-align: left; vertical-align: initial; }
-a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+code { text-align: left; }
+h1 .md-tag, h2 .md-tag, h3 .md-tag, h4 .md-tag, h5 .md-tag, h6 .md-tag { font-weight: initial; opacity: 0.35; }
+a.md-print-anchor { border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: none !important; background: transparent !important; text-decoration: initial !important; text-shadow: initial !important; }
 .md-inline-math .MathJax_SVG .noError { display: none !important; }
-.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
-.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.mathjax-block .MathJax_SVG_Display { text-align: center; margin: 1em 0em; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; display: block !important; }
 .MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
-.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-monospace { font-family: monospace; }
 .MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
-.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: normal; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
 .MathJax_SVG * { transition: none; }
-.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; }
-.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
 .md-diagram-panel > svg { max-width: 100%; }
-[lang="mermaid"] svg, [lang="flow"] svg { max-width: 100%; }
-[lang="mermaid"] .node text { font-size: 1rem; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; }
 table tr th { border-bottom: 0px; }
-video { max-width: 100%; display: block; margin: 0px auto; }
-iframe { max-width: 100%; width: 100%; border: none; }
-.highlight td, .highlight tr { border: 0px; }
 
 
 :root { --side-bar-bg-color: #fafafa; --control-text-color: #777; }
+@font-face { font-family: "Open Sans"; font-style: normal; font-weight: normal; src: local("Open Sans Regular"), url("./github/400.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: italic; font-weight: normal; src: local("Open Sans Italic"), url("./github/400i.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: normal; font-weight: bold; src: local("Open Sans Bold"), url("./github/700.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: italic; font-weight: bold; src: local("Open Sans Bold Italic"), url("./github/700i.woff") format("woff"); }
 html { font-size: 16px; }
 body { font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; color: rgb(51, 51, 51); line-height: 1.6; }
-#write { max-width: 860px; margin: 0px auto; padding: 30px 30px 100px; }
+#write { max-width: 860px; margin: 0px auto; padding: 20px 30px 100px; }
 #write > ul:first-child, #write > ol:first-child { margin-top: 30px; }
+body > :first-child { margin-top: 0px !important; }
+body > :last-child { margin-bottom: 0px !important; }
 a { color: rgb(65, 131, 196); }
 h1, h2, h3, h4, h5, h6 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-weight: bold; line-height: 1.4; cursor: text; }
 h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { text-decoration: none; }
@@ -171,26 +162,34 @@ h5 { font-size: 1em; }
 h6 { font-size: 1em; color: rgb(119, 119, 119); }
 p, blockquote, ul, ol, dl, table { margin: 0.8em 0px; }
 li > ol, li > ul { margin: 0px; }
-hr { height: 2px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border: 0px none; overflow: hidden; box-sizing: content-box; }
+hr { height: 4px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border-width: 0px 0px 1px; border-style: none none solid; border-top-color: initial; border-right-color: initial; border-left-color: initial; border-image: initial; overflow: hidden; box-sizing: content-box; border-bottom-color: rgb(221, 221, 221); }
+body > h2:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child + h2 { margin-top: 0px; padding-top: 0px; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child { margin-top: 0px; padding-top: 0px; }
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 { margin-top: 0px; padding-top: 0px; }
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p { margin-top: 0px; }
 li p.first { display: inline-block; }
 ul, ol { padding-left: 30px; }
 ul:first-child, ol:first-child { margin-top: 0px; }
 ul:last-child, ol:last-child { margin-bottom: 0px; }
-blockquote { border-left: 4px solid rgb(223, 226, 229); padding: 0px 15px; color: rgb(119, 119, 119); }
+blockquote { border-left: 4px solid rgb(221, 221, 221); padding: 0px 15px; color: rgb(119, 119, 119); }
 blockquote blockquote { padding-right: 0px; }
 table { padding: 0px; word-break: initial; }
-table tr { border-top: 1px solid rgb(223, 226, 229); margin: 0px; padding: 0px; }
-table tr:nth-child(2n), thead { background-color: rgb(248, 248, 248); }
-table tr th { font-weight: bold; border-width: 1px 1px 0px; border-top-style: solid; border-right-style: solid; border-left-style: solid; border-top-color: rgb(223, 226, 229); border-right-color: rgb(223, 226, 229); border-left-color: rgb(223, 226, 229); border-image: initial; border-bottom-style: initial; border-bottom-color: initial; text-align: left; margin: 0px; padding: 6px 13px; }
-table tr td { border: 1px solid rgb(223, 226, 229); text-align: left; margin: 0px; padding: 6px 13px; }
+table tr { border-top: 1px solid rgb(204, 204, 204); margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border-width: 1px 1px 0px; border-top-style: solid; border-right-style: solid; border-left-style: solid; border-top-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); border-image: initial; border-bottom-style: initial; border-bottom-color: initial; text-align: left; margin: 0px; padding: 6px 13px; }
+table tr td { border: 1px solid rgb(204, 204, 204); text-align: left; margin: 0px; padding: 6px 13px; }
 table tr th:first-child, table tr td:first-child { margin-top: 0px; }
 table tr th:last-child, table tr td:last-child { margin-bottom: 0px; }
-.CodeMirror-lines { padding-left: 4px; }
-.code-tooltip { box-shadow: rgba(0, 28, 36, 0.3) 0px 1px 1px 0px; border-top: 1px solid rgb(238, 242, 242); }
-.md-fences, code, tt { border: 1px solid rgb(231, 234, 237); background-color: rgb(248, 248, 248); border-radius: 3px; padding: 2px 4px 0px; font-size: 0.9em; }
-code { background-color: rgb(243, 244, 244); padding: 0px 2px; }
-.md-fences { margin-bottom: 15px; margin-top: 15px; padding-top: 8px; padding-bottom: 6px; }
-.md-task-list-item > input { margin-left: -1.3em; }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); }
+.md-fences, code, tt { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); border-radius: 3px; font-family: Consolas, "Liberation Mono", Courier, monospace; padding: 2px 4px 0px; font-size: 0.9em; }
+.md-fences { margin-bottom: 15px; margin-top: 15px; padding: 8px 1em 6px; }
+.task-list { padding-left: 0px; }
+.task-list-item { padding-left: 32px; }
+.task-list-item input { top: 3px; left: 8px; }
+@media screen and (min-width: 914px) {
+}
 @media print {
   html { font-size: 13px; }
   table, pre { break-inside: avoid; }
@@ -199,34 +198,31 @@ code { background-color: rgb(243, 244, 244); padding: 0px 2px; }
 .md-fences { background-color: rgb(248, 248, 248); }
 #write pre.md-meta-block { padding: 1rem; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border: 0px; border-radius: 3px; color: rgb(119, 119, 119); margin-top: 0px !important; }
 .mathjax-block > .code-tooltip { bottom: 0.375rem; }
-.md-mathjax-midline { background: rgb(250, 250, 250); }
 #write > h3.md-focus::before { left: -1.5625rem; top: 0.375rem; }
 #write > h4.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
 #write > h5.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
 #write > h6.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
-.md-image > .md-meta { border-radius: 3px; padding: 2px 0px 0px 4px; font-size: 0.9em; color: inherit; }
-.md-tag { color: rgb(167, 167, 167); opacity: 1; }
+.md-image > .md-meta { border: 1px solid rgb(221, 221, 221); border-radius: 3px; font-family: Consolas, "Liberation Mono", Courier, monospace; padding: 2px 4px 0px; font-size: 0.9em; color: inherit; }
+.md-tag { color: inherit; }
 .md-toc { margin-top: 20px; padding-bottom: 20px; }
 .sidebar-tabs { border-bottom: none; }
 #typora-quick-open { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); }
 #typora-quick-open-item { background-color: rgb(250, 250, 250); border-color: rgb(254, 254, 254) rgb(229, 229, 229) rgb(229, 229, 229) rgb(238, 238, 238); border-style: solid; border-width: 1px; }
+#md-notification::before { top: 10px; }
 .on-focus-mode blockquote { border-left-color: rgba(85, 85, 85, 0.12); }
 header, .context-menu, .megamenu-content, footer { font-family: "Segoe UI", Arial, sans-serif; }
 .file-node-content:hover .file-node-icon, .file-node-content:hover .file-node-open-state { visibility: visible; }
 .mac-seamless-mode #typora-sidebar { background-color: var(--side-bar-bg-color); }
 .md-lang { color: rgb(180, 101, 77); }
-.html-for-mac .context-menu { --item-hover-bg-color: #E6F0FE; }
-#md-notification .btn { border: 0px; }
-.dropdown-menu .divider { border-color: rgb(229, 229, 229); }
 
 
 
 
 
- .typora-export li, .typora-export p, .typora-export,  .footnote-line {white-space: normal;} 
+
 </style>
 </head>
 <body class='typora-export' >
-<div  id='write'  class = 'is-node'><h1><a name='header-n0' class='md-header-anchor '></a>Changelog</h1><p>All notable changes to PSD solver will be documented in this file.</p><h2><a name='header-n3' class='md-header-anchor '></a>Unreleased</h2><h3><a name='header-n4' class='md-header-anchor '></a>Added</h3><h3><a name='header-n6' class='md-header-anchor '></a>Changed</h3><h2><a name='header-n8' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8'>1.8</a> - 2020-01-21</h2><h3><a name='header-n9' class='md-header-anchor '></a>Added</h3><ul><li>New soil dynamic module <code>-soildynamics</code></li><li>New paraxial element support in 2D.</li><li>New timeplotting support <code>-timepvd</code></li><li>New <code>-postprocess</code> option for postprocessing <code>u</code> , <code>v</code>,  <code>a</code> , or <code>uav</code>. </li></ul><h3><a name='header-n19' class='md-header-anchor '></a>Changed</h3><ul><li>Moved to FreeFEM 4.4.2.</li><li>Moved to PETSc 13.12.</li><li>New simpler way of ploting <code>savevtk</code> in parallel with <code>append</code> flag for iterative solutions.</li><li>VTU files get stored with a date and time stamp.</li><li>New way of maintaining a logfile for all simulations (date,time,case,..) in <code>simulation-log.csv</code>.</li></ul><h2><a name='header-n32' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7'>1.7</a> - 2019-11-08</h2><h3><a name='header-n33' class='md-header-anchor '></a>Added</h3><ul><li>New  mesh reordering via Reverse Cuthill-Mackee via <code>-useRCM</code>. </li><li>New quasi-static parallel solver (Extension of B.Masseron &amp; G.Rastiello sequential version).</li><li>New GFP plugin for Mazar&#39;s damage update for 2D/3D problems <code>GFPMazarsDamageUpdate(...)</code>.</li><li>New MPI plotting routine <code>plotJustMeshMPI()</code>.</li><li>New option <code>-fastmethod</code> to switich back to defualt variational formulation.</li><li>New  make flage for compiling on supercomputer. </li></ul><h3><a name='header-n47' class='md-header-anchor '></a>Changed</h3><ul><li>Changed variational formulation now using $\epsilon(u):A:\epsilon(v)$.</li><li>Using GFP becomes optional <code>-useGFP</code>.</li><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Better plotting support for <code>PlotMPI()</code>.</li><li>Moved to FreeFEM 4.4.</li></ul><h2><a name='header-n60' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6'>1.6</a> - 2019-06-11</h2><h3><a name='header-n61' class='md-header-anchor '></a>Added</h3><ul><li>Dynamic linear solver in 2D and 3D  parallel/sequential.</li><li>New finite element variable for partition of unity-- for fixing integrals.</li></ul><p>&nbsp;</p><h3><a name='header-n68' class='md-header-anchor '></a>Changed</h3><ul><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Correct quadrature order for faster computations.</li><li>Major changes/splitting of <code>.script</code> files.</li></ul><h3><a name='header-n76' class='md-header-anchor '></a>Removed</h3><ul><li>Removed the <code>BoundaryAndSourceConditions.script</code> merged with <code>ControlParameters.script</code>.</li></ul><h3><a name='header-n80' class='md-header-anchor '></a>Bugs</h3><ul><li>Bug in integrals fixed.</li></ul><h2><a name='header-n84' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5'>1.5</a> - 2019-05-29</h2><h3><a name='header-n85' class='md-header-anchor '></a>Added</h3><ul><li>Dynamic linear solver in 2D and 3D  sequential.</li><li>New meshes for dynamics tests <code>bar-dynamic.msh</code>.</li><li>Checking modules <code>make check</code>.</li><li>Faster sparsity pattern calculations. </li></ul><h3><a name='header-n95' class='md-header-anchor '></a>Changed</h3><ul><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Major restructuring of the codes. </li><li>Moved to <code>automake</code> for solver installation.</li><li>Mesh building via <code>make</code>.</li></ul><h3><a name='header-n105' class='md-header-anchor '></a>Removed</h3><ul><li>Removed the manufactured solution codes.</li></ul><p>&nbsp;</p><h2><a name='header-n110' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4'>1.4</a> - 2019-05-14</h2><h3><a name='header-n111' class='md-header-anchor '></a>Added</h3><ul><li>Fully vectorial finite element solver for phase-filed <code>-vectorial</code>.</li><li>New <code>-supercomp</code> for avoiding xterm issues on super computers.</li><li>New <code>MatViz()</code> function for matrix sparsity visualization.</li><li>Introduced <code>GFP</code> plugin support (Go Fast Plugins). </li></ul><h3><a name='header-n121' class='md-header-anchor '></a>Changed</h3><ul><li>Elastic energy decomposition is now optional <code>-energydecomp</code>.</li><li>Force calculation using integrals (Thanks to G.Rastiello).</li></ul><h2><a name='header-n127' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3'>1.3</a> - 2019-04-08</h2><h3><a name='header-n128' class='md-header-anchor '></a>Added</h3><ul><li>New meshes in 2D/3D<code>Notched-plate</code> , <code>square-crack</code>, etc.</li><li>New fracture mechanics module.</li><li>New <code>-nonlinear</code> flag to activate phase-field model for brittle fracture.</li><li>New <code>-timelog</code> for time logging the solver.</li><li>New <code>-pipegnu</code> for GNUplot piping.</li></ul><h3><a name='header-n141' class='md-header-anchor '></a>Changed</h3><ul><li><p>Scripting now performed using <code>.script</code> files:</p><ul><li><code>BoundaryAndSourceConditions.script</code></li><li><code>LinearFormBuilderAndSolver.script</code></li><li><code>Macros.script</code> </li><li><code>Main.script</code> </li><li><code>VariationalFormulation.script</code> </li><li>....</li></ul></li><li><p>Move to FreeFEM version 4.0.</p></li><li><p>Move to PETSc version 3.11.</p></li></ul><h2><a name='header-n162' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2'>1.2</a> - 2019-03-18</h2><h3><a name='header-n163' class='md-header-anchor '></a>Added</h3><ul><li>Support for Gmsh&#39;s <code>.msh</code>  or Medit&#39;s <code>.mesh</code> meshes in folder <code>Meshes</code>.</li><li>Advance to 3D physics.</li><li>New MPI based parallel solver linear elasticity.</li><li>New approach for solver generation via scripting (PhD thesis MA Badri) with <code>scriptGenerator.edp</code>.</li><li>Integrated Domain decomposition macro (PhD thesis MA Badri).</li><li>Customized <code>.vtk</code> support for ParaView post-processing.</li><li>New point boundary condition macro <code>pointbc(Real[int], fespace, matrix)</code>.</li><li>New flags for communicating with the solver: <code>-dimension</code>, <code>-plot</code>, <code>-bodyforce</code>, <code>-lagrange</code>, etc.</li></ul><h3><a name='header-n182' class='md-header-anchor '></a>Changed</h3><ul><li>More advance README.MD.</li><li>Sequential solver now merged within scripting via flag <code>-sequential</code>.</li><li>Move to FreeFEM version 3.62.</li><li>Moved manufactured solutions to <code>validation-test</code> folder.</li></ul><h2><a name='header-n193' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1'>1.1</a> - 2019-03-04</h2><h3><a name='header-n194' class='md-header-anchor '></a>Added</h3><ul><li>Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).</li><li>More cases of manufactured solution for linear elasticity in 2D.</li><li>Added README.MD for explaining the solver.</li><li>ParaView plotting activated.</li></ul><h3><a name='header-n204' class='md-header-anchor '></a>Changed</h3><ul><li>Moved to Tuleap git hosting from CEA.</li><li>Separate folder of manufactured solutions and the linear elastic solver.</li><li>Move to FreeFEM version 3.61.</li></ul><h2><a name='header-n212' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0'>1.0</a> - 2019-02-15</h2><h3><a name='header-n213' class='md-header-anchor '></a>Added</h3><ul><li>Initial FreeFEM files  Method of manufactured solution for linear elasticity in 2D.</li></ul><h2><a name='header-n217' class='md-header-anchor '></a>Version git tags</h2><figure><table><thead><tr><th>Version</th><th>Git tag</th></tr></thead><tbody><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0'>1.0</a></td><td>8a8ecb2746b7da792073358c60df33bae647f788</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1'>1.1</a></td><td>a667e6085ba1f92f8dd619bd40e18f85c593bc0a</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2'>1.2</a></td><td>e48b7b3a30c05ad4c343efa6a17fee386031f437</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3'>1.3</a></td><td>39f4324550365849852c5264b8d4535aae05e30d</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4'>1.4</a></td><td>f51f678630eb9b2fed355e5cedf976ce8b5fa341</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5'>1.5</a></td><td>07293ba09a69d3d6a16278220a0b4a7a9f318f96</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6'>1.6</a></td><td>f359dd049fb1ddde376e8ad8e5177c663e430418</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7'>1.7</a></td><td>aee9bfec868a70b3d9974d7692bc19f9739ab7dc</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8'>1.8</a></td><td>2f26292636c7248133e31ae912ee58113de2ef71</td></tr></tbody></table></figure></div>
+<div  id='write'  class = 'is-node'><h1><a name='header-n0' class='md-header-anchor '></a>Changelog</h1><p>All notable changes to PSD solver will be documented in this file.</p><h2><a name='header-n4' class='md-header-anchor '></a>Unreleased</h2><h3><a name='header-n5' class='md-header-anchor '></a>Added</h3><ul><li>New preproceeing via C++, PSD_PreProcess binary.</li><li>New examples of using the solver.</li><li>New time discretization option <code>-timediscretization</code>.</li><li>Automatic identification of FreeFEM and Gmsh during <code>./configure</code>.</li><li>New flags for <code>--with-FreeFEM=</code> and <code>--with-Gmsh=</code> during <code>./configure</code>.</li></ul><h3><a name='header-n22' class='md-header-anchor '></a>Changed</h3><ul><li>Moved to FreeFEM 4.6.</li><li>Moved to PETSc 13.13.</li><li>Moved to C++ for preprocessing.</li></ul><h3><a name='header-n33' class='md-header-anchor '></a>Removed</h3><ul><li>No more <code>FFINSTALLDIR</code> and <code>GMSH</code> variables during <code>make</code> and <code>make check</code>.</li></ul><h2><a name='header-n39' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8'>1.8</a> - 2020-01-21</h2><h3><a name='header-n40' class='md-header-anchor '></a>Added</h3><ul><li>New soil dynamic module <code>-soildynamics</code></li><li>New paraxial element support in 2D.</li><li>New timeplotting support <code>-timepvd</code></li><li>New <code>-postprocess</code> option for postprocessing <code>u</code> , <code>v</code>,  <code>a</code> , or <code>uav</code>. </li></ul><h3><a name='header-n54' class='md-header-anchor '></a>Changed</h3><ul><li>Moved to FreeFEM 4.4.2.</li><li>Moved to PETSc 13.12.</li><li>New simpler way of ploting <code>savevtk</code> in parallel with <code>append</code> flag for iterative solutions.</li><li>VTU files get stored with a date and time stamp.</li><li>New way of maintaining a logfile for all simulations (date,time,case,..) in <code>simulation-log.csv</code>.</li></ul><h2><a name='header-n71' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7'>1.7</a> - 2019-11-08</h2><h3><a name='header-n72' class='md-header-anchor '></a>Added</h3><ul><li>New  mesh reordering via Reverse Cuthill-Mackee via <code>-useRCM</code>. </li><li>New quasi-static parallel solver (Extension of B.Masseron &amp; G.Rastiello sequential version).</li><li>New GFP plugin for Mazar&#39;s damage update for 2D/3D problems <code>GFPMazarsDamageUpdate(...)</code>.</li><li>New MPI plotting routine <code>plotJustMeshMPI()</code>.</li><li>New option <code>-fastmethod</code> to switich back to defualt variational formulation.</li><li>New  make flage for compiling on supercomputer. </li></ul><h3><a name='header-n92' class='md-header-anchor '></a>Changed</h3><ul><li>Changed variational formulation now using <span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-1-Frame" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.582ex" height="2.577ex" viewBox="0 -806.1 5847.6 1109.7" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="1" id="E1-MJMATHI-3F5" d="M227 -11Q149 -11 95 41T40 174Q40 262 87 322Q121 367 173 396T287 430Q289 431 329 431H367Q382 426 382 411Q382 385 341 385H325H312Q191 385 154 277L150 265H327Q340 256 340 246Q340 228 320 219H138V217Q128 187 128 143Q128 77 160 52T231 26Q258 26 284 36T326 57T343 68Q350 68 354 58T358 39Q358 36 357 35Q354 31 337 21T289 0T227 -11Z"></path><path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path><path stroke-width="1" id="E1-MJMATHI-75" d="M21 287Q21 295 30 318T55 370T99 420T158 442Q204 442 227 417T250 358Q250 340 216 246T182 105Q182 62 196 45T238 27T291 44T328 78L339 95Q341 99 377 247Q407 367 413 387T427 416Q444 431 463 431Q480 431 488 421T496 402L420 84Q419 79 419 68Q419 43 426 35T447 26Q469 29 482 57T512 145Q514 153 532 153Q551 153 551 144Q550 139 549 130T540 98T523 55T498 17T462 -8Q454 -10 438 -10Q372 -10 347 46Q345 45 336 36T318 21T296 6T267 -6T233 -11Q189 -11 155 7Q103 38 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path><path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path><path stroke-width="1" id="E1-MJMAIN-3A" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path><path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path><path stroke-width="1" id="E1-MJMATHI-76" d="M173 380Q173 405 154 405Q130 405 104 376T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Q21 294 29 316T53 368T97 419T160 441Q202 441 225 417T249 361Q249 344 246 335Q246 329 231 291T200 202T182 113Q182 86 187 69Q200 26 250 26Q287 26 319 60T369 139T398 222T409 277Q409 300 401 317T383 343T365 361T357 383Q357 405 376 424T417 443Q436 443 451 425T467 367Q467 340 455 284T418 159T347 40T241 -11Q177 -11 139 22Q102 54 102 117Q102 148 110 181T151 298Q173 362 173 380Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMATHI-3F5" x="0" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-28" x="406" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMATHI-75" x="796" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-29" x="1368" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-3A" x="2035" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMATHI-41" x="2592" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-3A" x="3620" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMATHI-3F5" x="4176" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-28" x="4583" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMATHI-76" x="4972" y="0"></use><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#E1-MJMAIN-29" x="5458" y="0"></use></g></svg></span><script type="math/tex" id="MathJax-Element-1">\epsilon(u):A:\epsilon(v)</script>.</li><li>Using GFP becomes optional <code>-useGFP</code>.</li><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Better plotting support for <code>PlotMPI()</code>.</li><li>Moved to FreeFEM 4.4.</li></ul><h2><a name='header-n109' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6'>1.6</a> - 2019-06-11</h2><h3><a name='header-n110' class='md-header-anchor '></a>Added</h3><ul><li>Dynamic linear solver in 2D and 3D  parallel/sequential.</li><li>New finite element variable for partition of unity-- for fixing integrals.</li></ul><h3><a name='header-n119' class='md-header-anchor '></a>Changed</h3><ul><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Correct quadrature order for faster computations.</li><li>Major changes/splitting of <code>.script</code> files.</li></ul><h3><a name='header-n130' class='md-header-anchor '></a>Removed</h3><ul><li>Removed the <code>BoundaryAndSourceConditions.script</code> merged with <code>ControlParameters.script</code>.</li></ul><h3><a name='header-n135' class='md-header-anchor '></a>Bugs</h3><ul><li>Bug in integrals fixed.</li></ul><h2><a name='header-n140' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5'>1.5</a> - 2019-05-29</h2><h3><a name='header-n141' class='md-header-anchor '></a>Added</h3><ul><li>Dynamic linear solver in 2D and 3D  sequential.</li><li>New meshes for dynamics tests <code>bar-dynamic.msh</code>.</li><li>Checking modules <code>make check</code>.</li><li>Faster sparsity pattern calculations. </li></ul><h3><a name='header-n155' class='md-header-anchor '></a>Changed</h3><ul><li>Better documentation via <code>.md</code> and <code>.html</code> files.</li><li>Major restructuring of the codes. </li><li>Moved to <code>automake</code> for solver installation.</li><li>Mesh building via <code>make</code>.</li></ul><h3><a name='header-n169' class='md-header-anchor '></a>Removed</h3><ul><li>Removed the manufactured solution codes.</li></ul><h2><a name='header-n175' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4'>1.4</a> - 2019-05-14</h2><h3><a name='header-n176' class='md-header-anchor '></a>Added</h3><ul><li>Fully vectorial finite element solver for phase-filed <code>-vectorial</code>.</li><li>New <code>-supercomp</code> for avoiding xterm issues on super computers.</li><li>New <code>MatViz()</code> function for matrix sparsity visualization.</li><li>Introduced <code>GFP</code> plugin support (Go Fast Plugins). </li></ul><h3><a name='header-n190' class='md-header-anchor '></a>Changed</h3><ul><li>Elastic energy decomposition is now optional <code>-energydecomp</code>.</li><li>Force calculation using integrals (Thanks to G.Rastiello).</li></ul><h2><a name='header-n198' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3'>1.3</a> - 2019-04-08</h2><h3><a name='header-n199' class='md-header-anchor '></a>Added</h3><ul><li>New meshes in 2D/3D<code>Notched-plate</code> , <code>square-crack</code>, etc.</li><li>New fracture mechanics module.</li><li>New <code>-nonlinear</code> flag to activate phase-field model for brittle fracture.</li><li>New <code>-timelog</code> for time logging the solver.</li><li>New <code>-pipegnu</code> for GNUplot piping.</li></ul><h3><a name='header-n216' class='md-header-anchor '></a>Changed</h3><ul><li><p>Scripting now performed using <code>.script</code> files:</p><ul><li><code>BoundaryAndSourceConditions.script</code></li><li><code>LinearFormBuilderAndSolver.script</code></li><li><code>Macros.script</code> </li><li><code>Main.script</code> </li><li><code>VariationalFormulation.script</code> </li><li>....</li></ul></li><li><p>Move to FreeFEM version 4.0.</p></li><li><p>Move to PETSc version 3.11.</p></li></ul><h2><a name='header-n246' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2'>1.2</a> - 2019-03-18</h2><h3><a name='header-n247' class='md-header-anchor '></a>Added</h3><ul><li>Support for Gmsh&#39;s <code>.msh</code>  or Medit&#39;s <code>.mesh</code> meshes in folder <code>Meshes</code>.</li><li>Advance to 3D physics.</li><li>New MPI based parallel solver linear elasticity.</li><li>New approach for solver generation via scripting (PhD thesis MA Badri) with <code>scriptGenerator.edp</code>.</li><li>Integrated Domain decomposition macro (PhD thesis MA Badri).</li><li>Customized <code>.vtk</code> support for ParaView post-processing.</li><li>New point boundary condition macro <code>pointbc(Real[int], fespace, matrix)</code>.</li><li>New flags for communicating with the solver: <code>-dimension</code>, <code>-plot</code>, <code>-bodyforce</code>, <code>-lagrange</code>, etc.</li></ul><h3><a name='header-n273' class='md-header-anchor '></a>Changed</h3><ul><li>More advance README.MD.</li><li>Sequential solver now merged within scripting via flag <code>-sequential</code>.</li><li>Move to FreeFEM version 3.62.</li><li>Moved manufactured solutions to <code>validation-test</code> folder.</li></ul><h2><a name='header-n287' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1'>1.1</a> - 2019-03-04</h2><h3><a name='header-n288' class='md-header-anchor '></a>Added</h3><ul><li>Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).</li><li>More cases of manufactured solution for linear elasticity in 2D.</li><li>Added README.MD for explaining the solver.</li><li>ParaView plotting activated.</li></ul><h3><a name='header-n302' class='md-header-anchor '></a>Changed</h3><ul><li>Moved to Tuleap git hosting from CEA.</li><li>Separate folder of manufactured solutions and the linear elastic solver.</li><li>Move to FreeFEM version 3.61.</li></ul><h2><a name='header-n313' class='md-header-anchor '></a><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0'>1.0</a> - 2019-02-15</h2><h3><a name='header-n314' class='md-header-anchor '></a>Added</h3><ul><li>Initial FreeFEM files  Method of manufactured solution for linear elasticity in 2D.</li></ul><h2><a name='header-n319' class='md-header-anchor '></a>Version git tags</h2><figure><table><thead><tr><th>Version</th><th>Git tag</th></tr></thead><tbody><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0'>1.0</a></td><td>8a8ecb2746b7da792073358c60df33bae647f788</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1'>1.1</a></td><td>a667e6085ba1f92f8dd619bd40e18f85c593bc0a</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2'>1.2</a></td><td>e48b7b3a30c05ad4c343efa6a17fee386031f437</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3'>1.3</a></td><td>39f4324550365849852c5264b8d4535aae05e30d</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4'>1.4</a></td><td>f51f678630eb9b2fed355e5cedf976ce8b5fa341</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5'>1.5</a></td><td>07293ba09a69d3d6a16278220a0b4a7a9f318f96</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6'>1.6</a></td><td>f359dd049fb1ddde376e8ad8e5177c663e430418</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7'>1.7</a></td><td>aee9bfec868a70b3d9974d7692bc19f9739ab7dc</td></tr><tr><td><a href='https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8'>1.8</a></td><td>2f26292636c7248133e31ae912ee58113de2ef71</td></tr></tbody></table></figure></div>
 </body>
 </html>
