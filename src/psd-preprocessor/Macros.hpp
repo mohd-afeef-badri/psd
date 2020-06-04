@@ -129,7 +129,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
-<<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
+<<"  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){	   \n"
 <<"    fespace WWh0(Th,P0);							   \n"
 <<"    WWh0 e1,e2,e3;								   \n"
 <<(vectorial  ? "    e1=dx(uold); e2=dy(uold1);\n"    : ""  	    		    )
@@ -137,7 +137,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<(!vectorial ? "    e1=dx(u); e2=dy(u1);\n"          : ""  	    		    )
 <<(!vectorial ? "    e3=0.5*(dx(u1)+dy(u));\n"        : ""  	    		    )
 <<"										   \n"
-<<"    GFPDecompEnergy2D(e1[],e2[],e3[],Hplus[],Hminus[],H[],lambda,mu);	   \n"
+<<"    GFPDecompEnergy2D(e1[],e2[],e3[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],lambda,mu);	   \n"
 <<"  }//									   \n" 
 <<"										   \n";
 
@@ -272,7 +272,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
-<<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
+<<"  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){		   \n"
 <<"    fespace WWh0(Th,P0);							   \n"
 <<"    WWh0 e1,e2,e3,e4,e5,e6;							   \n"
 <<"										   \n"
@@ -289,7 +289,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<(vectorial  ? "    e5=0.5*(dz(uold)+dx(uold2));\n"              : ""  	    )
 <<(vectorial  ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"             : ""  	    )
 <<"										   \n"
-<<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],Hplus[],Hminus[],H[],par);  \n"
+<<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);  \n"
 <<"  }//									   \n" 
 <<"										   \n";
 

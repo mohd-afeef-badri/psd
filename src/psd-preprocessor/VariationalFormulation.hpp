@@ -215,14 +215,14 @@ writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<"      intN(Th,qforder=3)(                                                                       \n"
 <<"              (Gc*lo*(grad(phi)'*grad(q))) +                                                    \n"
-<<(energydecomp  ? "\t\t\t  ( ((Gc/lo)  + 2.*H)*phi*q )\n"         : ""                             )
+<<(energydecomp  ? "\t\t\t  ( ((Gc/lo)  + 2.*HistPlus)*phi*q )\n"         : ""                      )
 <<(!energydecomp ? "\t\t\t  ( ((Gc/lo)  + 2.*Hplus(u))*phi*q )\n"  : ""                             )
 <<"                       )                                                                        \n"
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}) q)$                                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*H*q  )\n"         : ""                              )
+<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*HistPlus*q  )\n"         : ""                       )
 <<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : ""                              )
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
@@ -260,7 +260,7 @@ if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writevarfmatsolve
 if(!energydecomp)writevarfmatsolve
 <<"\t\t\t( ((Gc/lo)  + 2.*Hplus(uold))*u"<<spc<<"*v"<<spc<<" )                                     \n";
 if(energydecomp)writevarfmatsolve
-<<"\t\t\t( ((Gc/lo)  + 2.*H)*u"<<spc<<"*v"<<spc<<" )                                               \n";
+<<"\t\t\t( ((Gc/lo)  + 2.*HistPlus)*u"<<spc<<"*v"<<spc<<" )                                        \n";
 
 writevarfmatsolve
 <<"                         )                                                                      \n";
@@ -276,7 +276,7 @@ if(energydecomp)writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}) q)$                                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"\t+ intN(Th,qforder=2)(  2.*H*v"<<spc<<"  )                                                     \n";
+<<"\t+ intN(Th,qforder=2)(  2.*HistPlus*v"<<spc<<"  )                                              \n";
 
 /*
 <<(!energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(uold))*u"<<spc<<"*v"<<spc<<" )\n": ""             )

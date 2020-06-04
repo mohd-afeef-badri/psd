@@ -31,7 +31,9 @@ if(nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 <<"//==============================================================================\n"
 <<"// -------Finite element variables -------					   \n"
 <<"//==============================================================================\n"
-<<"										   \n"
+<<"										   \n";
+
+if(NonLinearMethod=="Picard")writFemParameters
 <<"  Vh  def2(u)    ,    //  Displacement			   		   \n"
 <<"      def2(uold) ,    //  Previous displacement		   		   \n"
 <<"      def2(DPspc);    //  Partition of unity 	   	   		   \n"
@@ -41,11 +43,28 @@ if(nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 <<"      phiold    ,     //  Previous iteration phase field			   \n"
 <<"      DZspc     ;     //  Partition of unity		  	 	   	   \n";
 
+
+if(NonLinearMethod=="Newton-Raphson")writFemParameters
+<<"  Vh  def2(du)   ,    //  Displacement			   		   \n"
+<<"      def2(u)    ,    //  Previous displacement		   		   \n"
+<<"      def2(DPspc);    //  Partition of unity 	   	   		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  Vh1 dphi      ,     //  Phase field 			   		   \n"
+<<"      phi       ,     //  Previous iteration phase field			   \n"
+<<"      DZspc     ;     //  Partition of unity		  	 	   	   \n";
+
+
 if(energydecomp)writFemParameters
 <<"										   \n"
-<<"  Wh0 H         ,    // Stress history 					   \n"
-<<"      Hplus     ,    // Tensile stress history				   \n"
-<<"      Hminus    ;    // Compressive stress history				   \n";
+<<"  Vh1 HistPlusP1   ,    //  History tesile energy P1 field	   		   \n"
+<<"      HistMinusP1  ;    //  History compressive energy P1 fiels		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  Wh0 HistPlus  ,    // Tensile history 					   \n"
+<<"      HistMinus ,    // Compressive energy history				   \n"
+<<"      PsiPlus   ,    // Tensile energy					   \n"
+<<"      PsiMinus  ;    // Compressive nergy					   \n";
 }
 
 if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writFemParameters
@@ -60,9 +79,14 @@ if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writFemParameters
 
 if(energydecomp)writFemParameters
 <<"										   \n"
-<<"  Wh0 H         ,    // Stress history 			   		   \n"
-<<"      Hplus     ,    // Tensile stress history		   		   \n"
-<<"      Hminus    ;    // Compressive stress history		   		   \n";
+<<"  Vh1 HistPlusP1   ,    //  History tesile energy P1 field	   		   \n"
+<<"      HistMinusP1  ;    //  History compressive energy P1 fiels		   \n"
+<<"										   \n"
+<<"										   \n"
+<<"  Wh0 HistPlus  ,    // Tensile history 					   \n"
+<<"      HistMinus ,    // Compressive energy history				   \n"
+<<"      PsiPlus   ,    // Tensile energy					   \n"
+<<"      PsiMinus  ;    // Compressive nergy					   \n";
 }
 
 if(dynamic || soildynamics){writFemParameters

@@ -124,7 +124,7 @@ int main(int argc, char *argv[]){
   string PostProcess             = "u"; 
   string Partitioner             = "parmetis";
   string Preconditioner          = "jacobi";
-  string NonLinearMethod         = "Newton-Raphson";
+  string NonLinearMethod         = "Picard";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized-alpha";
 

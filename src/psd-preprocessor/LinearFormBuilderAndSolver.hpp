@@ -109,7 +109,8 @@ if(energydecomp)writesolver
 <<"    //---------------Energy decomposition phase-------------------//	  	   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n"         : ""           )
-<<"    DecomposeElasticEnergy(Hplus,Hminus,H)					   \n"
+<<"    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus)		   \n"
+<<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""           );
 
 writesolver
@@ -132,7 +133,18 @@ writesolver
 <<"    set(A1,solver=CG,sym=1);							   \n"
 <<"    phi[] = A1^-1*b1;						   	   \n"
 <<(timelog ? "    timerend  (\"solving U\",t0)\n" : "" 	        	  	    )
+<<"										   \n";
+
+if(energydecomp)writesolver
+<<"    //-------------Hybrid phase-field condition-----------------//		   \n"
 <<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""          	    )
+<<"    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
+  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.; 			   \n"
+<<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""          	    )
+<<"										   \n";
+
+writesolver
 <<"    //------------------Error calculation------------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : "" 	       	  	    )
@@ -281,7 +293,8 @@ if(energydecomp)writesolver
 <<"    //---------------Energy decomposition phase-------------------//	  	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""           	    )
-<<"    DecomposeElasticEnergy(Hplus,Hminus,H);					   \n"
+<<"    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);		   \n"
+<<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""   	  	    );
 
 writesolver
@@ -310,7 +323,18 @@ writesolver
 <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""    		       	    )
 <<"    phi[] = A1^-1*b1;				  	   		   \n"
 <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""           	  	    )
+<<"										   \n";
+
+if(energydecomp)writesolver
+<<"    //-------------Hybrid phase-field condition-----------------//		   \n"
 <<"										   \n"
+<<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""          	    )
+<<"    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
+  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.; 			   \n"
+<<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""          	    )
+<<"										   \n";
+
+writesolver
 <<"    //------------------Error calculation------------------------//		   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : "" 	       	    )
@@ -357,8 +381,9 @@ if(energydecomp)writesolver
 <<"    //---------------Energy decomposition phase-------------------//	  	   \n"
 <<"										   \n"
 <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""           	    )
-<<"    DecomposeElasticEnergy(Hplus,Hminus,H);					   \n"
-<<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""   	  	    );;
+<<"    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);		   \n"
+<<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+<<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""   	  	    );
 
 writesolver
 <<"										   \n"
