@@ -7,7 +7,7 @@
 *          MeshPartitioning,   VariationalFormulations,   BoundaryAndSourceConditions *
 *          Parameters,  LinearFormBuilderAndSolver, and PostProcessor. All these .edp * 
 *          files combine  together to form  a fully tailored  solid mechanics solver. *
-*	   Commandline flags  are  used to controls the nature of the generated file.     *
+*	   Commandline flags  are  used to controls the nature of the generated file. *
 *          One   is    advised     to   carefully   go   through   these   arguments. *
 * Compile: Use a g++/icpc compiler C++ compiler                                       *
 *                                                                                     *
@@ -124,6 +124,7 @@ int main(int argc, char *argv[]){
   string PostProcess             = "u"; 
   string Partitioner             = "parmetis";
   string Preconditioner          = "jacobi";
+  string NonLinearMethod         = "Newton-Raphson";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized-alpha";
 
@@ -210,8 +211,9 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-solver"             ) Solver               = argv[i+1];
     if( argvdummy == "-partitioner"        ) Partitioner          = argv[i+1];     
     if( argvdummy == "-postprocess"        ) PostProcess          = argv[i+1];     
-    if( argvdummy == "-preconditioner"     ) Preconditioner       = argv[i+1];     
-    if( argvdummy == "-subpreconditioner"  ) SubPreconditioner    = argv[i+1];   
+    if( argvdummy == "-preconditioner"     ) Preconditioner       = argv[i+1]; 
+    if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod      = argv[i+1];       
+    if( argvdummy == "-subpreconditioner"  ) SubPreconditioner    = argv[i+1];
     if( argvdummy == "-timediscretization" ) TimeDiscretization   = argv[i+1];         
 
     
@@ -263,7 +265,6 @@ int main(int argc, char *argv[]){
   cout << "===================================================================" << endl;
   cout << "                        BOOL ARGUMENTS                             " << endl;
   cout << "===================================================================" << endl;
-
 
   cout << " useRCM is --------------------------> " << RCM                      << endl;      
   cout << " help is ----------------------------> " << help                     << endl;              
