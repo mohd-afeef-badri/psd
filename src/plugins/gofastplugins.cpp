@@ -275,6 +275,7 @@ class DecompEnergy_Op : public E_F0mps {
         Expression Hp					;
         Expression Hm					;                
         Expression Hout					;
+        Expression Hout1				;
         Expression lambda				;  
         Expression mu					;                    
               
@@ -290,7 +291,8 @@ class DecompEnergy_Op : public E_F0mps {
         		Expression param5		,
         		Expression param6		,
         		Expression param7		,
-        		Expression param8		        		        				        		        		
+        		Expression param8		,
+        		Expression param9		        		        				        		        		
         		) : 
         		ex     (param1)			, 
         		ey     (param2)			, 
@@ -298,8 +300,9 @@ class DecompEnergy_Op : public E_F0mps {
         		Hp     (param4)			,
         		Hm     (param5)			, 
         		Hout   (param6)			,
-        		lambda (param7)			,
-        		mu     (param8)	        		        				        		        		 
+        		Hout1  (param7)			,
+        		lambda (param8)			,
+        		mu     (param9)	        		        				        		        		 
         		{
             		args.SetNameParam(n_name_param	, 
             				  name_param	, 
@@ -322,6 +325,7 @@ class DecompEnergy : public OneOperator {
         			     atype<KN<K>*>()	, 
         			     atype<KN<K>*>()    ,
         			     atype<KN<K>*>()    ,
+        			     atype<KN<K>*>()    ,
         			     atype<KN<K>*>() 	,
         			     atype<double>()	,
         			     atype<double>()  
@@ -336,7 +340,8 @@ class DecompEnergy : public OneOperator {
             				  t[4]->CastTo(args[4]),
             				  t[5]->CastTo(args[5]),
             				  t[6]->CastTo(args[6]),
-            				  t[7]->CastTo(args[7])            				              				  
+            				  t[7]->CastTo(args[7]),
+            				  t[8]->CastTo(args[8])            				              				  
             				  );
         }
 };
@@ -348,7 +353,8 @@ AnyType DecompEnergy_Op<K>::operator()(Stack stack) const {
     KN<K>* in3  = GetAny<KN<K>*>((*exy)(stack))		;
     KN<K>* out1 = GetAny<KN<K>*>((*Hp)(stack))		;
     KN<K>* out2 = GetAny<KN<K>*>((*Hm)(stack))		;
-    KN<K>* out3 = GetAny<KN<K>*>((*Hout)(stack))	;        
+    KN<K>* out3 = GetAny<KN<K>*>((*Hout)(stack))	; 
+    KN<K>* out4 = GetAny<KN<K>*>((*Hout1)(stack))	;       
     double lm   = GetAny<double>((*lambda)(stack))	;
     double muw  = GetAny<double>((*mu)(stack))		;
 
@@ -381,6 +387,7 @@ AnyType DecompEnergy_Op<K>::operator()(Stack stack) const {
         d2=min(0.,eval[1]);
         out2->operator[](j) += muw*(d1*d1 + d2*d2);
         out3->operator[](j) = max(out3->operator[](j),out1->operator[](j));
+        out4->operator[](j) = min(out4->operator[](j),out2->operator[](j));
      }     
     return 0L;
 }
