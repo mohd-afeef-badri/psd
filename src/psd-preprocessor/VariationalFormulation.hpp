@@ -107,7 +107,7 @@ writevarfmatsolve
 
 }  //-- [if loop terminator] !nonlinear ended --//
 
-if(nonlinear)if(!vectorial)if(!dynamic){writevarfmatsolve
+if(nonlinear)if(NonLinearMethod=="Picard")if(!vectorial)if(!dynamic){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation hybrid phase-field (Staggered)-------                           \n"
@@ -186,7 +186,6 @@ if(spc==3)writevarfmatsolve
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
-
 writevarfmatsolve
 <<";                                                                                               \n";
 
@@ -224,11 +223,178 @@ writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*HistPlus*q  )\n"         : ""                       )
 <<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : ""                              )
+<<"                                                                                                \n";
+
+if(!energydecomp)writevarfmatsolve
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(4,phi=1)             //  Cracked (Dirichlet)                                         \n"
+<<"      + on(4,phi=1)             //  Cracked (Dirichlet)                                         \n";
+
+writevarfmatsolve
+<<";                                                                                               \n";
+
+}  //-- [if loop terminator] nonlinear ended --//
+
+
+
+if(nonlinear)if(NonLinearMethod=="Newton-Raphson")if(!vectorial)if(!dynamic){writevarfmatsolve
+<<"                                                                                                \n"
+<<"//==============================================================================                \n"
+<<"// ---Variation formulation hybrid phase-field (Staggered Newton-Raphsons)----                  \n"
+<<"//==============================================================================                \n"
+<<"                                                                                                \n"
+<<"  real TractionIn = tr;                                                                         \n"
+<<"                                                                                                \n"
+<<" //-----------------------------                                                                \n"
+<<" // Eq. 1 Linear momentum     //                                                                \n"
+<<" //-----------------------------                                                                \n"
+<<"                                                                                                \n"
+<<" varf elast(def2(du),def2(v)) =                                                                 \n"
+<<"                                                                                                \n"
+<<"                           //--- Bilinear(K_uu ) ---//                                          \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(du):\\mathbbm(E):\\epsilon(v)))$               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      intN(Th,qforder=3)(                                                                       \n"
+<<"         ((1 - phi)*(1 - phi) + 1e-6)*                                                          \n"
+<<"         (lambda*divergence(du)*divergence(v)                                                   \n"
+<<"         + 2.*mu*( epsilon(du)'*epsilon(v) ))                                                   \n"
+<<"                        )                                                                       \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"                                                                                                \n"
+<<"                           //--- Linear(K_ud) ---//                                             \n"
+<<"    //--------------------------------------------------------------------------                \n"               
+<<"    // $+int_{\\Omega}( 2(1-\\phi)(\\epsilon(u):\\epsilon(v))phi$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"     + intN(Th,qforder=2)(                                                                      \n"
+<<"         2.*(1 - phi)*( epsilon(u)'*epsilon(v) )* phi                                           \n"                      
+<<"                        )                                                                       \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"                                                                                                \n"
+<<"                           //--- Linear(b_u) ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"     - intN(Th,qforder=2)(                                                                      \n"
+<<"         ((1 - phi)*(1 - phi))*                                                                 \n"
+<<"         (lambda*divergence(u)*divergence(v)                                                    \n"
+<<"         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
+<<"                        )                                                                       \n"
+<<"    //--------------------------------------------------------------------------                \n";
+
+if(bodyforce)writevarfmatsolve
+<<"                                                                                                \n"
+<<"                           //--- Linear(b_u) ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}(f.v)$                                                                    \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + intN(Th,qforder=2)(BF'*def2(v))    // Body force     (volumetric)                       \n";
+
+if(tractionconditions>=1)if(spc==2)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"                                                                                                \n"
+<<"                           //--- Linear(b_u) ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                    \n";
+
+if(tractionconditions>=1)if(spc==3)
+for(int i=0; i<tractionconditions; i++)
+writevarfmatsolve
+<<"                                                                                                \n"
+<<"                           //--- Linear(b_u) ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))          \n";
+
+
+if(dirichletbc){
+
+if(spc==2)writevarfmatsolve
+<<"                                                                                                \n"
+<<"                             //--- Dirichlet ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + on(Dlabel,du=Dvalue[0],du1=Dvalue[1])                                                   \n"
+<<"                                                                                                \n"
+<<"                             //--- Dirichlet ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + on(2,du1=TractionIn)                 // Displacement (Dirichlet)                        \n";
+
+if(spc==3)writevarfmatsolve
+<<"                                                                                                \n"
+<<"                             //--- Dirichlet ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + on(Dlabel,du=Dvalue[0],du1=Dvalue[1],du2=Dvalue[2])                                     \n"
+<<"                                                                                                \n"
+<<"                             //--- Dirichlet ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + on(2,du1=TractionIn)                                                                    \n";
+
+}  //-- [if loop terminator] dirichletbc ended --//
+
+
+writevarfmatsolve
+<<";                                                                                               \n";
+
+writevarfmatsolve
+<<"                                                                                                \n"
+<<" //-----------------------------                                                                \n"
+<<" // Eq. 2 Helmothz           //                                                                 \n"
+<<" //-----------------------------                                                                \n"
+<<"                                                                                                \n"
+<<"  varf phase(dphi,q) =                                                                          \n"
+<<"                                                                                                \n"
+<<"                           //--- Bilinear(K_dd ) ---//                                          \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}(G_cl_0(\\nabl{\\dphi}.\\nabla{q})+(G_c/l_0+2H^{+})\\dphi q)$             \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      intN(Th,qforder=3)(                                                                       \n"
+<<"              (Gc*lo*(grad(dphi)'*grad(q))) +                                                   \n"
+<<(energydecomp  ? "\t\t\t  ( ((Gc/lo)  + 2.*HistPlus)*dphi*q )\n"         : ""                     )
+<<(!energydecomp ? "\t\t\t  ( ((Gc/lo)  + 2.*Hplus(u))*dphi*q )\n"  : ""                            )
+<<"                       )                                                                        \n"
+<<"                                                                                                \n"
+<<"                           //--- Linear(K_du ) ---//                                            \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}((2H^{+}(i-\\phi)) q)$                                                    \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*HistPlus*(1-phi)*q  )\n"         : ""               )
+<<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*(1-phi)*q  )\n"  : ""                      )
+<<"                                                                                                \n"
+<<"                           //--- Linear(b_d ) ---//                                             \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    // $+int_{\\Omega}(G_cl_0(\\nabl{\\phi}.\\nabla{q})+(G_c/l_0+2H^{+})\\phi q)$               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      - intN(Th,qforder=2)(                                                                     \n"
+<<"              (Gc*lo*(grad(phi)'*grad(q))) +                                                    \n"
+<<(energydecomp  ? "\t\t\t  ( ((Gc/lo)  /*+ 2.*HistPlus*/)*phi*q )\n"         : ""                  )
+<<(!energydecomp ? "\t\t\t  ( ((Gc/lo)  /*+ 2.*Hplus(u)*/)*phi*q )\n"  : ""                         )
+<<"                       )                                                                        \n"
+<<"                                                                                                \n";
+
+if(!energydecomp)writevarfmatsolve
+<<"                                                                                                \n"
+<<"                             //--- Dirichlet ---//                                              \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"      + on(4,dphi=1)                                                                            \n";
+
+
+writevarfmatsolve
 <<";                                                                                               \n";
 
 }  //-- [if loop terminator] nonlinear ended --//
