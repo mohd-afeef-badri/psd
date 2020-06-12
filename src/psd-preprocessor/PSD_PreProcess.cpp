@@ -28,7 +28,7 @@
 
   -parmetis_worker          [int]  Active when mesh partitioner is parmetis.
 
-  -dimension                [int]  Dimension of proble. 2 for 2D 3 for 3D. Default 2.
+  -dimension                [int]  Dimension of problem. 2 for 2D 3 for 3D. Default 2.
   
   -lagrange                 [int]  Lagrange order used for building FE space. Options 
   			                       are  1 for P1 or 2 for P2. Defaut is P1.
@@ -41,9 +41,9 @@
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
   			      
-  -problem         [string] Intrested problem. Use linear-elasticity|damage|elastodynamics.
+  -problem         [string] Interested problem. Use linear-elasticity|damage|elastodynamics.
 
-  -model           [string] Intrested model. Use hybrid-phase-field|Mazar.			
+  -model           [string] Interested model. Use hybrid-phase-field|Mazar.			
 
   -------------------------------------------------------------------------------------
  			  
@@ -60,18 +60,12 @@
   -useRCM      [bool]	  To activate mesh level renumbering via Reverse Cuthill Mckee.   
   
   -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.
-
-  -pointbc     [bool]     To activate Dirichlet boundary condition on point. Default OFF.
   
   -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
 
   -vectorial   [bool]	  To generate vectorial space solver for non-linear. Default OFF.  
     
   -supercomp   [bool]	  To be used when using a cluster/supercomputer. Default OFF.   
-    
-  -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
-  
-  -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF.
 
   -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
   

@@ -8,6 +8,8 @@ All notable changes to PSD solver will be documented in this file.
 - New time discretization option `-timediscretization`.
 - Automatic identification of FreeFEM and Gmsh during `./configure`.
 - New flags for `--with-FreeFEM=` and `--with-Gmsh=` during `./configure`.
+- New flag `-problem` linear-elasticity|damage|elastodynamics|soildynamics to define physics.
+- New flag `-model` to set approximation for damage mechanics hybrid-phase-field|Mazar.
 
 ### Changed
 - Moved to FreeFEM 4.6.
@@ -16,6 +18,10 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Removed
 - No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.
+- No more `-nonlinear` flag.
+- No more `-dynamic` flag.
+- No more `-soildynamic` flag.
+- No more `-quasistatic` flag.
 
 
 
@@ -40,8 +46,8 @@ All notable changes to PSD solver will be documented in this file.
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
 - New GFP plugin for Mazar's damage update for 2D/3D problems `GFPMazarsDamageUpdate(...)`.
 - New MPI plotting routine `plotJustMeshMPI()`.
-- New option `-fastmethod` to switich back to defualt variational formulation.
-- New  make flage for compiling on supercomputer. 
+- New option `-fastmethod` to switch back to default variational formulation.
+- New  make flag for compiling on supercomputer. 
 
 ### Changed
 - Changed variational formulation now using $\epsilon(u):A:\epsilon(v)$.

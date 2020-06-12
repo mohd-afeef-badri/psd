@@ -18,7 +18,7 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 - [FreeFEM](https://freefem.org/)
 - [PETSc](https://www.mcs.anl.gov/petsc/)      (optional)
 - [Gmsh](http://gmsh.info/)
-- [gnuplot](http://www.gnuplot.info/)	(optional)
+	 [gnuplot](http://www.gnuplot.info/)	(optional)
 - [C++](http://www.cplusplus.com/)
 - [git](https://git-scm.com/)
 
@@ -37,7 +37,7 @@ autoreconf -i
 ./configure 
 ```
 *Note*:   `./configure` will install PSD in `$HOME/PSD` to change this directory use `--prefix=Your/Own/Path` with `./configure`. 
-*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages intalled in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
 ```
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
 ```
@@ -90,11 +90,11 @@ Now that the mesh has been loaded. Its time to set up the solver. Open the `term
 
 Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal.
 
-For example to generate a sequential 2D elasticity solver for a ploblem with body force and one Dirichlet border use
+For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
 ```
 /PSD_PreProcess -dimension 2 -bodyforce -dirichletconditions 1
-``` 
+```
 
 **Step 3: Launching the solver**
 
@@ -118,37 +118,34 @@ FreeFem++ Main.edp -v 0 -nw
 
 ## [Options-PSD]  explained  ##
 
-These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out all the options that are available.
+These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
 
 | Option         | Type      | Comment                                                      |
 | -------------- | --------- | :----------------------------------------------------------- |
-| `-help`        | `[bool]`  | To activate helping message on the terminal.  Recommended flag. |
-| `-plot`        | `[bool]`  | Use -plot to activate plotting using ParaView. Default is false. |
+| `-help`        | `[bool]`  | To activate helping message on the terminal. |
+| `-plot`        | `[bool]`  | Use -plot to activate plotting using ParaView. |
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
-| `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of c++ plugins.  |
+| `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
 | `-timepvd`     | `[bool]`  | To activate time pvd plotting for ParaView                   |
-| `-pointbc`     | `[bool]`  | To activate Dirichlet boundary condition on point.           |
-| `-dynamic`     | `[bool]`  | To activate dynamic solver.                                  |
-| `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). Default is false. |
+| `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
 | `-timelog`     | `[bool]`  | To activate time logging the different phases of the solver. |
-| `-nonlinear`   | `[bool]`  | To activate nonlinear solver.                                |
-| `-supercomp`   | `[bool]`  | To be used when using a super computer without X term. support .        |
+| `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm. support .        |
 | `-bodyforce`   | `[bool]`  | To activate volumetric source term (body force).             |
 | `-vectorial`   | `[bool]`  | To use vectorial finite element method.			    |
-| `-sequential`  | `[bool]`  | To solve via a sequential solver.   Default is false.        |
-| `-tractionbc`  | `[bool]`  | To activate traction boundary condition (Neumann).           |
-| `-dirichletbc` | `[bool]`  | To activate Dirichlet boundary condition.                    |
-| `-quasistatic` | `[bool]`  | To activate quasi-static damage mechanics module.            |
+| `-sequential`  | `[bool]`  | To solve via a sequential solver.        |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
-| `-soildynamics`| `[bool]`  | To activate soil dynamics module.		            |
 |  		 | 	     |                     					    |
+| `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |
+| `-tractionconditions`| `[int]`   | Number of Neumann/traction bounders. |
 | `-parmetis_worker`| `[int]`   | Number of parallel workers used by ParMetis for partiotining.   |
-| `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. Defaut is P1. |
+| `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. |
 | `-dimension`   	| `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |  		 | 	     |                     					    |
-| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", or  "uav". |
-| `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)" or "[ptstoch](http://www.labri.fr/perso/pelegrin/scotch/)". |
+| `-nonlinearmethod` | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons". |
+| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", "phi", "uphi", or  "uav". |
+| `-problem` | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
+| `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
 
 
 
