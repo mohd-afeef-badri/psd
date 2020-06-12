@@ -7,56 +7,54 @@ cout << " building PostProcessor.edp";
 if(plotAll){
 ofstream  writePostProcessor("PostProcessor.edp");
 
-writePostProcessor
-<<"                                                                                                \n"
-<<"/**************************Variational formulation******************************                \n"
-<<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
-<<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
-<<"*         the README.MD file.                                                  *                \n"
-<<"*                                                                              *                \n"
-<<"*******************************************************************************/                \n"
-<<"										   \n"
-<<"										   \n";
+writePostProcessor<<
+"/******************************* PostProcessor ********************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"										\n";
 
-if(!Sequential)if(soildynamics)writePostProcessor
+if(!Sequential)if(Prblm=="soildynamics")writePostProcessor
 <<"  if(mpirank==0){								   \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Soil-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
 <<"  }										   \n";	
 
-if(Sequential)if(soildynamics)writePostProcessor
+if(Sequential)if(Prblm=="soildynamics")writePostProcessor
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Soil-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
 
-if(!Sequential)if(dynamic)writePostProcessor
+if(!Sequential)if(Prblm=="elastodynamics")writePostProcessor
 <<"  if(mpirank==0){								   \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
 <<"  }										   \n";
 
-if(Sequential)if(dynamic)writePostProcessor
+if(Sequential)if(Prblm=="elastodynamics")writePostProcessor
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
 
-if(!Sequential)if(nonlinear)writePostProcessor
+if(!Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")writePostProcessor
 <<"  if(mpirank==0){								   \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");					   \n"
 <<"  }										   \n";	
 
-if(Sequential)if(nonlinear)writePostProcessor
+if(Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")writePostProcessor
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");  			   \n"
 <<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");						   \n";
 
-if(!Sequential)if(!nonlinear)if(!dynamic)if(!soildynamics){writePostProcessor
+if(!Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
 <<"										   \n"        
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//					   \n"
@@ -111,7 +109,7 @@ writePostProcessor
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(!nonlinear)if(!dynamic)if(!soildynamics){writePostProcessor
+if(Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
 <<"										   \n"	
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------					   \n"

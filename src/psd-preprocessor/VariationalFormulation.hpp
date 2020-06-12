@@ -6,19 +6,18 @@ cout << " building VariationalFormulations.edp";
 
 {ofstream  writevarfmatsolve("VariationalFormulations.edp");
 
-writevarfmatsolve
-<<"                                                                                                \n"
-<<"/**************************Variational formulation******************************                \n"
-<<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
-<<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
-<<"*         the README.MD file.                                                  *                \n"
-<<"*                                                                              *                \n"
-<<"*******************************************************************************/                \n"
-<<"                                                                                                \n";
+writevarfmatsolve<<
+"/***************************** MeshAndFeSpace *********************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"                                                                               \n";
 
-if(!nonlinear)if(!dynamic)if(!soildynamics)if(!quasistatic){writevarfmatsolve
+if(Prblm=="linear-elasticity"){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation linear elasticity-------                                        \n"
@@ -105,9 +104,10 @@ writevarfmatsolve
 <<";                                                                                               \n"
 <<"                                                                                                \n";
 
-}  //-- [if loop terminator] !nonlinear ended --//
+}  //-- [if loop terminator] linear-elasticity ended --//
 
-if(nonlinear)if(NonLinearMethod=="Picard")if(!vectorial)if(!dynamic){writevarfmatsolve
+if(Prblm=="damage" && Model=="hybrid-phase-field" && NonLinearMethod=="Picard")
+if(!vectorial){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation hybrid phase-field (Staggered)-------                           \n"
@@ -235,11 +235,12 @@ if(!energydecomp)writevarfmatsolve
 writevarfmatsolve
 <<";                                                                                               \n";
 
-}  //-- [if loop terminator] nonlinear ended --//
+}  //-- [if loop terminator] hybrid-phase-field picard non-vectorial ended --//
 
 
 
-if(nonlinear)if(NonLinearMethod=="Newton-Raphson")if(!vectorial)if(!dynamic){writevarfmatsolve
+if(Prblm=="damage" && Model=="hybrid-phase-field" && NonLinearMethod=="Newton-Raphson")
+if(!vectorial){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// ---Variation formulation hybrid phase-field (Staggered Newton-Raphsons)----                  \n"
@@ -397,10 +398,11 @@ if(!energydecomp)writevarfmatsolve
 writevarfmatsolve
 <<";                                                                                               \n";
 
-}  //-- [if loop terminator] nonlinear ended --//
+}  //-- [if loop terminator] hybrid-phase-field Newton-Raphsons non-vectorial ended --//
 
 
-if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writevarfmatsolve
+if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(vectorial){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation hybrid phase-field (Vectorial)-------                           \n"
@@ -503,13 +505,13 @@ if(pipegnu)writevarfmatsolve
 <<"                );                                                                              \n";
 /************************OLD METHOD*************************************************/  
 
-}  //-- [if loop terminator] nonlinear vectorial ended --//
+}  //-- [if loop terminator] hybrid-phase-field picard vectorial ended --//
 
 
-if(dynamic){writevarfmatsolve
+if(Prblm=="elastodynamics"){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
-<<"// -------Variation formulation dynamic linear-------                                           \n"
+<<"// -------Variation formulation elastodynamic linear-------                                     \n"
 <<"//==============================================================================                \n"
 <<"                                                                                                \n"
 <<"varf elastodynamics( def(du) , def(v) )                                                         \n"
@@ -609,7 +611,7 @@ if(dynamic){writevarfmatsolve
 
 
 
-if(soildynamics){writevarfmatsolve
+if(Prblm=="soildynamics"){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation soil-dynamics -------                                           \n"
@@ -686,7 +688,7 @@ writevarfmatsolve
 
 }  //-- [if loop terminator] dynamic Sequential ended --//
 
-if(quasistatic){writevarfmatsolve
+if(Prblm=="damage" && Model=="Mazar"){writevarfmatsolve
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Variation formulation linear-------                                                   \n"
@@ -730,8 +732,8 @@ if(dirichletbc)if(spc==3)writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(2, du=duimp)                                                                           \n"
 <<"    + on(1, du=0    )                                                                           \n"
+<<"    + on(2, du=duimp)                                                                           \n"
 <<"    + on(4, du1=0   )                                                                           \n"
 <<"    + on(5, du2=0   )                                                                           \n";
 
@@ -740,15 +742,15 @@ if(dirichletbc)if(spc==2)writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(4, du=duimp)                                                                           \n"
 <<"    + on(2, du=0    )                                                                           \n"
+<<"    + on(4, du=duimp)                                                                           \n"
 <<"    + on(5, du1=0   )                                                                           \n";
 
 writevarfmatsolve
 <<";                                                                                               \n" 
 <<"                                                                                                \n";
 
-}  //-- [if loop terminator] dquasistatic ended --//
+}  //-- [if loop terminator] quasistatic ended --//
 
 } //-- [ostream terminator]  varfmatsolve.edp closed --//
 

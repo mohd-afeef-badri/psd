@@ -41,6 +41,10 @@
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
   			      
+  -problem         [string] Intrested problem. Use linear-elasticity|damage|elastodynamics.
+
+  -model           [string] Intrested model. Use hybrid-phase-field|Mazar.			
+
   -------------------------------------------------------------------------------------
  			  
   -help        [bool]     To activate helping message on the terminal. Default OFF. 
@@ -48,8 +52,6 @@
   -plot        [bool]     To activate plotting routine. Default OFF.
 
   -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
-
-  -dynamic     [bool]	  To activate dynamic solver. Default OFF.
   
   -useGFP      [bool]	  To activate use of GoFastPlugins. A suite of c++ plugins.
   
@@ -61,8 +63,6 @@
 
   -pointbc     [bool]     To activate Dirichlet boundary condition on point. Default OFF.
   
-  -nonlinear   [bool]     To activate non-linear mechanics (Crack). Default OFF.
-  
   -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
 
   -vectorial   [bool]	  To generate vectorial space solver for non-linear. Default OFF.  
@@ -72,8 +72,6 @@
   -dirichletbc [bool]     To activate Dirichlet boundary condition. Default ON.
   
   -tractionbc  [bool]     To activate traction boundary condition (Neumann).Default OFF.
-  
-  -quasistatic [bool]     To activate quasi-static damage mechanics module.Default OFF.  
 
   -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
   
@@ -105,25 +103,23 @@ int main(int argc, char *argv[]){
   bool pointbc      = false;
   bool timelog      = false;
   bool plotAll      = false;
-  bool dynamic      = false;    
   bool pipegnu      = false;
   bool plotTime     = false;
   bool testflags    = false; 
   bool vectorial    = false;
   bool bodyforce    = false;
-  bool nonlinear    = false;
   bool supercomp    = false;
   bool elasticity   = false;    
   bool tractionbc   = false; 
   bool fastmethod   = false;       
   bool Sequential   = false;
-  bool quasistatic  = false;
   bool dirichletbc  = false;
-  bool energydecomp = false;  
-  bool soildynamics = false;  
+  bool energydecomp = false;
 
+  string Model                   = "hybrid-phase-field"; 
   string Solver                  = "cg"; 
   string PostProcess             = "u"; 
+  string Prblm                   = "linear-elasticity"; 
   string Partitioner             = "parmetis";
   string Preconditioner          = "jacobi";
   string NonLinearMethod         = "Picard";
@@ -149,7 +145,6 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-debug"        ) debug          = true;
     if( argvdummy == "-useGFP"       ) useGFP         = true;  
     if( argvdummy == "-plot"         ) plotAll        = true;
-    if( argvdummy == "-dynamic"      ) dynamic        = true;    
     if( argvdummy == "-pipegnu"      ) pipegnu        = true;
     if( argvdummy == "-timepvd"      ) plotTime       = true;
     if( argvdummy == "-testflags"    ) testflags      = true;
@@ -157,20 +152,19 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-timelog"      ) timelog        = true;
     if( argvdummy == "-vectorial"    ) vectorial      = true;  
     if( argvdummy == "-bodyforce"    ) bodyforce      = true;
-    if( argvdummy == "-nonlinear"    ) nonlinear      = true; 
     if( argvdummy == "-Lelasticty"   ) elasticity     = true;            
     if( argvdummy == "-supercomp"    ) supercomp      = true;       
     if( argvdummy == "-tractionbc"   ) tractionbc     = true; 
     if( argvdummy == "-fastmethod"   ) fastmethod     = true;       
     if( argvdummy == "-sequential"   ) Sequential     = true;
-    if( argvdummy == "-quasistatic"  ) quasistatic    = true;
     if( argvdummy == "-dirichletbc"  ) dirichletbc    = true;
-    if( argvdummy == "-energydecomp" ) energydecomp   = true;  
-    if( argvdummy == "-soildynamics" ) soildynamics   = true;
-  
+    if( argvdummy == "-energydecomp" ) energydecomp   = true;
+
+    if( argvdummy == "-model"              ) Model                = argv[i+1];  
     if( argvdummy == "-solver"             ) Solver               = argv[i+1];
+    if( argvdummy == "-problem"            ) Prblm                = argv[i+1];     
     if( argvdummy == "-partitioner"        ) Partitioner          = argv[i+1];     
-    if( argvdummy == "-postprocess"        ) PostProcess          = argv[i+1];     
+    if( argvdummy == "-postprocess"        ) PostProcess          = argv[i+1];
     if( argvdummy == "-preconditioner"     ) Preconditioner       = argv[i+1]; 
     if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod      = argv[i+1];       
     if( argvdummy == "-subpreconditioner"  ) SubPreconditioner    = argv[i+1];
@@ -180,8 +174,9 @@ int main(int argc, char *argv[]){
   }
   
   int labelDirichlet=2; 
-  if(nonlinear)labelDirichlet=1;
-  if(nonlinear)dirichletbc=true;
+  if(Prblm=="damage" && Model=="hybrid-phase-field")labelDirichlet=1;
+  if(Prblm=="damage" && Model=="hybrid-phase-field")dirichletbc=true;
+  if(Prblm=="damage" && Model=="Mazar")dirichletbc=true;
 
   int labLface=2;if(spc==3)labLface=1;  
   int labRface=4;if(spc==3)labRface=2;  
@@ -231,7 +226,6 @@ int main(int argc, char *argv[]){
   cout << " debug is ---------------------------> " << debug                    << endl;
   cout << " useGFP is --------------------------> " << useGFP                   << endl;  
   cout << " plot is ----------------------------> " << plotAll                  << endl;
-  cout << " dynamic is -------------------------> " << dynamic                  << endl;    
   cout << " pipegnu is -------------------------> " << pipegnu                  << endl;
   cout << " timepvd is -------------------------> " << plotTime                 << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
@@ -239,16 +233,13 @@ int main(int argc, char *argv[]){
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;  
   cout << " bodyforce is -----------------------> " << bodyforce                << endl;
-  cout << " nonlinear is -----------------------> " << nonlinear                << endl; 
   cout << " Lelasticty is ----------------------> " << elasticity               << endl;            
   cout << " supercomp is -----------------------> " << supercomp                << endl;       
   cout << " tractionbc is ----------------------> " << tractionbc               << endl; 
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;       
   cout << " sequential is ----------------------> " << Sequential               << endl;
-  cout << " quasistatic is ---------------------> " << quasistatic              << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
-  cout << " energydecomp is --------------------> " << energydecomp             << endl;  
-  cout << " soildynamics is --------------------> " << soildynamics             << endl;
+  cout << " energydecomp is --------------------> " << energydecomp             << endl;
   }
 
   cout << "                                                                   " << endl;

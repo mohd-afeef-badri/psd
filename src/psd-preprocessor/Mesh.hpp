@@ -6,26 +6,27 @@ cout << " building MeshAndFeSpace.edp";
  
 {ofstream  writemeshPartitioning("MeshAndFeSpace.edp");
 
-writemeshPartitioning
-<<"                                                                                                \n"
-<<"/**************************Variational formulation******************************                \n"
-<<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
-<<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
-<<"*         the README.MD file.                                                  *                \n"
-<<"*                                                                              *                \n"
-<<"*******************************************************************************/                \n"
-<<"                                                                                \n";
+writemeshPartitioning<<
+"/***************************** MeshAndFeSpace *********************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"                                                                               \n";
 
 //-----------------------------SEQUENTIAL------------------------------------------//
 
-if(Sequential){writemeshPartitioning
-<<"                                                                                \n"
-<<"//==============================================================================\n"
-<<"// ------- The finite element mesh -------                                      \n"
-<<"//==============================================================================\n"
-<<"                                                                                \n"
+if(Sequential)
+ {
+ writemeshPartitioning<<
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element mesh -------                                      \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
 <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                                  )
 <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                            )
 <<"  load \"gmsh\"					// Load  gmsh                                  \n"
@@ -39,10 +40,10 @@ if(Sequential){writemeshPartitioning
 <<"                                                                                \n"
 <<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)            \n";
 
-if(nonlinear)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field")writemeshPartitioning
 <<" fespace Vh1  ( Th , Zk );			// Damage field	FE space                   \n";
 
-if(nonlinear)if(energydecomp)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemeshPartitioning
 <<" fespace Wh0  ( Th , P0 );			// Energy decomposition field              \n";
 
 }
@@ -63,19 +64,20 @@ if(!Sequential){writemeshPartitioning
 <<"                                                                                \n"
 <<" fespace Vh     ( Th , Pk );			// Local mixed FE space                    \n";
 
-if(nonlinear)if(!vectorial)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemeshPartitioning
 <<" fespace Vh1    ( Th , Zk );			// Damage field	FE space                   \n";
 
-if(nonlinear)if(energydecomp)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(energydecomp)writemeshPartitioning
 <<" fespace Wh0    ( Th , P0 );			// Energy decomposition field              \n";
 
-if(nonlinear)if(vectorial)if(debug || plotAll)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(vectorial)if(debug || plotAll)writemeshPartitioning
 <<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space                   \n";
 
-if(quasistatic)writemeshPartitioning
+if(Prblm=="damage" && Model=="Mazar")writemeshPartitioning
 <<" fespace Wh0    ( Th , P0 );			// stress/strain/damage FE space           \n";
 
-if(quasistatic)if(useGFP)writemeshPartitioning
+if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemeshPartitioning
 <<" fespace VhStr  ( Th , Sk );			// stress/strain/damage FE space           \n";
 
 writemeshPartitioning
@@ -90,7 +92,7 @@ writemeshPartitioning
 <<"  Th = gmshloadN(\"\"+ThName+\".msh\");    		// Global mesh loaded          \n"
 <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                       );
 
-if(!nonlinear)writemeshPartitioning
+if(Prblm!="damage")writemeshPartitioning
 <<"                                                                                \n"
 <<"  PETScMPIBuild(                                                                \n"
 <<"		   Th				, // Local  mesh                                       \n"
@@ -101,7 +103,18 @@ if(!nonlinear)writemeshPartitioning
 <<"		   mpiCommWorld			  // MPI world                                     \n"
 <<"		  )                                                                        \n";
 
-if(nonlinear)if(!vectorial)writemeshPartitioning
+if(Prblm=="damage" && Model=="Mazar")writemeshPartitioning
+<<"                                                                                \n"
+<<"  PETScMPIBuild(                                                                \n"
+<<"		   Th				, // Local  mesh                                       \n"
+<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
+<<"		   restrictionIntersectionP	, // Restriction matrix                        \n"
+<<"		   DP				, // Partition of unity                                \n"
+<<"		   Pk				, // Vectorial FE space                                \n"
+<<"		   mpiCommWorld			  // MPI world                                     \n"
+<<"		  )                                                                        \n";
+
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemeshPartitioning
 <<"                                                                                \n"
 <<"  fespace Ph(Th, P0);                                                           \n"
 <<"  	     Ph part;                                                              \n"
@@ -138,7 +151,7 @@ if(nonlinear)if(!vectorial)writemeshPartitioning
 <<"		   init2		  	  // Scalar initilization                              \n"
 <<"		  )                                                                        \n";
 
-if(nonlinear)if(vectorial)writemeshPartitioning
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(vectorial)writemeshPartitioning
 <<"                                                                                \n"
 <<"  PETScMPIBuild(                                                                \n"
 <<"		   Th				, // Local  mesh                                       \n"

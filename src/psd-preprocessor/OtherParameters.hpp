@@ -39,7 +39,7 @@ writemeshParameters
 <<" real[int] DP;                               // Partition of unity		   \n";
 
 
-if(nonlinear)if(!vectorial)writemeshParameters
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemeshParameters
 <<"										   \n"
 <<" int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering  \n"
 <<" real[int] DZ;                               // Partition of unity		   \n";
@@ -47,7 +47,7 @@ if(nonlinear)if(!vectorial)writemeshParameters
 
 }
 
-if(nonlinear){
+if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
 if(plotAll)writemeshParameters
 <<"	 									   \n"
@@ -96,10 +96,10 @@ if(!supercomp)writemeshParameters
 
 
 
-if(dynamic){writemeshParameters
+if(Prblm=="elastodynamics"){writemeshParameters
 <<"	 									   \n"
 <<"//==============================================================================\n"
-<<"// ------- Dynamic constant parameters -------  			   	   \n"
+<<"// ------- Elasto-dynamic constant parameters -------  		   	   \n"
 <<"//==============================================================================\n"
 <<"	 									   \n"
 <<"  real[int] c(11);								   \n"
@@ -224,7 +224,7 @@ if(!supercomp)writemeshParameters
 
 }
 
-if(soildynamics){writemeshParameters
+if(Prblm=="soildynamics"){writemeshParameters
 <<"	 									   \n"
 <<"//==============================================================================\n"
 <<"// ------- Variational formulation constant parameters -------  	   	   \n"
@@ -320,7 +320,7 @@ if(plotTime)writemeshParameters
 
 }
 
-if(pipegnu)if(quasistatic){writemeshParameters 
+if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){writemeshParameters 
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Gnuplot pipeing parameters ------					   \n"

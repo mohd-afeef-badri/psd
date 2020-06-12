@@ -18,7 +18,7 @@ writFemParameters
 <<"*******************************************************************************/\n"
 <<"										   \n";
 
-if(!nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics)if(!quasistatic)writFemParameters
+if(Prblm=="linear-elasticity")writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Finite element variables -------					   \n"
@@ -26,7 +26,9 @@ if(!nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics)if(!quasistatic)writFem
 <<"										   \n"
 <<"  Vh  def(u)    ;    //  Displacement					   \n";
 
-if(nonlinear)if(!vectorial)if(!dynamic)if(!soildynamics){writFemParameters
+if(Prblm=="damage" && Model=="hybrid-phase-field")
+{
+if(!vectorial){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Finite element variables -------					   \n"
@@ -67,7 +69,7 @@ if(energydecomp)writFemParameters
 <<"      PsiMinus  ;    // Compressive nergy					   \n";
 }
 
-if(nonlinear)if(vectorial)if(!dynamic)if(!soildynamics){writFemParameters
+if(vectorial){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Finite element variables -------					   \n"
@@ -88,8 +90,9 @@ if(energydecomp)writFemParameters
 <<"      PsiPlus   ,    // Tensile energy					   \n"
 <<"      PsiMinus  ;    // Compressive nergy					   \n";
 }
+}
 
-if(dynamic || soildynamics){writFemParameters
+if(Prblm=="elastodynamics" || Prblm=="soildynamics"){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// -------Finite element variables -------					   \n"
@@ -105,7 +108,7 @@ if(dynamic || soildynamics){writFemParameters
 
 
 
-if(nonlinear){
+if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
 if(Sequential){
 
@@ -162,7 +165,7 @@ if(!vectorial)writFemParameters
 }
 
 
-if(dynamic || soildynamics){
+if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
 if(Sequential)writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
@@ -199,7 +202,7 @@ writFemParameters
 
 }
 
-if(quasistatic){writFemParameters
+if(Prblm=="damage" && Model=="Mazar"){writFemParameters
 <<"										   \n"
 <<"//==============================================================================\n"
 <<"// ------- Finite element variables -------					   \n"

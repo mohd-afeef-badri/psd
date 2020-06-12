@@ -6,149 +6,173 @@ cout << " building ControlParameters.edp";
 
 {ofstream  writemeshParameters("ControlParameters.edp");
 
-writemeshParameters
-<<"                                                                                                \n"
-<<"/**************************Variational formulation******************************                \n"
-<<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
-<<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
-<<"*         the README.MD file.                                                  *                \n"
-<<"*                                                                              *                \n"
-<<"*******************************************************************************/                \n"
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Mesh parameters (Un-partitioned) -------                                             \n"
-<<"//==============================================================================                \n";
+writemeshParameters<<
+"/************************ LinearFormBuilderAndSolver **************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"										\n";
+
+writemeshParameters<<
+"                                                                               \n"
+"//=============================================================================\n"
+"// ------- Mesh parameters (Un-partitioned) -------                            \n"
+"//=============================================================================\n";
 
 
-if(!nonlinear)if(!dynamic)if(!quasistatic)if(!soildynamics)writemeshParameters
-<<"                                                                                                \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name                                  \n";
+if(Prblm=="linear-elasticity")
+ writemeshParameters<<
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name                \n";
 
-if(nonlinear)if(!dynamic)writemeshParameters
-<<"                                                                                                \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name                         \n";
+if(Prblm=="damage" && Model=="hybrid-phase-field")
+ writemeshParameters<<
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name       \n";
 
-if(dynamic)writemeshParameters
-<<"                                                                                                \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\"; // Mesh  name                           \n";
+if(Prblm=="elastodynamics")
+ writemeshParameters<<
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\"; // Mesh  name         \n";
 
-if(quasistatic)writemeshParameters
-<<"                                                                                                \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name                           \n";
+if(Prblm=="damage" && Model=="Mazar")
+ writemeshParameters<<
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name         \n";
 
-if(soildynamics)writemeshParameters
-<<"                                                                                                \n"
-<<"  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name                            \n";
+if(Prblm=="soildynamics")
+ writemeshParameters<<
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name          \n";
 
-if(!nonlinear)if(!dynamic)if(!quasistatic)if(!soildynamics){writemeshParameters
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Material parameters -------                                                          \n"
-<<"//==============================================================================                \n"
-<<"                                                                                                \n";
 
-if(fastmethod)writemeshParameters
-<<"  real    mu                        // Lame parameter                                           \n"
-<<"         ,lambda;                   // Lame parameter                                           \n"
-<<"                                                                                                \n"
-<<"{                                                                                               \n"
-<<"  real E  = 200.e9  ,                // Modulus of Elasticity - [Pa]                            \n"
-<<"       nu = 0.3     ;                // Poisson ratio - [-]                                     \n"
-<<"                                                                                                \n"
-<<"  mu     = E/(2.*(1.+nu))            ;                                                          \n"
-<<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                                          \n"
-<<"}                                                                                               \n";
 
-if(!fastmethod){writemeshParameters
-<<"                                                                                                \n"
-<<"  real a1,a2,a3        ;                // Building material tensor                             \n"
-<<"{                                                                                               \n"
-<<"  real E  = 200.e9     ,                // Modulus of Elasticity - [Pa]                         \n"
-<<"       nu = 0.3        ;                // Poisson ratio - [-]                                  \n"
-<<"                                                                                                \n"
-<<"       a1 = E*(1.-nu)/((1.+nu)*(1.-2.*nu))   ;                                                  \n"
-<<"       a2 = a1*nu/(1.-nu)                    ;                                                  \n"
-<<"       a3 = E/(2*(1.+nu))                    ;                                                  \n"
-<<"}                                                                                               \n";
 
-if(spc==2)writemeshParameters
-<<"                                                                                                \n"
-<<"  macro Mt   [[ a1 ,  a2 , 0 ],                                                                 \n"
-<<"              [ a2 ,  a1 , 0 ],                                                                 \n"
-<<"              [ 0  ,  0  , a3]]               // Material tensor                                \n";
+if(Prblm=="linear-elasticity")
+ {
+ writemeshParameters<<
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Material parameters -------                                         \n"
+ "//=============================================================================\n"
+ "                                                                               \n";
+
+ if(fastmethod)
+  writemeshParameters<<
+  "  real    mu                        // Lame parameter                         \n"
+  "         ,lambda;                   // Lame parameter                         \n"
+  "                                                                              \n"
+  "{                                                                             \n"
+  "  real E  = 200.e9  ,                // Modulus of Elasticity - [Pa]          \n"
+  "       nu = 0.3     ;                // Poisson ratio - [-]                   \n"
+  "                                                                              \n"
+  "  mu     = E/(2.*(1.+nu))            ;                                        \n"
+  "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
+  "}                                                                             \n";
+
+ if(!fastmethod)
+  {
+  writemeshParameters<<
+  "                                                                              \n"
+  "  real a1,a2,a3        ;                // Building material tensor           \n"
+  "{                                                                             \n"
+  "  real E  = 200.e9     ,                // Modulus of Elasticity - [Pa]       \n"
+  "       nu = 0.3        ;                // Poisson ratio - [-]                \n"
+  "                                                                              \n"
+  "       a1 = E*(1.-nu)/((1.+nu)*(1.-2.*nu))   ;                                \n"
+  "       a2 = a1*nu/(1.-nu)                    ;                                \n"
+  "       a3 = E/(2*(1.+nu))                    ;                                \n"
+  "}                                                                             \n";
+
+ if(spc==2)
+  writemeshParameters<<
+  "                                                                              \n"
+  "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
+  "              [ a2 ,  a1 , 0 ],                                               \n"
+  "              [ 0  ,  0  , a3]]               // Material tensor              \n";
  
-if(spc==3)writemeshParameters
-<<"                                                                                                \n"
-<<"  macro Mt   [[ a1 ,  a2 , a2 , 0  , 0  , 0 ],                                                  \n"
-<<"              [ a2 ,  a1 , a2 , 0  , 0  , 0 ],                                                  \n"
-<<"              [ a2 ,  a2 , a1 , 0  , 0  , 0 ],                                                  \n"
-<<"              [ 0  ,  0  , 0  , a3 , 0  , 0 ],                                                  \n"
-<<"              [ 0  ,  0  , 0  , 0  , a3 , 0 ],                                                  \n"
-<<"              [ 0  ,  0  , 0  , 0  , 0  , a3]]// Material tensor                                \n";
-}}
-
-if(quasistatic)writemeshParameters
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Material parameters -------                                                          \n"
-<<"//==============================================================================                \n"
-<<"                                                                                                \n"
-<<"  real    mu                        // Lame parameter                                           \n"
-<<"         ,lambda                    // Lame parameter                                           \n"
-<<"         ,kappa0 = 1.e-4            // Damage initiation threshold                              \n"
-<<"         ,kappac = 1.e-3            // Critical strain level                                    \n"
-<<"         ;                                                                                      \n"
-<<"                                                                                                \n"
-<<"{                                                                                               \n"
-<<"  real E  = 100.e6  ,              // Modulus of Elasticity - [Pa]                              \n"
-<<"       nu = 0.2     ;              // Poisson ratio - [-]                                       \n"
-<<"                                                                                                \n"
-<<"  mu     = E/(2.*(1.+nu))            ;                                                          \n"
-<<"  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                                          \n"
-<<"}                                                                                               \n"
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Solver parameters -------                                                            \n"
-<<"//==============================================================================                \n"
-<<"                                                                                                \n"
-<<"  real tol      = 1.e-5 ;          // Tolerance of the NR procedure                             \n"
-<<"                                                                                                \n"
-<<"  int npas      = 2000  ,          // # of pseudo-time steps                                    \n"
-<<"      iterMaxNR = 10    ;          // Max # of iterations for the NR loop                       \n"
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Loading parameters -------                                                           \n"
-<<"//==============================================================================                \n"
-<<"  real Duimp = 2.e-7,              // Imposed displacement variation                            \n"
-<<"       duimp        ;              // Dummy Imposed displacement variation                      \n";
-
-
-if(nonlinear){writemeshParameters
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Material parameters -------                                                          \n"
-<<"//==============================================================================                \n"
-<<"                                                                                                \n"
-<<"  real lambda = 121.15e3 ,                                                                      \n"
-<<"       mu     = 80.77e3  ;                                                                      \n"
-<<"                                                                                                \n"
-<<"//==============================================================================                \n"
-<<"// ------- Nonlinear parameters -------                                                         \n"
-<<"//==============================================================================                \n"
-<<"                                                                                                \n"
-<<"  real Gc    = 2.7  ,                                                                           \n"
-<<"       lfac  = 2.0  ,                                                                           \n"
-<<"       maxtr = 7e-3 ,                                                                           \n"
-<<"       tr    = 1e-5 ,                                                                           \n"
-<<"       dtr   = 1e-5 ,                                                                           \n"
-<<"       lo           ;        // Calculated in OtherParameters.edp                               \n";
-}
+ if(spc==3)
+  writemeshParameters<<
+  "                                                                              \n"
+  "  macro Mt   [[ a1 ,  a2 , a2 , 0  , 0  , 0 ],                                \n"
+  "              [ a2 ,  a1 , a2 , 0  , 0  , 0 ],                                \n"
+  "              [ a2 ,  a2 , a1 , 0  , 0  , 0 ],                                \n"
+  "              [ 0  ,  0  , 0  , a3 , 0  , 0 ],                                \n"
+  "              [ 0  ,  0  , 0  , 0  , a3 , 0 ],                                \n"
+  "              [ 0  ,  0  , 0  , 0  , 0  , a3]]// Material tensor              \n";
+  }
+ }
 
 
 
-if(dynamic){writemeshParameters
+
+if(Prblm=="damage")
+ {
+ writemeshParameters<<
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Material parameters -------                                         \n"
+ "//=============================================================================\n";
+
+ if(Model=="Mazar")
+  writemeshParameters<<
+  "                                                                              \n"
+  "  real    mu                        // Lame parameter                         \n"
+  "         ,lambda                    // Lame parameter                         \n"
+  "         ,kappa0 = 1.e-4            // Damage initiation threshold            \n"
+  "         ,kappac = 1.e-3            // Critical strain level                  \n"
+  "         ;                                                                    \n"
+  "                                                                              \n"
+  "{                                                                             \n"
+  "  real E  = 100.e6  ,              // Modulus of Elasticity - [Pa]            \n"
+  "       nu = 0.2     ;              // Poisson ratio - [-]                     \n"
+  "                                                                              \n"
+  "  mu     = E/(2.*(1.+nu))            ;                                        \n"
+  "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
+  "}                                                                             \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Solver parameters -------                                          \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  real tol      = 1.e-5 ;          // Tolerance of the NR procedure           \n"
+  "                                                                              \n"
+  "  int npas      = 2000  ,          // # of pseudo-time steps                  \n"
+  "      iterMaxNR = 10    ;          // Max # of iterations for the NR loop     \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Loading parameters -------                                         \n"
+  "//============================================================================\n"
+  "  real Duimp = 2.e-7,              // Imposed displacement variation          \n"
+  "       duimp        ;              // Dummy Imposed displacement variation    \n";
+
+
+ if(Model=="hybrid-phase-field")
+  writemeshParameters<<
+  "                                                                              \n"
+  "  real lambda = 121.15e3 ,                                                    \n"
+  "       mu     = 80.77e3  ;                                                    \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Nonlinear parameters -------                                       \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  real Gc    = 2.7  ,                                                         \n"
+  "       lfac  = 2.0  ,                                                         \n"
+  "       maxtr = 7e-3 ,                                                         \n"
+  "       tr    = 1e-5 ,                                                         \n"
+  "       dtr   = 1e-5 ,                                                         \n"
+  "       lo           ;        // Calculated in OtherParameters.edp             \n";
+
+ }
+
+
+
+if(Prblm=="elastodynamics"){writemeshParameters
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// ------- Material parameters -------                                                          \n"
@@ -198,7 +222,6 @@ if(TimeDiscretization=="central-difference")writemeshParameters
 <<"       gamma = 0.5 ;                                                                            \n"
 <<"                                                                                                \n";
 
-
 if(TimeDiscretization=="hht-alpha")writemeshParameters
 <<"  real rho  = 1.0  ,                                                                            \n"
 <<"       etam = 0.01 ,                                                                            \n"
@@ -215,7 +238,7 @@ if(TimeDiscretization=="hht-alpha")writemeshParameters
 }
 
 
-if(soildynamics){writemeshParameters
+if(Prblm=="soildynamics"){writemeshParameters
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// ------- Soil parameters -------                                                              \n"
@@ -303,7 +326,7 @@ writemeshParameters
 <<"                                                                                                \n";
 }
 
-if(dirichletconditions>=1)if(!quasistatic)if(!soildynamics){writemeshParameters
+if(dirichletconditions>=1)if(!soildynamics){writemeshParameters
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// -------Dirichlet boundary-condition parameters-------                                        \n"
@@ -421,7 +444,7 @@ writemeshParameters
 
 }
 
-if(dynamic)writemeshParameters
+if(Prblm=="elastodynamics")writemeshParameters
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// ------- Neumann boundary-condition parameters -------                                        \n"

@@ -28,26 +28,34 @@ if(!Sequential)writemacros
 <<"  macro partitioner "<<Partitioner<<"\t\t	// Mesh partitioner used   	   \n"
 <<"  macro dimension 2      			// Two-dimensional problem 	   \n";
 
-if(vectorial)if(nonlinear)writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")writemacros
 <<"  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space  	   \n"
 <<"  macro def  (i) [ i , i#1, i#2 ]		// Vect. field definition  	   \n"
 <<"  macro init (i) [ i ,  i ,  i  ]		// Vect. field initialize  	   \n";
 
-if(vectorial)if(nonlinear)if(plotAll || debug)writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(plotAll || debug)writemacros
 <<"  macro Pltk         P1             		// FE space	   	 	   \n"
 <<"  macro def0 (i)  	 i 			// Vect. field definition  	   \n";
 
-if(quasistatic)if(useGFP)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemacros
 <<"  macro Sk           [ P0, P0 , P0  ]            // Third order strain vector   \n"
 <<"  macro defStrain(i) [ i , i#1, i#2 ]            // Vect. field definition  	   \n";
 
 if(!vectorial){writemacros
 <<"  macro Pk       [ P"<<lag<<", P"<<lag<<"  ]\t\t    // Finite element space	   \n";
 
-if(!nonlinear)writemacros
+if(Prblm!="damage")writemacros
 <<"  macro def  (i) [ i , i#1 ]                // Vect. field definition  	   \n";
 
-if(!nonlinear)if(!Sequential)writemacros
+if(Prblm!="damage")if(!Sequential)writemacros
+<<"  macro init (i) [ i ,  i  ]                // Vect. field initialize  	   \n"
+<<"										   \n";
+
+if(Prblm=="damage" && Model=="Mazar")writemacros
+<<"  macro def  (i) [ i , i#1 ]                // Vect. field definition  	   \n";
+
+if(Prblm=="damage" && Model=="Mazar")if(!Sequential)writemacros
 <<"  macro init (i) [ i ,  i  ]                // Vect. field initialize  	   \n"
 <<"										   \n";
 
@@ -61,7 +69,7 @@ writemacros
 <<"  macro epsilon(i) [dx(i), dy(i#1),						   \n" 
 <<"                   (dy(i)+dx(i#1))/sqrt(2.0)]	// Strain definition	   \n";
 
-if(nonlinear)if(!vectorial)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
 <<"										   \n"
 <<"//---------------------------Non-linear macros--------------------------------//\n"
 <<"										   \n"
@@ -71,7 +79,7 @@ if(nonlinear)if(!vectorial)writemacros
 <<"  macro init  (i)     i					// Initialize  	   \n"
 <<"  macro Zk            P1            				// FE space	   \n";
 
-if(nonlinear)if(!energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
@@ -91,7 +99,7 @@ if(nonlinear)if(!energydecomp)writemacros
 
 
 /************************OLD METHOD*************************************************
-if(nonlinear)if(energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){				   \n"
@@ -125,7 +133,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<"  }//									   \n"
 /************************OLD METHOD*************************************************/
 
-if(nonlinear)if(energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
@@ -141,7 +149,7 @@ if(nonlinear)if(energydecomp)writemacros
 <<"  }//									   \n" 
 <<"										   \n";
 
-if(quasistatic)writemacros
+if(Prblm=="damage" && Model=="Mazar")writemacros
 <<"										   \n"
 <<"//-----------------------Stess calculation macro------------------------------//\n"
 <<"										   \n"
@@ -176,27 +184,36 @@ if(!Sequential)writemacros
 <<"  macro partitioner "<<Partitioner<<"\t		// Mesh partitioner used   \n"
 <<"  macro dimension   3				// Three-D problem	   \n";
 
-if(vectorial)if(nonlinear)writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")writemacros
 <<"  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space       \n"
 <<"  macro def  (i) [ i , i#1, i#2, i#3 ]		// Vect. field definition  \n"
 <<"  macro init (i) [ i ,  i ,  i,  i  ]		// Vect. field initialize  \n";
 
-if(vectorial)if(nonlinear)if(plotAll || debug)writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(plotAll || debug)writemacros
 <<"  macro Pltk         P1             		// FE space	   	 	   \n"
 <<"  macro def0 (i)  	 i 			// Vect. field definition  	   \n";
 
-if(quasistatic)if(useGFP)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemacros
 <<"  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector	   \n"
 <<"  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition       \n";
 
 if(!vectorial){writemacros
 <<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]\t\t	// Finite element space	   \n";
 
-if(!nonlinear)writemacros
+if(Prblm!="damage")writemacros
 <<"										   \n"
 <<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n";
 
-if(!nonlinear)if(!Sequential)writemacros
+if(Prblm!="damage")if(!Sequential)writemacros
+<<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
+<<"										   \n";
+
+if(Prblm=="damage" && Model=="Mazar")writemacros
+<<"										   \n"
+<<"  macro def(i)  [i, i#1, i#2]			// Vect. field definition  \n";
+
+if(Prblm=="damage" && Model=="Mazar")if(!Sequential)writemacros
 <<"  macro init(i) [i,   i,   i]			// Vect. field initialize  \n"
 <<"										   \n";
 
@@ -213,7 +230,7 @@ writemacros
 <<"                       (dy( i ) + dx(i#1))/sqrt(2.0)]	// Strain macro    \n"
 <<"										   \n";
 
-if(nonlinear)if(!vectorial)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
 <<"										   \n"
 <<"//---------------------------Non-linear macros--------------------------------//\n"
 <<"										   \n"
@@ -224,7 +241,7 @@ if(nonlinear)if(!vectorial)writemacros
 <<"  macro Zk            P1            				// FE space	   \n";
 
 
-if(nonlinear)if(!energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
@@ -253,7 +270,7 @@ if(nonlinear)if(!energydecomp)writemacros
 <<"                  )                                           // Hplus   	   \n"
 <<"										   \n";
 
-if(quasistatic)writemacros
+if(Prblm=="damage" && Model=="Mazar")writemacros
 <<"										   \n"
 <<"//-----------------------Stess calculation macro------------------------------//\n"
 <<"										   \n"
@@ -268,7 +285,7 @@ if(quasistatic)writemacros
 <<"  ]//		 	 						   \n"
 <<"										   \n";
 
-if(nonlinear)if(energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"										   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"										   \n"
@@ -398,7 +415,7 @@ if(Sequential)writemacros
 } //-- [if loop terminator] timelog ended --//
 
 
-if(dynamic || soildynamics)if(!useGFP)writemacros
+if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)writemacros
 <<"										   \n"
 <<"//------------------------------update macros---------------------------------//\n"
 <<"										   \n"
@@ -418,7 +435,7 @@ if(dynamic || soildynamics)if(!useGFP)writemacros
 <<"										   \n";
 
 
-if(soildynamics){writemacros
+if(Prblm=="soildynamics"){writemacros
 <<"										   \n"
 <<"//----------------------Paraxial rotation macro-------------------------------//\n"
 <<"										   \n";
