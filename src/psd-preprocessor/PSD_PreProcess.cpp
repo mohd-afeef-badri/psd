@@ -26,6 +26,8 @@
 
   -tractionconditions       [int]  Number of Neumann/traction boundrie.  Default 1.
 
+  -parmetis_worker          [int]  Active when mesh partitioner is parmetis.
+
   -dimension                [int]  Dimension of proble. 2 for 2D 3 for 3D. Default 2.
   
   -lagrange                 [int]  Lagrange order used for building FE space. Options 
@@ -33,12 +35,12 @@
   
   -------------------------------------------------------------------------------------
 
-  -partitioner    [sting] Mesh partitioner to be used. Options are "metis"
-  			  "parmetis" "scotch" or "ptstoch".
-  			
-  -partitioner parmetis   Mesh partitioner is parmetis. Additional option is 
-  			  active '-parmetis_worker [int]'.			
- 
+  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons. 			
+
+  -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
+
+  -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
+  			      
   -------------------------------------------------------------------------------------
  			  
   -help        [bool]     To activate helping message on the terminal. Default OFF. 
@@ -127,48 +129,6 @@ int main(int argc, char *argv[]){
   string NonLinearMethod         = "Picard";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized-alpha";
-
-
-/*
-
-  string Solver=getARGV("-solver", "cg"); 
-  string PostProcess=getARGV("-postprocess", "u"); 
-  string Partitioner=getARGV("-partitioner", "parmetis");
-  string Preconditioner=getARGV("-preconditioner", "jacobi");
-  string SubPreconditioner=getARGV("-subpreconditioner", "ilu");
-  string TimeDiscretization=getARGV("-timediscretization", "generalized-alpha");
-  
-  
-  bool RCM          =  usedARGV("-useRCM"       ) !=  1;
-  bool help         =  usedARGV("-help"         ) != -1;
-  bool debug        =  usedARGV("-debug"        ) != -1;
-  bool useGFP       =  usedARGV("-useGFP"       ) != -1;  
-  bool plotAll      =  usedARGV("-plot"         ) != -1;
-  bool dynamic      =  usedARGV("-dynamic"      ) != -1;    
-  bool pipegnu      =  usedARGV("-pipegnu"      ) != -1;
-  bool plotTime     =  usedARGV("-timepvd"      ) != -1;
-  bool pointbc      =  usedARGV("-pointbc"      ) != -1;
-  bool timelog      =  usedARGV("-timelog"      ) != -1;
-  bool vectorial    =  usedARGV("-vectorial"    ) != -1;  
-  bool bodyforce    =  usedARGV("-bodyforce"    ) != -1;
-  bool nonlinear    =  usedARGV("-nonlinear"    ) != -1; 
-  bool elasticity   =  usedARGV("-Lelasticty"   ) != -1;            
-  bool supercomp    =  usedARGV("-supercomp"    ) != -1;       
-  bool tractionbc   =  usedARGV("-tractionbc"   ) != -1; 
-  bool fastmethod   =  usedARGV("-fastmethod"   ) != -1;       
-  bool Sequential   =  usedARGV("-sequential"   ) != -1;
-  bool quasistatic  =  usedARGV("-quasistatic"  ) != -1;
-  bool dirichletbc  =  usedARGV("-dirichletbc"  ) !=  1;
-  bool energydecomp =  usedARGV("-energydecomp" ) != -1;  
-  bool soildynamics =  usedARGV("-soildynamics" ) != -1;
-
-
-  int dirichletpointconditions = getARGV("-dirichletpointconditions", 0);
-  int dirichletconditions      = getARGV("-dirichletconditions", 1);
-  int tractionconditions       = getARGV("-tractionconditions" , 0);
-  int spc                      = getARGV("-dimension", 2);
-  int lag                      = getARGV("-lagrange" , 1);
-*/
 
 //=====================================================================================
 //---- Comandline Parameters -----
