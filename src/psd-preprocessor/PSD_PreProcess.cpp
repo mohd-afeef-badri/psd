@@ -3,13 +3,24 @@
 * Author:  Mohd Afeef BADRI                                                           *
 * Date:	   20/04/2020                                                                 *
 * Type:    Execution file                                                             *
+*                                                                                     *
 * Comment: Once executed this file generates following edp files: Main, Macros, Mesh, *
 *          MeshPartitioning,   VariationalFormulations,   BoundaryAndSourceConditions *
 *          Parameters,  LinearFormBuilderAndSolver, and PostProcessor. All these .edp * 
 *          files combine  together to form  a fully tailored  solid mechanics solver. *
 *	   Commandline flags  are  used to controls the nature of the generated file. *
 *          One   is    advised     to   carefully   go   through   these   arguments. *
+*                                                                                     *
 * Compile: Use a g++/icpc compiler C++ compiler                                       *
+*                                                                                     *
+**************************************************************************************/
+
+/**************************************************************************************
+*                              ___               __                                   *
+*                            / __ \   _____   __/  /                                  *
+*                           / /_/ /  / ___/ / __  /                                   * 
+*                          / ___ /  (__  ) / /_/ /                                    *
+*                         /_/      /____/  \___ /                                     *
 *                                                                                     *
 **************************************************************************************/
 

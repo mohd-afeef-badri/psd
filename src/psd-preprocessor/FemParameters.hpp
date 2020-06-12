@@ -6,17 +6,16 @@ cout << " building FemParameters.edp";
 
 {ofstream  writFemParameters("FemParameters.edp");
 
-writFemParameters
-<<"										   \n"
-<<"/***********************************Parameters**********************************\n"
-<<"*                                                                              *\n"
-<<"* Note!!! This file is  generated  by running SolverGenerator.edp. Do not edit *\n"
-<<"*         in order to  control this  file please change flag arguments of  the *\n"
-<<"*         SolverGenerator, details of which are present in SolverGenerator.edp *\n"
-<<"*         or in the README.MD file.                                            *\n"
-<<"*                                                                              *\n"
-<<"*******************************************************************************/\n"
-<<"										   \n";
+writFemParameters<<
+"/****************************** FemParameters *********************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"										\n";
 
 if(Prblm=="linear-elasticity")writFemParameters
 <<"										   \n"

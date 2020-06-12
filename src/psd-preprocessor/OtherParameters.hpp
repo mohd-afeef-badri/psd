@@ -6,17 +6,16 @@ cout << " building OtherParameters.edp";
 
 {ofstream  writemeshParameters("OtherParameters.edp");
 
-writemeshParameters
-<<"                                                                                                \n"
-<<"/**************************Variational formulation******************************                \n"
-<<"*                                                                              *                \n"
-<<"* Note!!! This file is  generated  by  running  PSD PreProcessor  Do  not edit *                \n"
-<<"*         in order to  control this  file please change flag arguments of  the *                \n"
-<<"*         PSD_PreProcess, details of which are present in PSD_PreProcess or in *                \n"
-<<"*         the README.MD file.                                                  *                \n"
-<<"*                                                                              *                \n"
-<<"*******************************************************************************/                \n"
-<<"										   \n";
+writemeshParameters<<
+"/***************************** OtherParameters ********************************\n"
+"*                                                                             *\n"
+"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
+"*         in order to  control this file please change flag arguments of  the *\n"
+"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
+"*         -help or read the PSD manual.                                       *\n"
+"*                                                                             *\n"
+"******************************************************************************/\n"
+"										\n";
 
 
 if(timelog)writemeshParameters
