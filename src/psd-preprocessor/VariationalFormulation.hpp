@@ -733,7 +733,7 @@ if(dirichletbc)if(spc==3)writevarfmatsolve
 <<"    + on(2, du=duimp)                                                                           \n"
 <<"    + on(1, du=0    )                                                                           \n"
 <<"    + on(4, du1=0   )                                                                           \n"
-<<"    + on(5, du2=0   ) ;                                                                         \n";
+<<"    + on(5, du2=0   )                                                                           \n";
 
 if(dirichletbc)if(spc==2)writevarfmatsolve
 <<"                                                                                                \n"
@@ -742,7 +742,11 @@ if(dirichletbc)if(spc==2)writevarfmatsolve
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    + on(4, du=duimp)                                                                           \n"
 <<"    + on(2, du=0    )                                                                           \n"
-<<"    + on(5, du1=0   ) ;                                                                         \n";
+<<"    + on(5, du1=0   )                                                                           \n";
+
+writevarfmatsolve
+<<";                                                                                               \n" 
+<<"                                                                                                \n";
 
 }  //-- [if loop terminator] dquasistatic ended --//
 
