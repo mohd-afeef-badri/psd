@@ -37,7 +37,7 @@ autoreconf -i
 ./configure 
 ```
 *Note*:   `./configure` will install PSD in `$HOME/PSD` to change this directory use `--prefix=Your/Own/Path` with `./configure`. 
-*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages intalled in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
 ```
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
 ```
@@ -90,7 +90,7 @@ Now that the mesh has been loaded. Its time to set up the solver. Open the `term
 
 Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal.
 
-For example to generate a sequential 2D elasticity solver for a ploblem with body force and one Dirichlet border use
+For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
 ```
 /PSD_PreProcess -dimension 2 -bodyforce -dirichletconditions 1

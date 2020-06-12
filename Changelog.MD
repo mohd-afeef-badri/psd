@@ -3,7 +3,7 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
-- New preproceeing via C++, PSD_PreProcess binary.
+- New preprocessing via C++, PSD_PreProcess binary.
 - New examples of using the solver.
 - New time discretization option `-timediscretization`.
 - Automatic identification of FreeFEM and Gmsh during `./configure`.
