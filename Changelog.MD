@@ -35,7 +35,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Changed
 - Moved to FreeFEM 4.4.2.
 - Moved to PETSc 13.12.
-- New simpler way of ploting `savevtk` in parallel with `append` flag for iterative solutions.
+- New simpler way of plotting `savevtk` in parallel with `append` flag for iterative solutions.
 - VTU files get stored with a date and time stamp.
 - New way of maintaining a logfile for all simulations (date,time,case,..) in `simulation-log.csv`.
 

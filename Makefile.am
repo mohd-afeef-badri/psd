@@ -102,7 +102,7 @@ install-Super-Comp:
 check: 				
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Sequential/Paralle 2D/3D under gravitation body force        "
+	@echo " Sequential/Paralle 2D/3D linear-elasticity                   "
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \

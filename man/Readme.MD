@@ -18,7 +18,7 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 - [FreeFEM](https://freefem.org/)
 - [PETSc](https://www.mcs.anl.gov/petsc/)      (optional)
 - [Gmsh](http://gmsh.info/)
-	 [gnuplot](http://www.gnuplot.info/)	(optional)
+- [gnuplot](http://www.gnuplot.info/)	(optional)
 - [C++](http://www.cplusplus.com/)
 - [git](https://git-scm.com/)
 
