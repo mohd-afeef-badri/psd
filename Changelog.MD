@@ -3,18 +3,24 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
-- New preprocessing via C++, PSD_PreProcess binary.
+- New preproceeing via C++, PSD_PreProcess binary (MAJOR CHANGE).
 - New examples of using the solver.
+- New Pdf documentation.
+- New option `-nonlinearmethod` (Picard|Newton-Raphsons).
 - New time discretization option `-timediscretization`.
+- New point boundary conditions.
+- New dummy city mesh and analysis 2D for soil dynamics. 
 - Automatic identification of FreeFEM and Gmsh during `./configure`.
 - New flags for `--with-FreeFEM=` and `--with-Gmsh=` during `./configure`.
 - New flag `-problem` linear-elasticity|damage|elastodynamics|soildynamics to define physics.
 - New flag `-model` to set approximation for damage mechanics hybrid-phase-field|Mazar.
+- Better energy splitting included Hybrib phase-field compressibility vs tensile enery condition.
 
 ### Changed
 - Moved to FreeFEM 4.6.
 - Moved to PETSc 13.13.
 - Moved to C++ for preprocessing.
+- Chnages to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.
 
 ### Removed
 - No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.
