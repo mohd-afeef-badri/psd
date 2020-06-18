@@ -1,36 +1,31 @@
-/****************************************************************************/
-/* This file is part of FreeFem++.                                          */
-/*                                                                          */
-/* FreeFem++ is free software: you can redistribute it and/or modify        */
-/* it under the terms of the GNU Lesser General Public License as           */
-/* published by the Free Software Foundation, either version 3 of           */
-/* the License, or (at your option) any later version.                      */
-/*                                                                          */
-/* FreeFem++ is distributed in the hope that it will be useful,             */
-/* but WITHOUT ANY WARRANTY; without even the implied warranty of           */
-/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            */
-/* GNU Lesser General Public License for more details.                      */
-/*                                                                          */
-/* You should have received a copy of the GNU Lesser General Public License */
-/* along with FreeFem++. If not, see <http://www.gnu.org/licenses/>.        */
-/****************************************************************************/
+/*****************************************************************************
 
-// SUMMARY : GoFastPlugins.cpp contains plugins to perform fast computations
-// LICENSE : LGPLv3
-// ORG     : CEA, Saclay, FRANCE
-// AUTHORS : Mohf Afeef BADRI
-// E-MAIL  : afeef.badri@gmail.com
-//-- GoFastPlugins for FreeFem++ --//
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@hotmail.com
+     Date     : 2018‑05‑29
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve 
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope 
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even  
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/
+
 
 #include <iostream>
 #include <math.h>
-
 #include "ff++.hpp"
 #include "RNM.hpp"
 #include "AFunction.hpp"
 #include "AFunction_ext.hpp"
-using namespace Fem2D;
 
+using namespace Fem2D;
 using namespace std;
 
 #ifdef __LP64__
@@ -369,6 +364,7 @@ AnyType DecompEnergy_Op<K>::operator()(Stack stack) const {
     dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
     lw = w[0];
     w.resize(lw);
+	        
 	    
     for(int j = 0; j < in1->n; ++j){
         out1->operator[](j) = max(0.,double(in1->operator[](j)+in2->operator[](j)));
@@ -388,10 +384,206 @@ AnyType DecompEnergy_Op<K>::operator()(Stack stack) const {
         out2->operator[](j) += muw*(d1*d1 + d2*d2);
         out3->operator[](j) = max(out3->operator[](j),out1->operator[](j));
         out4->operator[](j) = min(out4->operator[](j),out2->operator[](j));
-     }     
+     }
+          
     return 0L;
 }
 
+
+//=============================================================================
+// ------- class for 2D/3D energy splitting function ---------
+//=============================================================================
+template<class K>
+class SplitEnergy_Op : public E_F0mps {
+    public:
+        Expression epsilon	  ;          // Input 1 : strain vector
+        Expression psiPlus		;          // Input 2 : tensile energy     
+        Expression psiMinus		;          // Input 3 : compressible energy             
+        Expression HPlus			;          // Input 4 : historic max of Input 2
+        Expression HMinus			;          // Input 5 : historic min of Input 3
+        Expression constants	;          // Input 6 : Lambda and mu as vector 
+              
+        static const int n_name_param = 0		;
+        static basicAC_F0::name_and_type name_param[]	;
+        Expression nargs[n_name_param]			;
+        
+        SplitEnergy_Op(const basicAC_F0& args		, 
+        		Expression param1		, 
+        		Expression param2		, 
+        		Expression param3		, 
+        		Expression param4		,
+        		Expression param5		,
+        		Expression param6		       		        				        		        		
+        		) : 
+        		epsilon     (param1)			, 
+        		psiPlus     (param2)			, 
+        		psiMinus    (param3)			,  
+        		HPlus       (param4)			,
+        		HMinus      (param5)			, 
+        		constants   (param6)			        		        				        		        		 
+        		{
+            		args.SetNameParam(n_name_param	, 
+            				  name_param	, 
+            				  nargs
+            				  )		;
+        		}
+        		
+        AnyType operator()(Stack stack) const		;
+};
+
+template<class K>
+basicAC_F0::name_and_type SplitEnergy_Op<K>::name_param[] = { };
+
+template<class K>
+class SplitEnergy : public OneOperator {
+    public:
+        SplitEnergy() : OneOperator(atype<long>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()	, 
+        			     atype<KN<K>*>()  ,
+        			     atype<KN<K>*>()  ,
+        			     atype<KN<K>*>()  ,
+        			     atype<KN<K>*>() 	
+        			     ) {}
+
+        E_F0* code(const basicAC_F0& args) const {
+            return new SplitEnergy_Op<K>(args, 
+            				  t[0]->CastTo(args[0]), 
+            				  t[1]->CastTo(args[1]), 
+            				  t[2]->CastTo(args[2]), 
+            				  t[3]->CastTo(args[3]),
+            				  t[4]->CastTo(args[4]),
+            				  t[5]->CastTo(args[5])           				              				  
+            				  );
+        }
+};
+
+template<class K>
+AnyType SplitEnergy_Op<K>::operator()(Stack stack) const {
+    KN<K>* Eps    = GetAny<KN<K>*>((*epsilon)(stack))		;
+    KN<K>* pPlus  = GetAny<KN<K>*>((*psiPlus)(stack))		;
+    KN<K>* pMinus = GetAny<KN<K>*>((*psiMinus)(stack))  ;
+    KN<K>* Hp     = GetAny<KN<K>*>((*HPlus)(stack))		  ;
+    KN<K>* Hm     = GetAny<KN<K>*>((*HMinus)(stack))		;
+    KN<K>* Prpty  = GetAny<KN<K>*>((*constants)(stack))	; 
+
+    // Extract Lambda & mu from property vector
+    double lambda = Prpty->operator[](0);
+    double mu     = Prpty->operator[](1); 
+       
+    // Get dimension of the problem 2 or 3 
+    int problemDimension = Eps->n/Hp->n;
+    problemDimension = problemDimension/3 + 1;
+    
+    KNM<double> Amat(problemDimension,problemDimension);
+    KN<double>  eval(problemDimension);
+
+    intblas n = problemDimension;
+    char JOBZ = 'N', UPLO = 'U';
+    intblas info, lw = -1;
+    KN<double> w(1);
+    dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+    lw = w[0];
+    w.resize(lw);
+
+    int    probDimP1   = problemDimension + 1;
+	   
+    if(problemDimension==2)
+	    {
+	    double d1,d2;      
+	    	  
+	    int indexEx, 
+	        indexEy, 
+	        indexExy; 
+	        
+      for(int j = 0; j < pPlus->n; ++j)
+       {
+        
+        indexEx  = j*probDimP1;
+        indexEy  = indexEx + 1;
+        indexExy = indexEx + 2;
+
+        pPlus->operator[](j) = max(0.,double(Eps->operator[](indexEx)+Eps->operator[](indexEy)));
+        pPlus->operator[](j) = 0.5*lambda*pPlus->operator[](j)*pPlus->operator[](j);
+                
+        pMinus->operator[](j) = min(0.,double(Eps->operator[](indexEx)+Eps->operator[](indexEy)));
+        pMinus->operator[](j) = 0.5*lambda*pMinus->operator[](j)*pMinus->operator[](j);        
+               
+        Amat(0,0)=Eps->operator[](indexEx); 
+        Amat(0,1)=Eps->operator[](indexExy);
+        Amat(1,1)=Eps->operator[](indexEy);
+        
+	      dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+
+        d1=max(0.,eval[0]);
+        d2=max(0.,eval[1]);
+        pPlus->operator[](j) += mu*(d1*d1 + d2*d2);
+        
+        d1=min(0.,eval[0]);
+        d2=min(0.,eval[1]);
+        pMinus->operator[](j) += mu*(d1*d1 + d2*d2);
+        
+        Hp->operator[](j) = max(Hp->operator[](j),pPlus->operator[](j));
+        Hm->operator[](j) = min(Hm->operator[](j),pMinus->operator[](j));         
+       }
+      }
+    
+    if(problemDimension==3)
+	    {  
+	    double d1,d2,d3;
+	    int indexEx, 
+	        indexEy, 
+	        indexEz,
+	        indexExy, 
+	        indexExz, 	        	         
+	        indexEyz; 
+      for(int j = 0; j < pPlus->n; ++j)
+       {
+  
+	      indexEx  = j*probDimP1; 
+	      indexEy  = indexEx + 1;  
+	      indexEz  = indexEx + 2; 
+	      indexExy = indexEx + 3;
+	      indexExz = indexEx + 4; 	        	         
+	      indexEyz = indexEx + 5; 
+	        
+	                        
+        pPlus->operator[](j) = max(0.,double(Eps->operator[](indexEx)+Eps->operator[](indexEy)+Eps->operator[](indexEz)));
+        pPlus->operator[](j) = 0.5*lambda*pPlus->operator[](j)*pPlus->operator[](j);
+
+        pMinus->operator[](j) = min(0.,double(Eps->operator[](indexEx)+Eps->operator[](indexEy)+Eps->operator[](indexEz)));
+        pMinus->operator[](j) = 0.5*lambda*pMinus->operator[](j)*pMinus->operator[](j);
+        
+        Amat(0,0)=Eps->operator[](indexEx); 
+        Amat(1,1)=Eps->operator[](indexEy);
+        Amat(2,2)=Eps->operator[](indexEz);
+        Amat(0,1)=Eps->operator[](indexExy);
+        Amat(0,2)=Eps->operator[](indexExz);
+        Amat(1,2)=Eps->operator[](indexEyz);
+        
+	      dsyev_(&JOBZ, &UPLO, &n, Amat, &n, eval, w, &lw, &info);
+
+        d1=max(0.,eval[0]);
+        d2=max(0.,eval[1]);
+        d3=max(0.,eval[2]);
+
+        pPlus->operator[](j) += mu*(d1*d1 + d2*d2 + d3*d3);
+        
+        d1=min(0.,eval[0]);
+        d2=min(0.,eval[1]);
+        d3=min(0.,eval[2]);
+
+        pMinus->operator[](j) += mu*(d1*d1 + d2*d2 + d3*d3);
+        
+
+        Hp->operator[](j) = max(Hp->operator[](j),pPlus->operator[](j));
+        Hm->operator[](j) = min(Hm->operator[](j),pMinus->operator[](j));         
+       }
+    }
+       
+      
+    return 0L;
+}
 
 
 
@@ -406,8 +598,8 @@ class DecompEnergy3_Op : public E_F0mps {
         Expression exy					;
         Expression exz					;
         Expression eyz					;
-        Expression Hp					;
-        Expression Hm					;                
+        Expression Hp					  ;
+        Expression Hm					  ;                
         Expression Hout					;
         Expression prpty				;  
               
@@ -684,6 +876,7 @@ static void InitFF()
   Global.Add("GFPUpdateDynamic", "(", new updatedynamic<double>);
   Global.Add("GFPDecompEnergy3D", "(", new DecompEnergy3<double>);
   Global.Add("GFPDecompEnergy2D", "(", new DecompEnergy<double>);
+  Global.Add("GFPSplitEnergy", "(", new SplitEnergy<double>);
   Global.Add("GFPMazarsDamageUpdate", "(", new MazarsDamageUpdate<double>);
   Global.Add("GFPmaxintwoFEfields","(",new OneOperator2_<double,KN<double>*, KN<double>*>(GFPmaxintwoP1));		
   Global.Add("GFPeigen", "(", new OneOperator3_<long, KNM<double> *, KN<double> *, KNM<double> *>(lapack_dsyev));
