@@ -15,7 +15,7 @@ writemeshParameters<<
 "*         -help or read the PSD manual.                                       *\n"
 "*                                                                             *\n"
 "******************************************************************************/\n"
-"										\n";
+"                                                                               \n";
 
 writemeshParameters<<
 "                                                                               \n"

@@ -29,8 +29,8 @@ if(Sequential)
  "                                                                                \n"
 <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                                  )
 <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                            )
-<<"  load \"gmsh\"					// Load  gmsh                                  \n"
-<<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");	// Mesh loaded                 \n"
+<<"  load \"gmsh\"                    // Load  gmsh                               \n"
+<<"  meshN Th = gmshloadN(\"\"+ThName+\".msh\");    // Mesh loaded                \n"
 <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                       )
 <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                             )
 <<"                                                                                \n"
@@ -38,13 +38,14 @@ if(Sequential)
 <<"// ------- The finite element spaces -------                                    \n"
 <<"//==============================================================================\n"
 <<"                                                                                \n"
-<<" fespace Vh   ( Th , Pk );			// Mixed FE space (displacemnt)            \n";
+<<" fespace Vh   ( Th , Pk );            // Mixed FE space (displacemnt)           \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")writemeshPartitioning
-<<" fespace Vh1  ( Th , Zk );			// Damage field	FE space                   \n";
+<<" fespace Vh1  ( Th , Zk );            // Damage field    FE space               \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemeshPartitioning
-<<" fespace Wh0  ( Th , P0 );			// Energy decomposition field              \n";
+<<" fespace Wh0  ( Th , P0 );            // Energy decomposition FE space          \n"
+<<" fespace Sh0  ( Th , Sk );            // Strain vector FE space                 \n";
 
 }
 
@@ -56,29 +57,30 @@ if(!Sequential){writemeshPartitioning
 <<"// ------- The finite element mesh -------                                      \n"
 <<"//==============================================================================\n"
 <<"                                                                                \n"
-<<" meshN   Th = DummyMesh;			// This is a dummy mesh for now                \n"
+<<" meshN   Th = DummyMesh;            // This is a dummy mesh for now             \n"
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- The finite element spaces -------                                    \n"
 <<"//==============================================================================\n"
 <<"                                                                                \n"
-<<" fespace Vh     ( Th , Pk );			// Local mixed FE space                    \n";
+<<" fespace Vh     ( Th , Pk );            // Local mixed FE space                 \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemeshPartitioning
-<<" fespace Vh1    ( Th , Zk );			// Damage field	FE space                   \n";
+<<" fespace Vh1    ( Th , Zk );            // Damage field    FE space             \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")if(energydecomp)writemeshPartitioning
-<<" fespace Wh0    ( Th , P0 );			// Energy decomposition field              \n";
+<<" fespace Wh0    ( Th , P0 );            // Energy decomposition field           \n"
+<<" fespace Sh0    ( Th , Sk );            // Strain vector FE space               \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")
 if(vectorial)if(debug || plotAll)writemeshPartitioning
-<<" fespace VhPlt  ( Th , P1 );			// Damage field	FE space                   \n";
+<<" fespace VhPlt  ( Th , P1 );            // Damage field    FE space             \n";
 
 if(Prblm=="damage" && Model=="Mazar")writemeshPartitioning
-<<" fespace Wh0    ( Th , P0 );			// stress/strain/damage FE space           \n";
+<<" fespace Wh0    ( Th , P0 );            // stress/strain/damage FE space        \n";
 
 if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemeshPartitioning
-<<" fespace VhStr  ( Th , Sk );			// stress/strain/damage FE space           \n";
+<<" fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space        \n";
 
 writemeshPartitioning
 <<"                                                                                \n"
@@ -89,78 +91,78 @@ writemeshPartitioning
 <<" func int PartThAndBuildCommunication(){                                        \n"
 <<"                                                                                \n"
 <<"  load \"gmsh\"                                      // Load meshes from gmsh   \n"
-<<"  Th = gmshloadN(\"\"+ThName+\".msh\");    		// Global mesh loaded          \n"
+<<"  Th = gmshloadN(\"\"+ThName+\".msh\");            // Global mesh loaded        \n"
 <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                       );
 
 if(Prblm!="damage")writemeshPartitioning
 <<"                                                                                \n"
 <<"  PETScMPIBuild(                                                                \n"
-<<"		   Th				, // Local  mesh                                       \n"
-<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
-<<"		   restrictionIntersectionP	, // Restriction matrix                        \n"
-<<"		   DP				, // Partition of unity                                \n"
-<<"		   Pk				, // Vectorial FE space                                \n"
-<<"		   mpiCommWorld			  // MPI world                                     \n"
-<<"		  )                                                                        \n";
+<<"           Th                , // Local  mesh                                   \n"
+<<"           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+<<"           restrictionIntersectionP    , // Restriction matrix                  \n"
+<<"           DP                , // Partition of unity                            \n"
+<<"           Pk                , // Vectorial FE space                            \n"
+<<"           mpiCommWorld              // MPI world                               \n"
+<<"          )                                                                     \n";
 
 if(Prblm=="damage" && Model=="Mazar")writemeshPartitioning
 <<"                                                                                \n"
 <<"  PETScMPIBuild(                                                                \n"
-<<"		   Th				, // Local  mesh                                       \n"
-<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
-<<"		   restrictionIntersectionP	, // Restriction matrix                        \n"
-<<"		   DP				, // Partition of unity                                \n"
-<<"		   Pk				, // Vectorial FE space                                \n"
-<<"		   mpiCommWorld			  // MPI world                                     \n"
-<<"		  )                                                                        \n";
+<<"           Th                , // Local  mesh                                   \n"
+<<"           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+<<"           restrictionIntersectionP    , // Restriction matrix                  \n"
+<<"           DP                , // Partition of unity                            \n"
+<<"           Pk                , // Vectorial FE space                            \n"
+<<"           mpiCommWorld              // MPI world                               \n"
+<<"          )                                                                     \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemeshPartitioning
 <<"                                                                                \n"
 <<"  fespace Ph(Th, P0);                                                           \n"
-<<"  	     Ph part;                                                              \n"
+<<"           Ph part;                                                             \n"
 <<"                                                                                \n"
 <<"                                                                                \n"
 <<"  if(mpirank == 0)                                                              \n"
-<<"	partitionerSeq(part[], Th, mpisize);                                           \n"
+<<"    partitionerSeq(part[], Th, mpisize);                                        \n"
 <<"                                                                                \n"
 <<"  partitionerPar(part[], Th, mpiCommWorld, mpisize);                            \n"
 <<"                                                                                \n"
 <<"  PETScMPIBuildWithPartitioning(                                                \n"
-<<"		   Th				, // Local  mesh                                       \n"
-<<"		   part[]			, // Partitions                                        \n"
-<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
-<<"		   restrictionIntersectionZ	, // Restriction matrix                        \n"
-<<"		   DZ				, // Partition of unity                                \n"
-<<"		   Zk				, // Vectorial FE space                                \n"
-<<"		   mpiCommWorld			  // MPI world                                     \n"
-<<"		  )                                                                        \n"
+<<"           Th                , // Local  mesh                                   \n"
+<<"           part[]            , // Partitions                                    \n"
+<<"           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+<<"           restrictionIntersectionZ    , // Restriction matrix                  \n"
+<<"           DZ                , // Partition of unity                            \n"
+<<"           Zk                , // Vectorial FE space                            \n"
+<<"           mpiCommWorld              // MPI world                               \n"
+<<"          )                                                                     \n"
 <<"                                                                                \n"
 <<"  Th = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded             \n"
 <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                      )
 <<"                                                                                \n"
 <<"  PETScMPIBuildEdgeWithPartitioning(                                            \n"
-<<"		   Th				, // Local  mesh                                       \n"
-<<"		   part[]			, // Partitions                                        \n"
-<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
-<<"		   restrictionIntersectionP	, // Restriction matrix                        \n"
-<<"		   DP				, // Partition of unity                                \n"
-<<"		   Pk				, // Vectorial FE space                                \n"
-<<"		   mpiCommWorld			, // MPI world                                     \n"
-<<"		   Pk				, // Vectorial FE space                                \n"
-<<"		   def2				, // Scalar definition                                 \n"
-<<"		   init2		  	  // Scalar initilization                              \n"
-<<"		  )                                                                        \n";
+<<"           Th                , // Local  mesh                                   \n"
+<<"           part[]            , // Partitions                                    \n"
+<<"           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+<<"           restrictionIntersectionP    , // Restriction matrix                  \n"
+<<"           DP                , // Partition of unity                            \n"
+<<"           Pk                , // Vectorial FE space                            \n"
+<<"           mpiCommWorld            , // MPI world                               \n"
+<<"           Pk                , // Vectorial FE space                            \n"
+<<"           def2                , // Scalar definition                           \n"
+<<"           init2                // Scalar initilization                         \n"
+<<"          )                                                                     \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")if(vectorial)writemeshPartitioning
 <<"                                                                                \n"
 <<"  PETScMPIBuild(                                                                \n"
-<<"		   Th				, // Local  mesh                                       \n"
-<<"		   getARGV( \"-split\" , 1 )	, // Split factor                          \n"
-<<"		   restrictionIntersectionP	, // Restriction matrix                        \n"
-<<"		   DP				, // Partition of unity                                \n"
-<<"		   Pk				, // Vectorial FE space	   	                           \n"
-<<"		   mpiCommWorld			  // MPI world                                     \n"
-<<"		  )                                                                        \n"
+<<"           Th                , // Local  mesh                                   \n"
+<<"           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+<<"           restrictionIntersectionP    , // Restriction matrix                  \n"
+<<"           DP                , // Partition of unity                            \n"
+<<"           Pk                , // Vectorial FE space                            \n"
+<<"           mpiCommWorld              // MPI world                               \n"
+<<"          )                                                                     \n"
 <<"                                                                                \n";
 
 writemeshPartitioning
@@ -169,11 +171,11 @@ writemeshPartitioning
 <<"                                                                                \n"
 <<" }                                                                              \n"
 <<"                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"Solver\",t1)\n" : "" 	         	 	    )
-<<(timelog ? "  if(mpirank==0)cout<<\"\"<<endl;\n" : ""          	 	    )
-<<(timelog ? "  MPItimerbegin(\"Mesh Partitioning\",t0)\n" : ""           	    )
-<<"  PartThAndBuildCommunication();						   \n"
-<<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "           	    )
+<<(timelog ? "  MPItimerbegin(\"Solver\",t1)\n" : ""                                )
+<<(timelog ? "  if(mpirank==0)cout<<\"\"<<endl;\n" : ""                             )
+<<(timelog ? "  MPItimerbegin(\"Mesh Partitioning\",t0)\n" : ""                     )
+<<"  PartThAndBuildCommunication();                                                \n"
+<<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "                      )
 <<"                                                                                \n"
 <<"                                                                                \n";
 
