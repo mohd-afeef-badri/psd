@@ -1,8 +1,9 @@
 /**************************************************************************************
 *                                                                                     *
-* Author:  Mohd Afeef BADRI                                                           *
-* Date:	   20/04/2020                                                                 *
-* Type:    Support file                                                               *
+* Author : Mohd Afeef BADRI                                                           *
+* Email  : mohd-afeef.badri@cea.fr                                                    *
+* Date   : 20/04/2020                                                                 *
+* Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support  file is  responsible for generating  ControlParameters.edp   *
 *          which contain main solver control parameters of PSD.                       *
