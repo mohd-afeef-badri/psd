@@ -1,23 +1,21 @@
-//=====================================================================================
-// ------ Building the Parameters.edp file ------ 
-//=====================================================================================
+/**************************************************************************************
+*                                                                                     *
+* Author:  Mohd Afeef BADRI                                                           *
+* Date:	   20/04/2020                                                                 *
+* Type:    Support file                                                               *
+*                                                                                     *
+* Comment: This support  file is  responsible for generating  ControlParameters.edp   *
+*          which contain main solver control parameters of PSD.                       *
+*                                                                                     *
+**************************************************************************************/
 
 cout << " building ControlParameters.edp";
 
-{ofstream  writemeshParameters("ControlParameters.edp");
+{ofstream  write("ControlParameters.edp");
 
-writemeshParameters<<
-"/**************************** ControlParameters *******************************\n"
-"*                                                                             *\n"
-"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
-"*         in order to  control this file please change flag arguments of  the *\n"
-"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
-"*         -help or read the PSD manual.                                       *\n"
-"*                                                                             *\n"
-"******************************************************************************/\n"
-"                                                                               \n";
+writeHeader;
 
-writemeshParameters<<
+writeIt
 "                                                                               \n"
 "//=============================================================================\n"
 "// ------- Mesh parameters (Un-partitioned) -------                            \n"
@@ -25,27 +23,27 @@ writemeshParameters<<
 
 
 if(Prblm=="linear-elasticity")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name                \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name       \n";
 
 if(Prblm=="elastodynamics")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\"; // Mesh  name         \n";
 
 if(Prblm=="damage" && Model=="Mazar")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name         \n";
 
 if(Prblm=="soildynamics")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name          \n";
 
@@ -54,7 +52,7 @@ if(Prblm=="soildynamics")
 
 if(Prblm=="linear-elasticity")
  {
- writemeshParameters<<
+ writeIt
  "                                                                               \n"
  "//=============================================================================\n"
  "// ------- Material parameters -------                                         \n"
@@ -62,7 +60,7 @@ if(Prblm=="linear-elasticity")
  "                                                                               \n";
 
  if(fastmethod)
-  writemeshParameters<<
+  writeIt
   "  real    mu                        // Lame parameter                         \n"
   "         ,lambda;                   // Lame parameter                         \n"
   "                                                                              \n"
@@ -76,7 +74,7 @@ if(Prblm=="linear-elasticity")
 
  if(!fastmethod)
   {
-  writemeshParameters<<
+  writeIt
   "                                                                              \n"
   "  real a1,a2,a3        ;                // Building material tensor           \n"
   "{                                                                             \n"
@@ -89,14 +87,14 @@ if(Prblm=="linear-elasticity")
   "}                                                                             \n";
 
  if(spc==2)
-  writemeshParameters<<
+  writeIt
   "                                                                              \n"
   "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
   "              [ a2 ,  a1 , 0 ],                                               \n"
   "              [ 0  ,  0  , a3]]               // Material tensor              \n";
  
  if(spc==3)
-  writemeshParameters<<
+  writeIt
   "                                                                              \n"
   "  macro Mt   [[ a1 ,  a2 , a2 , 0  , 0  , 0 ],                                \n"
   "              [ a2 ,  a1 , a2 , 0  , 0  , 0 ],                                \n"
@@ -112,14 +110,14 @@ if(Prblm=="linear-elasticity")
 
 if(Prblm=="damage")
  {
- writemeshParameters<<
+ writeIt
  "                                                                               \n"
  "//=============================================================================\n"
  "// ------- Material parameters -------                                         \n"
  "//=============================================================================\n";
 
  if(Model=="Mazar")
-  writemeshParameters<<
+  writeIt
   "                                                                              \n"
   "  real    mu                        // Lame parameter                         \n"
   "         ,lambda                    // Lame parameter                         \n"
@@ -152,7 +150,7 @@ if(Prblm=="damage")
 
 
  if(Model=="hybrid-phase-field")
-  writemeshParameters<<
+  writeIt
   "                                                                              \n"
   "  real lambda = 121.15e3 ,                                                    \n"
   "       mu     = 80.77e3  ;                                                    \n"
@@ -174,7 +172,7 @@ if(Prblm=="damage")
 
 if(Prblm=="elastodynamics")
  {
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Material parameters -------                                        \n"
@@ -189,7 +187,7 @@ if(Prblm=="elastodynamics")
  "                                                                              \n";
 
  if(TimeDiscretization=="generalized-alpha")
-  writemeshParameters<<
+  writeIt
   "  real rho  = 1.0  ,                                                         \n"
   "       etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
@@ -204,7 +202,7 @@ if(Prblm=="elastodynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="newmark-beta")
-  writemeshParameters<<
+  writeIt
   "  real rho  = 1.0  ,                                                         \n"
   "       etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
@@ -217,7 +215,7 @@ if(Prblm=="elastodynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="central-difference")
-  writemeshParameters<<
+  writeIt
   "  real rho  = 1.0  ,                                                         \n"
   "       etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
@@ -228,7 +226,7 @@ if(Prblm=="elastodynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="hht-alpha")
-  writemeshParameters<<
+  writeIt
   "  real rho  = 1.0  ,                                                         \n"
   "       etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
@@ -246,7 +244,7 @@ if(Prblm=="elastodynamics")
 
 if(Prblm=="soildynamics")
  {
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Soil parameters -------                                            \n"
@@ -274,7 +272,7 @@ if(Prblm=="soildynamics")
  "                                                                              \n";
 
  if(TimeDiscretization=="generalized-alpha")
-  writemeshParameters<<
+  writeIt
   "  real alpm = 0.2     ,                                                      \n"
   "       alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
@@ -286,7 +284,7 @@ if(Prblm=="soildynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="newmark-beta")
-  writemeshParameters<<
+  writeIt
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ;                                                      \n"
@@ -296,7 +294,7 @@ if(Prblm=="soildynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="central-difference")
-  writemeshParameters<<
+  writeIt
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ,                                                      \n"
@@ -304,7 +302,7 @@ if(Prblm=="soildynamics")
   "                                                                             \n";
 
  if(TimeDiscretization=="hht-alpha")
-  writemeshParameters<<
+  writeIt
   "  real alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
@@ -315,35 +313,34 @@ if(Prblm=="soildynamics")
   "                                                                             \n";
 
 
- writemeshParameters<<
+ writeIt
  "//============================================================================\n"
  "// -------Paraxial boundary-condition parameters-------                       \n"
  "//============================================================================\n"
  "                                                                              \n";
 
  if(spc==2)
-  writemeshParameters<<
+  writeIt
   "  int [int]   PAlabels = [2,4,5];   \t// Vector of Paraxial load             \n"
   "  int [int]   LoadLabels = [3];   \t// Vector of Paraxial load               \n"
   "  real tt;                                                                   \n"
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n";
 
  if(spc==3)
-  writemeshParameters<<
+  writeIt
   "  int [int]   PAlabels = [1,2,3,5];   \t// Vector of Paraxial load           \n"
   "  int [int]   LoadLabels = [4];   \t// Vector of Paraxial load               \n"
   "  real tt;                                                                   \n"
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n";
 
 
- writemeshParameters<<
+ writeIt
  "                                                                              \n";
  }
 
 if(dirichletconditions>=1)
  {
- writemeshParameters
-<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// -------Dirichlet boundary-condition parameters-------                      \n"
@@ -352,46 +349,40 @@ if(dirichletconditions>=1)
  "  int [int]   Dlabel = ["<<labelDirichlet<<"\t// Label for Dirichlet border 0 \n";
 
  for(int i=1; i<dirichletconditions; i++)
-  writemeshParameters
-<<
+  writeIt
   "                       ,"<<labelDirichlet<<"\t// Label Dirichlet border "<<i<<"\n";
 
- writemeshParameters
-<<
+ writeIt
  "                       ];                                                     \n"
  "                                                                              \n";
 
 
  if(spc==2)
   {
-  writemeshParameters
-<<
+  writeIt
   "  real[int]   Dvalue = [ 0., 0.        // u1,u2 of Dirichlet border 0        \n";
   for(int i=1; i<dirichletconditions; i++)
-   writemeshParameters
-<<
+   writeIt
    "                        ,0., 0.        // u1,u2 of Dirichlet border "<<i<<" \n";
   }
 
  if(spc==3)
   {
-  writemeshParameters
-<<
+  writeIt
   "  real[int]   Dvalue = [ 0., 0., 0.  // u1,u2,u3 of Dirichlet border 0       \n";
   for(int i=1; i<dirichletconditions; i++)
-   writemeshParameters
-<<
+   writeIt
    "                        ,0., 0., 0. // u1,u2,u3 of Dirichlet border "<<i<<" \n";
   }
 
- writemeshParameters<<
+ writeIt
  "                       ];                                                     \n"
  "                                                                              \n";
  }
 
 if(dirichletpointconditions>=1)
  {
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// -------Dirichlet point boundary-condition parameters-------                \n"
@@ -401,34 +392,33 @@ if(dirichletpointconditions>=1)
 
 
  for(int i=1; i<dirichletpointconditions; i++)
-  writemeshParameters<<
+  writeIt
   "                          ,"<<labelDirichlet<<"\t//  Labels containing point "<<i<<" \n";
 
- writemeshParameters<<
+ writeIt
  "                          ];                                                  \n"
  "                                                                              \n";
 
 
  if(spc==2)
  {
- writemeshParameters<<
+ writeIt
  "  real[int]   PnV = [ 0., 0., 0., 0. // [x, y, u1, u2] of point border 0      \n";
  for(int i=1; i<dirichletpointconditions; i++)
-  writemeshParameters<<
+  writeIt
   "                     ,0., 0., 0., 0. // [x, y, u1, u2] of point border "<<i<<"\n";
  }
 
  if(spc==3)
  {
- writemeshParameters
-<<
+ writeIt
  "  real[int]   PnV = [ 0., 0., 0., 0., 0., 0.  // [x,y,z,u1,u2,u3] of point 0  \n";
  for(int i=1; i<dirichletpointconditions; i++)
-  writemeshParameters<<
+  writeIt
   "                     ,0., 0., 0., 0., 0., 0. // [x,y,z,u1,u2,u3] of point "<<i<<" \n";
  }
 
- writemeshParameters<<
+ writeIt
  "                    ];                                                        \n"
  "                                                                              \n";
 }
@@ -436,7 +426,7 @@ if(dirichletpointconditions>=1)
 
 if(tractionconditions>=1)
  {
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
@@ -445,10 +435,10 @@ if(tractionconditions>=1)
  "  int [int]   Tlabel = [ 4             //  Label for traction border 1        \n";                     
 
  for(int i=1; i<tractionconditions; i++)
-  writemeshParameters<<
+  writeIt
   "                        ,4             //  Label for traction border "<<i<<" \n";
 
- writemeshParameters<<
+ writeIt
  "                       ];                                                     \n"
  "                                                                              \n"
  "                                                                              \n";
@@ -456,10 +446,10 @@ if(tractionconditions>=1)
  if(spc==2)
   {
   for(int i=0; i<tractionconditions; i++)
-   writemeshParameters<<
+   writeIt
    "  real  tx"<<i<<"=0, ty"<<i<<"=10.;\t\t\t// Traction forces on label "<<i<<"\n";
 
-  writemeshParameters<<
+  writeIt
   "                                                                             \n"
   "  macro T(i,j) [i,j]                        // Traction vector               \n"; 
   }
@@ -468,16 +458,16 @@ if(tractionconditions>=1)
  if(spc==3)
   {
   for(int i=0; i<tractionconditions; i++)
-   writemeshParameters<<
+   writeIt
    "  real tx"<<i<<"=0, ty"<<i<<"=0, tz"<<i<<"=0 ;// Component traction  on label "<<i<<" \n";
 
-  writemeshParameters<<
+  writeIt
   "  macro T(i,j,k) [i,j,k]                // Three component traction forces   \n"; 
   }
  }
 
 if(Prblm=="elastodynamics")
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Neumann boundary-condition parameters -------                      \n"
@@ -490,7 +480,7 @@ if(Prblm=="elastodynamics")
 
 if(bodyforce)
  {
- writemeshParameters<<
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Bodyforce  parameters -------                                      \n"
@@ -500,18 +490,18 @@ if(bodyforce)
  "  real f2 = 8.e3*(-9.81);            // Y component body forces               \n";
 
  if(spc==2)
-  writemeshParameters<<
+  writeIt
   "                                                                             \n"
   "  macro BF [f1,f2]                   // Two component body forces            \n"; 
 
  if(spc==3)
-  writemeshParameters<<
+  writeIt
   "  real f3 = 0.;                      // Z component body forces              \n"
   "                                                                             \n"
   "  macro BF [f1,f2,f3]                // Three component body forces          \n"; 
  }
 
-writemeshParameters<<
+writeIt
 "                                                                               \n"
 "//=============================================================================\n"
 "// ------- Solver control parameters -------                                   \n"

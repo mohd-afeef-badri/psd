@@ -8,7 +8,7 @@
 *          MeshPartitioning,   VariationalFormulations,   BoundaryAndSourceConditions *
 *          Parameters,  LinearFormBuilderAndSolver, and PostProcessor. All these .edp * 
 *          files combine  together to form  a fully tailored  solid mechanics solver. *
-*	   Commandline flags  are  used to controls the nature of the generated file. *
+*          Commandline flags  are  used to controls the nature of the generated file. *
 *          One   is    advised     to   carefully   go   through   these   arguments. *
 *                                                                                     *
 * Compile: Use a g++/icpc compiler C++ compiler                                       *
@@ -88,6 +88,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include "HeaderMacro.hpp"
+
+#define writeIt  write<<
 
 
 using namespace std;
