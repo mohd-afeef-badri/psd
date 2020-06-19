@@ -306,6 +306,7 @@ if(Prblm=="damage" && Model=="Mazar")writemacros
 <<"  ]//                                                                             \n"
 <<"                                                                                   \n";
 
+/******************************************************************************************
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"                                                                                   \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
@@ -330,6 +331,20 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);  \n"
 <<"  }//                                                                           \n" 
 <<"                                                                                   \n";
+/********************************************************************************************/
+
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
+"                                                                               \n"
+ 
+"//------------------------------Hplus macros----------------------------------//\n"
+ "                                                                               \n"
+ "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){           \n"
+ "    real[int] par = [lambda,mu];                                               \n"
+ <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u),dz(u),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")<<
+ "                                                                               \n"
+ "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ;  \n"
+<<"  }//                                                                         \n" 
+<<"                                                                              \n";
 
 if(Sequential)writemacros
 <<"                                                                                   \n"
