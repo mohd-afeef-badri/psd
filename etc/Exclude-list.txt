@@ -1,0 +1,39 @@
+# Main Directory Files #
+install-sh
+config.status
+stamp-h1
+aclocal.m4
+config.h.in
+missing
+config.log
+config.h
+autom4te.cache
+configure
+Makefile.in
+Makefile
+
+*Makefile.in
+*Makefile
+
+# All so and o files #
+*.so
+*.o
+
+# All mesh files #
+*.msh
+
+# PARAVIEW FILES #
+*.vtk
+*.vtu
+*.pvd
+
+# PARALLEL/SEQUENTIAL VERSION FILES #
+*Main.edp
+*Macros.edp
+*Parameters.edp
+*PostProcessor.edp
+*MeshAndFeSpace.edp
+*VariationalFormulations.edp
+*LinearFormBuilderAndSolver.edp
+*BoundaryAndSourceConditions.edp
+*PSD_PreProcess
