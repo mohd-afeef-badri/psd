@@ -1,54 +1,55 @@
-//=================================================================================
-// ------ Building the main.edp file ------ 
-//=================================================================================
+/**************************************************************************************
+*                                                                                     *
+* Author : Mohd Afeef BADRI                                                           *
+* Email  : mohd-afeef.badri@cea.fr                                                    *
+* Date   : 20/04/2020                                                                 *
+* Type   : Support file                                                               *
+*                                                                                     *
+* Comment: This support file is  responsible for generating Main.edp which  contain   *
+*          the main solver finite element files of PSD.                               *
+*                                                                                     *
+**************************************************************************************/
 
 cout << " building Main.edp";
 
-{ofstream  writemain("Main.edp");
+{ofstream  write("Main.edp");
 
-writemain<<
-"/********************************** Main **************************************\n"
-"*                                                                             *\n"
-"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
-"*         in order to  control this file please change flag arguments of  the *\n"
-"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
-"*         -help or read the PSD manual.                                       *\n"
-"*                                                                             *\n"
-"******************************************************************************/\n"
-"				                                                \n"
-"				                                                \n"
+writeHeader;
+
+writeIt
+"                                                                               \n"
 "//=============================================================================\n"
-"// ------ Module files load and include ------ 		                \n"
+"// ------ Module files load and include ------                                 \n"
 "//=============================================================================\n"
-"				                                                \n"
-"								        	\n";
+"                                                                               \n"
+"                                                                               \n";
 
 if(!Sequential)
- writemain<<
+ writeIt
  "  load    \"PETSc\"                                // PETSc plugin activated  \n";
 
 if(Sequential)if(plotAll || plotTime)
- writemain<<
+ writeIt
  "  load    \"../Plugins/iovtk\"                     // Paraview support files \n";
 
 if(useGFP)if(!energydecomp)
- writemain<<
+ writeIt
  "  load    \"../Plugins/gofastplugins\"             // GoFastPlugins Library  \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
- writemain<<
+ writeIt
  "  load    \"../Plugins/gofastplugins\"             // GoFastPlugins Library  \n";
 
 if(pipegnu)if(!supercomp)
- writemain<<
+ writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
 
 if(debug || plotAll || plotTime)if(!Sequential)
- writemain<<
+ writeIt
  "  include \"../Plugins/DDplotMacro.edp\"           // Domain decomp plotting \n";
 
 if(Sequential)
- writemain<<
+ writeIt
  "  include \"getARGV.idp\"                          // Commandline arguments  \n"
  "  include \"ControlParameters.edp\"                // Parameters & propeties \n"
  "  include \"Macros.edp\"                           // User-defined macros    \n"
@@ -59,7 +60,7 @@ if(Sequential)
  "  include \"LinearFormBuilderAndSolver.edp\"       // Build and solve Ax=b   \n";
 
 if(!Sequential)
- writemain<<
+ writeIt
  "  include \"getARGV.idp\"                          // Commandline arguments  \n"
  "  include \"ControlParameters.edp\"                // Parameters & propeties \n"
  "  include \"OtherParameters.edp\"                  // Other Parameters       \n"
@@ -72,7 +73,7 @@ if(!Sequential)
 
 
 if(plotAll)
- writemain<<
+ writeIt
  "  include \"PostProcessor.edp\"                    // Post Processing        \n";        
 
 } //-- [ostream terminator]  main.edp closed --//
