@@ -341,6 +341,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
  "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){           \n"
  "    real[int] par = [lambda,mu];                                               \n"
  <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u),dz(u),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")<<
+ <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold),dz(uold),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<< 
  "                                                                               \n"
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ;  \n"
 <<"  }//                                                                         \n" 
