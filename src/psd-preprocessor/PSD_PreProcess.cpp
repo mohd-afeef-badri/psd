@@ -33,16 +33,16 @@
 
   -dirichletpointconditions [int]  Number of Dirchlet points.  Default 1.
 
-  -dirichletconditions      [int]  Number of Dirchlet boundries.  Default 1.
+  -dirichletconditions      [int]  Number of Dirchlet boundaries.  Default 1.
 
-  -tractionconditions       [int]  Number of Neumann/traction boundrie.  Default 1.
+  -tractionconditions       [int]  Number of Neumann/traction boundaries.  Default 1.
 
   -parmetis_worker          [int]  Active when mesh partitioner is parmetis.
 
   -dimension                [int]  Dimension of problem. 2 for 2D 3 for 3D. Default 2.
   
   -lagrange                 [int]  Lagrange order used for building FE space. Options 
-  			                       are  1 for P1 or 2 for P2. Defaut is P1.
+  			                       are  1 for P1 or 2 for P2. Default is P1.
   
   -------------------------------------------------------------------------------------
 
@@ -108,7 +108,6 @@ int main(int argc, char *argv[]){
   bool help         = false;
   bool debug        = false;
   bool useGFP       = false;
-  bool pointbc      = false;
   bool timelog      = false;
   bool plotAll      = false;
   bool pipegnu      = false;
@@ -118,7 +117,6 @@ int main(int argc, char *argv[]){
   bool bodyforce    = false;
   bool supercomp    = false;
   bool elasticity   = false;    
-  bool tractionbc   = false; 
   bool fastmethod   = false;       
   bool Sequential   = false;
   bool dirichletbc  = false;
@@ -156,13 +154,11 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-pipegnu"      ) pipegnu        = true;
     if( argvdummy == "-timepvd"      ) plotTime       = true;
     if( argvdummy == "-testflags"    ) testflags      = true;
-    if( argvdummy == "-pointbc"      ) pointbc        = true;
     if( argvdummy == "-timelog"      ) timelog        = true;
     if( argvdummy == "-vectorial"    ) vectorial      = true;  
     if( argvdummy == "-bodyforce"    ) bodyforce      = true;
     if( argvdummy == "-Lelasticty"   ) elasticity     = true;            
     if( argvdummy == "-supercomp"    ) supercomp      = true;       
-    if( argvdummy == "-tractionbc"   ) tractionbc     = true; 
     if( argvdummy == "-fastmethod"   ) fastmethod     = true;       
     if( argvdummy == "-sequential"   ) Sequential     = true;
     if( argvdummy == "-dirichletbc"  ) dirichletbc    = true;
@@ -237,13 +233,11 @@ int main(int argc, char *argv[]){
   cout << " pipegnu is -------------------------> " << pipegnu                  << endl;
   cout << " timepvd is -------------------------> " << plotTime                 << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
-  cout << " pointbc is -------------------------> " << pointbc                  << endl;
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;  
   cout << " bodyforce is -----------------------> " << bodyforce                << endl;
   cout << " Lelasticty is ----------------------> " << elasticity               << endl;            
   cout << " supercomp is -----------------------> " << supercomp                << endl;       
-  cout << " tractionbc is ----------------------> " << tractionbc               << endl; 
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;       
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;

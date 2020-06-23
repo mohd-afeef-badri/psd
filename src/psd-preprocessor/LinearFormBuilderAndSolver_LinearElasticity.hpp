@@ -37,14 +37,15 @@ if(dirichletpointconditions>=1)writesolver
 <<"										   \n"
 <<"  Dpointlab.resize(0); PnV.resize(0);					   \n";
 
-if(dirichletbc)writesolver
+if(dirichletconditions>=1)writesolver
 <<"										   \n"
 <<"  Dlabel.resize(0); Dvalue.resize(0);					   \n";
 
+/*
 if(tractionbc)writesolver
 <<"										   \n"
 <<"  Tlabel.resize(0);								   \n";
-   
+*/   
 writesolver
 <<"										   \n"
 <<"//---------------PETSc Assembly---------------------//			   \n"
