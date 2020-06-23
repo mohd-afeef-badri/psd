@@ -118,15 +118,13 @@ FreeFem++ Main.edp -v 0 -nw
 
 ## [Options-PSD]  explained  ##
 
-
-## Amost always imports
-
-|  R |  Python |    Matlab |
-| --------- |:---|:---------|:-----|
-| library(tidyverse) |import numpy as np|
-
-
 These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
+
+|      |      |      |
+| ---- | ---- | ---- |
+|      |      |      |
+
+
 
 | Option         | Type      | Comment                                                      |
 | -------------- | --------- | :----------------------------------------------------------- |
