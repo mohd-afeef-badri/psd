@@ -5,21 +5,21 @@
 if(help)
  {
  cout <<
- "										\n"
+ "                                                                              \n"
  "===================================================================           \n"
- "               ----YOU ACTIVATED THE HELP OPTION----			        \n"
- "             Please read the messages below carefully		                \n"
+ "               ----YOU ACTIVATED THE HELP OPTION----                          \n"
+ "             Please read the messages below carefully                         \n"
  "===================================================================           \n"
- "									        \n"
- "									        \n"
+ "                                                                              \n"
+ "                                                                              \n"
  " According to the flags provided You are solving A "<<spc<<"D problem.        \n"
- "										\n"
- "										\n"
- "  # With"<<(bodyforce   ? "" : "out")<<" bodyforce acting on the volume.	\n"
+ "                                                                              \n"
+ "                                                                              \n"
+ "  # With"<<(bodyforce   ? "" : "out")<<" bodyforce acting on the volume.      \n"
  "  # With"<<(dirichletbc ? "" : "out")<<" Dirichlet surface boundary condition.\n"
- "  # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.		        \n"
- "									        \n"
- "										\n"
+ "  # Paraview plotting is "<<(plotAll ? "en" : "dis")<<"abled.                 \n"
+ "                                                                              \n"
+ "                                                                              \n"
  "/***********************************IMPORTANT*********************************\n"
  "*                                                                            *\n"
  "* To change the mesh and material parameters edit 'ControlParameters.edp'    *\n"
@@ -30,11 +30,11 @@ if(help)
  "*    modulus of elasticity, Poisson ratio, body  forces  f1,f2,f3 in x,y,z.  *\n"
  "*                                                                            *\n"
  "*****************************************************************************/\n"
- "								                \n";
+ "                                                                              \n";
 
  if(dirichletconditions>=1)
   cout<< 
-  "										\n"
+  "                                                                             \n"
   "/***********************************IMPORTANT********************************\n"
   "*                                                                           *\n"
   "* Using Dirichlet BC  please edit the file 'ControlParameters.edp'          *\n"
@@ -48,24 +48,24 @@ if(help)
   "*    you can use Dvalue=[1.,0.], meaning u1=1, and u2=0                     *\n"
   "*                                                                           *\n"
   "****************************************************************************/\n"
-  "							                	\n";
+  "                                                                             \n";
 
  if(bodyforce)
   cout<<
-  "							           		\n"
+  "                                                                             \n"
   "/***********************************IMPORTANT********************************\n"
   "*                                                                           *\n"
-  "* Using bodyforce within the problem edit  'ControlParameters.edp'  	       *\n"
+  "* Using bodyforce within the problem edit  'ControlParameters.edp'          *\n"
   "*                                                                           *\n"
   "* 1. Edit values of <<f1,f2,f3>>  that provide the  three components of the *\n"
   "*    bodyforce.                                                             *\n" 
   "*                                                                           *\n"
   "****************************************************************************/\n"
-  "		                  						\n";
+  "                                                                             \n";
 
  if(dirichletpointconditions>=1)
   cout<<
-  "							           		\n"
+  "                                                                             \n"
   "/***********************************IMPORTANT********************************\n"
   "*                                                                           *\n"
   "* Using Dirichlet BC on  point please edit  'ControlParameters.edp'         *\n"
@@ -77,11 +77,11 @@ if(help)
   "*    (u1,u2) are coordinates and deformation values of the Dirichlet point. *\n"
   "*                                                                           *\n"
   "****************************************************************************/\n"
-  "							        	        \n";
+  "                                                                             \n";
 
  if(tractionconditions>=1)
   cout<<
-  "							           		\n"
+  "                                                                             \n"
   "/***********************************IMPORTANT********************************\n"
   "*                                                                           *\n"
   "* Using Dirichlet BC on  point please edit  'ControlParameters.edp'         *\n"
@@ -94,7 +94,7 @@ if(help)
   "*    traction.                                                              *\n" 
   "*                                                                           *\n"
   "****************************************************************************/\n"
-  "							        	        \n";
+  "                                                                             \n";
 
 } //-- [if loop terminator] help ended --//
 

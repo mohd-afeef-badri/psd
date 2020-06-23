@@ -1,7 +1,7 @@
 /**************************************************************************************
 *                                                                                     *
 * Author:  Mohd Afeef BADRI                                                           *
-* Date:	   20/04/2020                                                                 *
+* Date:    20/04/2020                                                                 *
 * Type:    Execution file                                                             *
 *                                                                                     *
 * Comment: Once executed this file generates following edp files: Main, Macros, Mesh, *
@@ -42,45 +42,45 @@
   -dimension                [int]  Dimension of problem. 2 for 2D 3 for 3D. Default 2.
   
   -lagrange                 [int]  Lagrange order used for building FE space. Options 
-  			                       are  1 for P1 or 2 for P2. Default is P1.
+                                   are  1 for P1 or 2 for P2. Default is P1.
   
   -------------------------------------------------------------------------------------
 
-  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons. 			
+  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons.
 
   -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
-  			      
+       
   -problem         [string] Interested problem. Use linear-elasticity|damage|elastodynamics.
 
-  -model           [string] Interested model. Use hybrid-phase-field|Mazar.			
+  -model           [string] Interested model. Use hybrid-phase-field|Mazar.
 
   -------------------------------------------------------------------------------------
- 			  
+
   -help        [bool]     To activate helping message on the terminal. Default OFF. 
-  			  
+
   -plot        [bool]     To activate plotting routine. Default OFF.
 
   -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
   
-  -useGFP      [bool]	  To activate use of GoFastPlugins. A suite of c++ plugins.
+  -useGFP      [bool]     To activate use of GoFastPlugins. A suite of c++ plugins.
   
-  -timelog     [bool]	  To setup time logging for various phases of the solver.  
+  -timelog     [bool]     To setup time logging for various phases of the solver.  
 
-  -useRCM      [bool]	  To activate mesh level renumbering via Reverse Cuthill Mckee.   
+  -useRCM      [bool]     To activate mesh level renumbering via Reverse Cuthill Mckee.   
   
-  -pipegnu     [bool]	  To activate realtime pipe plotting using GnuPlot. Default OFF.
+  -pipegnu     [bool]     To activate realtime pipe plotting using GnuPlot. Default OFF.
   
   -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
 
-  -vectorial   [bool]	  To generate vectorial space solver for non-linear. Default OFF.  
+  -vectorial   [bool]     To generate vectorial space solver for non-linear. Default OFF.  
     
-  -supercomp   [bool]	  To be used when using a cluster/supercomputer. Default OFF.   
+  -supercomp   [bool]     To be used when using a cluster/supercomputer. Default OFF.   
 
   -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
   
-  -sequential  [bool]	  To generate a sequential ff++ solver. Default OFF.
+  -sequential  [bool]     To generate a sequential ff++ solver. Default OFF.
 
 */
 
