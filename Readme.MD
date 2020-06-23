@@ -120,12 +120,6 @@ FreeFem++ Main.edp -v 0 -nw
 
 These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
 
-|      |      |      |
-| ---- | ---- | ---- |
-|      |      |      |
-
-
-
 | Option         | Type      | Comment                                                      |
 | -------------- | --------- | :----------------------------------------------------------- |
 | `-help`        | `[bool]`  | To activate helping message on the terminal. |
