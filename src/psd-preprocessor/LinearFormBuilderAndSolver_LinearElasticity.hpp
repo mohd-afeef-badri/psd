@@ -41,11 +41,11 @@ if(dirichletconditions>=1)writesolver
 <<"										   \n"
 <<"  Dlabel.resize(0); Dvalue.resize(0);					   \n";
 
-/*
-if(tractionbc)writesolver
+
+if(tractionconditions>=1)writesolver
 <<"										   \n"
 <<"  Tlabel.resize(0);								   \n";
-*/   
+   
 writesolver
 <<"										   \n"
 <<"//---------------PETSc Assembly---------------------//			   \n"
