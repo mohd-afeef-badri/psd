@@ -225,7 +225,7 @@ writevarfmatsolve
 <<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : ""                              )
 <<"                                                                                                \n";
 
-if(!energydecomp)writevarfmatsolve
+writevarfmatsolve
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
@@ -247,6 +247,7 @@ if(!vectorial){writevarfmatsolve
 <<"//==============================================================================                \n"
 <<"                                                                                                \n"
 <<"  real TractionIn = tr;                                                                         \n"
+<<"  real PhiCracked = 1.;                                                                         \n"
 <<"                                                                                                \n"
 <<" //-----------------------------                                                                \n"
 <<" // Eq. 1 Linear momentum     //                                                                \n"
@@ -386,13 +387,13 @@ writevarfmatsolve
 <<"                       )                                                                        \n"
 <<"                                                                                                \n";
 
-if(!energydecomp)writevarfmatsolve
+writevarfmatsolve
 <<"                                                                                                \n"
 <<"                             //--- Dirichlet ---//                                              \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(4,dphi=1)                                                                            \n";
+<<"      + on(4,dphi=PhiCracked)                                                                   \n";
 
 
 writevarfmatsolve

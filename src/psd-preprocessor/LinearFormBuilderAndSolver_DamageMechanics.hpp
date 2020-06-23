@@ -942,6 +942,7 @@ writesolver
 <<"    }                                                                           \n"
 <<"                                                                                   \n"
 <<"    TractionIn = 0;                                                                   \n"
+<<"    PhiCracked = 0;                                                                   \n"
 <<"  }                                                                                    \n"
 <<"                                                                                   \n"
 <<"  //-----------------updating traction----------------//                           \n"
@@ -1092,7 +1093,6 @@ if(Model=="Mazar"){writesolver
 <<"//==============================================================================\n"           
 <<"                                                                                   \n"
 <<"      duimp         = 0.       ;                                                   \n"
-//<<"    def(u)        = init(0.) ;                                                   \n"
 <<"      intVar[]      = kappa0   ;                                                      \n"
 <<"      mufield[]     = mu       ;                                                           \n"
 <<"      lambdafield[] = lambda   ;                                                   \n"
@@ -1161,7 +1161,6 @@ if(Model=="Mazar"){writesolver
 <<"                                                                                   \n"
 <<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""                            )
 <<"     u[]   += du[]  ;                                                            \n"
-//<<"     u1[]  += du1[] ;                                                            \n"
 <<"                                                                                   \n"
 <<"    //----------Damage field calulation using Mazrs model---------//                   \n";
 
