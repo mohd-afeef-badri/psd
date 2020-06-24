@@ -15,19 +15,25 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-problem` linear-elasticity|damage|elastodynamics|soildynamics to define physics.
 - New flag `-model` to set approximation for damage mechanics hybrid-phase-field|Mazar.
 - Better energy splitting included Hybrib phase-field compressibility vs tensile enery condition.
+- Introduce boundary conditions via `-dirichletconditions` [int] flag. 
+- Introduce point boundary conditions via `-dirichletpointcondition` [int] flag. 
+- Introduce traction boundary conditions via `-tractionconditions` [int] flag.
+- New folder `tests` containing unit-tests for modules. 
 
 ### Changed
 - Moved to FreeFEM 4.6.
 - Moved to PETSc 13.13.
 - Moved to C++ for preprocessing.
-- Chnages to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.
+- Changes to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.
+- Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.
 
 ### Removed
 - No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.
-- No more `-nonlinear` flag.
-- No more `-dynamic` flag.
-- No more `-soildynamic` flag.
-- No more `-quasistatic` flag.
+- No more `-nonlinear` flag now handled by `-problem` and `-model`.
+- No more `-dynamic` flag now handled by `-problem` and `-model`.
+- No more `-soildynamic` flag now handled by `-problem` and `-model`.
+- No more `-quasistatic` flag now handled by `-problem` and `-model`.
+- No more `-dirichletbc` flag now handled by `-dirichletconditions`.
 
 
 
