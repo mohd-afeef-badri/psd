@@ -53,20 +53,12 @@ typedef void VOID;
 
 
 // (computation of the eigenvalues and eigenvectors of a real symmetric matrix)
-long lapack_dsyev (KNM<double> *const &A, KN<double> *const &vp, KNM<double> *const &vectp) {
+long lapack_dsyev (KNM<double> *const &A, KN<double> *const &vp, KNM<double> *const &vectp) 
+{
 
 	intblas n = A->N();
-	
-	//ERROR CHECK//
-	/*
-	ffassert(A->M() == n);
-	ffassert(vectp->N() == n);
-	ffassert(vectp->M() == n);
-	ffassert(vp->N() == n);
-	*/
-	
-	
 	KNM<double> mat(*A);
+	
 	intblas info, lw = -1;
 	KN<double> w(1);
 	char JOBZ = 'V', UPLO = 'U';
