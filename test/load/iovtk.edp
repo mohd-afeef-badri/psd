@@ -1,0 +1,39 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2020‑06‑24                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                                                                                                                                                                                     
+  load    "../../src/plugins/iovtk"
+      
+  mesh Th = square(10,10);   
+  fespace Vh1 (Th, P1); fespace Vh0 (Th, P0);
+  Vh1 u1 = x; Vh0 u0 = x;
+  int[int] vtkorder0=[0];
+  int[int] vtkorder1=[1];  
+  savevtk("squareP0.vtu",Th,u0,order=vtkorder0,dataname="u0");
+  savevtk("squareP1.vtu",Th,u1,order=vtkorder1,dataname="u1");  
+  
+  
+  load "msh3"
+  mesh3 Th3 = cube(10,10,10);
+  fespace Vh31 (Th3, P1); fespace Vh30 (Th3, P0);
+  Vh31 u31 = x; Vh30 u30 = x;
+  int[int] vtkorder30=[0];
+  int[int] vtkorder31=[1];  
+  savevtk("cubeP0.vtu",Th3,u30,order=vtkorder30,dataname="u0");
+  savevtk("cubeP1.vtu",Th3,u31,order=vtkorder31,dataname="u1");   
+  
+   

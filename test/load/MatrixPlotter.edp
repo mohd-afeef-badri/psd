@@ -1,0 +1,43 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2020‑06‑24                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                                                                                                                                                                                     
+  load    "../../src/plugins/MatrixPlotter"
+
+/*      
+  matrix A =[[1,0,0,0,0],
+             [0,1,0,0,0],
+             [0,0,1,0,0],
+             [0,0,0,1,0],
+             [0,0,0,0,1]];
+  MatViz(A);
+*/  
+  
+  mesh Th=square(5,5);
+  fespace Vh(Th,P1);     
+  func f=1;
+  func g=0;
+ 
+  varf laplace(uh,vh) =                    //  definion of  the problem 
+    int2d(Th)( dx(uh)*dx(vh) + dy(uh)*dy(vh) ) //  bilinear form
+  - int2d(Th)( f*vh )                          //  linear form
+  + on(1,2,uh=g) ;                      //  boundary condition form
+
+  matrix B = laplace(Vh,Vh,tgv=-20);
+  MatViz(B);     
+  
+   

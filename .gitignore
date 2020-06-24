@@ -31,7 +31,7 @@ BoundaryAndSourceConditions.edp
 launch.sh
 
 ## TEST  FILE ##
-test*
+#test*
 
 ## AUTOCONF FILES ##
 Makefile
