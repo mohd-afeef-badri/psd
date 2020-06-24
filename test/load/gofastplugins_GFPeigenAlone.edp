@@ -25,7 +25,4 @@
                      [ 2, 0, 2],
                      [ 4, 2, 3]];
   
-  cout << "Eigen values of A are: "  <<  EvaluesA << endl;       
-    
-  
-   
+  cout << "Eigen values of A are: "  <<  EvaluesA << endl;
