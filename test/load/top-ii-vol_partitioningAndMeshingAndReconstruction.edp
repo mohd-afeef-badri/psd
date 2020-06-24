@@ -1,0 +1,57 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2020‑06‑24                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/
+
+load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
+
+topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
+mpiBarrier(mpiCommWorld);
+topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
+
+
+load "PETSc"
+func Pk = P1;
+macro grad(u)[dx(u), dy(u), dz(u)]//three-dimensional gradient
+macro def(u)u//
+
+{
+    macro dimension()3// EOM
+    include "macro_ddm.idp"
+    mesh3 Th;
+
+    Th=readmesh3("top-ii-vol-mesh_"+mpirank+".mesh");   
+    reconstructDmesh(Th);
+    
+    fespace Wh(Th, Pk);
+    Wh<real> u;
+        
+    Mat A;
+    createMat(Th, A, Pk)
+      
+
+    varf vPb(u, v) = intN(Th)(grad(u)' * grad(v)) + on(6, u = 15.0)+ on(3, u = 1.0);
+           
+    real[int] rhs = vPb(0, Wh);
+    set(A, sparams = "-ksp_type cg" );
+    A = vPb(Wh, Wh);
+     
+    u[] = A^-1 * rhs; 
+
+    int[int] fforder=[1];
+    savevtk("solution.vtu",Th,u,order=fforder, dataname = "u");
+}    

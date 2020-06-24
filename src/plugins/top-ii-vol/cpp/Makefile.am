@@ -1,8 +1,6 @@
-SUBDIRS=top-ii-vol
-
-LIST_COMPILE=gofastplugins.cpp iovtk.cpp  MatrixPlotter.cpp
+LIST_COMPILE=top-ii-vol.cpp
 	
-all-local: gofastplugins.so iovtk.so  MatrixPlotter.so 
+all-local: top-ii-vol.so
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -10,18 +8,9 @@ all-local: gofastplugins.so iovtk.so  MatrixPlotter.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-gofastplugins.so: gofastplugins.cpp
-	$(FFCXX) -auto gofastplugins.cpp
+top-ii-vol.so: top-ii-vol.cpp
+	$(FFCXX) -auto top-ii-vol.cpp
 	@echo ""	
-	
-MatrixPlotter.so: MatrixPlotter.cpp
-	$(FFCXX) -auto MatrixPlotter.cpp
-	@echo ""	
-	
-iovtk.so: iovtk.cpp
-	$(FFCXX) -auto iovtk.cpp
-	@echo ""	
-
 
 clean-local:
 	@echo ""

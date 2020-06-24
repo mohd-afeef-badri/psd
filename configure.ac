@@ -109,6 +109,8 @@ AC_CONFIG_FILES([
  Makefile
  src/Makefile 
  src/plugins/Makefile
+ src/plugins/top-ii-vol/Makefile
+ src/plugins/top-ii-vol/cpp/Makefile
  src/psd-preprocessor/Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
