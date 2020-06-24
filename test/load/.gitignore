@@ -2,3 +2,5 @@
 *.pdf
 *.mesh
 *.xyz
+*.dat
+*.gnu

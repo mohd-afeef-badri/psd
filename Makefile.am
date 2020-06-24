@@ -1,4 +1,4 @@
-SUBDIRS = src data 
+SUBDIRS = src data test/load
 EXTRA_DIST=README.MD Changelog.MD
 
 AUTOMAKE_LIST=autom4te.cache \
@@ -101,7 +101,7 @@ install-Super-Comp:
 	@echo "*============================================================*"
 	@echo "  									  "	
 	
-check: 				
+check-local: 				
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential/Paralle 2D/3D linear-elasticity                   "

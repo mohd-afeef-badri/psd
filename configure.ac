@@ -112,6 +112,7 @@ AC_CONFIG_FILES([
  src/plugins/top-ii-vol/Makefile
  src/plugins/top-ii-vol/cpp/Makefile
  src/psd-preprocessor/Makefile
+ test/load/Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
  data/meshes/3D/Geo-Files/Makefile 
