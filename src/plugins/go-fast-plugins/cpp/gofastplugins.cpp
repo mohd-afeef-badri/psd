@@ -51,6 +51,19 @@ typedef void VOID;
 #undef real
 #undef complex
 
+//=============================================================================
+// --- Max of two vectors--
+//=============================================================================
+
+double GFPmaxintwoP1(KN<double> *const & f, KN<double> *const & f1)   
+{
+  long int nn = f->N();
+  for(long int i=0; i<nn; i++) 
+   {    
+   *(f[0]+i)=max(*(f1[0]+i),*(f[0]+i));
+   }
+  return 0.0;
+}
 
 //=============================================================================
 // --- Computation of eigenvalues and eigenvectors of a real symmetric matrix--
@@ -68,7 +81,7 @@ long lapack_dsyev (KNM<double> *const &A, KN<double> *const &vp, KNM<double> *co
 	            UPLO = 'U'   ;   // 'U' means upper triangular
 	intblas     n    = A->N();   // n is matrix order
 
-
+  // http://www.netlib.org/lapack/explore-html/d2/d8a/group__double_s_yeigen_ga442c43fca5493590f8f26cf42fed4044.html#ga442c43fca5493590f8f26cf42fed4044
   // FUNCTION DSYEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
   //  JOBZ    (input) CHARACTER*1
   //          = 'N':  Compute eigenvalues only;
@@ -137,98 +150,104 @@ long lapack_dsyev (KNM<double> *const &A, KN<double> *const &vp, KNM<double> *co
 	return info;
 }
 
-// http://www.netlib.org/lapack/explore-html/d2/d8a/group__double_s_yeigen_ga442c43fca5493590f8f26cf42fed4044.html#ga442c43fca5493590f8f26cf42fed4044
-// (computation of the eigenvalues and eigenvectors of a real symmetric matrix)
+
+//=============================================================================
+// --- Computation of eigenvalues and eigenvectors of a real symmetric matrix--
+//=============================================================================
+
 long lapack_dsyevAlone (KNM<double> *const &A, KN<double> *const &vp) {
 
-	intblas n = A->N();
+
+	KNM<double> mat(*A)      ;   // cast matrix 
+	KN<double>  w(1)         ;   // lapack variable 
+	intblas     info         ,   // variable to fetch error 
+	            lw   = -1    ;   // lapack variable     
+	char        JOBZ = 'N'   ,   // 'V' means compute eigenvalues and vectors
+	            UPLO = 'U'   ;   // 'U' means upper triangular
+	intblas     n    = A->N();   // n is matrix order
 	
-	//ERROR CHECK//
-	/*
-	ffassert(A->M() == n);
-	ffassert(vectp->N() == n);
-	ffassert(vectp->M() == n);
-	ffassert(vp->N() == n);
-	*/
+  // http://www.netlib.org/lapack/explore-html/d2/d8a/group__double_s_yeigen_ga442c43fca5493590f8f26cf42fed4044.html#ga442c43fca5493590f8f26cf42fed4044
+  // FUNCTION DSYEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
+  //  JOBZ    (input) CHARACTER*1
+  //          = 'N':  Compute eigenvalues only;
+  //          = 'V':  Compute eigenvalues and eigenvectors.
+  //
+  //  UPLO    (input) CHARACTER*1
+  //          = 'U':  Upper triangle of A is stored;
+  //          = 'L':  Lower triangle of A is stored.
+  //
+  //  N       (input) INTEGER
+  //          The order of the matrix A.  N >= 0.
+  //
+  //  A       (input/output) DOUBLE PRECISION array, dimension (LDA, N)
+  //          On entry, the symmetric matrix A.  If UPLO = 'U', the
+  //          leading N-by-N upper triangular part of A contains the
+  //          upper triangular part of the matrix A.  If UPLO = 'L',
+  //          the leading N-by-N lower triangular part of A contains
+  //          the lower triangular part of the matrix A.
+  //          On exit, if JOBZ = 'V', then if INFO = 0, A contains the
+  //          orthonormal eigenvectors of the matrix A.
+  //          If JOBZ = 'N', then on exit the lower triangle (if UPLO='L')
+  //          or the upper triangle (if UPLO='U') of A, including the
+  //          diagonal, is destroyed.
+  //
+  //  LDA     (input) INTEGER
+  //          The leading dimension of the array A.  LDA >= max(1,N).
+  //
+  //  W       (output) DOUBLE PRECISION array, dimension (N)
+  //          If INFO = 0, the eigenvalues in ascending order.
+  //
+  //  WORK    (workspace/output) DOUBLE PRECISION array, dimension (MAX(1,LWORK))
+  //          On exit, if INFO = 0, WORK(1) returns the optimal LWORK.
+  //
+  //  LWORK   (input) INTEGER
+  //          The length of the array WORK.  LWORK >= max(1,3*N-1).
+  //          For optimal efficiency, LWORK >= (NB+2)*N,
+  //          where NB is the blocksize for DSYTRD returned by ILAENV.
+  //
+  //          If LWORK = -1, then a workspace query is assumed; the routine
+  //          only calculates the optimal size of the WORK array, returns
+  //          this value as the first entry of the WORK array, and no error
+  //          message related to LWORK is issued by XERBLA.
+  //
+  //  INFO    (output) INTEGER
+  //          = 0:  successful exit
+  //          < 0:  if INFO = -i, the i-th argument had an illegal value
+  //          > 0:  if INFO = i, the algorithm failed to converge; i
+  //                off-diagonal elements of an intermediate tridiagonal
+  //                form did not converge to zero.
+  //
 	
-	
-	KNM<double> mat(*A);
-	intblas info, lw = -1;
-	KN<double> w(1);
-	char JOBZ = 'N', UPLO = 'U';
 	dsyev_(&JOBZ, &UPLO, &n, mat, &n, *vp, w, &lw, &info);
 	lw = w[0];
 	w.resize(lw);
+	
 	dsyev_(&JOBZ, &UPLO, &n, mat, &n, *vp, w, &lw, &info);
 	
 	if (info < 0) {
 		cout << " LAPACK ERROR  dsyev: the " << info << "-th argument had an illegal value." << endl;
 	} else if (info > 0) {
 		cout << " LAPACK ERROR  dsyev: the algorithm failed to converge." << endl;
-	} /*else if (info == 0) {
-		cout << " LAPACK ERROR  dsyev: Done!!!!." << endl;
-		//*vectp = mat;
-	}*/
-
-	return info;
-}
-
-long lapack_zheev (KNM<Complex> *const &A, KN<double> *const &vp, KNM<Complex> *const &vectp) {
-
-	intblas n = A->N();
-
-	//ERROR CHECK//
-	/*
-	ffassert(A->M() == n);
-	ffassert(vectp->N() == n);
-	ffassert(vectp->M() == n);
-	ffassert(vp->N() == n);
-	*/
-	
-	
-	KNM<Complex> mat(*A);
-	intblas info, lw = -1;
-	KN<Complex> w(1);
-	KN<double> rw(max(1, int(3 * n - 2)));
-	char JOBZ = 'V', UPLO = 'U';
-	zheev_(&JOBZ, &UPLO, &n, mat, &n, *vp, w, &lw, rw, &info);
-	lw = w[0].real();
-	w.resize(lw);
-	zheev_(&JOBZ, &UPLO, &n, mat, &n, *vp, w, &lw, rw, &info);
-	
-	
-	if (info < 0) {
-		cout << " LAPACK ERROR  zheev: the " << info << "-th argument had an illegal value." << endl;
-	} else if (info > 0) {
-		cout << "  LAPACK ERROR zheev: the algorithm failed to converge." << endl;
-	} else if (info == 0) {
-		*vectp = mat;
 	}
 
 	return info;
 }
-
   
-double GFPmaxintwoP1(KN<double> *const & f, KN<double> *const & f1)   
-{
-    long int nn = f->N();
-    for(long int i=0; i<nn; i++) {    
-      *(f[0]+i)=max(*(f1[0]+i),*(f[0]+i));
-    }
-  return 0.0;
-}
 
+//=============================================================================
+// --- Update phase for dunamic solver --
+//=============================================================================
 
 template<class K>
 class updatedynamic_Op : public E_F0mps {
     public:
-        Expression du					;
+        Expression du					  ;
         Expression uold					;
         Expression vold					;
         Expression aold					;
         Expression beta					;                
         Expression gamma				;
-        Expression dt					;  
+        Expression dt					  ;  
               
         static const int n_name_param = 0		;
         static basicAC_F0::name_and_type name_param[]	;
@@ -264,6 +283,10 @@ template<class K>
 basicAC_F0::name_and_type updatedynamic_Op<K>::name_param[] = { };
 
 
+//=============================================================================
+// --- Split the compressive and tensile energies and update history --
+//=============================================================================
+
 template<class K>
 class updatedynamic : public OneOperator {
     public:
@@ -297,11 +320,11 @@ AnyType updatedynamic_Op<K>::operator()(Stack stack) const {
     KN<K>* vec2 = GetAny<KN<K>*>((*uold)(stack))	;
     KN<K>* vec3 = GetAny<KN<K>*>((*vold)(stack))	;
     KN<K>* vec4 = GetAny<KN<K>*>((*aold)(stack))	;        
-    double bet   = GetAny<double>((*beta)(stack))	;
+    double bet  = GetAny<double>((*beta)(stack))	;
     double gam  = GetAny<double>((*gamma)(stack))	;
     double ddt  = GetAny<double>((*dt)(stack))		;
 
-    double anew						;
+    double anew						                        ;
     
     for(int j = 0; j < vec1->n; ++j){           
       anew = (vec1->operator[](j)-vec2->operator[](j)-ddt*vec3->operator[](j))/bet/(ddt*ddt) - (1.-2.*bet)/2./bet*vec4->operator[](j);        
@@ -317,7 +340,7 @@ class DecompEnergy_Op : public E_F0mps {
     public:
         Expression ex					;
         Expression ey					;
-        Expression exy					;
+        Expression exy				;
         Expression Hp					;
         Expression Hm					;                
         Expression Hout					;
