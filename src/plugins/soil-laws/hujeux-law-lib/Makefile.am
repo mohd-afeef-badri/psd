@@ -1,8 +1,6 @@
-SUBDIRS=top-ii-vol soil-laws
-
-LIST_COMPILE=gofastplugins.cpp iovtk.cpp  MatrixPlotter.cpp
+LIST_COMPILE = hujeux.cpp utils.cpp
 	
-all-local: gofastplugins.so iovtk.so  MatrixPlotter.so 
+all-local: 
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -10,18 +8,11 @@ all-local: gofastplugins.so iovtk.so  MatrixPlotter.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-gofastplugins.so: gofastplugins.cpp
-	$(FFCXX) -auto gofastplugins.cpp
+hujeux.o: hujeux.cpp
 	@echo ""	
 	
-MatrixPlotter.so: MatrixPlotter.cpp
-	$(FFCXX) -auto MatrixPlotter.cpp
+utils.o: utils.cpp
 	@echo ""	
-	
-iovtk.so: iovtk.cpp
-	$(FFCXX) -auto iovtk.cpp
-	@echo ""	
-
 
 clean-local:
 	@echo ""
