@@ -111,6 +111,10 @@ AC_CONFIG_FILES([
  src/plugins/Makefile
  src/plugins/top-ii-vol/Makefile
  src/plugins/top-ii-vol/cpp/Makefile 
+ src/plugins/go-fast-plugins/Makefile
+ src/plugins/go-fast-plugins/cpp/Makefile
+ src/plugins/paraview-output/Makefile
+ src/plugins/paraview-output/cpp/Makefile     
  src/plugins/sparsity-visualizer/Makefile 
  src/plugins/sparsity-visualizer/cpp/Makefile  
  src/plugins/soil-laws/Makefile 

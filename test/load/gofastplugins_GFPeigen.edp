@@ -16,7 +16,7 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/gofastplugins"
+  load    "../../src/plugins/go-fast-plugins/cpp/gofastplugins"
       
 
   real[int]     EvaluesA(3);

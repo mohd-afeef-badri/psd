@@ -1,4 +1,4 @@
-SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins  paraview-output
+SUBDIRS = cpp
 
 clean-local:
 	@echo ""
@@ -6,4 +6,4 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~

@@ -1,0 +1,21 @@
+LIST_COMPILE= gofastplugins.cpp
+	
+all-local: gofastplugins.so
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Compilation done in :"; pwd
+	@echo "*============================================================*"
+	@echo ""
+	@echo " Compilation list $(LIST_COMPILE)"
+
+gofastplugins.so: gofastplugins.cpp
+	$(FFCXX) -auto gofastplugins.cpp
+	@echo ""	
+
+clean-local:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning files in :"; pwd
+	@echo "*============================================================*"
+	@echo ""
+	rm  -f *~  *.so *.o

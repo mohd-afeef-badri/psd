@@ -44,9 +44,9 @@ install-exec-local:
 	@mkdir -p ${prefix}/PSD/Doc	
 	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD/Meshes/2D/.	
 	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD/Meshes/3D/.
-	@cp  ./src/plugins/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
 	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so ${prefix}/PSD/Plugins/top-ii-vol.so	
-	@cp  ./src/plugins/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
+	@cp  ./src/plugins/paraview-output/cpp/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
 	@cp  ./src/plugins/sparsity-visualizer/cpp/MatrixPlotter.so ${prefix}/PSD/Plugins/MatrixPlotter.so
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD/Plugins/DDplotMacro.edp	
@@ -76,8 +76,8 @@ install-Super-Comp:
 	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/2D/.	
 	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/3D/.
 	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so ${prefix}/PSD/Plugins/top-ii-vol.so	
-	@cp  ./src/plugins/gofastplugins.cpp ${prefix}/PSD-Super-Comp/Plugins/gofastplugins.cpp
-	@cp  ./src/plugins/iovtk.cpp ${prefix}/PSD-Super-Comp/Plugins/iovtk.cpp
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
+	@cp  ./src/plugins/paraview-output/cpp/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-Super-Comp/Plugins/MacroTools.edp	
