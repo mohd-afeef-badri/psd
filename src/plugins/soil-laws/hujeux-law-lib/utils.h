@@ -37,7 +37,7 @@ extern bool		operator!=(const dvector&, const dvector&);
 extern void		AfficheMessage(const char*);
 extern string	makelower(const char*);
 
-extern double	EPS, TOL, TempsPause, facHour, facMin, facDay;
+extern const double	EPS, TOL; //, TempsPause, facHour, facMin, facDay;             ///////// CHECK CEHCK 
 extern char		szout[];
 extern string	ferrlog;
 

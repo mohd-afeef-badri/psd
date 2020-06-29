@@ -252,7 +252,7 @@ void HujeuxLaw::computeElastTensor(const double& p)
 }
 
 // Computing tangent constitutive (4th order) tensor considering nonlinear elasticity
-void HujeuxLaw::computeTangentTensor(const Tensor2 sig)
+void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
 {
     auto p = trace(sig)/3.;
 	auto ne = m_param[2];
@@ -314,49 +314,49 @@ bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 	histab->back() = iipl;
 	histab->front() = evp;
 
-	ii = 1;
-	jj = 15;
-	for (i = 0; i < 4; i++)
+	int ii = 1;
+	int jj = 15;
+	for (int i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 2; j++)
+		for (int j = 0; j < 2; j++)
 		{
-			histab[ii + j] = ray[i][j];
+			(*histab)[ii + j] = ray[i][j];
 		}
 		ii += 2;
 	}
 
-	for (i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (j = 0; j < 2; j++)
+		for (int j = 0; j < 2; j++)
 		{
-			histab[ii + j] = vn[i][j];
-			histab[jj + j] = sigb[i][j];
+			(*histab)[ii + j] = vn[i][j];
+			(*histab)[jj + j] = sigb[i][j];
 		}
 		ii += 2;
 		jj += 2;
 	}
-	histab[jj++] = pldiso;
+	(*histab)[jj++] = pldiso;
 
 	return stop;
 }
 
-bool HujeuxLaw::initHistory(dvector* histab)
+void HujeuxLaw::initHistory(dvector* histab)
 {
     evp = histab->front();
 
 	int ii = 1, jj = 15;
     for (int i = 0; i < 4; i++)
     {
-        for (j = 0; j < 2; j++)
+        for (int j = 0; j < 2; j++)
         {
             ray[i][j] = (*histab)[ii + j];
         }
         ii += 2;
     }
 
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
-        for (j = 0; j < 2; j++)
+        for (int j = 0; j < 2; j++)
         {
             vn[i][j] = (*histab)[ii + j];
             sigb[i][j] = (*histab)[jj + j];
@@ -368,7 +368,7 @@ bool HujeuxLaw::initHistory(dvector* histab)
     set_ipl(histab->back());
 }
 
-bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, double* vnk, double* sbk, double* rayk)
+bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vnk, Real2& sbk, Real2& rayk)
 {
 	double	pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]),
 			s1 = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]),
@@ -398,7 +398,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, double* v
 			filebuf ficherr;
 			ficherr.open(ferrlog.c_str(), ios::out | ios::app);
 			ostream oserr(&ficherr);
-            sprintf_s(szout, MAXCAR, "Starting out of dev yield surface %d!", km + 1);
+            snprintf(szout, MAXCAR, "Starting out of dev yield surface %d!", km + 1);             ///////// CHECK CHECK 
 			oserr << szout << endl;
 			ficherr.close();
 			raykk = 1.;
@@ -426,7 +426,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, double* v
 		filebuf ficherr;
 		ficherr.open(ferrlog.c_str(), ios::out | ios::app);
 		ostream oserr(&ficherr);
-        sprintf_s(szout, MAXCAR, "Starting as elastic impossible when dev mob degree %d > rayela!", km + 1);
+        snprintf(szout, MAXCAR, "Starting as elastic impossible when dev mob degree %d > rayela!", km + 1);
 		oserr << szout << endl;
 		ficherr.close();
 		stop = true;
@@ -434,7 +434,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, double* v
 	return stop;
 }
 
-bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, double* delta)
+bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& delta)
 {
 	double	dltela = m_param[17],
 			d = m_param[15],
@@ -492,7 +492,7 @@ bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, double* d
 }
 
 void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* Phik, double* Psik, double* CPsik, double& seuilk,
-	double& fidsig, double& hray, double& xlray, int& iplk, int& jplk, double* vnk, double* sbk, double* rayk)
+	double& fidsig, double& hray, double& xlray, int& iplk, int& jplk, Real2& vnk, Real2& sbk, Real2& rayk)
 {
 	Real2	c, cred, s, si;
 	double	pci = m_param[6],
@@ -754,7 +754,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 }
 
 void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* Phic, double* Psic, double* CPsic, double& seuilc, double& fidsig,
-	double& hray, double& xldelta, int& ipl4, int& jpl4, double* delta)
+	double& hray, double& xldelta, int& ipl4, int& jpl4, Real2& delta)
 {
 	double	d = m_param[15],
 			beta = m_param[6],
@@ -878,8 +878,10 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			b = m_param[8],
 			p = 0.,
 			factmp = 0., fac = 0., actif = 0.,
-			seuil[4], fidsig[4], hray[4], xlray[4], hb[4],
-			daux[6][6], hh1[4][4];
+			seuil[4], fidsig[4], hray[4], xlray[4],
+			daux[6][6];
+	auto hh1 = new double*[4];
+	auto hb = new double[4];
 
 	initHistory(histab);
 	auto evp0 = evp;
@@ -894,6 +896,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 	incmin = 1./incmax;
 	for (i = 0; i < 4; i++)
 	{
+		hh1[i] = new double[4];
 		seuil[i] = 0.;
 		fidsig[i] = 0.;
 		xlray[i] = 0.;
@@ -1043,7 +1046,9 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			{
 				niter++;
 				for (i = 0; i < 4; i++) lambdap[i] = 0.;
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////				
 				gauss(hh1, hb, lambdap, nmec);
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////				
 
 				// test on lambdap (> 0)
 				j = 0;
@@ -1102,7 +1107,17 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			{
 			    // replace double** with matrix type from existing lib
 			    // use inversion fct from existing lib (not implemented here)
-				double	**hhi = inverse(hh);
+			    
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////
+				auto	hhi = new double*[4];				
+				for (i = 0; i <4; i++) 
+				{
+					hhi[i] = new double[4];
+					for (j = 0; j < 4; j++) hhi[i][j] = hh1[i][j];
+				}
+				gauss(hhi,hb,hb,nmec);              
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////
+				
 				auto	G2 = 2.*m_mu;
 
 				for (i = 0; i < 6; i++)
@@ -1144,7 +1159,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 							{
 								if ((l = jmec[6 - jj]) != 0)
 								{
-									daux(ii,jj) += (m_lamda*(Psi[k][0] + Psi[k][1] + Psi[k][2])
+									daux[ii][jj] += (m_lamda*(Psi[k][0] + Psi[k][1] + Psi[k][2])
 													+ G2*Psi[k][ii])*hhi[kmec][l]*G2*Phi[l][4];
 								}
 							}
@@ -1163,7 +1178,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 							{
 								if ((l = jmec[6 - ii]) != 0)
 								{
-									daux(ii,jj) += (m_lamda*(Phi[k][0] + Phi[k][1] + Phi[k][2])
+									daux[ii][jj] += (m_lamda*(Phi[k][0] + Phi[k][1] + Phi[k][2])
 													+ G2*Phi[k][jj])*hhi[l][kmec]*G2*Psi[l][4];
 								}
 							}

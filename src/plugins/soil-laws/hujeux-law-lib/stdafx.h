@@ -42,9 +42,9 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include <filesystem>
+//#include <filesystem>                   ///////////////// CHECK CHECK
+#include <cstring>                        ///////////////// CHECK CHECK  FOR CENTOS 7
 
-#include "enum.h"
 #include "utils.h"
 #include "hujeux.h"
 

@@ -132,7 +132,7 @@ public:
 
 	Real2   ray[4], sigb[3], vn[3];
 
-	int		nmecdev{};,// nb of deviatoric mechanisms
+	int		nmecdev{},// nb of deviatoric mechanisms
 			nmeciso{},// = 1 if isotropic mechanism is active, else 0
 			incmax{}, // nb max of sub-increments for law integration (user data)
 			indaux,//indicator for auxiliary (tangent) constitutive operator type:
@@ -190,18 +190,18 @@ public:
 	bool initState(const Tensor2& /*sign*/ = Tensor2::zero(), dvector* /*histab*/ = nullptr);
 	void initHistory(dvector* /*histab*/);
 
-	void ComputeStress(Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/, 
+	void ComputeStress(dvector* /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/, 
 		              const Tensor2& /*deps*/,bool /*is_converge*/ = false);
 
-	bool initMecdev(const Tensor2& /*sig*/, int& /*iniplkm*/, int& /*iplk*/, double* /*vnk*/, double* /*sigbk*/, double* /*rayk*/),
-		 initMeciso(const Tensor2& /*sig*/, int& /*inipl3*/, int& /*ipl3*/, double* /*ray3*/);
+	bool initMecdev(const Tensor2& /*sig*/, int& /*iniplkm*/, int& /*iplk*/, Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/),
+		 initMeciso(const Tensor2& /*sig*/, int& /*inipl3*/, int& /*ipl3*/, Real2& /*ray3*/);
 
 	void ComputeMecdev(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, double* /*Phik*/, double* /*Psik*/, double* /*CPsik*/, double& /*seuilk*/,
 		double& /*fidsig*/, double& /*hray*/, double& /*xlray*/, int& /*iplk*/, int& /*jplk*/,
-		double* /*vnk*/, double* /*sigbk*/, double* /*rayk*/);
+		Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/);
 	
 	void ComputeMeciso(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, double* /*Phic*/, double* /*Psic*/, double* /*CPsic*/, double& /*seuilc*/,
-		double& /*fidsig*/, double& /*hray*/, double& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, double* /*delta*/);
+		double& /*fidsig*/, double& /*hray*/, double& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, Real2& /*delta*/);
 
 	bool readParameters(const string&);
 };
