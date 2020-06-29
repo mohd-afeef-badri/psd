@@ -1,0 +1,25 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2020‑06‑24                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/ 
+
+load "../../src/plugins/soil-laws/cpp/soil-laws"
+
+real[int]  vector1(1);
+vector1=10.;
+
+HujeuxSoilLaw(vector1);

@@ -19,10 +19,17 @@ check-local: gofastplugins.edp
 	$(FF) iovtk.edp 
 	$(FF) MatrixPlotter.edp 
 	$(FF) top-ii-vol.edp 
+	$(FF) soil-laws.edp
+	$(FF) soil-laws_hujeux.edp 		 	
 	$(FFMPI) -np 2 top-ii-vol.edp 	
 	$(FFMPI) -np 2 top-ii-vol_partitioningAndMeshingAndReconstruction.edp 
 	$(FFMPI) -np 2 top-ii-vol_partitioningAndMeshing.edp 
 	$(FFMPI) -np 2 top-ii-vol_partitioning.edp
+	$(FFMPI) -np 2 soil-laws.edp
+	$(FFMPI) -np 2 soil-laws_hujeux.edp
+	
+hujeux: soil-laws_hujeux.edp 	soil-laws.edp
+	$(FFMPI) -np 2 soil-laws_hujeux.edp -v 0
 	
 clean-local:
 	@echo ""

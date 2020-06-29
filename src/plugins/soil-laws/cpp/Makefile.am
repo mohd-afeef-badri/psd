@@ -1,6 +1,6 @@
-LIST_COMPILE= soil-law.cpp
+LIST_COMPILE= soil-laws.cpp
 	
-all-local: soil-law.so
+all-local: soil-laws.so
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,8 +8,8 @@ all-local: soil-law.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-soil-law.so: soil-law.cpp
-	$(FFCXX) -auto soil-law.cpp
+soil-laws.so: soil-laws.cpp
+	$(FFCXX) -auto soil-laws.cpp
 	@echo ""	
 
 clean-local:
