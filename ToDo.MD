@@ -1,6 +1,6 @@
 # What is comping up
 
-## [TODO] Hejeux soil law
+## [TODO] Hejeux soil law make it work with C++ 11
 ## [TODO] Distributed meshing for soil dynamics.
 ## [TODO] Strain Vectorization
 ## [TODO] Introduce non-lineaity for dynamics
