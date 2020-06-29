@@ -110,10 +110,12 @@ AC_CONFIG_FILES([
  src/Makefile 
  src/plugins/Makefile
  src/plugins/top-ii-vol/Makefile
+ src/plugins/top-ii-vol/cpp/Makefile 
+ src/plugins/sparsity-visualizer/Makefile 
+ src/plugins/sparsity-visualizer/cpp/Makefile  
  src/plugins/soil-laws/Makefile 
  src/plugins/soil-laws/cpp/Makefile 
  src/plugins/soil-laws/hujeux-law-lib/Makefile   
- src/plugins/top-ii-vol/cpp/Makefile
  src/psd-preprocessor/Makefile
  test/load/Makefile
  data/Makefile

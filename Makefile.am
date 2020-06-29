@@ -47,7 +47,7 @@ install-exec-local:
 	@cp  ./src/plugins/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
 	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so ${prefix}/PSD/Plugins/top-ii-vol.so	
 	@cp  ./src/plugins/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
-	@cp  ./src/plugins/MatrixPlotter.so ${prefix}/PSD/Plugins/MatrixPlotter.so
+	@cp  ./src/plugins/sparsity-visualizer/cpp/MatrixPlotter.so ${prefix}/PSD/Plugins/MatrixPlotter.so
 	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	

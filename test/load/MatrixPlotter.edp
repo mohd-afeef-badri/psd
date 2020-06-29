@@ -16,7 +16,7 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/MatrixPlotter"
+  load    "../../src/plugins/sparsity-visualizer/cpp/MatrixPlotter"
 
 /*      
   matrix A =[[1,0,0,0,0],

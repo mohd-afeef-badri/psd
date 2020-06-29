@@ -1,8 +1,6 @@
-SUBDIRS=top-ii-vol soil-laws sparsity-visualizer
-
-LIST_COMPILE=gofastplugins.cpp iovtk.cpp
+LIST_COMPILE= MatrixPlotter.cpp
 	
-all-local: gofastplugins.so iovtk.so 
+all-local: MatrixPlotter.so
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -10,14 +8,9 @@ all-local: gofastplugins.so iovtk.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-gofastplugins.so: gofastplugins.cpp
-	$(FFCXX) -auto gofastplugins.cpp
+MatrixPlotter.so: MatrixPlotter.cpp
+	$(FFCXX) -auto MatrixPlotter.cpp
 	@echo ""	
-	
-iovtk.so: iovtk.cpp
-	$(FFCXX) -auto iovtk.cpp
-	@echo ""	
-
 
 clean-local:
 	@echo ""
