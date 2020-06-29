@@ -45,7 +45,7 @@ class HujeuxSoilLaw_Op : public E_F0mps {
         Expression du					  ;
 
               
-        static const int n_name_param = 0		;
+        static const int n_name_param = 2		;
         static basicAC_F0::name_and_type name_param[]	;
         Expression nargs[n_name_param]			;
         
@@ -64,7 +64,10 @@ class HujeuxSoilLaw_Op : public E_F0mps {
 };
 
 template<class K>
-basicAC_F0::name_and_type HujeuxSoilLaw_Op<K>::name_param[] = { };
+basicAC_F0::name_and_type HujeuxSoilLaw_Op<K>::name_param[] = { 
+    {"ParamaterFile", &typeid(std::string*)},
+    {"InternalVariables", &typeid(KN<K>*)}        
+};
 
 template<class K>
 class HujeuxSoilLaw : public OneOperator {
@@ -83,9 +86,23 @@ class HujeuxSoilLaw : public OneOperator {
 
 template<class K>
 AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
+
+    string* paramFileName= nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
     KN<K>* vec1 = GetAny<KN<K>*>((*du)(stack))		;
-    					                        ;
-    cout << " HELLO HELLO FROM hujeuxLaw CLass " << endl;    
+    KN<K>* vec2 = nargs[1] ? GetAny<KN<K>*>((*nargs[1])(stack))  : NULL	;    
+
+    if(paramFileName == NULL) 
+       cout << "ERRROOOOOOOOOOOOOOOOOOOOOOOOOORRRRRRR " << endl;
+    
+    vec2->operator[](0)=vec2->operator[](0)+99.;
+    
+
+
+    cout << " HELLO HELLO FROM HUJEUX-SOIL-LAW CLASS " << endl;
+    cout << " paramFileName is  " << *paramFileName<<endl; 
+    
+
+
     
     return 0L;
 }
