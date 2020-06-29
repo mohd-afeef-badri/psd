@@ -1,5 +1,6 @@
 # What is comping up
 
+## [TODO] Hejeux soil law
 ## [TODO] Distributed meshing for soil dynamics.
 ## [TODO] Strain Vectorization
 ## [TODO] Introduce non-lineaity for dynamics
