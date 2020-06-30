@@ -124,7 +124,7 @@ class HujeuxLaw
 {
 	// Member Variables
 public:
-    dvector m_param{}; // tab with 26 constant law parameters (user data) which will be read on the fly:
+   dvector m_param{}; // tab with 26 constant law parameters (user data) which will be read on the fly:
                     // 0-Ki  1-Gi     2-ne      3-phi(°)  4-psi(°)  5-beta    6-pci    7-amon
                     // 8-b   9-acyc  10-alfa   11-rayela 12-rayhys 13-raymbl 14-cmon  15-d
                     // 16-ccyc  17-dltela   18-xkimin   19-m   20-facinc   21-iecoul  22-incmax
@@ -182,7 +182,8 @@ public:
 //	HujeuxLaw& operator=(const HujeuxLaw&);
 	
 	static double get_dev(const Tensor2&, bool /*is_sig*/ = true);
-	void init(const dvector& /*param*/);
+	//void init(const dvector& /*param*/);           //AFEEF ------------ REMOVED const ----------------//
+	void init(dvector& /*param*/);                   //AFEEF ------------ REMOVED const ----------------//	
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);
 	void computeElastTensor(const double& /*p*/);
