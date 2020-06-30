@@ -19,6 +19,8 @@
 
 
 #include "ff++.hpp"
+#include "./../hujeux-law-lib/utils.h"
+#include "./../hujeux-law-lib/hujeux.h"
 
 using namespace Fem2D;
 using namespace std;
@@ -27,11 +29,13 @@ using namespace std;
 // --- HujeuxLaw --
 //=============================================================================
 
+/*
 double HujeuxLaw(KN<double> *const & f, KN<double> *const & f1)   
 {
   cout << "  HELLO HELLO FROM hujeuxLaw fuction  " << endl;
   return 0.0;
 }
+*/
 
 
 
@@ -101,7 +105,10 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
     cout << " HELLO HELLO FROM HUJEUX-SOIL-LAW CLASS " << endl;
     cout << " paramFileName is  " << *paramFileName<<endl; 
     
-
+    //gauss();
+    HujeuxLaw Newobject; 
+    cout << " getNum() is  " << Newobject.getNum()<<endl;     
+    
 
     
     return 0L;
@@ -111,7 +118,7 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
  
 static void InitFF()
 {
-  Global.Add("HujeuxSoilLaw", "(", new HujeuxSoilLaw<double>);
-  Global.Add("HujeuxLaw","(",new OneOperator2_<double,KN<double>*, KN<double>*>(HujeuxLaw));
+  Global.Add("PSDHujeuxSoilLaw", "(", new HujeuxSoilLaw<double>);
+//  Global.Add("PSDHujeuxLaw","(",new OneOperator2_<double,KN<double>*, KN<double>*>(HujeuxLaw));
 }
 LOADFUNC(InitFF)   

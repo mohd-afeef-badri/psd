@@ -205,6 +205,7 @@ public:
 		double& /*fidsig*/, double& /*hray*/, double& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, Real2& /*delta*/);
 
 	bool readParameters(const string&);
+  int getNum();	       
 };
 ///////////////////////////////////////////////////////////////////////////////
 #endif // __HUJEUX_H__

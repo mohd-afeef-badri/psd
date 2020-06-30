@@ -25,5 +25,5 @@ vector1=10.;
 real[int]  vector2(1);
 vector2=1.;
 
-HujeuxSoilLaw(vector1,ParamaterFile="hello.in",InternalVariables=vector2);
+PSDHujeuxSoilLaw(vector1,ParamaterFile="hello.in",InternalVariables=vector2);
 cout << " HERE iS VECTOR 2 " << vector2 << endl;
