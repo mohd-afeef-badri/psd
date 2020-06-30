@@ -1,5 +1,6 @@
 # What is comping up
 
+## [TODO] Hujeux law split
 ## [TODO] Hejeux soil law make it work with C++ 11
 ## [TODO] Distributed meshing for soil dynamics.
 ## [TODO] Strain Vectorization
