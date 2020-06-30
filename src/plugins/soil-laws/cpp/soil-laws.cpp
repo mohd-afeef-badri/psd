@@ -19,6 +19,7 @@
 
 
 #include "ff++.hpp"
+//#include "./../hujeux-law-lib/stdafx.h"
 #include "./../hujeux-law-lib/utils.h"
 #include "./../hujeux-law-lib/hujeux.h"
 
@@ -95,21 +96,27 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
     KN<K>* vec1 = GetAny<KN<K>*>((*du)(stack))		;
     KN<K>* vec2 = nargs[1] ? GetAny<KN<K>*>((*nargs[1])(stack))  : NULL	;    
 
+
+#ifdef DEBUG
+    cout << "\n Entering class HujeuxSoilLaw  soil-laws.cpp\n"
+         << " Input parameters :\n                  paramFileName = "  << *paramFileName << endl;
+       
     if(paramFileName == NULL) 
-       cout << "ERRROOOOOOOOOOOOOOOOOOOOOOOOOORRRRRRR " << endl;
-    
-    vec2->operator[](0)=vec2->operator[](0)+99.;
-    
+       cout << "******Error in class HujeuxSoilLaw_Op --> ParamaterFile cannot be empty*****" << endl;       
+#endif
 
+//    vec2->operator[](0)=vec2->operator[](0)+99.;
 
-    cout << " HELLO HELLO FROM HUJEUX-SOIL-LAW CLASS " << endl;
-    cout << " paramFileName is  " << *paramFileName<<endl; 
+   //----------------------------------------------------------
+   // HujeuxLaw class test
+   //---------------------------------------------------------- 
     
-    //gauss();
-    HujeuxLaw Newobject; 
-    cout << " getNum() is  " << Newobject.getNum()<<endl;     
+    HujeuxLaw PSDobject;                      // Creating PSDobject in Hujeux law class    
+    PSDobject.readParameters(*paramFileName);    
     
-
+//#ifdef DEBUG     
+    cout << " PSDobject.getNum() fetches is  " << PSDobject.getNum()<<endl; 
+//#endif
     
     return 0L;
 }

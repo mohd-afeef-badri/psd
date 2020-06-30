@@ -25,5 +25,7 @@ vector1=10.;
 real[int]  vector2(1);
 vector2=1.;
 
-PSDHujeuxSoilLaw(vector1,ParamaterFile="hello.in",InternalVariables=vector2);
-cout << " HERE iS VECTOR 2 " << vector2 << endl;
+PSDHujeuxSoilLaw(vector1,ParamaterFile="Hujeuxparam.input",InternalVariables=vector2);
+
+if(0)
+ cout << " Vector 2 in PSD is  " << vector2 << endl;

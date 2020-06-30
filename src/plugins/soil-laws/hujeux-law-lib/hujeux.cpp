@@ -6,12 +6,12 @@
 using namespace std;
 
 extern void		gauss(double**, double*, double*, const int&);
-const double	EPS = 1.e-15,
-		        FTOL = 1.e-8,
-		         TOL = 1.e-8,		                   //AFEEF ------------ ADDED THIS VALUE ----------------//         
-        		Pa = -1.e6, // Reference stress (in Pa)
-	            RAD = acos(-1.) / 180.;
-string 	        ferrlog = "error.log";
+const double	EPS  = 1.e-15,
+		          FTOL = 1.e-8,
+		          TOL  = 1.e-15,		                   //AFEEF ------------ ADDED THIS VALUE ----------------//         
+        		  Pa   = -1.e6,                      // Reference stress (in Pa)
+	            RAD  = acos(-1.) / 180.;
+string 	      ferrlog = "error.log";
 char	        szout[MAXBUFFER];
 //////////////////////////////////////////////////////////////////////////////////////
 // class ElastTensor: 4th-order elastic tensor
@@ -112,15 +112,15 @@ HujeuxLaw::HujeuxLaw()
 
 //=================================================================================================================//
 //=================================================================================================================//
-//HujeuxLaw::HujeuxLaw(const HujeuxLaw& h)
-//{
-//	init(h.m_param);                               //AFEEF ----- NOT WORKING m_parm not defined ----//
-//}
+HujeuxLaw::HujeuxLaw(const HujeuxLaw& h)
+{
+	init(h.m_param);                               //AFEEF ----- NOT WORKING m_parm not defined ----//
+}
 //=================================================================================================================//
 
 
 //=================================================================================================================//
-// Initialization performed when reading user parameters at the begining of each step for a given integration point
+// Initialization performed when reading user parameters at the beginning of each step for a given integration point
 //=================================================================================================================//
 void HujeuxLaw::initConst()
 {
@@ -178,12 +178,11 @@ void HujeuxLaw::initConst()
 
 
 //=================================================================================================================//
-// Initializing when reading user parameters at the begining of each step for a given integration point
+// Initializing when reading user parameters at the beginning of each step for a given integration point
 //=================================================================================================================//
-//void HujeuxLaw::init(const dvector& param)                                      //AFEEF ------------ REMOVED const ----------------//
-void HujeuxLaw::init(dvector& param)                                              //AFEEF ------------ REMOVED const ----------------//
+void HujeuxLaw::init(const dvector& param)                                      //AFEEF ------------ REMOVED const ----------------//
 {
-    m_param = param; // tab of size NPROPHUJ
+    m_param.assign(param.begin(),param.end()); // tab of size NPROPHUJ
     nmecdev = 3;
     nmeciso = 1;
     inc = 0.;
@@ -238,14 +237,20 @@ void HujeuxLaw::init(dvector& param)                                            
 
 	
 //=================================================================================================================//
-// reading the 24 Hujeux Law parameters from a given file 
+// reading the 24 Hujeux Law parameters from a given .input file 
 //=================================================================================================================//	        
 bool HujeuxLaw::readParameters(const string& name)
 {
+#ifdef DEBUG
+  cout << "\n Entering class HujeuxLaw::readParameters  from hujeux.cpp\n"
+       << " Input parameters :\n                  name = "  << name <<"\n"<< endl;
+#endif
+		
 #ifdef _DEBUG
 	if (name.empty())
 	{
-		cout << "\nFilename for materials not found!! Stop...\n";
+		cout << "\n Error filename for materials not found "
+		        "--> Process stopped in HujeuxLaw::readParameters\n";
 		return false;
 	}
 #endif
@@ -287,7 +292,37 @@ bool HujeuxLaw::readParameters(const string& name)
 	param[4] *= RAD;
 
 	init(param);                                                                    
-	
+
+#ifdef DEBUG
+  cout << "// ================================================================================= //"
+       << "\n  0  Ki      = "<< param[0] 
+       << "\n  1  Gi      = "<< param[1] 
+       << "\n  2  ne      = "<< param[2] 
+       << "\n  3  phi(°)  = "<< param[3] 
+       << "\n  4  psi(°)  = "<< param[4] 
+       << "\n  5  beta    = "<< param[5] 
+       << "\n  6  pci     = "<< param[6]
+       << "\n  7  amon    = "<< param[7]
+       << "\n  8  b       = "<< param[8] 
+       << "\n  9  acyc    = "<< param[9] 
+       << "\n  10 alfa    = "<< param[10] 
+       << "\n  11 rayela  = "<< param[11] 
+       << "\n  12 rayhys  = "<< param[12] 
+       << "\n  13 raymbl  = "<< param[13] 
+       << "\n  14 cmon    = "<< param[14] 
+       << "\n  15 d       = "<< param[15] 
+       << "\n  16 ccyc    = "<< param[16] 
+       << "\n  17 dltela  = "<< param[17] 
+       << "\n  18 xkimin  = "<< param[18] 
+       << "\n  19 m       = "<< param[19] 
+       << "\n  20 facinc  = "<< param[20] 
+       << "\n  21 iecoul  = "<< param[21] 
+       << "\n  22 incmax  = "<< param[22] 
+       << "\n  23 Kaux    = "<< param[23] 
+       << "\n  24 Gaux    = "<< param[24]        
+       << "\n// ================================================================================= //"
+       << endl;  
+#endif	
 	return true;
 }	        
 //=================================================================================================================//
@@ -400,13 +435,14 @@ void HujeuxLaw::initHistory(dvector* histab)
 
 //=================================================================================================================//
 // sig = stress tensor at the end of previous converged time step
-// histab : tab containing internal variables (=hardening parameters)
-// stored on each integration point (size = NHISTHUJ)
+// histab : tab containing internal variables(=hardening parameters) stored on each integration point(size = NHISTHUJ)
+// 
 //=================================================================================================================//
 bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 {
 //	if (sig == Tensor2::zero() || histab == nullptr) return true;   //AFEEF ---- Not working due to zero() ------//
-
+	  if (histab == nullptr) return true;   //AFEEF ---- Not working due to zero() ------//
+	//if (sig.m_vec == dvector()) return true;   //AFEEF ---- Not working due to zero() ------//	
 	auto beta = m_param[5];
 	pc = m_param[6] * exp(beta * evp);
 	initHistory(histab);
@@ -1417,7 +1453,21 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 //=================================================================================================================//
 int HujeuxLaw::getNum() 
 {  
- return 222; 
+
+    Tensor2 Newobject, Newobject2(Real3(1,1,1),Real3(1,1,1));
+    //Tensor2 Newobject3 = Newobject2 + Newobject;
+   cout << Newobject2.m_vec[0] << endl;
+    cout << Newobject.m_vec[0] << endl;
+
+Newobject = Newobject2;
+//if (Newobject == Newobject2)
+//cout << Newobject.m_vec[0] << endl;
+
+
+#ifdef DEBUG
+  cout << "\n Entering class HujeuxLaw::getNum  from hujeux.cpp "<<endl;
+#endif
+ return 9999999; 
 }
 //=================================================================================================================//
 

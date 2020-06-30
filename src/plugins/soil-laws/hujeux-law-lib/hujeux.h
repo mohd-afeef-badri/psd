@@ -182,8 +182,7 @@ public:
 //	HujeuxLaw& operator=(const HujeuxLaw&);
 	
 	static double get_dev(const Tensor2&, bool /*is_sig*/ = true);
-	//void init(const dvector& /*param*/);           //AFEEF ------------ REMOVED const ----------------//
-	void init(dvector& /*param*/);                   //AFEEF ------------ REMOVED const ----------------//	
+	void init(const dvector& /*param*/);         
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);
 	void computeElastTensor(const double& /*p*/);

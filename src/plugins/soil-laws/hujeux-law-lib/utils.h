@@ -15,7 +15,7 @@ using namespace std;
 typedef vector<double>	dvector;
 typedef vector<int> ivector;
 
-extern void		gauss(double**, double*, double*, const int&);                         //AFEEF --------- ADDED GAUSS DEFINITION ------------- //
+extern void		gauss(double**, double*, double*, const int&);                         
 extern dvector	operator-(const dvector&, const dvector&);
 extern dvector	operator+(const dvector&, const dvector&);
 extern dvector	operator+(const dvector&, const double&);
