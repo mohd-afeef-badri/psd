@@ -44,6 +44,8 @@
 #include <iomanip>
 //#include <filesystem>                   ///////////////// CHECK CHECK
 #include <cstring>                        ///////////////// CHECK CHECK  FOR CENTOS 7
+#include <stdexcept>                      ///////////////// CHECK CHECK  FOR CENTOS 7
+
 
 #include "utils.h"
 #include "hujeux.h"
