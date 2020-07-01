@@ -18,7 +18,8 @@ All notable changes to PSD solver will be documented in this file.
 - Introduce boundary conditions via `-dirichletconditions` [int] flag. 
 - Introduce point boundary conditions via `-dirichletpointcondition` [int] flag. 
 - Introduce traction boundary conditions via `-tractionconditions` [int] flag.
-- New folder `tests` containing unit-tests for modules. 
+- New folder `tests` containing unit-tests for modules.
+- New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne).
 
 ### Changed
 - Moved to FreeFEM 4.6.
