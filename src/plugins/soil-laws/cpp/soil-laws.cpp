@@ -113,9 +113,9 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
     
     HujeuxLaw PSDobject;                      // Creating PSDobject in Hujeux law class    
     PSDobject.readParameters(*paramFileName);    
-    
+   
 //#ifdef DEBUG     
-    cout << " PSDobject.getNum() fetches is  " << PSDobject.getNum()<<endl; 
+//    cout << " PSDobject.getNum() fetches is  " << PSDobject.getNum()<<endl; 
 //#endif
     
     return 0L;
