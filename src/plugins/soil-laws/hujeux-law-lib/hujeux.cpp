@@ -1382,8 +1382,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 	} while (resinc > FTOL);
 
   
-//	bool is_plastic = (fabs(evp) >= EPS || norm(epsp.m_vec) >= EPS);      //AFEEF -------- causing error -----------//
-  	bool is_plastic = true;                                               //AFEEF -------- DANGER added just to test -----------//
+	bool is_plastic = (fabs(evp) >= EPS || norm(epsp.m_vec) >= EPS);
 	if (!is_plastic)
 	{
 		epsp = epspn;
