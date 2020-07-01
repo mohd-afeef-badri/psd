@@ -49,7 +49,7 @@ public:
 	// ***** CONSTRUCTORS & DESTRUCTOR
 public:
 	ElastTensor() = default;
-	ElastTensor(const Real3x3& D, const Real3x3& S) { m_D = D; m_S = S; }
+	ElastTensor(const Real3x3& /*D*/, const Real3x3& /*S*/);
 	ElastTensor(const ElastTensor&);
 	ElastTensor(const double&/*lambda*/, const double&/*mu*/);
 	~ElastTensor() = default;
@@ -67,55 +67,20 @@ public:
 	double		operator()(const int&, const int&) const;
 	void		set(const int&, const int&, const double&);
 };
-
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator+(ElastTensor m1, ElastTensor m2)
-{
-	return ElastTensor(m1.m_D + m2.m_D, m1.m_S + m2.m_S);
-}
-
+extern ElastTensor operator+(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator-(ElastTensor m1, ElastTensor m2)
-{
-	return ElastTensor(m1.m_D - m2.m_D, m1.m_S - m2.m_S);
-}
-
+extern ElastTensor operator-(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator*(double x, ElastTensor m)
-{
-	return ElastTensor(x * m.m_D, x * m.m_S);
-}
-
+extern ElastTensor operator*(double, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator*(ElastTensor m, double x)
-{
-	return ElastTensor(x * m.m_D, x * m.m_S);
-}
-
+extern ElastTensor operator*(const ElastTensor&, double);
 /*---------------------------------------------------------------------------*/
-inline Tensor2 operator*(ElastTensor m1, Tensor2 m2)
-{
-	Tensor2 m;
-	for (int i = 0; i < 6; i++)
-	{
-		double vi = 0.;
-		for (int j = 0; j < 6; j++) vi += m1(i,j) * m2.m_vec[j];
-		m.m_vec[i] = vi;
-	}
-	return m;
-}
-
+extern Tensor2 operator*(const ElastTensor&, Tensor2);
 /*---------------------------------------------------------------------------*/
-inline double trace(ElastTensor m)
-{
-	return trace(m.m_D) + trace(m.m_S);
-}
-
+extern double trace(const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-inline ElastTensor transpose(ElastTensor m)
-{
-	return ElastTensor(matrix3x3Transpose(m.m_D), matrix3x3Transpose(m.m_S));
-}
+extern ElastTensor transpose(const ElastTensor&);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // class HujeuxLaw: Hujeux 3D constitutive model with 3 deviatoric + 1 isotropic mechanisms

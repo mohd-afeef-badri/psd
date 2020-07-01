@@ -11,14 +11,16 @@ const double	EPS  = 1.e-15,
 		          TOL  = 1.e-15,         
         		  Pa   = -1.e6,                      // Reference stress (in Pa)
 	            RAD  = acos(-1.) / 180.;
-string 	      ferrlog = "error.log";
-char	        szout[MAXBUFFER];
+string 	      ferrlog("error.log");
+char	      szout[MAXBUFFER];
 //////////////////////////////////////////////////////////////////////////////////////
 // class ElastTensor: 4th-order elastic tensor
 //
 
 ////////////////////////////////////
 // ***** CONSTRUCTORS & DESTRUCTOR
+
+ElastTensor::ElastTensor(const Real3x3& D, const Real3x3& S) { m_D = D; m_S = S; }
 
 ElastTensor::ElastTensor(const ElastTensor& tens)
 {
@@ -95,10 +97,59 @@ void ElastTensor::set(const int& i, const int& j, const double& x)
 		m_S[i-3][j-3] = x;
 }
 
+/*---------------------------------------------------------------------------*/
+inline ElastTensor operator+(const ElastTensor& m1, const ElastTensor& m2)
+{
+    return ElastTensor(m1.m_D + m2.m_D, m1.m_S + m2.m_S);
+}
+
+/*---------------------------------------------------------------------------*/
+inline ElastTensor operator-(const ElastTensor& m1, const ElastTensor& m2)
+{
+    return ElastTensor(m1.m_D - m2.m_D, m1.m_S - m2.m_S);
+}
+
+/*---------------------------------------------------------------------------*/
+inline ElastTensor operator*(double x, const ElastTensor& m)
+{
+    return ElastTensor(x * m.m_D, x * m.m_S);
+}
+
+/*---------------------------------------------------------------------------*/
+inline ElastTensor operator*(const ElastTensor& m, double x)
+{
+    return ElastTensor(x * m.m_D, x * m.m_S);
+}
+
+/*---------------------------------------------------------------------------*/
+inline Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
+{
+    Tensor2 m;
+    for (int i = 0; i < 6; i++)
+    {
+        double vi = 0.;
+        for (int j = 0; j < 6; j++) vi += m1(i,j) * m2.m_vec[j];
+        m.m_vec[i] = vi;
+    }
+    return m;
+}
+
+/*---------------------------------------------------------------------------*/
+inline double trace(const ElastTensor& m)
+{
+    return trace(m.m_D) + trace(m.m_S);
+}
+
+/*---------------------------------------------------------------------------*/
+inline ElastTensor transpose(const ElastTensor& m)
+{
+    return ElastTensor(matrix3x3Transpose(m.m_D), matrix3x3Transpose(m.m_S));
+}
+
+/*---------------------------------------------------------------------------*/
 const int ipermu[3][3] = { {1,2,5},{2,0,4},{0,1,3} };
 const int   NHISTHUJ = 24, // nb of internal variables (history) for Hujeux
 	        NPROPHUJ = 25; // nb of const properties (user data) for Hujeux
-
 
 //=================================================================================================================//
 //=================================================================================================================//
