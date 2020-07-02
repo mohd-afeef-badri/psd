@@ -36,9 +36,6 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-//#include <stdio.h>
-//#include "utils.h"
-//#include "hujeux.h"
 
 using namespace std;
 
@@ -101,7 +98,23 @@ int main()
       cout << "  N2.m_vec[0] = " << N2.m_vec[0] << endl;
       cout << "  N1.m_vec[0] = " << N1.m_vec[0] << endl; 
 
-    cout << "\nsuccess !!!!\n\n";        
+    cout << "\nsuccess !!!!\n\n"; 
+    
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Tensor2 class test check cout trace of N3                \n"
+   "//----------------------------------------------------------\n"; 
+
+      Tensor2 N3(Real3(1,2,3),Real3(4,5,6));
+           
+      double ExactTrace = N3.m_vec[0] + N3.m_vec[1] + N3.m_vec[2];
+      double CalcuTrace = N3.m_vec[0] + N3.m_vec[1] + N3.m_vec[2];      
+      
+      cout << "\n  Trace exact is "     <<  ExactTrace 
+           << "  function for trace " <<  trace(N3) 
+           << endl;           
+ 
+    cout << "\nsuccess !!!!\n\n";               
     
    return 0;
  }
