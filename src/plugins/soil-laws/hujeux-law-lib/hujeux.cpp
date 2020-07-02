@@ -427,8 +427,7 @@ void HujeuxLaw::computeElastTensor(const double& p)
 //=================================================================================================================//
 void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
 {
-    //auto p = trace(sig)/3.;                                  //AFEEF ---- NOT WORKING  ----//
-    auto p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.;  //AFEEF ---- WORK AROUND ----//
+    auto p = trace(sig)/3.;
     
 	auto ne = m_param[2];
 	double	fac = 1.;
@@ -573,8 +572,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 	bool	stop = false;
 
 	ppp = pk;
-	//if (iecoul < 0) ppp = trace(sig) / 3.;                                     //AFEEF ---- NOT WORKING  ----//
-	if (iecoul < 0) ppp =(sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.;        //AFEEF ---- WORK AROUND  ----//
+	if (iecoul < 0) ppp = trace(sig) / 3.;
 
 	double	facpk = sinphi * (1. - b * log(ppp / pc)),
 			fmk = facpk * pk,
@@ -639,8 +637,7 @@ bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& de
 {
 	double	dltela = m_param[17],
 			d = m_param[15],
-			//p = trace(sig) / 3.,                                         //AFEEF ---- NOT WORKING  ----//
-				p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.,         //AFEEF ---- WORK AROUND  ----//
+			p = trace(sig) / 3.,
 			faciso = -d * pc,
 			rayiso = -p / faciso;
 	bool	stop = false;
@@ -715,8 +712,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 			acyc = m_param[9],
 			da = amon - acyc,
 			pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]),
-			//tracesig = trace(sig),                                     //AFEEF ---- NOT WORKING  ----//
-			tracesig = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]),		 //AFEEF ---- WORK AROUND  ----//	
+			tracesig = trace(sig),
 			p = tracesig / 3.;
 
 	s[0] = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]);
@@ -980,8 +976,7 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 			ccyc = m_param[16],
 			xkimin = m_param[18],
 			cc = cmon - ccyc,
-			//p = trace(sig) / 3.,                                   //AFEEF ---- NOT WORKING  ----//	
-			p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.,		 //AFEEF ---- WORK AROUND  ----//	
+			p = trace(sig) / 3.,
 			dm = delta[0],
 			dc = delta[1],
 			faciso = -d * pc,
@@ -1024,8 +1019,7 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 	int jpl1 = 1 - jpl4;
 	Phic[3] = -pc * beta * (d * delta[jpl4 - 1] + jpl1 * sgnnew * pldiso);
 
-	//fidsig = sgnnew * trace(dsig) / 3.;                                      //AFEEF ---- NOT WORKING  ----//
-		fidsig = sgnnew * (dsig.m_vec[0] + dsig.m_vec[1] + dsig.m_vec[2])/3.;		 //AFEEF ---- WORK AROUND  ----//	
+	fidsig = sgnnew * trace(dsig) / 3.;
 
 	double	prkinc = facdlt / (fabs(fidsig) + 1.e-12) * facinc;
 
@@ -1131,8 +1125,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		xlray[i] = 0.;
 	}
 
-	//double depsv = trace(deps);                                      //AFEEF ---- NOT WORKING  ----//                              
-	double depsv = (deps.m_vec[0] + deps.m_vec[1] + deps.m_vec[2]);    //AFEEF ---- WORK AROUND  ----//
+	double depsv = trace(deps);
 	
 	computeTangentTensor(sig);
 	
@@ -1149,8 +1142,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		if (incfai == 1 || (incfai > 1 && nmec > 0))
 		{
 			pc = pci * exp(beta * evp);
-			//p = trace(sig) / 3.;                                        //AFEEF ---- NOT WORKING  ----//  
-			p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]) / 3.;        //AFEEF ---- WORK AROUND  ----//
+			p = trace(sig) / 3.;
 			factmp = 50. * p / pc;
 			fac = factmp;
 			if (factmp < 0.1) fac = 0.1;
@@ -1460,8 +1452,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		epsp = epspn;
 		evp = evp0;
 		sig = sign;
-	//p = trace(sig) / 3.;                                        //AFEEF ---- NOT WORKING  ----//  
-		p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]) / 3.;        //AFEEF ---- WORK AROUND  ----//		
+	  p = trace(sig) / 3.;
 		if (p >= 0.) p = ptrac;
 		else if (p >= -1.e-7) p = -1.e-7;
 

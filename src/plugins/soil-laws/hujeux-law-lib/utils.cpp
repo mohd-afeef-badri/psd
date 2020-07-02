@@ -844,7 +844,8 @@ inline Real3x3 convertVectorToMatrix3x3(dvector vec)
 }
 
 /*---------------------------------------------------------------------------*/
-inline double trace(Tensor2 t) {
+//inline double trace(Tensor2 t) {                                       //AFEEF ---- NOT WORKING WITH inline ----//
+double trace(Tensor2 t) {                                                //AFEEF ---- NOT WORKING WITH inline ----//
     return (t.m_vec[0] + t.m_vec[1] + t.m_vec[2]);
 }
 
