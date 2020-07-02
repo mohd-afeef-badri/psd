@@ -154,14 +154,16 @@ inline dvector operator*(const double& x, const dvector& V)
 }
 
 // Scalar (dot) product
-inline double dot(const dvector& V, const dvector& W)
+//inline double dot(const dvector& V, const dvector& W)                          // AFEEF ----- NOT WORKING WITH INLINE ----- //
+double dot(const dvector& V, const dvector& W)                                   // AFEEF ----- NOT WORKING WITH INLINE ----- //
 {
 	double init = 0.;
 	return inner_product(V.begin(), V.end(), W.begin(), init);
 }
 
 // Euclidian norm
-inline double norm(const dvector& V)
+//inline double norm(const dvector& V)                                         // AFEEF ----- NOT WORKING WITH INLINE ----- //
+double norm(const dvector& V)                                                  // AFEEF ----- NOT WORKING WITH INLINE ----- //
 {
 	return sqrt(dot(V,V));
 }

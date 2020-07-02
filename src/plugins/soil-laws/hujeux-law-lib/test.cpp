@@ -171,6 +171,20 @@ int main()
  
     cout << "\nsuccess !!!!\n\n";  
 
+
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Tensor2 class test check norm(Tensor2.m_vec)             \n"
+   "//----------------------------------------------------------\n"; 
+
+      Tensor2 N9;
+      N9 = Tensor2::identity();
+      
+      double testNormTensor2 = norm(N9.m_vec);                   
+ 
+    cout << "\nsuccess !!!!\n\n";
+    
+
    cout <<
    "//----------------------------------------------------------\n"
    "// Real3x3 class test check object creation R1						  \n"
