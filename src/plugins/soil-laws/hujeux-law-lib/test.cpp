@@ -114,7 +114,43 @@ int main()
            << "  function for trace " <<  trace(N3) 
            << endl;           
  
-    cout << "\nsuccess !!!!\n\n";               
+    cout << "\nsuccess !!!!\n\n";
+    
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Tensor2 class test check Tensor2::zero()                 \n"
+   "//----------------------------------------------------------\n"; 
+
+      Tensor2 N4;
+      N4 = Tensor2::zero();
+      
+      cout << "  N4.m_vec[0] = " << N4.m_vec[0] << endl;
+      cout << "  N4.m_vec[0] = " << N4.m_vec[0] << endl;                    
+ 
+    cout << "\nsuccess !!!!\n\n"; 
+    
+
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Tensor2 class test bool operator ==                      \n"
+   "//----------------------------------------------------------\n"; 
+
+      Tensor2 N5;
+      N5 = Tensor2::zero();
+
+      Tensor2 N6;
+      N6 = Tensor2::identity();      
+      
+      if(N5==N4)
+        cout << "Bool operator == for Tensor2 works as N5==N4 \n";
+      if(N5==N6)
+         cout << "Bool operator == for Tensor2 as N5!=N6 \n";                 
+      
+      cout << "  N5.m_vec[0] = " << N5.m_vec[0] << endl;
+      cout << "  N5.m_vec[0] = " << N5.m_vec[1] << endl;                    
+ 
+    cout << "\nsuccess !!!!\n\n";    
+                       
 
    cout <<
    "//----------------------------------------------------------\n"
