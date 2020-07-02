@@ -154,6 +154,25 @@ int main()
 
    cout <<
    "//----------------------------------------------------------\n"
+   "// Tensor2 class test bool operator +=                      \n"
+   "//----------------------------------------------------------\n"; 
+
+      Tensor2 N7;
+      N7 = Tensor2::identity();
+
+      Tensor2 N8;
+      N8 = Tensor2::identity();      
+      
+      N8 += N7;
+      N8 += N7;                     
+      
+      cout << "  N8.m_vec[0] = " << N8.m_vec[0] << endl;
+      cout << "  N8.m_vec[0] = " << N8.m_vec[1] << endl;                    
+ 
+    cout << "\nsuccess !!!!\n\n";  
+
+   cout <<
+   "//----------------------------------------------------------\n"
    "// Real3x3 class test check object creation R1						  \n"
    "//----------------------------------------------------------\n"; 
 

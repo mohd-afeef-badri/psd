@@ -1428,12 +1428,12 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 
 			// computing elastoplastic stresses
 			depsp = dep;
-//			sig -= m_elast_tensor * depsp;                                     //AFEEF -------- causing error -----------//
-//			epsp += depsp;                                                     //AFEEF -------- causing error -----------//
+			sig -= m_elast_tensor * depsp;
+			epsp += depsp;
 	
 		}
 		
-//		sig += dsig * inc;                                                   //AFEEF -------- causing error -----------//
+		sig += dsig * inc;
 		resinc -= inc;
    
 	} while (resinc > FTOL);

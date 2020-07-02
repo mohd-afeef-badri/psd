@@ -869,7 +869,8 @@ inline bool operator!=(const Tensor2& t1, const Tensor2& t2) {
 }
 
 /*---------------------------------------------------------------------------*/
-inline Tensor2 operator*(const Tensor2& t1,const double& x) {
+//inline Tensor2 operator*(const Tensor2& t1,const double& x) {         //AFEEF ---- NOT WORKING WITH inline ----//
+Tensor2 operator*(const Tensor2& t1,const double& x) {                  //AFEEF ---- NOT WORKING WITH inline ----//
     return Tensor2(t1.m_vec * x);
 }
 
