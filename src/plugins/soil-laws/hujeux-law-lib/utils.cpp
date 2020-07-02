@@ -858,7 +858,8 @@ inline Tensor2 operator+(const Tensor2& t1,const Tensor2& t2) {
 }
 
 /*---------------------------------------------------------------------------*/
-inline bool operator==(const Tensor2& t1, const Tensor2& t2) {
+//inline bool operator==(const Tensor2& t1, const Tensor2& t2) {        //AFEEF ---- NOT WORKING WITH inline ----//
+bool operator==(const Tensor2& t1, const Tensor2& t2) {                 //AFEEF ---- NOT WORKING WITH inline ----//
     return (t1.m_vec == t2.m_vec);
 }
 

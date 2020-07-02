@@ -492,9 +492,7 @@ void HujeuxLaw::initHistory(dvector* histab)
 //=================================================================================================================//
 bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 {
-//	if (sig == Tensor2::zero() || histab == nullptr) return true;   //AFEEF ---- Not working due to zero() ------//
-	  if (histab == nullptr) return true;        //AFEEF ---- Not working due to zero() ------//
-	//if (sig.m_vec == dvector()) return true;   //AFEEF ---- Not working due to zero() ------//	
+  if (sig == Tensor2::zero() || histab == nullptr) return true;
 	auto beta = m_param[5];
 	pc = m_param[6] * exp(beta * evp);
 	initHistory(histab);

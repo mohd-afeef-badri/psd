@@ -329,7 +329,7 @@ public:
 	Tensor2& operator/=(const double&);
 	Tensor2& operator=(const Real3x3&);
 	Tensor2& operator=(const dvector&);
-
+	
 	Real3	get_diagonal() const; // xx yy zz
 	void	set_diagonal(const Real3&);
 	
