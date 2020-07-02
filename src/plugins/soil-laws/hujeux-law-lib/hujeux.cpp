@@ -33,7 +33,8 @@ ElastTensor::ElastTensor(const double& lambda, const double& mu)
 
 	m_D = lambda;
 	for (int i = 0; i < 3; i++) m_D[i][i] += 2 * mu;
-	//m_S = mu * Real3x3::identity();                              //AFEEF ------------ NOT WORKING  ----------------//     
+	//m_S = mu * Real3x3::identity();                                                     //AFEEF ---- NOT WORKING  ----//                        
+	m_S =  Real3x3(Real3(mu, 0.0, 0.0), Real3(0.0, mu, 0.0), Real3(0.0, 0.0, mu));        //AFEEF ---- WORK AROUND  ----//   
 }
 
 ////////////////////////////////////
@@ -158,7 +159,7 @@ HujeuxLaw::HujeuxLaw()
     initConst();
 }
 //=================================================================================================================//
-
+/**/
 
 
 //=================================================================================================================//
@@ -168,7 +169,7 @@ HujeuxLaw::HujeuxLaw(const HujeuxLaw& h)
 	init(h.m_param);
 }
 //=================================================================================================================//
-
+/**/
 
 //=================================================================================================================//
 // Initialization performed when reading user parameters at the beginning of each step for a given integration point
@@ -225,13 +226,13 @@ void HujeuxLaw::initConst()
     }
 }
 //=================================================================================================================//
-
+/**/
 
 
 //=================================================================================================================//
 // Initializing when reading user parameters at the beginning of each step for a given integration point
 //=================================================================================================================//
-void HujeuxLaw::init(const dvector& param)                                      //AFEEF ------------ REMOVED const ----------------//
+void HujeuxLaw::init(const dvector& param)
 {
     m_param.assign(param.begin(),param.end()); // tab of size NPROPHUJ
     nmecdev = 3;
@@ -284,7 +285,7 @@ void HujeuxLaw::init(const dvector& param)                                      
 	evp = 0.;
 }
 //=================================================================================================================//
-
+/**/
 
 	
 //=================================================================================================================//
@@ -377,7 +378,7 @@ bool HujeuxLaw::readParameters(const string& name)
 	return true;
 }	        
 //=================================================================================================================//
-
+/**/
 
 
 //=================================================================================================================//
@@ -395,7 +396,7 @@ void HujeuxLaw::set_ipl(const int& iiplval)
 	ipl[3] -= 2;
 }
 //=================================================================================================================//
-//=================================================================================================================//
+/**/
 
 
 //=================================================================================================================//
@@ -418,15 +419,17 @@ void HujeuxLaw::computeElastTensor(const double& p)
 	m_elast_tensor = ElastTensor(m_lamda, m_mu);
 }
 //=================================================================================================================//
+/**/
 
 
-/* //AFEEF1 ------------ NOT WORKING  ----------------//
 //=================================================================================================================//
 // Computing tangent constitutive (4th order) tensor considering nonlinear elasticity
 //=================================================================================================================//
 void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
 {
-    auto p = trace(sig)/3.;
+    //auto p = trace(sig)/3.;                                  //AFEEF ---- NOT WORKING  ----//
+    auto p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.;  //AFEEF ---- WORK AROUND ----//
+    
 	auto ne = m_param[2];
 	double	fac = 1.;
     auto Kaux = m_param[23];
@@ -443,7 +446,7 @@ void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
 
 	for (int i = 0; i < 6; i++)
 	    for (int j = 0; j < 6; j++)
-	        m_tangent_tensor[i][j] = t(i,j);
+	        m_tangent_tensor[i][j] = t(i,j);        
 }
 //=================================================================================================================//
 /**/
@@ -479,11 +482,11 @@ void HujeuxLaw::initHistory(dvector* histab)
     set_ipl(histab->back());
 }
 //=================================================================================================================//
+/**/
 
 
 
 
-/*
 //=================================================================================================================//
 // sig = stress tensor at the end of previous converged time step
 // histab : tab containing internal variables(=hardening parameters) stored on each integration point(size = NHISTHUJ)
@@ -492,7 +495,7 @@ void HujeuxLaw::initHistory(dvector* histab)
 bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 {
 //	if (sig == Tensor2::zero() || histab == nullptr) return true;   //AFEEF ---- Not working due to zero() ------//
-	  if (histab == nullptr) return true;   //AFEEF ---- Not working due to zero() ------//
+	  if (histab == nullptr) return true;        //AFEEF ---- Not working due to zero() ------//
 	//if (sig.m_vec == dvector()) return true;   //AFEEF ---- Not working due to zero() ------//	
 	auto beta = m_param[5];
 	pc = m_param[6] * exp(beta * evp);
@@ -501,6 +504,7 @@ bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 	// initialisation des mecanismes
 	// mecanismes deviatoires
 	bool stop = false;
+	
 	for (int k = 0; k < nmecdev && !stop; k++)
 	{
 		im = ipermu[k][0];
@@ -553,7 +557,7 @@ bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 	return stop;
 }
 //=================================================================================================================//
-
+/**/
 
 
 //=================================================================================================================//
@@ -569,7 +573,8 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 	bool	stop = false;
 
 	ppp = pk;
-	if (iecoul < 0) ppp = trace(sig) / 3.;
+	//if (iecoul < 0) ppp = trace(sig) / 3.;                                     //AFEEF ---- NOT WORKING  ----//
+	if (iecoul < 0) ppp =(sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.;        //AFEEF ---- WORK AROUND  ----//
 
 	double	facpk = sinphi * (1. - b * log(ppp / pc)),
 			fmk = facpk * pk,
@@ -621,10 +626,11 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 		ficherr.close();
 		stop = true;
 	}
+
 	return stop;
 }
 //=================================================================================================================//
-//=================================================================================================================//
+/**/
 
 
 //=================================================================================================================//
@@ -633,7 +639,8 @@ bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& de
 {
 	double	dltela = m_param[17],
 			d = m_param[15],
-			p = trace(sig) / 3.,
+			//p = trace(sig) / 3.,                                         //AFEEF ---- NOT WORKING  ----//
+				p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.,         //AFEEF ---- WORK AROUND  ----//
 			faciso = -d * pc,
 			rayiso = -p / faciso;
 	bool	stop = false;
@@ -686,6 +693,7 @@ bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& de
 	return stop;
 }
 //=================================================================================================================//
+/**/
 
 
 
@@ -707,7 +715,8 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 			acyc = m_param[9],
 			da = amon - acyc,
 			pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]),
-			tracesig = trace(sig),
+			//tracesig = trace(sig),                                     //AFEEF ---- NOT WORKING  ----//
+			tracesig = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]),		 //AFEEF ---- WORK AROUND  ----//	
 			p = tracesig / 3.;
 
 	s[0] = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]);
@@ -749,6 +758,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 			// remaining cyclic: test if intersecting with monotonous surface
 			// cred: reduced coordinates of the circle center
 			fmkray = fmk * rayc;
+			
 			for (int i = 0; i < 2; i++) cred[i] = sbk[i] - vnk[i] * rayc;
 			cmod = cred.norm();
 
@@ -773,13 +783,14 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 			}
 
 			// computing cyclic yield surface seuilk
-			c = cred * fmk;
+      c = cred * fmk;
 			s -= c;
 			qkc = s.norm();
 			seuilk = qkc - fmkray;
 
 			// Accuracy issue
 			if (fabs(1. - qkc / fmkray) < EPS) seuilk = 0.;
+
 		}
 		else
 		{
@@ -847,6 +858,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 		phiv2 = 0.5 * (temp - facpk * raykk);
 		Phik[3] = temp * pk * beta;
 	}
+	
 	phid2 = 0.5 * dfds[0];
 	Phik[im] = phid2 + phiv2;
 	Phik[jm] = -phid2 + phiv2;
@@ -950,11 +962,12 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 		prkinc = fmk / fabs(fidsig) * facinc;
 		if (prkinc < incmin) prkinc = incmin;
 		if (prkinc < inc) inc = prkinc;
-	}
+	}	
 }
 //=================================================================================================================//
+/**/
 
-
+/*
 //=================================================================================================================//
 //=================================================================================================================//
 void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* Phic, double* Psic, double* CPsic, double& seuilc, double& fidsig,

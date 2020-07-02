@@ -93,15 +93,18 @@ public:
 	bool isNearlyZero() const;
 	bool operator==(const Real2& b) const;
 	bool operator!=(const Real2& b) const;
+	
+	friend Real2 operator/(const Real2&, double&);                              // AFEEF ----- operator / AS FRIEND IN CLASS -----//
+	friend Real2 operator*(const Real2&, double&);                              // AFEEF ----- operator * AS FRIEND IN CLASS -----//	
 };
 typedef vector<Real2> VecReal2;
 
 /*---------------------------------------------------------------------------*/
 extern Real2 operator+(const Real2&, const Real2&);
 /*---------------------------------------------------------------------------*/
-extern Real2 operator*(const Real2&, const double&);
+//extern Real2 operator*(const Real2&, const double&);                          // AFEEF ----- NOT WORKING ADDED AS FRIEND IN CLASS -----//
 /*---------------------------------------------------------------------------*/
-extern Real2 operator/(const Real2&, const double&);
+//extern Real2 operator/(const Real2&, const double&);                          // AFEEF ----- NOT WORKING ADDED AS FRIEND IN CLASS -----//
 /*---------------------------------------------------------------------------*/
 extern Real2 operator*(const double&, const Real2&);
 

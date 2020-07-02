@@ -307,9 +307,9 @@ bool Real2::operator!=(const Real2& b) const { return !operator==(b); }
 //////////////////////////////////////////////////////////////////////
 // class Real3: 3D real vector same as Real3 from Arcane
 //
-Real3::Real3() { x = 0.0; y = 0.0; z = 0.0; }
-Real3::Real3(double ax, double ay, double az): x(ax),y(ay),z(az) {}
-Real3::Real3(const Real3& f) { x = f.x; y = f.y; z = f.z; }
+//Real3::Real3() { x = 0.0; y = 0.0; z = 0.0; }
+//Real3::Real3(double ax, double ay, double az): x(ax),y(ay),z(az) {}
+//Real3::Real3(const Real3& f) { x = f.x; y = f.y; z = f.z; }
 
 double Real3::operator[](int i) const
 {
@@ -584,18 +584,39 @@ inline Real2 operator*(const Real2& n, const double& b)
 }
 
 /*---------------------------------------------------------------------------*/
+/*
 inline Real2 operator/(const Real2& n, const double& b)
 {
-    Real2 newn;
+    //Real2 newn;                                             // AFEEEF -----------------WHY WHY ??----------------------//
+    double ib = (fabs(b) >= EPS ? 1 / b : 1 / EPS);
+    return Real2(n.x * ib,n.y * ib);
+}
+*/
+
+/*---------------------------------------------------------------------------*/
+Real2 operator/(const Real2& n, double& b)                    // AFEEEF -----------------REMOVED INLINE & CONST----------------------//
+{
+    //Real2 newn;                                             // AFEEEF -----------------WHY WHY ??----------------------//
     double ib = (fabs(b) >= EPS ? 1 / b : 1 / EPS);
     return Real2(n.x * ib,n.y * ib);
 }
 
+
 /*---------------------------------------------------------------------------*/
-inline Real2 operator*(const double& b, const Real2& n)
+/*
+inline Real2 operator*(const double& b, const Real2& n)        
 {
     return Real2(n.x * b, n.y * b);
 }
+*/
+
+
+/*---------------------------------------------------------------------------*/
+Real2 operator*(const Real2& n, double& b )      // AFEEEF -----------------REMOVED INLINE  & CONST ----------------------//  
+{
+    return Real2(n.x * b, n.y * b);
+}
+
 /*---------------------------------------------------------------------------*/
 inline Real3 vec_prod(const Real3& v1, const Real3& v2)
 {
