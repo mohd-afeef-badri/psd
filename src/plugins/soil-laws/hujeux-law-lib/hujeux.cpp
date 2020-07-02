@@ -967,7 +967,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 //=================================================================================================================//
 /**/
 
-/*
+
 //=================================================================================================================//
 //=================================================================================================================//
 void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* Phic, double* Psic, double* CPsic, double& seuilc, double& fidsig,
@@ -980,7 +980,8 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 			ccyc = m_param[16],
 			xkimin = m_param[18],
 			cc = cmon - ccyc,
-			p = trace(sig) / 3.,
+			//p = trace(sig) / 3.,                                   //AFEEF ---- NOT WORKING  ----//	
+			p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2])/3.,		 //AFEEF ---- WORK AROUND  ----//	
 			dm = delta[0],
 			dc = delta[1],
 			faciso = -d * pc,
@@ -1023,7 +1024,8 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 	int jpl1 = 1 - jpl4;
 	Phic[3] = -pc * beta * (d * delta[jpl4 - 1] + jpl1 * sgnnew * pldiso);
 
-	fidsig = sgnnew * trace(dsig) / 3.;
+	//fidsig = sgnnew * trace(dsig) / 3.;                                      //AFEEF ---- NOT WORKING  ----//
+		fidsig = sgnnew * (dsig.m_vec[0] + dsig.m_vec[1] + dsig.m_vec[2])/3.;		 //AFEEF ---- WORK AROUND  ----//	
 
 	double	prkinc = facdlt / (fabs(fidsig) + 1.e-12) * facinc;
 
@@ -1129,8 +1131,9 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		xlray[i] = 0.;
 	}
 
-	double depsv = trace(deps);
-
+	//double depsv = trace(deps);                                      //AFEEF ---- NOT WORKING  ----//                              
+	double depsv = (deps.m_vec[0] + deps.m_vec[1] + deps.m_vec[2]);    //AFEEF ---- WORK AROUND  ----//
+	
 	computeTangentTensor(sig);
 	
 	// subincrements loop start
@@ -1146,7 +1149,8 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		if (incfai == 1 || (incfai > 1 && nmec > 0))
 		{
 			pc = pci * exp(beta * evp);
-			p = trace(sig) / 3.;
+			//p = trace(sig) / 3.;                                        //AFEEF ---- NOT WORKING  ----//  
+			p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]) / 3.;        //AFEEF ---- WORK AROUND  ----//
 			factmp = 50. * p / pc;
 			fac = factmp;
 			if (factmp < 0.1) fac = 0.1;
@@ -1445,14 +1449,19 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
    
 	} while (resinc > FTOL);
 
-  
-	bool is_plastic = (fabs(evp) >= EPS || norm(epsp.m_vec) >= EPS);
+ 
+	//bool is_plastic = (fabs(evp) >= EPS || norm(epsp.m_vec) >= EPS);        //AFEEF ---- NOT WORKING  ----//
+	bool is_plastic = (fabs(evp) >= EPS );                                    //AFEEF ---- NOT WORKING  ----//
+	//bool is_plastic = (norm(epsp.m_vec) >= EPS );                           //AFEEF ---- NOT WORKING  ----//	
+	 
 	if (!is_plastic)
 	{
+
 		epsp = epspn;
 		evp = evp0;
 		sig = sign;
-		p = trace(sig) / 3.;
+	//p = trace(sig) / 3.;                                        //AFEEF ---- NOT WORKING  ----//  
+		p = (sig.m_vec[0] + sig.m_vec[1] + sig.m_vec[2]) / 3.;        //AFEEF ---- WORK AROUND  ----//		
 		if (p >= 0.) p = ptrac;
 		else if (p >= -1.e-7) p = -1.e-7;
 
@@ -1460,6 +1469,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 
 		dsig = m_elast_tensor * deps;
 		sig += dsig;
+
 	}
 
 	if (is_converge)
@@ -1509,27 +1519,26 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 	}	
 }
 //=================================================================================================================//
-*/
+/**/
 
 //=================================================================================================================//
 // Test class to get number
 //=================================================================================================================//
 int HujeuxLaw::TestClass() 
-{  
-
-    Tensor2 Newobject, Newobject2(Real3(1,1,1),Real3(1,1,1));
-    //Tensor2 Newobject3 = Newobject2 + Newobject;
-   cout << Newobject2.m_vec[0] << endl;
-    cout << Newobject.m_vec[0] << endl;
-
-Newobject = Newobject2;
-//if (Newobject == Newobject2)
-//cout << Newobject.m_vec[0] << endl;
-
+{ 
 
 #ifdef DEBUG
   cout << "\n Entering class HujeuxLaw::getNum  from hujeux.cpp "<<endl;
-#endif
+#endif 
+
+    Tensor2 Newobject, Newobject2(Real3(1,1,1),Real3(1,1,1));
+    //Tensor2 Newobject3 = Newobject2 + Newobject;
+    cout << Newobject2.m_vec[0] << endl;
+    cout << Newobject.m_vec[0] << endl;
+
+    Newobject = Newobject2;
+    //if (Newobject == Newobject2)
+    //cout << Newobject.m_vec[0] << endl;
  return 9999999; 
 }
 //=================================================================================================================//	        
