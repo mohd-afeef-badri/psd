@@ -115,6 +115,56 @@ int main()
            << endl;           
  
     cout << "\nsuccess !!!!\n\n";               
+
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Real3x3 class test check object creation R1						  \n"
+   "//----------------------------------------------------------\n"; 
+
+      Real3x3 R1;
+
+    cout << "\nsuccess !!!!\n\n";
     
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Real3x3 class test  creation R2 = Real3x3::identity();		\n"
+   "//----------------------------------------------------------\n"; 
+
+      Real3x3 R2;
+      
+      R2 = Real3x3::identity();
+      
+      cout << "  R2.x[0] = " << R2.x[0] << endl;
+      cout << "  R2.x[1] = " << R2.x[1] << endl;
+      cout << "  R2.x[2] = " << R2.x[2] << endl; 
+      cout << "  R2.y[0] = " << R2.y[0] << endl;
+      cout << "  R2.y[1] = " << R2.y[1] << endl;
+      cout << "  R2.y[2] = " << R2.y[2] << endl;
+      cout << "  R2.z[0] = " << R2.z[0] << endl;
+      cout << "  R2.z[1] = " << R2.z[1] << endl;
+      cout << "  R2.z[2] = " << R2.z[2] << endl;                       
+      
+    cout << "\nsuccess !!!!\n\n";
+    
+   cout <<
+   "//----------------------------------------------------------\n"
+   "// Real3x3 class test operator '*' creation of R3= 33.*R2;		\n"
+   "//----------------------------------------------------------\n"; 
+
+      Real3x3 R3;
+      
+      R3 = 33.*Real3x3::identity();
+      
+      cout << "  R3.x[0] = " << R3.x[0] << endl;
+      cout << "  R3.x[1] = " << R3.x[1] << endl;
+      cout << "  R3.x[2] = " << R3.x[2] << endl; 
+      cout << "  R3.y[0] = " << R3.y[0] << endl;
+      cout << "  R3.y[1] = " << R3.y[1] << endl;
+      cout << "  R3.y[2] = " << R3.y[2] << endl;
+      cout << "  R3.z[0] = " << R3.z[0] << endl;
+      cout << "  R3.z[1] = " << R3.z[1] << endl;
+      cout << "  R3.z[2] = " << R3.z[2] << endl;                       
+      
+    cout << "\nsuccess !!!!\n\n";               
    return 0;
  }
