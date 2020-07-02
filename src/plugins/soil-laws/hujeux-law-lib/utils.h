@@ -226,6 +226,9 @@ public:
 	Real3x3 operator+(const Real3x3&) const;
 	Real3x3 operator-(const Real3x3&) const;
 	Real3x3 operator-() const;
+	
+	friend Real3x3 operator*(double, const Real3x3&);                              // AFEEF ----- operator * AS FRIEND IN CLASS -----//		
+	friend Real3x3 operator*(const Real3x3&, double);                              // AFEEF ----- operator * AS FRIEND IN CLASS -----//		
 
 	bool operator==(const Real3x3&) const;
 	bool operator!=(const Real3x3&) const;
@@ -235,9 +238,9 @@ public:
 };
 
 /*---------------------------------------------------------------------------*/
-extern Real3x3 operator*(double, const Real3x3&);
+//extern Real3x3 operator*(double, const Real3x3&);                            // AFEEF ----- operator * AS FRIEND IN CLASS -----//
 /*---------------------------------------------------------------------------*/
-extern Real3x3 operator*(const Real3x3&, double);
+//extern Real3x3 operator*(const Real3x3&, double);                           // AFEEF ----- operator * AS FRIEND IN CLASS -----//
 /*---------------------------------------------------------------------------*/
 extern Real3x3 operator/(const Real3x3&, double);
 /*---------------------------------------------------------------------------*/

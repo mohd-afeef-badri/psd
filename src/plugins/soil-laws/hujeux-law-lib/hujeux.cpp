@@ -33,8 +33,7 @@ ElastTensor::ElastTensor(const double& lambda, const double& mu)
 
 	m_D = lambda;
 	for (int i = 0; i < 3; i++) m_D[i][i] += 2 * mu;
-	//m_S = mu * Real3x3::identity();                                                     //AFEEF ---- NOT WORKING  ----//                        
-	m_S =  Real3x3(Real3(mu, 0.0, 0.0), Real3(0.0, mu, 0.0), Real3(0.0, 0.0, mu));        //AFEEF ---- WORK AROUND  ----//   
+	m_S = mu * Real3x3::identity();
 }
 
 ////////////////////////////////////

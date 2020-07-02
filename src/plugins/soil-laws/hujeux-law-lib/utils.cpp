@@ -693,13 +693,15 @@ inline bool operator<(const Real3& v1, const Real3& v2)
     return (v1.x < v2.x);
 }
 /*---------------------------------------------------------------------------*/
-inline Real3x3 operator*(double sca, const Real3x3& vec)
+//inline Real3x3 operator*(double sca, const Real3x3& vec)                       // AFEEF ----- NOT WORKING DUE TO INLINE -----//
+Real3x3 operator*(double sca, const Real3x3& vec)
 {
     return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
 }
 
 /*---------------------------------------------------------------------------*/
-inline Real3x3 operator*(const Real3x3& vec, double sca)
+//inline Real3x3 operator*(const Real3x3& vec, double sca)
+Real3x3 operator*(const Real3x3& vec, double sca)                              // AFEEF ----- NOT WORKING DUE TO INLINE -----//
 {
     return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
 }
