@@ -98,31 +98,31 @@ void ElastTensor::set(const int& i, const int& j, const double& x)
 }
 
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator+(const ElastTensor& m1, const ElastTensor& m2)
+ElastTensor operator+(const ElastTensor& m1, const ElastTensor& m2)
 {
     return ElastTensor(m1.m_D + m2.m_D, m1.m_S + m2.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator-(const ElastTensor& m1, const ElastTensor& m2)
+ElastTensor operator-(const ElastTensor& m1, const ElastTensor& m2)
 {
     return ElastTensor(m1.m_D - m2.m_D, m1.m_S - m2.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator*(double x, const ElastTensor& m)
+ElastTensor operator*(double x, const ElastTensor& m)
 {
     return ElastTensor(x * m.m_D, x * m.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-inline ElastTensor operator*(const ElastTensor& m, double x)
+ElastTensor operator*(const ElastTensor& m, double x)
 {
     return ElastTensor(x * m.m_D, x * m.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-inline Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
+Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
 {
     Tensor2 m;
     for (int i = 0; i < 6; i++)
@@ -135,13 +135,13 @@ inline Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
 }
 
 /*---------------------------------------------------------------------------*/
-inline double trace(const ElastTensor& m)
+double trace(const ElastTensor& m)
 {
     return trace(m.m_D) + trace(m.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-inline ElastTensor transpose(const ElastTensor& m)
+ElastTensor transpose(const ElastTensor& m)
 {
     return ElastTensor(matrix3x3Transpose(m.m_D), matrix3x3Transpose(m.m_S));
 }
