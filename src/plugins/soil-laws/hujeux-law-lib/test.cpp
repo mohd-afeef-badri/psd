@@ -21,17 +21,17 @@
      defined in  hejeux.cpp or utils.cpp can be tested here. To compile 
      1. with intel complier
      
-       icpc -c ocpp -std=c++11 -fpic; 
-       icpc -c hujeux.cpp -DDEBUG -std=c++11 -fpic
-       icpc -c test.cpp -std=c++11
-       icpc -o hujeux-utils-tester utils.o hujeux.cpp test.cpp -std=c++11
+       icpc -c utils.cpp  -O3 -finline-functions -std=c++11 -fpic
+       icpc -c hujeux.cpp  -O3 -finline-functions -DDEBUG -std=c++11 -fpic
+       icpc -c test.cpp  -O2 -finline-functions -std=c++11
+       icpc -O2 -o hujeux-utils-tester utils.o hujeux.o test.cpp  -std=c++11
        
      2. with GNU compiler
      
-       g++ -c ocpp -std=c++11 -fpic; 
-       g++ -c hujeux.cpp -DDEBUG -std=c++11 -fpic
-       g++ -c test.cpp -std=c++11
-       g++ -o hujeux-utils-tester utils.o hujeux.cpp test.cpp  -std=c++11   
+       g++ -c utils.cpp  -O3 -finline-functions -std=c++11 -fpic
+       g++ -c hujeux.cpp  -O3 -finline-functions -DDEBUG -std=c++11 -fpic
+       g++ -c test.cpp  -O2 -finline-functions -std=c++11
+       g++ -O2 -o hujeux-utils-tester utils.o hujeux.o test.cpp  -std=c++11   
 
 *******************************************************************************/
 
