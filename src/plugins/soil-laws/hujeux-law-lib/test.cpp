@@ -39,29 +39,12 @@
 
 using namespace std;
 
+extern const int NHISTHUJ;
+extern const double	EPS;
 int main()
  {
    cout << "  hujeux-utils-tester started ...." << endl;
    
-   cout <<
-   "//----------------------------------------------------------\n"
-   "// HujeuxLaw class test  create a Dummy Object called DO    \n"
-   "//----------------------------------------------------------\n"; 
-    
-      HujeuxLaw DO; 
-
-   cout << "\nsuccess !!!!\n\n";
-    
-   cout <<
-   "//----------------------------------------------------------\n"
-   "// HujeuxLaw class test  check .readParameters for DO       \n"
-   "//----------------------------------------------------------\n";        
-              
-      DO.readParameters("ok.in");
-
-   cout << "\nsuccess !!!!\n\n";
- 
- 
    cout <<
    "//----------------------------------------------------------\n"
    "// Tensor2 class test check create Objects called N1, N2 \n"
@@ -234,6 +217,101 @@ int main()
       cout << "  R3.z[1] = " << R3.z[1] << endl;
       cout << "  R3.z[2] = " << R3.z[2] << endl;                       
       
-    cout << "\nsuccess !!!!\n\n";               
-   return 0;
+    cout << "\nsuccess !!!!\n\n";
+
+    cout <<
+      "//----------------------------------------------------------\n"
+      "// HujeuxLaw class test  create a Dummy Object called DO    \n"
+      "//----------------------------------------------------------\n";
+
+     HujeuxLaw DO;
+
+     cout << "\nsuccess !!!!\n\n";
+
+    cout <<
+      "//----------------------------------------------------------\n"
+      "// HujeuxLaw class test  check .readParameters for DO       \n"
+      "//----------------------------------------------------------\n";
+
+     DO.readParameters("./../../../../test/load/Hujeuxparam.input");
+
+     cout << "\nsuccess !!!!\n\n";
+
+     cout <<
+          "//----------------------------------------------------------\n"
+          "// HujeuxLaw class tests : simple shear on one material point ;\n"
+          "//----------------------------------------------------------\n";
+     auto PI = acos(-1.);
+     double	freq = 5., dt = 0.001, pc0 = -50.e3,
+        	xmax = 0.001,//0.1% strains max
+            dx = 0., x = 0.,
+            tpeak = asin(1) / (2 * PI * freq),
+            fact = tpeak/dt,faceps = 100.,facsig = 1.e-3;
+     int	npi = (int)(fact), // number of steps per 1/4 cycle
+            ncyc = 1,// only one loading cycle for this 1st test (to be increased later if everything works fine)
+            npas = 4 * ncyc * npi;
+
+     dvector histab(NHISTHUJ,0.);
+
+     filebuf fichout;
+     fichout.open("\"./../../../../test/load/Hujeuxresults.ouput\"", ios::out);
+     ostream os(&fichout);
+     os.setf(std::ios::left);
+     os.precision(8);
+     os << string("#Simple shear test on a material point\n#gamma[%]\ttau[kPa]\tepsv[%]") << endl;
+
+     Tensor2 sig(Real3(pc0, pc0,pc0), Real3::zero()),// effective stress tensor for current step
+             eps,	// strain tensor for current step
+             epsp,// plastic strain tensor for current step
+             deps,// strain tensor increment
+             dsig;// effective stress tensor increment
+
+     // saving order: gamxy[%]  gampxy[%]  sigxy[kPa] pmean[kPa] epsv[%]  epsvp[%]
+     os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
+     os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0." << endl;
+
+     initHistory(histab);
+
+     bool is_converge = true;
+
+     for (int i = 0; i < npas; i++)
+     {
+         auto x0 = xmax * sin(2 * PI * freq * t);
+         auto t += dt;
+         auto x = xmax * sin(2 * PI * freq * t);
+         if (fabs(x0) < EPS) x0 = 0.;
+         if (fabs(x) < EPS) x = 0.;
+         dx = x - x0;
+
+         // x = gamxy, dx = dgamxy
+         eps.m_vec[3] = 2 * x;//epsxy = 2*gamxy
+         deps.m_vec[3] = 2 * dx;
+
+         DO.ComputeStress(histab,sig, eps, epsp, dsig, deps,is_converge);
+
+         // saving order: gamxy[%]  gampxy[%]  sigxy[kPa] pmean[kPa] epsv[%]  epsvp[%]
+         auto gamxy = eps.m_vec[3] * faceps / 2.; // in %
+         auto gampxy = epsp.m_vec[3] * faceps / 2.; // in %
+         auto sigxy = sig.m_vec[3] * facsig; // in kPa
+         auto pmean = -trace(sig) / 3. * facsig; // in kPa
+         auto epsv = trace(eps) * faceps;// in %
+         auto epsvp = trace(epsp) * faceps; // in %
+
+         cout << "\nprinting step results in Hujeuxresults.ouput...";
+         os << setw(15) << gamxy << setw(15) << gampxy << setw(15) << sigxy;
+         os << setw(15) << pmean << setw(15) << epsv << setw(15) << epsvp << endl;
+     }
+     fichout.close();
+
+     cout << "\nhistab-evp =" << histab[0] << endl;
+     cout << "histab-ray[0][0] = " << histab[1] << endl;
+     cout << "histab-ray[0][1] = " << histab[2] << endl;
+     cout << "histab-ray[1][0] = " << histab[3] << endl;
+     cout << "histab-ray[1][1] = " << histab[4] << endl;
+     cout << "histab-ray[2][0] = " << histab[5] << endl;
+     cout << "histab-ray[2][1] = " << histab[6] << endl;
+     cout << "histab-ray[3][0] = " << histab[7] << endl;
+     cout << "histab-ray[3][1] = " << histab[8] << endl;
+
+     cout << "\nsuccess !!!!\n\n";
  }
