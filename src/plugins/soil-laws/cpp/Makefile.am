@@ -9,7 +9,7 @@ all-local: soil-laws.so
 	@echo " Compilation list $(LIST_COMPILE)"
 
 soil-laws.so: soil-laws.cpp
-	$(FFCXX) -auto soil-laws.cpp
+	$(FFCXX) -auto soil-laws.cpp './../hujeux-law-lib/hujeux.o' './../hujeux-law-lib/utils.o'
 	@echo ""	
 
 clean-local:

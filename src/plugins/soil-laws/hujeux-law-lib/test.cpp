@@ -24,14 +24,14 @@
        icpc -c utils.cpp  -O3 -finline-functions -std=c++11 -fpic
        icpc -c hujeux.cpp  -O3 -finline-functions -DDEBUG -std=c++11 -fpic
        icpc -c test.cpp  -O2 -finline-functions -std=c++11
-       icpc -O2 -o hujeux-utils-tester utils.o hujeux.o test.cpp  -std=c++11
+       icpc -O2 -o hujeux-utils-tester utils.o hujeux.o test.o  -std=c++11
        
      2. with GNU compiler
      
        g++ -c utils.cpp  -O3 -finline-functions -std=c++11 -fpic
        g++ -c hujeux.cpp  -O3 -finline-functions -DDEBUG -std=c++11 -fpic
        g++ -c test.cpp  -O2 -finline-functions -std=c++11
-       g++ -O2 -o hujeux-utils-tester utils.o hujeux.o test.cpp  -std=c++11   
+       g++ -O2 -o hujeux-utils-tester utils.o hujeux.o test.o  -std=c++11   
 
 *******************************************************************************/
 
