@@ -7,6 +7,9 @@
 #define __HUJEUX_H__
 
 #pragma once
+
+extern const int NHISTHUJ, NPROPHUJ;
+
 ///////////////////////////////////////////////////////////////////////////////
 // External Classes used in this file
 

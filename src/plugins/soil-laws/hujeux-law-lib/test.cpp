@@ -39,11 +39,8 @@
 
 using namespace std;
 
-extern const int NHISTHUJ;
-extern const double	EPS;
 int main()
  {
-   cout << "  hujeux-utils-tester started ...." << endl;
    
    cout <<
    "//----------------------------------------------------------\n"
@@ -251,8 +248,10 @@ int main()
             ncyc = 1,// only one loading cycle for this 1st test (to be increased later if everything works fine)
             npas = 4 * ncyc * npi;
 
-     dvector histab(NHISTHUJ,0.);
-
+     dvector *histab = new dvector(NHISTHUJ);
+     for(int i = 0; i < NHISTHUJ; i++) (*histab)[i] = 0.;
+     //dvector histab(NHISTHUJ,0.);
+     
      filebuf fichout;
      fichout.open("\"./../../../../test/load/Hujeuxresults.ouput\"", ios::out);
      ostream os(&fichout);
@@ -270,14 +269,14 @@ int main()
      os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
      os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0." << endl;
 
-     initHistory(histab);
+     DO.initHistory(histab);
 
      bool is_converge = true;
-
+     auto t = 0.;
      for (int i = 0; i < npas; i++)
      {
          auto x0 = xmax * sin(2 * PI * freq * t);
-         auto t += dt;
+         t += dt;
          auto x = xmax * sin(2 * PI * freq * t);
          if (fabs(x0) < EPS) x0 = 0.;
          if (fabs(x) < EPS) x = 0.;
@@ -302,16 +301,16 @@ int main()
          os << setw(15) << pmean << setw(15) << epsv << setw(15) << epsvp << endl;
      }
      fichout.close();
-
-     cout << "\nhistab-evp =" << histab[0] << endl;
-     cout << "histab-ray[0][0] = " << histab[1] << endl;
-     cout << "histab-ray[0][1] = " << histab[2] << endl;
-     cout << "histab-ray[1][0] = " << histab[3] << endl;
-     cout << "histab-ray[1][1] = " << histab[4] << endl;
-     cout << "histab-ray[2][0] = " << histab[5] << endl;
-     cout << "histab-ray[2][1] = " << histab[6] << endl;
-     cout << "histab-ray[3][0] = " << histab[7] << endl;
-     cout << "histab-ray[3][1] = " << histab[8] << endl;
-
+    
+     cout << "\n\nhistab-evp       =" << (*histab)[0] << endl;
+     cout << "histab-ray[0][0] = " << (*histab)[1] << endl;
+     cout << "histab-ray[0][1] = " << (*histab)[2] << endl;
+     cout << "histab-ray[1][0] = " << (*histab)[3] << endl;
+     cout << "histab-ray[1][1] = " << (*histab)[4] << endl;
+     cout << "histab-ray[2][0] = " << (*histab)[5] << endl;
+     cout << "histab-ray[2][1] = " << (*histab)[6] << endl;
+     cout << "histab-ray[3][0] = " << (*histab)[7] << endl;
+     cout << "histab-ray[3][1] = " << (*histab)[8] << endl;
+    
      cout << "\nsuccess !!!!\n\n";
  }
