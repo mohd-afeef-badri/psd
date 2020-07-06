@@ -5,7 +5,7 @@
      -------------------------------------------------------------------
 
      Author(s): Mohd Afeef Badri, Evelyne Foerster
-     Email    : mohd-afeef.badri@cea.fr 
+     Email    : mohd-afeef.badri@cea.fr, evelyne.foerster@cea.fr 
      Date     : 2018‑06‑01
 
      -------------------------------------------------------------------
@@ -238,7 +238,8 @@ int main()
           "//----------------------------------------------------------\n"
           "// HujeuxLaw class tests : simple shear on one material point ;\n"
           "//----------------------------------------------------------\n";
-     auto PI = acos(-1.);
+          
+     auto   PI = acos(-1.);
      double	freq = 5., dt = 0.001, pc0 = -50.e3,
         	xmax = 0.001,//0.1% strains max
             dx = 0., x = 0.,
@@ -250,10 +251,9 @@ int main()
 
      dvector *histab = new dvector(NHISTHUJ);
      for(int i = 0; i < NHISTHUJ; i++) (*histab)[i] = 0.;
-     //dvector histab(NHISTHUJ,0.);
      
      filebuf fichout;
-     fichout.open("\"./../../../../test/load/Hujeuxresults.ouput\"", ios::out);
+     fichout.open("./../../../../test/load/Hujeuxresults.output", ios::out);
      ostream os(&fichout);
      os.setf(std::ios::left);
      os.precision(8);

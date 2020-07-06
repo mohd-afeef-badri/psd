@@ -8,7 +8,8 @@
 
 #pragma once
 
-extern const int NHISTHUJ, NPROPHUJ;
+extern const int NHISTHUJ , // nb of internal variables (history) for Hujeux
+                 NPROPHUJ ; // nb of const properties (user data) for Hujeux
 
 ///////////////////////////////////////////////////////////////////////////////
 // External Classes used in this file
