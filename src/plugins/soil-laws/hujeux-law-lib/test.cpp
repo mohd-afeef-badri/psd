@@ -230,7 +230,8 @@ int main()
       "// HujeuxLaw class test  check .readParameters for DO       \n"
       "//----------------------------------------------------------\n";
 
-     DO.readParameters("./../../../../test/load/Hujeuxparam.input");
+//     DO.readParameters("./../../../../test/load/Hujeuxparam.input");
+     DO.readParameters("Hujeuxparam.input");
 
      cout << "\nsuccess !!!!\n\n";
 
@@ -253,11 +254,13 @@ int main()
      for(int i = 0; i < NHISTHUJ; i++) (*histab)[i] = 0.;
      
      filebuf fichout;
-     fichout.open("./../../../../test/load/Hujeuxresults.output", ios::out);
+//    fichout.open("./../../../../test/load/Hujeuxresults.output", ios::out);
+     fichout.open("Hujeuxresults.output", ios::out);
      ostream os(&fichout);
      os.setf(std::ios::left);
      os.precision(8);
-     os << string("#Simple shear test on a material point\n#gamma[%]\ttau[kPa]\tepsv[%]") << endl;
+     os << "#Simple shear test on a material point";
+     os << string("\n#gamxy[%]\tgampxy[%]\tsigxy[kPa]\tpmean[kPa]\tepsv[%]\tepsvp[%]") << endl;
 
      Tensor2 sig(Real3(pc0, pc0,pc0), Real3::zero()),// effective stress tensor for current step
              eps,	// strain tensor for current step
@@ -267,10 +270,15 @@ int main()
 
      // saving order: gamxy[%]  gampxy[%]  sigxy[kPa] pmean[kPa] epsv[%]  epsvp[%]
      os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
-     os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0." << endl;
+     os << setw(15) << -pc0 * facsig << setw(15) << "0." << setw(15) << "0." << endl;
 
-     DO.initHistory(histab);
-
+//     DO.initHistory(histab);
+     if (DO.initState(sig, histab))
+     {
+         cout << "\nStop: Hujeux initialization failed!!\n";
+         return -1;
+     }
+     
      bool is_converge = true;
      auto t = 0.;
      for (int i = 0; i < npas; i++)
@@ -313,4 +321,5 @@ int main()
      cout << "histab-ray[3][1] = " << (*histab)[8] << endl;
     
      cout << "\nsuccess !!!!\n\n";
+     return 0;
  }

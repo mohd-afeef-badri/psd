@@ -967,7 +967,7 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 	double& hray, double& xldelta, int& ipl4, int& jpl4, Real2& delta)
 {
 	double	d = m_param[15],
-			beta = m_param[6],
+			beta = m_param[5],
 			dltela = m_param[17],
 			cmon = m_param[14],
 			ccyc = m_param[16],
@@ -1117,6 +1117,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 	for (i = 0; i < 4; i++)
 	{
 		hh1[i] = new double[4];
+		hray[i] = 0.;
 		seuil[i] = 0.;
 		fidsig[i] = 0.;
 		xlray[i] = 0.;
