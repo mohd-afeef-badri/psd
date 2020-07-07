@@ -116,7 +116,6 @@ int main(int argc, char *argv[]){
   bool vectorial    = false;
   bool bodyforce    = false;
   bool supercomp    = false;
-  bool elasticity   = false;    
   bool fastmethod   = false;       
   bool Sequential   = false;
   bool dirichletbc  = false;
@@ -157,7 +156,6 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-timelog"      ) timelog        = true;
     if( argvdummy == "-vectorial"    ) vectorial      = true;  
     if( argvdummy == "-bodyforce"    ) bodyforce      = true;
-    if( argvdummy == "-Lelasticty"   ) elasticity     = true;            
     if( argvdummy == "-supercomp"    ) supercomp      = true;       
     if( argvdummy == "-fastmethod"   ) fastmethod     = true;       
     if( argvdummy == "-sequential"   ) Sequential     = true;
@@ -236,7 +234,6 @@ int main(int argc, char *argv[]){
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;  
   cout << " bodyforce is -----------------------> " << bodyforce                << endl;
-  cout << " Lelasticty is ----------------------> " << elasticity               << endl;            
   cout << " supercomp is -----------------------> " << supercomp                << endl;       
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;       
   cout << " sequential is ----------------------> " << Sequential               << endl;
