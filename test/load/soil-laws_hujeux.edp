@@ -19,13 +19,21 @@
 
 load "../../src/plugins/soil-laws/cpp/soil-laws"
 
-real[int]  vector1(1);
-vector1=10.;
 
-real[int]  vector2(1);
-vector2=1.;
+real[int]  vector0(3);
+vector0=0.;
 
-PSDHujeuxSoilLaw(vector1,ParamaterFile="Hujeuxparam.input",InternalVariables=vector2);
+real[int]  vector1(3);
+vector1=-50.e3;
+
+real[int]  vector2(24);
+vector2=0.;
+
+PSDHujeuxSoilLaw ( vector0,
+                   ParamaterFile     = "Hujeuxparam.input",
+                   stressVector      =  vector1, 
+                   InternalVariables =  vector2                   
+                 );
 
 if(0)
  cout << " Vector 2 in PSD is  " << vector2 << endl;
