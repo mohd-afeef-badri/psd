@@ -14,6 +14,14 @@
      multiple  solid-dynamic  problems; PSD is distributed  in  the hope 
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even  
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+     
+     --------------------------------------------------------------------
+     
+     This file is intended for  providing an  interface  between PSD and
+     material laws for soil-dynamic calculations. The idea  is  that PSD
+     sends inputs: strain [vector], stress [vector],  internal-variables
+     [vector], and file-name-of-law-constants [string], these inputs are
+     processed and returned back as outputs.    
 
 *******************************************************************************/
 
@@ -22,67 +30,59 @@
 #include "./../hujeux-law-lib/utils.h"
 #include "./../hujeux-law-lib/hujeux.h"
 
-using namespace Fem2D;
 using namespace std;
 
-
 //=============================================================================
-// --- HujeuxSoilLaw class interface for PSD--
+// --- HujeuxSoilLaw class interface for PSD ---
 //=============================================================================
 
 template<class K>
-class HujeuxSoilLaw_Op : public E_F0mps {
-    public:
-        Expression du					  ;
-            
-        static const int n_name_param = 3		;
-        static basicAC_F0::name_and_type name_param[]	;
-        Expression nargs[n_name_param]			;
+class HujeuxSoilLaw_Op : public E_F0mps 
+ {
+
+  public:            
+    static const int n_name_param = 4		;
+    static basicAC_F0::name_and_type name_param[]	;
+    Expression nargs[n_name_param]			;
         
-        HujeuxSoilLaw_Op(const basicAC_F0& args		, 
-        		Expression param1		
-        		) : 
-        		du     (param1)					
-        		{
-            		args.SetNameParam(n_name_param	, 
-            				  name_param	, 
-            				  nargs
-            				  )		;
-        		}
+    HujeuxSoilLaw_Op(const basicAC_F0& args) 
+     {
+      args.SetNameParam(n_name_param, name_param, nargs);
+     }
         		
-        AnyType operator()(Stack stack) const		;
-};
+    AnyType operator()(Stack stack) const		;
+ };
 
 template<class K>
-basicAC_F0::name_and_type HujeuxSoilLaw_Op<K>::name_param[] = { 
-    {"ParamaterFile", &typeid(std::string*)},
-    {"stressVector" , &typeid(KN<K>*)},    
+basicAC_F0::name_and_type HujeuxSoilLaw_Op<K>::name_param[] = 
+ { 
+    {"ParamaterFile"    , &typeid(string*)},
+    {"stressVector"     , &typeid(KN<K>*)},
+    {"strainVector"     , &typeid(KN<K>*)},            
     {"InternalVariables", &typeid(KN<K>*)}        
-};
+ };
 
 template<class K>
-class HujeuxSoilLaw : public OneOperator {
-    public:
-        HujeuxSoilLaw() : OneOperator(atype<long>()	, 
-        			     atype<KN<K>*>()	 
-        			     ) {}
+class HujeuxSoilLaw : public OneOperator 
+ {
+  public:
+    HujeuxSoilLaw() : OneOperator(atype<long>()) {}
 
-        E_F0* code(const basicAC_F0& args) const {
-            return new HujeuxSoilLaw_Op<K>(args, 
-            				  t[0]->CastTo(args[0])       				              				  
-            				  );
-        }
-};
+    E_F0* code(const basicAC_F0& args) const 
+     {
+      return new HujeuxSoilLaw_Op<K>(args);
+     }
+ };
 
 
 template<class K>
-AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
-
-  string* paramFileName = nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
-  
-  KN<K>* epsPSD    = GetAny<KN<K>*>((*du)(stack));                            // PSD starin vector for all gauss points
-  KN<K>* sigPSD    = nargs[1] ? GetAny<KN<K>*>((*nargs[1])(stack))  : NULL	; // PSD history variable vector for all gauss points   
-  KN<K>* hisVarPSD = nargs[2] ? GetAny<KN<K>*>((*nargs[2])(stack))  : NULL	; // PSD stress vector for all gauss points 
+AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const 
+ {
+    
+  string* paramFileName = nargs[0] ? GetAny<string*>((*nargs[0])(stack)) : NULL;  // file name containing law parameters  
+  KN<K>*  sigPSD    = nargs[1] ? GetAny<KN<K>*>((*nargs[1])(stack))  : NULL	;     // PSD stress vector for all gauss points 
+  KN<K>*  epsPSD    = nargs[2] ? GetAny<KN<K>*>((*nargs[2])(stack))  : NULL	;     // PSD starin vector for all gauss points   
+  KN<K>*  hisVarPSD = nargs[3] ? GetAny<KN<K>*>((*nargs[3])(stack))  : NULL	;     // PSD history variable vector for all gauss points 
 
 
 #ifdef DEBUG
@@ -98,8 +98,6 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
              "********************************************"
           << endl;       
 #endif
-
-//vec2->operator[](0)=vec2->operator[](0)+99.;
 
 //----------------------------------------------------------
 //  HujeuxLaw class tests : simple shear on one material point 
@@ -123,8 +121,9 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
          ncyc   = 1,                        // only one loading cycle for this 1st test (to be increased later if everything works fine)
          npas   = 4 * ncyc * npi;
 
-  Tensor2 sig(Real3(sigPSD->operator[](0), sigPSD->operator[](1),sigPSD->operator[](2)), 
-              Real3::zero()                                                     ),  // effective stress tensor for current step
+  Tensor2 sig(Real3( (*sigPSD)[0], (*sigPSD)[1], (*sigPSD)[2] ), 
+              Real3::zero()                                 
+             ),                                     // effective stress tensor for current step
           eps,	                                    // strain tensor for current step
           epsp,                                     // plastic strain tensor for current step
           deps,                                     // strain tensor increment
@@ -132,17 +131,19 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
           
           
   dvector *histab = new dvector(NHISTHUJ);
-  for(int i = 0; i < NHISTHUJ; i++) (*histab)[i] = hisVarPSD->operator[](i);
+  for(int i = 0; i < NHISTHUJ; i++) 
+    (*histab)[i] = (*hisVarPSD)[i];
+     
      
   filebuf fichout;
   fichout.open("Hujeuxresults.output", ios::out);
   ostream os(&fichout);
-  os.setf(std::ios::left);
+  os.setf(ios::left);
   os.precision(8);
   os << "#Simple shear test on a material point";
-  os << string("\n#gamxy[%]\tgampxy[%]\tsigxy[kPa]\tpmean[kPa]\tepsv[%]\tepsvp[%]") << endl;
+  os << string("\n#gamxy[%]\tgampxy[%]\tsigxy[kPa]\tpmean[kPa]\tepsv[%]\tepsvp[%]") << "\n";
   os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
-  os << setw(15) << -sigPSD->operator[](0) * facsig << setw(15) << "0." << setw(15) << "0." << endl;
+  os << setw(15) << -sigPSD->operator[](0) * facsig << setw(15) << "0." << setw(15) << "0." << "\n";
 
   PSDobject.initState(sig, histab);
 
@@ -169,17 +170,15 @@ AnyType HujeuxSoilLaw_Op<K>::operator()(Stack stack) const {
     auto epsv   =  trace(eps)    * faceps;        // [%]
     auto epsvp  =  trace(epsp)   * faceps;        // [%]
 
-    if(i==0)cout << "\nprinting step results in Hujeuxresults.ouput...";
+    if(i==0)cout << "\nprinting step results in Hujeuxresults.ouput...\n";
     os << setw(15) << gamxy << setw(15) << gampxy << setw(15) << sigxy;
-    os << setw(15) << pmean << setw(15) << epsv << setw(15) << epsvp << endl;
+    os << setw(15) << pmean << setw(15) << epsv << setw(15) << epsvp << "\n";
    }
      fichout.close();
     
   return 0L;
 }
 
-
- 
 static void InitFF()
 {
   Global.Add("PSDHujeuxSoilLaw", "(", new HujeuxSoilLaw<double>);

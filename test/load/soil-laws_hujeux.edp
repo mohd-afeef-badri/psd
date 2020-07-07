@@ -19,20 +19,20 @@
 
 load "../../src/plugins/soil-laws/cpp/soil-laws"
 
-
-real[int]  vector0(3);
-vector0=0.;
-
 real[int]  vector1(3);
 vector1=-50.e3;
 
-real[int]  vector2(24);
+real[int]  vector2(3);
 vector2=0.;
 
-PSDHujeuxSoilLaw ( vector0,
+real[int]  vector3(24);
+vector3=0.;
+
+PSDHujeuxSoilLaw (  
                    ParamaterFile     = "Hujeuxparam.input",
-                   stressVector      =  vector1, 
-                   InternalVariables =  vector2                   
+                   stressVector      =  vector1,
+                   strainVector      =  vector2,                     
+                   InternalVariables =  vector3                   
                  );
 
 if(0)
