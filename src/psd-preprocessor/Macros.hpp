@@ -488,7 +488,7 @@ if(spc==3)writemacros
 <<"  macro PA0(i)                                                             \n"
 <<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
 <<"          cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
-<<"          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.x*N.y*i#1 + (1.-N.z*N.z)*i#2)         \n"
+<<"          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
 <<"        ]//                                                                \n";
 
 if(Sequential)writemacros
