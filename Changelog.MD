@@ -36,6 +36,10 @@ All notable changes to PSD solver will be documented in this file.
 - No more `-quasistatic` flag now handled by `-problem` and `-model`.
 - No more `-dirichletbc` flag now handled by `-dirichletconditions`.
 
+### Bugs removed
+- Bug in 3D paraxial loading (see hash [8fcbe7390e526423cd24b5f0ab1c06899b36c67f](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=blobdiff&h=f23846d41b3eee27b9f2c3b852b9c5e2f90080c5&hp=0af4cfcc1355b98cc09a94e42c8ec521c6c0bb00&hb=8fcbe7390e526423cd24b5f0ab1c06899b36c67f&f=src%2Fpsd-preprocessor%2FMacros.hpp))
+
+
 
 
 ## [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8) - 2020-01-21
