@@ -8,7 +8,7 @@ write
 <<"// -------Variation formulation soil-dynamics -------                                           \n"
 <<"//==============================================================================                \n"
 <<"                                                                                                \n"
-<<"varf elastodynamics( def(du) , def(v) )                                                         \n"
+<<"varf soildynamics( def(du) , def(v) )                                                         \n"
 <<"                                                                                                \n"
 <<"    = intN(Th,qforder=3)                                                                        \n"
 <<"  (                                                                                             \n"

@@ -14,28 +14,19 @@ if(Sequential){write
 <<"  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;                     \n"
 <<"                                                                                \n"
 <<"  //--------------tt update for loading--------------//                         \n"
-<<"                                                                                \n";
-
-if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-write
-<<"  tt  = t-real(alpf*dt);                                                        \n";
-
-if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-write
-<<"  tt  = t-dt;                                                                   \n";
-
-write
+<<"                                                                                \n"
+<<"  tt  = t;                                                                      \n"
 <<"                                                                                \n"
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                         )
-<<"  A = elastodynamics(Vh,Vh,solver=CG,sym=1);                                    \n"
+<<"  A = soildynamics(Vh,Vh,solver=CG,sym=1);                                      \n"
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                         )
 <<"                                                                                \n"
 <<"  //-----------------Assembly for b-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                            )
-<<"  b = elastodynamics(0,Vh);                                                     \n"
+<<"  b = soildynamics(0,Vh);                                                       \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                            )
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
@@ -46,19 +37,11 @@ write
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                               )
 <<"                                                                                \n";
 
-if(debug)if(spc==2)write
+if(debug)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
-<<"  meshN ThMoved = movemesh(Th, [x + du, y + du1])  ;                            \n"
-<<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;                            \n";
-
-if(debug)if(spc==3)write
-<<"                                                                                \n"
-<<"  //-----------------Move mesh plotting------------//                           \n"
-<<"                                                                                \n"
-<<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ;          \n"
-<<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;                            \n";
+<<"  plot (du1,wait=0, cmm= \"t = \"+t+\" (s)\",value=1);                          \n";
 
 write
 <<"                                                                                \n"
@@ -194,22 +177,13 @@ if(!Sequential){write
 <<"  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;                     \n"
 <<"                                                                                \n"
 <<"  //--------------tt update for loading--------------//                         \n"
-<<"                                                                                \n";
-
-if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-write
-<<"  tt  = t-real(alpf*dt);                                                        \n";
-
-if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-write
-<<"  tt  = t-dt;                                                                   \n";
-
-write
+<<"                                                                                \n"
+<<"  tt  = t;                                                                      \n"
 <<"                                                                                \n"
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
-<<"  ALoc = elastodynamics(Vh,Vh,solver=CG,sym=1);                                 \n"
+<<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                 \n"
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
@@ -219,7 +193,7 @@ write
 <<"  //-----------------Assembly for b-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"RHS assembly\",t0)\n" : ""                         )
-<<"  b = elastodynamics(0,Vh);                                                     \n"
+<<"  b = soildynamics(0,Vh);                                                     \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                         )
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
@@ -230,26 +204,17 @@ write
 <<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""                            )
 <<"                                                                                \n";
 
-if(debug)if(spc==2)write
+if(debug)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
-<<"  meshN ThMoved = movemesh(Th, [x + du, y + du1]) ;                             \n"
-<<"  plotJustMeshMPI (ThMoved, wait=0, cmm=\"t=\"+t+\"(s)\")                       \n";
-
-if(debug)if(spc==3)write
-<<"                                                                                \n"
-<<"  //-----------------Move mesh plotting------------//                           \n"
-<<"                                                                                \n"
-<<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ;          \n"
-<<"  plotJustMeshMPI3 (ThMoved, wait=0, cmm=\"t=\"+t+\"(s)\")                      \n";
+<<"  macro defplot(i) i//                                                          \n"
+<<"  plotMPI(Th, du1, P1, defplot, real, wait=0, cmm=\"T-\"+t+\"\");               \n";
 
 write
 <<"                                                                                \n"
 <<"  //-----------------updating variables------------//                           \n"
 <<"                                                                                \n"
-//<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);                  \n"
-//<<"  updateVariables(du,uold,vold,aold)                                          \n"
 <<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : ""                   )
 <<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )
