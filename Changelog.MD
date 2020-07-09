@@ -3,23 +3,24 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
-- New preproceeing via C++, PSD_PreProcess binary (MAJOR CHANGE).
+- New processing via C++, PSD_PreProcess binary (MAJOR CHANGE).
 - New examples of using the solver.
-- New Pdf documentation.
+- New Pdf documentation containing tutorials, function definitions, verbos on PSD c++ library.
 - New option `-nonlinearmethod` (Picard|Newton-Raphsons).
 - New time discretization option `-timediscretization`.
 - New point boundary conditions.
 - New dummy city mesh and analysis 2D for soil dynamics. 
 - Automatic identification of FreeFEM and Gmsh during `./configure`.
 - New flags for `--with-FreeFEM=` and `--with-Gmsh=` during `./configure`.
-- New flag `-problem` linear-elasticity|damage|elastodynamics|soildynamics to define physics.
-- New flag `-model` to set approximation for damage mechanics hybrid-phase-field|Mazar.
-- Better energy splitting included Hybrib phase-field compressibility vs tensile enery condition.
+- New flag `-problem` linear-elasticity | damage | elastodynamics | soildynamics to define physics.
+- New flag `-model` to set approximation for damage mechanics hybrid-phase-field | Mazar | pseudo-nonlinear | Hujeux.
+- Better energy splitting included Hybrid phase-field compressibility vs tensile energy condition.
 - Introduce boundary conditions via `-dirichletconditions` [int] flag. 
 - Introduce point boundary conditions via `-dirichletpointcondition` [int] flag. 
 - Introduce traction boundary conditions via `-tractionconditions` [int] flag.
 - New folder `tests` containing unit-tests for modules.
-- New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne).
+- New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne Foerster).
+- New pseudo-nonlinear model for solving elastodynamics and soildynamics with nonlinear Newton-Raphsons.
 
 ### Changed
 - Moved to FreeFEM 4.6.

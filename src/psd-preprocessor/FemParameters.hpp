@@ -98,8 +98,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
  }
 }
 
-if(Prblm=="elastodynamics" && Model!="pseudo-nonlinear" || 
-   Prblm=="soildynamics"   && Model!="Hujeux"             )
+if(Prblm=="elastodynamics"  || Prblm=="soildynamics"){
+if(Model!="pseudo-nonlinear" && Model!="Hujeux")
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -113,8 +113,7 @@ if(Prblm=="elastodynamics" && Model!="pseudo-nonlinear" ||
  "      def(DPspc) ;      // Partition of unity field for integral               \n"
  "                                                                               \n";
 
-if(Prblm=="elastodynamics" && Model=="pseudo-nonlinear" || 
-   Prblm=="soildynamics"   && Model=="Hujeux"             )
+if(Model=="pseudo-nonlinear" || Model=="Hujeux" )
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -128,7 +127,7 @@ if(Prblm=="elastodynamics" && Model=="pseudo-nonlinear" ||
  "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
  "      def(DPspc) ;      // Partition of unity field for integral               \n"
  "                                                                               \n";
-
+}
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
 

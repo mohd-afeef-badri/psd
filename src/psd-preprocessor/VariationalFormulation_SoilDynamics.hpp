@@ -65,13 +65,19 @@ if(spc==3)write
 <<"  )                                                                                             \n";
 
 
-if(Model=="Hujeux")write
+if(Model=="pseudo-nonlinear")write
 <<"                                                                                                \n"
-<<"    - intN(Th,qforder=3)                                                                        \n"
+<<"    - intN(Th,qforder=2)                                                                        \n"
 <<"  (                                                                                             \n"
 <<"      (def(uNL)'*def(v))*c[0]                                                                   \n"
 <<"    + (divergence(uNL)*divergence(v))*c[1]                                                      \n"
 <<"    + (epsilon(uNL)'*epsilon(v))*c[2]                                                           \n"
+<<"  )                                                                                             \n"
+<<"                                                                                                \n"
+<<"                                                                                                \n" 
+<<"    - intN1(Th,qforder=2,PAlabels)                                                              \n"
+<<"  (                                                                                             \n"
+<<"      c[7]*(  PA0(uNL)'*def(v)  )                                                               \n" 
 <<"  )                                                                                             \n"
 <<"                                                                                                \n";
                 
@@ -102,7 +108,7 @@ if(Model=="Hujeux")write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    intN(Th,qforder=3)                                                                          \n"
 <<"  (                                                                                             \n"
-<<"    + (divergence(du)*divergence(v))*lambda                                                     \n"
+<<"      (divergence(du)*divergence(v))*lambda                                                     \n"
 <<"    + (epsilon(du)'*epsilon(v))*2.*mu                                                           \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n"

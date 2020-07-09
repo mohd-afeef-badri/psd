@@ -191,7 +191,7 @@ if(!Sequential){write
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
 <<"                                                                                \n";
 
-if(Model=="Hujeux")write
+if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
 <<"  //---------update Nonlinear displacement-----------//                         \n"
 <<"                                                                                \n"
@@ -217,7 +217,7 @@ write
 <<"                                                                                \n";
 
 
-if(Model=="Hujeux")write
+if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
 <<"  //---------update Nonlinear displacement-----------//                         \n"
 <<"                                                                                \n"
