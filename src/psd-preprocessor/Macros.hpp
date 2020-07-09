@@ -449,7 +449,7 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)write
 <<"                                                                           \n"
 <<"  macro updateVariables(du,uold,vold,aold,beta,gamma,dt){                  \n"
 <<"                                                                           \n"
-<<"    double aloc  ;                                                         \n"
+<<"    real aloc  ;                                                           \n"
 <<"                                                                           \n"
 <<"    for (int i=0; i< Vh.ndof; i++){                                        \n"
 <<"      aloc     =   (du[][i]-uold[][i]-dt*vold[][i])/beta/(dt*dt)           \n"
