@@ -4,65 +4,56 @@
 
 cout << " building Macros.edp";
    
-{ofstream  writemacros("Macros.edp");
+{ofstream  write("Macros.edp");
 
-writemacros<<
-"/********************************* Macros *************************************\n"
-"*                                                                             *\n"
-"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
-"*         in order to  control this file please change flag arguments of  the *\n"
-"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
-"*         -help or read the PSD manual.                                       *\n"
-"*                                                                             *\n"
-"******************************************************************************/\n"
-"                                                                               \n";
+writeHeader;
 
-if(spc==2){writemacros
+if(spc==2){write
 <<"                                                                             \n"
 <<"//------------------------- Essential Macros ------------------------------//\n"
 <<"                                                                            \n";
 
-if(!Sequential)writemacros
+if(!Sequential)write
 <<"  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used   \n"
 <<"  macro dimension 2                              // Two-dimensional problem \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space    \n"
 <<"  macro def  (i) [ i , i#1, i#2 ]                // Vect. field definition  \n"
 <<"  macro init (i) [ i ,  i ,  i  ]                // Vect. field initialize  \n";
 
 if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
-if(plotAll || debug)writemacros
+if(plotAll || debug)write
 <<"  macro Pltk         P1                          // FE space                \n"
 <<"  macro def0 (i)           i                     // Vect. field definition  \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
 "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(useGFP)write
 <<"  macro Sk           [ P0, P0 , P0  ]       // Third order strain vector   \n"
 <<"  macro defStrain(i) [ i , i#1, i#2 ]       // Vect. field definition      \n";
 
-if(!vectorial){writemacros
+if(!vectorial){write
 <<"  macro Pk       [ P"<<lag<<", P"<<lag<<"  ]\t\t    // Finite element space\n";
 
-if(Prblm!="damage")writemacros
+if(Prblm!="damage")write
 <<"  macro def  (i) [ i , i#1 ]                // Vect. field definition      \n";
 
-if(Prblm!="damage")if(!Sequential)writemacros
+if(Prblm!="damage")if(!Sequential)write
 <<"  macro init (i) [ i ,  i  ]                // Vect. field initialize      \n"
 <<"                                                                           \n";
 
-if(Prblm=="damage" && Model=="Mazar")writemacros
+if(Prblm=="damage" && Model=="Mazar")write
 <<"  macro def  (i) [ i , i#1 ]                // Vect. field definition      \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(!Sequential)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
 <<"  macro init (i) [ i ,  i  ]                // Vect. field initialize      \n"
 <<"                                                                           \n";
 
 } //-- [if loop terminator] !vectorial ended --//
 
-writemacros
+write
 <<"                                                                           \n"
 <<"//--------------------Divergence and epsilion macros---------------------//\n"
 <<"                                                                           \n"
@@ -70,7 +61,7 @@ writemacros
 <<"  macro epsilon(i) [dx(i), dy(i#1),                                        \n" 
 <<"                   (dy(i)+dx(i#1))/SQ2]        // Strain definition        \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)write
 <<"                                                                           \n"
 <<"//---------------------------Non-linear macros---------------------------//\n"
 <<"                                                                           \n"
@@ -80,7 +71,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
 <<"  macro init  (i)     i                               // Initialize        \n"
 <<"  macro Zk            P1                              // FE space          \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-------------------------------\n"
 <<"                                                                           \n"
@@ -100,7 +91,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
 
 
 /************************OLD METHOD*************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-------------------------------\n"
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){                            \n"
@@ -135,7 +126,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 /************************OLD METHOD*************************************************/
 
 /************************OLD METHOD*************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"                                                                           \n"
@@ -152,7 +143,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"                                                                           \n";
 /************************OLD METHOD*************************************************/
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
  "                                                                             \n"
  "//------------------------------Hplus macros-------------------------------//\n"
  "                                                                             \n"
@@ -167,7 +158,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
 
 
 
-if(Prblm=="damage" && Model=="Mazar")writemacros
+if(Prblm=="damage" && Model=="Mazar")write
 <<"                                                                            \n"
 <<"//-----------------------Stess calculation macro--------------------------//\n"
 <<"                                                                            \n"
@@ -177,7 +168,7 @@ if(Prblm=="damage" && Model=="Mazar")writemacros
 <<"     2.*muVal*epsilon(i)[2]]//                                              \n"
 <<"                                                                            \n";
   
-if(Sequential)writemacros
+if(Sequential)write
 <<"                                                                            \n"
 <<"//--------------------Sequential remapping macros-------------------------//\n"
 <<"                                                                            \n"
@@ -193,54 +184,54 @@ if(Sequential)writemacros
 
 
 
-if(spc==3){writemacros
+if(spc==3){write
 <<"                                                                            \n"
 <<"//--------------------Macros needed by DDmacro.idp------------------------//\n"
 <<"                                                                            \n";
 
-if(!Sequential)writemacros
+if(!Sequential)write
 <<"  macro partitioner "<<Partitioner<<"\t          // Mesh partitioner used   \n"
 <<"  macro dimension   3                          // Three-D problem           \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")writemacros
+if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"
 <<"  macro def  (i) [ i , i#1, i#2, i#3 ]           // Vect. field definition  \n"
 <<"  macro init (i) [ i ,  i ,  i,  i  ]            // Vect. field initialize  \n";
 
 if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
-if(plotAll || debug)writemacros
+if(plotAll || debug)write
 <<"  macro Pltk         P1                          // FE space                \n"
 <<"  macro def0 (i)           i                     // Vect. field definition  \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"  macro Sk           [ P0,P0,P0,P0,P0,P0  ]  // Sixth order strain vector   \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(useGFP)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(useGFP)write
 <<"  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector\n"
 <<"  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition   \n";
 
-if(!vectorial){writemacros
+if(!vectorial){write
 <<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]\t\t  // Finite element space  \n";
 
-if(Prblm!="damage")writemacros
+if(Prblm!="damage")write
 <<"                                                                            \n"
 <<"  macro def(i)  [i, i#1, i#2]                    // Vect. field definition  \n";
 
-if(Prblm!="damage")if(!Sequential)writemacros
+if(Prblm!="damage")if(!Sequential)write
 <<"  macro init(i) [i,   i,   i]                    // Vect. field initialize  \n"
 <<"                                                                            \n";
 
-if(Prblm=="damage" && Model=="Mazar")writemacros
+if(Prblm=="damage" && Model=="Mazar")write
 <<"                                                                            \n"
 <<"  macro def(i)  [i, i#1, i#2]                    // Vect. field definition  \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(!Sequential)writemacros
+if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
 <<"  macro init(i) [i,   i,   i]                    // Vect. field initialize  \n"
 <<"                                                                            \n";
 
 } //-- [if loop terminator] !vectorial ended --//
 
-writemacros
+write
 <<"                                                                           \n"
 <<"//--------------------Divergence and epsilion macros---------------------//\n"
 <<"                                                                           \n"
@@ -251,7 +242,7 @@ writemacros
 <<"                       (dy( i ) + dx(i#1))/SQ2]        // Strain macro     \n"
 <<"                                                                           \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)write
 <<"                                                                           \n"
 <<"//---------------------------Non-linear macros---------------------------//\n"
 <<"                                                                           \n"
@@ -262,7 +253,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)writemacros
 <<"  macro Zk            P1                                // FE space        \n";
 
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-----------------------------//\n"
 <<"                                                                           \n"
@@ -291,7 +282,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)writemacros
 <<"                  )                                           // Hplus     \n"
 <<"                                                                           \n";
 
-if(Prblm=="damage" && Model=="Mazar")writemacros
+if(Prblm=="damage" && Model=="Mazar")write
 <<"                                                                           \n"
 <<"//-----------------------Stess calculation macro-------------------------//\n"
 <<"                                                                           \n"
@@ -307,7 +298,7 @@ if(Prblm=="damage" && Model=="Mazar")writemacros
 <<"                                                                           \n";
 
 /******************************************************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-----------------------------//\n"
 <<"                                                                           \n"
@@ -333,7 +324,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros
 <<"                                                                           \n";
 /********************************************************************************************/
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
 "                                                                             \n"
  
 "//----------------------------Hplus macros---------------------------------//\n"
@@ -347,7 +338,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)writemacros<<
  "  }//                                                                       \n" 
  "                                                                            \n";
  
-if(Sequential)writemacros
+if(Sequential)write
 <<"                                                                           \n"
 <<"//---------------------Sequential remapping macros-----------------------//\n"
 <<"                                                                           \n"
@@ -364,7 +355,7 @@ if(Sequential)writemacros
 
 
 
-if(dirichletpointconditions>=1){writemacros
+if(dirichletpointconditions>=1){write
 <<"                                                                           \n"
 <<"//----------------------------Point BC macro-----------------------------//\n"
 <<"                                                                           \n"
@@ -373,7 +364,7 @@ if(dirichletpointconditions>=1){writemacros
 <<"    meshN Th=Wh.Th;                                                        \n"
 <<"                                                                           \n";
  
-if(spc==2)writemacros
+if(spc==2)write
 <<"                                                                           \n"
 <<"        varf vlabs(def(u),def(v))                                          \n"
 <<"        = on( Dpointlab,                                                   \n"
@@ -383,7 +374,7 @@ if(spc==2)writemacros
 <<"                                                                           \n";
 
 if(spc==3)
-writemacros
+write
 <<"                                                                           \n"
 <<"    varf vlabs(def(u),def(v))                                              \n"
 <<"        = on( Dpointlab,                                                   \n"
@@ -393,7 +384,7 @@ writemacros
 <<"            );                                                             \n"
 <<"                                                                           \n";
 
-writemacros
+write
 <<"                                                                           \n"
 <<"    real[int] absc=vlabs(0,Wh);                                            \n"
 <<"                                                                           \n"
@@ -412,12 +403,12 @@ writemacros
 } //-- [if loop terminator] pointbc ended --//
 
 
-if(timelog){writemacros
+if(timelog){write
 <<"                                                                           \n"
 <<"//-----------------------------------Timing macros-----------------------//\n"
 <<"                                                                           \n";
 
-if(!Sequential)writemacros
+if(!Sequential)write
 <<"                                                                           \n"
 <<"  macro MPItimerbegin(str1,t0){                                            \n"
 <<"    mpiBarrier(mpiCommWorld);                                              \n"
@@ -435,7 +426,7 @@ if(!Sequential)writemacros
 <<"                                                                           \n"
 <<"                                                                           \n";
 
-if(Sequential)writemacros
+if(Sequential)write
 <<"                                                                           \n"
 <<"  macro timerbegin(str1,t0){                                               \n"
 <<"    t0 = clock();                                                          \n"
@@ -452,7 +443,7 @@ if(Sequential)writemacros
 } //-- [if loop terminator] timelog ended --//
 
 
-if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)writemacros
+if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)write
 <<"                                                                           \n"
 <<"//------------------------------update macros----------------------------//\n"
 <<"                                                                           \n"
@@ -471,26 +462,26 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)writemacros
 <<"                                                                           \n";
 
 
-if(Prblm=="soildynamics"){writemacros
+if(Prblm=="soildynamics"){write
 <<"                                                                           \n"
 <<"//----------------------Paraxial rotation macro--------------------------//\n"
 <<"                                                                           \n";
 
-if(spc==2)writemacros
+if(spc==2)write
 <<"  macro PA0(i)                                                             \n"
 <<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),    \n"
 <<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
 <<"        ]//                                                                \n";
 
 
-if(spc==3)writemacros
+if(spc==3)write
 <<"  macro PA0(i)                                                             \n"
 <<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
 <<"          cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
 <<"          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
 <<"        ]//                                                                \n";
 
-if(Sequential)writemacros
+if(Sequential)write
 <<"                                                                           \n"
 <<"//----------------------ParaView plotting macro--------------------------//\n"
 <<"                                                                           \n"

@@ -58,11 +58,11 @@
 
   -------------------------------------------------------------------------------------
 
-  -help        [bool]     To activate helping message on the terminal. Default OFF. 
+  -help        [bool]     To activate helping message on the terminal. 
 
-  -plot        [bool]     To activate plotting routine. Default OFF.
+  -plot        [bool]     To activate plotting routine.
 
-  -debug       [bool]     To activate debug openGL plotting routine. Default OFF.
+  -debug       [bool]     To activate debug openGL plotting routine.
   
   -useGFP      [bool]     To activate use of GoFastPlugins. A suite of c++ plugins.
   
@@ -70,17 +70,19 @@
 
   -useRCM      [bool]     To activate mesh level renumbering via Reverse Cuthill Mckee.   
   
-  -pipegnu     [bool]     To activate realtime pipe plotting using GnuPlot. Default OFF.
+  -pipegnu     [bool]     To activate realtime pipe plotting using GnuPlot.
   
-  -bodyforce   [bool]     To activate volumetric source term (body force). Default OFF.
+  -bodyforce   [bool]     To activate volumetric source term (body force).
 
-  -vectorial   [bool]     To generate vectorial space solver for non-linear. Default OFF.  
+  -vectorial   [bool]     To generate vectorial space solver for non-linear.
     
-  -supercomp   [bool]     To be used when using a cluster/supercomputer. Default OFF.   
+  -supercomp   [bool]     To be used when using a cluster/supercomputer.
+  
+  -fastmethod  [bool]     Fast method for linear elasticity (expanded material tensor).         
 
   -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
   
-  -sequential  [bool]     To generate a sequential ff++ solver. Default OFF.
+  -sequential  [bool]     To generate a sequential ff++ solver.
 
 */
 
