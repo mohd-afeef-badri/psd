@@ -67,7 +67,7 @@ if(spc==3)write
 
 if(Model=="Hujeux")write
 <<"                                                                                                \n"
-<"    - intN(Th,qforder=3)                                                                         \n"
+<<"    - intN(Th,qforder=3)                                                                        \n"
 <<"  (                                                                                             \n"
 <<"      (def(uNL)'*def(v))*c[0]                                                                   \n"
 <<"    + (divergence(uNL)*divergence(v))*c[1]                                                      \n"
