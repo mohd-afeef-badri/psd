@@ -256,6 +256,18 @@ write
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
 <<"  changeOperator(A, ALoc);                                                      \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
+<<"                                                                                \n";
+
+if(Model=="pseudo-nonlinear")write
+<<"                                                                                \n"
+<<"  //---------update Nonlinear displacement-----------//                         \n"
+<<"                                                                                \n"
+<<"  uNL[] = uold[];                                                               \n"
+<<"                                                                                \n"
+<<"  for (int k=0; k<5; k++){                   // Nonlinear NR loop               \n"
+<<"                                                                                \n";
+
+write
 <<"                                                                                \n"
 <<"  //-----------------Assembly for b-----------------//                          \n"
 <<"                                                                                \n"
@@ -269,6 +281,46 @@ write
 <<"  set(A,sparams =\"  -ksp_type cg  \");                                         \n"
 <<"  du[] = A^-1*b;                                                                \n"
 <<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""                            )
+<<"                                                                                \n";
+
+if(Model=="pseudo-nonlinear")write
+<<"                                                                                \n"
+<<"  //---------update Nonlinear displacement-----------//                         \n"
+<<"                                                                                \n"
+<<"  uNL[] += du[];                                                                \n"
+<<"                                                                                \n"
+<<"    //------Newton-Raphsons Error calculation---------//                        \n"
+<<"                                                                                \n"
+<<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
+<<"    real err1Gather,  err1Loc ;                                                 \n"
+<<"                                                                                \n"
+<<"        b = b .* DP                                   ;                         \n"                        
+<<"        err1Loc = b.l2                                ;                         \n"                          
+<<"        err1Loc = err1Loc*err1Loc                     ;                         \n"                          
+<<"        mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                   \n"                          
+<<"        err1Gather = sqrt(err1Gather) ;                                         \n"
+<<"                                                                                \n"               
+<<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )
+<<"                                                                                \n"
+<<"    //--------------- Convergence conditional---------------------//            \n"
+<<"                                                                                \n"
+<<"    if(err1Gather < 1e-5 || k==4){                                              \n"
+<<"                                                                                \n"
+<<"      //------------------Screen output norm----------------------//            \n"
+<<"                                                                                \n"
+<<"      if(mpirank==0)                                                            \n"
+<<"      cout.scientific << \"NL iteration number :  [ \"  << k                    \n"
+<<"      << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                        \n"
+<<"      << \" ]\"      << endl;                                                   \n"
+<<"                                                                                \n"
+<<"      break;                                                                    \n"
+<<"                                                                                \n"
+<<"     }                                                                          \n"
+<<" }    // Nonlinear NR loop ends                                                 \n"
+<<"                                                                                \n"
+<<"  //---------------update  displacement--------------//                         \n"
+<<"                                                                                \n"
+<<"  du[] = uNL[];                                                                 \n"
 <<"                                                                                \n";
 
 if(debug)if(spc==2)write
@@ -289,8 +341,6 @@ write
 <<"                                                                                \n"
 <<"  //-----------------updating variables------------//                           \n"
 <<"                                                                                \n"
-//<<"  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);                  \n"
-//<<"  updateVariables(du,uold,vold,aold)                                          \n"
 <<(timelog ? "  MPItimerbegin(\"updating variables\",t0)\n" : ""                   )
 <<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )

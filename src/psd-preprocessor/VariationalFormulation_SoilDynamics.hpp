@@ -8,7 +8,7 @@ write
 <<"// -------Variation formulation soil-dynamics -------                                           \n"
 <<"//==============================================================================                \n"
 <<"                                                                                                \n"
-<<"varf soildynamics( def(du) , def(v) )                                                         \n"
+<<"varf soildynamics( def(du) , def(v) )                                                           \n"
 <<"                                                                                                \n"
 <<"    = intN(Th,qforder=3)                                                                        \n"
 <<"  (                                                                                             \n"
@@ -63,6 +63,17 @@ if(spc==3)write
 <<"             +cs*(-N.x*N.z*0 - N.z*N.y*v1in + (1.-N.z*N.z)*0))*v2                               \n"
 <<"          )                                                                                     \n" 
 <<"  )                                                                                             \n";
+
+
+if(Model=="Hujeux")write
+<<"                                                                                                \n"
+<"    - intN(Th,qforder=3)                                                                         \n"
+<<"  (                                                                                             \n"
+<<"      (def(uNL)'*def(v))*c[0]                                                                   \n"
+<<"    + (divergence(uNL)*divergence(v))*c[1]                                                      \n"
+<<"    + (epsilon(uNL)'*epsilon(v))*c[2]                                                           \n"
+<<"  )                                                                                             \n"
+<<"                                                                                                \n";
                 
 write
 <<"                                                                                                \n" 
@@ -77,7 +88,7 @@ write
 <<";                                                                                               \n" 
 <<"                                                                                                \n";
 
-if(Model=="hujeux")write
+if(Model=="Hujeux")write
 <<"                                                                                                \n"
 <<"//==============================================================================                \n"
 <<"// --Variation formulation soil-dynamics (static solve before dynamics) -------                 \n"

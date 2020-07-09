@@ -29,7 +29,7 @@ write
 <<"    + (epsilon(vold)'*epsilon(v))*c[9]                                                          \n"
 <<"    + (epsilon(aold)'*epsilon(v))*c[10]                                                         \n"
 <<"  )                                                                                             \n"
-<<"                                                                                                \n"
+<<"                                                                                                \n";
 /************************OLD METHOD*************************************************
 <<"    = intN(Th,qforder=3)                                                                        \n"
 <<"  (                                                                                             \n"
@@ -82,6 +82,18 @@ write
 <<"                                                                                                \n"
 <<"  )                                                                                             \n"
 /************************OLD METHOD*************************************************/  
+
+if(Model=="pseudo-nonlinear")write
+<<"                                                                                                \n"
+<<"    - intN(Th,qforder=3)                                                                        \n"
+<<"  (                                                                                             \n"
+<<"      (def(uNL)'*def(v))*c[0]                                                                   \n"
+<<"    + (divergence(uNL)*divergence(v))*c[1]                                                      \n"
+<<"    + (epsilon(uNL)'*epsilon(v))*c[2]                                                           \n"
+<<"  )                                                                                             \n"
+<<"                                                                                                \n";
+
+write
 <<"                                                                                                \n"
 <<"    + intN1(Th,qforder=2,"<<labRface<<")                                                        \n"
 <<"  (                                                                                             \n"
@@ -100,3 +112,5 @@ write
 <<"  )                                                                                             \n"
 <<";                                                                                               \n"
 <<"                                                                                                \n";
+
+

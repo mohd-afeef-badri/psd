@@ -98,7 +98,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
  }
 }
 
-if(Prblm=="elastodynamics" || Prblm=="soildynamics")
+if(Prblm=="elastodynamics" && Model!="pseudo-nonlinear" || 
+   Prblm=="soildynamics"   && Model!="Hujeux"             )
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -112,6 +113,21 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics")
  "      def(DPspc) ;      // Partition of unity field for integral               \n"
  "                                                                               \n";
 
+if(Prblm=="elastodynamics" && Model=="pseudo-nonlinear" || 
+   Prblm=="soildynamics"   && Model=="Hujeux"             )
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// -------Finite element variables -------                                     \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ "  Vh  def(du)    ,      // Displacement FE field                               \n"
+ "      def(uold)  ,      // Previous iteration displacement FE field            \n"
+ "      def(uNL)   ,      // Nonlinear iteration displacement FE field           \n"
+ "      def(vold)  ,      // Previous iteration velocity FE field                \n"
+ "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
+ "      def(DPspc) ;      // Partition of unity field for integral               \n"
+ "                                                                               \n";
 
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
