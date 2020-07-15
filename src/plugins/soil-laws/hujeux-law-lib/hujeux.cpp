@@ -5,14 +5,15 @@
 
 using namespace std;
 
-extern void		gauss(double**, double*, double*, const int&);
-const double	EPS  = 1.e-15,
-		          FTOL = 1.e-8,
-		          TOL  = 1.e-15,         
-        		  Pa   = -1.e6,                      // Reference stress (in Pa)
-	            RAD  = acos(-1.) / 180.;
-string 	      ferrlog("error.log");
-char	      szout[MAXBUFFER];
+//extern void		gauss(double**, double*, double*, const int&);
+extern void		gauss(Real**, Real*, Real*, const int&);
+const Real	EPS  = 1.e-15,
+		    FTOL = 1.e-8,
+		    TOL  = 1.e-15,
+            Pa   = -1.e6,                      // Reference stress (in Pa)
+	        RAD  = acos(-1.) / 180.;
+string 	    ferrlog("error.log");
+char	    szout[MAXBUFFER];
 //////////////////////////////////////////////////////////////////////////////////////
 // class ElastTensor: 4th-order elastic tensor
 //
@@ -28,7 +29,7 @@ ElastTensor::ElastTensor(const ElastTensor& tens)
 	m_S = tens.m_S;
 }
 
-ElastTensor::ElastTensor(const double& lambda, const double& mu)
+ElastTensor::ElastTensor(const Real& lambda, const Real& mu)
 {
 
 	m_D = lambda;
@@ -46,7 +47,7 @@ ElastTensor& ElastTensor::operator=(const ElastTensor& tens)
 	return (*this);
 }
 
-ElastTensor& ElastTensor::operator*=(const double& x)
+ElastTensor& ElastTensor::operator*=(const Real& x)
 {
 	m_D *= x;
 	m_S *= x;
@@ -72,7 +73,7 @@ ElastTensor ElastTensor::operator-() const
 	return ElastTensor(-m_D,-m_S);
 }
 
-double ElastTensor::operator()(const int& i, const int& j) const
+Real ElastTensor::operator()(const int& i, const int& j) const
 {
 	if (i < 0 || i >= 6 && j < 0 || j >= 6) throw std::out_of_range("Matrix indices are out of range");
 
@@ -86,7 +87,7 @@ double ElastTensor::operator()(const int& i, const int& j) const
 	return m_S[i-3][j-3];
 }
 
-void ElastTensor::set(const int& i, const int& j, const double& x)
+void ElastTensor::set(const int& i, const int& j, const Real& x)
 {
 	if (i < 0 || i >= 6 && j < 0 || j >= 6) throw std::out_of_range("Matrix indices are out of range");
 
@@ -110,13 +111,13 @@ ElastTensor operator-(const ElastTensor& m1, const ElastTensor& m2)
 }
 
 /*---------------------------------------------------------------------------*/
-ElastTensor operator*(double x, const ElastTensor& m)
+ElastTensor operator*(Real x, const ElastTensor& m)
 {
     return ElastTensor(x * m.m_D, x * m.m_S);
 }
 
 /*---------------------------------------------------------------------------*/
-ElastTensor operator*(const ElastTensor& m, double x)
+ElastTensor operator*(const ElastTensor& m, Real x)
 {
     return ElastTensor(x * m.m_D, x * m.m_S);
 }
@@ -127,7 +128,7 @@ Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
     Tensor2 m;
     for (int i = 0; i < 6; i++)
     {
-        double vi = 0.;
+        Real vi = 0.;
         for (int j = 0; j < 6; j++) vi += m1(i,j) * m2.m_vec[j];
         m.m_vec[i] = vi;
     }
@@ -135,7 +136,7 @@ Tensor2 operator*(const ElastTensor& m1, Tensor2 m2)
 }
 
 /*---------------------------------------------------------------------------*/
-double trace(const ElastTensor& m)
+Real trace(const ElastTensor& m)
 {
     return trace(m.m_D) + trace(m.m_S);
 }
@@ -402,12 +403,12 @@ void HujeuxLaw::set_ipl(const int& iiplval)
 // Computing elastic constitutive (4th order) tensor considering nonlinear elasticity p = current effective
 // mean stress at integration point (=I1/3 with I1, 1st stress invariant)
 //=================================================================================================================//
-void HujeuxLaw::computeElastTensor(const double& p)
+void HujeuxLaw::computeElastTensor(const Real& p)
 {
 	auto K = m_param[0];
 	m_mu = m_param[1];
 	auto ne = m_param[2];
-	double	fac = 1.;
+    Real	fac = 1.;
 
 	if (p < 0.) fac = pow(p / pref, ne);
 	K *= fac;
@@ -429,7 +430,7 @@ void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
     auto p = trace(sig)/3.;
     
 	auto ne = m_param[2];
-	double	fac = 1.;
+    Real	fac = 1.;
     auto Kaux = m_param[23];
     auto Gaux = m_param[24];
 
@@ -457,11 +458,11 @@ void HujeuxLaw::initHistory(dvector* histab)
     evp = histab->front();
 
 	int ii = 1, jj = 15;
-    for (int i = 0; i < 4; i++)
+    for (auto & r : ray)
     {
         for (int j = 0; j < 2; j++)
         {
-            ray[i][j] = (*histab)[ii + j];
+            r[j] = (*histab)[ii + j];
         }
         ii += 2;
     }
@@ -529,11 +530,11 @@ bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 
 	int ii = 1;
 	int jj = 15;
-	for (int i = 0; i < 4; i++)
+	for (auto & r : ray)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			(*histab)[ii + j] = ray[i][j];
+			(*histab)[ii + j] = r[j];
 		}
 		ii += 2;
 	}
@@ -560,22 +561,22 @@ bool HujeuxLaw::initState(const Tensor2& sig, dvector* histab)
 //=================================================================================================================//
 bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vnk, Real2& sbk, Real2& rayk)
 {
-	double	pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]),
-			s1 = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]),
-			s2 = sig.m_vec[lm],
-			qk = sqrt(s1 * s1 + s2 * s2),
-			rayela = m_param[11],
-			b = m_param[8];
-	bool	stop = false;
+	auto	pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]);
+    auto    s1 = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]);
+    auto    s2 = sig.m_vec[lm];
+    auto    qk = sqrt(s1 * s1 + s2 * s2);
+    auto    rayela = m_param[11];
+    auto    b = m_param[8];
+    bool	stop = false;
 
 	ppp = pk;
 	if (iecoul < 0) ppp = trace(sig) / 3.;
 
-	double	facpk = sinphi * (1. - b * log(ppp / pc)),
-			fmk = facpk * pk,
-			raykk = qk / fmk;
+	auto  facpk = sinphi * (1. - b * log(ppp / pc));
+    auto  fmk = facpk * pk;
+    auto  raykk = qk / fmk;
 
-	if (abs(iniplk) == 2)
+    if (abs(iniplk) == 2)
 	{
 		// cannot start as cyclic
 		iniplk = 1;
@@ -588,7 +589,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 			filebuf ficherr;
 			ficherr.open(ferrlog.c_str(), ios::out | ios::app);
 			ostream oserr(&ficherr);
-      snprintf(szout, MAXCAR, "Starting out of dev yield surface %d!", km + 1);             ///////// CHECK CHECK 
+            snprintf(szout, MAXBUFFER, "Starting out of dev yield surface %d!", km + 1);             ///////// CHECK CHECK
 			oserr << szout << endl;
 			ficherr.close();
 			raykk = 1.;
@@ -616,7 +617,7 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 		filebuf ficherr;
 		ficherr.open(ferrlog.c_str(), ios::out | ios::app);
 		ostream oserr(&ficherr);
-        snprintf(szout, MAXCAR, "Starting as elastic impossible when dev mob degree %d > rayela!", km + 1);
+        snprintf(szout, MAXBUFFER, "Starting as elastic impossible when dev mob degree %d > rayela!", km + 1);
 		oserr << szout << endl;
 		ficherr.close();
 		stop = true;
@@ -632,12 +633,12 @@ bool HujeuxLaw::initMecdev(const Tensor2& sig, int& iniplk, int& iplk, Real2& vn
 //=================================================================================================================//
 bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& delta)
 {
-	double	dltela = m_param[17],
-			d = m_param[15],
-			p = trace(sig) / 3.,
-			faciso = -d * pc,
-			rayiso = -p / faciso;
-	bool	stop = false;
+	auto dltela = m_param[17];
+	auto d = m_param[15];
+    auto p = trace(sig) / 3.;
+    auto faciso = -d * pc;
+    auto rayiso = -p / faciso;
+    bool stop = false;
 
 	pldiso = p / pc;
 
@@ -693,26 +694,26 @@ bool HujeuxLaw::initMeciso(const Tensor2& sig, int& inipl4, int& ipl4, Real2& de
 
 //=================================================================================================================//
 //=================================================================================================================//
-void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* Phik, double* Psik, double* CPsik, double& seuilk,
-	double& fidsig, double& hray, double& xlray, int& iplk, int& jplk, Real2& vnk, Real2& sbk, Real2& rayk)
+void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, Real* Phik, Real* Psik, Real* CPsik, Real& seuilk,
+                              Real& fidsig, Real& hray, Real& xlray, int& iplk, int& jplk, Real2& vnk, Real2& sbk, Real2& rayk)
 {
 	Real2	c, cred, s, si;
-	double	pci = m_param[6],
-			b = m_param[8],
-			beta = m_param[5],
-			alfa = m_param[10],
-			m = m_param[19],
-			rayela = m_param[11],
-			rayhys = m_param[12],
-			raymbl = m_param[13],
-			amon = m_param[7],
-			acyc = m_param[9],
-			da = amon - acyc,
-			pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]),
-			tracesig = trace(sig),
-			p = tracesig / 3.;
+	auto	pci = m_param[6];
+    auto    b = m_param[8];
+    auto    beta = m_param[5];
+    auto    alfa = m_param[10];
+    auto    m = m_param[19];
+    auto    rayela = m_param[11];
+    auto    rayhys = m_param[12];
+    auto    raymbl = m_param[13];
+    auto    amon = m_param[7];
+    auto    acyc = m_param[9];
+    auto    da = amon - acyc;
+    auto    pk = 0.5 * (sig.m_vec[im] + sig.m_vec[jm]);
+    auto    tracesig = trace(sig);
+    auto    p = tracesig / 3.;
 
-	s[0] = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]);
+    s[0] = 0.5 * (sig.m_vec[im] - sig.m_vec[jm]);
 	s[1] = sig.m_vec[lm];
 	si = s;
 
@@ -727,18 +728,19 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 	// Accuracy issue
 	else if (ppp >= -1.e-7) ppp = -1.e-7;
 
-	double	qk = s.norm(), qkc = qk,
-			facpk = sinphi * (1. - b * (log(-ppp) - log(-pci) - beta * evp)),
-			fmk = facpk * pk,
-			raym = rayk[0],
-			rayc = rayk[1],
-			raykk = raym,
-			fmkray = fmk * raykk,
-			cmod = 0.,
-			fachray = 1.,
-			raydum = 0.;
+	auto	qk = s.norm();
+    auto    qkc = qk;
+    auto    facpk = sinphi * (1. - b * (log(-ppp) - log(-pci) - beta * evp));
+    auto    fmk = facpk * pk;
+    auto    raym = rayk[0];
+    auto    rayc = rayk[1];
+    auto    raykk = raym;
+    auto    fmkray = fmk * raykk;
+    Real    cmod = 0.,
+            fachray = 1.,
+            raydum = 0.;
 
-	// former cyclic yield surface active: testing if monotonous surface is reached
+    // former cyclic yield surface active: testing if monotonous surface is reached
 	seuilk = qk - fmkray;
 
 	// Accuracy issue
@@ -764,7 +766,7 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 				if (rayc < raym)
 				{
 					raydum = rayc + cmod;
-					raym = min_(1., raydum);
+					raym = min_(Real(1.), raydum);
 					rayk[0] = raym;
 					raykk = raym;
 				}
@@ -963,8 +965,8 @@ void HujeuxLaw::ComputeMecdev(const Tensor2& sig, const Tensor2& dsig, double* P
 
 //=================================================================================================================//
 //=================================================================================================================//
-void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* Phic, double* Psic, double* CPsic, double& seuilc, double& fidsig,
-	double& hray, double& xldelta, int& ipl4, int& jpl4, Real2& delta)
+void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, Real* Phic, Real* Psic, Real* CPsic, Real& seuilc, Real& fidsig,
+                              Real& hray, Real& xldelta, int& ipl4, int& jpl4, Real2& delta)
 {
 	double	d = m_param[15],
 			beta = m_param[5],
@@ -1090,7 +1092,7 @@ void HujeuxLaw::ComputeMeciso(const Tensor2& sig, const Tensor2& dsig, double* P
 void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor2& epsp, Tensor2& dsig,
         const Tensor2& deps,bool is_converge)
 {
-	double	resinc = 1., // portion d'increment restant a calculer
+	Real	resinc = 1., // portion d'increment restant a calculer
 			beta = m_param[5],
 			pci = m_param[6],
 			n = m_param[2],
@@ -1099,8 +1101,8 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			factmp = 0., fac = 0., actif = 0.,
 			seuil[4], fidsig[4], hray[4], xlray[4],
 			daux[6][6];
-	auto hh1 = new double*[4];
-	auto hb = new double[4];
+	auto hh1 = new Real*[4];
+	auto hb = new Real[4];
 
 
 	initHistory(histab);
@@ -1116,14 +1118,14 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 	incmin = 1./incmax;
 	for (i = 0; i < 4; i++)
 	{
-		hh1[i] = new double[4];
+		hh1[i] = new Real[4];
 		hray[i] = 0.;
 		seuil[i] = 0.;
 		fidsig[i] = 0.;
 		xlray[i] = 0.;
 	}
 
-	double depsv = trace(deps);
+	Real depsv = trace(deps);
 	
 	computeTangentTensor(sig);
 	
@@ -1199,7 +1201,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 		// dividing into sub-increments for elasticity
 		factmp = depsv;
 
-		double dum = fabs(factmp * inc * K * n / p / facinc);
+		auto dum = fabs(factmp * inc * K * n / p / facinc);
 
 		if (dum > 1.) inc /= dum;
 		if (inc < incmin) inc = incmin;
@@ -1263,7 +1265,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			}
 
 			// solving for lambdap by gauss elimination
-			double lpi = 0.;
+			Real lpi = 0.;
 			bool stop = false;
 			int niter = 0, maxit = incmax / 2;
 			
@@ -1315,7 +1317,7 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 				//	if (lpi < -EPS) lpi = 0.;
 				evp += lpi * CPsi[k][3];
 				ray[k][kpl] += lpi * xlray[k];
-				ray[k][kpl] = min_(ray[k][kpl], 1.);
+				ray[k][kpl] = min_(ray[k][kpl], Real(1.));
 
 				for (j = 0; j < 6; j++)
 					dep[j] += lpi * Psi[k][j];
@@ -1325,8 +1327,8 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			if (fabs(evp) < EPS) evp = 0.;
 			else
 			{
-				evp = max_(evp, -1.);
-				evp = min_(evp, 1.);
+				evp = max_(evp, Real(-1.));
+				evp = min_(evp, Real(1.));
 			}
 
 			if (indaux == 1 && is_converge)
@@ -1335,10 +1337,10 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 			    // use inversion fct from existing lib (not implemented here)
 			    
 			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////
-				auto	hhi = new double*[4];				
+				auto	hhi = new Real*[4];
 				for (i = 0; i <4; i++) 
 				{
-					hhi[i] = new double[4];
+					hhi[i] = new Real[4];
 					for (j = 0; j < 4; j++) hhi[i][j] = hh1[i][j];
 				}
 				gauss(hhi,hb,hb,nmec);              
