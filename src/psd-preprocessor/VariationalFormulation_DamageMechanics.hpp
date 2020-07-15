@@ -30,11 +30,11 @@ if(bodyforce)write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}(f.v)$                                                                    \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN(Th,qforder=2)(BF'*def2(v))    // Body force     (volumetric)                       \n";
+<<"      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
 
 
 //if(tractionbc)write
-//<<"    + intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)                    \n";
+//<<"    + intN1(Th,Tlabel,qforder=3)(T'*def2(v))// Traction force (Neumann BC)                    \n";
 
 if(tractionconditions>=1)if(spc==2)
 for(int i=0; i<tractionconditions; i++)
@@ -43,7 +43,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                    \n";
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                    \n";
 
 if(tractionconditions>=1)if(spc==3)
 for(int i=0; i<tractionconditions; i++)
@@ -52,7 +52,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))          \n";
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))          \n";
 
 
 if(dirichletbc){
@@ -118,8 +118,8 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}) q)$                                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*HistPlus*q  )\n"         : ""                       )
-<<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*q  )\n"  : ""                              )
+<<(energydecomp  ? "\t+ intN(Th,qforder=3)(  2.*HistPlus*q  )\n"         : ""                       )
+<<(!energydecomp ? "\t+ intN(Th,qforder=3)(  2.*Hplus(u)*q  )\n"  : ""                              )
 <<"                                                                                                \n";
 
 write
@@ -167,7 +167,7 @@ if(!vectorial){write
 <<"    //--------------------------------------------------------------------------                \n"               
 <<"    // $+int_{\\Omega}( 2(1-\\phi)(\\epsilon(u):\\epsilon(v))phi$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"     + intN(Th,qforder=2)(                                                                      \n"
+<<"     + intN(Th,qforder=3)(                                                                      \n"
 <<"         2.*(1 - phi)*( epsilon(u)'*epsilon(v) )* phi                                           \n"                      
 <<"                        )                                                                       \n"
 <<"    //--------------------------------------------------------------------------                \n"
@@ -176,7 +176,7 @@ if(!vectorial){write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"     - intN(Th,qforder=2)(                                                                      \n"
+<<"     - intN(Th,qforder=3)(                                                                      \n"
 <<"         ((1 - phi)*(1 - phi))*                                                                 \n"
 <<"         (lambda*divergence(u)*divergence(v)                                                    \n"
 <<"         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
@@ -189,7 +189,7 @@ if(bodyforce)write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}(f.v)$                                                                    \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN(Th,qforder=2)(BF'*def2(v))    // Body force     (volumetric)                       \n";
+<<"      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
 
 if(tractionconditions>=1)if(spc==2)
 for(int i=0; i<tractionconditions; i++)
@@ -199,7 +199,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                    \n";
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                    \n";
 
 if(tractionconditions>=1)if(spc==3)
 for(int i=0; i<tractionconditions; i++)
@@ -209,7 +209,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))          \n";
+<<"      + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))          \n";
 
 
 if(dirichletbc){
@@ -270,14 +270,14 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}(i-\\phi)) q)$                                                    \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<(energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*HistPlus*(1-phi)*q  )\n"         : ""               )
-<<(!energydecomp ? "\t+ intN(Th,qforder=2)(  2.*Hplus(u)*(1-phi)*q  )\n"  : ""                      )
+<<(energydecomp  ? "\t+ intN(Th,qforder=3)(  2.*HistPlus*(1-phi)*q  )\n"         : ""               )
+<<(!energydecomp ? "\t+ intN(Th,qforder=3)(  2.*Hplus(u)*(1-phi)*q  )\n"  : ""                      )
 <<"                                                                                                \n"
 <<"                           //--- Linear(b_d ) ---//                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}(G_cl_0(\\nabl{\\phi}.\\nabla{q})+(G_c/l_0+2H^{+})\\phi q)$               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      - intN(Th,qforder=2)(                                                                     \n"
+<<"      - intN(Th,qforder=3)(                                                                     \n"
 <<"              (Gc*lo*(grad(phi)'*grad(q))) +                                                    \n"
 <<(energydecomp  ? "\t\t\t  ( ((Gc/lo)  /*+ 2.*HistPlus*/)*phi*q )\n"         : ""                  )
 <<(!energydecomp ? "\t\t\t  ( ((Gc/lo)  /*+ 2.*Hplus(u)*/)*phi*q )\n"  : ""                         )
@@ -336,19 +336,19 @@ if(!energydecomp)write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}) q)$                                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + intN(Th,qforder=2)(  2.*Hplus(uold)*v"<<spc<<"  )                                       \n";
+<<"      + intN(Th,qforder=3)(  2.*Hplus(uold)*v"<<spc<<"  )                                       \n";
 if(energydecomp)write
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    // $+int_{\\Omega}((2H^{+}) q)$                                                             \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"\t+ intN(Th,qforder=2)(  2.*HistPlus*v"<<spc<<"  )                                              \n";
+<<"\t+ intN(Th,qforder=3)(  2.*HistPlus*v"<<spc<<"  )                                              \n";
 
 /*
 <<(!energydecomp  ? "\t\t\t( ((Gc/lo)  + 2.*Hplus(uold))*u"<<spc<<"*v"<<spc<<" )\n": ""             )
 <<(energydecomp   ? "\t\t\t( ((Gc/lo)  + 2.*H)*u"<<spc<<"*v"<<spc<<" )\n"          : ""             )
-<<(!energydecomp  ? "\t+ intN(Th,qforder=2)(  2.*Hplus(uold)*v"<<spc<<"  )\n": ""                   )
-<<(energydecomp   ? "\t+ intN(Th,qforder=2)(  2.*H*v"<<spc<<"  )\n"          : ""                   )
+<<(!energydecomp  ? "\t+ intN(Th,qforder=3)(  2.*Hplus(uold)*v"<<spc<<"  )\n": ""                   )
+<<(energydecomp   ? "\t+ intN(Th,qforder=3)(  2.*H*v"<<spc<<"  )\n"          : ""                   )
 */
 
 write
@@ -415,15 +415,15 @@ if(Model=="Mazar"){write
 <<"    = intN(Th,qforder=3)(                                                                       \n"
 <<"            (1-damage) * stress(du,lambdafield,mufield)' * epsilon(v)                           \n"
 <<"                         )                                                                      \n"
-<<"     - intN(Th,qforder=2)(                                                                      \n"
+<<"     - intN(Th,qforder=3)(                                                                      \n"
 <<"                     (1-damage) * stress(u,lambdafield,mufield)' * epsilon(v)                   \n"
 <<"                         )                                                                      \n";
 
 if(bodyforce)write
-<<"    + intN(Th,qforder=2)(BF'*def2(v))    // Body force     (volumetric)                         \n";
+<<"    + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                         \n";
 
 //if(tractionbc)write
-//<<"    + intN1(Th,Tlabel,qforder=2)(T'*def2(v))// Traction force (Neumann BC)                    \n";
+//<<"    + intN1(Th,Tlabel,qforder=3)(T'*def2(v))// Traction force (Neumann BC)                    \n";
 
 if(tractionconditions>=1)if(spc==2)
 for(int i=0; i<tractionconditions; i++)
@@ -432,7 +432,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                      \n";
+<<"    + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                      \n";
 
 if(tractionconditions>=1)if(spc==3)
 for(int i=0; i<tractionconditions; i++)
@@ -441,7 +441,7 @@ write
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + intN1(Th,Tlabel["<<i<<"],qforder=2)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))            \n";
+<<"    + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))            \n";
 
 
 if(dirichletbc)if(spc==3)write

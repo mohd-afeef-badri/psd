@@ -183,7 +183,7 @@ if(!Sequential){write
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
-<<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                 \n"
+<<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
@@ -193,11 +193,20 @@ if(!Sequential){write
 
 if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
-<<"  //---------update Nonlinear displacement-----------//                         \n"
+<<"  //---------update nonlinear displacement-----------//                         \n"
 <<"                                                                                \n"
 <<"  uNL[] = uold[];                                                               \n"
 <<"                                                                                \n"
-<<"  for (int k=0; k<5; k++){                   // Nonlinear NR loop               \n"
+<<"  for (int k=0; k<5; k++){  // pseudo-nonlinear NR loop                         \n"
+<<"                                                                                \n";
+
+if(Model=="Hujeux")write
+<<"                                                                                \n"
+<<"  //---------update nonlinear displacement-----------//                         \n"
+<<"                                                                                \n"
+<<"  uNL[] = uold[];                                                               \n"
+<<"                                                                                \n"
+<<"  for (int k=0; k<5; k++){  // Hujeux NR loop                                   \n"
 <<"                                                                                \n";
 
 write
@@ -205,7 +214,7 @@ write
 <<"  //-----------------Assembly for b-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"RHS assembly\",t0)\n" : ""                         )
-<<"  b = soildynamics(0,Vh);                                                     \n"
+<<"  b = soildynamics(0,Vh);                                                       \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                         )
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
@@ -223,34 +232,75 @@ if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
 <<"  uNL[] += du[];                                                                \n"
 <<"                                                                                \n"
-<<"    //------Newton-Raphsons Error calculation---------//                        \n"
+<<"  //------Newton-Raphsons Error calculation---------//                          \n"
 <<"                                                                                \n"
-<<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
-<<"    real err1Gather,  err1Loc ;                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
+<<"  real err1Gather,  err1Loc ;                                                   \n"
 <<"                                                                                \n"
-<<"        b = b .* DP                                   ;                         \n"                        
-<<"        err1Loc = b.l2                                ;                         \n"                          
-<<"        err1Loc = err1Loc*err1Loc                     ;                         \n"                          
-<<"        mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                   \n"                          
-<<"        err1Gather = sqrt(err1Gather) ;                                         \n"
+<<"  b = b .* DP                                   ;                               \n"                        
+<<"  err1Loc = b.l2                                ;                               \n"                          
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  err1Gather = sqrt(err1Gather) ;                                               \n"
 <<"                                                                                \n"               
-<<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )
+<<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
-<<"    //--------------- Convergence conditional---------------------//            \n"
+<<"  //--------------- Convergence conditional---------------------//              \n"
 <<"                                                                                \n"
-<<"    if(err1Gather < 1e-5 || k==4){                                              \n"
+<<"  if(err1Gather < 1e-5 || k==4){                                                \n"
 <<"                                                                                \n"
-<<"      //------------------Screen output norm----------------------//            \n"
+<<"  //------------------Screen output norm----------------------//                \n"
 <<"                                                                                \n"
-<<"      if(mpirank==0)                                                            \n"
-<<"      cout.scientific << \"NL iteration number :  [ \"  << k                    \n"
-<<"      << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                        \n"
-<<"      << \" ]\"      << endl;                                                   \n"
+<<"   if(mpirank==0)                                                               \n"
+<<"    cout.scientific << \"NL iteration number :  [ \"  << k                      \n"
+<<"    << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                          \n"
+<<"    << \" ]\"      << endl;                                                     \n"
 <<"                                                                                \n"
-<<"      break;                                                                    \n"
+<<"   break;                                                                       \n"
 <<"                                                                                \n"
-<<"     }                                                                          \n"
-<<" }    // Nonlinear NR loop ends                                                 \n"
+<<"  }                                                                             \n"
+<<" }    // pseudo-nonlinear NR loop ends                                          \n"
+<<"                                                                                \n"
+<<"  //---------------update  displacement--------------//                         \n"
+<<"                                                                                \n"
+<<"  du[] = uNL[];                                                                 \n"
+<<"                                                                                \n";
+
+
+if(Model=="Hujeux")write
+<<"                                                                                \n"
+<<"  //---------update Nonlinear displacement-----------//                         \n"
+<<"                                                                                \n"
+<<"  uNL[] += du[];                                                                \n"
+<<"                                                                                \n"
+<<"  //------Newton-Raphsons Error calculation---------//                          \n"
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
+<<"  real err1Gather,  err1Loc ;                                                   \n"
+<<"                                                                                \n"
+<<"  b = b .* DP                                   ;                               \n"                        
+<<"  err1Loc = b.l2                                ;                               \n"                          
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  err1Gather = sqrt(err1Gather) ;                                               \n"
+<<"                                                                                \n"               
+<<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
+<<"                                                                                \n"
+<<"  //--------------- Convergence conditional---------------------//              \n"
+<<"                                                                                \n"
+<<"  if(err1Gather < 1e-5 || k==4){                                                \n"
+<<"                                                                                \n"
+<<"  //------------------Screen output norm----------------------//                \n"
+<<"                                                                                \n"
+<<"   if(mpirank==0)                                                               \n"
+<<"    cout.scientific << \"NL iteration number :  [ \"  << k                      \n"
+<<"    << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                          \n"
+<<"    << \" ]\"      << endl;                                                     \n"
+<<"                                                                                \n"
+<<"   break;                                                                       \n"
+<<"                                                                                \n"
+<<"  }                                                                             \n"
+<<" }    // Hujeux NR loop ends                                                    \n"
 <<"                                                                                \n"
 <<"  //---------------update  displacement--------------//                         \n"
 <<"                                                                                \n"
@@ -366,6 +416,44 @@ write
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""                      );
 
 }
+
+if(pipegnu){write
+<<"                                                                                \n"
+<<"  //---------------Energy calculations-------------//                           \n"
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"Energy calculations\",t0)\n" : ""                  )
+<<"  E[0] =intN(Th,qforder=2)( 0.5*DPspc*(vold*vold+vold1*vold1));                 \n"
+<<"  E[1] =intN(Th,qforder=2)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
+<<"                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );       \n"
+<<"                                                                                \n"
+<<"  mpiAllReduce(E[0],EG[0],mpiCommWorld,mpiSUM);                                 \n"
+<<"  mpiAllReduce(E[1],EG[1],mpiCommWorld,mpiSUM);                                 \n"
+<<"                                                                                \n"
+<<"  //----------Appending energies to a file----------//                          \n"
+<<"                                                                                \n"
+<<"  if(mpirank==0){                                                               \n"
+<<"     ofstream ff(\"energies.data\",append);                                     \n"
+<<"     ff<< t << \"  \" << EG[0] << \"  \"<< EG[1] <<endl;                        \n";
+
+if(!supercomp)write
+<<"                                                                                \n"
+<<"     //---------------Gnuplot pipeping-------------//                           \n"
+<<"                                                                                \n"
+<<"     pgnuplot <<\"plot\"                                                        \n"
+<<"     <<\"\\\"energies.data\\\"\"                                                \n"
+<<"     <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\",\"                       \n"
+<<"     <<\"\\\"energies.data\\\"\"                                                \n"
+<<"     <<\"u ($1):($3) w lp lw 2  pt 7 ps 2 t \\\"E.E\\\",\"                      \n"
+<<"     <<\"\\\"energies.data\\\"\"                                                \n"
+<<"     <<\"u ($1):($3+$2) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"                    \n"
+<<"     <<\"\\n\";                                                                 \n" 
+<<"     flush(pgnuplot);                                                           \n";
+
+write
+<<"                                                                                \n"
+<<"   }                                                                            \n"
+<<(timelog ? "   MPItimerend(\"Energy calculations\",t0)\n" : ""                   );
+}  //-- [if loop terminator]  pipegnu ended --//
 
 write
 <<"                                                                                \n"

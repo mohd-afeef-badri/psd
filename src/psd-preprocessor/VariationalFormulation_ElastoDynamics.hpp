@@ -17,7 +17,7 @@ write
 <<"    + (epsilon(du)'*epsilon(v))*c[2]                                                            \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n"
-<<"    + intN(Th,qforder=2)                                                                        \n"
+<<"    + intN(Th,qforder=3)                                                                        \n"
 <<"  (                                                                                             \n"
 <<"      (def(uold)'*def(v))*c[0]                                                                  \n"
 <<"    + (def(vold)'*def(v))*c[3]                                                                  \n"
@@ -95,7 +95,7 @@ if(Model=="pseudo-nonlinear")write
 
 write
 <<"                                                                                                \n"
-<<"    + intN1(Th,qforder=2,"<<labRface<<")                                                        \n"
+<<"    + intN1(Th,qforder=3,"<<labRface<<")                                                        \n"
 <<"  (                                                                                             \n"
 <<"     tr * v1                                           // Time dependent loading                \n"
 <<"  )                                                                                             \n"
