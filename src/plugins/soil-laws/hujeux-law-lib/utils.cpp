@@ -7,7 +7,7 @@
 // Fonctions generales
 //-----------------------------------------
 
-dvector convertToVector(const double* vec, const int& nval)
+dvector convertToVector(const Real* vec, const int& nval)
 {
 	dvector newvec;
 	for (int i = 0; i < nval; i++) newvec.push_back(vec[i]);
@@ -87,7 +87,7 @@ dvector operator+(const dvector& V, const dvector& W)
 	return newv;
 }
 
-dvector operator+(const dvector& V, const double& x)
+dvector operator+(const dvector& V, const Real& x)
 {
 	dvector newv;
 	auto iv = V.begin(), vend = V.end();
@@ -96,7 +96,7 @@ dvector operator+(const dvector& V, const double& x)
 	return newv;
 }
 
-dvector operator-(const dvector& V, const double& x)
+dvector operator-(const dvector& V, const Real& x)
 {
 	dvector newv;
 	auto iv = V.begin(), vend = V.end();
@@ -105,7 +105,7 @@ dvector operator-(const dvector& V, const double& x)
 	return newv;
 }
 
-dvector operator+(const double& x, const dvector& V)
+dvector operator+(const Real& x, const dvector& V)
 {
 	return (V + x);
 }
@@ -119,11 +119,11 @@ dvector operator-(const double& x, const dvector& V)
 	return newv;
 }
 
-dvector operator/(const dvector& V, const double& x)
+dvector operator/(const dvector& V, const Real& x)
 {
 	auto vstart = V.begin(), vend = V.end(), iv = vstart;
 	dvector newv;
-	double ix = x;
+    Real ix = x;
 	if (x < EPS) ix = EPS * signe(x);
 	ix = 1 / ix;
 
@@ -135,7 +135,7 @@ dvector operator/(const dvector& V, const double& x)
 	return newv;
 }
 
-dvector operator*(const dvector& V, const double& x)
+dvector operator*(const dvector& V, const Real& x)
 {
 	auto vstart = V.begin(), vend = V.end(), iv = vstart;
 	dvector newv;
@@ -148,37 +148,37 @@ dvector operator*(const dvector& V, const double& x)
 	return newv;
 }
 
-dvector operator*(const double& x, const dvector& V)
+dvector operator*(const Real& x, const dvector& V)
 {
 	return (V * x);
 }
 
 // Scalar (dot) product
-double dot(const dvector& V, const dvector& W)
+Real dot(const dvector& V, const dvector& W)
 {
-	double init = 0.;
+    Real init = 0.;
 	return inner_product(V.begin(), V.end(), W.begin(), init);
 }
 
 // Euclidian norm
-double norm(const dvector& V)
+Real norm(const dvector& V)
 {
 	return sqrt(dot(V,V));
 }
 
 // square Euclidian norm
-/*double norm_sqr(const dvector& V)
+/*Real norm_sqr(const dvector& V)
 {
 	return dot(V, V);
 }
 
 // Euclidian distance
-double dist(const dvector& V, const dvector& W)
+Real dist(const dvector& V, const dvector& W)
 {
 	return norm(V - W);
 }
 
-double dist_sqr(const dvector& V, const dvector& W)
+Real dist_sqr(const dvector& V, const dvector& W)
 {
 	return norm_sqr(V - W);
 }
@@ -214,9 +214,9 @@ bool operator!=(const dvector& V, const dvector& W)
 // Resolution of A.X = B, where A(n,n), X(n) and B(n)
 // by gaussian elimination => inverse matrix stored in A, solution stored in x
 //
-void gauss(double** a, double* b, double* x, const int& n)
+void gauss(Real** a, Real* b, Real* x, const int& n)
 {
-	double	r = 0., s = 0.;
+    Real	r = 0., s = 0.;
 	int		i = 0, j = 0, k = 0;
 
 	for (k = 0; k < n - 1; k++)
@@ -243,15 +243,15 @@ void gauss(double** a, double* b, double* x, const int& n)
 // class Real2: 2D real vector same as Real3 from Arcane
 //
 Real2::Real2() { x = 0.0; y = 0.0; }
-Real2::Real2(double ax, double ay) : x(ax), y(ay) {}
+Real2::Real2(Real ax, Real ay) : x(ax), y(ay) {}
 Real2::Real2(const Real2& f) { x = f.x; y = f.y; }
 
-double Real2::operator[](int i) const {
+Real Real2::operator[](int i) const {
     if (i < 0 || i >= 2) throw std::out_of_range("Vector indices out of range");
     return (&x)[i];
 }
 
-double& Real2::operator[](int i) {
+Real& Real2::operator[](int i) {
     if (i < 0 || i >= 2) throw std::out_of_range("Vector indices out of range");
     return (&x)[i];
 }
@@ -261,7 +261,7 @@ Real2& Real2::operator=(const Real2& f) {
     return (*this);
 }
 
-Real2& Real2::operator= (double v) {
+Real2& Real2::operator=(Real v) {
     x = y = v; return (*this);
 }
 
@@ -271,13 +271,13 @@ Real2 Real2::identity() { return Real2(1., 1.); }
 
 Real2 Real2::copy() const { return (*this); }
 Real2& Real2::reset() { x = y = 0.; return (*this); }
-Real2& Real2::assign(double ax, double ay) { x = ax; y = ay; return (*this); }
-Real2& Real2::assign(Real2 f) { x = f.x; y = f.y; return (*this); }
-double Real2::norm_sqr() const { return x * x + y * y; }
-double Real2::norm() const { return sqrt(norm_sqr()); }
+Real2& Real2::assign(Real ax, Real ay) { x = ax; y = ay; return (*this); }
+Real2& Real2::assign(const Real2& f) { x = f.x; y = f.y; return (*this); }
+Real Real2::norm_sqr() const { return x * x + y * y; }
+Real Real2::norm() const { return sqrt(norm_sqr()); }
 
-Real2& Real2::operator*= (double b) { x *= b; y *= b; return (*this); }
-Real2& Real2::operator/= (double b) { x /= b; y /= b; return (*this); }
+Real2& Real2::operator*= (Real b) { x *= b; y *= b; return (*this); }
+Real2& Real2::operator/= (Real b) { x /= b; y /= b; return (*this); }
 Real2& Real2::operator+= (const Real2& b) { x += b.x; y += b.y; return (*this); }
 Real2& Real2::operator-= (const Real2& b) { x -= b.x; y -= b.y; return (*this); }
 Real2& Real2::operator*= (const Real2& b) { x *= b.x; y *= b.y; return (*this); }
@@ -289,7 +289,7 @@ Real2 Real2::operator*(const Real2& b) const { return Real2(x * b.x, y * b.y); }
 Real2 Real2::operator/(const Real2& b) const { return Real2(x / b.x, y / b.y); }
 
 Real2& Real2::normalize() {
-    double d = norm();
+    Real d = norm();
     if (fabs(d) >= EPS)
         operator/=(d);
     return (*this);
@@ -297,48 +297,63 @@ Real2& Real2::normalize() {
 
 bool Real2::isNearlyZero() const
 {
-    static double eps = 1.e-10;
+    static Real eps = 1.e-10;
     return (fabs(x) < eps && fabs(y) < eps);
 }
 
 bool Real2::operator==(const Real2& b) const { return (x == b.x && y == b.y); }
 bool Real2::operator!=(const Real2& b) const { return !operator==(b); }
 
+/*---------------------------------------------------------------------------*/
+Real2 operator+(const Real2& a, const Real2& b) { return Real2(a.x+b.x,a.y+b.y); }
+
+/*---------------------------------------------------------------------------*/
+Real2 operator*(const Real2& n, const Real& b) { return Real2(n.x * b, n.y * b); }
+
+/*---------------------------------------------------------------------------*/
+Real2 operator*(const Real& b, const Real2& n) { return Real2(n.x * b, n.y * b); }
+
+/*---------------------------------------------------------------------------*/
+Real2 operator/(const Real2& n, const Real& b) {
+    Real ib = (fabs(b) >= EPS ? 1 / b : 1 / EPS);
+    return Real2(n.x * ib,n.y * ib);
+}
+
 //////////////////////////////////////////////////////////////////////
 // class Real3: 3D real vector same as Real3 from Arcane
 //
-//Real3::Real3() { x = 0.0; y = 0.0; z = 0.0; }
-//Real3::Real3(double ax, double ay, double az): x(ax),y(ay),z(az) {}
-//Real3::Real3(const Real3& f) { x = f.x; y = f.y; z = f.z; }
+Real3::Real3() { x = 0.0; y = 0.0; z = 0.0; }
+Real3::Real3(Real ax, Real ay, Real az): x(ax),y(ay),z(az) {}
+Real3::Real3(const Real3& f) { x = f.x; y = f.y; z = f.z; }
 
-double Real3::operator[](int i) const
+Real Real3::operator[](int i) const
 {
     if (i < 0 || i >= 3) throw std::out_of_range("Vector indices out of range");
     return (&x)[i];
 }
 
-double& Real3::operator[](int i)
+Real& Real3::operator[](int i)
 {
     if (i < 0 || i >= 3) throw std::out_of_range("Vector indices out of range");
     return (&x)[i];
 }
 
 Real3& Real3::operator=(const Real3& f) { x = f.x; y = f.y; z = f.z; return (*this); }
-Real3& Real3::operator= (double v) { x = y = z = v; return (*this); }
+Real3& Real3::operator= (Real v) { x = y = z = v; return (*this); }
 Real3 Real3::null() { return Real3(0., 0., 0.); }
 Real3 Real3::zero() { return Real3(0., 0., 0.); }
 Real3 Real3::identity() { return Real3(1., 1., 1.); }
 Real3 Real3::copy() const { return (*this); }
 Real3& Real3::reset() { x = y = z = 0.; return (*this); }
-Real3& Real3::assign(double ax, double ay, double az) { x = ax; y = ay; z = az; return (*this); }
+Real3& Real3::assign(Real ax, Real ay, Real az) { x = ax; y = ay; z = az; return (*this); }
 Real3& Real3::assign(const Real3& f) { x = f.x; y = f.y; z = f.z; return (*this); }
-double Real3::norm_sqr() const { return x * x + y * y + z * z; }
-double Real3::norm() const { return sqrt(norm_sqr()); }
+Real Real3::norm_sqr() const { return x * x + y * y + z * z; }
+Real Real3::norm() const { return sqrt(norm_sqr()); }
 
-Real3& Real3::operator+=(double b) { x += b;     y += b;     z += b;     return (*this); }
-Real3& Real3::operator-=(double b) { x -= b;     y -= b;     z -= b;     return (*this); }
-Real3& Real3::operator*=(double b) { x *= b;     y *= b;     z *= b;     return (*this); }
-Real3& Real3::operator/=(double b) { x /= b;     y /= b;     z /= b;     return (*this); }
+Real3& Real3::operator+=(Real b) { x += b;     y += b;     z += b;     return (*this); }
+Real3& Real3::operator-=(Real b) { x -= b;     y -= b;     z -= b;     return (*this); }
+Real3& Real3::operator*=(Real b) { x *= b;     y *= b;     z *= b;     return (*this); }
+Real3& Real3::operator/=(Real b) { x /= b;     y /= b;     z /= b;     return (*this); }
 Real3& Real3::operator+= (const Real3& b) { x += b.x; y += b.y; z += b.z; return (*this); }
 Real3& Real3::operator-= (const Real3& b) { x -= b.x; y -= b.y; z -= b.z; return (*this); }
 Real3& Real3::operator*= (const Real3& b) { x *= b.x; y *= b.y; z *= b.z; return (*this); }
@@ -366,6 +381,81 @@ bool Real3::isNearlyZero() const
 bool Real3::operator==(const Real3& b) const { return (x == b.x && y == b.y && z == b.z); }
 bool Real3::operator!=(const Real3& b) const { return !operator==(b); }
 
+/*---------------------------------------------------------------------------*/
+Real3 vec_prod(const Real3& v1, const Real3& v2)
+{
+    Real3 v;
+    v.x = v1.y * v2.z - v1.z * v2.y;
+    v.y = v2.x * v1.z - v2.z * v1.x;
+    v.z = v1.x * v2.y - v1.y * v2.x;
+    return v;
+}
+
+/*---------------------------------------------------------------------------*/
+Real dot(const Real3& v1, const Real3& v2)
+{
+    return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+}
+
+/*---------------------------------------------------------------------------*/
+Real norm_sqr(const Real3& v)
+{
+    return dot(v,v);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator+(const Real& sca, const Real3& vec)
+{
+    return Real3(vec.x + sca, vec.y + sca, vec.z + sca);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator+(const Real3& vec, const Real& sca)
+{
+    return (sca + vec);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator-(const Real& sca, const Real3& vec)
+{
+    return Real3(vec.x - sca, vec.y - sca, vec.z - sca);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator-(const Real3& vec, const Real& sca)
+{
+    return Real3(sca - vec.x, sca - vec.y, sca - vec.z);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator*(const Real& sca, const Real3& vec)
+{
+    return Real3(vec.x * sca, vec.y * sca, vec.z * sca);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator*(const Real3& vec, const Real& sca)
+{
+    return sca * vec;
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 operator/(const Real3& vec, const Real& sca)
+{
+    return Real3(vec.x / sca, vec.y / sca, vec.z / sca);
+}
+/*---------------------------------------------------------------------------*/
+bool operator<(const Real3& v1, const Real3& v2)
+{
+    if (v1.x == v2.x) {
+        if (v1.y == v2.y)
+            return v1.z < v2.z;
+        else
+            return v1.y < v2.y;
+    }
+    return (v1.x < v2.x);
+}
+
 //////////////////////////////////////////////////////////////////////
 // class Real3x3: Matrix 3x3 same as Real3x3 from Arcane
 //
@@ -375,18 +465,18 @@ Real3x3::Real3x3(const Real3& ax, const Real3& ay, const Real3& az): x(ax), y(ay
 Real3x3::Real3x3(const Real3x3& f): x(f.x), y(f.y), z(f.z) {}
 
 Real3x3& Real3x3::operator=(const Real3x3& f) { x = f.x; y = f.y; z = f.z; return (*this); }
-Real3x3& Real3x3::operator= (double v) { x = y = z = v; return (*this); }
+Real3x3& Real3x3::operator= (const Real& v) { x = y = z = v; return (*this); }
 
 Real3x3 Real3x3::null() { return Real3x3(); }
 Real3x3 Real3x3::zero() { return Real3x3(); }
 Real3x3 Real3x3::identity() { return Real3x3(Real3(1.0, 0.0, 0.0), Real3(0.0, 1.0, 0.0), Real3(0.0, 0.0, 1.0)); }
 
-Real3x3 Real3x3::fromColumns(double ax, double ay, double az, double bx, double by, double bz, double cx, double cy, double cz)
+Real3x3 Real3x3::fromColumns(Real ax, Real ay, Real az, Real bx, Real by, Real bz, Real cx, Real cy, Real cz)
 {
     return Real3x3(Real3(ax, bx, cx), Real3(ay, by, cy), Real3(az, bz, cz));
 }
 
-Real3x3 Real3x3::fromLines(double ax, double bx, double cx, double ay, double by, double cy, double az, double bz, double cz)
+Real3x3 Real3x3::fromLines(Real ax, Real bx, Real cx, Real ay, Real by, Real cy, Real az, Real bz, Real cz)
 {
     return Real3x3(Real3(ax, bx, cx), Real3(ay, by, cy), Real3(az, bz, cz));
 }
@@ -414,8 +504,8 @@ Real3x3& Real3x3::operator+=(const Real3& b) { x += b; y += b; z += b; return (*
 Real3x3& Real3x3::operator-=(const Real3& b) { x -= b; y -= b; z -= b; return (*this); }
 Real3x3& Real3x3::operator+= (const Real3x3& b) { x += b.x; y += b.y; z += b.z; return (*this); }
 Real3x3& Real3x3::operator-= (const Real3x3& b) { x -= b.x; y -= b.y; z -= b.z; return (*this); }
-void Real3x3::operator*= (double b) { x *= b; y *= b; z *= b; }
-void Real3x3::operator/= (double b) { x /= b; y /= b; z /= b; }
+void Real3x3::operator*= (const Real& b) { x *= b; y *= b; z *= b; }
+void Real3x3::operator/= (const Real& b) { x /= b; y /= b; z /= b; }
 Real3x3 Real3x3::operator+(const Real3x3& b)  const { return Real3x3(x + b.x, y + b.y, z + b.z); }
 Real3x3 Real3x3::operator-(const Real3x3& b)  const { return Real3x3(x - b.x, y - b.y, z - b.z); }
 Real3x3 Real3x3::operator-() const { return Real3x3(-x, -y, -z); }
@@ -435,12 +525,164 @@ Real3& Real3x3::operator[](int i)
     return (&x)[i];
 }
 
-double Real3x3::determinant() const
+Real Real3x3::determinant() const
 {
     return (x.x * (y.y * z.z - y.z * z.y)
             + x.y * (y.z * z.x - y.x * z.z)
             + x.z * (y.x * z.y - y.y * z.x));
 }
+
+/*---------------------------------------------------------------------------*/
+Real3x3 operator*(const Real& sca, const Real3x3& vec)
+{
+    return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 operator*(const Real3x3& vec, const Real& sca)
+{
+    return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 operator/(const Real3x3& vec, const Real& sca)
+{
+    return Real3x3(vec.x / sca, vec.y / sca, vec.z / sca);
+}
+
+/*---------------------------------------------------------------------------*/
+bool operator<(const Real3x3& v1, const Real3x3& v2)
+{
+    if (v1.x == v2.x) {
+        if (v1.y == v2.y)
+            return v1.z < v2.z;
+        else
+            return v1.y < v2.y;
+    }
+    return (v1.x < v2.x);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 tensor_prod(Real3 u,Real3 v)
+{
+    Real3x3 mat;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            mat[i][j] = u[i] * v[j];
+
+    return mat;
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 matrix3x3Transpose(const Real3x3& m)
+{
+    return Real3x3::fromColumns(m.x.x, m.x.y, m.x.z,
+                                m.y.x, m.y.y, m.y.z,
+                                m.z.x, m.z.y, m.z.z);
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 matrix3x3GetDiagonal(const Real3x3& mat)
+{
+    return Real3(mat[0][0], mat[1][1], mat[2][2]);
+}
+
+/*---------------------------------------------------------------------------*/
+void matrix3x3SetDiagonal(Real3x3& mat, const Real3& vec)
+{
+    mat[0][0] = vec[0];
+    mat[1][1] = vec[1];
+    mat[2][2] = vec[2];
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 matrix3x3GetSupOutdiagonal(const Real3x3& mat)
+{
+    return Real3(mat[0][1], mat[0][2], mat[1][2]);
+}
+
+/*---------------------------------------------------------------------------*/
+void matrix3x3SetSupOutdiagonal(Real3x3& mat, const Real3& vec)
+{
+    mat[0][1] = vec[0];
+    mat[0][2] = vec[1];
+    mat[1][2] = vec[2];
+}
+
+/*---------------------------------------------------------------------------*/
+Real3 matrix3x3GetLowOutdiagonal(const Real3x3& mat)
+{
+    return Real3(mat[1][0], mat[2][0], mat[2][1]);
+}
+
+/*---------------------------------------------------------------------------*/
+void matrix3x3SetLowOutdiagonal(Real3x3& mat, const Real3& vec)
+{
+    mat[1][0] = vec[0];
+    mat[2][0] = vec[1];
+    mat[2][1] = vec[2];
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 diagonalMatrix3x3(const Real3x3& mat)
+{
+    Real3x3 newmat;
+    newmat[0][0] = mat[0][0];
+    newmat[1][1] = mat[1][1];
+    newmat[2][2] = mat[2][2];
+    return newmat;
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 outdiagonalMatrix3x3(const Real3x3& mat)
+{
+    return (mat - diagonalMatrix3x3(mat));
+}
+
+/*---------------------------------------------------------------------------*/
+bool	matrix3x3IsSymmetric(const Real3x3& mat)
+{
+    Real3 matsup = matrix3x3GetSupOutdiagonal(mat);
+    Real3 matlow = matrix3x3GetLowOutdiagonal(mat);
+
+    return (matsup == matlow);
+}
+
+/*---------------------------------------------------------------------------*/
+Real trace(const Real3x3& mat)
+{
+    return (mat[0][0] + mat[1][1] + mat[2][2]);
+}
+
+/*---------------------------------------------------------------------------*/
+dvector convertMatrix3x3ToVector(const Real3x3& mat)
+{
+    dvector vec(6);
+    int i;
+
+    for (i = 0; i < 3; i++) vec[i] = mat[i][i];
+    for (i = 3; i < 5; i++) vec[i] = mat[0][i - 2];
+    vec[5] = mat[1][2];
+    return vec;
+}
+
+/*---------------------------------------------------------------------------*/
+Real3x3 convertVectorToMatrix3x3(const dvector& vec)
+{
+    Real3x3 mat;
+    int i;
+
+    for (i = 0; i < 3; i++) mat[i][i] = vec[i];
+    for (i = 3; i < 5; i++)
+    {
+        mat[0][i - 2] = vec[i];
+        mat[i - 2][0] = vec[i];
+    }
+    mat[1][2] = mat[2][1] = vec[5];
+
+    return mat;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 // class Tensor2: class for symmetric 2nd-order tensors (useful for stresses, strains)
@@ -489,13 +731,13 @@ int	Tensor2::get_index(const int& i, const int& j) {
     return ij;
 }
 
-double& Tensor2::operator()(const int& i, const int& j)
+Real& Tensor2::operator()(const int& i, const int& j)
 {
     int ij = get_index(i, j);
     return m_vec[ij];
 }
 
-double Tensor2::operator()(const int& i, const int& j) const
+Real Tensor2::operator()(const int& i, const int& j) const
 {
     int ij = get_index(i, j);
     return m_vec[ij];
@@ -520,15 +762,15 @@ Tensor2& Tensor2::operator-=(const Tensor2& mat)
     return (*this);
 }
 
-Tensor2& Tensor2::operator*=(const double& x)
+Tensor2& Tensor2::operator*=(const Real& x)
 {
     m_vec = x * m_vec;
     return (*this);
 }
 
-Tensor2& Tensor2::operator/=(const double& x)
+Tensor2& Tensor2::operator/=(const Real& x)
 {
-    double ix = x;
+    Real ix = x;
     if (x < EPS) ix = EPS * signe(x);
     ix = 1 / ix;
     m_vec = m_vec * ix;
@@ -568,272 +810,8 @@ Real3x3 Tensor2::Matrix3x3() const
     return mat;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// General operations on Real2, Real3, Real3x3, Tensor2 classes
-//
 /*---------------------------------------------------------------------------*/
-Real2 operator+(const Real2& a, const Real2& b)
-{
-    return Real2(a.x+b.x,a.y+b.y);
-}
-
-/*---------------------------------------------------------------------------*/
-Real2 operator*(const Real2& n, const double& b)
-{
-    return Real2(n.x * b, n.y * b);
-}
-
-/*---------------------------------------------------------------------------*/
-Real2 operator/(const Real2& n, double& b)
-{
-    double ib = (fabs(b) >= EPS ? 1 / b : 1 / EPS);
-    return Real2(n.x * ib,n.y * ib);
-}
-
-
-/*---------------------------------------------------------------------------*/
-/*
-Real2 operator*(const double& b, const Real2& n)        
-{
-    return Real2(n.x * b, n.y * b);
-}
-*/
-
-
-/*---------------------------------------------------------------------------*/
-Real2 operator*(const Real2& n, double& b )
-{
-    return Real2(n.x * b, n.y * b);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 vec_prod(const Real3& v1, const Real3& v2)
-{
-    Real3 v;
-    v.x = v1.y * v2.z - v1.z * v2.y;
-    v.y = v2.x * v1.z - v2.z * v1.x;
-    v.z = v1.x * v2.y - v1.y * v2.x;
-    return v;
-}
-
-/*---------------------------------------------------------------------------*/
-double dot(const Real3& v1, const Real3& v2)
-{
-    return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
-}
-
-/*---------------------------------------------------------------------------*/
-double norm_sqr(const Real3& v)
-{
-    return dot(v,v);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator+(double sca, const Real3& vec)
-{
-    return Real3(vec.x + sca, vec.y + sca, vec.z + sca);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator+(const Real3& vec, double sca)
-{
-    return (sca + vec);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator-(double sca, const Real3& vec)
-{
-    return Real3(vec.x - sca, vec.y - sca, vec.z - sca);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator-(const Real3& vec, double sca)
-{
-    return Real3(sca - vec.x, sca - vec.y, sca - vec.z);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator*(double sca, const Real3& vec)
-{
-    return Real3(vec.x * sca, vec.y * sca, vec.z * sca);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator*(const Real3& vec, double sca)
-{
-    return sca * vec;
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 operator/(const Real3& vec, double sca)
-{
-    return Real3(vec.x / sca, vec.y / sca, vec.z / sca);
-}
-
-/*---------------------------------------------------------------------------*/
-bool operator<(const Real3& v1, const Real3& v2)
-{
-    if (v1.x == v2.x) {
-        if (v1.y == v2.y)
-            return v1.z < v2.z;
-        else
-            return v1.y < v2.y;
-    }
-    return (v1.x < v2.x);
-}
-/*---------------------------------------------------------------------------*/
-Real3x3 operator*(double sca, const Real3x3& vec)
-{
-    return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 operator*(const Real3x3& vec, double sca)
-{
-    return Real3x3(vec.x * sca, vec.y * sca, vec.z * sca);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 operator/(const Real3x3& vec, double sca)
-{
-    return Real3x3(vec.x / sca, vec.y / sca, vec.z / sca);
-}
-
-/*---------------------------------------------------------------------------*/
-bool operator<(const Real3x3& v1, const Real3x3& v2)
-{
-    if (v1.x == v2.x) {
-        if (v1.y == v2.y)
-            return v1.z < v2.z;
-        else
-            return v1.y < v2.y;
-    }
-    return (v1.x < v2.x);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 tensor_prod(Real3 u,Real3 v)
-{
-    Real3x3 mat;
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            mat[i][j] = u[i] * v[j];
-
-    return mat;
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 matrix3x3Transpose(const Real3x3& m)
-{
-    return Real3x3::fromColumns(m.x.x, m.x.y, m.x.z,
-                                m.y.x, m.y.y, m.y.z,
-                                m.z.x, m.z.y, m.z.z);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 matrix3x3GetDiagonal(Real3x3 mat)
-{
-    return Real3(mat[0][0], mat[1][1], mat[2][2]);
-}
-
-/*---------------------------------------------------------------------------*/
-void matrix3x3SetDiagonal(Real3x3& mat, Real3 vec)
-{
-    mat[0][0] = vec[0];
-    mat[1][1] = vec[1];
-    mat[2][2] = vec[2];
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 matrix3x3GetSupOutdiagonal(Real3x3 mat)
-{
-    return Real3(mat[0][1], mat[0][2], mat[1][2]);
-}
-
-/*---------------------------------------------------------------------------*/
-void matrix3x3SetSupOutdiagonal(Real3x3& mat, Real3 vec)
-{
-    mat[0][1] = vec[0];
-    mat[0][2] = vec[1];
-    mat[1][2] = vec[2];
-}
-
-/*---------------------------------------------------------------------------*/
-Real3 matrix3x3GetLowOutdiagonal(Real3x3 mat)
-{
-    return Real3(mat[1][0], mat[2][0], mat[2][1]);
-}
-
-/*---------------------------------------------------------------------------*/
-void matrix3x3SetLowOutdiagonal(Real3x3& mat, const Real3& vec)
-{
-    mat[1][0] = vec[0];
-    mat[2][0] = vec[1];
-    mat[2][1] = vec[2];
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 diagonalMatrix3x3(Real3x3 mat)
-{
-    Real3x3 newmat;
-    newmat[0][0] = mat[0][0];
-    newmat[1][1] = mat[1][1];
-    newmat[2][2] = mat[2][2];
-    return newmat;
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 outdiagonalMatrix3x3(const Real3x3& mat)
-{
-    return (mat - diagonalMatrix3x3(mat));
-}
-
-/*---------------------------------------------------------------------------*/
-bool	matrix3x3IsSymmetric(const Real3x3& mat)
-{
-    Real3 matsup = matrix3x3GetSupOutdiagonal(mat);
-    Real3 matlow = matrix3x3GetLowOutdiagonal(mat);
-
-    return (matsup == matlow);
-}
-
-/*---------------------------------------------------------------------------*/
-double trace(Real3x3 mat)
-{
-    return (mat[0][0] + mat[1][1] + mat[2][2]);
-}
-
-/*---------------------------------------------------------------------------*/
-dvector convertMatrix3x3ToVector(Real3x3 mat)
-{
-    dvector vec(6);
-    int i;
-
-    for (i = 0; i < 3; i++) vec[i] = mat[i][i];
-    for (i = 3; i < 5; i++) vec[i] = mat[0][i - 2];
-    vec[5] = mat[1][2];
-    return vec;
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 convertVectorToMatrix3x3(dvector vec)
-{
-    Real3x3 mat;
-    int i;
-
-    for (i = 0; i < 3; i++) mat[i][i] = vec[i];
-    for (i = 3; i < 5; i++)
-    {
-        mat[0][i - 2] = vec[i];
-        mat[i - 2][0] = vec[i];
-    }
-    mat[1][2] = mat[2][1] = vec[5];
-
-    return mat;
-}
-
-/*---------------------------------------------------------------------------*/
-double trace(Tensor2 t) {
+Real trace(const Tensor2& t) {
     return (t.m_vec[0] + t.m_vec[1] + t.m_vec[2]);
 }
 
@@ -854,7 +832,7 @@ bool operator!=(const Tensor2& t1, const Tensor2& t2) {
 }
 
 /*---------------------------------------------------------------------------*/
-Tensor2 operator*(const Tensor2& t1,const double& x) {
+Tensor2 operator*(const Tensor2& t1,const Real& x) {
     return Tensor2(t1.m_vec * x);
 }
 

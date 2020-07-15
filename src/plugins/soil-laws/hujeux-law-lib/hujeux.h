@@ -55,7 +55,7 @@ public:
 	ElastTensor() = default;
 	ElastTensor(const Real3x3& /*D*/, const Real3x3& /*S*/);
 	ElastTensor(const ElastTensor&);
-	ElastTensor(const double&/*lambda*/, const double&/*mu*/);
+	ElastTensor(const Real&/*lambda*/, const Real&/*mu*/);
 	~ElastTensor() = default;
 
 	// ***** ACCESS TO ATTRIBUTES
@@ -63,28 +63,43 @@ public:
 	// ***** IMPLEMENTATION METHODS
 public:
 	ElastTensor& operator=(const ElastTensor&);
-	ElastTensor& operator*=(const double&);
+	ElastTensor& operator*=(const Real&);
 	ElastTensor& operator+=(const ElastTensor&);
 	ElastTensor& operator-=(const ElastTensor&);
 	ElastTensor operator-() const;
 
-	double		operator()(const int&, const int&) const;
-	void		set(const int&, const int&, const double&);
+    Real		operator()(const int&, const int&) const;
+	void		set(const int&, const int&, const Real&);
+
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator+(const ElastTensor&, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator-(const ElastTensor&, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator*(Real, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator*(const ElastTensor&, Real);
+/*---------------------------------------------------------------------------*/
+    friend Tensor2 operator*(const ElastTensor&, Tensor2);
+/*---------------------------------------------------------------------------*/
+    friend Real trace(const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor transpose(const ElastTensor&);
 };
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator+(const ElastTensor&, const ElastTensor&);
+//extern ElastTensor operator+(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator-(const ElastTensor&, const ElastTensor&);
+//extern ElastTensor operator-(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator*(double, const ElastTensor&);
+//extern ElastTensor operator*(Real, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator*(const ElastTensor&, double);
+//extern ElastTensor operator*(const ElastTensor&, Real);
 /*---------------------------------------------------------------------------*/
-extern Tensor2 operator*(const ElastTensor&, Tensor2);
+//extern Tensor2 operator*(const ElastTensor&, Tensor2);
 /*---------------------------------------------------------------------------*/
-extern double trace(const ElastTensor&);
+//extern Real trace(const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor transpose(const ElastTensor&);
+//extern ElastTensor transpose(const ElastTensor&);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // class HujeuxLaw: Hujeux 3D constitutive model with 3 deviatoric + 1 isotropic mechanisms
@@ -118,7 +133,7 @@ public:
 				// = (ipl[0] + 2) + 5*(ipl[1] + 2) + 25*(ipl[2] + 2) + 125*(ipl[3] + 2)
 			im{}, jm{}, km{}, lm{}, iecoul{};// local indices for deviatoric mechanisms
 
-	double	Phi[4][6]{}, Psi[4][6]{}, CPsi[4][6]{},
+	Real	Phi[4][6]{}, Psi[4][6]{}, CPsi[4][6]{},
 
 	// Lame coef. depending on mean effective stress p' (=I1/3)
 	// computed from a nonlinear function of user data Ki, Gi and exponant ne (nonlinear elasticity)
@@ -134,8 +149,8 @@ public:
 			pldiso{}, sgncyc{},
 			lambdap[4]{};
 	
-	ElastTensor m_elast_tensor; // elastic constitutive tensor
-	double m_tangent_tensor[6][6]; // tangent constitutive tensor used for LHS contribution (implicit solver)
+	ElastTensor m_elast_tensor{}; // elastic constitutive tensor
+	Real m_tangent_tensor[6][6]{}; // tangent constitutive tensor used for LHS contribution (implicit solver)
 
 public:
 
@@ -150,11 +165,11 @@ public:
 	// Methodes
 //	HujeuxLaw& operator=(const HujeuxLaw&);
 	
-	static double get_dev(const Tensor2&, bool /*is_sig*/ = true);
+	static Real get_dev(const Tensor2&, bool /*is_sig*/ = true);
 	void init(const dvector& /*param*/);         
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);
-	void computeElastTensor(const double& /*p*/);
+	void computeElastTensor(const Real& /*p*/);
 	void computeTangentTensor(const Tensor2& /*sign*/);
 	bool initState(const Tensor2& /*sign*/ = Tensor2::zero(), dvector* /*histab*/ = nullptr);
 	void initHistory(dvector* /*histab*/);
@@ -165,12 +180,12 @@ public:
 	bool initMecdev(const Tensor2& /*sig*/, int& /*iniplkm*/, int& /*iplk*/, Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/),
 		 initMeciso(const Tensor2& /*sig*/, int& /*inipl3*/, int& /*ipl3*/, Real2& /*ray3*/);
 
-	void ComputeMecdev(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, double* /*Phik*/, double* /*Psik*/, double* /*CPsik*/, double& /*seuilk*/,
-		double& /*fidsig*/, double& /*hray*/, double& /*xlray*/, int& /*iplk*/, int& /*jplk*/,
+	void ComputeMecdev(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, Real* /*Phik*/, Real* /*Psik*/, Real* /*CPsik*/, Real& /*seuilk*/,
+                       Real& /*fidsig*/, Real& /*hray*/, Real& /*xlray*/, int& /*iplk*/, int& /*jplk*/,
 		Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/);
 	
-	void ComputeMeciso(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, double* /*Phic*/, double* /*Psic*/, double* /*CPsic*/, double& /*seuilc*/,
-		double& /*fidsig*/, double& /*hray*/, double& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, Real2& /*delta*/);
+	void ComputeMeciso(const Tensor2& /*sig*/, const Tensor2& /*dsig*/, Real* /*Phic*/, Real* /*Psic*/, Real* /*CPsic*/, Real& /*seuilc*/,
+                       Real& /*fidsig*/, Real& /*hray*/, Real& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, Real2& /*delta*/);
 
 	bool readParameters(const string&);
   int TestClass();	       
