@@ -220,7 +220,7 @@ write
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"solving U\",t0)\n" : ""                            )
-<<"  set(A,sparams =\"  -ksp_type cg  \");                                         \n"
+<<"  set(A,sparams =\"  -ksp_type cg  -ksp_rtol 1e-9 \");                          \n"
 <<"  du[] = A^-1*b;                                                                \n"
 <<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""                            )
 <<"                                                                                \n";

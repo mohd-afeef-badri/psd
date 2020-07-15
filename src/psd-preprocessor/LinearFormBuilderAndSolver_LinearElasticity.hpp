@@ -57,7 +57,7 @@ write
 <<"//---------------PETSc solving---------------------//                           \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc solving\",t0)\n" : ""                        )
-<<"  set(A,sparams =\" -ksp_type cg \");                                           \n"
+<<"  set(A,sparams =\" -ksp_type cg -ksp_rtol 1e-9 \");                            \n"
 <<"  u[] = A^-1*b;                                                                 \n"
 <<(timelog ? "  MPItimerend(\"PETSc solving\",t0)\n" : ""                          );
 
