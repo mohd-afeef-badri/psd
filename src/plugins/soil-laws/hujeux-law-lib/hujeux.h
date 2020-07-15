@@ -70,21 +70,36 @@ public:
 
     Real		operator()(const int&, const int&) const;
 	void		set(const int&, const int&, const Real&);
+
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator+(const ElastTensor&, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator-(const ElastTensor&, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator*(Real, const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor operator*(const ElastTensor&, Real);
+/*---------------------------------------------------------------------------*/
+    friend Tensor2 operator*(const ElastTensor&, Tensor2);
+/*---------------------------------------------------------------------------*/
+    friend Real trace(const ElastTensor&);
+/*---------------------------------------------------------------------------*/
+    friend ElastTensor transpose(const ElastTensor&);
 };
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator+(const ElastTensor&, const ElastTensor&);
+//extern ElastTensor operator+(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator-(const ElastTensor&, const ElastTensor&);
+//extern ElastTensor operator-(const ElastTensor&, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator*(Real, const ElastTensor&);
+//extern ElastTensor operator*(Real, const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor operator*(const ElastTensor&, Real);
+//extern ElastTensor operator*(const ElastTensor&, Real);
 /*---------------------------------------------------------------------------*/
-extern Tensor2 operator*(const ElastTensor&, Tensor2);
+//extern Tensor2 operator*(const ElastTensor&, Tensor2);
 /*---------------------------------------------------------------------------*/
-extern Real trace(const ElastTensor&);
+//extern Real trace(const ElastTensor&);
 /*---------------------------------------------------------------------------*/
-extern ElastTensor transpose(const ElastTensor&);
+//extern ElastTensor transpose(const ElastTensor&);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // class HujeuxLaw: Hujeux 3D constitutive model with 3 deviatoric + 1 isotropic mechanisms
