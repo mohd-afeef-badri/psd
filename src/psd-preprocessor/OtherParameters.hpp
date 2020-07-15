@@ -347,6 +347,34 @@ if(Prblm=="soildynamics"){
   " )                                                                              \n"        
   "                                                                                \n";
 
+ if(pipegnu){
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "// ------- Gnuplot pipeing parameters  -------                                 \n"
+  "//=============================================================================\n"
+  "                                                                               \n"
+  <<(Sequential ? "  real Ek,El,Ec;" : "  real[int] E(3),EG(3);"                  )<<
+  "  // To store damping energy                                                   \n"
+  "                                                                               \n"
+  <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
+  "  system(\"rm energies.data\");                                                \n";
+
+ if(!supercomp)
+  writeIt
+  "                                                                               \n"
+  "  pstream pgnuplot(\"gnuplot -p\");                                            \n"
+  <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
+  "  pgnuplot                                                                     \n"
+  "  <<\" set title\\\"E-Energy\t E-Elastic\tT-Total\tK-Kinetic\\\";        \\n\" \n"
+  "  <<\" set termoption font \\\"Arial-Bold,20\\\";                \t\t\\n\"     \n"
+  "  <<\" set format x \\\"%.1t\\\";                                    \t\t\\n\" \n"
+  "  <<\" set xlabel \\\" Time     \\\";                            \t\t\\n\"     \n"
+  "  <<\" set ylabel \\\" Energies \\\";                            \t\t\\n\"     \n"
+  "  <<\" set grid x y; set key left;                                       \\n\";\n"
+  "                                                                               \n";
+ }
+ 
 }
 
 if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){
