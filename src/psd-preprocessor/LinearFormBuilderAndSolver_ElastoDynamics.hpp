@@ -2,7 +2,7 @@
 // ------ Elasticity Dynamics for the LinearFormBuilderAndSolver.edp file ------ 
 //=====================================================================================
 
-if(Sequential){writesolver    
+if(Sequential){write    
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -17,14 +17,14 @@ if(Sequential){writesolver
 <<"                                                                                \n";
 
 if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-writesolver
+write
 <<"  tt  = t-real(alpf*dt);                                                        \n";
 
 if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-writesolver
+write
 <<"  tt  = t-dt;                                                                   \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
@@ -46,21 +46,21 @@ writesolver
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                               )
 <<"                                                                                \n";
 
-if(debug)if(spc==2)writesolver
+if(debug)if(spc==2)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
 <<"  meshN ThMoved = movemesh(Th, [x + du, y + du1])  ;                            \n"
 <<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;                            \n";
 
-if(debug)if(spc==3)writesolver
+if(debug)if(spc==3)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
 <<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ;          \n"
 <<"  plot (ThMoved,wait=0, cmm= \"t = \"+t+\" (s)\")  ;                            \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating variables------------//                           \n"
 <<"                                                                                \n"
@@ -69,7 +69,7 @@ writesolver
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )
 <<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""                      );
 
-if(plotAll)if(spc==2){writesolver
+if(plotAll)if(spc==2){write
 <<"                                                                                \n"
 <<"  //-----------------Paraview plotting-------------//                           \n"
 <<"                                                                                \n"
@@ -78,25 +78,25 @@ if(plotAll)if(spc==2){writesolver
 <<"  savevtk  (  namevtu               ,                                           \n"
 <<"              Th                    ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,0]        ,                                           \n";
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<"              [vold,vold1,0]        ,                                           \n";
-if(PostProcess=="a")writesolver 
+if(PostProcess=="a")write 
 <<"              [aold,aold1,0]        ,                                           \n";
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<"              [uold,uold1,0]        ,                                           \n"
 <<"              [vold,vold1,0]        ,                                           \n"
 <<"              [aold,aold1,0]        ,                                           \n";
 
-writesolver
+write
 <<"              order=vtuorder        ,                                           \n"
 <<"              dataname=namedata                                                 \n"
 <<"           );                                                                   \n"
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""                       );
 }
 
-if(plotTime){writesolver
+if(plotTime){write
 <<"                                                                                \n"
 <<"  //-----------------Paraview plotting-------------//                           \n"
 <<"                                                                                \n"
@@ -104,21 +104,21 @@ if(plotTime){writesolver
 <<"  exportTimeStep( namevtu,                                                      \n"
 <<"                  Th                    ,                                       \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<(spc==2 ? "\t\t [uold,uold1,0]\t   ,\n" : "\t\t [uold,uold1,uold2]\t   ,\n"      );
 
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<(spc==2 ? "\t\t [vold,vold1,0]\t   ,\n" : "\t\t [vold,vold1,vold2]\t   ,\n"      );
 
-if(PostProcess=="a")writesolver
+if(PostProcess=="a")write
 <<(spc==2 ? "\t\t [aold,aold1,0]\t   ,\n" : "\t\t [aold,aold1,aold2]\t   ,\n"      );
 
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<(spc==2 ? "\t\t [uold,uold1,0]\t   ,\n" : "\t\t [uold,uold1,uold2]\t   ,\n"      )
 <<(spc==2 ? "\t\t [vold,vold1,0]\t   ,\n" : "\t\t [vold,vold1,vold2]\t   ,\n"      )
 <<(spc==2 ? "\t\t [aold,aold1,0]\t   ,\n" : "\t\t [aold,aold1,aold2]\t   ,\n"      );
 
-writesolver
+write
 <<"                  vtuorder              ,                                       \n"
 <<"                  iterout               ,                                       \n"
 <<"                  t                     ,                                       \n"
@@ -128,7 +128,7 @@ writesolver
 }
 
 
-if(plotAll)if(spc==3){writesolver
+if(plotAll)if(spc==3){write
 <<"                                                                                \n"
 <<"  //-----------------Paraview plotting-------------//                           \n"
 <<"                                                                                \n"
@@ -137,18 +137,18 @@ if(plotAll)if(spc==3){writesolver
 <<"  savevtk  (  namevtu               ,                                           \n"
 <<"              Th                    ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n";
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<"              [vold,vold1,vold2]    ,                                           \n";
-if(PostProcess=="a")writesolver 
+if(PostProcess=="a")write 
 <<"              [aold,aold1,aold2]    ,                                           \n";
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n"
 <<"              [vold,vold1,vold2]    ,                                           \n"
 <<"              [aold,aold1,aold2]    ,                                           \n";
 
-writesolver
+write
 <<"              order=vtuorder        ,                                           \n"
 <<"              dataname=namedata                                                 \n"
 <<"           );                                                                   \n"
@@ -156,7 +156,7 @@ writesolver
 }
 
 
-if(pipegnu)if(Prblm=="elastodynamics"){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //---------------Energy calculations-------------//                           \n"
 <<"                                                                                \n"
@@ -174,7 +174,7 @@ if(pipegnu)if(Prblm=="elastodynamics"){writesolver
 <<"  ofstream ff(\"energies.data\",append);                                        \n"
 <<"  ff<< t << \"  \" << Ek << \"  \"<< El << \"  \" << Ec <<endl;                 \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"                                                                                \n"
 <<"  //-----------------Gnuplot pipeping-------------//                            \n"
 <<"                                                                                \n"
@@ -190,25 +190,25 @@ if(!supercomp)writesolver
 <<"  <<\"\\n\";                                                                    \n" 
 <<"  flush(pgnuplot);                                                              \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<(timelog ? "  timerend(\"Energy calculations\",t0)\n" : ""                       );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating time----------------//                            \n"
 <<"                                                                                \n"
 <<"  t += dt;                                                                      \n";
 
-if(plotAll || plotTime)writesolver
+if(plotAll || plotTime)write
 <<"                                                                                \n"
 <<"  //-----------updating iteration count-----------//                            \n"
 <<"                                                                                \n"
 <<"  iterout++;                                                                    \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"}                                                                               \n"
 <<"                                                                                \n"
@@ -222,7 +222,7 @@ writesolver
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
 
-if(!Sequential){writesolver    
+if(!Sequential){write    
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -238,14 +238,14 @@ if(!Sequential){writesolver
 <<"                                                                                \n";
 
 if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-writesolver
+write
 <<"  tt  = t-real(alpf*dt);                                                        \n";
 
 if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-writesolver
+write
 <<"  tt  = t-dt;                                                                   \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
@@ -271,21 +271,21 @@ writesolver
 <<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""                            )
 <<"                                                                                \n";
 
-if(debug)if(spc==2)writesolver
+if(debug)if(spc==2)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
 <<"  meshN ThMoved = movemesh(Th, [x + du, y + du1]) ;                             \n"
 <<"  plotJustMeshMPI (ThMoved, wait=0, cmm=\"t=\"+t+\"(s)\")                       \n";
 
-if(debug)if(spc==3)writesolver
+if(debug)if(spc==3)write
 <<"                                                                                \n"
 <<"  //-----------------Move mesh plotting------------//                           \n"
 <<"                                                                                \n"
 <<"  meshN ThMoved = movemesh3(Th, transfo =[x + du, y + du1, z + du2]) ;          \n"
 <<"  plotJustMeshMPI3 (ThMoved, wait=0, cmm=\"t=\"+t+\"(s)\")                      \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating variables------------//                           \n"
 <<"                                                                                \n"
@@ -297,7 +297,7 @@ writesolver
 <<(timelog ? "  MPItimerend(\"updating variables\",t0)\n" : ""                     );
 
 
-if(plotAll)if(spc==2){writesolver
+if(plotAll)if(spc==2){write
 <<"                                                                                \n"
 <<"  //-----------------ParaView plotting--------------//                          \n"
 <<"                                                                                \n"
@@ -305,22 +305,22 @@ if(plotAll)if(spc==2){writesolver
 <<"                                                                                \n";
 
 
-writesolver
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"                 [uold,uold1,0]     ,                                           \n";
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<"                 [vold,vold1,0]     ,                                           \n";
-if(PostProcess=="a")writesolver 
+if(PostProcess=="a")write 
 <<"                 [aold,aold1,0]     ,                                           \n";
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<"                 [uold,uold1,0]     ,                                           \n"
 <<"                 [vold,vold1,0]     ,                                           \n"
 <<"                 [aold,aold1,0]     ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n"
 <<"                 dataname=\"U\"       ,                                         \n"
 <<"                 append=true                                                    \n"
@@ -329,7 +329,7 @@ writesolver
 }
 
 
-if(plotTime)if(spc==3)writesolver
+if(plotTime)if(spc==3)write
 <<"                                                                                \n"
 <<"  //-----------------Paraview plotting-------------//                           \n"
 <<"                                                                                \n"
@@ -345,54 +345,54 @@ if(plotTime)if(spc==3)writesolver
 <<"           );                                                                   \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""                      );
 
-if(plotAll)if(spc==3){writesolver
+if(plotAll)if(spc==3){write
 <<"                                                                                \n"
 <<"  //-----------------ParaView plotting--------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"ParaView plotting\",t0)\n" : ""                    );
 
 
-writesolver
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"                 [uold,uold1,uold2] ,                                           \n";
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<"                 [vold,vold1,vold2] ,                                           \n";
-if(PostProcess=="a")writesolver
+if(PostProcess=="a")write
 <<"                 [aold,aold1,aold2] ,                                           \n";
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<"                 [uold,uold1,uold2] ,                                           \n"
 <<"                 [vold,vold1,vold2] ,                                           \n"
 <<"                 [aold,aold1,aold2] ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")writesolver
+if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"                 dataname=\"U\"       ,                                         \n";
 
-if(PostProcess=="v")writesolver
+if(PostProcess=="v")write
 <<"                 dataname=\"U  V\" ,                                            \n";
-if(PostProcess=="a")writesolver
+if(PostProcess=="a")write
 <<"                 dataname=\"U  A\" ,                                            \n";
-if(PostProcess=="uva")writesolver
+if(PostProcess=="uva")write
 <<"                 dataname=\"U  V  A\" ,                                         \n";
 
-writesolver
+write
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 
 
-writesolver
+write
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""                      );
 
 }
 
 
 
-if(pipegnu)if(Prblm=="elastodynamics"){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //---------------Energy calculations-------------//                           \n"
 <<"                                                                                \n"
@@ -415,7 +415,7 @@ if(pipegnu)if(Prblm=="elastodynamics"){writesolver
 <<"     ofstream ff(\"energies.data\",append);                                     \n"
 <<"     ff<< t << \"  \" << EG[0] << \"  \"<< EG[1] << \"  \" << EG[2] <<endl;     \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"                                                                                \n"
 <<"     //---------------Gnuplot pipeping-------------//                           \n"
 <<"                                                                                \n"
@@ -431,7 +431,7 @@ if(!supercomp)writesolver
 <<"     <<\"\\n\";                                                                 \n" 
 <<"     flush(pgnuplot);                                                           \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"   }                                                                            \n"
 <<(timelog ? "   MPItimerend(\"Energy calculations\",t0)\n" : ""                   );
@@ -439,17 +439,17 @@ writesolver
 
 
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating time----------------//                            \n"
 <<"                                                                                \n"
 <<"  t += dt;                                                                      \n";
 
-writesolver
+write
 <<"}                                                                               \n"
 <<"                                                                                \n";
 
-writesolver
+write
 <<(timelog ? "if(mpirank==0)\n" : " "                                               )
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : ""                                  )

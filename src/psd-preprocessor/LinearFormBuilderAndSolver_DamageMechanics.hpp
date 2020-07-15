@@ -4,7 +4,7 @@
 
 if(Model=="hybrid-phase-field"){
 
-if(Sequential)writesolver
+if(Sequential)write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- L_o calculation -------                                              \n"
@@ -18,17 +18,17 @@ if(Sequential)writesolver
 <<"}                                                                               \n";
 
 /************************OLD METHOD*************************************************
-if(pipegnu)if(!supercomp)writesolver
+if(pipegnu)if(!supercomp)write
 <<"                                                                                \n"
 <<"  matrix  And                        ;        // PostProcessing                 \n";
-if(vectorial)writesolver
+if(vectorial)write
 <<"  Vh def(fr)                         ;        // Variables for force            \n"
 <<"                                                                                \n"
 <<"  int[int]  ldof( 1 )                        ;                                  \n"
 <<"  ExtractDofBorderVectorial(2,Vh,ldof)        ;                                 \n"
 <<"                                                                                \n";
 
-if(!vectorial)writesolver
+if(!vectorial)write
 <<"  Vh def2(fr)                        ;        // Variables for force            \n"
 <<"                                                                                \n"
 <<"  int[int]  ldof( 1 )                ;                                          \n"
@@ -36,7 +36,7 @@ if(!vectorial)writesolver
 <<"                                                                                \n";
 /************************OLD METHOD*************************************************/ 
 
-if(!Sequential)writesolver
+if(!Sequential)write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- L_o calculation in parallel -------                                  \n"
@@ -51,7 +51,7 @@ if(!Sequential)writesolver
 <<"}                                                                               \n";
 
 
-if(Sequential)if(NonLinearMethod=="Picard"){writesolver
+if(Sequential)if(NonLinearMethod=="Picard"){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// ------- Traction loading loop -------                                        \n"
@@ -88,7 +88,7 @@ if(Sequential)if(NonLinearMethod=="Picard"){writesolver
 <<"    u[] = A^-1*b;                                                               \n"
 <<(timelog ? "    timerend  (\"solving U\",t0)\n"         : ""                       );
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -97,7 +97,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""           );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //----------------Assembly for bilinear----------------------//             \n"
 <<"                                                                                \n"
@@ -119,7 +119,7 @@ writesolver
 <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                               )
 <<"                                                                                \n";
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"    //-------------Hybrid phase-field condition-----------------//              \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""                )
@@ -128,7 +128,7 @@ if(energydecomp)writesolver
 <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""                )
 <<"                                                                                \n";
 
-writesolver
+write
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
 <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                       )
@@ -161,7 +161,7 @@ writesolver
 <<"                                                                                \n"
 <<"  }                                                                             \n";
 
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //-------------------Force calculation-----------------------//               \n"
 <<"                                                                                \n"
@@ -179,16 +179,16 @@ if(pipegnu){writesolver
 <<"  ofstream ff(\"force.data\",append);                                           \n"
 <<"  ff << tr << \"        \" << forcetot*1e-3 << endl;                            \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"FEM\\\"\\n\";    \n"
 //<<"    <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"              \n"
 <<"  flush(pgnuplot);                                                              \n";
 
-writesolver
+write
 <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
 }
 
-if(plotAll)writesolver
+if(plotAll)write
 <<"                                                                                \n"
 <<"  //-------Paraview plotting every nth iteration -----------//                  \n"
 <<"                                                                                \n"
@@ -209,13 +209,13 @@ if(plotAll)writesolver
 <<"    }                                                                           \n"
 <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""                 );
 
-if(debug)writesolver
+if(debug)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plot(phi,fill=1,value=1);                                                     \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating traction----------------//                        \n"
 <<"                                                                                \n"
@@ -229,7 +229,7 @@ writesolver
 
 
 
-if(Sequential)if(NonLinearMethod=="Newton-Raphson"){writesolver
+if(Sequential)if(NonLinearMethod=="Newton-Raphson"){write
 <<"                                                                                \n"
 <<"  real TractionTotal=tr;                                                        \n"
 <<"                                                                                \n"
@@ -274,7 +274,7 @@ if(Sequential)if(NonLinearMethod=="Newton-Raphson"){writesolver
 <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                     )
 <<"                                                                                \n";
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -283,7 +283,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""           );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //----------------Assembly for bilinear----------------------//             \n"
 <<"                                                                                \n"
@@ -311,7 +311,7 @@ writesolver
 <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                     )
 <<"                                                                                \n";
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"    //-------------Hybrid phase-field condition-----------------//              \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""              )
@@ -320,7 +320,7 @@ if(energydecomp)writesolver
 <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""              )
 <<"                                                                                \n";
 
-writesolver
+write
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
 <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                     )
@@ -350,7 +350,7 @@ writesolver
 <<"    TractionIn     = tr;                                                        \n"
 <<"    TractionTotal += dtr;                                                       \n";
 
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //-------------------Force calculation-----------------------//               \n"
 <<"                                                                                \n"
@@ -360,15 +360,15 @@ if(pipegnu){writesolver
 <<"  ofstream ff(\"force.data\",append);                                           \n"
 <<"  ff << TractionTotal << \"        \" << forcetot*1e-3 << endl;                 \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"FEM\\\"\\n\";    \n"
 <<"  flush(pgnuplot);                                                              \n";
 
-writesolver
+write
 <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                       );
 }
 
-if(plotAll)writesolver
+if(plotAll)write
 <<"                                                                                \n"
 <<"  //-------Paraview plotting every nth iteration -----------//                  \n"
 <<"                                                                                \n"
@@ -389,13 +389,13 @@ if(plotAll)writesolver
 <<"    }                                                                           \n"
 <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""                );
 
-if(debug)writesolver
+if(debug)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plot(phi,fill=1,value=1);                                                     \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"}                                                                               \n"
 <<"                                                                                \n"
@@ -404,7 +404,7 @@ writesolver
 <<"//-------------------------------THE END------------------------------//        \n"; 
 }  //-- [if loop terminator] Sequential ended --//
 
-if(!Sequential)if(NonLinearMethod=="Picard"){writesolver
+if(!Sequential)if(NonLinearMethod=="Picard"){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"// -------  Traction loading loop  -------                                      \n"
@@ -449,7 +449,7 @@ if(!Sequential)if(NonLinearMethod=="Picard"){writesolver
 <<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "                         );
 
 if(!vectorial){
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -458,7 +458,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //----------------Assembly for bilinear----------------------//             \n"
 <<"                                                                                \n"
@@ -486,7 +486,7 @@ writesolver
 <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""                        )
 <<"                                                                                \n";
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"    //-------------Hybrid phase-field condition-----------------//              \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""              )
@@ -495,7 +495,7 @@ if(energydecomp)writesolver
 <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""              )
 <<"                                                                                \n";
 
-writesolver
+write
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
@@ -520,7 +520,7 @@ writesolver
 <<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){                                 \n";
 }
 
-if(vectorial){writesolver
+if(vectorial){write
 <<"                                                                                \n"
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
@@ -537,7 +537,7 @@ if(vectorial){writesolver
 <<"    uold[] = u[];                                                               \n"
 <<(timelog ? "    MPItimerend (\"solution update\",t0)\n" : ""                     );
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -546,7 +546,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //--------------- Convergence conditional---------------------//            \n"
 <<"                                                                                \n"
@@ -556,7 +556,7 @@ writesolver
 
 
 /************************OLD METHOD*************************************************
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"      //-------------------Force calculation-----------------------//           \n"
 <<"                                                                                \n"
@@ -572,7 +572,7 @@ if(pipegnu){writesolver
 <<"                                                                                \n"
 /************************OLD METHOD*************************************************/
 
-if(!vectorial)writesolver
+if(!vectorial)write
 <<"                                                                                \n"
 <<"      //------------------Screen output norm----------------------//            \n"
 <<"                                                                                \n"
@@ -582,7 +582,7 @@ if(!vectorial)writesolver
 <<"      << \" , \" <<  err2Gather << \" ]\"      << endl;                         \n"
 <<"                                                                                \n";
 
-if(vectorial)writesolver
+if(vectorial)write
 <<"                                                                                \n"
 <<"      //------------------Screen output norm----------------------//            \n"
 <<"                                                                                \n"
@@ -590,14 +590,14 @@ if(vectorial)writesolver
 <<"      cout.scientific << \"NL iteration number :  [ \" << iter                  \n"
 <<"      << \" ]\\nL2  error  in  [U]  :  [ \" << err1Gather << \" ]\" <<endl;     \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"      break;                                                                    \n"
 <<"    }                                                                           \n"
 <<"  }                                                                             \n";
 
 
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //-------------------Force calculation-----------------------//               \n"
 <<"                                                                                \n"
@@ -609,18 +609,18 @@ if(pipegnu){writesolver
 <<"  ofstream ff(\"force.data\",append);                                           \n"
 <<"  ff << tr << \"        \" << forcetotGath*1e-3 << endl;                        \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"  pgnuplot<<\"plot \\\"force.data\\\" u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\\n\";  \n"
 //<<"      <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"            \n"
 <<"  flush(pgnuplot);                                                              \n";
 
-writesolver
+write
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)if(!vectorial){writesolver
+if(plotAll)if(!vectorial){write
 <<"                                                                                \n"
 <<"  //-------Paraview plotting every nth iteration -----------//                  \n"
 <<"                                                                                \n"
@@ -630,39 +630,39 @@ if(plotAll)if(!vectorial){writesolver
 <<"  if(int(iterout%10)==0){                                                       \n";
 
 
-writesolver            
+write            
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")writesolver
+if(PostProcess!="u" & PostProcess!="phi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
 
-if(PostProcess=="u")writesolver
+if(PostProcess=="u")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
 
-if(PostProcess=="phi")writesolver
+if(PostProcess=="phi")write
 <<"                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")writesolver
+if(PostProcess=="uphi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n"
 <<"                 dataname=\"U  d\"    ,                                         \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    iterout1++;                                                                 \n"
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(plotAll)if(vectorial){writesolver
+if(plotAll)if(vectorial){write
 <<"                                                                                \n"
 <<"  //--------Paraview plotting every nth iteration ----------//                  \n"
 <<"                                                                                \n"
@@ -674,52 +674,52 @@ if(plotAll)if(vectorial){writesolver
 <<"                                                                                \n"
 <<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
 
-writesolver                   
+write                   
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")writesolver
+if(PostProcess!="u" & PostProcess!="phi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
 
-if(PostProcess=="u")writesolver
+if(PostProcess=="u")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
 
-if(PostProcess=="phi")writesolver
+if(PostProcess=="phi")write
 <<"                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")writesolver
+if(PostProcess=="uphi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n"
 <<"                 dataname=\"U  d\"    ,                                         \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    iterout1++;                                                                 \n"
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(debug)if(!vectorial)writesolver
+if(debug)if(!vectorial)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plotMPI(Th, phi, P1,  def, real, wait=0, cmm=\"Tr-\"+tr+\"\")                 \n";
 
-if(debug)if(vectorial)writesolver
+if(debug)if(vectorial)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plotMPI(Th, u"<<spc<<", P1,  def0, real, wait=0, cmm=\"Tr-\"+tr+\"\")         \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"  //-----------------updating traction----------------//                        \n"
 <<"                                                                                \n"
@@ -734,7 +734,7 @@ writesolver
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){writesolver
+if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){write
 <<"                                                                                \n"
 <<"real TractionTotal=tr;                                                          \n"
 <<"                                                                                \n"
@@ -788,7 +788,7 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){writesolver
 <<"                                                                                \n";
 
 if(!vectorial){
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -797,7 +797,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //----------------Assembly for bilinear----------------------//             \n"
 <<"                                                                                \n"
@@ -831,7 +831,7 @@ writesolver
 <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                    )
 <<"                                                                                \n";
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"    //-------------Hybrid phase-field condition-----------------//              \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""              )
@@ -841,7 +841,7 @@ if(energydecomp)writesolver
 <<"                                                                                \n";
 
 /******************************  Old Method **********************************************
-writesolver
+write
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
@@ -857,7 +857,7 @@ writesolver
 <<"    if(err1Gather < 1e-2 && err2Gather < 1e-2){                                 \n";
 /******************************************************************************************/
 
-writesolver
+write
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
@@ -884,7 +884,7 @@ writesolver
 
 }
 
-if(vectorial){writesolver
+if(vectorial){write
 <<"                                                                                \n"
 <<"    //------------------Error calculation------------------------//             \n"
 <<"                                                                                \n"
@@ -901,7 +901,7 @@ if(vectorial){writesolver
 <<"    uold[] = u[];                                                               \n"
 <<(timelog ? "    MPItimerend (\"solution update\",t0)\n" : ""                     );
 
-if(energydecomp)writesolver
+if(energydecomp)write
 <<"                                                                                \n"
 <<"    //---------------Energy decomposition phase-------------------//            \n"
 <<"                                                                                \n"
@@ -910,7 +910,7 @@ if(energydecomp)writesolver
 <<"    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
 <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    //--------------- Convergence conditional---------------------//            \n"
 <<"                                                                                \n"
@@ -918,7 +918,7 @@ writesolver
 
 }  //-- [if loop terminator] vectorial ended --//
 
-if(!vectorial)writesolver
+if(!vectorial)write
 <<"                                                                                \n"
 <<"      //------------------Screen output norm----------------------//            \n"
 <<"                                                                                \n"
@@ -928,7 +928,7 @@ if(!vectorial)writesolver
 <<"      << \" , \" <<  err2Gather << \" ]\"      << endl;                         \n"
 <<"                                                                                \n";
 
-if(vectorial)writesolver
+if(vectorial)write
 <<"                                                                                \n"
 <<"      //------------------Screen output norm----------------------//            \n"
 <<"                                                                                \n"
@@ -936,7 +936,7 @@ if(vectorial)writesolver
 <<"      cout.scientific << \"NL iteration number :  [ \" << iter                  \n"
 <<"      << \" ]\\nL2  error  in  [U]  :  [ \" << err1Gather << \" ]\" <<endl;     \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"      break;                                                                    \n"
 <<"    }                                                                           \n"
@@ -951,7 +951,7 @@ writesolver
 <<"    TractionTotal += dtr;                                                       \n";
 
 
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //-------------------Force calculation-----------------------//               \n"
 <<"                                                                                \n"
@@ -963,17 +963,17 @@ if(pipegnu){writesolver
 <<"  ofstream ff(\"force.data\",append);                                           \n"
 <<"  ff << TractionTotal << \"        \" << forcetotGath*1e-3 << endl;             \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"  pgnuplot<<\"plot \\\"force.data\\\" u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\\n\";  \n"
 <<"  flush(pgnuplot);                                                              \n";
 
-writesolver
+write
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)if(!vectorial){writesolver
+if(plotAll)if(!vectorial){write
 <<"                                                                                \n"
 <<"  //-------Paraview plotting every nth iteration -----------//                  \n"
 <<"                                                                                \n"
@@ -983,39 +983,39 @@ if(plotAll)if(!vectorial){writesolver
 <<"  if(int(iterout%10)==0){                                                       \n";
 
 
-writesolver            
+write            
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")writesolver
+if(PostProcess!="u" & PostProcess!="phi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
 
-if(PostProcess=="u")writesolver
+if(PostProcess=="u")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
 
-if(PostProcess=="phi")writesolver
+if(PostProcess=="phi")write
 <<"                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")writesolver
+if(PostProcess=="uphi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n"
 <<"                 dataname=\"U  d\"    ,                                         \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    iterout1++;                                                                 \n"
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(plotAll)if(vectorial){writesolver
+if(plotAll)if(vectorial){write
 <<"                                                                                \n"
 <<"  //--------Paraview plotting every nth iteration ----------//                  \n"
 <<"                                                                                \n"
@@ -1027,52 +1027,52 @@ if(plotAll)if(vectorial){writesolver
 <<"                                                                                \n"
 <<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
 
-writesolver                   
+write                   
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")writesolver
+if(PostProcess!="u" & PostProcess!="phi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
 
-if(PostProcess=="u")writesolver
+if(PostProcess=="u")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
 
-if(PostProcess=="phi")writesolver
+if(PostProcess=="phi")write
 <<"                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")writesolver
+if(PostProcess=="uphi")write
 <<(spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )
 <<"                 phi                ,                                           \n";
 
-writesolver
+write
 <<"                 order=vtuorder     ,                                           \n"
 <<"                 dataname=\"U  d\"    ,                                         \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 
 
-writesolver
+write
 <<"                                                                                \n"
 <<"    iterout1++;                                                                 \n"
 <<"  }                                                                             \n"
 <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(debug)if(!vectorial)writesolver
+if(debug)if(!vectorial)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plotMPI(Th, phi, P1,  def, real, wait=0, cmm=\"Tr-\"+tr+\"\")                 \n";
 
-if(debug)if(vectorial)writesolver
+if(debug)if(vectorial)write
 <<"                                                                                \n"
 <<"  //-----------------Debug glut plotting----------------------//                \n"
 <<"                                                                                \n"
 <<"  plotMPI(Th, u"<<spc<<", P1,  def0, real, wait=0, cmm=\"Tr-\"+tr+\"\")         \n";
 
-writesolver
+write
 <<"                                                                                \n"
 <<"}                                                                               \n"
 <<"                                                                                \n"
@@ -1086,7 +1086,7 @@ writesolver
 
 }  //-- [if loop terminator] hybrid-phase-field ended --//
 
-if(Model=="Mazar"){writesolver
+if(Model=="Mazar"){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Variable initilization -------                                      \n"
@@ -1165,15 +1165,15 @@ if(Model=="Mazar"){writesolver
 <<"    //----------Damage field calulation using Mazrs model---------//            \n";
 
 
-if(useGFP){writesolver
+if(useGFP){write
 <<"                                                                                \n";
-if(spc==2)writesolver
+if(spc==2)write
 <<"     defStrain(strain) = [epsilon(u)[0]          ,                              \n"
 <<"                          epsilon(u)[2]/sqrt(2.) ,                              \n"
 <<"                          epsilon(u)[1]                                         \n"
 <<"                         ];                                                     \n"
 <<"                                                                                \n";
-if(spc==3)writesolver
+if(spc==3)write
 <<"     defStrain(strain) = [epsilon(u)[0]          ,                              \n"
 <<"                          epsilon(u)[5]/sqrt(2.) ,                              \n"
 <<"                          epsilon(u)[4]/sqrt(2.) ,                              \n"
@@ -1182,10 +1182,10 @@ if(spc==3)writesolver
 <<"                          epsilon(u)[2]                                         \n"
 <<"                         ];                                                     \n";
 
-writesolver
+write
 <<"     GFPMazarsDamageUpdate(strain[],intVar[],damage[],kappa0,kappac);           \n";
 }
-else{ writesolver
+else{ write
 <<"                                                                                \n"
 <<"     e11 = epsilon(u)[0] ;                                                      \n"
 <<"     e22 = epsilon(u)[1] ;                                                      \n"
@@ -1202,7 +1202,7 @@ else{ writesolver
 <<"     damage = floor(100000.*damage)/100000. ;                                   \n";
 }
 
-writesolver
+write
 <<"                                                                                \n"
 <<(timelog ? "    MPItimerend  (\"solution update\",t0)\n" : " "                   )
 <<"                                                                                \n"
@@ -1213,7 +1213,7 @@ writesolver
 <<"  duimp = Duimp ;                                                               \n";
 
 
-if(pipegnu){writesolver
+if(pipegnu){write
 <<"                                                                                \n"
 <<"  //-------------------Force calculation-----------------------//               \n"
 <<"                                                                                \n"
@@ -1227,7 +1227,7 @@ if(pipegnu){writesolver
 <<"     ofstream outputFile(\"output.data\", append);                              \n"
 <<"     outputFile << n*Duimp << \" \" << ForceXGather << endl;                    \n";
 
-if(!supercomp)writesolver
+if(!supercomp)write
 <<"     pgnuplot                                                                   \n"
 <<"      <<\"plot\"                                                                \n"
 <<"      <<\"\\\"output.data\\\"\"                                                 \n"
@@ -1235,13 +1235,13 @@ if(!supercomp)writesolver
 <<"      <<\"\\n\";                                                                \n" 
 <<"     flush(pgnuplot);                                                           \n";
 
-writesolver
+write
 <<"   }                                                                            \n"
 <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
-writesolver
+write
 <<"}                                                                               \n"
 <<"                                                                                \n"
 <<(timelog ? "if(mpirank==0)\n" : " "                                              )

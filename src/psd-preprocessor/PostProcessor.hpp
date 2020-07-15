@@ -5,56 +5,47 @@
 cout << " building PostProcessor.edp"; 
 
 if(plotAll){
-ofstream  writePostProcessor("PostProcessor.edp");
+ofstream  write("PostProcessor.edp");
 
-writePostProcessor<<
-"/******************************* PostProcessor ********************************\n"
-"*                                                                             *\n"
-"* Note!!! This file is  generated  by  running  PSD PreProcessor. Do not edit *\n"
-"*         in order to  control this file please change flag arguments of  the *\n"
-"*         PSD_PreProcess. To know the available flags run PSD_PreProcess with *\n"
-"*         -help or read the PSD manual.                                       *\n"
-"*                                                                             *\n"
-"******************************************************************************/\n"
-"                                                                               \n";
+writeHeader;
 
-if(!Sequential)if(Prblm=="soildynamics")writePostProcessor
+if(!Sequential)if(Prblm=="soildynamics")write
 <<"  if(mpirank==0){                                                               \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Soil-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");                                           \n"
 <<"  }                                                                             \n"; 
 
-if(Sequential)if(Prblm=="soildynamics")writePostProcessor
+if(Sequential)if(Prblm=="soildynamics")write
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Soil-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
 
-if(!Sequential)if(Prblm=="elastodynamics")writePostProcessor
+if(!Sequential)if(Prblm=="elastodynamics")write
 <<"  if(mpirank==0){                                                               \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");                                           \n"
 <<"  }                                                                             \n";
 
-if(Sequential)if(Prblm=="elastodynamics")writePostProcessor
+if(Sequential)if(Prblm=="elastodynamics")write
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
 
-if(!Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")writePostProcessor
+if(!Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"  if(mpirank==0){                                                               \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\t\"+mpisize+\"\\\" >>simulation-log.csv\");                                           \n"
 <<"  }                                                                             \n"; 
 
-if(Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")writePostProcessor
+if(Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
 
-if(!Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
+if(!Sequential)if(Prblm=="linear-elasticity"){write
 <<"                                                                                \n"        
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------//                                       \n"
@@ -73,26 +64,26 @@ if(!Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
 <<"     bool     withsur=true;                          // Export surface mesh     \n";
 */
 /*
-if(spc==2)writePostProcessor
+if(spc==2)write
 <<"                                                                                \n"
 <<"     exportpvd(namevtu, Th,[u,u1,0], vtuorder, withsur, namedata, mpiCommWorld);\n"; 
 
-if(spc==3)writePostProcessor
+if(spc==3)write
 <<"                                                                                \n"
 <<"     exportpvd(namevtu, Th,[u,u1,u2], vtuorder, withsur,namedata, mpiCommWorld);\n";
 */
 
-if(spc==2)writePostProcessor
+if(spc==2)write
 <<"  savevtk( \"VTUs/Solution.vtu\"     ,                                          \n"
 <<"            Th                  ,                                               \n"
 <<"            [u,u1,0]                 ,                                          \n";
  
-if(spc==3)writePostProcessor     
+if(spc==3)write     
 <<"  savevtk(\"VTUs/Solution.vtu\"      ,                                          \n"
 <<"            Th                  ,                                               \n"
 <<"            [u,u1,u2]                ,                                          \n";    
   
-writePostProcessor       
+write       
 <<"             order=vtuorder          ,                                          \n"
 <<"             dataname=\"U\"                                                     \n"
 <<"         );                                                                     \n"        
@@ -100,7 +91,7 @@ writePostProcessor
 <<(timelog ? "  MPItimerend(\"Solver\",t1)\n" : " "                                 )
 <<"                                                                                \n";
 
-writePostProcessor       
+write       
 <<"  if(mpirank==0){                                                               \n"
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Elasticity\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
@@ -109,7 +100,7 @@ writePostProcessor
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
+if(Sequential)if(Prblm=="linear-elasticity"){write
 <<"                                                                                \n"  
 <<"//==============================================================================\n"
 <<"// -------Plotting with paraview-------                                         \n"
@@ -120,17 +111,17 @@ if(Sequential)if(Prblm=="linear-elasticity"){writePostProcessor
 <<(timelog ? "  timerbegin(\"Post-Processing\",t0)\n" : " "                        )
 <<"  int[int] vtuorder=[1];                             // Solution export order   \n"; 
   
-if(spc==2)writePostProcessor
+if(spc==2)write
 <<"  savevtk( \"VTUs/Solution-Seq.vtu\" ,                                          \n"
 <<"            Th                       ,                                          \n"
 <<"            [u,u1,0]                 ,                                          \n";
  
-if(spc==3)writePostProcessor     
+if(spc==3)write     
 <<"  savevtk(\"VTUs/Solution-Seq.vtu\"  ,                                          \n"
 <<"            Th                       ,                                          \n"
 <<"            [u,u1,u2]                ,                                          \n"; 
   
-writePostProcessor       
+write       
 <<"             order=vtuorder          ,                                          \n"
 <<"             dataname=\"U\"                                                     \n"
 <<"         );                                                                     \n"
@@ -138,7 +129,7 @@ writePostProcessor
 <<(timelog ? "  timerend  (\"Solver\",t1)\n" : " "                                  )   
 <<"                                                                                \n";
 
-writePostProcessor
+write
 <<"     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
 <<"     system(\"echo \\\"Elasticity\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
 <<"\\tSeq.\\\" >>simulation-log.csv\");                                            \n";

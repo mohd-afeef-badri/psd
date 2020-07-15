@@ -3,7 +3,7 @@
 //=====================================================================================
 
 
-if(!Sequential){writesolver      
+if(!Sequential){write      
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------                             \n"
@@ -21,7 +21,7 @@ if(!Sequential){writesolver
 <<"  real[int]    b = elast(0,Vh);                                                 \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                          );
 
-if(dirichletpointconditions>=1)writesolver
+if(dirichletpointconditions>=1)write
 <<"                                                                                \n"
 <<"//---------Additional assembly for A & b----------//                            \n"
 <<"                                                                                \n"
@@ -29,24 +29,24 @@ if(dirichletpointconditions>=1)writesolver
 <<"  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                             \n"
 <<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""                );
 
-writesolver
+write
 <<"                                                                                \n"
 <<" //------------Memory optimization-----------------//                           \n";
 
-if(dirichletpointconditions>=1)writesolver
+if(dirichletpointconditions>=1)write
 <<"                                                                                \n"
 <<"  Dpointlab.resize(0); PnV.resize(0);                                           \n";
 
-if(dirichletconditions>=1)writesolver
+if(dirichletconditions>=1)write
 <<"                                                                                \n"
 <<"  Dlabel.resize(0); Dvalue.resize(0);                                           \n";
 
 
-if(tractionconditions>=1)writesolver
+if(tractionconditions>=1)write
 <<"                                                                                \n"
 <<"  Tlabel.resize(0);                                                             \n";
    
-writesolver
+write
 <<"                                                                                \n"
 <<"//---------------PETSc Assembly---------------------//                          \n"
 <<"                                                                                \n"
@@ -62,21 +62,21 @@ writesolver
 <<(timelog ? "  MPItimerend(\"PETSc solving\",t0)\n" : ""                          );
 
 
-if(debug)writesolver
+if(debug)write
 <<"                                                                                \n"
 <<"//-------------Debug glut plotting------------------//                          \n"
 <<"                                                                                \n"
 <<"  macro viz(i)i//                                                               \n"
 <<"  plotMPI(Th, u, P1,  viz, real, wait=0, cmm=\"displacement\")                  \n";
 
-if(!plotAll)if(Prblm=="linear-elasticity")writesolver
+if(!plotAll)if(Prblm=="linear-elasticity")write
 <<"                                                                                \n"
 <<(timelog ? "MPItimerend(\"solver\",t1)\n" : ""                                    )
 <<"                                                                                \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential){writesolver    
+if(Sequential){write    
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------                             \n"
@@ -102,13 +102,13 @@ if(Sequential){writesolver
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                               );
 
 
-if(debug)writesolver
+if(debug)write
 <<"                                                                                \n"
 <<"  //--------------debug glut plotting---------------//                          \n"
 <<"                                                                                \n"
 <<"  plot (u, wait=1, fill=1, value=1, cmm= \"solution\");                         \n";
 
-if(!plotAll)if(Prblm=="linear-elasticity")writesolver
+if(!plotAll)if(Prblm=="linear-elasticity")write
 <<"                                                                                \n"
 <<(timelog ? "timerend(\"solver\",t1)\n" : ""                                       )
 <<"                                                                                \n";
