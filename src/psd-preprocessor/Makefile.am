@@ -1,4 +1,26 @@
-LIST_COMPILE=PSD_PreProcess.cpp
+LIST_COMPILE = PSD_PreProcess.cpp
+
+PSD_PREPROCESSOR_HPP_LIST = ControlParameters.hpp \
+FemParameters.hpp \
+HeaderMacro.hpp \
+Help.hpp \
+LinearFormBuilderAndSolver_DamageMechanics.hpp \
+LinearFormBuilderAndSolver_ElastoDynamics.hpp \
+LinearFormBuilderAndSolver.hpp \
+LinearFormBuilderAndSolver_LinearElasticity.hpp \
+LinearFormBuilderAndSolver_SoilDynamics.hpp \
+Macros.hpp \
+Main.hpp \
+Mesh.hpp \
+OtherParameters.hpp \
+PostProcessor.hpp \
+PSD_PreProcess.cpp \
+VariationalFormulation_DamageMechanics.hpp \
+VariationalFormulation_ElastoDynamics.hpp \
+VariationalFormulation.hpp \
+VariationalFormulation_LinearElasticity.hpp \
+VariationalFormulation_SoilDynamics.hpp
+
 	
 all-local: PSD_PreProcess 
 	@echo ""
@@ -14,7 +36,7 @@ PSD_PreProcess: PSD_PreProcess.o
 	@echo ""	
 
 
-PSD_PreProcess.o:
+PSD_PreProcess.o: $(PSD_PREPROCESSOR_HPP_LIST)
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11	
 
 clean-local:
