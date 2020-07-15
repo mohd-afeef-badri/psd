@@ -264,7 +264,7 @@ if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
 <<"  uNL[] = uold[];                                                               \n"
 <<"                                                                                \n"
-<<"  for (int k=0; k<5; k++){                   // Nonlinear NR loop               \n"
+<<"  for (int k=0; k<5; k++){  // Pseudo-nonlinear NR loop                         \n"
 <<"                                                                                \n";
 
 write
@@ -289,26 +289,26 @@ if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
 <<"  uNL[] += du[];                                                                \n"
 <<"                                                                                \n"
-<<"    //------Newton-Raphsons Error calculation---------//                        \n"
+<<"  //------Newton-Raphsons Error calculation---------//                          \n"
 <<"                                                                                \n"
-<<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
-<<"    real err1Gather,  err1Loc ;                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
+<<"  real err1Gather,  err1Loc ;                                                   \n"
 <<"                                                                                \n"
-<<"        b = b .* DP                                   ;                         \n"                        
-<<"        err1Loc = b.l2                                ;                         \n"                          
-<<"        err1Loc = err1Loc*err1Loc                     ;                         \n"                          
-<<"        mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                   \n"                          
-<<"        err1Gather = sqrt(err1Gather) ;                                         \n"
+<<"  b = b .* DP                                   ;                               \n"                        
+<<"  err1Loc = b.l2                                ;                               \n"                          
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  err1Gather = sqrt(err1Gather) ;                                               \n"
 <<"                                                                                \n"               
-<<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )
+<<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
-<<"    //--------------- Convergence conditional---------------------//            \n"
+<<"  //--------------- Convergence conditional---------------------//              \n"
 <<"                                                                                \n"
-<<"    if(err1Gather < 1e-5 || k==4){                                              \n"
+<<"  if(err1Gather < 1e-5 || k==4){                                                \n"
 <<"                                                                                \n"
-<<"      //------------------Screen output norm----------------------//            \n"
+<<"    //------------------Screen output norm----------------------//              \n"
 <<"                                                                                \n"
-<<"      if(mpirank==0)                                                            \n"
+<<"    if(mpirank==0)                                                              \n"
 <<"      cout.scientific << \"NL iteration number :  [ \"  << k                    \n"
 <<"      << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                        \n"
 <<"      << \" ]\"      << endl;                                                   \n"

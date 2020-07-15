@@ -1,6 +1,14 @@
-//=============================================================================
-// ------ Building the Macros.edp file ------ 
-//=============================================================================
+/**************************************************************************************
+*                                                                                     *
+* Author : Mohd Afeef BADRI                                                           *
+* Email  : mohd-afeef.badri@cea.fr                                                    *
+* Date   : 20/04/2020                                                                 *
+* Type   : Support file                                                               *
+*                                                                                     *
+* Comment: This support  file is responsible for generating Macro.edp  which contains *
+*           main macros compiletime/runtime for PSD solver.                           *
+*                                                                                     *
+**************************************************************************************/
 
 cout << " building Macros.edp";
    
@@ -8,87 +16,106 @@ cout << " building Macros.edp";
 
 writeHeader;
 
-if(spc==2){write
-<<"                                                                             \n"
-<<"//------------------------- Essential Macros ------------------------------//\n"
-<<"                                                                            \n";
+writeIt
+"                                                                               \n"
+"//=============================================================================\n"
+"// ------- Essential Macros -------                                            \n"
+"//=============================================================================\n";
 
-if(!Sequential)write
-<<"  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used   \n"
-<<"  macro dimension 2                              // Two-dimensional problem \n";
+if(spc==2)
+ {
+ writeIt
+ "                                                                              \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
-<<"  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space    \n"
-<<"  macro def  (i) [ i , i#1, i#2 ]                // Vect. field definition  \n"
-<<"  macro init (i) [ i ,  i ,  i  ]                // Vect. field initialize  \n";
+ if(!Sequential)
+ writeIt
+ "  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used    \n"
+ "  macro dimension 2                              // Two-dimensional problem  \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
-if(plotAll || debug)write
-<<"  macro Pltk         P1                          // FE space                \n"
-<<"  macro def0 (i)           i                     // Vect. field definition  \n";
+ if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+ writeIt
+ "  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space     \n"
+ "  macro def  (i) [ i , i#1, i#2 ]                // Vect. field definition   \n"
+ "  macro init (i) [ i ,  i ,  i  ]                // Vect. field initialize   \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
-"  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
+ if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+ if(plotAll || debug)
+ writeIt 
+ "  macro Pltk         P1                          // FE space                 \n"
+ "  macro def0 (i)           i                     // Vect. field definition   \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(useGFP)write
-<<"  macro Sk           [ P0, P0 , P0  ]       // Third order strain vector   \n"
-<<"  macro defStrain(i) [ i , i#1, i#2 ]       // Vect. field definition      \n";
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ writeIt  
+ "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
 
-if(!vectorial){write
-<<"  macro Pk       [ P"<<lag<<", P"<<lag<<"  ]\t\t    // Finite element space\n";
+ if(useGFP && Prblm=="damage" && Model=="Mazar")
+ writeIt
+ "  macro Sk           [ P0, P0 , P0  ]       // Third order strain vector     \n"
+ "  macro defStrain(i) [ i , i#1, i#2 ]       // Vect. field definition        \n";
 
-if(Prblm!="damage")write
-<<"  macro def  (i) [ i , i#1 ]                // Vect. field definition      \n";
+ if(!vectorial)
+  {
+  writeIt
+  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ]\t\t    // Finite element space  \n";
 
-if(Prblm!="damage")if(!Sequential)write
-<<"  macro init (i) [ i ,  i  ]                // Vect. field initialize      \n"
-<<"                                                                           \n";
+  if(Prblm!="damage")
+  writeIt
+  "  macro def  (i) [ i , i#1 ]                // Vect. field definition       \n";
 
-if(Prblm=="damage" && Model=="Mazar")write
-<<"  macro def  (i) [ i , i#1 ]                // Vect. field definition      \n";
+  if(!Sequential && Prblm!="damage")
+  writeIt
+  "  macro init (i) [ i ,  i  ]                // Vect. field initialize       \n"
+  "                                                                            \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
-<<"  macro init (i) [ i ,  i  ]                // Vect. field initialize      \n"
-<<"                                                                           \n";
+  if(Prblm=="damage" && Model=="Mazar")
+  writeIt  
+  "  macro def  (i) [ i , i#1 ]                // Vect. field definition       \n";
 
-} //-- [if loop terminator] !vectorial ended --//
+  if(!Sequential  && Prblm=="damage" && Model=="Mazar")
+  writeIt
+  "  macro init (i) [ i ,  i  ]                // Vect. field initialize       \n"
+  "                                                                            \n";
+  }   //-- [if loop terminator] !vectorial ended --//
 
-write
-<<"                                                                           \n"
-<<"//--------------------Divergence and epsilion macros---------------------//\n"
-<<"                                                                           \n"
-<<"  macro divergence(i)(dx(i) + dy(i#1))          // Divergence function     \n"
-<<"  macro epsilon(i) [dx(i), dy(i#1),                                        \n" 
-<<"                   (dy(i)+dx(i#1))/SQ2]        // Strain definition        \n";
+ writeIt
+ "                                                                              \n"
+ "//--------------------Divergence and epsilion macros---------------------//   \n"
+ "                                                                              \n"
+ "  macro divergence(i)(dx(i) + dy(i#1))          // Divergence function        \n"
+ "  macro epsilon(i) [dx(i), dy(i#1),                                           \n" 
+ "                   (dy(i)+dx(i#1))/SQ2]        // Strain definition           \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)write
-<<"                                                                           \n"
-<<"//---------------------------Non-linear macros---------------------------//\n"
-<<"                                                                           \n"
-<<"  macro def2  (i) [ i , i#1 ]                         // Vect. field       \n"
-<<"  macro init2 (i) [ i ,  i  ]                         // Vect. initialize  \n"
-<<"  macro def   (i)     i                               // Scalar field      \n"
-<<"  macro init  (i)     i                               // Initialize        \n"
-<<"  macro Zk            P1                              // FE space          \n";
+ if(!vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+ writeIt
+ "                                                                              \n"
+ "//---------------------------Non-linear macros---------------------------//   \n"
+ "                                                                              \n"
+ "  macro def2  (i) [ i , i#1 ]                         // Vect. field          \n"
+ "  macro init2 (i) [ i ,  i  ]                         // Vect. initialize     \n"
+ "  macro def   (i)     i                               // Scalar field         \n"
+ "  macro init  (i)     i                               // Initialize           \n"
+ "  macro Zk            P1                              // FE space             \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)write
-<<"                                                                           \n"
-<<"//------------------------------Hplus macros-------------------------------\n"
-<<"                                                                           \n"
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
+ writeIt
+ "                                                                              \n"
+ "//------------------------------Hplus macros-------------------------------   \n"
+ "                                                                              \n"
+ "  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0]            \n"
+ "                                     + epsilon(i)[1]*epsilon(i)[1] )          \n"
+ "                   + lambda*epsilon(i)[0]*epsilon(i)[1]                       \n"
+ "                   + mu*epsilon(i)[2]*epsilon(i)[2]                           \n"
+ "                  )                                           // Hplus        \n"
+ "                                                                              \n";
+
+
 /************************OLD METHOD*************************************************
 <<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )     // Sigma_xx   \n"
 <<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy   \n"
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), SQ2*sxy(i) ]        // Sigma            \n"
 <<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus      \n"
-/************************OLD METHOD*************************************************/  
-<<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0]         \n"
-<<"                                     + epsilon(i)[1]*epsilon(i)[1] )       \n"
-<<"                   + lambda*epsilon(i)[0]*epsilon(i)[1]                    \n"
-<<"                   + mu*epsilon(i)[2]*epsilon(i)[2]                        \n"
-<<"                  )                                           // Hplus     \n"
-<<"                                                                           \n";
-
+/************************OLD METHOD*************************************************/ 
 
 /************************OLD METHOD*************************************************
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
@@ -143,42 +170,43 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n";
 /************************OLD METHOD*************************************************/
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
- "                                                                             \n"
- "//------------------------------Hplus macros-------------------------------//\n"
- "                                                                             \n"
- "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){         \n"
- "    real[int] par = [lambda,mu];                                             \n"
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ writeIt
+ "                                                                              \n"
+ "//------------------------------Hplus macros-------------------------------// \n"
+ "                                                                              \n"
+ "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){          \n"
+ "    real[int] par = [lambda,mu];                                              \n"
 <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps12] = [dx(uold),dy(uold1),0.5*(dx(uold1)+dy(uold))]; \n": "")
 <<(!vectorial ? "    Sh0 [Eps1,Eps2,Eps12] = [dx(u),dy(u1),0.5*(dx(u1)+dy(u))];\n": "")
-<<"                                                                            \n"
- "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ;\n"
- "  }//                                                                        \n" 
- "                                                                             \n";
+<<"                                                                             \n"
+ "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ; \n"
+ "  }//                                                                         \n" 
+ "                                                                              \n";
 
-
-
-if(Prblm=="damage" && Model=="Mazar")write
-<<"                                                                            \n"
-<<"//-----------------------Stess calculation macro--------------------------//\n"
-<<"                                                                            \n"
-<<"  macro stress(i,lambdaVal,muVal)                                           \n"
-<<"     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[0],       \n"
-<<"     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1] ,       \n"
-<<"     2.*muVal*epsilon(i)[2]]//                                              \n"
-<<"                                                                            \n";
+ if(Prblm=="damage" && Model=="Mazar")
+ writeIt
+ "                                                                              \n"
+ "//-----------------------Stess calculation macro--------------------------//  \n"
+ "                                                                              \n"
+ "  macro stress(i,lambdaVal,muVal)                                             \n"
+ "     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[0],         \n"
+ "     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1] ,         \n"
+ "     2.*muVal*epsilon(i)[2]]//                                                \n"
+ "                                                                              \n";
   
-if(Sequential)write
-<<"                                                                            \n"
-<<"//--------------------Sequential remapping macros-------------------------//\n"
-<<"                                                                            \n"
-<<"  macro meshN()mesh                   // Two-dimensional problem            \n"
-<<"  macro intN()int2d                   // Two-dimensional integral           \n"
-<<"  macro intN1()int1d                  // One-dimensional integral           \n"
-<<"  macro readmeshN()readmesh           // Two-dimensional 'mesh' reader      \n"
-<<"  macro gmshloadN()gmshload           // Two-dimensional 'msh' reader       \n"
-<<"  macro grad(i) [dx(i),dy(i)]         // two-dimensional gradient           \n"
-<<"                                                                            \n";
+ if(Sequential)
+ writeIt 
+ "                                                                              \n"
+ "//--------------------Sequential remapping macros-------------------------//  \n"
+ "                                                                              \n"
+ "  macro meshN()mesh                   // Two-dimensional problem              \n"
+ "  macro intN()int2d                   // Two-dimensional integral             \n"
+ "  macro intN1()int1d                  // One-dimensional integral             \n"
+ "  macro readmeshN()readmesh           // Two-dimensional 'mesh' reader        \n"
+ "  macro gmshloadN()gmshload           // Two-dimensional 'msh' reader         \n"
+ "  macro grad(i) [dx(i),dy(i)]         // two-dimensional gradient             \n"
+ "                                                                              \n";
 
 } //-- [if loop terminator] space==2 ended --//
 
