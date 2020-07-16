@@ -64,42 +64,40 @@ install-exec-local:
 	@echo "*============================================================*"
 	@echo ""
 	
-install-Super-Comp:
-	@mkdir -p ${prefix}/PSD-Super-Comp
-	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes		
-	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes/2D
-	@mkdir -p ${prefix}/PSD-Super-Comp/Meshes/3D
-	@mkdir -p ${prefix}/PSD-Super-Comp/Plugins
-	@mkdir -p ${prefix}/PSD-Super-Comp/Solver
-#	@mkdir -p ${prefix}/PSD-Super-Comp/Solver/ScriptModules
-	@mkdir -p ${prefix}/PSD-Super-Comp/Doc	
-	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/2D/.	
-	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD-Super-Comp/Meshes/3D/.
+install-devel:
+	@mkdir -p ${prefix}/PSD-devel
+	@mkdir -p ${prefix}/PSD-devel/Meshes
+	@mkdir -p ${prefix}/PSD-devel/PSD_PreProcess-devel					
+	@mkdir -p ${prefix}/PSD-devel/Meshes/2D
+	@mkdir -p ${prefix}/PSD-devel/Meshes/3D
+	@mkdir -p ${prefix}/PSD-devel/Plugins
+	@mkdir -p ${prefix}/PSD-devel/Solver
+	@mkdir -p ${prefix}/PSD-devel/Doc	
+	@cp  ./data/meshes/2D/Geo-Files/*.msh ${prefix}/PSD-devel/Meshes/2D/.
+	@cp  ./data/meshes/2D/Geo-Files/*.geo ${prefix}/PSD-devel/Meshes/2D/.			
+	@cp  ./data/meshes/3D/Geo-Files/*.msh ${prefix}/PSD-devel/Meshes/3D/.
+	@cp  ./data/meshes/3D/Geo-Files/*.geo ${prefix}/PSD-devel/Meshes/3D/.	
 	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so ${prefix}/PSD/Plugins/top-ii-vol.so	
 	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp ${prefix}/PSD/Plugins/gofastplugins.cpp	
 	@cp  ./src/plugins/paraview-output/cpp/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
-	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDmacro.edp
-	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-Super-Comp/Plugins/DDplotMacro.edp	
-	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-Super-Comp/Plugins/MacroTools.edp	
-#	@cp  ./src/ff-files/SolverGenerator.edp ${prefix}/PSD-Super-Comp/Solver/SolverGenerator.edp
-	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-Super-Comp/Solver/.	
-#	@cp  ./src/scripts/* ${prefix}/PSD-Super-Comp/Solver/ScriptModules/.
-	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-Super-Comp/Solver/PSD_PreProcess
-	@cp  ./man/*.html ${prefix}/PSD-Super-Comp/Doc/.
-	@cp  ./man/*.pdf ${prefix}/PSD-Super-Comp/Doc/.
-	@cp  ./man/*.png  ${prefix}/PSD-Super-Comp/Doc/.	
+	@cp  ./src/plugins/paraview-output/cpp/iovtk.cpp ${prefix}/PSD/Plugins/iovtk.cpp	
+	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD-devel/Plugins/DDmacro.edp
+	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD-devel/Plugins/DDplotMacro.edp	
+	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-devel/Plugins/MacroTools.edp	
+	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-devel/Solver/.	
+	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-devel/Solver/PSD_PreProcess
+	@cp  ./src/psd-preprocessor/*.cpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.	
+	@cp  ./src/psd-preprocessor/*.hpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.
+	@cp  ./etc/Makefile-psd-preprocess-devel ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile					
+	@cp  ./man/*.html ${prefix}/PSD-devel/Doc/.
+	@cp  ./man/*.pdf ${prefix}/PSD-devel/Doc/.
+	@cp  ./man/*.png  ${prefix}/PSD-devel/Doc/.	
 	@echo "  			  "
 	@echo "*============================================================*"
-	@echo " Finished installing  PSD version 2.0			  "
-	@echo "  			  						  "			
-	@echo " ****Note****								  "
-	@echo "  			  						  "			
-	@echo " # You still need to manullay install the plugins in the plugins folder	  "			
-	@echo " # Once PSD is trasfered on the Super-computer goto the plugins folder &  "
-	@echo "    $ make plugins 	  						  "	
-	@echo "  			  						  "				
+	@echo " Finished installing  PSD version 2.0	developers	edition"
 	@echo "*============================================================*"
-	@echo "  									  "	
+	@echo ""	
 	
 check-local: 				
 	@echo ""

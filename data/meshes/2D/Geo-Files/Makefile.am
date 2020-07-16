@@ -54,11 +54,17 @@ install-exec-local:
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
 	@ls | egrep "^sparsity.msh" | xargs -I {} mv {} ../Meshes/.
 	@ls | egrep "^Notched-Plate.msh" | xargs -I {} mv {} ../Meshes/.		
-#	@mv bar.msh ../Meshes/bar.msh
-#	@mv Notched-Plate.msh ../Meshes/Notched-Plate.msh	
-#	@mv sparsity.msh ../Meshes/sparsity.msh	
-#	@mv tensile-crack.msh ../Meshes/tensile-crack.msh	
-
+	
+install-devel-local:
+	@mkdir -p ../Meshes
+	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.	
+	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.	
+	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
+	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^sparsity.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^Notched-Plate.msh" | xargs -I {} mv {} ../Meshes/.
+	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

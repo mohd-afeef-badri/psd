@@ -39,6 +39,14 @@ install-exec-local:
 	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.		
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
+
+install-devel-local:
+	@mkdir -p ../Meshes
+	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.		
+	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.		
+	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
+	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
 	
 clean-local:
 	@echo ""
