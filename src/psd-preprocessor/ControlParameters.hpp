@@ -316,21 +316,32 @@ if(Prblm=="soildynamics")
 
  writeIt
  "//============================================================================\n"
- "// -------Paraxial boundary-condition parameters-------                       \n"
+ "//        -------Paraxial boundary-condition parameters-------                \n"
+ "// -------------------------------------------------------------------        \n"
+ "// PAlabels : is the vector of surface mesh labels that participate as        \n"
+ "//            absorbing boundaries (via paraxial elements)                    \n"
+ "// LoadLabels : is the vector of surface mesh labels to which external        \n"
+ "//              force is applied to                                           \n"
+ "// v1in : is a time dependent sinusoidal loading function ( traction )        \n"
+ "//        which exists for time (tt <= 1 sec)                                 \n"
  "//============================================================================\n"
  "                                                                              \n";
 
  if(spc==2)
   writeIt
-  "  int [int]   PAlabels = [2,4,5];   \t// Vector of Paraxial load             \n"
-  "  int [int]   LoadLabels = [3];   \t// Vector of Paraxial load               \n"
+  "  int [int]   PAlabels = [ 2 ,      // Left-border label                     \n"
+  "                           4 ,      // Right-border label                    \n"
+  "                           5 ];     // Bottom-border label                   \n"
+  "                                                                             \n"
+  "  int [int]   LoadLabels = [ 5      // Bottom-border label                   \n"
+  "                              ];                                             \n"
   "  real tt;                                                                   \n"
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n";
 
  if(spc==3)
   writeIt
-  "  int [int]   PAlabels = [1,2,3,5];   \t// Vector of Paraxial load           \n"
-  "  int [int]   LoadLabels = [4];   \t// Vector of Paraxial load               \n"
+  "  int [int]   PAlabels = [1,2,3,5];                                          \n"
+  "  int [int]   LoadLabels = [4];                                              \n"
   "  real tt;                                                                   \n"
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n";
 
