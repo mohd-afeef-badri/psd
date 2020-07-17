@@ -70,6 +70,11 @@ if(!Sequential){
   " fespace Wh0    ( Th , P0 );            // Energy decomposition field          \n"
   " fespace Sh0    ( Th , Sk );            // Strain vector FE space              \n";
 
+ if(Prblm=="soildynamics" && Model=="Hujeux")
+  writeIt    
+  " fespace Q3vh   ( Th , Sk );            // Quadrature 3  vector FE space       \n"
+  " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";  
+  
  if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || plotAll)
   writeIt
   " fespace VhPlt  ( Th , P1 );            // Damage field    FE space            \n";

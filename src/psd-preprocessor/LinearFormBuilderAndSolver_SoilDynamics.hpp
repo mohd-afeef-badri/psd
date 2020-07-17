@@ -269,11 +269,15 @@ if(Model=="pseudo-nonlinear")write
 
 if(Model=="Hujeux")write
 <<"                                                                                \n"
-<<"  //---------update Nonlinear displacement-----------//                         \n"
+<<"  //---------update nonlinear displacement-----------//                         \n"
 <<"                                                                                \n"
 <<"  uNL[] += du[];                                                                \n"
 <<"                                                                                \n"
-<<"  //------Newton-Raphsons Error calculation---------//                          \n"
+<<"  //------------calculate stress vector--------------//                         \n"
+<<"                                                                                \n"
+<<"  calculateStress(Sig,uNL,lambda,mu);                                           \n"
+<<"                                                                                \n"
+<<"  //------Newton-Raphsons error calculation---------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
 <<"  real err1Gather,  err1Loc ;                                                   \n"
@@ -286,11 +290,11 @@ if(Model=="Hujeux")write
 <<"                                                                                \n"               
 <<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
-<<"  //--------------- Convergence conditional---------------------//              \n"
+<<"  //--------------- convergence conditional---------------------//              \n"
 <<"                                                                                \n"
 <<"  if(err1Gather < 1e-5 || k==4){                                                \n"
 <<"                                                                                \n"
-<<"  //------------------Screen output norm----------------------//                \n"
+<<"  //------------------screen output norm----------------------//                \n"
 <<"                                                                                \n"
 <<"   if(mpirank==0)                                                               \n"
 <<"    cout.scientific << \"NL iteration number :  [ \"  << k                      \n"

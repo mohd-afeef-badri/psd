@@ -48,6 +48,33 @@ if(spc==2)
  writeIt  
  "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
 
+ if(Prblm=="soildynamics" && Model=="Hujeux")
+ writeIt  
+ "                                                                              \n"  
+ "  macro Sk [ FEQF1, FEQF1 , FEQF1 ]       // Quadrature element space order 3 \n"
+ "  macro defSh (i) [ i , i#1, i#2 ]        // 3rd order Vect. field definition \n"
+ "                                                                              \n" 
+ "  macro Ik [FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
+ "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
+ "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1]// Quadrature element space order 25\n"
+ "  macro defIh (i) [ i,        i#1,i#2,i#3,i#4,i#5,i#6,i#7,i#8,i#9,i#10,       \n"
+ "                     i#11,i#12,i#13,i#14,i#15,i#16,i#17,i#18,i#19,i#20,       \n"
+ "                     i#21,i#22,i#23,i#24]// 25th order Vect. field definition \n"
+ "                                                                              \n"
+ "                                                                              \n"
+ "  macro calculateStress(i,j,lambdaVal,muVal){                                 \n"
+ "     defSh (i) = [ lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dx(j),                  \n"
+ "                   lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dy(j#1) ,               \n"
+ "                   muVal*(dx(j#1)+dy(j))];                                    \n"
+ "     }//                                                                      \n"
+ "                                                                              \n"
+ "  macro calculateStrain(i,j){                                                 \n"
+ "     defSh (i) = [ dx(j), dy(j#1), 0.5*(dx(j#1)+dy(j))];                      \n"
+ "     }//                                                                      \n"   
+ "                                                                              \n"
+ "  macro Epsl(i) [dx(i), dy(i#1), (dy(i)+dx(i#1))/2.]   // Strain definition   \n" 
+ "                                                                              \n";
+
  if(useGFP && Prblm=="damage" && Model=="Mazar")
  writeIt
  "  macro Sk           [ P0, P0 , P0  ]       // Third order strain vector     \n"
@@ -359,8 +386,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
  "                                                                            \n"
  "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){        \n"
  "    real[int] par = [lambda,mu];                                            \n"
- <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u),dz(u),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")
- <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold),dz(uold),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<< 
+ <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u1),dz(u2),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")
+ <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold1),dz(uold2),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<< 
  "                                                                            \n"
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par); \n"
  "  }//                                                                       \n" 

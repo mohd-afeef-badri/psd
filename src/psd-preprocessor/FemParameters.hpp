@@ -127,6 +127,16 @@ if(Model=="pseudo-nonlinear" || Model=="Hujeux" )
  "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
  "      def(DPspc) ;      // Partition of unity field for integral               \n"
  "                                                                               \n";
+ 
+ if(Model=="Hujeux")
+ writeIt
+ "                                                                               \n"
+ "  Q3vh  defSh(Sig),      // Three stress components                            \n" 
+ "        defSh(Eps);      // Three strain components                            \n"
+ "                                                                               \n"
+ "  Q25vh defIh(Iv);       // 25 component internal variables components         \n"
+ "                                                                               \n";
+     
 }
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
