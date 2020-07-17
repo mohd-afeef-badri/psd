@@ -1,7 +1,9 @@
-// LAWDRIVER: constitutive model driver
-// OS : Linux - Windows
-// Auteur : Evelyne FOERSTER
-// Version initiale (1.0) : mai 2020
+//*-------------------------------------------------------------------------------------*/
+// Hujeux Constitutive Model (ECP family models): 4 yielding bounding surfaces
+//                         (3 deviatoric + 1 isotropic), strain hardening
+// Author: Evelyne FOERSTER
+// Initial Version: May 2020
+//*-------------------------------------------------------------------------------------*/
 
 #if !defined(__HUJEUX_H__)
 #define __HUJEUX_H__
@@ -14,6 +16,7 @@ extern const int NHISTHUJ , // nb of internal variables (history) for Hujeux
 ///////////////////////////////////////////////////////////////////////////////
 // External Classes used in this file
 
+class Real2;
 class Real3;
 class Real3x3;
 // see utils.h for definition
@@ -165,7 +168,7 @@ public:
 	// Methodes
 //	HujeuxLaw& operator=(const HujeuxLaw&);
 	
-	static Real get_dev(const Tensor2&, bool /*is_sig*/ = true);
+//	static Real get_dev(const Tensor2&, bool /*is_sig*/ = true);
 	void init(const dvector& /*param*/);         
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);

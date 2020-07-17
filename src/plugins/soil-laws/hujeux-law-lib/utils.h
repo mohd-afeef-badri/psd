@@ -45,7 +45,7 @@ extern bool		operator!=(const dvector&, const dvector&);
 //extern void		AfficheMessage(const char*);
 //extern string	makelower(const char*);
 
-extern const Real	EPS; //, TOL, TempsPause, facHour, facMin, facDay;             ///////// CHECK CEHCK
+extern const Real	EPS, RAD;
 extern char		szout[];
 extern string	ferrlog;
 
@@ -117,6 +117,8 @@ typedef vector<Real2> VecReal2;
 //////////////////////////////////////////////////////////////////////
 // class Real3: 3D real vector same as Real3 from Arcane
 //
+class Real3x3;
+
 class Real3
 {
 public:
@@ -185,6 +187,8 @@ public:
 /*---------------------------------------------------------------------------*/
     friend Real3 operator*(const Real3&, const Real&);
 /*---------------------------------------------------------------------------*/
+    friend Real3x3 tensor_prod(Real3, Real3);
+/*---------------------------------------------------------------------------*/
     friend Real3 operator/(const Real3&, const Real&);
 /*---------------------------------------------------------------------------*/
     friend bool operator<(const Real3&, const Real3&);
@@ -247,8 +251,6 @@ public:
     friend Real3x3 operator/(const Real3x3&, const Real&);
 /*---------------------------------------------------------------------------*/
     friend bool operator<(const Real3x3&, const Real3x3&);
-/*---------------------------------------------------------------------------*/
-    friend Real3x3 tensor_prod(Real3, Real3);
 /*---------------------------------------------------------------------------*/
     friend Real3x3 matrix3x3Transpose(const Real3x3&);
 /*---------------------------------------------------------------------------*/
@@ -346,13 +348,15 @@ public:
 /*---------------------------------------------------------------------------*/
     friend Real trace(const Tensor2&);
 /*---------------------------------------------------------------------------*/
-    friend Tensor2 operator+(const Tensor2&,const Tensor2&);
+    friend Tensor2 operator+(const Tensor2&, const Tensor2&);
 /*---------------------------------------------------------------------------*/
     friend bool operator==(const Tensor2&, const Tensor2&);
 /*---------------------------------------------------------------------------*/
     friend bool operator!=(const Tensor2&, const Tensor2&);
 /*---------------------------------------------------------------------------*/
-    friend Tensor2 operator*(const Tensor2&,const Real&);
+    friend Tensor2 operator*(const Tensor2&, const Real&);
+/*---------------------------------------------------------------------------*/
+    friend Tensor2 operator*(const Real&, const Tensor2&);
 };
 
 

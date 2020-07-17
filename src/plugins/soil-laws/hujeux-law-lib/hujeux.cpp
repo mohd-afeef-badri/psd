@@ -1,5 +1,9 @@
-// Hujeux Constitutive Model (ECP family models): 4 yielding bounding surfaces (3 deviatoric + 1 isotropic), strain hardening
-// Developed by Evelyne FOERSTER - 2019
+//*-------------------------------------------------------------------------------------*/
+// Hujeux Constitutive Model (ECP family models): 4 yielding bounding surfaces
+//                         (3 deviatoric + 1 isotropic), strain hardening
+// Author: Evelyne FOERSTER
+// Initial Version: May 2020
+//*-------------------------------------------------------------------------------------*/
 
 #include "stdafx.h"
 
@@ -7,11 +11,10 @@ using namespace std;
 
 //extern void		gauss(double**, double*, double*, const int&);
 extern void		gauss(Real**, Real*, Real*, const int&);
-const Real	EPS  = 1.e-15,
-		    FTOL = 1.e-8,
-		    TOL  = 1.e-15,
-            Pa   = -1.e6,                      // Reference stress (in Pa)
-	        RAD  = acos(-1.) / 180.;
+const Real	EPS  = 1.e-15;
+const Real  FTOL = 1.e-8;
+const Real  Pa   = -1.e6;                      // Reference stress (in Pa)
+const Real  RAD = acos(-1.) / 180.;
 string 	    ferrlog("error.log");
 char	    szout[MAXBUFFER];
 //////////////////////////////////////////////////////////////////////////////////////
