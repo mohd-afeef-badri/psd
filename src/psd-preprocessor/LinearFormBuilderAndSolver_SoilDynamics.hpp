@@ -214,7 +214,17 @@ write
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                         )
 <<"                                                                                \n";
 
-if(doublecouple)
+if(doublecouple=="force-based")
+ writeIt
+ "                                                                                 \n"
+ "   if(t<.015){                                                                   \n" 
+ "      DcNorthSouth(DcLabelNorth,Vh,b,DcNorthPointCord,DcNorthCondition);         \n"
+ "      DcNorthSouth(DcLabelSouth,Vh,b,DcSouthPointCord,DcSouthCondition);         \n" 
+ "      DcEastWest(DcLabelEast,Vh,b,DcEastPointCord,DcEastCondition);              \n" 
+ "      DcEastWest(DcLabelWest,Vh,b,DcWestPointCord,DcWestCondition);              \n"     
+ "   }                                                                             \n" ;    
+ 
+if(doublecouple=="displacement-based")
  writeIt
  "                                                                                 \n"
  "   if(t<.015){                                                                   \n" 
@@ -222,7 +232,7 @@ if(doublecouple)
  "      DcNorthSouth(DcLabelSouth,Vh,ALoc,b,DcSouthPointCord,DcSouthCondition);    \n" 
  "      DcEastWest(DcLabelEast,Vh,ALoc,b,DcEastPointCord,DcEastCondition);         \n" 
  "      DcEastWest(DcLabelWest,Vh,ALoc,b,DcWestPointCord,DcWestCondition);         \n"     
- "   }                                                                             \n" ;    
+ "   }                                                                             \n" ; 
  
 write
 <<"                                                                                \n"

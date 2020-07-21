@@ -43,15 +43,17 @@ if(Prblm=="damage" && Model=="Mazar")
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name         \n";
 
-if(Prblm=="soildynamics")if(!doublecouple)
- writeIt
- "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name          \n";
-
-if(Prblm=="soildynamics")if(doublecouple)
- writeIt
- "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name       \n"; 
+if(Prblm=="soildynamics")
+ {
+ if(doublecouple=="force-based" || doublecouple=="displacement-based")
+  writeIt
+  "                                                                             \n"
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name      \n"; 
+ else 
+  writeIt
+  "                                                                             \n"
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name         \n";
+ } 
 
 
 
@@ -351,7 +353,7 @@ if(Prblm=="soildynamics")
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
   "                                                                               \n";
 
- if(doublecouple)
+ if(doublecouple=="force-based" || doublecouple=="displacement-based")
  writeIt
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
@@ -373,8 +375,8 @@ if(Prblm=="soildynamics")
  "        DcLabelWest  = 6;                                                     \n"  
  "                                                                              \n"
  "                                                                              \n" 
- "   real [int]   DcNorthPointCord = [5,6];                                     \n"
- "   real [int]   DcSouthPointCord = [5,5];                                     \n"
+ "   real [int]   DcNorthPointCord = [5.,6.];                                   \n"
+ "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.5,5.5];                                 \n"
  "   real [int]   DcWestPointCord  = [4.5,5.5];                                 \n"     
  "                                                                              \n"

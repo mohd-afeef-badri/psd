@@ -46,6 +46,8 @@
   
   -------------------------------------------------------------------------------------
 
+  -doublecouple    [string] Soil dynamics double couple. Use force-based|displacement-based.  
+  
   -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons.
 
   -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
@@ -58,33 +60,31 @@
 
   -------------------------------------------------------------------------------------
 
-  -help        [bool]     To activate helping message on the terminal. 
+  -help         [bool]     To activate helping message on the terminal. 
 
-  -plot        [bool]     To activate plotting routine.
+  -plot         [bool]     To activate plotting routine.
 
-  -debug       [bool]     To activate debug openGL plotting routine.
+  -debug        [bool]     To activate debug openGL plotting routine.
   
-  -useGFP      [bool]     To activate use of GoFastPlugins. A suite of c++ plugins.
+  -useGFP       [bool]     To activate use of GoFastPlugins. A suite of c++ plugins.
   
-  -timelog     [bool]     To setup time logging for various phases of the solver.  
+  -timelog      [bool]     To setup time logging for various phases of the solver.  
 
-  -useRCM      [bool]     To activate mesh level renumbering via Reverse Cuthill Mckee.   
+  -useRCM       [bool]     To activate mesh level renumbering via Reverse Cuthill Mckee.   
   
-  -pipegnu     [bool]     To activate realtime pipe plotting using GnuPlot.
+  -pipegnu      [bool]     To activate realtime pipe plotting using GnuPlot.
   
-  -bodyforce   [bool]     To activate volumetric source term (body force).
+  -bodyforce    [bool]     To activate volumetric source term (body force).
 
-  -vectorial   [bool]     To generate vectorial space solver for non-linear.
+  -vectorial    [bool]     To generate vectorial space solver for non-linear.
     
-  -supercomp   [bool]     To be used when using a cluster/supercomputer.
+  -supercomp    [bool]     To be used when using a cluster/supercomputer.
   
-  -fastmethod  [bool]     Fast method for linear elasticity (expanded material tensor).         
+  -fastmethod   [bool]     Fast method for linear elasticity (expanded material tensor).         
 
-  -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
-
-  -doublecouple[bool]     To activate double couple source for soildynamics.  
+  -energydecomp [bool]     To activate hybrid phase field energy decomposition.
     
-  -sequential  [bool]     To generate a sequential ff++ solver.
+  -sequential   [bool]     To generate a sequential ff++ solver.
 
 */
 
@@ -124,13 +124,13 @@ int main(int argc, char *argv[]){
   bool Sequential   = false;
   bool dirichletbc  = false;
   bool energydecomp = false;
-  bool doublecouple = false;  
 
   string Model                   = "hybrid-phase-field"; 
   string Solver                  = "cg"; 
   string PostProcess             = "u"; 
-  string Prblm                   = "linear-elasticity"; 
-  string Partitioner             = "parmetis";
+  string Prblm                   = "linear-elasticity";
+  string Partitioner             = "parmetis";   
+  string doublecouple            = "force-based";
   string Preconditioner          = "jacobi";
   string NonLinearMethod         = "Picard";
   string SubPreconditioner       = "ilu";
@@ -150,33 +150,33 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"       ) RCM            = true;      
-    if( argvdummy == "-help"         ) help           = true;              
-    if( argvdummy == "-debug"        ) debug          = true;
-    if( argvdummy == "-useGFP"       ) useGFP         = true;  
-    if( argvdummy == "-plot"         ) plotAll        = true;
-    if( argvdummy == "-pipegnu"      ) pipegnu        = true;
-    if( argvdummy == "-timepvd"      ) plotTime       = true;
-    if( argvdummy == "-testflags"    ) testflags      = true;
-    if( argvdummy == "-timelog"      ) timelog        = true;
-    if( argvdummy == "-vectorial"    ) vectorial      = true;  
-    if( argvdummy == "-bodyforce"    ) bodyforce      = true;
-    if( argvdummy == "-supercomp"    ) supercomp      = true;       
-    if( argvdummy == "-fastmethod"   ) fastmethod     = true;       
-    if( argvdummy == "-sequential"   ) Sequential     = true;
-    if( argvdummy == "-dirichletbc"  ) dirichletbc    = true;
-    if( argvdummy == "-energydecomp" ) energydecomp   = true;
-    if( argvdummy == "-doublecouple" ) doublecouple   = true;    
+    if( argvdummy == "-useRCM"       ) RCM                                 = true;      
+    if( argvdummy == "-help"         ) help                                = true;              
+    if( argvdummy == "-debug"        ) debug                               = true;
+    if( argvdummy == "-useGFP"       ) useGFP                              = true;  
+    if( argvdummy == "-plot"         ) plotAll                             = true;
+    if( argvdummy == "-pipegnu"      ) pipegnu                             = true;
+    if( argvdummy == "-timepvd"      ) plotTime                            = true;
+    if( argvdummy == "-testflags"    ) testflags                           = true;
+    if( argvdummy == "-timelog"      ) timelog                             = true;
+    if( argvdummy == "-vectorial"    ) vectorial                           = true;  
+    if( argvdummy == "-bodyforce"    ) bodyforce                           = true;
+    if( argvdummy == "-supercomp"    ) supercomp                           = true;       
+    if( argvdummy == "-fastmethod"   ) fastmethod                          = true;       
+    if( argvdummy == "-sequential"   ) Sequential                          = true;
+    if( argvdummy == "-dirichletbc"  ) dirichletbc                         = true;
+    if( argvdummy == "-energydecomp" ) energydecomp                        = true;
 
-    if( argvdummy == "-model"              ) Model                = argv[i+1];  
-    if( argvdummy == "-solver"             ) Solver               = argv[i+1];
-    if( argvdummy == "-problem"            ) Prblm                = argv[i+1];     
-    if( argvdummy == "-partitioner"        ) Partitioner          = argv[i+1];     
-    if( argvdummy == "-postprocess"        ) PostProcess          = argv[i+1];
-    if( argvdummy == "-preconditioner"     ) Preconditioner       = argv[i+1]; 
-    if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod      = argv[i+1];       
-    if( argvdummy == "-subpreconditioner"  ) SubPreconditioner    = argv[i+1];
-    if( argvdummy == "-timediscretization" ) TimeDiscretization   = argv[i+1];         
+    if( argvdummy == "-model"              ) Model                         = argv[i+1];  
+    if( argvdummy == "-solver"             ) Solver                        = argv[i+1];
+    if( argvdummy == "-problem"            ) Prblm                         = argv[i+1];     
+    if( argvdummy == "-partitioner"        ) Partitioner                   = argv[i+1];     
+    if( argvdummy == "-postprocess"        ) PostProcess                   = argv[i+1];
+    if( argvdummy == "-doublecouple"       ) doublecouple                  = argv[i+1];     
+    if( argvdummy == "-preconditioner"     ) Preconditioner                = argv[i+1]; 
+    if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod               = argv[i+1];       
+    if( argvdummy == "-subpreconditioner"  ) SubPreconditioner             = argv[i+1];
+    if( argvdummy == "-timediscretization" ) TimeDiscretization            = argv[i+1];         
 
     
   }
@@ -195,10 +195,10 @@ int main(int argc, char *argv[]){
 
   cout << "===================================================================" << endl;
   cout << "                        ___               __                       " << endl;
-  cout << "                      / __ \\   _____   __/  /                      " << endl;
+  cout << "                      / __ \\   _____   __/  /                     " << endl;
   cout << "                     / /_/ /  / ___/ / __  /                       " << endl;
   cout << "                    / ___ /  (__  ) / /_/ /                        " << endl;
-  cout << "                   /_/      /____/  \\___ /                         " << endl;
+  cout << "                   /_/      /____/  \\___ /                        " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 
@@ -221,6 +221,7 @@ int main(int argc, char *argv[]){
   cout << " partitioner is----------------------> "<<  Partitioner              << endl;
   cout << " solver is---------------------------> "<<  Solver                   << endl;
   cout << " postProcess is----------------------> "<<  PostProcess              << endl;
+  cout << " doublecouple is---------------------> "<<  doublecouple             << endl;  
   cout << " preconditioner is-------------------> "<<  Preconditioner           << endl;
   cout << " subPreconditioner is----------------> "<<  SubPreconditioner        << endl;
   cout << " timeDiscretization is---------------> "<<  TimeDiscretization       << endl;
@@ -245,7 +246,6 @@ int main(int argc, char *argv[]){
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
-  cout << " doublecouple is --------------------> " << doublecouple             << endl;  
   }
 
   cout << "                                                                   " << endl;

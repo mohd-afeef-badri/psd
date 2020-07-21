@@ -38,7 +38,12 @@ write
 <<"    - c[9]*(  PA0(aold)'*def(v)  )                                                              \n" 
 <<"  )                                                                                             \n";
 
-if(spc==2)if(!doublecouple)write
+if(doublecouple=="force-based" || doublecouple=="displacement-based"){
+write
+<<"                                                                                                \n";
+}
+else{
+if(spc==2)write
 <<"                                                                                                \n" 
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
@@ -50,7 +55,7 @@ if(spc==2)if(!doublecouple)write
 <<"          )                                                                                     \n" 
 <<"  )                                                                                             \n";
 
-if(spc==3)if(!doublecouple)write
+if(spc==3)write
 <<"                                                                                                \n" 
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
@@ -63,7 +68,7 @@ if(spc==3)if(!doublecouple)write
 <<"             +cs*(-N.x*N.z*0 - N.z*N.y*v1in + (1.-N.z*N.z)*0))*v2                               \n"
 <<"          )                                                                                     \n" 
 <<"  )                                                                                             \n";
-
+}
 
 if(Model=="pseudo-nonlinear")write
 <<"                                                                                                \n"
