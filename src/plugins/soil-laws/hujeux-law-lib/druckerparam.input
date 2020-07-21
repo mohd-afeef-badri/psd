@@ -1,0 +1,8 @@
+628.e6    290.e6       33       33     0.   30   0
+#
+# =================================================================================
+# Drucker-Prager (3D) model parameters :
+# 0-Ki 1-Gi 2-phi(°) 3-psi(°) 4-cohesion (Pa)  5-incmax  6-indaux
+# if plastic yielding: indaux = 0 => symmetric tangent stiffness matrix (keeping upper part)
+# else unsymmetric one
+# =================================================================================

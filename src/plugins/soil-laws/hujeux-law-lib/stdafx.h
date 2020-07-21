@@ -36,7 +36,7 @@
 #include <cfloat>
 #include <cmath>
 #include <string>	// pour les operations sur les strings (STL)
-#include <functional>	// pour les operations mathématiques (STL)
+#include <functional>	// pour les operations mathï¿½matiques (STL)
 #include <numeric> // pour les manipulations sur vecteurs (STL)
 #include <algorithm>
 #include <fstream>
@@ -49,6 +49,7 @@
 
 #include "utils.h"
 #include "hujeux.h"
+#include "druckerprager.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>

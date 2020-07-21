@@ -392,6 +392,17 @@ Real3 vec_prod(const Real3& v1, const Real3& v2)
 }
 
 /*---------------------------------------------------------------------------*/
+Real3x3 tensor_prod(Real3 u,Real3 v)
+{
+    Real3x3 mat;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            mat[i][j] = u[i] * v[j];
+
+    return mat;
+}
+
+/*---------------------------------------------------------------------------*/
 Real dot(const Real3& v1, const Real3& v2)
 {
     return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
@@ -560,17 +571,6 @@ bool operator<(const Real3x3& v1, const Real3x3& v2)
             return v1.y < v2.y;
     }
     return (v1.x < v2.x);
-}
-
-/*---------------------------------------------------------------------------*/
-Real3x3 tensor_prod(Real3 u,Real3 v)
-{
-    Real3x3 mat;
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
-            mat[i][j] = u[i] * v[j];
-
-    return mat;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -816,7 +816,7 @@ Real trace(const Tensor2& t) {
 }
 
 /*---------------------------------------------------------------------------*/
-Tensor2 operator+(const Tensor2& t1,const Tensor2& t2) {
+Tensor2 operator+(const Tensor2& t1, const Tensor2& t2) {
     dvector vec = t1.m_vec + t2.m_vec;
     return Tensor2(vec);
 }
@@ -832,7 +832,12 @@ bool operator!=(const Tensor2& t1, const Tensor2& t2) {
 }
 
 /*---------------------------------------------------------------------------*/
-Tensor2 operator*(const Tensor2& t1,const Real& x) {
+Tensor2 operator*(const Tensor2& t1, const Real& x) {
+    return Tensor2(t1.m_vec * x);
+}
+
+/*---------------------------------------------------------------------------*/
+Tensor2 operator*(const Real& x, const Tensor2& t1) {
     return Tensor2(t1.m_vec * x);
 }
 
