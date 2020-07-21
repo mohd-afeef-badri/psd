@@ -566,6 +566,51 @@ if(Sequential)write
 <<"      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";            \n"
 <<"  //                                                                       \n"
 <<"                                                                           \n";
+
+if(doublecouple){
+write
+<<"                                                                           \n"
+<<"//-----------------------Double Couple macro-----------------------------//\n"
+<<"                                                                           \n"
+<<"  macro DcNorthSouth(Dpointlab,Wh,A,b,PnV,Cond){                           \n"
+<<"    int count=0;                                                           \n"
+<<"        varf vlabs(def(u),def(v))                                          \n"
+<<"        = on( Dpointlab,                                                   \n"
+<<"              u  = -1*( x==PnV[0] && y==PnV[1]                             \n"
+<<(spc==3 ? "    && z==PnV[2] ) \n":   "                       )\n"            )
+<<"             );                                                            \n"
+<<"    real[int] absc=vlabs(0,Wh);                                            \n"
+<<"                                                                           \n"
+<<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
+<<"      if(abs(-1e+30-absc(i))==0 ){                                         \n"
+<<"        A(i,i)=tgv;                                                        \n"
+<<"        b[i]=Cond*tgv;                                                     \n"
+<<"        break;                                                             \n"
+<<"      }                                                                    \n"
+<<"    }                                                                      \n"
+<<"  }//                                                                      \n"
+<<"                                                                           \n"
+<<"  macro DcEastWest(Dpointlab,Wh,A,b,PnV,Cond){                             \n"
+<<"    int count=0;                                                           \n"
+<<"        varf vlabs(def(u),def(v))                                          \n"
+<<"        = on( Dpointlab,                                                   \n"
+<<(spc==3 ? "               u2 \n"    :   "               u1 \n"               )
+<<"                = -1*( x==PnV[0] && y==PnV[1]                               \n"
+<<(spc==3 ? "    && z==PnV[2] ) \n":                   ")\n"                   )
+<<"             );                                                            \n"
+<<"    real[int] absc=vlabs(0,Wh);                                            \n"
+<<"                                                                           \n"
+<<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
+<<"      if(abs(-1e+30-absc(i))==0 ){                                         \n"
+<<"        A(i,i)=tgv;                                                        \n"
+<<"        b[i]=Cond*tgv;                                                     \n"
+<<"        break;                                                             \n"
+<<"      }                                                                    \n"
+<<"    }                                                                      \n"
+<<"  }//                                                                      \n"
+<<"                                                                           \n";
+}
+
 }
 
 } //-- [ostream terminator]  macros.edp closed --//  

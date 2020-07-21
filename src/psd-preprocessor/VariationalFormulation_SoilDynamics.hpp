@@ -38,7 +38,7 @@ write
 <<"    - c[9]*(  PA0(aold)'*def(v)  )                                                              \n" 
 <<"  )                                                                                             \n";
 
-if(spc==2)write
+if(spc==2)if(!doublecouple)write
 <<"                                                                                                \n" 
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
@@ -50,7 +50,7 @@ if(spc==2)write
 <<"          )                                                                                     \n" 
 <<"  )                                                                                             \n";
 
-if(spc==3)write
+if(spc==3)if(!doublecouple)write
 <<"                                                                                                \n" 
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"

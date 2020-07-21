@@ -43,10 +43,15 @@ if(Prblm=="damage" && Model=="Mazar")
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name         \n";
 
-if(Prblm=="soildynamics")
+if(Prblm=="soildynamics")if(!doublecouple)
  writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name          \n";
+
+if(Prblm=="soildynamics")if(doublecouple)
+ writeIt
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name       \n"; 
 
 
 
@@ -343,8 +348,43 @@ if(Prblm=="soildynamics")
   "  int [int]   PAlabels = [1,2,3,5];                                          \n"
   "  int [int]   LoadLabels = [4];                                              \n"
   "  real tt;                                                                   \n"
-  "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n";
+  "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
+  "                                                                               \n";
 
+ if(doublecouple)
+ writeIt
+ "//============================================================================\n"
+ "//     -------Parameters for double couple point source-------                \n"
+ "// -------------------------------------------------------------------        \n"
+ "// DcLabelNorth : is the label of the (line/surface) containing the           \n"
+ "//                double couple north point. North point is  loaded           \n"
+ "//                in x direction. Idiom nomenclature applies to the           \n"
+ "//                south, east, and west points. (S/W loaded in z).            \n"
+ "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
+ "//                double couple north point. Idiom nomenclature ap-           \n" 
+ "//                lies to the south, east, and west points.                   \n"
+ "// DcNorthCondition : is the macro containing the applied condition           \n"
+ "//                of the double couple north point.                           \n"     
+ "//============================================================================\n"
+ "                                                                              \n"
+ "   int  DcLabelNorth = 6,                                                     \n"
+ "        DcLabelSouth = 7,                                                     \n"
+ "        DcLabelEast  = 7,                                                     \n"
+ "        DcLabelWest  = 6;                                                     \n"  
+ "                                                                              \n"
+ "                                                                              \n" 
+ "   int [int]   DcNorthPointCord = [5,6];                                      \n"
+ "   int [int]   DcSouthPointCord = [5,5];                                      \n"
+ "   int [int]   DcEastPointCord  = [5.5,5.5];                                  \n"
+ "   int [int]   DcWestPointCord  = [4.5,5.5];                                  \n"     
+ "                                                                              \n"
+ "                                                                              \n"
+ "   macro DcNorthCondition() 100.  //                                          \n"
+ "   macro DcSouthCondition() 100.  //                                          \n"
+ "   macro DcEastCondition()  100.  //                                          \n"
+ "   macro DcWestCondition()  100.  //                                          \n"   
+ "                                                                              \n"
+ "                                                                              \n";         
 
  writeIt
  "                                                                              \n";

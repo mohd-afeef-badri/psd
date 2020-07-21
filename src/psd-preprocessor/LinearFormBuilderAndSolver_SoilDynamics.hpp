@@ -185,10 +185,6 @@ if(!Sequential){write
 <<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
 <<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
-<<"                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
-<<"  changeOperator(A, ALoc);                                                      \n"
-<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
 <<"                                                                                \n";
 
 if(Model=="pseudo-nonlinear")write
@@ -216,6 +212,25 @@ write
 <<(timelog ? "  MPItimerbegin(\"RHS assembly\",t0)\n" : ""                         )
 <<"  b = soildynamics(0,Vh);                                                       \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                         )
+<<"                                                                                \n";
+
+if(doublecouple)
+ writeIt
+ "                                                                                 \n"
+ "   if(t<.015){                                                                   \n" 
+ "      DcNorthSouth(DcLabelNorth,Vh,ALoc,b,DcNorthPointCord,DcNorthCondition);    \n"
+ "      DcNorthSouth(DcLabelSouth,Vh,ALoc,b,DcSouthPointCord,DcSouthCondition);    \n" 
+ "      DcEastWest(DcLabelEast,Vh,ALoc,b,DcEastPointCord,DcEastCondition);         \n" 
+ "      DcEastWest(DcLabelWest,Vh,ALoc,b,DcWestPointCord,DcWestCondition);         \n"     
+ "   }                                                                             \n" ;    
+ 
+write
+<<"                                                                                \n"
+<<"  //-----------------Petsc Assembly-----------------//                          \n"
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
+<<"  changeOperator(A, ALoc);                                                      \n"
+<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
 <<"                                                                                \n"
