@@ -135,6 +135,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-vectorial`   | `[bool]`  | To use vectorial finite element method.			    |
 | `-sequential`  | `[bool]`  | To solve via a sequential solver.        |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
+| `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
 |  		 | 	     |                     					    |
 | `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |
 | `-tractionconditions`| `[int]`   | Number of Neumann/traction bounders. |

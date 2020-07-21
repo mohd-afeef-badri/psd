@@ -81,7 +81,9 @@
   -fastmethod  [bool]     Fast method for linear elasticity (expanded material tensor).         
 
   -energydecomp[bool]     To activate hybrid phase field energy decomposition.  
-  
+
+  -doublecouple[bool]     To activate double couple source for soildynamics.  
+    
   -sequential  [bool]     To generate a sequential ff++ solver.
 
 */
@@ -122,6 +124,7 @@ int main(int argc, char *argv[]){
   bool Sequential   = false;
   bool dirichletbc  = false;
   bool energydecomp = false;
+  bool doublecouple = false;  
 
   string Model                   = "hybrid-phase-field"; 
   string Solver                  = "cg"; 
@@ -163,6 +166,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-sequential"   ) Sequential     = true;
     if( argvdummy == "-dirichletbc"  ) dirichletbc    = true;
     if( argvdummy == "-energydecomp" ) energydecomp   = true;
+    if( argvdummy == "-doublecouple" ) doublecouple   = true;    
 
     if( argvdummy == "-model"              ) Model                = argv[i+1];  
     if( argvdummy == "-solver"             ) Solver               = argv[i+1];
@@ -241,6 +245,7 @@ int main(int argc, char *argv[]){
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
+  cout << " doublecouple is --------------------> " << doublecouple             << endl;  
   }
 
   cout << "                                                                   " << endl;

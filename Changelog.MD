@@ -21,6 +21,8 @@ All notable changes to PSD solver will be documented in this file.
 - New folder `tests` containing unit-tests for modules.
 - New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne Foerster).
 - New pseudo-nonlinear model for solving elastodynamics and soildynamics with nonlinear Newton-Raphsons.
+- Introduced double couple earthquake source boundary condition for soildynamics.
+- New flag `-doublecouple` [bool]  to activate double couple source for soildynamics.
 
 ### Changed
 - Moved to FreeFEM 4.6.
