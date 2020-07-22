@@ -399,40 +399,46 @@ if(dirichletconditions>=1)
  "//============================================================================\n"
  "// -------Dirichlet boundary-condition parameters-------                      \n"
  "//============================================================================\n"
- "                                                                              \n"
- "  int [int]   Dlabel = ["<<labelDirichlet<<"\t// Label for Dirichlet border 0 \n";
-
- for(int i=1; i<dirichletconditions; i++)
-  writeIt
-  "                       ,"<<labelDirichlet<<"\t// Label Dirichlet border "<<i<<"\n";
-
- writeIt
- "                       ];                                                     \n"
  "                                                                              \n";
-
-
+ 
+ int trickLoop = 1;
+ if(Prblm=="damage") trickLoop = 2;
+ 
  if(spc==2)
-  {
-  writeIt
-  "  real[int]   Dvalue = [ 0., 0.        // u1,u2 of Dirichlet border 0        \n";
-  for(int i=1; i<dirichletconditions; i++)
-   writeIt
-   "                        ,0., 0.        // u1,u2 of Dirichlet border "<<i<<" \n";
-  }
+ writeIt
+ "                                                                              \n"
+ " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
+ "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n"; 
+ for(int i=trickLoop; i<dirichletconditions; i++)
+  writeIt 
+ "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n";
 
  if(spc==3)
-  {
-  writeIt
-  "  real[int]   Dvalue = [ 0., 0., 0.  // u1,u2,u3 of Dirichlet border 0       \n";
-  for(int i=1; i<dirichletconditions; i++)
-   writeIt
-   "                        ,0., 0., 0. // u1,u2,u3 of Dirichlet border "<<i<<" \n";
-  }
-
  writeIt
- "                       ];                                                     \n"
+ "                                                                              \n"
+ " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
+ "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n"; 
+ for(int i=trickLoop; i<dirichletconditions; i++)
+  writeIt 
+ "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n";
+
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ writeIt  
+ "   macro  DirichletBorder1       2,      Uy=tr           //                   \n"
+ " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n" 
+ " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
+ " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"         
  "                                                                              \n";
+ else
+ writeIt  
+ " //macro  DirichletBorder1       1,2     Ux=1, Uy=0      //                   \n"
+ " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n" 
+ " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
+ " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"         
+ "                                                                              \n";  
  }
+ 
+ 
 
 if(dirichletpointconditions>=1)
  {

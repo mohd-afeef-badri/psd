@@ -128,52 +128,52 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 1 &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -energydecomp &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -energydecomp &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 -energydecomp &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 1 -energydecomp &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -useGFP &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -useGFP &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 -useGFP &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 1 -useGFP &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -energydecomp -useGFP &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 1 -energydecomp -useGFP &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FF) Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 -energydecomp -useGFP &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 1 -energydecomp -useGFP &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	$(FFMPI) -np 2  Main.edp -v 10 -ns -nw
 	@echo ""

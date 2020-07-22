@@ -57,29 +57,13 @@ write
 
 if(dirichletbc){
 
-if(spc==2)write
+for(int i=0; i<dirichletconditions; i++)
+write
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(Dlabel,u=Dvalue[0],u1=Dvalue[1])    // Displacement (Dirichlet)                      \n"
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(2,u1=tr)                          // Displacement (Dirichlet)                        \n";
-
-if(spc==3)write
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(Dlabel,u=Dvalue[0],u1=Dvalue[1],u2=Dvalue[2])    // Displacement (Dirichlet)         \n"
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"      + on(2,u1=tr)                                         // Displacement (Dirichlet)         \n";
+<<"      + on (DirichletBorder"<<i<<")                                                             \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
@@ -360,32 +344,13 @@ write
 
 if(dirichletbc){
 
-if(spc==2)write
+for(int i=0; i<dirichletconditions; i++)
+write
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(Dlabel,u=Dvalue[0],u1=Dvalue[1])    // Displacement (Dirichlet)                        \n"
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(2,u1=tr)                // Displacement (Dirichlet)                                    \n"
-<<"                                                                                                \n";
-
-if(spc==3)write
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(Dlabel,u=Dvalue[0],u1=Dvalue[1]                                                        \n"
-<<"                ,u2=Dvalue[2])    // Displacement (Dirichlet)                                   \n"
-<<"                                                                                                \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
-<<"    //--------------------------------------------------------------------------                \n"
-<<"    + on(2,u1=tr)                // Displacement (Dirichlet)                                    \n"
-<<"                                                                                                \n";
+<<"      + on (DirichletBorder"<<i<<")                                                             \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 

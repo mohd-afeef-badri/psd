@@ -31,6 +31,16 @@ if(spc==2)
  writeIt
  "  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used    \n"
  "  macro dimension 2                              // Two-dimensional problem  \n";
+ 
+ if(Prblm=="elastodynamics")
+ writeIt 
+ "  macro Ux   du                                  // x displacement           \n"
+ "  macro Uy   du1                                 // y displacement           \n"; 
+
+ if(Prblm=="linear-elasticity" || Prblm=="damage")
+ writeIt 
+ "  macro Ux    u                                  // x displacement           \n"
+ "  macro Uy    u1                                 // y displacement           \n";  
 
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
@@ -247,6 +257,18 @@ if(spc==3){write
 if(!Sequential)write
 <<"  macro partitioner "<<Partitioner<<"\t          // Mesh partitioner used   \n"
 <<"  macro dimension   3                          // Three-D problem           \n";
+
+ if(Prblm=="elastodynamics")
+ writeIt 
+ "  macro Ux   du                                  // x displacement           \n"
+ "  macro Uy   du1                                 // y displacement           \n"
+ "  macro Uz   du2                                 // z displacement           \n";  
+
+ if(Prblm=="linear-elasticity" || Prblm=="damage")
+ writeIt 
+ "  macro Ux    u                                  // x displacement           \n"
+ "  macro Uy    u1                                 // y displacement           \n"
+ "  macro Uz    u2                                 // z displacement           \n";  
 
 if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"

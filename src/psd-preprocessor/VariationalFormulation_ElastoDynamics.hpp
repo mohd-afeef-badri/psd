@@ -95,22 +95,27 @@ if(Model=="pseudo-nonlinear")write
 
 write
 <<"                                                                                                \n"
+<<"    //--------------------------------------------------------------------------                \n"
+<<"    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
+<<"    //--------------------------------------------------------------------------                \n"
 <<"    + intN1(Th,qforder=3,"<<labRface<<")                                                        \n"
 <<"  (                                                                                             \n"
 <<"     tr * v1                                           // Time dependent loading                \n"
 <<"  )                                                                                             \n"
-<<"                                                                                                \n"
+<<"                                                                                                \n";
+
+for(int i=0; i<dirichletconditions; i++)
+write
 <<"                                                                                                \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
 <<"    //--------------------------------------------------------------------------                \n"
-<<"    + on                                                                                        \n"
-<<"  (                                                                                             \n"
-<<"         "<<labLface<<"        ,                        // Constrain  (Dirichlet)               \n"
-<<"         du  = 0  ,                                                                             \n"
-<<"         du1 = 0                                                                                \n"
-<<"  )                                                                                             \n"
+<<"      + on (DirichletBorder"<<i<<")                                                             \n";
+
+write
 <<";                                                                                               \n"
 <<"                                                                                                \n";
+
+
 
 

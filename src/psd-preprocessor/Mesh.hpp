@@ -44,6 +44,15 @@ if(Sequential){
   writeIt
   " fespace Wh0  ( Th , P0 );            // Energy decomposition FE space         \n"
   " fespace Sh0  ( Th , Sk );            // Strain vector FE space                \n";
+  
+ if(Prblm=="damage" && Model=="Mazar")
+  writeIt
+  " fespace Wh0    ( Th , P0 );            // stress/strain/damage FE space       \n";
+
+ if(Prblm=="damage" && Model=="Mazar" && useGFP)
+  writeIt
+  " fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space       \n";
+    
 }
 
 if(!Sequential){

@@ -185,6 +185,7 @@ int main(int argc, char *argv[]){
   if(Prblm=="damage" && Model=="hybrid-phase-field")labelDirichlet=1;
   if(Prblm=="damage" && Model=="hybrid-phase-field")dirichletbc=true;
   if(Prblm=="damage" && Model=="Mazar")dirichletbc=true;
+  if(Prblm=="soildynamics")dirichletconditions      = 0;  
 
   int labLface=2;if(spc==3)labLface=1;  
   int labRface=4;if(spc==3)labRface=2;  
