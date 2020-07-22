@@ -32,4 +32,4 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o *.input *.output
+	rm  -f *~  *.so *.o *.output
