@@ -46,7 +46,7 @@ soil.msh: soil.geo
 	@echo ""
 
 soil-dc.msh: soil-dc.geo			
-	$(GMSH) -2 soil-dc.msh -o soil-dc.msh -format msh2 -v 0	
+	$(GMSH) -2 soil-dc.geo -o soil-dc.msh -format msh2 -v 0	
 	@echo ""
 	
 install-exec-local:
