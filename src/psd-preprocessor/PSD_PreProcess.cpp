@@ -130,7 +130,7 @@ int main(int argc, char *argv[]){
   string PostProcess             = "u"; 
   string Prblm                   = "linear-elasticity";
   string Partitioner             = "parmetis";   
-  string doublecouple            = "force-based";
+  string doublecouple            = "unused";
   string Preconditioner          = "jacobi";
   string NonLinearMethod         = "Picard";
   string SubPreconditioner       = "ilu";

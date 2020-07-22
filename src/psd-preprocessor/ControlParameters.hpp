@@ -49,7 +49,7 @@ if(Prblm=="soildynamics")
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name      \n"; 
- else 
+ if(doublecouple=="unused") 
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name         \n";

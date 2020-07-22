@@ -2,7 +2,18 @@
 // ------ Soil Dynamics for the LinearFormBuilderAndSolver.edp file ------ 
 //=====================================================================================
 
-if(Sequential){write    
+if(Sequential){write 
+<<"                                                                                \n"
+<<"//==============================================================================\n"
+<<"//  ------- Assembly for stiffness matrix A -------                             \n"
+<<"//==============================================================================\n"  
+<<"                                                                                \n"
+<<"  //-----------------Assembly for A-----------------//                          \n"
+<<"                                                                                \n"
+<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                         )
+<<"  A = soildynamics(Vh,Vh,solver=CG,sym=1);                                      \n"
+<<"  set(A,solver=CG,sym=1);                                                       \n"
+<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                         )
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -17,12 +28,6 @@ if(Sequential){write
 <<"                                                                                \n"
 <<"  tt  = t;                                                                      \n"
 <<"                                                                                \n"
-<<"  //-----------------Assembly for A-----------------//                          \n"
-<<"                                                                                \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                         )
-<<"  A = soildynamics(Vh,Vh,solver=CG,sym=1);                                      \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                         )
-<<"                                                                                \n"
 <<"  //-----------------Assembly for b-----------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                            )
@@ -32,7 +37,6 @@ if(Sequential){write
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""                               )
-<<"  set(A,solver=CG,sym=1);                                                       \n"
 <<"  du[] = A^-1*b;                                                                \n"
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                               )
 <<"                                                                                \n";
@@ -164,7 +168,30 @@ write
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
 
-if(!Sequential){write    
+if(!Sequential){
+
+if(doublecouple=="force-based" || doublecouple=="unused")
+write    
+<<"                                                                                \n"
+<<"//==============================================================================\n"
+<<"//  ------- Assembly for stiffness matrix A -------                             \n"
+<<"//==============================================================================\n"  
+<<"                                                                                \n"
+<<"  //-----------------Local Assembly-----------------//                          \n"
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
+<<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
+<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
+<<"                                                                                \n"
+<<"  //-----------------Petsc Assembly-----------------//                          \n"
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
+<<"  changeOperator(A, ALoc);                                                      \n"
+<<"  set(A,sparams =\"  -ksp_type cg   \");                                        \n"
+<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
+<<"                                                                                \n";
+
+write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -175,17 +202,15 @@ if(!Sequential){write
 <<"  if(mpirank==0)                                                                \n"
 <<"  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
 <<"  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;                     \n"
-<<"                                                                                \n"
+<<"                                                                                \n";
+
+if(doublecouple=="unused")write
 <<"  //--------------tt update for loading--------------//                         \n"
 <<"                                                                                \n"
 <<"  tt  = t;                                                                      \n"
-<<"                                                                                \n"
-<<"  //-----------------Assembly for A-----------------//                          \n"
-<<"                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
-<<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
-<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
 <<"                                                                                \n";
+
+
 
 if(Model=="pseudo-nonlinear")write
 <<"                                                                                \n"
@@ -227,25 +252,49 @@ if(doublecouple=="force-based")
 if(doublecouple=="displacement-based")
  writeIt
  "                                                                                 \n"
- "   if(t<.015){                                                                   \n" 
+ "   if(t<.02){                                                                    \n"
+ "                                                                                 \n"
+ "  //-----------------Local Assembly-----------------//                           \n"
+ "                                                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )<<
+ "  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                    \n"
+<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )<<
+ "                                                                                 \n"
+ "  //-----------------Petsc Assembly-----------------//                           \n"
+ "                                                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )<<
+ "  changeOperator(A, ALoc);                                                       \n"
+ "  set(A,sparams =\"  -ksp_type cg   \");                                         \n"
+<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
+ "                                                                                 \n"  
  "      DcNorthSouth(DcLabelNorth,Vh,ALoc,b,DcNorthPointCord,DcNorthCondition);    \n"
  "      DcNorthSouth(DcLabelSouth,Vh,ALoc,b,DcSouthPointCord,DcSouthCondition);    \n" 
  "      DcEastWest(DcLabelEast,Vh,ALoc,b,DcEastPointCord,DcEastCondition);         \n" 
  "      DcEastWest(DcLabelWest,Vh,ALoc,b,DcWestPointCord,DcWestCondition);         \n"     
- "   }                                                                             \n" ; 
+ "   }                                                                             \n" 
+ "  if(t==.02){                                                                     \n"
+ "                                                                                 \n"
+ "  //-----------------Local Assembly-----------------//                           \n"
+ "                                                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )<<
+ "  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                    \n"
+<<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )<<
+ "                                                                                 \n"
+ "  //-----------------Petsc Assembly-----------------//                           \n"
+ "                                                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )<<
+ "  changeOperator(A, ALoc);                                                       \n"
+ "  set(A,sparams =\"  -ksp_type cg   \");                                         \n"
+<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
+ "                                                                                 \n" 
+ "   }                                                                             \n"
+ "                                                                                 \n";     
  
 write
-<<"                                                                                \n"
-<<"  //-----------------Petsc Assembly-----------------//                          \n"
-<<"                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
-<<"  changeOperator(A, ALoc);                                                      \n"
-<<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"solving U\",t0)\n" : ""                            )
-<<"  set(A,sparams =\"  -ksp_type cg  -ksp_rtol 1e-9 \");                          \n"
 <<"  du[] = A^-1*b;                                                                \n"
 <<(timelog ? "  MPItimerend  (\"solving U\",t0)\n" : ""                            )
 <<"                                                                                \n";
