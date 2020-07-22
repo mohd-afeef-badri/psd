@@ -1,5 +1,5 @@
-LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo
-MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh quasistatic.msh soil.msh  
+LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo soil-dc.geo
+MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh  quasistatic.msh  soil.msh soil-dc.msh 
 	
 all-local: $(MESH_FILES) 
 	@echo ""
@@ -43,10 +43,15 @@ soil.msh: soil.geo
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0	
-	@echo ""		
+	@echo ""
+
+soil-dc.msh: soil-dc.geo			
+	$(GMSH) -2 soil-dc.msh -o soil-dc.msh -format msh2 -v 0	
+	@echo ""
 	
 install-exec-local:
 	@mkdir -p ../Meshes
+	@ls | egrep "^soil-dc.msh" | xargs -I {} mv {} ../Meshes/.		
 	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.	
 	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
 	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.	
@@ -57,6 +62,7 @@ install-exec-local:
 	
 install-devel-local:
 	@mkdir -p ../Meshes
+	@ls | egrep "^soil-dc.msh" | xargs -I {} mv {} ../Meshes/.		
 	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.	
 	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
 	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.	
