@@ -37,10 +37,6 @@ if(dirichletpointconditions>=1)write
 <<"                                                                                \n"
 <<"  Dpointlab.resize(0); PnV.resize(0);                                           \n";
 
-if(dirichletconditions>=1)write
-<<"                                                                                \n"
-<<"  Dlabel.resize(0); Dvalue.resize(0);                                           \n";
-
 
 if(tractionconditions>=1)write
 <<"                                                                                \n"
