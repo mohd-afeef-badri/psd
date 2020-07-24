@@ -589,6 +589,7 @@ if(Sequential)write
 <<"  //                                                                       \n"
 <<"                                                                           \n";
 
+/*
 if(doublecouple=="force-based"){
 write
 <<"                                                                           \n"
@@ -628,8 +629,9 @@ write
 <<"  }//                                                                      \n"
 <<"                                                                           \n";
 }
+*/
 
-if(doublecouple=="displacement-based")
+if(doublecouple=="displacement-based" || doublecouple=="force-based"){
 write
 <<"                                                                           \n"
   "//=============================================================================\n"
@@ -676,7 +678,10 @@ write
 <<"      if(PointMarker(i)>3.1 && PointMarker(i)<4.1)                         \n"                                                    
 <<"      {iW=i; Wrank=mpirank;}                                               \n" 
 <<"    }                                                                      \n"
-<<"  }//                                                                      \n"
+<<"  }//                                                                      \n";
+
+if(doublecouple=="displacement-based")
+write
 <<"                                                                           \n"
   "//=============================================================================\n"
   "//  ------ double couple Stiffness matrix penalization macro  -------          \n"
@@ -717,9 +722,9 @@ write
   "//  these degrees of freedom.                                                  \n"
   "// -------------------------------------------------------------------         \n"                                
   "//  RHS : is the right hand side vector  assembled from linear.                \n"
-  "//  CondN  : is boundary condition force/displacement applied  to the          \n"
-  "//           norther point of the double couple. Same is true for              \n"
-  "//           Conds, CondW, and CondE.                                          \n"          
+  "//  CondN  : is boundary condition displacement applied to the norther         \n"
+  "//           point of the double couple. Same is true for Conds, CondW,        \n"
+  "//           and CondE.                                                        \n"          
   "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
   "//        couple point. Same is true for iS, iE, iW.                           \n" 
   "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
@@ -742,6 +747,46 @@ write
 <<"     RHS[iW]= CondW*tgv;                                                   \n"
 <<"  //                                                                       \n"
 <<"                                                                           \n";
+
+if(doublecouple=="force-based")
+write
+<<"                                                                           \n"
+  "//=============================================================================\n"
+  "//       ------ double couple RHS force macro  -------                         \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  ApplyDoubleCoupleToRHS is a macro designed to  apply  the  double          \n"
+  "//  couple Dirichlet boundary condition. This  can be  applied easily          \n"
+  "//  by knowing the finite element degree of  freedom that corresponds          \n"
+  "//  to these  indices, and the MPI rank that  holds these degrees of           \n"
+  "//  freedom.                                                                   \n"
+  "// -------------------------------------------------------------------         \n"                                
+  "//  RHS : is the right hand side vector  assembled from linear.                \n"
+  "//  CondN  : is boundary condition force applied to the norther point          \n"
+  "//           of the double couple. Same is true for Conds, CondW, and          \n"
+  "//           CondE.                                                            \n"          
+  "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
+  "//        couple point. Same is true for iS, iE, iW.                           \n" 
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           degree of freedom of the  Northern  double couple point.          \n"
+  "//           Same is true for Srank, Erank, Wrank.                             \n"
+  "//=============================================================================\n"
+<<"                                                                           \n"  
+<<"  macro ApplyDoubleCoupleToRHS( RHS,                                       \n"
+<<"                                CondN,CondS,CondE,CondW,                   \n"
+<<"                                iN,   iS,   iE,   iW,                      \n"
+<<"                                Nrank,Srank,Erank,Wrank)                   \n"
+<<"   if(mpirank==Nrank)                                                      \n"
+<<"    RHS[iN]= CondN;                                                        \n"
+<<"   if(mpirank==Srank)                                                      \n"
+<<"     RHS[iS]= CondS;                                                       \n"
+<<"   if(mpirank==Erank)                                                      \n"
+<<"     RHS[iE]= CondE;                                                       \n"
+<<"   if(mpirank==Wrank)                                                      \n"
+<<"     RHS[iW]= CondW;                                                       \n"
+<<"  //                                                                       \n"
+<<"                                                                           \n";
+}
+
 
 /*
 <<"//-----------------------Double Couple macro-----------------------------//\n"

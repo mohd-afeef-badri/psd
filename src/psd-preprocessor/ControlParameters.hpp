@@ -353,6 +353,7 @@ if(Prblm=="soildynamics")
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
   "                                                                               \n";
 
+/*
  if(doublecouple=="force-based")
  writeIt
  "//============================================================================\n"
@@ -387,8 +388,9 @@ if(Prblm=="soildynamics")
  "   macro DcWestCondition()  -100.  //                                         \n"   
  "                                                                              \n"
  "                                                                              \n"; 
+*/
          
- if(doublecouple=="displacement-based")
+ if(doublecouple=="displacement-based" || doublecouple=="force-based")
  writeIt
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
@@ -409,7 +411,10 @@ if(Prblm=="soildynamics")
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
  "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"     
- "                                                                              \n"
+ "                                                                              \n";
+ 
+ if(doublecouple=="displacement-based")
+ writeIt 
  "                                                                              \n"
  "   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//                       \n"
  "   macro DcSouthCondition()  0.5*(1.+tanh(8*(t-0.2)))//                       \n"
@@ -418,6 +423,16 @@ if(Prblm=="soildynamics")
  "                                                                              \n"
  "                                                                              \n";  
 
+ if(doublecouple=="force-based")
+ writeIt 
+ "                                                                              \n"
+ "   macro DcNorthCondition() rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
+ "   macro DcSouthCondition()-rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
+ "   macro DcEastCondition() -rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
+ "   macro DcWestCondition()  rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"   
+ "                                                                              \n"
+ "                                                                              \n"; 
+ 
  writeIt
  "                                                                              \n";
  }

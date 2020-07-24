@@ -184,7 +184,7 @@ write
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
 <<"                                                                                \n";
 
-if(doublecouple=="displacement-based")
+if(doublecouple=="displacement-based" || doublecouple=="force-based"){
 write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
@@ -199,14 +199,22 @@ write
 <<"           iNorth,iSouth,iEast,iWest,                                           \n"
 <<"           Nrank,Srank,Erank,Wrank                                              \n"
 <<"   );                                                                           \n"
+<<"                                                                                \n";
+
+if(doublecouple=="displacement-based")
+write
 <<"                                                                                \n"
 <<"   ApplyDoubleCoupleToA(                                                        \n"
 <<"           ALoc,                                                                \n"
 <<"           iNorth,iSouth,iEast,iWest,                                           \n"
 <<"           Nrank,Srank,Erank,Wrank                                              \n"
-<<"   );                                                                           \n"
+<<"   );                                                                           \n";
+
+write
+<<"                                                                                \n"
 <<(timelog ? "  MPItimerend  (\"Applying double couple A\",t0)\n" : ""             )
 <<"                                                                                \n";
+}
 
 
 write
@@ -266,6 +274,7 @@ write
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                         )
 <<"                                                                                \n";
 
+/*
 if(doublecouple=="force-based")
  writeIt
  "                                                                                 \n"
@@ -275,8 +284,9 @@ if(doublecouple=="force-based")
  "      DcEastWest(DcLabelEast,Vh,b,DcEastPointCord,DcEastCondition);              \n" 
  "      DcEastWest(DcLabelWest,Vh,b,DcWestPointCord,DcWestCondition);              \n"     
  "   }                                                                             \n" ;    
+*/
 
-if(doublecouple=="displacement-based")
+if(doublecouple=="displacement-based" || doublecouple=="force-based" )
  writeIt
  "                                                                                 \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<< 
@@ -288,6 +298,7 @@ if(doublecouple=="displacement-based")
 <<"   );                                                                           \n"
 <<(timelog ? "  MPItimerend  (\"Applying double couple b\",t0)\n" : ""             )<<
  "                                                                                 \n";
+ 
  /*
 if(doublecouple=="displacement-based")
  writeIt
