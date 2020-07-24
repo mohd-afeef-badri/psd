@@ -375,7 +375,23 @@ if(Prblm=="soildynamics"){
   "                                                                               \n";
  }
  
-}
+ if(doublecouple=="force-based" || doublecouple=="displacement-based")
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "// ------- double couple  indexes  -------                                     \n"
+  "// -------------------------------------------------------------------         \n"
+  "// iNorth : is the integer index of the northern degree of freedom             \n"
+  "//          as it is assembled in the linear system. This is  used             \n"
+  "//          to force boundary coditions of double-couple whcih can             \n"
+  "//          be a point load or a force. Same is true for iSouth,..             \n"      
+  "//=============================================================================\n"
+  "                                                                               \n" 
+  "  int iNorth, iSouth, iEast, iWest;                                            \n"
+  "  int Nrank , Srank , Erank, Wrank;                                            \n";       
+ 
+ }
+ 
 
 if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){
  writeIt   

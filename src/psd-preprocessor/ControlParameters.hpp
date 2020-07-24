@@ -353,7 +353,7 @@ if(Prblm=="soildynamics")
   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
   "                                                                               \n";
 
- if(doublecouple=="force-based" || doublecouple=="displacement-based")
+ if(doublecouple=="force-based")
  writeIt
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
@@ -386,7 +386,37 @@ if(Prblm=="soildynamics")
  "   macro DcEastCondition()   100.  //                                         \n"
  "   macro DcWestCondition()  -100.  //                                         \n"   
  "                                                                              \n"
- "                                                                              \n";         
+ "                                                                              \n"; 
+         
+ if(doublecouple=="displacement-based")
+ writeIt
+ "//============================================================================\n"
+ "//     -------Parameters for double couple point source-------                \n"
+ "// -------------------------------------------------------------------        \n"
+ "// DClabelpoints: is the label of the (line/surface) containing the           \n"
+ "//                double couple points.If points are placed on more           \n"
+ "//                than one label then use it as a vector.                     \n" 
+ "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
+ "//                double couple north point. Idiom nomenclature ap-           \n" 
+ "//                lies to the south, east, and west points.                   \n"
+ "// DcNorthCondition : is the macro containing the applied condition           \n"
+ "//                of the double couple north point.                           \n"     
+ "//============================================================================\n"
+ "                                                                              \n"
+ "   int [int]   DClabelpoints = [6,7];                                         \n" 
+ "                                                                              \n" 
+ "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
+ "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
+ "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
+ "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"     
+ "                                                                              \n"
+ "                                                                              \n"
+ "   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//                       \n"
+ "   macro DcSouthCondition()  0.5*(1.+tanh(8*(t-0.2)))//                       \n"
+ "   macro DcEastCondition()   0.5*(1.+tanh(8*(t-0.2)))//                       \n"
+ "   macro DcWestCondition()  -0.5*(1.+tanh(8*(t-0.2)))//                       \n"   
+ "                                                                              \n"
+ "                                                                              \n";  
 
  writeIt
  "                                                                              \n";

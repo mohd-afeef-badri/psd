@@ -170,7 +170,7 @@ write
 
 if(!Sequential){
 
-if(doublecouple=="force-based" || doublecouple=="unused")
+
 write    
 <<"                                                                                \n"
 <<"//==============================================================================\n"
@@ -182,16 +182,43 @@ write
 <<(timelog ? "  MPItimerbegin(\"matrix assembly\",t0)\n" : ""                      )
 <<"  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )
+<<"                                                                                \n";
+
+if(doublecouple=="displacement-based")
+write
 <<"                                                                                \n"
-<<"  //-----------------Petsc Assembly-----------------//                          \n"
+<<"//==============================================================================\n"
+<<"//  ------- Applying double couple point boundary condition -------             \n"
+<<"//==============================================================================\n" 
+<<"                                                                                \n"
+<<(timelog ? "  MPItimerbegin(\"Applying double couple A\",t0)\n"  : ""             )
+<<"  GetDoubelCoupleIndicies(                                                      \n"
+<<"           DClabelpoints,                                                       \n"
+<<"           Vh,                                                                  \n"
+<<"           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
+<<"           iNorth,iSouth,iEast,iWest,                                           \n"
+<<"           Nrank,Srank,Erank,Wrank                                              \n"
+<<"   );                                                                           \n"
+<<"                                                                                \n"
+<<"   ApplyDoubleCoupleToA(                                                        \n"
+<<"           ALoc,                                                                \n"
+<<"           iNorth,iSouth,iEast,iWest,                                           \n"
+<<"           Nrank,Srank,Erank,Wrank                                              \n"
+<<"   );                                                                           \n"
+<<(timelog ? "  MPItimerend  (\"Applying double couple A\",t0)\n" : ""             )
+<<"                                                                                \n";
+
+
+write
+<<"                                                                                \n"
+<<"//==============================================================================\n"
+<<"//  ------- PETSc Assembly for stiffness matrix A -------                       \n"
+<<"//==============================================================================\n"  
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
 <<"  changeOperator(A, ALoc);                                                      \n"
 <<"  set(A,sparams =\"  -ksp_type cg   \");                                        \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )
-<<"                                                                                \n";
-
-write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -248,7 +275,20 @@ if(doublecouple=="force-based")
  "      DcEastWest(DcLabelEast,Vh,b,DcEastPointCord,DcEastCondition);              \n" 
  "      DcEastWest(DcLabelWest,Vh,b,DcWestPointCord,DcWestCondition);              \n"     
  "   }                                                                             \n" ;    
- 
+
+if(doublecouple=="displacement-based")
+ writeIt
+ "                                                                                 \n"
+<<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<< 
+ "   ApplyDoubleCoupleToRHS(                                                       \n"
+<<"           b,                                                                   \n"
+<<"           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,   \n"
+<<"           iNorth,iSouth,iEast,iWest,                                           \n"
+<<"           Nrank,Srank,Erank,Wrank                                              \n"
+<<"   );                                                                           \n"
+<<(timelog ? "  MPItimerend  (\"Applying double couple b\",t0)\n" : ""             )<<
+ "                                                                                 \n";
+ /*
 if(doublecouple=="displacement-based")
  writeIt
  "                                                                                 \n"
@@ -289,6 +329,7 @@ if(doublecouple=="displacement-based")
  "                                                                                 \n" 
  "   }                                                                             \n"
  "                                                                                 \n";     
+*/
  
 write
 <<"                                                                                \n"
