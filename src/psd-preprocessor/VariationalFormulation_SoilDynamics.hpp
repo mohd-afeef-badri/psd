@@ -38,11 +38,9 @@ write
 <<"    - c[9]*(  PA0(aold)'*def(v)  )                                                              \n" 
 <<"  )                                                                                             \n";
 
-if(doublecouple=="force-based" || doublecouple=="displacement-based"){
+if(doublecouple=="unused"){
 write
 <<"                                                                                                \n";
-}
-else{
 if(spc==2)write
 <<"                                                                                                \n" 
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"

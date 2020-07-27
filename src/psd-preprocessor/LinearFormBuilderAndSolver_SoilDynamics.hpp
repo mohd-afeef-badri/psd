@@ -467,20 +467,30 @@ write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
+if(PostProcess=="u")write
 <<"                 [uold,uold1,0]     ,                                           \n";
 if(PostProcess=="v")write
 <<"                 [vold,vold1,0]     ,                                           \n";
 if(PostProcess=="a")write 
 <<"                 [aold,aold1,0]     ,                                           \n";
-if(PostProcess=="uva")write
+if(PostProcess=="uv" || PostProcess=="vu")
+write
+<<"                 [uold,uold1,0]     ,                                           \n"
+<<"                 [vold,vold1,0]     ,                                           \n";
+if(PostProcess=="va" || PostProcess=="av")
+write
+<<"                 [uold,uold1,0]     ,                                           \n"
+<<"                 [aold,aold1,0]     ,                                           \n";
+if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+    PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
+write
 <<"                 [uold,uold1,0]     ,                                           \n"
 <<"                 [vold,vold1,0]     ,                                           \n"
 <<"                 [aold,aold1,0]     ,                                           \n";
 
 write
-<<"                 order=vtuorder     ,                                           \n"
-<<"                 dataname=\"U\"       ,                                         \n"
+<<"                 order = vtuorder   ,                                           \n"
+<<"                 dataname= namedata ,                                           \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n"
 <<(timelog ? "  MPItimerend(\"ParaView plotting\",t0)\n" : ""                      );
@@ -514,31 +524,30 @@ write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
+if(PostProcess=="u")write
 <<"                 [uold,uold1,uold2] ,                                           \n";
 if(PostProcess=="v")write
 <<"                 [vold,vold1,vold2] ,                                           \n";
-if(PostProcess=="a")write
+if(PostProcess=="a")write 
 <<"                 [aold,aold1,aold2] ,                                           \n";
-if(PostProcess=="uva")write
+if(PostProcess=="uv" || PostProcess=="vu")
+write
+<<"                 [uold,uold1,uold2] ,                                           \n"
+<<"                 [vold,vold1,vold2] ,                                           \n";
+if(PostProcess=="va" || PostProcess=="av")
+write
+<<"                 [uold,uold1,uold2] ,                                           \n"
+<<"                 [aold,aold1,aold2] ,                                           \n";
+if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+    PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
+write
 <<"                 [uold,uold1,uold2] ,                                           \n"
 <<"                 [vold,vold1,vold2] ,                                           \n"
 <<"                 [aold,aold1,aold2] ,                                           \n";
 
 write
-<<"                 order=vtuorder     ,                                           \n";
-
-if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
-<<"                 dataname=\"U\"       ,                                         \n";
-
-if(PostProcess=="v")write
-<<"                 dataname=\"U  V\" ,                                            \n";
-if(PostProcess=="a")write
-<<"                 dataname=\"U  A\" ,                                            \n";
-if(PostProcess=="uva")write
-<<"                 dataname=\"U  V  A\" ,                                         \n";
-
-write
+<<"                 order = vtuorder     ,                                         \n"
+<<"                 dataname = amedata   ,                                         \n"
 <<"                 append=true                                                    \n"
 <<"              );                                                                \n";
 

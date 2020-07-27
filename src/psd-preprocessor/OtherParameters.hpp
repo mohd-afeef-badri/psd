@@ -318,21 +318,44 @@ if(Prblm=="soildynamics"){
 
  if(Sequential)
   writeIt  
-  "  string   namedata = \"U\"              ;  // Name of export data              \n"
   "  bool     withsur  = true             ;  // With surfaces                      \n"
   "  int      iterout  = 0                ;  // Loop counter                       \n";
 
- if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")
+ if(PostProcess=="u")
   writeIt   
-  "  int[int] vtuorder = [1]                ;  // Solution export order            \n";
+  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
+  "  macro   namedata()\"U\"       // Name of export data                         \n";  
 
- if(PostProcess=="v" || PostProcess=="a")
-  writeIt  
-  "  int[int] vtuorder = [1,1]              ;  // Solution export order            \n";
+ if(PostProcess=="v")
+  writeIt   
+  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
+  "  macro   namedata()\"V\"       // Name of export data                         \n";  
 
- if(PostProcess=="uva")
+ if(PostProcess=="a")
   writeIt  
-  "  int[int] vtuorder = [1,1,1]            ;  // Solution export order            \n";
+  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
+  "  macro   namedata()\"A\"       // Name of export data                         \n";     
+
+ if(PostProcess=="uv" || PostProcess=="vu")
+  writeIt   
+  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
+  "  macro   namedata()\"U V\"       // Name of export data                        \n";
+  
+ if(PostProcess=="ua" || PostProcess=="au")
+  writeIt   
+  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
+  "  macro   namedata()\"U A\"       // Name of export data                        \n";
+
+ if(PostProcess=="va" || PostProcess=="av")
+  writeIt   
+  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
+  "  macro   namedata()\"V A\"       // Name of export data                        \n";
+
+ if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+    PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
+  writeIt  
+  "  int[int] vtuorder = [1,1,1]  ;  // Solution export order                      \n"
+  "  macro   namedata()\"U V A\"       // Name of export data                      \n";  
 
  if(plotAll && !Sequential)
   writeIt    
