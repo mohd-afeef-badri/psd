@@ -257,22 +257,36 @@ if(Prblm=="soildynamics")
  "//============================================================================\n"
  "// ------- Soil parameters -------                                            \n"
  "//============================================================================\n"
- "                                                                              \n"
- "  real rho  = 2500.0 ;              // Density                                \n"
- "                                                                              \n"
- "  real    mu                        // Lame parameter                         \n"
- "         ,lambda                    // Lame parameter                         \n"
- "         ;                                                                    \n"
- "                                                                              \n"
- "{                                                                             \n"
- "  real E  = 6.62e6  ,                // Modulus of Elasticity - [Pa]          \n"
- "       nu = 0.45    ;                // Poisson ratio - [-]                   \n"
- "                                                                              \n"
- "  mu     = E/(2.*(1.+nu))            ;                                        \n"
- "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
- "}                                                                             \n"
- "  real cs   = sqrt(mu/rho)               ,                                    \n"
- "       cp   = sqrt((lambda+(2.*mu))/rho) ;                                    \n"
+ "                                                                              \n";
+
+ if(doublecouple=="displacement-based" || doublecouple=="force-based")
+  writeIt
+  "  real rho  = 1800.0 ,                  // Density                          \n"
+  "       cs   = 2300.  ,                  // Secondary wave Velocity          \n"
+  "       cp   = 4000.  ;                  // Primary wave Velocity            \n"
+  "                                                                            \n" 
+  "  real    mu     =  cs*cs*rho,          // Lame parameter                   \n"
+  "          lambda =  cp*cp*rho - 2*mu;   // Lame parameter                   \n"
+  "                                                                            \n"; 
+ else 
+  writeIt
+  "  real rho  = 2500.0 ;              // Density                               \n"
+  "                                                                             \n"
+  "  real    mu                        // Lame parameter                        \n"
+  "         ,lambda                    // Lame parameter                        \n"
+  "         ;                                                                   \n"
+  "                                                                             \n"
+  "{                                                                            \n"
+  "  real E  = 6.62e6  ,                // Modulus of Elasticity - [Pa]         \n"
+  "       nu = 0.45    ;                // Poisson ratio - [-]                  \n"
+  "                                                                             \n"
+  "  mu     = E/(2.*(1.+nu))            ;                                       \n"
+  "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                       \n"
+  "}                                                                            \n"
+  "  real cs   = sqrt(mu/rho)               ,                                   \n"
+  "       cp   = sqrt((lambda+(2.*mu))/rho) ;                                   \n";
+ 
+ writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Dynamic parameters -------                                         \n"

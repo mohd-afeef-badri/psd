@@ -195,6 +195,7 @@ write
 <<"  GetDoubelCoupleIndicies(                                                      \n"
 <<"           DClabelpoints,                                                       \n"
 <<"           Vh,                                                                  \n"
+<<"           DcFlag,                                                              \n"
 <<"           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
 <<"           iNorth,iSouth,iEast,iWest,                                           \n"
 <<"           Nrank,Srank,Erank,Wrank                                              \n"
@@ -205,7 +206,7 @@ if(doublecouple=="displacement-based")
 write
 <<"                                                                                \n"
 <<"   ApplyDoubleCoupleToA(                                                        \n"
-<<"           ALoc,                                                                \n"
+<<"           ALoc,  DcFlag,                                                       \n"
 <<"           iNorth,iSouth,iEast,iWest,                                           \n"
 <<"           Nrank,Srank,Erank,Wrank                                              \n"
 <<"   );                                                                           \n";
@@ -291,7 +292,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based" )
  "                                                                                 \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<< 
  "   ApplyDoubleCoupleToRHS(                                                       \n"
-<<"           b,                                                                   \n"
+<<"           b, DcFlag,                                                           \n"
 <<"           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,   \n"
 <<"           iNorth,iSouth,iEast,iWest,                                           \n"
 <<"           Nrank,Srank,Erank,Wrank                                              \n"

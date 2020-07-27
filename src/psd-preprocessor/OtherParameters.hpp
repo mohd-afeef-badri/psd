@@ -379,16 +379,22 @@ if(Prblm=="soildynamics"){
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
-  "// ------- double couple  indexes  -------                                     \n"
+  "// ------- double couple  parameters  -------                                  \n"
   "// -------------------------------------------------------------------         \n"
   "// iNorth : is the integer index of the northern degree of freedom             \n"
   "//          as it is assembled in the linear system. This is  used             \n"
   "//          to force boundary coditions of double-couple whcih can             \n"
-  "//          be a point load or a force. Same is true for iSouth,..             \n"      
+  "//          be a point load or a force. Same is true for iSouth,..             \n"
+  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
+  "//           double couple points.                                             \n"   
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           degree of freedom of the  Northern  double couple point.          \n"
+  "//           Same is true for Srank, Erank, Wrank.                             \n"        
   "//=============================================================================\n"
   "                                                                               \n" 
   "  int iNorth, iSouth, iEast, iWest;                                            \n"
-  "  int Nrank , Srank , Erank, Wrank;                                            \n";       
+  "  int Nrank , Srank , Erank, Wrank;                                            \n"
+  "  bool DcFlag;                                                                 \n";  
  
  }
  
