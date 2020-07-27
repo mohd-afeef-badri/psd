@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
   bool vectorial    = false;
   bool bodyforce    = false;
   bool supercomp    = false;
-  bool fastmethod   = false;       
+  bool fastmethod   = true;       
   bool Sequential   = false;
   bool dirichletbc  = false;
   bool energydecomp = false;

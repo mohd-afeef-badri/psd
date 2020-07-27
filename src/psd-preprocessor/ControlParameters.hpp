@@ -20,6 +20,8 @@ writeIt
 "                                                                               \n"
 "//=============================================================================\n"
 "// ------- Mesh parameters (Un-partitioned) -------                            \n"
+"// -------------------------------------------------------------------         \n"
+"//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         \n"
 "//=============================================================================\n";
 
 
@@ -60,21 +62,24 @@ if(Prblm=="soildynamics")
 
 if(Prblm=="linear-elasticity")
  {
- writeIt
- "                                                                               \n"
- "//=============================================================================\n"
- "// ------- Material parameters -------                                         \n"
- "//=============================================================================\n"
- "                                                                               \n";
+
 
  if(fastmethod)
   writeIt
-  "  real    mu                        // Lame parameter                         \n"
-  "         ,lambda;                   // Lame parameter                         \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Material parameters -------                      \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  mu, lambda : Lame parameter of the material                               \n" 
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"                        
+  "//============================================================================\n"
+  "                                                                              \n"  
+  "  real    mu                                                                  \n"
+  "         ,lambda;                                                             \n"
   "                                                                              \n"
   "{                                                                             \n"
-  "  real E  = 200.e9  ,                // Modulus of Elasticity - [Pa]          \n"
-  "       nu = 0.3     ;                // Poisson ratio - [-]                   \n"
+  "  real E  = 200.e9  ,                                                         \n"
+  "       nu = 0.3     ;                                                         \n"
   "                                                                              \n"
   "  mu     = E/(2.*(1.+nu))            ;                                        \n"
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
@@ -84,10 +89,18 @@ if(Prblm=="linear-elasticity")
   {
   writeIt
   "                                                                              \n"
-  "  real a1,a2,a3        ;                // Building material tensor           \n"
+  "//============================================================================\n"
+  "//              ------- Building material tensor-------                       \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  mu, lambda : Lame parameter of the material                               \n" 
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n" 
+  "//  Mt : Material tensor                                                      \n"                         
+  "//============================================================================\n"
+  "                                                                              \n" 
+  "  real a1,a2,a3        ;                                                      \n"
   "{                                                                             \n"
-  "  real E  = 200.e9     ,                // Modulus of Elasticity - [Pa]       \n"
-  "       nu = 0.3        ;                // Poisson ratio - [-]                \n"
+  "  real E  = 200.e9     ,                                                      \n"
+  "       nu = 0.3        ;                                                      \n"
   "                                                                              \n"
   "       a1 = E*(1.-nu)/((1.+nu)*(1.-2.*nu))   ;                                \n"
   "       a2 = a1*nu/(1.-nu)                    ;                                \n"
@@ -119,10 +132,14 @@ if(Prblm=="linear-elasticity")
 if(Prblm=="damage")
  {
  writeIt
- "                                                                               \n"
- "//=============================================================================\n"
- "// ------- Material parameters -------                                         \n"
- "//=============================================================================\n";
+ "                                                                              \n"
+ "//============================================================================\n"
+ "//                   ------- Material parameters -------                      \n"
+ "// -------------------------------------------------------------------        \n"
+ "//  mu, lambda : Lame parameter of the Material                               \n" 
+ "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"                        
+ "//============================================================================\n"
+ "                                                                              \n";
 
  if(Model=="Mazar")
   writeIt
@@ -183,21 +200,31 @@ if(Prblm=="elastodynamics")
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
- "// ------- Material parameters -------                                        \n"
+ "//                   ------- Material parameters -------                      \n"
+ "// -------------------------------------------------------------------        \n"
+ "//  rho : density of Material                                                 \n"
+ "//  mu, lambda : Lame parameter of the Material                               \n" 
+ "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"                        
  "//============================================================================\n"
- "                                                                              \n"
- "  real lambda = 576.9230769  ,           // E=1000. & nu=0.3                  \n"
+ "                                                                              \n"  
+ "  real rho    = 1.0          ,                                                \n"
+ "       lambda = 576.9230769  ,           // E=1000. & nu=0.3                  \n"
  "       mu     = 384.6153846  ;           // E=1000. & nu=0.3                  \n"
- "                                                                              \n"
- "//============================================================================\n"
- "// ------- Dynamic parameters -------                                         \n"
- "//============================================================================\n"
  "                                                                              \n";
 
  if(TimeDiscretization=="generalized-alpha")
   writeIt
-  "  real rho  = 1.0  ,                                                         \n"
-  "       etam = 0.01 ,                                                         \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  alpm, alpf : Generalized-alpha scheme constants                           \n"
+  "//  etam, etak : damping parameters                                           \n"  
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
+  "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       alpm = 0.2  ,                                                         \n"
   "       alpf = 0.4  ,                                                         \n"
@@ -211,8 +238,16 @@ if(Prblm=="elastodynamics")
 
  if(TimeDiscretization=="newmark-beta")
   writeIt
-  "  real rho  = 1.0  ,                                                         \n"
-  "       etam = 0.01 ,                                                         \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  etam, etak : damping parameters                                           \n"  
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
+  "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       tmax = 4.0  ,                                                         \n"
   "       t    = 0.08 ,                                                         \n"
@@ -224,8 +259,16 @@ if(Prblm=="elastodynamics")
 
  if(TimeDiscretization=="central-difference")
   writeIt
-  "  real rho  = 1.0  ,                                                         \n"
-  "       etam = 0.01 ,                                                         \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  etam, etak : damping parameters                                           \n"  
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma : Time discretization constant                                      \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
+  "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       tmax = 4.0  ,                                                         \n"
   "       t    = 0.08 ,                                                         \n"
@@ -235,8 +278,17 @@ if(Prblm=="elastodynamics")
 
  if(TimeDiscretization=="hht-alpha")
   writeIt
-  "  real rho  = 1.0  ,                                                         \n"
-  "       etam = 0.01 ,                                                         \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  alpf : HHT-alpha scheme constant                                          \n"
+  "//  etam, etak : damping parameters                                           \n"  
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
+  "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       alpf = 0.4  ,                                                         \n"
   "       tmax = 4.0  ,                                                         \n"
@@ -252,49 +304,66 @@ if(Prblm=="elastodynamics")
 
 if(Prblm=="soildynamics")
  {
- writeIt
- "                                                                              \n"
- "//============================================================================\n"
- "// ------- Soil parameters -------                                            \n"
- "//============================================================================\n"
- "                                                                              \n";
+
 
  if(doublecouple=="displacement-based" || doublecouple=="force-based")
   writeIt
-  "  real rho  = 1800.0 ,                  // Density                          \n"
-  "       cs   = 2300.  ,                  // Secondary wave Velocity          \n"
-  "       cp   = 4000.  ;                  // Primary wave Velocity            \n"
-  "                                                                            \n" 
-  "  real    mu     =  cs*cs*rho,          // Lame parameter                   \n"
-  "          lambda =  cp*cp*rho - 2*mu;   // Lame parameter                   \n"
-  "                                                                            \n"; 
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Soil parameters -------                          \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  rho : density of soil                                                     \n"
+  "//  cp, cs : Primary and secondary wave velocities                            \n"
+  "//  mu, lambda : Lame parameter of the soil                                   \n"       
+  "//============================================================================\n"
+  "                                                                              \n"  
+  "  real rho  = 1800.0 ,                                                        \n"
+  "       cs   = 2300.  ,                                                        \n"
+  "       cp   = 4000.  ;                                                        \n"
+  "                                                                              \n" 
+  "  real    mu     =  cs*cs*rho,                                                \n"
+  "          lambda =  cp*cp*rho - 2*mu;                                         \n"
+  "                                                                              \n"; 
  else 
   writeIt
-  "  real rho  = 2500.0 ;              // Density                               \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Soil parameters -------                          \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  rho : density of soil                                                     \n"
+  "//  cp, cs : Primary and secondary wave velocities                            \n"
+  "//  mu, lambda : Lame parameter of the soil                                   \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the soil               \n"                
+  "//============================================================================\n" 
+  "                                                                              \n"     
+  "  real rho  = 2500.0 ;                                                       \n"
   "                                                                             \n"
-  "  real    mu                        // Lame parameter                        \n"
-  "         ,lambda                    // Lame parameter                        \n"
+  "  real    mu                                                                 \n"
+  "         ,lambda                                                             \n"
   "         ;                                                                   \n"
   "                                                                             \n"
   "{                                                                            \n"
-  "  real E  = 6.62e6  ,                // Modulus of Elasticity - [Pa]         \n"
-  "       nu = 0.45    ;                // Poisson ratio - [-]                  \n"
+  "  real E  = 6.62e6  ,                                                        \n"
+  "       nu = 0.45    ;                                                        \n"
   "                                                                             \n"
   "  mu     = E/(2.*(1.+nu))            ;                                       \n"
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                       \n"
   "}                                                                            \n"
   "  real cs   = sqrt(mu/rho)               ,                                   \n"
   "       cp   = sqrt((lambda+(2.*mu))/rho) ;                                   \n";
- 
- writeIt
- "                                                                              \n"
- "//============================================================================\n"
- "// ------- Dynamic parameters -------                                         \n"
- "//============================================================================\n"
- "                                                                              \n";
+
 
  if(TimeDiscretization=="generalized-alpha")
   writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  alpm, alpf : Generalized-alpha scheme constants                           \n"
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n" 
   "  real alpm = 0.2     ,                                                      \n"
   "       alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
@@ -307,6 +376,14 @@ if(Prblm=="soildynamics")
 
  if(TimeDiscretization=="newmark-beta")
   writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ;                                                      \n"
@@ -317,6 +394,14 @@ if(Prblm=="soildynamics")
 
  if(TimeDiscretization=="central-difference")
   writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma : Time discretization constant                                      \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ,                                                      \n"
@@ -325,6 +410,15 @@ if(Prblm=="soildynamics")
 
  if(TimeDiscretization=="hht-alpha")
   writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//           ------- Time discretization parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  alpf : HHT-alpha scheme constant                                          \n"
+  "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
+  "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
+  "//============================================================================\n"
+  "                                                                              \n"   
   "  real alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
@@ -342,10 +436,6 @@ if(Prblm=="soildynamics")
  "// -------------------------------------------------------------------        \n"
  "// PAlabels : is the vector of surface mesh labels that participate as        \n"
  "//            absorbing boundaries (via paraxial elements)                    \n"
- "// LoadLabels : is the vector of surface mesh labels to which external        \n"
- "//              force is applied to                                           \n"
- "// v1in : is a time dependent sinusoidal loading function ( traction )        \n"
- "//        which exists for time (tt <= 1 sec)                                 \n"
  "//============================================================================\n"
  "                                                                              \n";
 
@@ -353,15 +443,12 @@ if(Prblm=="soildynamics")
   writeIt
   "  int [int]   PAlabels = [ 2 ,      // Left-border label                     \n"
   "                           4 ,      // Right-border label                    \n"
-  "                           5 ];     // Bottom-border label                   \n"
-  "                                                                             \n"
-  "  int [int]   LoadLabels = [ 5      // Bottom-border label                   \n"
-  "                              ];                                             \n";
+  "                           5 ];     // Bottom-border label                   \n";
+
 
  if(spc==3)
   writeIt
-  "  int [int]   PAlabels = [1,2,3,5];                                          \n"
-  "  int [int]   LoadLabels = [4];                                              \n";
+  "  int [int]   PAlabels = [1,2,3,5];                                          \n";
 
  if(doublecouple=="unused"){  
   writeIt
@@ -371,17 +458,23 @@ if(Prblm=="soildynamics")
   "// -------------------------------------------------------------------        \n"
   "// v1in : is a time dependent sinusoidal loading function ( traction )        \n"
   "//        which exists for time (tt <= 1 sec)                                 \n"
+  "// LoadLabels : is the vector of surface mesh labels to which external        \n"
+  "//              force is applied to                                           \n"  
   "//============================================================================\n"
   "                                                                              \n"
   "  real tt;                                                                    \n";  
  
   if(spc==2)
-   writeIt
-   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n"; 
+   writeIt  
+   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n"
+   "                                                                             \n"
+   "  int [int]   LoadLabels = [ 5 ];     // Bottom-border label                 \n"
+   "                                                                             \n";     
   
   if(spc==3)
    writeIt
-   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n";
+   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
+   "  int [int]   LoadLabels = [4];                                              \n";   
   }
      
 
@@ -440,6 +533,7 @@ if(Prblm=="soildynamics")
  "                                                                              \n"
  "   int  [int]   DcLabelPoints = [6,7];                                        \n" 
  "                                                                              \n" 
+ "                                                                              \n"  
  "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
