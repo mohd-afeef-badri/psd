@@ -336,6 +336,7 @@ if(Prblm=="soildynamics")
 
 
  writeIt
+ "                                                                              \n" 
  "//============================================================================\n"
  "//        -------Paraxial boundary-condition parameters-------                \n"
  "// -------------------------------------------------------------------        \n"
@@ -355,17 +356,34 @@ if(Prblm=="soildynamics")
   "                           5 ];     // Bottom-border label                   \n"
   "                                                                             \n"
   "  int [int]   LoadLabels = [ 5      // Bottom-border label                   \n"
-  "                              ];                                             \n"
-  "  real tt;                                                                   \n"
-  "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n";
+  "                              ];                                             \n";
 
  if(spc==3)
   writeIt
   "  int [int]   PAlabels = [1,2,3,5];                                          \n"
-  "  int [int]   LoadLabels = [4];                                              \n"
-  "  real tt;                                                                   \n"
-  "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
-  "                                                                               \n";
+  "  int [int]   LoadLabels = [4];                                              \n";
+
+ if(doublecouple=="unused"){  
+  writeIt
+ "                                                                              \n"  
+  "//============================================================================\n"
+  "//        -------Paraxial boundary load-------                                \n"
+  "// -------------------------------------------------------------------        \n"
+  "// v1in : is a time dependent sinusoidal loading function ( traction )        \n"
+  "//        which exists for time (tt <= 1 sec)                                 \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  real tt;                                                                    \n";  
+ 
+  if(spc==2)
+   writeIt
+   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n"; 
+  
+  if(spc==3)
+   writeIt
+   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n";
+  }
+     
 
 /*
  if(doublecouple=="force-based")
@@ -406,10 +424,11 @@ if(Prblm=="soildynamics")
          
  if(doublecouple=="displacement-based" || doublecouple=="force-based")
  writeIt
+ "                                                                              \n" 
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
  "// -------------------------------------------------------------------        \n"
- "// DClabelpoints: is the label of the (line/surface) containing the           \n"
+ "// DcLabelPoints: is the label of the (line/surface) containing the           \n"
  "//                double couple points.If points are placed on more           \n"
  "//                than one label then use it as a vector.                     \n" 
  "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
@@ -419,7 +438,7 @@ if(Prblm=="soildynamics")
  "//                of the double couple north point.                           \n"     
  "//============================================================================\n"
  "                                                                              \n"
- "   int [int]   DClabelpoints = [6,7];                                         \n" 
+ "   int  [int]   DcLabelPoints = [6,7];                                        \n" 
  "                                                                              \n" 
  "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"

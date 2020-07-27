@@ -193,7 +193,7 @@ write
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple A\",t0)\n"  : ""             )
 <<"  GetDoubelCoupleIndicies(                                                      \n"
-<<"           DClabelpoints,                                                       \n"
+<<"           DcLabelPoints,                                                       \n"
 <<"           Vh,                                                                  \n"
 <<"           DcFlag,                                                              \n"
 <<"           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
