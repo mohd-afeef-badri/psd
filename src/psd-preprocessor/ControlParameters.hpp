@@ -131,65 +131,83 @@ if(Prblm=="linear-elasticity")
 
 if(Prblm=="damage")
  {
- writeIt
+
+ if(Model=="Mazar")
+  writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "//                   ------- Material parameters -------                      \n"
  "// -------------------------------------------------------------------        \n"
  "//  mu, lambda : Lame parameter of the Material                               \n" 
- "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"                        
- "//============================================================================\n"
- "                                                                              \n";
-
- if(Model=="Mazar")
-  writeIt
+ "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"
+ "//  kappa0 : Damage initiation threshold of the Material                      \n" 
+ "//  kappac :  Critical strain level of the Material                           \n"                                                  
+ "//============================================================================\n"  
   "                                                                              \n"
-  "  real    mu                        // Lame parameter                         \n"
-  "         ,lambda                    // Lame parameter                         \n"
-  "         ,kappa0 = 1.e-4            // Damage initiation threshold            \n"
-  "         ,kappac = 1.e-3            // Critical strain level                  \n"
+  "  real    mu                                                                  \n"
+  "         ,lambda                                                              \n"
+  "         ,kappa0 = 1.e-4                                                      \n"
+  "         ,kappac = 1.e-3                                                      \n"
   "         ;                                                                    \n"
   "                                                                              \n"
   "{                                                                             \n"
-  "  real E  = 100.e6  ,              // Modulus of Elasticity - [Pa]            \n"
-  "       nu = 0.2     ;              // Poisson ratio - [-]                     \n"
+  "  real E  = 100.e6  ,                                                         \n"
+  "       nu = 0.2     ;                                                         \n"
   "                                                                              \n"
   "  mu     = E/(2.*(1.+nu))            ;                                        \n"
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
   "}                                                                             \n"
   "                                                                              \n"
   "//============================================================================\n"
-  "// ------- Solver parameters -------                                          \n"
+  "//                  ------- Solver parameters -------                         \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  tol : Tolerance of the Newton-Raphsons procedure                          \n" 
+  "//  npas : # of pseudo-time steps                                             \n"
+  "//  iterMaxNR : Max # of iterations for the NR loop                           \n" 
+  "//  Duimp :  Imposed displacement variation                                   \n"   
+  "//  duimp :  Dummy Imposed displacement variation                             \n"           
   "//============================================================================\n"
   "                                                                              \n"
-  "  real tol      = 1.e-5 ;          // Tolerance of the NR procedure           \n"
+  "  real tol      = 1.e-5 ;                                                     \n"
   "                                                                              \n"
-  "  int npas      = 2000  ,          // # of pseudo-time steps                  \n"
-  "      iterMaxNR = 10    ;          // Max # of iterations for the NR loop     \n"
+  "  int npas      = 2000  ,                                                     \n"
+  "      iterMaxNR = 10    ;                                                     \n"
   "                                                                              \n"
-  "//============================================================================\n"
-  "// ------- Loading parameters -------                                         \n"
-  "//============================================================================\n"
-  "  real Duimp = 2.e-7,              // Imposed displacement variation          \n"
-  "       duimp        ;              // Dummy Imposed displacement variation    \n";
+  "  real Duimp = 2.e-7,                                                         \n"
+  "       duimp        ;                                                         \n";
 
 
  if(Model=="hybrid-phase-field")
   writeIt
-  "                                                                              \n"
+ "                                                                              \n"
+ "//============================================================================\n"
+ "//                   ------- Material parameters -------                      \n"
+ "// -------------------------------------------------------------------        \n"
+ "//  mu, lambda : Lame parameter of the material                               \n" 
+ "//  Gc : Material fracture toughness                                          \n"
+ "//  kappa0 : Damage initiation threshold of the Material                      \n" 
+ "//  kappac :  Critical strain level of the Material                           \n"                                                  
+ "//============================================================================\n"  
+  "                                                                              \n"  
   "  real lambda = 121.15e3 ,                                                    \n"
-  "       mu     = 80.77e3  ;                                                    \n"
+  "       mu     = 80.77e3  ,                                                    \n"
+  "       Gc     = 2.7      ;                                                    \n"
   "                                                                              \n"
   "//============================================================================\n"
-  "// ------- Nonlinear parameters -------                                       \n"
+  "//                  ------- Solver parameters -------                         \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  lfac : # of cells within which fracture diffusion occurs                  \n" 
+  "//  maxtr : Maximum traction force applied                                    \n"
+  "//  tr : Traction force applied                                               \n" 
+  "//  dtr :  Change in traction force between two pseudo-time steps             \n"   
+  "//  lo :  Mesh dependent lateral fracture length                              \n"           
   "//============================================================================\n"
   "                                                                              \n"
-  "  real Gc    = 2.7  ,                                                         \n"
-  "       lfac  = 2.0  ,                                                         \n"
+  "  real lfac  = 2.0  ,                                                         \n"
   "       maxtr = 7e-3 ,                                                         \n"
   "       tr    = 1e-5 ,                                                         \n"
   "       dtr   = 1e-5 ,                                                         \n"
-  "       lo           ;        // Calculated in OtherParameters.edp             \n";
+  "       lo           ;                                                         \n";
 
  }
 
