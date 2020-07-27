@@ -106,115 +106,115 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 > PSD-check.log &&  \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 >> PSD-check.log &&  \
-	$(FF) Main.edp -v 0 -ns -nw  >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 >> PSD-check.log  &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 -fastmethod >> PSD-check.log &&  \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 -fastmethod >> PSD-check.log &&  \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 -fastmethod >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 -fastmethod >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log 
+	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1  -testflags > PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw   -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1  -testflags >> PSD-check.log  &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log 
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential/Paralle 2D/3D phase-field fracture mechanics      "
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP >> PSD-check.log &&  \
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw >> PSD-check.log
+	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential/Paralle 2D/3D Elastodynamics                      "
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem elastodynamics -sequential -dirichletconditions 1 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem elastodynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem elastodynamics -sequential -dirichletconditions 1 >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem elastodynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
-	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 >> PSD-check.log &&  \
+	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw >> PSD-check.log
+	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential/Paralle 2D/3D Soildynamics                        "
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem soildynamics -sequential -dirichletconditions 1 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -problem soildynamics -sequential -dirichletconditions 1 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FF) Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
+	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
+	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1 >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw >> PSD-check.log &&  \
+	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
 	rm  -rf *.edp	
 	@echo ""
 	@echo "*============================================================*"

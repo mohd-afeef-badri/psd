@@ -19,12 +19,12 @@ utils.o: utils.cpp utils.h
 check-local: utils.o 	hujeux.o		
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Testing  hujeux  & utils routines in hujeux-law-lib          "
+	@echo " Checking  hujeux  & utils routines in hujeux-law-lib          "
 	@echo "*============================================================*"
 	@echo ""
 	$(CXX) -c test.cpp  -O2 -finline-functions -std=c++11
 	$(CXX) -O2 -o hujeux-utils-tester utils.o hujeux.o test.o  -std=c++11
-	./hujeux-utils-tester		
+	./hujeux-utils-tester	> PSD-check.log	
 
 clean-local:
 	@echo ""
