@@ -28,7 +28,7 @@ if(Prblm=="linear-elasticity")
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
  if(!vectorial){
- 
+
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -127,16 +127,16 @@ if(Model=="pseudo-nonlinear" || Model=="Hujeux" )
  "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
  "      def(DPspc) ;      // Partition of unity field for integral               \n"
  "                                                                               \n";
- 
+
  if(Model=="Hujeux")
  writeIt
  "                                                                               \n"
- "  Q3vh  defSh(Sig),      // Three stress components                            \n" 
+ "  Q3vh  defSh(Sig),      // Three stress components                            \n"
  "        defSh(Eps);      // Three strain components                            \n"
  "                                                                               \n"
  "  Q25vh defIh(Iv);       // 25 component internal variables components         \n"
  "                                                                               \n";
-     
+
 }
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
@@ -209,7 +209,7 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
   "  real[int]  b(Vh.ndof)        ;                                              \n";
 
  if(!Sequential){
-  
+
   if(pipegnu)
    writeIt
    "                                                                             \n"
@@ -259,7 +259,7 @@ if(Prblm=="damage" && Model=="Mazar"){
   "      ep2         ,    //  2nd principal strain component (in y)              \n"
   "      eqStrain    ,    //  Equivalent strain                                  \n";
 
- writeIt        
+ writeIt
  "      lambdafield ,    //  lambda                                              \n"
  "      mufield     ;    //  mu                                                  \n"
  "                                                                               \n";

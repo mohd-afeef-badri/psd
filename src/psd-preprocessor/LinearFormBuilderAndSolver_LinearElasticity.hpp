@@ -1,9 +1,9 @@
 //=====================================================================================
-// ------ Elasticity Mechanics for the LinearFormBuilderAndSolver.edp file ------ 
+// ------ Elasticity Mechanics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
 
-if(!Sequential){write      
+if(!Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------                             \n"
@@ -41,7 +41,7 @@ if(dirichletpointconditions>=1)write
 if(tractionconditions>=1)write
 <<"                                                                                \n"
 <<"  Tlabel.resize(0);                                                             \n";
-   
+
 write
 <<"                                                                                \n"
 <<"//---------------PETSc Assembly---------------------//                          \n"
@@ -72,7 +72,7 @@ if(!plotAll)if(Prblm=="linear-elasticity")write
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential){write    
+if(Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Local Au=b assembly and solving -------                             \n"

@@ -1,5 +1,5 @@
 //=================================================================================================
-// ------ Building the VariationalFormulations.edp file ------ 
+// ------ Building the VariationalFormulations.edp file ------
 //=================================================================================================
 
 write
@@ -25,46 +25,46 @@ write
 <<"    - (divergence(uold)*divergence(v))*c[5]                                                     \n"
 <<"    - (epsilon(uold)'*epsilon(v))*c[6]                                                          \n"
 <<"  )                                                                                             \n"
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    + intN1(Th,qforder=3,PAlabels)                                                              \n"
 <<"  (                                                                                             \n"
-<<"      c[7]*(  PA0(du)'*def(v)  )                                                                \n" 
+<<"      c[7]*(  PA0(du)'*def(v)  )                                                                \n"
 <<"  )                                                                                             \n"
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    + intN1(Th,qforder=3,PAlabels)                                                              \n"
 <<"  (                                                                                             \n"
 <<"      c[7]*(  PA0(uold)'*def(v)  )                                                              \n"
-<<"    - c[8]*(  PA0(vold)'*def(v)  )                                                              \n" 
-<<"    - c[9]*(  PA0(aold)'*def(v)  )                                                              \n" 
+<<"    - c[8]*(  PA0(vold)'*def(v)  )                                                              \n"
+<<"    - c[9]*(  PA0(aold)'*def(v)  )                                                              \n"
 <<"  )                                                                                             \n";
 
 if(doublecouple=="unused"){
 write
 <<"                                                                                                \n";
 if(spc==2)write
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
-<<"     rho*(                                                                                      \n" 
-<<"           (  cp*(N.x*N.x*0 + N.x*N.y*v1in)                                                     \n" 
-<<"             +cs*((1.-N.x*N.x)*0 - N.x*N.y*v1in))*v                                             \n" 
-<<"          +(  cp*(N.x*N.y*0 + N.y*N.y*v1in)                                                     \n" 
-<<"             +cs*(- N.x*N.y*0+ (1.-N.y*N.y)*v1in ))*v1                                          \n" 
-<<"          )                                                                                     \n" 
+<<"     rho*(                                                                                      \n"
+<<"           (  cp*(N.x*N.x*0 + N.x*N.y*v1in)                                                     \n"
+<<"             +cs*((1.-N.x*N.x)*0 - N.x*N.y*v1in))*v                                             \n"
+<<"          +(  cp*(N.x*N.y*0 + N.y*N.y*v1in)                                                     \n"
+<<"             +cs*(- N.x*N.y*0+ (1.-N.y*N.y)*v1in ))*v1                                          \n"
+<<"          )                                                                                     \n"
 <<"  )                                                                                             \n";
 
 if(spc==3)write
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
-<<"     rho*(                                                                                      \n" 
-<<"           (  cp*( N.x*N.x*0 + N.x*N.y*v1in + N.x*N.z*0)                                        \n" 
-<<"             +cs*((1.-N.x*N.x)*0 - N.x*N.y*v1in - N.x*N.z*0))*v                                 \n" 
-<<"          +(  cp*( N.x*N.y*0 + N.y*N.y*v1in + N.y*N.z*0)                                        \n" 
-<<"             +cs*(-N.x*N.y*0 + (1.-N.y*N.y)*v1in - N.y*N.z*0))*v1                               \n" 
-<<"          +(  cp*( N.x*N.z*0 + N.y*N.z*v1in + N.z*N.z*0)                                        \n" 
+<<"     rho*(                                                                                      \n"
+<<"           (  cp*( N.x*N.x*0 + N.x*N.y*v1in + N.x*N.z*0)                                        \n"
+<<"             +cs*((1.-N.x*N.x)*0 - N.x*N.y*v1in - N.x*N.z*0))*v                                 \n"
+<<"          +(  cp*( N.x*N.y*0 + N.y*N.y*v1in + N.y*N.z*0)                                        \n"
+<<"             +cs*(-N.x*N.y*0 + (1.-N.y*N.y)*v1in - N.y*N.z*0))*v1                               \n"
+<<"          +(  cp*( N.x*N.z*0 + N.y*N.z*v1in + N.z*N.z*0)                                        \n"
 <<"             +cs*(-N.x*N.z*0 - N.z*N.y*v1in + (1.-N.z*N.z)*0))*v2                               \n"
-<<"          )                                                                                     \n" 
+<<"          )                                                                                     \n"
 <<"  )                                                                                             \n";
 }
 
@@ -77,10 +77,10 @@ if(Model=="pseudo-nonlinear")write
 <<"    + (epsilon(uNL)'*epsilon(v))*c[2]                                                           \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n"
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    - intN1(Th,qforder=3,PAlabels)                                                              \n"
 <<"  (                                                                                             \n"
-<<"      c[7]*(  PA0(uNL)'*def(v)  )                                                               \n" 
+<<"      c[7]*(  PA0(uNL)'*def(v)  )                                                               \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n";
 
@@ -94,24 +94,24 @@ if(Model=="Hujeux")write
 <<"     + (epsilon(uNL)'*epsilon(v))*c[2] */                                                       \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n"
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"    - intN1(Th,qforder=3,PAlabels)                                                              \n"
 <<"  (                                                                                             \n"
-<<"      c[7]*(  PA0(uNL)'*def(v)  )                                                               \n" 
+<<"      c[7]*(  PA0(uNL)'*def(v)  )                                                               \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n";
-                
+
 write
-<<"                                                                                                \n" 
-<<" /*  //---- uncomment if the load is not on paraxial border ----//                              \n" 
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
+<<" /*  //---- uncomment if the load is not on paraxial border ----//                              \n"
+<<"                                                                                                \n"
 <<"    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
 <<"  (                                                                                             \n"
 <<"     load1*v+load2*v1                                                                           \n"
 <<"  )                                                                                             \n"
 <<" */                                                                                             \n"
-<<"                                                                                                \n" 
-<<";                                                                                               \n" 
+<<"                                                                                                \n"
+<<";                                                                                               \n"
 <<"                                                                                                \n";
 
 if(Model=="Hujeux")write
@@ -136,6 +136,6 @@ if(Model=="Hujeux")write
 <<"    //  $+int_{\\Omega}(\\rho g v1)$                                                            \n"
 <<"    //--------------------------------------------------------------------------                \n"
 <<"     + intN(Th,qforder=3)(rho*9.81*v1)                                                          \n"
-<<"                                                                                                \n" 
-<<";                                                                                               \n" 
+<<"                                                                                                \n"
+<<";                                                                                               \n"
 <<"                                                                                                \n";

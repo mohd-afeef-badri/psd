@@ -10,7 +10,7 @@
 *                                                                                     *
 **************************************************************************************/
 
-cout << " building OtherParameters.edp"; 
+cout << " building OtherParameters.edp";
 
 {ofstream  write("OtherParameters.edp");
 
@@ -61,7 +61,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "// ------- Paraview plotting parameters -------                               \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  int[int] vtuorder=[1,1];                                                    \n" 
+  "  int[int] vtuorder=[1,1];                                                    \n"
   "  string   namedata=\"U Phi\";                                                \n"
   "  bool     withsur=true;                                                      \n"
   "                                                                              \n"
@@ -128,7 +128,7 @@ if(Prblm=="elastodynamics"){
   "                                                                               \n";
 
  if(TimeDiscretization=="newmark-beta")
-  writeIt 
+  writeIt
   "  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma/beta/dt                          ;\n"
   "  c[1] =   lambda + lambda*etak*gamma/beta/dt                                 ;\n"
   "  c[2] =   2.*mu + 2.*mu*etak*gamma/beta/dt                                   ;\n"
@@ -143,7 +143,7 @@ if(Prblm=="elastodynamics"){
   "                                                                               \n";
 
  if(TimeDiscretization=="central-difference")
-  writeIt 
+  writeIt
   "  c[0] =   rho/(dt*dt) + etam*rho*gamma/dt                                    ;\n"
   "  c[1] =   lambda + lambda*etak*gamma/dt                                      ;\n"
   "  c[2] =   2.*mu + 2.*mu*etak*gamma/dt                                        ;\n"
@@ -158,7 +158,7 @@ if(Prblm=="elastodynamics"){
   "                                                                               \n";
 
  if(TimeDiscretization=="hht-alpha")
-  writeIt 
+  writeIt
   "  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt                 ;\n"
   "  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt              ;\n"
   "  c[2] =   2.*mu*(1.-alpf) + 2.*mu*etak*gamma*(1-alpf)/beta/dt                ;\n"
@@ -188,7 +188,7 @@ if(Prblm=="elastodynamics"){
   "  int[int] vtuorder = [1]                ;  // Solution export order           \n";
 
  if(PostProcess=="v" || PostProcess=="a")
-  writeIt 
+  writeIt
   "  int[int] vtuorder = [1,1]              ;  // Solution export order           \n";
 
  if(PostProcess=="uva")
@@ -210,7 +210,7 @@ if(Prblm=="elastodynamics"){
   "  string   namevtu  = \"VTUs/Result\"    ;  // File name                       \n"
   "  exportBegin(                                                                 \n"
   <<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu")<<
-  " )                                                                             \n"        
+  " )                                                                             \n"
   "                                                                               \n";
 
  if(pipegnu){
@@ -309,7 +309,7 @@ if(Prblm=="soildynamics"){
   "                                                                                \n";
 
  if(plotAll || plotTime)
-  writeIt 
+  writeIt
   "                                                                                \n"
   "//==============================================================================\n"
   "//  ------- Paraview plotting parameters -------                                \n"
@@ -317,48 +317,48 @@ if(Prblm=="soildynamics"){
   "                                                                                \n";
 
  if(Sequential)
-  writeIt  
+  writeIt
   "  bool     withsur  = true             ;  // With surfaces                      \n"
   "  int      iterout  = 0                ;  // Loop counter                       \n";
 
  if(PostProcess=="u")
-  writeIt   
+  writeIt
   "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"U\"       // Name of export data                         \n";  
+  "  macro   namedata()\"U\"       // Name of export data                         \n";
 
  if(PostProcess=="v")
-  writeIt   
+  writeIt
   "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"V\"       // Name of export data                         \n";  
+  "  macro   namedata()\"V\"       // Name of export data                         \n";
 
  if(PostProcess=="a")
-  writeIt  
+  writeIt
   "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"A\"       // Name of export data                         \n";     
+  "  macro   namedata()\"A\"       // Name of export data                         \n";
 
  if(PostProcess=="uv" || PostProcess=="vu")
-  writeIt   
+  writeIt
   "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
   "  macro   namedata()\"U V\"       // Name of export data                        \n";
-  
+
  if(PostProcess=="ua" || PostProcess=="au")
-  writeIt   
+  writeIt
   "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
   "  macro   namedata()\"U A\"       // Name of export data                        \n";
 
  if(PostProcess=="va" || PostProcess=="av")
-  writeIt   
+  writeIt
   "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
   "  macro   namedata()\"V A\"       // Name of export data                        \n";
 
- if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+ if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||
     PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
-  writeIt  
+  writeIt
   "  int[int] vtuorder = [1,1,1]  ;  // Solution export order                      \n"
-  "  macro   namedata()\"U V A\"       // Name of export data                      \n";  
+  "  macro   namedata()\"U V A\"       // Name of export data                      \n";
 
  if(plotAll && !Sequential)
-  writeIt    
+  writeIt
   "                                                                                \n"
   "  if(mpirank==0)system(\"mkdir -p VTUs\");                                      \n";
 
@@ -367,7 +367,7 @@ if(Prblm=="soildynamics"){
   "  string   namevtu  = \"VTUs/Result\"    ;  // File name                        \n"
   "  exportBegin(                                                                  \n"
   <<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu" )<<
-  " )                                                                              \n"        
+  " )                                                                              \n"
   "                                                                                \n";
 
  if(pipegnu){
@@ -397,7 +397,7 @@ if(Prblm=="soildynamics"){
   "  <<\" set grid x y; set key left;                                       \\n\";\n"
   "                                                                               \n";
  }
- 
+
  if(doublecouple=="force-based" || doublecouple=="displacement-based")
   writeIt
   "                                                                               \n"
@@ -409,21 +409,21 @@ if(Prblm=="soildynamics"){
   "//          to force boundary coditions of double-couple whcih can             \n"
   "//          be a point load or a force. Same is true for iSouth,..             \n"
   "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"   
-  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           double couple points.                                             \n"
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
-  "//           Same is true for Srank, Erank, Wrank.                             \n"        
+  "//           Same is true for Srank, Erank, Wrank.                             \n"
   "//=============================================================================\n"
-  "                                                                               \n" 
+  "                                                                               \n"
   "  int iNorth, iSouth, iEast, iWest;                                            \n"
   "  int Nrank , Srank , Erank, Wrank;                                            \n"
-  "  bool DcFlag;                                                                 \n";  
- 
+  "  bool DcFlag;                                                                 \n";
+
  }
- 
+
 
 if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){
- writeIt   
+ writeIt
  "                                                                                \n"
  "//==============================================================================\n"
  "// ------- Gnuplot pipeing parameters ------                                    \n"

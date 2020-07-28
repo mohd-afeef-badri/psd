@@ -21,8 +21,8 @@ VariationalFormulation.hpp \
 VariationalFormulation_LinearElasticity.hpp \
 VariationalFormulation_SoilDynamics.hpp
 
-	
-all-local: PSD_PreProcess 
+
+all-local: PSD_PreProcess
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -33,11 +33,11 @@ all-local: PSD_PreProcess
 
 PSD_PreProcess: PSD_PreProcess.o
 	$(CXX) -o PSD_PreProcess PSD_PreProcess.o
-	@echo ""	
+	@echo ""
 
 
 PSD_PreProcess.o: $(PSD_PREPROCESSOR_HPP_LIST)
-	$(CXX) -c PSD_PreProcess.cpp -std=c++11	
+	$(CXX) -c PSD_PreProcess.cpp -std=c++11
 
 clean-local:
 	@echo ""
@@ -45,6 +45,6 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  PSD_PreProcess *.o *.edp 
+	rm  -f *~  PSD_PreProcess *.o *.edp
 	rm  -rf VTUs
-	@echo ""	
+	@echo ""

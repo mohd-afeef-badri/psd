@@ -11,7 +11,7 @@
 **************************************************************************************/
 
 cout << " building Macros.edp";
-   
+
 {ofstream  write("Macros.edp");
 
 writeHeader;
@@ -31,16 +31,16 @@ if(spc==2)
  writeIt
  "  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used    \n"
  "  macro dimension 2                              // Two-dimensional problem  \n";
- 
+
  if(Prblm=="elastodynamics")
- writeIt 
+ writeIt
  "  macro Ux   du                                  // x displacement           \n"
- "  macro Uy   du1                                 // y displacement           \n"; 
+ "  macro Uy   du1                                 // y displacement           \n";
 
  if(Prblm=="linear-elasticity" || Prblm=="damage")
- writeIt 
+ writeIt
  "  macro Ux    u                                  // x displacement           \n"
- "  macro Uy    u1                                 // y displacement           \n";  
+ "  macro Uy    u1                                 // y displacement           \n";
 
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
@@ -50,20 +50,20 @@ if(spc==2)
 
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
- writeIt 
+ writeIt
  "  macro Pltk         P1                          // FE space                 \n"
  "  macro def0 (i)           i                     // Vect. field definition   \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
- writeIt  
+ writeIt
  "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
 
  if(Prblm=="soildynamics" && Model=="Hujeux")
- writeIt  
- "                                                                              \n"  
+ writeIt
+ "                                                                              \n"
  "  macro Sk [ FEQF1, FEQF1 , FEQF1 ]       // Quadrature element space order 3 \n"
  "  macro defSh (i) [ i , i#1, i#2 ]        // 3rd order Vect. field definition \n"
- "                                                                              \n" 
+ "                                                                              \n"
  "  macro Ik [FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
  "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
  "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1]// Quadrature element space order 25\n"
@@ -80,9 +80,9 @@ if(spc==2)
  "                                                                              \n"
  "  macro calculateStrain(i,j){                                                 \n"
  "     defSh (i) = [ dx(j), dy(j#1), 0.5*(dx(j#1)+dy(j))];                      \n"
- "     }//                                                                      \n"   
+ "     }//                                                                      \n"
  "                                                                              \n"
- "  macro Epsl(i) [dx(i), dy(i#1), (dy(i)+dx(i#1))/2.]   // Strain definition   \n" 
+ "  macro Epsl(i) [dx(i), dy(i#1), (dy(i)+dx(i#1))/2.]   // Strain definition   \n"
  "                                                                              \n";
 
  if(useGFP && Prblm=="damage" && Model=="Mazar")
@@ -105,7 +105,7 @@ if(spc==2)
   "                                                                            \n";
 
   if(Prblm=="damage" && Model=="Mazar")
-  writeIt  
+  writeIt
   "  macro def  (i) [ i , i#1 ]                // Vect. field definition       \n";
 
   if(!Sequential  && Prblm=="damage" && Model=="Mazar")
@@ -119,7 +119,7 @@ if(spc==2)
  "//--------------------Divergence and epsilion macros---------------------//   \n"
  "                                                                              \n"
  "  macro divergence(i)(dx(i) + dy(i#1))          // Divergence function        \n"
- "  macro epsilon(i) [dx(i), dy(i#1),                                           \n" 
+ "  macro epsilon(i) [dx(i), dy(i#1),                                           \n"
  "                   (dy(i)+dx(i#1))/SQ2]        // Strain definition           \n";
 
  if(!vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
@@ -152,7 +152,7 @@ if(spc==2)
 <<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx   \n"
 <<"  macro sig  (i) [ sxx(i), syy(i), SQ2*sxy(i) ]        // Sigma            \n"
 <<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus      \n"
-/************************OLD METHOD*************************************************/ 
+/************************OLD METHOD*************************************************/
 
 /************************OLD METHOD*************************************************
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
@@ -162,7 +162,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"    fespace WWh0(Th,P0);                                                   \n"
 <<"    WWh0 e1,e2,e3,ud;                                                      \n"
 <<(!vectorial ? "    e1=dx(u); e2=dy(u1);\n"        : ""                      )
-<<(vectorial  ? "    e1=dx(uold); e2=dy(uold1);\n"  : ""                      )  
+<<(vectorial  ? "    e1=dx(uold); e2=dy(uold1);\n"  : ""                      )
 <<"    e1=dx(u); e2=dy(u1);                                                   \n"
 <<"    ud[] = e1[] + e2[];                                                    \n"
 <<"    e3 = max(0.,ud);                                                       \n"
@@ -203,7 +203,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<(!vectorial ? "    e3=0.5*(dx(u1)+dy(u));\n"        : ""                    )
 <<"                                                                           \n"
 <<"    GFPDecompEnergy2D(e1[],e2[],e3[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],lambda,mu);           \n"
-<<"  }//                                                                      \n" 
+<<"  }//                                                                      \n"
 <<"                                                                           \n";
 /************************OLD METHOD*************************************************/
 
@@ -218,7 +218,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<(!vectorial ? "    Sh0 [Eps1,Eps2,Eps12] = [dx(u),dy(u1),0.5*(dx(u1)+dy(u))];\n": "")
 <<"                                                                             \n"
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ; \n"
- "  }//                                                                         \n" 
+ "  }//                                                                         \n"
  "                                                                              \n";
 
  if(Prblm=="damage" && Model=="Mazar")
@@ -231,9 +231,9 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  "     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1] ,         \n"
  "     2.*muVal*epsilon(i)[2]]//                                                \n"
  "                                                                              \n";
-  
+
  if(Sequential)
- writeIt 
+ writeIt
  "                                                                              \n"
  "//--------------------Sequential remapping macros-------------------------//  \n"
  "                                                                              \n"
@@ -259,16 +259,16 @@ if(!Sequential)write
 <<"  macro dimension   3                          // Three-D problem           \n";
 
  if(Prblm=="elastodynamics")
- writeIt 
+ writeIt
  "  macro Ux   du                                  // x displacement           \n"
  "  macro Uy   du1                                 // y displacement           \n"
- "  macro Uz   du2                                 // z displacement           \n";  
+ "  macro Uz   du2                                 // z displacement           \n";
 
  if(Prblm=="linear-elasticity" || Prblm=="damage")
- writeIt 
+ writeIt
  "  macro Ux    u                                  // x displacement           \n"
  "  macro Uy    u1                                 // y displacement           \n"
- "  macro Uz    u2                                 // z displacement           \n";  
+ "  macro Uz    u2                                 // z displacement           \n";
 
 if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
 <<"  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"
@@ -397,24 +397,24 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<(vectorial  ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"             : ""        )
 <<"                                                                           \n"
 <<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);  \n"
-<<"  }//                                                                      \n" 
+<<"  }//                                                                      \n"
 <<"                                                                           \n";
 /********************************************************************************************/
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
 "                                                                             \n"
- 
+
 "//----------------------------Hplus macros---------------------------------//\n"
  "                                                                            \n"
  "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){        \n"
  "    real[int] par = [lambda,mu];                                            \n"
  <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u1),dz(u2),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")
- <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold1),dz(uold2),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<< 
+ <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold1),dz(uold2),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<<
  "                                                                            \n"
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par); \n"
- "  }//                                                                       \n" 
+ "  }//                                                                       \n"
  "                                                                            \n";
- 
+
 if(Sequential)write
 <<"                                                                           \n"
 <<"//---------------------Sequential remapping macros-----------------------//\n"
@@ -440,7 +440,7 @@ if(dirichletpointconditions>=1){write
 <<"    int count=0;                                                           \n"
 <<"    meshN Th=Wh.Th;                                                        \n"
 <<"                                                                           \n";
- 
+
 if(spc==2)write
 <<"                                                                           \n"
 <<"        varf vlabs(def(u),def(v))                                          \n"
@@ -642,24 +642,24 @@ writeIt
   "//  can be applied easily by knowing these   indices. The  macro  also         \n"
   "//  gives information of the ranks holding the double couple points in         \n"
   "//  the distributed mesh.                                                      \n"
-  "// -------------------------------------------------------------------         \n" 
-  "//  Inputs  : DcLabelPoints,  PnN, PnS, PnE, PnW                               \n" 
-  "//  Outputs : DcFlag,  iN, iS, iE, iW,  Nrank, Srank, Erank, Wrank             \n"     
-  "// -------------------------------------------------------------------         \n" 
+  "// -------------------------------------------------------------------         \n"
+  "//  Inputs  : DcLabelPoints,  PnN, PnS, PnE, PnW                               \n"
+  "//  Outputs : DcFlag,  iN, iS, iE, iW,  Nrank, Srank, Erank, Wrank             \n"
+  "// -------------------------------------------------------------------         \n"
   "//  DcLabelPoints : is the vector of [int] contains labels of borders          \n"
   "//                  that contain the double couple points.                     \n"
   "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"   
+  "//           double couple points.                                             \n"
   "//  PnN : is the vector containing the point coordinates of the North          \n"
-  "//        point of the double couple. Same is true for PnS, PnE, PnW.          \n" 
-  "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
-  "//        couple point. Same is true for iS, iE, iW.                           \n" 
-  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//        point of the double couple. Same is true for PnS, PnE, PnW.          \n"
+  "//  iN  : is finite element degree of freedom of the Northern  double          \n"
+  "//        couple point. Same is true for iS, iE, iW.                           \n"
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
   "//=============================================================================\n"
 <<"                                                                           \n"
-<<"                                                                           \n"  
+<<"                                                                           \n"
 <<"  macro GetDoubelCoupleIndicies(DcLabelPoints, Wh, DcFlag,                 \n"
 <<"                                PnN,   PnS,   PnE,   PnW,                  \n"
 <<"                                iN,    iS,    iE,    iW,                   \n"
@@ -674,14 +674,14 @@ writeIt
 <<"    real[int] PointMarker=VarfPointLabs(0,Wh, tgv = -1);                   \n"
 <<"                                                                           \n"
 <<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
-<<"      if(PointMarker(i)>0.1 && PointMarker(i)<1.1)                         \n"                                                    
-<<"      {iN=i; Nrank=mpirank; DcFlag=true;}                                  \n"         
-<<"      if(PointMarker(i)>1.1 && PointMarker(i)<2.1)                         \n"                                                    
-<<"      {iS=i; Srank=mpirank; DcFlag=true;}                                  \n" 
-<<"      if(PointMarker(i)>2.1 && PointMarker(i)<3.1)                         \n"                                                    
+<<"      if(PointMarker(i)>0.1 && PointMarker(i)<1.1)                         \n"
+<<"      {iN=i; Nrank=mpirank; DcFlag=true;}                                  \n"
+<<"      if(PointMarker(i)>1.1 && PointMarker(i)<2.1)                         \n"
+<<"      {iS=i; Srank=mpirank; DcFlag=true;}                                  \n"
+<<"      if(PointMarker(i)>2.1 && PointMarker(i)<3.1)                         \n"
 <<"      {iE=i; Erank=mpirank; DcFlag=true;}                                  \n"
-<<"      if(PointMarker(i)>3.1 && PointMarker(i)<4.1)                         \n"                                                    
-<<"      {iW=i; Wrank=mpirank; DcFlag=true;}                                  \n" 
+<<"      if(PointMarker(i)>3.1 && PointMarker(i)<4.1)                         \n"
+<<"      {iW=i; Wrank=mpirank; DcFlag=true;}                                  \n"
 <<"    }                                                                      \n"
 <<"  }//                                                                      \n";
 
@@ -696,18 +696,18 @@ write
   "//  applied easily by knowing the  finite element  degree of  freedom          \n"
   "//  that corresponds to these  indices, and the MPI rank that  holds           \n"
   "//  these degrees of freedom.                                                  \n"
-  "// -------------------------------------------------------------------         \n"                                 
+  "// -------------------------------------------------------------------         \n"
   "//  A : is the stiffness matrix assembled from bilinear.                       \n"
   "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"   
-  "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
-  "//        couple point. Same is true for iS, iE, iW.                           \n" 
-  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           double couple points.                                             \n"
+  "//  iN  : is finite element degree of freedom of the Northern  double          \n"
+  "//        couple point. Same is true for iS, iE, iW.                           \n"
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
-  "//  tgv  : is the large penalization term tgv=1e30.                            \n"   
+  "//  tgv  : is the large penalization term tgv=1e30.                            \n"
   "//=============================================================================\n"
-<<"                                                                           \n"  
+<<"                                                                           \n"
 <<"  macro ApplyDoubleCoupleToA(A,DcFlag,iN,iS,iE,iW,Nrank,Srank,Erank,Wrank) \n"
 <<"   if(DcFlag){                                                             \n"
 <<"     if(mpirank==Nrank)                                                    \n"
@@ -729,21 +729,21 @@ write
   "//  applied easily by knowing the  finite element  degree of  freedom          \n"
   "//  that corresponds to these  indices, and the MPI rank that  holds           \n"
   "//  these degrees of freedom.                                                  \n"
-  "// -------------------------------------------------------------------         \n"                                
+  "// -------------------------------------------------------------------         \n"
   "//  RHS : is the right hand side vector  assembled from linear.                \n"
   "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"   
+  "//           double couple points.                                             \n"
   "//  CondN  : is boundary condition displacement applied to the norther         \n"
   "//           point of the double couple. Same is true for Conds, CondW,        \n"
-  "//           and CondE.                                                        \n"          
-  "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
-  "//        couple point. Same is true for iS, iE, iW.                           \n" 
-  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           and CondE.                                                        \n"
+  "//  iN  : is finite element degree of freedom of the Northern  double          \n"
+  "//        couple point. Same is true for iS, iE, iW.                           \n"
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
-  "//  tgv  : is the large penalization term tgv=1e30.                            \n"   
+  "//  tgv  : is the large penalization term tgv=1e30.                            \n"
   "//=============================================================================\n"
-<<"                                                                           \n"  
+<<"                                                                           \n"
 <<"  macro ApplyDoubleCoupleToRHS( RHS, DcFlag,                               \n"
 <<"                                CondN,CondS,CondE,CondW,                   \n"
 <<"                                iN,   iS,   iE,   iW,                      \n"
@@ -772,20 +772,20 @@ write
   "//  by knowing the finite element degree of  freedom that corresponds          \n"
   "//  to these  indices, and the MPI rank that  holds these degrees of           \n"
   "//  freedom.                                                                   \n"
-  "// -------------------------------------------------------------------         \n"                                
+  "// -------------------------------------------------------------------         \n"
   "//  RHS : is the right hand side vector  assembled from linear.                \n"
   "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"    
+  "//           double couple points.                                             \n"
   "//  CondN  : is boundary condition force applied to the norther point          \n"
   "//           of the double couple. Same is true for Conds, CondW, and          \n"
-  "//           CondE.                                                            \n"          
-  "//  iN  : is finite element degree of freedom of the Northern  double          \n" 
-  "//        couple point. Same is true for iS, iE, iW.                           \n" 
-  "//  Nrank  : is rank of the MPI process that holds the finite element          \n" 
+  "//           CondE.                                                            \n"
+  "//  iN  : is finite element degree of freedom of the Northern  double          \n"
+  "//        couple point. Same is true for iS, iE, iW.                           \n"
+  "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
   "//=============================================================================\n"
-<<"                                                                           \n"  
+<<"                                                                           \n"
 <<"  macro ApplyDoubleCoupleToRHS( RHS, DcFlag,                               \n"
 <<"                                CondN,CondS,CondE,CondW,                   \n"
 <<"                                iN,   iS,   iE,   iW,                      \n"
@@ -844,7 +844,7 @@ write
 
 }
 
-} //-- [ostream terminator]  macros.edp closed --//  
+} //-- [ostream terminator]  macros.edp closed --//
 
 cout << " ................................... Done \n";
 

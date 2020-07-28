@@ -1,5 +1,5 @@
 //=====================================================================================
-// ------ Damage Mechanics for the LinearFormBuilderAndSolver.edp file ------ 
+// ------ Damage Mechanics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
 if(Model=="hybrid-phase-field"){
@@ -34,7 +34,7 @@ if(!vectorial)write
 <<"  int[int]  ldof( 1 )                ;                                          \n"
 <<"  ExtractDofBorderP1(2,Vh,ldof)        ;                                        \n"
 <<"                                                                                \n";
-/************************OLD METHOD*************************************************/ 
+/************************OLD METHOD*************************************************/
 
 if(!Sequential)write
 <<"                                                                                \n"
@@ -168,7 +168,7 @@ if(pipegnu){write
 <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                         )
 <<"  real forcetot  = 0.;                                                          \n"
 <<"  forcetot = intN1(Th,qforder=2,2)(lambda*divergence(u)+2.*mu*dy(u1));          \n"
-/************************OLD METHOD************************************************   
+/************************OLD METHOD************************************************
 <<"      And = elastNoDirc(Vh,Vh);                                                 \n"
 <<"      fr[] = And*u[];                                                           \n"
 <<"                                                                                \n"
@@ -224,7 +224,7 @@ write
 <<"                                                                                \n"
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                    )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 }  //-- [if loop terminator] Sequential ended --//
 
 
@@ -401,7 +401,7 @@ write
 <<"                                                                                \n"
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                   )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 }  //-- [if loop terminator] Sequential ended --//
 
 if(!Sequential)if(NonLinearMethod=="Picard"){write
@@ -630,7 +630,7 @@ if(plotAll)if(!vectorial){write
 <<"  if(int(iterout%10)==0){                                                       \n";
 
 
-write            
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
@@ -674,7 +674,7 @@ if(plotAll)if(vectorial){write
 <<"                                                                                \n"
 <<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
 
-write                   
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
@@ -730,7 +730,7 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "                                )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 
@@ -863,18 +863,18 @@ write
 <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
 <<"    real err1Gather,err2Gather, err1Loc, err2Loc;                               \n"
 <<"                                                                                \n"
-<<"        b = b .* DP                                   ;                         \n"                        
-<<"        err1Loc = b.l2                                ;                         \n"                          
-<<"        err1Loc = err1Loc*err1Loc                     ;                         \n"                          
-<<"        mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)  ;                 \n"                          
+<<"        b = b .* DP                                   ;                         \n"
+<<"        err1Loc = b.l2                                ;                         \n"
+<<"        err1Loc = err1Loc*err1Loc                     ;                         \n"
+<<"        mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)  ;                 \n"
 <<"        err1Gather = sqrt(err1Gather)                                 ;         \n"
-<<"                                                                                \n"       
-<<"        b1 = b1 .* DZ                                         ;                 \n"                        
-<<"        err2Loc = b1.l2                               ;                         \n"                          
+<<"                                                                                \n"
+<<"        b1 = b1 .* DZ                                         ;                 \n"
+<<"        err2Loc = b1.l2                               ;                         \n"
 <<"        err2Loc = err2Loc*err2Loc                     ;                         \n"
-<<"        mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM)  ;                 \n"                          
+<<"        mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM)  ;                 \n"
 <<"        err1Gather = sqrt(err2Gather)                                 ;         \n"
-<<"                                                                                \n"               
+<<"                                                                                \n"
 <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )
 <<"                                                                                \n"
 <<"    //--------------- Convergence conditional---------------------//            \n"
@@ -983,7 +983,7 @@ if(plotAll)if(!vectorial){write
 <<"  if(int(iterout%10)==0){                                                       \n";
 
 
-write            
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
@@ -1027,7 +1027,7 @@ if(plotAll)if(vectorial){write
 <<"                                                                                \n"
 <<"    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
 
-write                   
+write
 <<"    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
 <<"                 Th                 ,                                           \n";
 
@@ -1080,7 +1080,7 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                    )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : " "                                )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
 
@@ -1090,7 +1090,7 @@ if(Model=="Mazar"){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Variable initilization -------                                      \n"
-<<"//==============================================================================\n"           
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"      duimp         = 0.       ;                                                \n"
 <<"      intVar[]      = kappa0   ;                                                \n"
@@ -1099,7 +1099,7 @@ if(Model=="Mazar"){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Quasistatic loop for linear assembly and solving -------            \n"
-<<"//==============================================================================\n"        
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"  for (int n = 0; n < npas; n++){                                               \n"
 <<"                                                                                \n"
@@ -1232,7 +1232,7 @@ if(!supercomp)write
 <<"      <<\"plot\"                                                                \n"
 <<"      <<\"\\\"output.data\\\"\"                                                 \n"
 <<"      <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 notitle\"                             \n"
-<<"      <<\"\\n\";                                                                \n" 
+<<"      <<\"\\n\";                                                                \n"
 <<"     flush(pgnuplot);                                                           \n";
 
 write

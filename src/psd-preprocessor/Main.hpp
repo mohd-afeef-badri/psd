@@ -43,12 +43,12 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
 if(pipegnu)if(!supercomp)
  writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
- 
+
 if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
- "  load    \"Element_QF\"                           // Quadrature elements     \n" 
+ "  load    \"Element_QF\"                           // Quadrature elements     \n"
  "  load    \"../Plugins/soil-laws\"                 // Soil law PSD library    \n";
- 
+
 
 if(debug || plotAll || plotTime)if(!Sequential)
  writeIt
@@ -80,7 +80,7 @@ if(!Sequential)
 
 if(plotAll)
  writeIt
- "  include \"PostProcessor.edp\"                    // Post Processing        \n";        
+ "  include \"PostProcessor.edp\"                    // Post Processing        \n";
 
 } //-- [ostream terminator]  main.edp closed --//
 

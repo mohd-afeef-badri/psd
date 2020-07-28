@@ -1,5 +1,5 @@
 //=================================================================================================
-// ------ Building the VariationalFormulations.edp file ------ 
+// ------ Building the VariationalFormulations.edp file ------
 //=================================================================================================
 
 write
@@ -45,7 +45,7 @@ write
 <<"     + (etam*rho*gamma*(1-alpf)/(beta*dt)) *def(du)'*def(v)                                     \n"
 <<"     + (etak*gamma*(1-alpf)/(beta*dt)*lambda)*(divergence(du)*divergence(v))                    \n"
 <<"     + (etak*gamma*(1-alpf)/(beta*dt) * 2.*mu)*(epsilon(du)'*epsilon(v))                        \n"
-<<"                                                                                                \n" 
+<<"                                                                                                \n"
 <<"  )                                                                                             \n"
 <<"                                                                                                \n"
 <<"    + intN(Th,qforder=3)                                                                        \n"
@@ -81,7 +81,7 @@ write
 <<"     + (etak*dt*(1.-alpf)*(1.-2*beta)/2./beta*2.*mu)*(epsilon(aold)'*epsilon(v))                \n"
 <<"                                                                                                \n"
 <<"  )                                                                                             \n"
-/************************OLD METHOD*************************************************/  
+/************************OLD METHOD*************************************************/
 
 if(Model=="pseudo-nonlinear")write
 <<"                                                                                                \n"

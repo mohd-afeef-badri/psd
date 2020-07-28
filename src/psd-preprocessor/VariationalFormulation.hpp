@@ -13,7 +13,7 @@
 *                                                                                     *
 **************************************************************************************/
 
-cout << " building VariationalFormulations.edp"; 
+cout << " building VariationalFormulations.edp";
 
 {ofstream  write("VariationalFormulations.edp");
 

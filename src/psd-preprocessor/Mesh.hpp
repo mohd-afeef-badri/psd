@@ -10,8 +10,8 @@
 *                                                                                     *
 **************************************************************************************/
 
-cout << " building MeshAndFeSpace.edp"; 
- 
+cout << " building MeshAndFeSpace.edp";
+
 {ofstream  write("MeshAndFeSpace.edp");
 
 writeHeader;
@@ -44,7 +44,7 @@ if(Sequential){
   writeIt
   " fespace Wh0  ( Th , P0 );            // Energy decomposition FE space         \n"
   " fespace Sh0  ( Th , Sk );            // Strain vector FE space                \n";
-  
+
  if(Prblm=="damage" && Model=="Mazar")
   writeIt
   " fespace Wh0    ( Th , P0 );            // stress/strain/damage FE space       \n";
@@ -52,7 +52,7 @@ if(Sequential){
  if(Prblm=="damage" && Model=="Mazar" && useGFP)
   writeIt
   " fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space       \n";
-    
+
 }
 
 if(!Sequential){
@@ -80,10 +80,10 @@ if(!Sequential){
   " fespace Sh0    ( Th , Sk );            // Strain vector FE space              \n";
 
  if(Prblm=="soildynamics" && Model=="Hujeux")
-  writeIt    
+  writeIt
   " fespace Q3vh   ( Th , Sk );            // Quadrature 3  vector FE space       \n"
-  " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";  
-  
+  " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";
+
  if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || plotAll)
   writeIt
   " fespace VhPlt  ( Th , P1 );            // Damage field    FE space            \n";
@@ -171,7 +171,7 @@ if(!Sequential){
   "          )                                                                     \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)
-  writeIt 
+  writeIt
   "                                                                                \n"
   "  PETScMPIBuild(                                                                \n"
   "           Th                , // Local  mesh                                   \n"

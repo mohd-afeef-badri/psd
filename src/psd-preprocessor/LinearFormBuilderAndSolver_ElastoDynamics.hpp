@@ -1,12 +1,12 @@
 //=====================================================================================
-// ------ Elasticity Dynamics for the LinearFormBuilderAndSolver.edp file ------ 
+// ------ Elasticity Dynamics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
-if(Sequential){write    
+if(Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"while (t <= tmax){                                                              \n"
 <<"                                                                                \n"
@@ -82,7 +82,7 @@ if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,0]        ,                                           \n";
 if(PostProcess=="v")write
 <<"              [vold,vold1,0]        ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"              [aold,aold1,0]        ,                                           \n";
 if(PostProcess=="uva")write
 <<"              [uold,uold1,0]        ,                                           \n"
@@ -141,7 +141,7 @@ if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n";
 if(PostProcess=="v")write
 <<"              [vold,vold1,vold2]    ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"              [aold,aold1,aold2]    ,                                           \n";
 if(PostProcess=="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n"
@@ -187,7 +187,7 @@ if(!supercomp)write
 <<"  <<\"u ($1):($4) w lp lw 2 pt 7 ps 2 t \\\"D.E\\\",\"                          \n"
 <<"  <<\"\\\"energies.data\\\"          \"                                         \n"
 <<"  <<\"u ($1):($3+$2+$4) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"                    \n"
-<<"  <<\"\\n\";                                                                    \n" 
+<<"  <<\"\\n\";                                                                    \n"
 <<"  flush(pgnuplot);                                                              \n";
 
 write
@@ -217,16 +217,16 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                    )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
 
-if(!Sequential){write    
+if(!Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"while (t <= tmax){                                                              \n"
 <<"                                                                                \n"
@@ -294,12 +294,12 @@ if(Model=="pseudo-nonlinear")write
 <<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
 <<"  real err1Gather,  err1Loc ;                                                   \n"
 <<"                                                                                \n"
-<<"  b = b .* DP                                   ;                               \n"                        
-<<"  err1Loc = b.l2                                ;                               \n"                          
-<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
-<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  b = b .* DP                                   ;                               \n"
+<<"  err1Loc = b.l2                                ;                               \n"
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
 <<"  err1Gather = sqrt(err1Gather) ;                                               \n"
-<<"                                                                                \n"               
+<<"                                                                                \n"
 <<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
 <<"  //--------------- Convergence conditional---------------------//              \n"
@@ -363,7 +363,7 @@ if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"                 [uold,uold1,0]     ,                                           \n";
 if(PostProcess=="v")write
 <<"                 [vold,vold1,0]     ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"                 [aold,aold1,0]     ,                                           \n";
 if(PostProcess=="uva")write
 <<"                 [uold,uold1,0]     ,                                           \n"
@@ -478,7 +478,7 @@ if(!supercomp)write
 <<"     <<\"u ($1):($4) w lp lw 2 pt 7 ps 2 t \\\"D.E\\\",\"                       \n"
 <<"     <<\"\\\"energies.data\\\"\"                                                \n"
 <<"     <<\"u ($1):($3+$2+$4) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"                 \n"
-<<"     <<\"\\n\";                                                                 \n" 
+<<"     <<\"\\n\";                                                                 \n"
 <<"     flush(pgnuplot);                                                           \n";
 
 write
@@ -504,6 +504,6 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : ""                                  )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] !Sequential Dynamic ended --//

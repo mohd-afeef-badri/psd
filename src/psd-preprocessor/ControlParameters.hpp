@@ -50,12 +50,12 @@ if(Prblm=="soildynamics")
  if(doublecouple=="force-based" || doublecouple=="displacement-based")
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name      \n"; 
- if(doublecouple=="unused") 
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name      \n";
+ if(doublecouple=="unused")
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name         \n";
- } 
+ }
 
 
 
@@ -70,10 +70,10 @@ if(Prblm=="linear-elasticity")
   "//============================================================================\n"
   "//                   ------- Material parameters -------                      \n"
   "// -------------------------------------------------------------------        \n"
-  "//  mu, lambda : Lame parameter of the material                               \n" 
-  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"                        
+  "//  mu, lambda : Lame parameter of the material                               \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"
   "//============================================================================\n"
-  "                                                                              \n"  
+  "                                                                              \n"
   "  real    mu                                                                  \n"
   "         ,lambda;                                                             \n"
   "                                                                              \n"
@@ -92,11 +92,11 @@ if(Prblm=="linear-elasticity")
   "//============================================================================\n"
   "//              ------- Building material tensor-------                       \n"
   "// -------------------------------------------------------------------        \n"
-  "//  mu, lambda : Lame parameter of the material                               \n" 
-  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n" 
-  "//  Mt : Material tensor                                                      \n"                         
+  "//  mu, lambda : Lame parameter of the material                               \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"
+  "//  Mt : Material tensor                                                      \n"
   "//============================================================================\n"
-  "                                                                              \n" 
+  "                                                                              \n"
   "  real a1,a2,a3        ;                                                      \n"
   "{                                                                             \n"
   "  real E  = 200.e9     ,                                                      \n"
@@ -113,7 +113,7 @@ if(Prblm=="linear-elasticity")
   "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
   "              [ a2 ,  a1 , 0 ],                                               \n"
   "              [ 0  ,  0  , a3]]               // Material tensor              \n";
- 
+
  if(spc==3)
   writeIt
   "                                                                              \n"
@@ -138,11 +138,11 @@ if(Prblm=="damage")
  "//============================================================================\n"
  "//                   ------- Material parameters -------                      \n"
  "// -------------------------------------------------------------------        \n"
- "//  mu, lambda : Lame parameter of the Material                               \n" 
+ "//  mu, lambda : Lame parameter of the Material                               \n"
  "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"
- "//  kappa0 : Damage initiation threshold of the Material                      \n" 
- "//  kappac :  Critical strain level of the Material                           \n"                                                  
- "//============================================================================\n"  
+ "//  kappa0 : Damage initiation threshold of the Material                      \n"
+ "//  kappac :  Critical strain level of the Material                           \n"
+ "//============================================================================\n"
   "                                                                              \n"
   "  real    mu                                                                  \n"
   "         ,lambda                                                              \n"
@@ -161,11 +161,11 @@ if(Prblm=="damage")
   "//============================================================================\n"
   "//                  ------- Solver parameters -------                         \n"
   "// -------------------------------------------------------------------        \n"
-  "//  tol : Tolerance of the Newton-Raphsons procedure                          \n" 
+  "//  tol : Tolerance of the Newton-Raphsons procedure                          \n"
   "//  npas : # of pseudo-time steps                                             \n"
-  "//  iterMaxNR : Max # of iterations for the NR loop                           \n" 
-  "//  Duimp :  Imposed displacement variation                                   \n"   
-  "//  duimp :  Dummy Imposed displacement variation                             \n"           
+  "//  iterMaxNR : Max # of iterations for the NR loop                           \n"
+  "//  Duimp :  Imposed displacement variation                                   \n"
+  "//  duimp :  Dummy Imposed displacement variation                             \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  real tol      = 1.e-5 ;                                                     \n"
@@ -183,12 +183,12 @@ if(Prblm=="damage")
  "//============================================================================\n"
  "//                   ------- Material parameters -------                      \n"
  "// -------------------------------------------------------------------        \n"
- "//  mu, lambda : Lame parameter of the material                               \n" 
+ "//  mu, lambda : Lame parameter of the material                               \n"
  "//  Gc : Material fracture toughness                                          \n"
- "//  kappa0 : Damage initiation threshold of the Material                      \n" 
- "//  kappac :  Critical strain level of the Material                           \n"                                                  
- "//============================================================================\n"  
-  "                                                                              \n"  
+ "//  kappa0 : Damage initiation threshold of the Material                      \n"
+ "//  kappac :  Critical strain level of the Material                           \n"
+ "//============================================================================\n"
+  "                                                                              \n"
   "  real lambda = 121.15e3 ,                                                    \n"
   "       mu     = 80.77e3  ,                                                    \n"
   "       Gc     = 2.7      ;                                                    \n"
@@ -196,11 +196,11 @@ if(Prblm=="damage")
   "//============================================================================\n"
   "//                  ------- Solver parameters -------                         \n"
   "// -------------------------------------------------------------------        \n"
-  "//  lfac : # of cells within which fracture diffusion occurs                  \n" 
+  "//  lfac : # of cells within which fracture diffusion occurs                  \n"
   "//  maxtr : Maximum traction force applied                                    \n"
-  "//  tr : Traction force applied                                               \n" 
-  "//  dtr :  Change in traction force between two pseudo-time steps             \n"   
-  "//  lo :  Mesh dependent lateral fracture length                              \n"           
+  "//  tr : Traction force applied                                               \n"
+  "//  dtr :  Change in traction force between two pseudo-time steps             \n"
+  "//  lo :  Mesh dependent lateral fracture length                              \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  real lfac  = 2.0  ,                                                         \n"
@@ -221,10 +221,10 @@ if(Prblm=="elastodynamics")
  "//                   ------- Material parameters -------                      \n"
  "// -------------------------------------------------------------------        \n"
  "//  rho : density of Material                                                 \n"
- "//  mu, lambda : Lame parameter of the Material                               \n" 
- "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"                        
+ "//  mu, lambda : Lame parameter of the Material                               \n"
+ "//  E, nu : Modulus of Elasticity and Poisson ratio of the Material           \n"
  "//============================================================================\n"
- "                                                                              \n"  
+ "                                                                              \n"
  "  real rho    = 1.0          ,                                                \n"
  "       lambda = 576.9230769  ,           // E=1000. & nu=0.3                  \n"
  "       mu     = 384.6153846  ;           // E=1000. & nu=0.3                  \n"
@@ -237,11 +237,11 @@ if(Prblm=="elastodynamics")
   "//           ------- Time discretization parameters -------                   \n"
   "// -------------------------------------------------------------------        \n"
   "//  alpm, alpf : Generalized-alpha scheme constants                           \n"
-  "//  etam, etak : damping parameters                                           \n"  
+  "//  etam, etak : damping parameters                                           \n"
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       alpm = 0.2  ,                                                         \n"
@@ -260,11 +260,11 @@ if(Prblm=="elastodynamics")
   "//============================================================================\n"
   "//           ------- Time discretization parameters -------                   \n"
   "// -------------------------------------------------------------------        \n"
-  "//  etam, etak : damping parameters                                           \n"  
+  "//  etam, etak : damping parameters                                           \n"
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       tmax = 4.0  ,                                                         \n"
@@ -281,11 +281,11 @@ if(Prblm=="elastodynamics")
   "//============================================================================\n"
   "//           ------- Time discretization parameters -------                   \n"
   "// -------------------------------------------------------------------        \n"
-  "//  etam, etak : damping parameters                                           \n"  
+  "//  etam, etak : damping parameters                                           \n"
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma : Time discretization constant                                      \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       tmax = 4.0  ,                                                         \n"
@@ -301,11 +301,11 @@ if(Prblm=="elastodynamics")
   "//           ------- Time discretization parameters -------                   \n"
   "// -------------------------------------------------------------------        \n"
   "//  alpf : HHT-alpha scheme constant                                          \n"
-  "//  etam, etak : damping parameters                                           \n"  
+  "//  etam, etak : damping parameters                                           \n"
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real etam = 0.01 ,                                                         \n"
   "       etak = 0.01 ,                                                         \n"
   "       alpf = 0.4  ,                                                         \n"
@@ -332,17 +332,17 @@ if(Prblm=="soildynamics")
   "// -------------------------------------------------------------------        \n"
   "//  rho : density of soil                                                     \n"
   "//  cp, cs : Primary and secondary wave velocities                            \n"
-  "//  mu, lambda : Lame parameter of the soil                                   \n"       
+  "//  mu, lambda : Lame parameter of the soil                                   \n"
   "//============================================================================\n"
-  "                                                                              \n"  
+  "                                                                              \n"
   "  real rho  = 1800.0 ,                                                        \n"
   "       cs   = 2300.  ,                                                        \n"
   "       cp   = 4000.  ;                                                        \n"
-  "                                                                              \n" 
+  "                                                                              \n"
   "  real    mu     =  cs*cs*rho,                                                \n"
   "          lambda =  cp*cp*rho - 2*mu;                                         \n"
-  "                                                                              \n"; 
- else 
+  "                                                                              \n";
+ else
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -351,9 +351,9 @@ if(Prblm=="soildynamics")
   "//  rho : density of soil                                                     \n"
   "//  cp, cs : Primary and secondary wave velocities                            \n"
   "//  mu, lambda : Lame parameter of the soil                                   \n"
-  "//  E, nu : Modulus of Elasticity and Poisson ratio of the soil               \n"                
-  "//============================================================================\n" 
-  "                                                                              \n"     
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the soil               \n"
+  "//============================================================================\n"
+  "                                                                              \n"
   "  real rho  = 2500.0 ;                                                       \n"
   "                                                                             \n"
   "  real    mu                                                                 \n"
@@ -381,7 +381,7 @@ if(Prblm=="soildynamics")
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n" 
+  "                                                                              \n"
   "  real alpm = 0.2     ,                                                      \n"
   "       alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
@@ -401,7 +401,7 @@ if(Prblm=="soildynamics")
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ;                                                      \n"
@@ -419,7 +419,7 @@ if(Prblm=="soildynamics")
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma : Time discretization constant                                      \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
   "       dt   = 0.01    ,                                                      \n"
@@ -436,7 +436,7 @@ if(Prblm=="soildynamics")
   "//  t, tmax, dt : Time parameters, time, maximum time, and time step          \n"
   "//  gamma, beta : Time discretization constants (Newmark-beta)                \n"
   "//============================================================================\n"
-  "                                                                              \n"   
+  "                                                                              \n"
   "  real alpf = 0.4     ,                                                      \n"
   "       tmax = 4.0     ,                                                      \n"
   "       t    = 0.01    ,                                                      \n"
@@ -448,7 +448,7 @@ if(Prblm=="soildynamics")
 
 
  writeIt
- "                                                                              \n" 
+ "                                                                              \n"
  "//============================================================================\n"
  "//        -------Paraxial boundary-condition parameters-------                \n"
  "// -------------------------------------------------------------------        \n"
@@ -468,33 +468,33 @@ if(Prblm=="soildynamics")
   writeIt
   "  int [int]   PAlabels = [1,2,3,5];                                          \n";
 
- if(doublecouple=="unused"){  
+ if(doublecouple=="unused"){
   writeIt
- "                                                                              \n"  
+ "                                                                              \n"
   "//============================================================================\n"
   "//        -------Paraxial boundary load-------                                \n"
   "// -------------------------------------------------------------------        \n"
   "// v1in : is a time dependent sinusoidal loading function ( traction )        \n"
   "//        which exists for time (tt <= 1 sec)                                 \n"
   "// LoadLabels : is the vector of surface mesh labels to which external        \n"
-  "//              force is applied to                                           \n"  
+  "//              force is applied to                                           \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  real tt;                                                                    \n";  
- 
+  "  real tt;                                                                    \n";
+
   if(spc==2)
-   writeIt  
+   writeIt
    "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );    \n"
    "                                                                             \n"
    "  int [int]   LoadLabels = [ 5 ];     // Bottom-border label                 \n"
-   "                                                                             \n";     
-  
+   "                                                                             \n";
+
   if(spc==3)
    writeIt
    "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
-   "  int [int]   LoadLabels = [4];                                              \n";   
+   "  int [int]   LoadLabels = [4];                                              \n";
   }
-     
+
 
 /*
  if(doublecouple=="force-based")
@@ -507,77 +507,77 @@ if(Prblm=="soildynamics")
  "//                in x direction. Idiom nomenclature applies to the           \n"
  "//                south, east, and west points. (S/W loaded in z).            \n"
  "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
- "//                double couple north point. Idiom nomenclature ap-           \n" 
+ "//                double couple north point. Idiom nomenclature ap-           \n"
  "//                lies to the south, east, and west points.                   \n"
  "// DcNorthCondition : is the macro containing the applied condition           \n"
- "//                of the double couple north point.                           \n"     
+ "//                of the double couple north point.                           \n"
  "//============================================================================\n"
  "                                                                              \n"
  "   int  DcLabelNorth = 6,                                                     \n"
  "        DcLabelSouth = 7,                                                     \n"
  "        DcLabelEast  = 7,                                                     \n"
- "        DcLabelWest  = 6;                                                     \n"  
+ "        DcLabelWest  = 6;                                                     \n"
  "                                                                              \n"
- "                                                                              \n" 
+ "                                                                              \n"
  "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
- "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"     
+ "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"
  "                                                                              \n"
  "                                                                              \n"
  "   macro DcNorthCondition() -100.  //                                         \n"
  "   macro DcSouthCondition()  100.  //                                         \n"
  "   macro DcEastCondition()   100.  //                                         \n"
- "   macro DcWestCondition()  -100.  //                                         \n"   
+ "   macro DcWestCondition()  -100.  //                                         \n"
  "                                                                              \n"
- "                                                                              \n"; 
+ "                                                                              \n";
 */
-         
+
  if(doublecouple=="displacement-based" || doublecouple=="force-based")
  writeIt
- "                                                                              \n" 
+ "                                                                              \n"
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
  "// -------------------------------------------------------------------        \n"
  "// DcLabelPoints: is the label of the (line/surface) containing the           \n"
  "//                double couple points.If points are placed on more           \n"
- "//                than one label then use it as a vector.                     \n" 
+ "//                than one label then use it as a vector.                     \n"
  "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
- "//                double couple north point. Idiom nomenclature ap-           \n" 
+ "//                double couple north point. Idiom nomenclature ap-           \n"
  "//                lies to the south, east, and west points.                   \n"
  "// DcNorthCondition : is the macro containing the applied condition           \n"
- "//                of the double couple north point.                           \n"     
+ "//                of the double couple north point.                           \n"
  "//============================================================================\n"
  "                                                                              \n"
- "   int  [int]   DcLabelPoints = [6,7];                                        \n" 
- "                                                                              \n" 
- "                                                                              \n"  
+ "   int  [int]   DcLabelPoints = [6,7];                                        \n"
+ "                                                                              \n"
+ "                                                                              \n"
  "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
- "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"     
+ "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"
  "                                                                              \n";
- 
+
  if(doublecouple=="displacement-based")
- writeIt 
+ writeIt
  "                                                                              \n"
  "   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//                       \n"
  "   macro DcSouthCondition()  0.5*(1.+tanh(8*(t-0.2)))//                       \n"
  "   macro DcEastCondition()   0.5*(1.+tanh(8*(t-0.2)))//                       \n"
- "   macro DcWestCondition()  -0.5*(1.+tanh(8*(t-0.2)))//                       \n"   
+ "   macro DcWestCondition()  -0.5*(1.+tanh(8*(t-0.2)))//                       \n"
  "                                                                              \n"
- "                                                                              \n";  
+ "                                                                              \n";
 
  if(doublecouple=="force-based")
- writeIt 
+ writeIt
  "                                                                              \n"
  "   macro DcNorthCondition() rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
  "   macro DcSouthCondition()-rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
  "   macro DcEastCondition() -rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
- "   macro DcWestCondition()  rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"   
+ "   macro DcWestCondition()  rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
  "                                                                              \n"
- "                                                                              \n"; 
- 
+ "                                                                              \n";
+
  writeIt
  "                                                                              \n";
  }
@@ -590,45 +590,45 @@ if(dirichletconditions>=1)
  "// -------Dirichlet boundary-condition parameters-------                      \n"
  "//============================================================================\n"
  "                                                                              \n";
- 
+
  int trickLoop = 1;
  if(Prblm=="damage") trickLoop = 2;
- 
+
  if(spc==2)
  writeIt
  "                                                                              \n"
  " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
- "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n"; 
+ "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n";
  for(int i=trickLoop; i<dirichletconditions; i++)
-  writeIt 
+  writeIt
  "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n";
 
  if(spc==3)
  writeIt
  "                                                                              \n"
  " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
- "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n"; 
+ "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n";
  for(int i=trickLoop; i<dirichletconditions; i++)
-  writeIt 
+  writeIt
  "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field")
- writeIt  
+ writeIt
  "   macro  DirichletBorder1       2,      Uy=tr           //                   \n"
- " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n" 
+ " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n"
  " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
- " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"         
+ " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"
  "                                                                              \n";
  else
- writeIt  
+ writeIt
  " //macro  DirichletBorder1       1,2     Ux=1, Uy=0      //                   \n"
- " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n" 
+ " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n"
  " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
- " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"         
- "                                                                              \n";  
+ " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"
+ "                                                                              \n";
  }
- 
- 
+
+
 
 if(dirichletpointconditions>=1)
  {
@@ -682,7 +682,7 @@ if(tractionconditions>=1)
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
  "//============================================================================\n"
  "                                                                              \n"
- "  int [int]   Tlabel = [ 4             //  Label for traction border 1        \n";                     
+ "  int [int]   Tlabel = [ 4             //  Label for traction border 1        \n";
 
  for(int i=1; i<tractionconditions; i++)
   writeIt
@@ -701,7 +701,7 @@ if(tractionconditions>=1)
 
   writeIt
   "                                                                             \n"
-  "  macro T(i,j) [i,j]                        // Traction vector               \n"; 
+  "  macro T(i,j) [i,j]                        // Traction vector               \n";
   }
 
 
@@ -712,7 +712,7 @@ if(tractionconditions>=1)
    "  real tx"<<i<<"=0, ty"<<i<<"=0, tz"<<i<<"=0 ;// Component traction  on label "<<i<<" \n";
 
   writeIt
-  "  macro T(i,j,k) [i,j,k]                // Three component traction forces   \n"; 
+  "  macro T(i,j,k) [i,j,k]                // Three component traction forces   \n";
   }
  }
 
@@ -742,13 +742,13 @@ if(bodyforce)
  if(spc==2)
   writeIt
   "                                                                             \n"
-  "  macro BF [f1,f2]                   // Two component body forces            \n"; 
+  "  macro BF [f1,f2]                   // Two component body forces            \n";
 
  if(spc==3)
   writeIt
   "  real f3 = 0.;                      // Z component body forces              \n"
   "                                                                             \n"
-  "  macro BF [f1,f2,f3]                // Three component body forces          \n"; 
+  "  macro BF [f1,f2,f3]                // Three component body forces          \n";
  }
 
 writeIt

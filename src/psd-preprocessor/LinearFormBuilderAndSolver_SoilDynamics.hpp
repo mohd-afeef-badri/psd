@@ -1,12 +1,12 @@
 //=====================================================================================
-// ------ Soil Dynamics for the LinearFormBuilderAndSolver.edp file ------ 
+// ------ Soil Dynamics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
-if(Sequential){write 
+if(Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Assembly for stiffness matrix A -------                             \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"  //-----------------Assembly for A-----------------//                          \n"
 <<"                                                                                \n"
@@ -17,7 +17,7 @@ if(Sequential){write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"while (t <= tmax){                                                              \n"
 <<"                                                                                \n"
@@ -69,7 +69,7 @@ if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,0]        ,                                           \n";
 if(PostProcess=="v")write
 <<"              [vold,vold1,0]        ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"              [aold,aold1,0]        ,                                           \n";
 if(PostProcess=="uva")write
 <<"              [uold,uold1,0]        ,                                           \n"
@@ -128,7 +128,7 @@ if(PostProcess!="v" & PostProcess!="a" & PostProcess!="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n";
 if(PostProcess=="v")write
 <<"              [vold,vold1,vold2]    ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"              [aold,aold1,aold2]    ,                                           \n";
 if(PostProcess=="uva")write
 <<"              [uold,uold1,uold2]    ,                                           \n"
@@ -163,7 +163,7 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
 <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                    )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] Sequential Dynamic ended --//
 
@@ -171,11 +171,11 @@ write
 if(!Sequential){
 
 
-write    
+write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Assembly for stiffness matrix A -------                             \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"  //-----------------Local Assembly-----------------//                          \n"
 <<"                                                                                \n"
@@ -189,7 +189,7 @@ write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Applying double couple point boundary condition -------             \n"
-<<"//==============================================================================\n" 
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple A\",t0)\n"  : ""             )
 <<"  GetDoubelCoupleIndicies(                                                      \n"
@@ -222,7 +222,7 @@ write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- PETSc Assembly for stiffness matrix A -------                       \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )
 <<"  changeOperator(A, ALoc);                                                      \n"
@@ -231,7 +231,7 @@ write
 <<"                                                                                \n"
 <<"//==============================================================================\n"
 <<"//  ------- Dynamic loop for linear assembly and solving -------                \n"
-<<"//==============================================================================\n"  
+<<"//==============================================================================\n"
 <<"                                                                                \n"
 <<"while (t <= tmax){                                                              \n"
 <<"                                                                                \n"
@@ -279,18 +279,18 @@ write
 if(doublecouple=="force-based")
  writeIt
  "                                                                                 \n"
- "   if(t<.015){                                                                   \n" 
+ "   if(t<.015){                                                                   \n"
  "      DcNorthSouth(DcLabelNorth,Vh,b,DcNorthPointCord,DcNorthCondition);         \n"
- "      DcNorthSouth(DcLabelSouth,Vh,b,DcSouthPointCord,DcSouthCondition);         \n" 
- "      DcEastWest(DcLabelEast,Vh,b,DcEastPointCord,DcEastCondition);              \n" 
- "      DcEastWest(DcLabelWest,Vh,b,DcWestPointCord,DcWestCondition);              \n"     
- "   }                                                                             \n" ;    
+ "      DcNorthSouth(DcLabelSouth,Vh,b,DcSouthPointCord,DcSouthCondition);         \n"
+ "      DcEastWest(DcLabelEast,Vh,b,DcEastPointCord,DcEastCondition);              \n"
+ "      DcEastWest(DcLabelWest,Vh,b,DcWestPointCord,DcWestCondition);              \n"
+ "   }                                                                             \n" ;
 */
 
 if(doublecouple=="displacement-based" || doublecouple=="force-based" )
  writeIt
  "                                                                                 \n"
-<<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<< 
+<<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<<
  "   ApplyDoubleCoupleToRHS(                                                       \n"
 <<"           b, DcFlag,                                                           \n"
 <<"           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,   \n"
@@ -299,7 +299,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based" )
 <<"   );                                                                           \n"
 <<(timelog ? "  MPItimerend  (\"Applying double couple b\",t0)\n" : ""             )<<
  "                                                                                 \n";
- 
+
  /*
 if(doublecouple=="displacement-based")
  writeIt
@@ -318,12 +318,12 @@ if(doublecouple=="displacement-based")
  "  changeOperator(A, ALoc);                                                       \n"
  "  set(A,sparams =\"  -ksp_type cg   \");                                         \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
- "                                                                                 \n"  
+ "                                                                                 \n"
  "      DcNorthSouth(DcLabelNorth,Vh,ALoc,b,DcNorthPointCord,DcNorthCondition);    \n"
- "      DcNorthSouth(DcLabelSouth,Vh,ALoc,b,DcSouthPointCord,DcSouthCondition);    \n" 
- "      DcEastWest(DcLabelEast,Vh,ALoc,b,DcEastPointCord,DcEastCondition);         \n" 
- "      DcEastWest(DcLabelWest,Vh,ALoc,b,DcWestPointCord,DcWestCondition);         \n"     
- "   }                                                                             \n" 
+ "      DcNorthSouth(DcLabelSouth,Vh,ALoc,b,DcSouthPointCord,DcSouthCondition);    \n"
+ "      DcEastWest(DcLabelEast,Vh,ALoc,b,DcEastPointCord,DcEastCondition);         \n"
+ "      DcEastWest(DcLabelWest,Vh,ALoc,b,DcWestPointCord,DcWestCondition);         \n"
+ "   }                                                                             \n"
  "  if(t==.02){                                                                     \n"
  "                                                                                 \n"
  "  //-----------------Local Assembly-----------------//                           \n"
@@ -338,11 +338,11 @@ if(doublecouple=="displacement-based")
  "  changeOperator(A, ALoc);                                                       \n"
  "  set(A,sparams =\"  -ksp_type cg   \");                                         \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
- "                                                                                 \n" 
+ "                                                                                 \n"
  "   }                                                                             \n"
- "                                                                                 \n";     
+ "                                                                                 \n";
 */
- 
+
 write
 <<"                                                                                \n"
 <<"  //-----------------Solving du=A^-1*b--------------//                          \n"
@@ -364,12 +364,12 @@ if(Model=="pseudo-nonlinear")write
 <<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
 <<"  real err1Gather,  err1Loc ;                                                   \n"
 <<"                                                                                \n"
-<<"  b = b .* DP                                   ;                               \n"                        
-<<"  err1Loc = b.l2                                ;                               \n"                          
-<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
-<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  b = b .* DP                                   ;                               \n"
+<<"  err1Loc = b.l2                                ;                               \n"
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
 <<"  err1Gather = sqrt(err1Gather) ;                                               \n"
-<<"                                                                                \n"               
+<<"                                                                                \n"
 <<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
 <<"  //--------------- Convergence conditional---------------------//              \n"
@@ -409,12 +409,12 @@ if(Model=="Hujeux")write
 <<(timelog ? "  MPItimerbegin(\"NL error checking\",t0)\n" : ""                    )
 <<"  real err1Gather,  err1Loc ;                                                   \n"
 <<"                                                                                \n"
-<<"  b = b .* DP                                   ;                               \n"                        
-<<"  err1Loc = b.l2                                ;                               \n"                          
-<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"                          
-<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"                          
+<<"  b = b .* DP                                   ;                               \n"
+<<"  err1Loc = b.l2                                ;                               \n"
+<<"  err1Loc = err1Loc*err1Loc                     ;                               \n"
+<<"  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
 <<"  err1Gather = sqrt(err1Gather) ;                                               \n"
-<<"                                                                                \n"               
+<<"                                                                                \n"
 <<(timelog ? "  MPItimerend (\"NL error checking\",t0)\n" : ""                     )
 <<"                                                                                \n"
 <<"  //--------------- convergence conditional---------------------//              \n"
@@ -471,7 +471,7 @@ if(PostProcess=="u")write
 <<"                 [uold,uold1,0]     ,                                           \n";
 if(PostProcess=="v")write
 <<"                 [vold,vold1,0]     ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"                 [aold,aold1,0]     ,                                           \n";
 if(PostProcess=="uv" || PostProcess=="vu")
 write
@@ -481,7 +481,7 @@ if(PostProcess=="va" || PostProcess=="av")
 write
 <<"                 [uold,uold1,0]     ,                                           \n"
 <<"                 [aold,aold1,0]     ,                                           \n";
-if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||
     PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
 write
 <<"                 [uold,uold1,0]     ,                                           \n"
@@ -528,7 +528,7 @@ if(PostProcess=="u")write
 <<"                 [uold,uold1,uold2] ,                                           \n";
 if(PostProcess=="v")write
 <<"                 [vold,vold1,vold2] ,                                           \n";
-if(PostProcess=="a")write 
+if(PostProcess=="a")write
 <<"                 [aold,aold1,aold2] ,                                           \n";
 if(PostProcess=="uv" || PostProcess=="vu")
 write
@@ -538,7 +538,7 @@ if(PostProcess=="va" || PostProcess=="av")
 write
 <<"                 [uold,uold1,uold2] ,                                           \n"
 <<"                 [aold,aold1,aold2] ,                                           \n";
-if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||  
+if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||
     PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
 write
 <<"                 [uold,uold1,uold2] ,                                           \n"
@@ -586,7 +586,7 @@ if(!supercomp)write
 <<"     <<\"u ($1):($3) w lp lw 2  pt 7 ps 2 t \\\"E.E\\\",\"                      \n"
 <<"     <<\"\\\"energies.data\\\"\"                                                \n"
 <<"     <<\"u ($1):($3+$2) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"                    \n"
-<<"     <<\"\\n\";                                                                 \n" 
+<<"     <<\"\\n\";                                                                 \n"
 <<"     flush(pgnuplot);                                                           \n";
 
 write
@@ -610,6 +610,6 @@ write
 <<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
 <<(timelog ? "MPItimerend  (\"solver\",t1)\n" : ""                                  )
 <<"                                                                                \n"
-<<"//-------------------------------THE END------------------------------//        \n"; 
+<<"//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] !Sequential Dynamic ended --//
