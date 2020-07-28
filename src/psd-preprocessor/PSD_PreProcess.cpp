@@ -249,23 +249,26 @@ int main(int argc, char *argv[]){
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
   }
 
+
   cout << "                                                                   " << endl;
 
-#include "Help.hpp"
-#include "Main.hpp"
-#include "Mesh.hpp"
-#include "Macros.hpp"
-#include "FemParameters.hpp"      
-#include "OtherParameters.hpp" 
-#include "ControlParameters.hpp" 
-#include "VariationalFormulation.hpp"
-#include "LinearFormBuilderAndSolver.hpp"   
-#include "PostProcessor.hpp"
+ #include "Help.hpp"
+ 
+if(!help){ 
+ #include "Main.hpp"
+ #include "Mesh.hpp"
+ #include "Macros.hpp"
+ #include "FemParameters.hpp"      
+ #include "OtherParameters.hpp" 
+ #include "ControlParameters.hpp" 
+ #include "VariationalFormulation.hpp"
+ #include "LinearFormBuilderAndSolver.hpp"   
+ #include "PostProcessor.hpp"
 
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 
-if(plotAll)
+ if(plotAll)
   system("mkdir -p VTUs");
 
   cout << "                                                                   " << endl;
@@ -280,6 +283,6 @@ if(plotAll)
   cout << "     FreeFem++ Main.edp                                            " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
-
+}
 return 0;
 }
