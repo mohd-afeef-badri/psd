@@ -80,3 +80,12 @@ clean-local:
 	rm  -f *~  *.msh
 	rm -rf ../Meshes
 	@echo ""
+	
+		
+maintainer-clean-local: clean-local
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files"
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -rf Makefile Makefile.in

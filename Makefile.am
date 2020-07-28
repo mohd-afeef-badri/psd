@@ -289,19 +289,13 @@ clean-local:
 	@echo ""	
 	rm  -f *~
 		
-clean-automake:
+maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
 	rm  -rf ${AUTOMAKE_LIST}
-	rm  -rf ./data/Makefile ./data/Makefile.in
-	rm  -rf ./data/meshes/2D/Geo-Files/Makefile ./data/meshes/2D/Geo-Files/Makefile.in
-	rm  -rf ./data/meshes/3D/Geo-Files/Makefile ./data/meshes/3D/Geo-Files/Makefile.in
-	rm  -rf ./src/Makefile ./src/Makefile.in
-	rm  -rf ./src/plugins/Makefile ./src/plugins/Makefile.in
-	rm  -rf ./src/plugins/top-ii-vol/Makefile ./src/plugins/top-ii-vol/Makefile.in	
-	rm  -rf ./src/plugins/top-ii-vol/cpp/Makefile ./src/plugins/top-ii-vol/cpp/Makefile.in		
+#	rm  -rf ./src/plugins/top-ii-vol/cpp/Makefile ./src/plugins/top-ii-vol/cpp/Makefile.in		
 	
 proper: clean-automake clean-local
