@@ -9,3 +9,20 @@ EXTRA_DIST=   	      \
 ./meshes/3D/Geo-Files/tensile-crack.geo\
 ./meshes/3D/Geo-Files/bar-dynamic.geo
 
+clean-local:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning files in :"; pwd
+	@echo "*============================================================*"
+	@echo ""
+	rm  -f *~ 
+	@echo ""
+
+maintainer-clean-local: clean-local
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files"
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -rf Makefile Makefile.in
+

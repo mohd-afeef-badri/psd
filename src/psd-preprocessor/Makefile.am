@@ -48,3 +48,12 @@ clean-local:
 	rm  -f *~  PSD_PreProcess *.o *.edp
 	rm  -rf VTUs
 	@echo ""
+
+
+maintainer-clean-local: clean-local
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files"
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -rf Makefile Makefile.in	

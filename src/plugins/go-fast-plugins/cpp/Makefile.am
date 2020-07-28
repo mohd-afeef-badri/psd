@@ -19,3 +19,12 @@ clean-local:
 	@echo "*============================================================*"
 	@echo ""
 	rm  -f *~  *.so *.o
+
+
+maintainer-clean-local: clean-local
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files"
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -rf Makefile Makefile.in	

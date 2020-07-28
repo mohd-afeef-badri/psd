@@ -44,5 +44,4 @@ maintainer-clean-local: clean-local
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -rf ${AUTOMAKE_LIST}
 	rm  -rf Makefile Makefile.in	
