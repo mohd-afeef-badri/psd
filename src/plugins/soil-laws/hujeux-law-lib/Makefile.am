@@ -1,6 +1,6 @@
-LIST_COMPILE = hujeux.cpp utils.cpp
+LIST_COMPILE = utils.cpp hujeux.cpp druckerprager.cpp
 	
-all-local: hujeux.o utils.o
+all-local: utils.o hujeux.o druckerprager.o
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,13 +8,17 @@ all-local: hujeux.o utils.o
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
+utils.o: utils.cpp utils.h
+	@echo ""
+	$(FFCXX) -O3 -finline-functions -std=c++11 -fpic -c 	utils.cpp
+	
 hujeux.o: hujeux.cpp hujeux.h utils.cpp utils.h
 	@echo ""
 	$(FFCXX) -O3 -finline-functions -std=c++11 -fpic -c 	hujeux.cpp
 	
-utils.o: utils.cpp utils.h
+druckerprager.o: druckerprager.cpp druckerprager.o utils.cpp utils.h
 	@echo ""
-	$(FFCXX) -O3 -finline-functions -std=c++11 -fpic -c 	utils.cpp
+	$(FFCXX) -O3 -finline-functions -std=c++11 -fpic -c 	druckerprager.cpp
 
 check-local: utils.o 	hujeux.o		
 	@echo ""
@@ -33,3 +37,12 @@ clean-local:
 	@echo "*============================================================*"
 	@echo ""
 	rm  -f *~  *.so *.o *.output
+
+maintainer-clean-local: clean-local
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Cleaning automake generated files"
+	@echo "*============================================================*"
+	@echo ""	
+	rm  -rf ${AUTOMAKE_LIST}
+	rm  -rf Makefile Makefile.in	
