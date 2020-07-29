@@ -22,7 +22,7 @@ All notable changes to PSD solver will be documented in this file.
 - New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne Foerster).
 - New pseudo-nonlinear model for solving elastodynamics and soildynamics with nonlinear Newton-Raphsons.
 - Introduced double couple earthquake source boundary condition for soildynamics.
-- New flag `-doublecouple` [bool]  to activate double couple source for soildynamics.
+- New flag `-doublecouple` force-based | displacement-based   to use double couple source for soildynamics.
 
 ### Changed
 - Moved to FreeFEM 4.6.
@@ -30,6 +30,7 @@ All notable changes to PSD solver will be documented in this file.
 - Moved to C++ for preprocessing.
 - Changes to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.
 - Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.
+- Postprocessing flag `-postprocess` options now support  `u` , `v`,  `a` , `uv`, `ua`, `av` or `uav`. 
 
 ### Removed
 - No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.

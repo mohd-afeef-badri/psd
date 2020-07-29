@@ -292,10 +292,7 @@ clean-local:
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Cleaning automake generated files"
+	@echo " Cleaning maintainer mode"
 	@echo "*============================================================*"
 	@echo ""	
 	rm  -rf ${AUTOMAKE_LIST}
-#	rm  -rf ./src/plugins/top-ii-vol/cpp/Makefile ./src/plugins/top-ii-vol/cpp/Makefile.in		
-	
-proper: clean-automake clean-local
