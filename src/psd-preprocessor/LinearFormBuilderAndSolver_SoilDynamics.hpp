@@ -474,7 +474,7 @@ if(Model=="Hujeux")
  "  du[] = uNL[];                                                                 \n"
  "                                                                                \n";
 
-if(debug)
+if(debug && !top2vol)
  writeIt
  "                                                                                \n"
  "  //-----------------Move mesh plotting------------//                           \n"
@@ -482,6 +482,13 @@ if(debug)
  "  macro defplot(i) i//                                                          \n"
  "  plotMPI(Th, du1, P1, defplot, real, wait=0, cmm=\"T-\"+t+\"\");               \n";
 
+if(debug && top2vol)
+ writeIt
+ "                                                                                \n"
+ "  //-----------------Move mesh plotting------------//                           \n"
+ "                                                                                \n"
+ "  macro defplot(i) i//                                                          \n"
+ "  plotMPI(Th, du1, P1, defplot, real,  cmm=\"T-\"+t+\"\");                      \n";
 
  writeIt
  "                                                                                \n"

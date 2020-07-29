@@ -207,27 +207,27 @@ if(!Sequential){
  "// ---- creating a folder for top-ii-vol related files ----                     \n"
  "//==============================================================================\n"
  "                                                                                \n"
- "  if(mpirank==0)system(\"mkdir -p top-ii-vol-meshes\");                         \n"  
+ "  if(mpirank==0)system(\"mkdir -p top-ii-vol-meshes\");                         \n"
  "                                                                                \n"
  "//==============================================================================\n"
  "// ---- top-ii-vol point cloud partitioning + meshing ----                      \n"
  "//==============================================================================\n"
  "                                                                                \n"
  "  topiivolpart(                                                                 \n"
- "                 PcName,                                                        \n" 
+ "                 PcName,                                                        \n"
  "                 outfile=\"./top-ii-vol-meshes/Pc-strip\",                      \n"
- "                 pointsx=32,                                                    \n" 
- "                 pointsy=29                                                     \n"  
+ "                 pointsx=PcNx,                                                  \n"
+ "                 pointsy=PcNy                                                   \n"
  "              );                                                                \n"
- "                                                                                \n"   
- "  mpiBarrier(mpiCommWorld);                                                     \n" 
- "                                                                                \n" 
+ "                                                                                \n"
+ "  mpiBarrier(mpiCommWorld);                                                     \n"
+ "                                                                                \n"
  "  topiivolmesh(                                                                 \n"
  "                \"./top-ii-vol-meshes/Pc-strip\",                               \n"
  "                outfile=\"./top-ii-vol-meshes/top2volmesh\",                    \n"
- "                pointsz=4,                                                      \n"
- "                zdepth=-1920.0                                                  \n"
- "              );                                                                \n"     
+ "                pointsz=PcNz,                                                   \n"
+ "                zdepth=Dptz                                                     \n"
+ "              );                                                                \n"
  "                                                                                \n"
  "                                                                                \n"
  "//==============================================================================\n"
@@ -236,8 +236,8 @@ if(!Sequential){
  "                                                                                \n"
  "  Th=readmesh3(\"./top-ii-vol-meshes/top2volmesh_\"+mpirank+\".mesh\");         \n"
  "  reconstructDmesh(Th);                                                         \n"
- "                                                                                \n";       
- }  
+ "                                                                                \n";
+ }
 }
 
 } //-- [ostream terminator]  meshpartitioning.edp closed --//

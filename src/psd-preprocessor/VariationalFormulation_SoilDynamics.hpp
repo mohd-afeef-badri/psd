@@ -21,9 +21,14 @@ writeIt
 "  (                                                                                             \n"
 "      (def(uold)'*def(v))*c[0]                                                                  \n"
 "    + (def(vold)'*def(v))*c[3]                                                                  \n"
-"    + (def(aold)'*def(v))*c[4]                                                                  \n"
-"    - (divergence(uold)*divergence(v))*c[5]                                                     \n"
-"    - (epsilon(uold)'*epsilon(v))*c[6]                                                          \n"
+"    + (def(aold)'*def(v))*c[4]                                                                  \n";
+
+if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+ writeIt
+ "    - (divergence(uold)*divergence(v))*c[5]                                                    \n"
+ "    - (epsilon(uold)'*epsilon(v))*c[6]                                                         \n";
+
+writeIt
 "  )                                                                                             \n"
 "                                                                                                \n"
 "    + intN1(Th,qforder=3,PAlabels)                                                              \n"
@@ -47,17 +52,39 @@ if(doublecouple=="unused"){
  "    + intN1(Th,qforder=3,LoadLabels)                                                           \n"
  "  (                                                                                            \n"
  "     rho*(                                                                                     \n"
+ "           (  cp*(N.x*N.y*v1in)                                                                \n"
+ "             +cs*(- N.x*N.y*v1in))*v                                                           \n"
+ "          +(  cp*(N.y*N.y*v1in)                                                                \n"
+ "             +cs*((1.-N.y*N.y)*v1in ))*v1                                                      \n"
+ "          )                                                                                    \n"
+ "  )                                                                                            \n"
+ "                                                                                               \n"
+ " /*   + intN1(Th,qforder=3,LoadLabels)                                                         \n"
+ "  (                                                                                            \n"
+ "     rho*(                                                                                     \n"
  "           (  cp*(N.x*N.x*0 + N.x*N.y*v1in)                                                    \n"
  "             +cs*((1.-N.x*N.x)*0 - N.x*N.y*v1in))*v                                            \n"
  "          +(  cp*(N.x*N.y*0 + N.y*N.y*v1in)                                                    \n"
  "             +cs*(- N.x*N.y*0+ (1.-N.y*N.y)*v1in ))*v1                                         \n"
  "          )                                                                                    \n"
- "  )                                                                                            \n";
+ "  ) */                                                                                         \n"; 
 
  if(spc==3)
  writeIt
  "                                                                                                \n"
  "    + intN1(Th,qforder=3,LoadLabels)                                                            \n"
+ "  (                                                                                             \n"
+ "     rho*(                                                                                      \n"
+ "           (  cp*( N.x*N.y*v1in)                                                                \n"
+ "             +cs*(- N.x*N.y*v1in))*v                                                            \n"
+ "          +(  cp*(  N.y*N.y*v1in )                                                              \n"
+ "             +cs*( (1.-N.y*N.y)*v1in ))*v1                                                      \n"
+ "          +(  cp*(  N.y*N.z*v1in )                                                              \n"
+ "             +cs*( - N.z*N.y*v1in))*v2                                                          \n"
+ "          )                                                                                     \n"
+ "  )                                                                                             \n"
+ "                                                                                                \n"
+ "/*    + intN1(Th,qforder=3,LoadLabels)                                                          \n"
  "  (                                                                                             \n"
  "     rho*(                                                                                      \n"
  "           (  cp*( N.x*N.x*0 + N.x*N.y*v1in + N.x*N.z*0)                                        \n"
@@ -67,7 +94,7 @@ if(doublecouple=="unused"){
  "          +(  cp*( N.x*N.z*0 + N.y*N.z*v1in + N.z*N.z*0)                                        \n"
  "             +cs*(-N.x*N.z*0 - N.z*N.y*v1in + (1.-N.z*N.z)*0))*v2                               \n"
  "          )                                                                                     \n"
- "  )                                                                                             \n";
+ "  )*/                                                                                           \n"; 
 }
 
 if(Model=="pseudo-nonlinear")

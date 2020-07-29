@@ -16,49 +16,67 @@ cout << " building ControlParameters.edp";
 
 writeHeader;
 
-writeIt
-"                                                                               \n"
-"//=============================================================================\n"
-"// ------- Mesh parameters (Un-partitioned) -------                            \n"
-"// -------------------------------------------------------------------         \n"
-"//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         \n"
-"//=============================================================================\n";
+if(!top2vol)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Mesh parameters (Un-partitioned) -------                            \n"
+ "// -------------------------------------------------------------------         \n"
+ "//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         \n"
+ "//=============================================================================\n";
 
+if(top2vol)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Mesh parameters (Un-partitioned) -------                            \n"
+ "// -------------------------------------------------------------------         \n"
+ "//  PcName : Name of the point cloud                                           \n"
+ "//  PcNx : Number of points in x in the point cloud                            \n"
+ "//  PcNy : Number of points in x in the point cloud                            \n"
+ "//  PcNz : Number of points in x in the point cloud                            \n"
+ "//  Dptz : Depth in z for the mesh produced by top-ii-vol                      \n"
+ "//=============================================================================\n";
 
 if(Prblm=="linear-elasticity")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/bar\";  // Mesh  name                \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar\";                               \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\"; // Mesh  name       \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\";                     \n";
 
 if(Prblm=="elastodynamics")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\"; // Mesh  name         \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\";                       \n";
 
 if(Prblm=="damage" && Model=="Mazar")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\"; // Mesh  name         \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\";                       \n";
 
 if(Prblm=="soildynamics")
  {
  if(doublecouple=="force-based" || doublecouple=="displacement-based" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";      // Mesh  name       \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";                          \n";
  if(doublecouple=="unused" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";      // Mesh  name          \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";                             \n";
  if(top2vol)
   writeIt
   "                                                                             \n"
-  "  string PcName = \"../Meshes/"<<spc<<"D/DEM_160m\";      // Point cloud name\n";  
+  "  string PcName = \"../Meshes/"<<spc<<"D/DEM_160m\";                         \n"
+  "  macro PcNx() 32 //                                                         \n"
+  "  macro PcNy() 29 //                                                         \n"
+  "  macro PcNz() 10 //                                                         \n"
+  "  macro Dptz() -1920.0 //                                                    \n"
+  "                                                                             \n";
  }
 
 
@@ -328,7 +346,7 @@ if(Prblm=="soildynamics")
  {
 
 
- if(doublecouple=="displacement-based" || doublecouple=="force-based")
+ if(doublecouple=="displacement-based" || doublecouple=="force-based" || top2vol)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -468,9 +486,13 @@ if(Prblm=="soildynamics")
   "                           5 ];     // Bottom-border label                   \n";
 
 
- if(spc==3)
+ if(spc==3 && !top2vol)
   writeIt
   "  int [int]   PAlabels = [1,2,3,5];                                          \n";
+
+ if(spc==3 && top2vol)
+  writeIt
+  "  int [int]   PAlabels = [1,2,4,5,6];                                        \n";
 
  if(doublecouple=="unused"){
   writeIt
@@ -493,10 +515,29 @@ if(Prblm=="soildynamics")
    "  int [int]   LoadLabels = [ 5 ];     // Bottom-border label                 \n"
    "                                                                             \n";
 
-  if(spc==3)
+  if(spc==3 && !top2vol)
    writeIt
-   "  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>10&&x<40)*(z>10&&z<40) : 0. );\n"
-   "  int [int]   LoadLabels = [4];                                              \n";
+   "  func v1in = (                                                               \n"
+   "                 tt <= 1.0  ?                                                 \n"
+   "                  real( sin(tt*(2.*pi/1.0))) *                                \n"
+   "                  (x>10.&&x<40.) * (y>10.&&y<40.)                             \n"
+   "                 :                                                            \n"
+   "                   0.                                                         \n"
+   "               );                                                             \n"
+   "                                                                              \n"
+   "  int [int]   LoadLabels = [4];                                               \n";
+
+  if(spc==3 && top2vol)
+   writeIt
+   "  func v1in = (                                                               \n"
+   "                 tt <= 1.0  ?                                                 \n"
+   "                  real( sin(tt*(2.*pi/1.0))) *                                \n"
+   "                  (x>875481.&&x<875681.) * (y>160200.&&y<160400.)             \n"
+   "                 :                                                            \n"
+   "                   0.                                                         \n"
+   "               );                                                             \n"
+   "                                                                              \n"
+   "  int [int]   LoadLabels = [6];                                               \n";
   }
 
 
