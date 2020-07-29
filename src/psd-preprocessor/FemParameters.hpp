@@ -205,12 +205,12 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
   "// ------- Fem matrices and vectors -------                                   \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  matrix  A                        ;                                          \n"
-  "  real[int]  b(Vh.ndof)        ;                                              \n";
+  "  matrix  A;                                                                  \n"
+  "  real[int]  b(Vh.ndof);                                                      \n";
 
  if(!Sequential){
 
-  if(pipegnu)
+  if(pipegnu && !top2vol)
    writeIt
    "                                                                             \n"
    "//===========================================================================\n"
@@ -220,6 +220,7 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
    "  for(int i=0; i<DP.n; i++)                                                  \n"
    "    DPspc[][i]=DP[i];                                                        \n";
 
+
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -227,12 +228,24 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
   "//============================================================================\n"
   "                                                                              \n"
   "  matrix       ALoc    ;                                                      \n"
-  "  real[int]    b(Vh.ndof);                                                    \n"
+  "  real[int]    b(Vh.ndof);                                                    \n";
+
+  if(!top2vol)
+  writeIt
   "                                                                              \n"
   <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
   "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
   <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
   "                                                                              \n";
+
+  if(top2vol)
+  writeIt
+  "                                                                              \n"
+  <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  Mat A; createMat(Th, A, Pk);                                                \n"
+  <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "                                                                              \n";
+    
  }
 }
 

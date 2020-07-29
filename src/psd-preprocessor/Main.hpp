@@ -49,8 +49,13 @@ if(Prblm=="soildynamics" && Model=="Hujeux")
  "  load    \"Element_QF\"                           // Quadrature elements     \n"
  "  load    \"../Plugins/soil-laws\"                 // Soil law PSD library    \n";
 
+if(!Sequential&& Prblm=="soildynamics" && top2vol)
+ writeIt
+ "  load    \"msh3\"                                 // to get cube function   \n" 
+ "  load    \"../Plugins/top-ii-vol\"                // top-ii-vol meshing     \n";
 
-if(debug || plotAll || plotTime)if(!Sequential)
+
+if(debug || plotAll || plotTime)if(!Sequential && !top2vol)
  writeIt
  "  include \"../Plugins/DDplotMacro.edp\"           // Domain decomp plotting \n";
 
@@ -66,16 +71,26 @@ if(Sequential)
  "  include \"LinearFormBuilderAndSolver.edp\"       // Build and solve Ax=b   \n";
 
 if(!Sequential)
+ {
  writeIt
  "  include \"getARGV.idp\"                          // Commandline arguments  \n"
  "  include \"ControlParameters.edp\"                // Parameters & propeties \n"
  "  include \"OtherParameters.edp\"                  // Other Parameters       \n"
- "  include \"Macros.edp\"                           // User-defined macros    \n"
- "  include \"../Plugins/DDmacro.edp\"               // Domain decomp macros   \n"
+ "  include \"Macros.edp\"                           // User-defined macros    \n";
+
+ if(!top2vol)
+  writeIt 
+  "  include \"../Plugins/DDmacro.edp\"               // Domain decomp macros  \n";
+ if(top2vol)
+  writeIt 
+  "  include \"macro_ddm.idp\"                        // Domain decomp macros  \n";
+
+ writeIt
  "  include \"MeshAndFeSpace.edp\"                   // Mesh and FE space      \n"
  "  include \"FemParameters.edp\"                    // Fem Parameters         \n"
  "  include \"VariationalFormulations.edp\"          // Variational formulation\n"
  "  include \"LinearFormBuilderAndSolver.edp\"       // Build and solve Ax=b   \n";
+ }
 
 
 if(plotAll)

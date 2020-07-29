@@ -254,7 +254,7 @@ if(doublecouple=="displacement-based")
  "//==============================================================================\n"
  "                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                     )<<
- "  changeOperator(A, ALoc);                                                      \n"
+ "  A=ALoc;  //changeOperator(A, ALoc);                                           \n"
  "  set(A,sparams =\"  -ksp_type cg   \");                                        \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                     )<<
  "                                                                                \n"
@@ -604,7 +604,7 @@ if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||
 
  writeIt
  "                 order = vtuorder     ,                                         \n"
- "                 dataname = amedata   ,                                         \n"
+ "                 dataname = namedata   ,                                        \n"
  "                 append=true                                                    \n"
  "              );                                                                \n";
 

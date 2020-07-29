@@ -86,6 +86,8 @@
 
   -sequential   [bool]     To generate a sequential ff++ solver.
 
+  -top2vol-meshing [bool]  To activate top-ii-vol point source meshing for soil-dynamics.
+
 */
 
 
@@ -108,11 +110,12 @@ int main(int argc, char *argv[]){
   int spc                      = 2;
   int lag                      = 1;
 
-  bool RCM          = true;
+  bool RCM          = true;  
   bool help         = false;
   bool debug        = false;
   bool useGFP       = false;
   bool timelog      = false;
+  bool top2vol      = false;    
   bool plotAll      = false;
   bool pipegnu      = false;
   bool plotTime     = false;
@@ -124,6 +127,7 @@ int main(int argc, char *argv[]){
   bool Sequential   = false;
   bool dirichletbc  = false;
   bool energydecomp = false;
+
 
   string Model                   = "hybrid-phase-field";
   string Solver                  = "cg";
@@ -150,22 +154,23 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"       ) RCM                                 = true;
-    if( argvdummy == "-help"         ) help                                = true;
-    if( argvdummy == "-debug"        ) debug                               = true;
-    if( argvdummy == "-useGFP"       ) useGFP                              = true;
-    if( argvdummy == "-plot"         ) plotAll                             = true;
-    if( argvdummy == "-pipegnu"      ) pipegnu                             = true;
-    if( argvdummy == "-timepvd"      ) plotTime                            = true;
-    if( argvdummy == "-testflags"    ) testflags                           = true;
-    if( argvdummy == "-timelog"      ) timelog                             = true;
-    if( argvdummy == "-vectorial"    ) vectorial                           = true;
-    if( argvdummy == "-bodyforce"    ) bodyforce                           = true;
-    if( argvdummy == "-supercomp"    ) supercomp                           = true;
-    if( argvdummy == "-fastmethod"   ) fastmethod                          = true;
-    if( argvdummy == "-sequential"   ) Sequential                          = true;
-    if( argvdummy == "-dirichletbc"  ) dirichletbc                         = true;
-    if( argvdummy == "-energydecomp" ) energydecomp                        = true;
+    if( argvdummy == "-useRCM"          ) RCM                              = true;
+    if( argvdummy == "-help"            ) help                             = true;
+    if( argvdummy == "-debug"           ) debug                            = true;
+    if( argvdummy == "-useGFP"          ) useGFP                           = true;
+    if( argvdummy == "-plot"            ) plotAll                          = true;
+    if( argvdummy == "-pipegnu"         ) pipegnu                          = true;
+    if( argvdummy == "-timepvd"         ) plotTime                         = true;
+    if( argvdummy == "-testflags"       ) testflags                        = true;
+    if( argvdummy == "-timelog"         ) timelog                          = true;
+    if( argvdummy == "-vectorial"       ) vectorial                        = true;
+    if( argvdummy == "-bodyforce"       ) bodyforce                        = true;
+    if( argvdummy == "-supercomp"       ) supercomp                        = true;
+    if( argvdummy == "-fastmethod"      ) fastmethod                       = true;
+    if( argvdummy == "-sequential"      ) Sequential                       = true;
+    if( argvdummy == "-dirichletbc"     ) dirichletbc                      = true;
+    if( argvdummy == "-energydecomp"    ) energydecomp                     = true;
+    if( argvdummy == "-top2vol-meshing" ) top2vol                          = true;        
 
     if( argvdummy == "-model"              ) Model                         = argv[i+1];
     if( argvdummy == "-solver"             ) Solver                        = argv[i+1];

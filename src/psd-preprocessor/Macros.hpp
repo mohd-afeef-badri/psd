@@ -57,7 +57,7 @@ if(spc==2)
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
  writeIt
  "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
-
+ 
  if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
  "                                                                              \n"
@@ -280,6 +280,10 @@ if(plotAll || debug)write
 <<"  macro Pltk         P1                          // FE space                \n"
 <<"  macro def0 (i)           i                     // Vect. field definition  \n";
 
+ if(Prblm=="soildynamics" && top2vol)
+ writeIt
+ "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                   \n";
+ 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"  macro Sk           [ P0,P0,P0,P0,P0,P0  ]  // Sixth order strain vector   \n";
 

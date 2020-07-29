@@ -96,6 +96,8 @@ if(!Sequential){
   writeIt
   " fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space       \n";
 
+ if(!top2vol)
+ {
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -196,7 +198,46 @@ if(!Sequential){
  <<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "                   )<<
  "                                                                                \n"
  "                                                                                \n";
-
+ }
+ if(top2vol)
+ {
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ---- creating a folder for top-ii-vol related files ----                     \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  if(mpirank==0)system(\"mkdir -p top-ii-vol-meshes\");                         \n"  
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ---- top-ii-vol point cloud partitioning + meshing ----                      \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  topiivolpart(                                                                 \n"
+ "                 PcName,                                                        \n" 
+ "                 outfile=\"./top-ii-vol-meshes/Pc-strip\",                      \n"
+ "                 pointsx=32,                                                    \n" 
+ "                 pointsy=29                                                     \n"  
+ "              );                                                                \n"
+ "                                                                                \n"   
+ "  mpiBarrier(mpiCommWorld);                                                     \n" 
+ "                                                                                \n" 
+ "  topiivolmesh(                                                                 \n"
+ "                \"./top-ii-vol-meshes/Pc-strip\",                               \n"
+ "                outfile=\"./top-ii-vol-meshes/top2volmesh\",                    \n"
+ "                pointsz=4,                                                      \n"
+ "                zdepth=-1920.0                                                  \n"
+ "              );                                                                \n"     
+ "                                                                                \n"
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ---- Partitioned mesh reading and ghost reconstruction ----                  \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  Th=readmesh3(\"./top-ii-vol-meshes/top2volmesh_\"+mpirank+\".mesh\");         \n"
+ "  reconstructDmesh(Th);                                                         \n"
+ "                                                                                \n";       
+ }  
 }
 
 } //-- [ostream terminator]  meshpartitioning.edp closed --//

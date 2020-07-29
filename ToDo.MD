@@ -3,22 +3,22 @@
 
 ## [ONGOING] Hujeux soil law make it work with PSD
 ## [ONGOING] Nonlinear damage mechanics with nested matrices 
+## [ONGOING] Distributed meshing interface for soil dynamics with top-ii-vol
 
 
-
+## [TODO] Druker-Prager law for soil dynamics
 ## [TODO] Couple damage and seismic solver
 ## [TODO] Fully commented control parameters file
-## [TODO] Better way to include Dirichlet via macro table
 ## [TODO] Including material properties as macros not real type
 ## [TODO] SNES interface for experimenting nonlinearity
 ## [TODO] Heterogeneous materials class of problems
 ## [TODO] Parallel interpolation on surface from volume
-## [TODO] Distributed meshing interface for soil dynamics with top-ii-vol
-## [TODO] Higher order quadrature formulations
-## [TODO] Quadrature point based stress, strain variables  
 ## [TODO] Extract point field in MPI
 
 
+## [DONE] Quadrature point based stress, strain variables  
+## [DONE] Higher order quadrature formulations
+## [DONE] Better way to include Dirichlet via macro table
 ## [DONE] Pseudo nonlinear procedure for solving linear problems with Newton-Raphsons
 ## [DONE] Hujeux soil law make it work with C++ 11
 ## [DONE] Strain Vectorization

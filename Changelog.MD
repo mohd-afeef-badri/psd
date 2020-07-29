@@ -23,6 +23,7 @@ All notable changes to PSD solver will be documented in this file.
 - New pseudo-nonlinear model for solving elastodynamics and soildynamics with nonlinear Newton-Raphsons.
 - Introduced double couple earthquake source boundary condition for soildynamics.
 - New flag `-doublecouple` force-based | displacement-based   to use double couple source for soildynamics.
+- New top-ii-vol parallel meshing via `-top2vol-meshing` flag (compatible with soildynamics).
 
 ### Changed
 - Moved to FreeFEM 4.6.

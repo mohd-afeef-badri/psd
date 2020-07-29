@@ -47,14 +47,18 @@ if(Prblm=="damage" && Model=="Mazar")
 
 if(Prblm=="soildynamics")
  {
- if(doublecouple=="force-based" || doublecouple=="displacement-based")
+ if(doublecouple=="force-based" || doublecouple=="displacement-based" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";       // Mesh  name      \n";
- if(doublecouple=="unused")
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";      // Mesh  name       \n";
+ if(doublecouple=="unused" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";       // Mesh  name         \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";      // Mesh  name          \n";
+ if(top2vol)
+  writeIt
+  "                                                                             \n"
+  "  string PcName = \"../Meshes/"<<spc<<"D/DEM_160m\";      // Point cloud name\n";  
  }
 
 
