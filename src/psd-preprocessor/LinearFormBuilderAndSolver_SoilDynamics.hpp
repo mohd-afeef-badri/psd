@@ -219,8 +219,8 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  "                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple A\",t0)\n"  : ""            )<<
  "  GetDoubelCoupleIndicies(                                                      \n"
- "           DcLabelPoints,                                                       \n"
- "           Vh,                                                                  \n"
+/*"           DcLabelPoints,                                                       \n"
+ "           Vh,                                                                  \n"*/
  "           DcFlag,                                                              \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
