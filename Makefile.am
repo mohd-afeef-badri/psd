@@ -55,6 +55,7 @@ install-exec-local:
 	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD/Solver/.
 #	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.	
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
+	@cp  ./etc/*.xyz ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile					
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
 	@cp  ./man/*.pdf ${prefix}/PSD/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
@@ -89,7 +90,8 @@ install-devel:
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-devel/Solver/PSD_PreProcess
 	@cp  ./src/psd-preprocessor/*.cpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.	
 	@cp  ./src/psd-preprocessor/*.hpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.
-	@cp  ./etc/Makefile-psd-preprocess-devel ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile					
+	@cp  ./etc/Makefile-psd-preprocess-devel ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile
+	@cp  ./etc/*.xyz 	${prefix}/PSD-devel/Meshes/3D/.				
 	@cp  ./man/*.html ${prefix}/PSD-devel/Doc/.
 	@cp  ./man/*.pdf ${prefix}/PSD-devel/Doc/.
 	@cp  ./man/*.png  ${prefix}/PSD-devel/Doc/.	

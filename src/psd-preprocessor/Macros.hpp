@@ -688,13 +688,13 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "                                iN,    iS,    iE,    iW,                       \n"
   "                                Nrank, Srank, Erank, Wrank)                    \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
-  "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1] && Th(i).y==PnN[2])                 \n"
+  "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1] && abs(Th(i).z-PnN[2])<.01)         \n"
   "       {iN=i*3; Nrank=mpirank; DcFlag=true;}                                   \n"
-  "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1] && Th(i).y==PnS[2])                 \n"
+  "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1] && abs(Th(i).z-PnS[2])<.01)         \n"
   "       {iS=i*3; Srank=mpirank; DcFlag=true;}                                   \n"
-  "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1] && Th(i).y==PnE[2])                 \n"
+  "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1] && abs(Th(i).z-PnE[2])<.01)         \n"
   "       {iE=i*3+2; Erank=mpirank; DcFlag=true;}                                 \n"
-  "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && Th(i).y==PnW[2])                 \n"
+  "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && abs(Th(i).z-PnW[2])<.01)         \n"
   "       {iW=i*3+2; Wrank=mpirank; DcFlag=true;}                                 \n"
   "     }//                                                                       \n";
     

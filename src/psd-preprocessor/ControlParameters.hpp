@@ -71,10 +71,10 @@ if(Prblm=="soildynamics")
  if(top2vol)
   writeIt
   "                                                                             \n"
-  "  string PcName = \"../Meshes/"<<spc<<"D/DEM_160m\";                         \n"
-  "  macro PcNx() 32 //                                                         \n"
-  "  macro PcNy() 29 //                                                         \n"
-  "  macro PcNz() 10 //                                                         \n"
+  "  string PcName = \"../Meshes/"<<spc<<"D/Point-Cloud\";                      \n"
+  "  macro PcNx() 63 //                                                         \n"
+  "  macro PcNy() 57 //                                                         \n"
+  "  macro PcNz() 29 //                                                         \n"
   "  macro Dptz() -1920.0 //                                                    \n"
   "                                                                             \n";
  }
@@ -578,30 +578,39 @@ if(Prblm=="soildynamics")
  "                                                                              \n";
 */
 
- if(doublecouple=="displacement-based" || doublecouple=="force-based")
+ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "//     -------Parameters for double couple point source-------                \n"
  "// -------------------------------------------------------------------        \n"
- "// DcLabelPoints: is the label of the (line/surface) containing the           \n"
- "//                double couple points.If points are placed on more           \n"
- "//                than one label then use it as a vector.                     \n"
  "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
  "//                double couple north point. Idiom nomenclature ap-           \n"
  "//                lies to the south, east, and west points.                   \n"
  "// DcNorthCondition : is the macro containing the applied condition           \n"
  "//                of the double couple north point.                           \n"
  "//============================================================================\n"
- "                                                                              \n"
- "   int  [int]   DcLabelPoints = [6,7];                                        \n"
- "                                                                              \n"
+ "                                                                              \n";
+//"   int  [int]   DcLabelPoints = [6,7];                                       \n"
+
+ if(spc==2)
+ writeIt
  "                                                                              \n"
  "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
  "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
  "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
  "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"
  "                                                                              \n";
+
+ if(spc==3)
+ writeIt
+ "                                                                              \n"
+ "   real [int]   DcNorthPointCord = [877421.00,162180.00, -1441.071429];       \n"
+ "   real [int]   DcSouthPointCord = [877421.00,162180.00, -1600.714286];       \n"
+ "   real [int]   DcEastPointCord  = [877341.00,162180.00, -1520.892857];       \n"
+ "   real [int]   DcWestPointCord  = [877501.00,162180.00, -1520.892857];       \n"
+ "                                                                              \n"; 
+ }
 
  if(doublecouple=="displacement-based")
  writeIt
