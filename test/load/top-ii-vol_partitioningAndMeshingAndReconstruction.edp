@@ -19,7 +19,7 @@
 
 load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
 
-topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
+topiivolpart("../../etc/Point-Cloud",outfile="point-cloud-strip",pointsx=63,pointsy=57);
 mpiBarrier(mpiCommWorld);
 topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
 
