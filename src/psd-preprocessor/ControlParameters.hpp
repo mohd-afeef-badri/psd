@@ -134,7 +134,7 @@ if(Prblm=="linear-elasticity")
   "                                                                              \n"
   "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
   "              [ a2 ,  a1 , 0 ],                                               \n"
-  "              [ 0  ,  0  , a3]]               // Material tensor              \n";
+  "              [ 0  ,  0  , a3]]//                                             \n";
 
  if(spc==3)
   writeIt
@@ -144,7 +144,7 @@ if(Prblm=="linear-elasticity")
   "              [ a2 ,  a2 , a1 , 0  , 0  , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , a3 , 0  , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , 0  , a3 , 0 ],                                \n"
-  "              [ 0  ,  0  , 0  , 0  , 0  , a3]]// Material tensor              \n";
+  "              [ 0  ,  0  , 0  , 0  , 0  , a3]]//                              \n";
   }
  }
 
@@ -734,40 +734,31 @@ if(tractionconditions>=1)
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
+ "// -------------------------------------------------------------------        \n"
+ "// TractioBorderI : is/are the surface  labels tags to which traction         \n"
+ "//                  is to be applied.                                         \n"
+ "// txI, tyI, tzI : are the components of traction forces respectively         \n"
+ "//                 in x, y, and z  directions  on  surface  border I.         \n"
+ "//                 Note that these can also be finite element fields.         \n"  
  "//============================================================================\n"
- "                                                                              \n"
- "  int [int]   Tlabel = [ 4             //  Label for traction border 1        \n";
-
- for(int i=1; i<tractionconditions; i++)
-  writeIt
-  "                        ,4             //  Label for traction border "<<i<<" \n";
-
- writeIt
- "                       ];                                                     \n"
- "                                                                              \n"
  "                                                                              \n";
 
  if(spc==2)
-  {
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  real  tx"<<i<<"=0, ty"<<i<<"=10.;\t\t\t// Traction forces on label "<<i<<"\n";
-
-  writeIt
-  "                                                                             \n"
-  "  macro T(i,j) [i,j]                        // Traction vector               \n";
-  }
+   "  macro  TractioBorder"<<i<<" 4   //                                       \n"   
+   "  macro  tx"<<i<<" 0   //                                                  \n"
+   "  macro  ty"<<i<<" 10. //                                                  \n";
 
 
  if(spc==3)
-  {
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  real tx"<<i<<"=0, ty"<<i<<"=0, tz"<<i<<"=0 ;// Component traction  on label "<<i<<" \n";
-
-  writeIt
-  "  macro T(i,j,k) [i,j,k]                // Three component traction forces   \n";
-  }
+   "  macro  TractioBorder"<<i<<" 4   //                                       \n"      
+   "  macro  tx"<<i<<" 0   //                                                  \n"
+   "  macro  ty"<<i<<" 10. //                                                  \n"
+   "  macro  tz"<<i<<" 0.  //                                                  \n";
+   
  }
 
 if(Prblm=="elastodynamics")
@@ -787,22 +778,18 @@ if(bodyforce)
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
- "// ------- Bodyforce  parameters -------                                      \n"
+ "//        ------- volumetric bodyforce  parameters -------                    \n"
+ "// -------------------------------------------------------------------        \n"
+ "// fx, fy, fz : are the components of body force in x, y, and z axis.         \n"
+ "//              Note that these can be finite element fields as well.         \n"
  "//============================================================================\n"
  "                                                                              \n"
- "  real f1 = 0.;                      // X component body forces               \n"
- "  real f2 = 8.e3*(-9.81);            // Y component body forces               \n";
-
- if(spc==2)
-  writeIt
-  "                                                                             \n"
-  "  macro BF [f1,f2]                   // Two component body forces            \n";
-
+ "  macro fx  0.         //                                                     \n"
+ "  macro fy  -78480.0   //  {/rho*g=8.e3*(-9.81)=-78480.0}                     \n";
  if(spc==3)
   writeIt
-  "  real f3 = 0.;                      // Z component body forces              \n"
-  "                                                                             \n"
-  "  macro BF [f1,f2,f3]                // Three component body forces          \n";
+  "  macro fz  0.       //                                                      \n"
+  "                                                                             \n";
  }
 
 writeIt

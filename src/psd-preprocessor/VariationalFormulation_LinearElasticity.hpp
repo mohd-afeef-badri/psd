@@ -52,7 +52,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def(v))                      \n";
+ "     + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def(v))                 \n";
 
 if(tractionconditions>=1)if(spc==3)
 for(int i=0; i<tractionconditions; i++)
@@ -62,7 +62,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,Tlabel["<<i<<"],qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))           \n";
+ "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))      \n";
 
 for(int i=0; i<dirichletconditions; i++)
 

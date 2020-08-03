@@ -9,13 +9,13 @@
 ## [TODO] Druker-Prager law for soil dynamics
 ## [TODO] Couple damage and seismic solver
 ## [TODO] Fully commented control parameters file
-## [TODO] Including material properties as macros not real type
 ## [TODO] SNES interface for experimenting nonlinearity
 ## [TODO] Heterogeneous materials class of problems
 ## [TODO] Parallel interpolation on surface from volume
 ## [TODO] Extract point field in MPI
 
 
+## [DONE] Including material properties as macros not real type
 ## [DONE] Quadrature point based stress, strain variables  
 ## [DONE] Higher order quadrature formulations
 ## [DONE] Better way to include Dirichlet via macro table

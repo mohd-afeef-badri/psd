@@ -42,12 +42,6 @@ if(dirichletpointconditions>=1)
  "  Dpointlab.resize(0); PnV.resize(0);                                           \n";
 
 
-if(tractionconditions>=1)
- writeIt
- "                                                                                \n"
- "  Tlabel.resize(0);                                                             \n";
-
-
  writeIt
  "                                                                                \n"
  "//---------------PETSc Assembly---------------------//                          \n"

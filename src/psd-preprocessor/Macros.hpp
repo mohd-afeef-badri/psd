@@ -42,6 +42,15 @@ if(spc==2)
  "  macro Ux    u                                  // x displacement           \n"
  "  macro Uy    u1                                 // y displacement           \n";
 
+ if(bodyforce)
+ writeIt 
+ "  macro BF [fx,fy]                               //  Body forces            \n";
+
+ if(tractionconditions>=1) 
+ writeIt
+ "                                                                            \n"
+ "  macro T(i,j) [i,j]                            // Traction vector          \n";
+    
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
  "  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space     \n"
@@ -249,14 +258,16 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 
 
 
-if(spc==3){write
-<<"                                                                            \n"
-<<"//--------------------Macros needed by DDmacro.idp------------------------//\n"
-<<"                                                                            \n";
+if(spc==3){
+ writeIt
+ "                                                                            \n"
+ "//--------------------Macros needed by DDmacro.idp------------------------//\n"
+ "                                                                            \n";
 
-if(!Sequential)write
-<<"  macro partitioner "<<Partitioner<<"\t          // Mesh partitioner used   \n"
-<<"  macro dimension   3                          // Three-D problem           \n";
+ if(!Sequential)
+  writeIt
+  "  macro partitioner "<<Partitioner<<"\t          // Mesh partitioner used   \n"
+  "  macro dimension   3                          // Three-D problem           \n";
 
  if(Prblm=="elastodynamics")
  writeIt
@@ -270,26 +281,40 @@ if(!Sequential)write
  "  macro Uy    u1                                 // y displacement           \n"
  "  macro Uz    u2                                 // z displacement           \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")write
-<<"  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"
-<<"  macro def  (i) [ i , i#1, i#2, i#3 ]           // Vect. field definition  \n"
-<<"  macro init (i) [ i ,  i ,  i,  i  ]            // Vect. field initialize  \n";
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ writeIt
+ "  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"
+ "  macro def  (i) [ i , i#1, i#2, i#3 ]           // Vect. field definition  \n"
+ "  macro init (i) [ i ,  i ,  i,  i  ]            // Vect. field initialize  \n";
 
-if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
-if(plotAll || debug)write
-<<"  macro Pltk         P1                          // FE space                \n"
-<<"  macro def0 (i)           i                     // Vect. field definition  \n";
+
+ if(bodyforce)
+ writeIt 
+ "  macro BF [fx,fy,fz]                             //  Body forces            \n";
+
+ if(tractionconditions>=1) 
+  writeIt
+  "                                                                            \n"
+  "  macro T(i,j,k) [i,j,k]                        // Traction vector          \n"; 
+ 
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(plotAll || debug)
+  writeIt
+  "  macro Pltk         P1                          // FE space                \n"
+  "  macro def0 (i)           i                     // Vect. field definition  \n";
 
  if(Prblm=="soildynamics" && top2vol)
  writeIt
  "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                   \n";
  
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
-<<"  macro Sk           [ P0,P0,P0,P0,P0,P0  ]  // Sixth order strain vector   \n";
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+  writeIt
+  "  macro Sk           [ P0,P0,P0,P0,P0,P0  ]  // Sixth order strain vector   \n";
 
-if(Prblm=="damage" && Model=="Mazar")if(useGFP)write
-<<"  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector\n"
-<<"  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition   \n";
+ if(Prblm=="damage" && Model=="Mazar")if(useGFP)
+  writeIt
+  "  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector\n"
+  "  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition   \n";
 
 if(!vectorial){write
 <<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]\t\t  // Finite element space  \n";
@@ -419,179 +444,192 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
  "  }//                                                                       \n"
  "                                                                            \n";
 
-if(Sequential)write
-<<"                                                                           \n"
-<<"//---------------------Sequential remapping macros-----------------------//\n"
-<<"                                                                           \n"
-<<"  load \"msh3\"                           // Loading 3D mesh               \n"
-<<"  macro meshN()mesh3                    // Three-dimensional problem       \n"
-<<"  macro intN()int3d                     // Three-dimensional integral      \n"
-<<"  macro intN1()int2d                    // Two-dimensional integral        \n"
-<<"  macro readmeshN()readmesh3            // Three-dimensional problem       \n"
-<<"  macro gmshloadN()gmshload3            // Three-dimensional 'msh' reader  \n"
-<<"  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient      \n"
-<<"                                                                           \n";
+ if(Sequential)
+  writeIt
+  "                                                                           \n"
+  "//---------------------Sequential remapping macros-----------------------//\n"
+  "                                                                           \n"
+  "  load \"msh3\"                           // Loading 3D mesh               \n"
+  "  macro meshN()mesh3                    // Three-dimensional problem       \n"
+  "  macro intN()int3d                     // Three-dimensional integral      \n"
+  "  macro intN1()int2d                    // Two-dimensional integral        \n"
+  "  macro readmeshN()readmesh3            // Three-dimensional problem       \n"
+  "  macro gmshloadN()gmshload3            // Three-dimensional 'msh' reader  \n"
+  "  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient      \n"
+  "                                                                           \n";
 
 } //-- [if loop terminator] space==3 ended --//
 
 
 
-if(dirichletpointconditions>=1){write
-<<"                                                                           \n"
-<<"//----------------------------Point BC macro-----------------------------//\n"
-<<"                                                                           \n"
-<<"  macro Pointbc(Dpointlab,Wh,A,b,PnV){                                     \n"
-<<"    int count=0;                                                           \n"
-<<"    meshN Th=Wh.Th;                                                        \n"
-<<"                                                                           \n";
+if(dirichletpointconditions>=1)
+{
+  writeIt
+  "                                                                           \n"
+  "//----------------------------Point BC macro-----------------------------//\n"
+  "                                                                           \n"
+  "  macro Pointbc(Dpointlab,Wh,A,b,PnV){                                     \n"
+  "    int count=0;                                                           \n"
+  "    meshN Th=Wh.Th;                                                        \n"
+  "                                                                           \n";
 
-if(spc==2)write
-<<"                                                                           \n"
-<<"        varf vlabs(def(u),def(v))                                          \n"
-<<"        = on( Dpointlab,                                                   \n"
-<<"                u  = -1*( x==PnV[0] && y==PnV[1] ),                        \n"
-<<"                u1 = -1*( x==PnV[0] && y==PnV[1] )                         \n"
-<<"             );                                                            \n"
-<<"                                                                           \n";
+ if(spc==2)
+  writeIt
+  "                                                                           \n"
+  "        varf vlabs(def(u),def(v))                                          \n"
+  "        = on( Dpointlab,                                                   \n"
+  "                u  = -1*( x==PnV[0] && y==PnV[1] ),                        \n"
+  "                u1 = -1*( x==PnV[0] && y==PnV[1] )                         \n"
+  "             );                                                            \n"
+  "                                                                           \n";
 
-if(spc==3)
-write
-<<"                                                                           \n"
-<<"    varf vlabs(def(u),def(v))                                              \n"
-<<"        = on( Dpointlab,                                                   \n"
-<<"                u  = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
-<<"                u1 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
-<<"                u2 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] )            \n"
-<<"            );                                                             \n"
-<<"                                                                           \n";
+ if(spc==3)
+  writeIt
+  "                                                                           \n"
+  "    varf vlabs(def(u),def(v))                                              \n"
+  "        = on( Dpointlab,                                                   \n"
+  "                u  = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
+  "                u1 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
+  "                u2 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] )            \n"
+  "            );                                                             \n"
+  "                                                                           \n";
 
-write
-<<"                                                                           \n"
-<<"    real[int] absc=vlabs(0,Wh);                                            \n"
-<<"                                                                           \n"
-<<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
-<<"      if(abs(-1e+30-absc(i))==0 ){                                         \n"
-<<"        A(i,i)=tgv;                                                        \n"
-<<"        b[i]=PnV["<<spc<<"+count]*tgv;                                     \n"
-<<"        count++;                                                           \n"
-<<"         if(count=="<<spc<<") break;                                       \n"
-<<"      }                                                                    \n"
-<<"    }                                                                      \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"                                                                           \n";
+ writeIt
+ "                                                                           \n"
+ "    real[int] absc=vlabs(0,Wh);                                            \n"
+ "                                                                           \n"
+ "    for (int i=0; i<Wh.ndof; i++){                                         \n"
+ "      if(abs(-1e+30-absc(i))==0 ){                                         \n"
+ "        A(i,i)=tgv;                                                        \n"
+ "        b[i]=PnV["<<spc<<"+count]*tgv;                                     \n"
+ "        count++;                                                           \n"
+ "         if(count=="<<spc<<") break;                                       \n"
+ "      }                                                                    \n"
+ "    }                                                                      \n"
+ "  }//                                                                      \n"
+ "                                                                           \n"
+ "                                                                           \n";
 
 } //-- [if loop terminator] pointbc ended --//
 
 
-if(timelog){write
-<<"                                                                           \n"
-<<"//-----------------------------------Timing macros-----------------------//\n"
-<<"                                                                           \n";
+ if(timelog){
+  writeIt
+  "                                                                           \n"
+  "//-----------------------------------Timing macros-----------------------//\n"
+  "                                                                           \n";
 
-if(!Sequential)write
-<<"                                                                           \n"
-<<"  macro MPItimerbegin(str1,t0){                                            \n"
-<<"    mpiBarrier(mpiCommWorld);                                              \n"
-<<"    t0 = mpiWtime();                                                       \n"
-<<"    if(mpirank==0)                                                         \n"
-<<"    cout << \"-->\"+str1+\" began....\\n\";                                \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"  macro MPItimerend(str1,t0){                                              \n"
-<<"    mpiBarrier(mpiCommWorld);                                              \n"
-<<"    if(mpirank==0)                                                         \n"
-<<"    cout.scientific << \"finished in [ \"<< mpiWtime()-t0                  \n"
-<<"      << \" ] seconds\\n\\n\";                                             \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"                                                                           \n";
+ if(!Sequential)
+  writeIt
+  "                                                                           \n"
+  "  macro MPItimerbegin(str1,t0){                                            \n"
+  "    mpiBarrier(mpiCommWorld);                                              \n"
+  "    t0 = mpiWtime();                                                       \n"
+  "    if(mpirank==0)                                                         \n"
+  "    cout << \"-->\"+str1+\" began....\\n\";                                \n"
+  "  }//                                                                      \n"
+  "                                                                           \n"
+  "  macro MPItimerend(str1,t0){                                              \n"
+  "    mpiBarrier(mpiCommWorld);                                              \n"
+  "    if(mpirank==0)                                                         \n"
+  "    cout.scientific << \"finished in [ \"<< mpiWtime()-t0                  \n"
+  "      << \" ] seconds\\n\\n\";                                             \n"
+  "  }//                                                                      \n"
+  "                                                                           \n"
+  "                                                                           \n";
 
-if(Sequential)write
-<<"                                                                           \n"
-<<"  macro timerbegin(str1,t0){                                               \n"
-<<"    t0 = clock();                                                          \n"
-<<"    cout << \"-->\"+str1+\" began....\\n\";                                \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"  macro timerend(str1,t0){                                                 \n"
-<<"    cout.scientific << \"finished in [ \"<< clock()-t0                     \n"
-<<"      << \" ] seconds\\n\\n\";                                             \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"                                                                           \n";
+ if(Sequential)
+  writeIt
+  "                                                                           \n"
+  "  macro timerbegin(str1,t0){                                               \n"
+  "    t0 = clock();                                                          \n"
+  "    cout << \"-->\"+str1+\" began....\\n\";                                \n"
+  "  }//                                                                      \n"
+  "                                                                           \n"
+  "  macro timerend(str1,t0){                                                 \n"
+  "    cout.scientific << \"finished in [ \"<< clock()-t0                     \n"
+  "      << \" ] seconds\\n\\n\";                                             \n"
+  "  }//                                                                      \n"
+  "                                                                           \n"
+  "                                                                           \n";
 
 } //-- [if loop terminator] timelog ended --//
 
 
-if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)write
-<<"                                                                           \n"
-<<"//------------------------------update macros----------------------------//\n"
-<<"                                                                           \n"
-<<"  macro updateVariables(du,uold,vold,aold,beta,gamma,dt){                  \n"
-<<"                                                                           \n"
-<<"    real aloc  ;                                                           \n"
-<<"                                                                           \n"
-<<"    for (int i=0; i< Vh.ndof; i++){                                        \n"
-<<"      aloc     =   (du[][i]-uold[][i]-dt*vold[][i])/beta/(dt*dt)           \n"
-<<"                  - (1.-2.*beta)/2./beta*aold[][i];                        \n"
-<<"      vold[][i] = vold[][i] + dt*((1.-gamma)*aold[][i] + gamma*aloc);      \n"
-<<"      aold[][i] = aloc;                                                    \n"
-<<"      uold[][i] = du[][i]    ;                                             \n"
-<<"    }                                                                      \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n";
+ if(Prblm=="elastodynamics" || Prblm=="soildynamics")if(!useGFP)
+  writeIt
+  "                                                                           \n"
+  "//------------------------------update macros----------------------------//\n"
+  "                                                                           \n"
+  "  macro updateVariables(du,uold,vold,aold,beta,gamma,dt){                  \n"
+  "                                                                           \n"
+  "    real aloc  ;                                                           \n"
+  "                                                                           \n"
+  "    for (int i=0; i< Vh.ndof; i++){                                        \n"
+  "      aloc     =   (du[][i]-uold[][i]-dt*vold[][i])/beta/(dt*dt)           \n"
+  "                  - (1.-2.*beta)/2./beta*aold[][i];                        \n"
+  "      vold[][i] = vold[][i] + dt*((1.-gamma)*aold[][i] + gamma*aloc);      \n"
+  "      aold[][i] = aloc;                                                    \n"
+  "      uold[][i] = du[][i]    ;                                             \n"
+  "    }                                                                      \n"
+  "  }//                                                                      \n"
+  "                                                                           \n";
 
 
-if(Prblm=="soildynamics"){write
-<<"                                                                           \n"
-<<"//----------------------Paraxial rotation macro--------------------------//\n"
-<<"                                                                           \n";
+ if(Prblm=="soildynamics")
+ {
+  writeIt
+  "                                                                           \n"
+  "//----------------------Paraxial rotation macro--------------------------//\n"
+  "                                                                           \n";
 
-if(spc==2)write
-<<"  macro PA0(i)                                                             \n"
-<<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),    \n"
-<<"          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
-<<"        ]//                                                                \n";
+ if(spc==2)
+  writeIt
+  "  macro PA0(i)                                                             \n"
+  "        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),    \n"
+  "          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
+  "        ]//                                                                \n";
 
 
-if(spc==3)write
-<<"  macro PA0(i)                                                             \n"
-<<"        [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
-<<"          cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
-<<"          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
-<<"        ]//                                                                \n";
+ if(spc==3)
+  writeIt
+  "  macro PA0(i)                                                             \n"
+  "        [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
+  "          cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
+  "          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
+  "        ]//                                                                \n";
 
-if(Sequential)write
-<<"                                                                           \n"
-<<"//----------------------ParaView plotting macro--------------------------//\n"
-<<"                                                                           \n"
-<<"  macro exportBegin(name)                                                  \n"
-<<"    {ofstream pvd(name +\".pvd\");                                         \n"
-<<"      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";                           \n"
-<<"      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";  \n"
-<<"      pvd << \"         byte_order=\\\"LittleEndian\\\"\\n\";              \n"
-<<"      pvd << \"         compressor=\\\"vtkZLibDataCompressor\\\">\\n\";    \n"
-<<"      pvd << \"  <Collection>\\n\";                                        \n"
-<<"    }//                                                                    \n"
-<<"                                                                           \n"
-<<"                                                                           \n"
-<<"  macro exportEnd(name)                                                    \n"
-<<"    {ofstream pvd(name +\".pvd\", append);                                 \n"
-<<"    pvd << \"  </Collection>\\n\";                                         \n"
-<<"    pvd << \"</VTKFile>\\n\";}                                             \n"
-<<"    system(\"mv \"+name+\".pvd .\");                                       \n"
-<<"  //                                                                       \n"
-<<"                                                                           \n"
-<<"                                                                           \n"
-<<"  macro exportTimeStep(name, mesh, sol, forder, iterno, ts, nam )          \n"
-<<"    savevtk(name+\"_\"+int(iterno)+\".vtu\",mesh,sol,order=forder,dataname=nam);\n"
-<<"    ofstream pvd(name +\".pvd\", append);                                  \n"
-<<"      pvd << \"    <DataSet timestep=\\\"\" + real(ts) + \"\\\"\\n\";      \n"
-<<"      pvd << \"             file=\\\"\";                                   \n"
-<<"      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";            \n"
-<<"  //                                                                       \n"
-<<"                                                                           \n";
+ if(Sequential)
+  writeIt
+  "                                                                           \n"
+  "//----------------------ParaView plotting macro--------------------------//\n"
+  "                                                                           \n"
+  "  macro exportBegin(name)                                                  \n"
+  "    {ofstream pvd(name +\".pvd\");                                         \n"
+  "      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";                           \n"
+  "      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";  \n"
+  "      pvd << \"         byte_order=\\\"LittleEndian\\\"\\n\";              \n"
+  "      pvd << \"         compressor=\\\"vtkZLibDataCompressor\\\">\\n\";    \n"
+  "      pvd << \"  <Collection>\\n\";                                        \n"
+  "    }//                                                                    \n"
+  "                                                                           \n"
+  "                                                                           \n"
+  "  macro exportEnd(name)                                                    \n"
+  "    {ofstream pvd(name +\".pvd\", append);                                 \n"
+  "    pvd << \"  </Collection>\\n\";                                         \n"
+  "    pvd << \"</VTKFile>\\n\";}                                             \n"
+  "    system(\"mv \"+name+\".pvd .\");                                       \n"
+  "  //                                                                       \n"
+  "                                                                           \n"
+  "                                                                           \n"
+  "  macro exportTimeStep(name, mesh, sol, forder, iterno, ts, nam )          \n"
+  "    savevtk(name+\"_\"+int(iterno)+\".vtu\",mesh,sol,order=forder,dataname=nam);\n"
+  "    ofstream pvd(name +\".pvd\", append);                                  \n"
+  "      pvd << \"    <DataSet timestep=\\\"\" + real(ts) + \"\\\"\\n\";      \n"
+  "      pvd << \"             file=\\\"\";                                   \n"
+  "      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";            \n"
+  "  //                                                                       \n"
+  "                                                                           \n";
 
 /*
 if(doublecouple=="force-based"){
