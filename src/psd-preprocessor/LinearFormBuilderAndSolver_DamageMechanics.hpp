@@ -465,7 +465,7 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
- "    changeOperator(A, ALoc);                                                    \n"
+ "     A = ALoc;   //changeOperator(A, ALoc);                                     \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
  <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"
@@ -504,7 +504,7 @@ if(energydecomp)
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
- "    changeOperator(A1, ALoc1);                                                  \n"
+ "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
  <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "                                                                                \n"
@@ -831,7 +831,7 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
- "    changeOperator(A, ALoc);                                                    \n"
+ "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
  <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"
@@ -877,13 +877,13 @@ if(energydecomp)
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
- "    changeOperator(A1, ALoc1);                                                  \n"
+ "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
  <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""                                     )<<
+ <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""                      )<<
  "    dphi[] = A1^-1*b1;                                                          \n"
  <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""                      )<<
  "                                                                                \n"
@@ -1242,7 +1242,7 @@ if(Model=="Mazar"){
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
- "     changeOperator(A, ALoc);                                                   \n"
+ "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "     set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");                     \n"
  <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"

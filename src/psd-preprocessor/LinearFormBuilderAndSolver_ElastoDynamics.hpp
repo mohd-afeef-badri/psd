@@ -289,7 +289,7 @@ if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference
 <<(timelog ? "  MPItimerend  (\"matrix assembly\",t0)\n" : ""                      )<<
  "                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"PETSc assembly\",t0)\n"  : ""                      )<<
- "  changeOperator(A, ALoc);                                                      \n"
+ "  A=ALoc;            //changeOperator(A, ALoc);                                 \n"
 <<(timelog ? "  MPItimerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
  "                                                                                \n";
 
