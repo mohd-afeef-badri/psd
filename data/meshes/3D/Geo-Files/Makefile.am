@@ -34,19 +34,19 @@ soil.msh: soil.geo
 
 install-exec-local:
 	@mkdir -p ../Meshes
-	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.		
-	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
-	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.		
-	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
-	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^soil.msh" | xargs -I {} cp {} ../Meshes/.		
+	@ls | egrep "^bar.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^quasistatic.msh" | xargs -I {} cp {} ../Meshes/.		
+	@ls | egrep "^bar-dynamic.msh" | xargs -I {} cp {} ../Meshes/.	
+	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
 
 install-devel-local:
 	@mkdir -p ../Meshes
-	@ls | egrep "^soil.msh" | xargs -I {} mv {} ../Meshes/.		
-	@ls | egrep "^bar.msh" | xargs -I {} mv {} ../Meshes/.
-	@ls | egrep "^quasistatic.msh" | xargs -I {} mv {} ../Meshes/.		
-	@ls | egrep "^bar-dynamic.msh" | xargs -I {} mv {} ../Meshes/.	
-	@ls | egrep "^tensile-crack.msh" | xargs -I {} mv {} ../Meshes/.
+	@ls | egrep "^soil.msh" | xargs -I {} cp {} ../Meshes/.		
+	@ls | egrep "^bar.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^quasistatic.msh" | xargs -I {} cp {} ../Meshes/.		
+	@ls | egrep "^bar-dynamic.msh" | xargs -I {} cp {} ../Meshes/.	
+	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
 	
 clean-local:
 	@echo ""
