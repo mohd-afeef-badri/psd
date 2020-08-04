@@ -13,20 +13,19 @@ if(Sequential){
  "                                                                                \n"
  "  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
  "  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;                     \n"
- "                                                                                \n"
- "  //--------------tt update for loading--------------//                         \n"
  "                                                                                \n";
 
-if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-
+if(tractionconditions>=1){
+ writeIt
+ "  //--------------tt update for loading--------------//                         \n"
+ "                                                                                \n"; 
+ if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
  writeIt
  "  tt  = t-real(alpf*dt);                                                        \n";
-
-if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-
+ if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
  writeIt
  "  tt  = t-dt;                                                                   \n";
-
+}
 
  writeIt
  "                                                                                \n"
@@ -265,20 +264,20 @@ if(!Sequential){
  "  if(mpirank==0)                                                                \n"
  "  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
  "  << \"Time iteration at t :\" << t << \" (s)\\n \"<< endl;                     \n"
- "                                                                                \n"
- "  //--------------tt update for loading--------------//                         \n"
  "                                                                                \n";
 
-if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
-
+if(tractionconditions>=1){
  writeIt
+ "  //--------------tt update for loading--------------//                         \n"
+ "                                                                                \n"; 
+ if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+ writeIt
+ 
  "  tt  = t-real(alpf*dt);                                                        \n";
-
-if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
-
- writeIt
+ if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
+ writeIt 
  "  tt  = t-dt;                                                                   \n";
-
+}
 
  writeIt
  "                                                                                \n"

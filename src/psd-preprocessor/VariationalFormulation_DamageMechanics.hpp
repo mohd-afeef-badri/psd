@@ -34,25 +34,14 @@ if(bodyforce)
  "    //--------------------------------------------------------------------------                \n"
  "      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
 
-if(tractionconditions>=1)if(spc==2)
+if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))               \n";
-
-if(tractionconditions>=1)if(spc==3)
-for(int i=0; i<tractionconditions; i++)
-
- writeIt
- "                                                                                                \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
- "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))     \n";
+ "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
 
 
 if(dirichletbc){
@@ -183,7 +172,7 @@ if(bodyforce)
  "    //--------------------------------------------------------------------------                \n"
  "      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
 
-if(tractionconditions>=1)if(spc==2)
+if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
  writeIt
  "                                                                                                \n"
@@ -191,17 +180,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))               \n";
-
-if(tractionconditions>=1)if(spc==3)
-for(int i=0; i<tractionconditions; i++)
- writeIt
- "                                                                                                \n"
- "                           //--- Linear(b_u) ---//                                              \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
- "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))     \n";
+ "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
 
 
 if(dirichletbc){
@@ -413,23 +392,14 @@ if(bodyforce)
  writeIt
  "    + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                         \n";
 
-if(tractionconditions>=1)if(spc==2)
+if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "    + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def2(v))                 \n";
-
-if(tractionconditions>=1)if(spc==3)
-for(int i=0; i<tractionconditions; i++)
- writeIt
- "                                                                                                \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
- "    //--------------------------------------------------------------------------                \n"
- "    + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def2(v))       \n";
+ "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
 
 
 if(dirichletbc)if(spc==3)

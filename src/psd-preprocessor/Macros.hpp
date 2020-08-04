@@ -16,56 +16,61 @@ cout << " building Macros.edp";
 
 writeHeader;
 
-writeIt
-"                                                                               \n"
-"//=============================================================================\n"
-"// ------- Essential Macros -------                                            \n"
-"//=============================================================================\n";
-
 if(spc==2)
  {
+
  writeIt
- "                                                                              \n";
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                     ------- Essential Macros -------                        \n"
+ "// --------------------------------------------------------------------------- \n";
+ if(!Sequential)writeIt
+ "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
+ "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
+ if(bodyforce)writeIt 
+ "// BF          : body force vector                                             \n";  
+ writeIt
+ "// Ux, Uy      : x and y displacements                                         \n"
+ "// Pk          : finite element space definition                               \n"
+ "// def(i)      : to define a vectorial field of same order as Pk               \n"
+ "// init(i)     : to initialize a vectorial field of same order as Pk           \n"   
+ "//=============================================================================\n"
+ "                                                                               \n"; 
 
  if(!Sequential)
  writeIt
- "  macro partitioner "<<Partitioner<<"\t\t        // Mesh partitioner used    \n"
- "  macro dimension 2                              // Two-dimensional problem  \n";
+ "  macro partitioner "<<Partitioner<<" //                                       \n"
+ "  macro dimension 2 //                                                         \n";
 
  if(Prblm=="elastodynamics")
  writeIt
- "  macro Ux   du                                  // x displacement           \n"
- "  macro Uy   du1                                 // y displacement           \n";
+ "  macro Ux   du  //                                                            \n"
+ "  macro Uy   du1 //                                                            \n";
 
  if(Prblm=="linear-elasticity" || Prblm=="damage")
  writeIt
- "  macro Ux    u                                  // x displacement           \n"
- "  macro Uy    u1                                 // y displacement           \n";
+ "  macro Ux    u  //                                                            \n"
+ "  macro Uy    u1 //                                                            \n";
 
  if(bodyforce)
  writeIt 
- "  macro BF [fx,fy]                               //  Body forces            \n";
-
- if(tractionconditions>=1) 
- writeIt
- "                                                                            \n"
- "  macro T(i,j) [i,j]                            // Traction vector          \n";
+ "  macro BF [fx,fy] //                                                          \n";    
     
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
- "  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ]\t\t// FE space     \n"
- "  macro def  (i) [ i , i#1, i#2 ]                // Vect. field definition   \n"
- "  macro init (i) [ i ,  i ,  i  ]                // Vect. field initialize   \n";
+ "  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ] //                   \n"
+ "  macro def  (i) [ i , i#1, i#2 ] //                                           \n"
+ "  macro init (i) [ i ,  i ,  i  ] //                                           \n";
 
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
  writeIt
- "  macro Pltk         P1                          // FE space                 \n"
- "  macro def0 (i)           i                     // Vect. field definition   \n";
+ "  macro Pltk     P1 //                                                         \n"
+ "  macro def0 (i) i  //                                                         \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
  writeIt
- "  macro Sk       [ P0, P0 , P0  ]       // Third order strain vector         \n";
+ "  macro Sk       [ P0, P0, P0 ]       // Third order strain vector            \n";
  
  if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
@@ -102,25 +107,25 @@ if(spc==2)
  if(!vectorial)
   {
   writeIt
-  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ]\t\t    // Finite element space  \n";
+  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ] //                               \n";
 
   if(Prblm!="damage")
   writeIt
-  "  macro def  (i) [ i , i#1 ]                // Vect. field definition       \n";
+  "  macro def  (i) [ i , i#1 ] //                                               \n";
 
   if(!Sequential && Prblm!="damage")
   writeIt
-  "  macro init (i) [ i ,  i  ]                // Vect. field initialize       \n"
-  "                                                                            \n";
+  "  macro init (i) [ i ,  i  ] //                                               \n"
+  "                                                                              \n";
 
   if(Prblm=="damage" && Model=="Mazar")
   writeIt
-  "  macro def  (i) [ i , i#1 ]                // Vect. field definition       \n";
+  "  macro def  (i) [ i , i#1 ] //                                               \n";
 
   if(!Sequential  && Prblm=="damage" && Model=="Mazar")
   writeIt
-  "  macro init (i) [ i ,  i  ]                // Vect. field initialize       \n"
-  "                                                                            \n";
+  "  macro init (i) [ i ,  i  ] //                                               \n"
+  "                                                                              \n";
   }   //-- [if loop terminator] !vectorial ended --//
 
  writeIt
@@ -254,6 +259,33 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  "  macro grad(i) [dx(i),dy(i)]         // two-dimensional gradient             \n"
  "                                                                              \n";
 
+
+ if(tractionconditions>=1){
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//      ------- Neumann/Traction boundary condition Macros -------             \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// NeumannBc'I' : will define the full Neumann boundary condition on border I  \n"
+ "//=============================================================================\n"; 
+ 
+ for(int i=0; i<tractionconditions; i++) 
+ writeIt
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty)                                \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v  EndMacro                   \n"
+ "  ENDIFMACRO ENDIFMACRO                                                     \n"
+ "                                                                            \n"
+ "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty)                                \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1  EndMacro                  \n"
+ "  ENDIFMACRO ENDIFMACRO                                                     \n"
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty)                                 \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v+(Tb"<<i<<"Ty)*v1  EndMacro  \n"
+ "  ENDIFMACRO ENDIFMACRO                                                     \n"
+ "                                                                            \n";
+ } 
+ 
 } //-- [if loop terminator] space==2 ended --//
 
 
@@ -458,6 +490,47 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
   "  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient      \n"
   "                                                                           \n";
 
+ if(tractionconditions>=1){
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//      ------- Neumann/Traction boundary condition Macros -------             \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// NeumannBc'I' : will define the full Neumann boundary condition on border I  \n"
+ "//=============================================================================\n"; 
+ 
+ for(int i=0; i<tractionconditions; i++) 
+ writeIt
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)          \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v  EndMacro                   \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)          \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1  EndMacro                  \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)          \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tz)*v2  EndMacro                  \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)           \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Ty)*v1  EndMacro\n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)           \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)           \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1 +(Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
+ "                                                                            \n"
+ "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)            \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Ty)*v1 +(Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n";  
+ } 
+ 
 } //-- [if loop terminator] space==3 ended --//
 
 

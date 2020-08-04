@@ -96,16 +96,15 @@ if(Model=="pseudo-nonlinear")
  "                                                                                                \n";
 
 
+if(tractionconditions>=1)
+for(int i=0; i<tractionconditions; i++)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "    + intN1(Th,qforder=3,"<<labRface<<")                                                        \n"
- "  (                                                                                             \n"
- "     tr * v1                                           // Time dependent loading                \n"
- "  )                                                                                             \n"
- "                                                                                                \n";
+ "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
+
 
 for(int i=0; i<dirichletconditions; i++)
 

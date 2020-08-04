@@ -44,25 +44,14 @@ if(bodyforce)
  "     + intN(Th,qforder=3)(BF'*def(v))                                                           \n";
 
 
-if(tractionconditions>=1)if(spc==2)
+if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<")'*def(v))                 \n";
-
-if(tractionconditions>=1)if(spc==3)
-for(int i=0; i<tractionconditions; i++)
-
- writeIt
- "                                                                                                \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
- "    //--------------------------------------------------------------------------                \n"
- "      + intN1(Th,TractioBorder"<<i<<",qforder=3)(T(tx"<<i<<",ty"<<i<<",tz"<<i<<")'*def(v))      \n";
+ "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
 
 for(int i=0; i<dirichletconditions; i++)
 

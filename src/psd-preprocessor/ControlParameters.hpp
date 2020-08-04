@@ -591,8 +591,7 @@ if(Prblm=="soildynamics")
  "//                of the double couple north point.                           \n"
  "//============================================================================\n"
  "                                                                              \n";
-//"   int  [int]   DcLabelPoints = [6,7];                                       \n"
-
+ 
  if(spc==2)
  writeIt
  "                                                                              \n"
@@ -735,43 +734,35 @@ if(tractionconditions>=1)
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
  "// -------------------------------------------------------------------        \n"
- "// TractioBorderI : is/are the surface  labels tags to which traction         \n"
- "//                  is to be applied.                                         \n"
- "// txI, tyI, tzI : are the components of traction forces respectively         \n"
- "//                 in x, y, and z  directions  on  surface  border I.         \n"
- "//                 Note that these can also be finite element fields.         \n"  
+ "// Tb(I)Labs : is/are the  surface  labels tags (integers) to which           \n"
+ "//             traction boundary conditions is to be applied.                 \n"
+ "// Tb(I)Tx   : is the x component of traction forces on the surface           \n"
+ "//             border (I) denoted by  label Tb(I)Labs.                        \n"
+ "//                                                                            \n"     
  "//============================================================================\n"
  "                                                                              \n";
 
- if(spc==2)
+ if(spc==2)if(Prblm!="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  TractioBorder"<<i<<" 4   //                                       \n"   
-   "  macro  tx"<<i<<" 0   //                                                  \n"
-   "  macro  ty"<<i<<" 10. //                                                  \n";
+   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
+   "//macro  Tb"<<i<<"Tx   0   //                                             \n"
+   "  macro  Tb"<<i<<"Ty   10. //                                             \n";
 
-
- if(spc==3)
+  if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  TractioBorder"<<i<<" 4   //                                       \n"      
-   "  macro  tx"<<i<<" 0   //                                                  \n"
-   "  macro  ty"<<i<<" 10. //                                                  \n"
-   "  macro  tz"<<i<<" 0.  //                                                  \n";
-   
+   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
+   "  macro  Tb"<<i<<"Ty   tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //               \n";
+
+ if(spc==3)if(Prblm!="elastodynamics")
+  for(int i=0; i<tractionconditions; i++)
+   writeIt
+   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
+   "//macro  Tb"<<i<<"Tx   0   //                                             \n"
+   "  macro  Tb"<<i<<"Ty   10. //                                             \n"
+   "//macro  Tb"<<i<<"Tz   0   //                                             \n";     
  }
-
-if(Prblm=="elastodynamics")
- writeIt
- "                                                                              \n"
- "//============================================================================\n"
- "// ------- Neumann boundary-condition parameters -------                      \n"
- "//============================================================================\n"
- "                                                                              \n"
- "  real tt;                                                                    \n"
- "  func tr = (tt <= 0.8 ? real(1.*tt/0.8) : 0. );    // tr is dynamic loading  \n"
- "                                                                              \n";
-
 
 if(bodyforce)
  {

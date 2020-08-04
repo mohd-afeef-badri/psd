@@ -171,7 +171,17 @@ if(Prblm=="elastodynamics"){
   "  c[9] =   etak*2*mu*(gamma*(1.-alpf)/beta -1)                                ;\n"
   "  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))           ;\n"
   "                                                                               \n";
-
+  
+  if(tractionconditions>=1)
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//  ------- Intermediate time holding variable for applying traction ------    \n"
+  "//=============================================================================\n"
+  "                                                                               \n"
+  "  real tt ;                                                                    \n"
+  "                                                                               \n";  
+  
  if(plotAll || plotTime)
   writeIt
   "                                                                               \n"

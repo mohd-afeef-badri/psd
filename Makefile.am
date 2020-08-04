@@ -316,7 +316,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem elastodynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem elastodynamics -sequential -dirichletconditions 1  -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
@@ -325,7 +325,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -problem elastodynamics -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem elastodynamics -sequential -dirichletconditions 1 -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
@@ -334,7 +334,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
 	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
@@ -343,7 +343,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
 	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
