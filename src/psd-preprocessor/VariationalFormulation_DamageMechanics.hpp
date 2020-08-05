@@ -26,13 +26,13 @@ if(!vectorial){
  "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
  "                        )                                                                       \n";
 
-if(bodyforce)
+for(int i=0; i<bodyforceconditions; i++)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
- "    // $+int_{\\Omega}(f.v)$                                                                    \n"
+ "    //  $+int_{\\Omega}(f.v)$                                                                   \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
+ "     + intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
 
 if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
@@ -47,13 +47,12 @@ for(int i=0; i<tractionconditions; i++)
 if(dirichletbc){
 
 for(int i=0; i<dirichletconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on (DirichletBorder"<<i<<")                                                             \n";
+ "      + on (Dbc"<<i<<"On,DirichletBc"<<i<<")                                                    \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
@@ -163,14 +162,14 @@ if(!vectorial){
  "                        )                                                                       \n"
  "    //--------------------------------------------------------------------------                \n";
 
-if(bodyforce)
+for(int i=0; i<bodyforceconditions; i++)
  writeIt
  "                                                                                                \n"
- "                           //--- Linear(b_u) ---//                                              \n"
+ "                           //--- Linear(b_u) ---//                                              \n" 
  "    //--------------------------------------------------------------------------                \n"
- "    // $+int_{\\Omega}(f.v)$                                                                    \n"
+ "    //  $+int_{\\Omega}(f.v)$                                                                   \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                       \n";
+ "     + intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
 
 if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
@@ -345,13 +344,12 @@ if(energydecomp)
 if(dirichletbc){
 
 for(int i=0; i<dirichletconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on (DirichletBorder"<<i<<")                                                             \n";
+ "      + on (Dbc"<<i<<"On,DirichletBc"<<i<<")                                                    \n";
 
 }  //-- [if loop terminator] dirichletbc ended --//
 
@@ -387,10 +385,14 @@ if(Model=="Mazar"){
  "     - intN(Th,qforder=3)(                                                                      \n"
  "                     (1-damage) * stress(u,lambdafield,mufield)' * epsilon(v)                   \n"
  "                         )                                                                      \n";
-
-if(bodyforce)
+ 
+ for(int i=0; i<bodyforceconditions; i++)
  writeIt
- "    + intN(Th,qforder=3)(BF'*def2(v))    // Body force     (volumetric)                         \n";
+ "                                                                                                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "    //  $+int_{\\Omega}(f.v)$                                                                   \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "     + intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
 
 if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)

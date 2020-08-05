@@ -108,7 +108,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1  -testflags > PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1conditions 1 -sequential -dirichletconditions 1  -testflags > PSD-check.log &&  \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
@@ -116,7 +116,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	$(FF) Main.edp -v 0 -ns -nw   -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
@@ -124,7 +124,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
 	@echo ""
 	@echo "*============================================================*"
@@ -132,7 +132,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log 	 	
 	@echo ""
 	@echo "*============================================================*"
@@ -140,7 +140,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1  -testflags >> PSD-check.log && \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1  -testflags >> PSD-check.log && \
 	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
@@ -148,7 +148,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
@@ -156,7 +156,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforce  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
 	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
 	@echo ""
 	@echo "*============================================================*"
@@ -164,7 +164,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 3 -bodyforce  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
 	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log 	 
 	@echo ""
 	@echo "*============================================================*"

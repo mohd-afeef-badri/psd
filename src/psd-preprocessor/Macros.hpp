@@ -27,8 +27,6 @@ if(spc==2)
  if(!Sequential)writeIt
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
- if(bodyforce)writeIt 
- "// BF          : body force vector                                             \n";
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
@@ -54,11 +52,7 @@ if(spc==2)
  if(Prblm=="linear-elasticity" || Prblm=="damage")
  writeIt
  "  macro Ux    u  //                                                            \n"
- "  macro Uy    u1 //                                                            \n";
-
- if(bodyforce)
- writeIt 
- "  macro BF [fx,fy] //                                                          \n";    
+ "  macro Uy    u1 //                                                            \n";   
     
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
@@ -111,7 +105,7 @@ if(spc==2)
  if(!vectorial)
   {
   writeIt
-  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ] //                               \n";
+  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ] //                              \n";
 
   if(Prblm!="damage")
   writeIt
@@ -273,7 +267,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  "                                                                              \n";
 
 
- if(tractionconditions>=1){
+ if(tractionconditions>=1)
+ {
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -284,20 +279,75 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  
  for(int i=0; i<tractionconditions; i++) 
  writeIt
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty)                              \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                  \n"
- "  ENDIFMACRO ENDIFMACRO                                                     \n"
- "                                                                            \n"
- "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                              \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                 \n"
- "  ENDIFMACRO ENDIFMACRO                                                     \n"
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                               \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v+(Tbc"<<i<<"Ty)*v1  EndMacro\n"
- "  ENDIFMACRO ENDIFMACRO                                                     \n"
- "                                                                            \n";
+ "                                                                               \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty)                                 \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                                 \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                                  \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v+(Tbc"<<i<<"Ty)*v1  EndMacro   \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n";
+ }
+
+ if(dirichletconditions>=1)
+ {
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//         ------- Dirichlet boundary condition macros -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// DirichletBc'I' : will define the full Dirichlet boundary condition on       \n"
+ "//                  border I                                                   \n" 
+ "//=============================================================================\n"; 
+ 
+ for(int i=0; i<dirichletconditions; i++) 
+ writeIt
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy)                                 \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                 \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                  \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n";
  } 
+ 
+ if(bodyforceconditions>=1)
+ {
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//      ------- volumetric bodyforce  conditions macro -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// BodyforceBc'I' : will define the body force boundary condition on region I  \n"
+ "//=============================================================================\n"; 
+ 
+ for(int i=0; i<bodyforceconditions; i++) 
+ writeIt
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy)                                 \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy)                                 \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy)                                  \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1  EndMacro     \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n";
+ }  
  
 } //-- [if loop terminator] space==2 ended --//
 
@@ -313,8 +363,6 @@ if(spc==3){
  if(!Sequential)writeIt
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
- if(bodyforce)writeIt 
- "// BF          : body force vector                                             \n";
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
@@ -349,11 +397,6 @@ if(spc==3){
  "  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]//               \n"
  "  macro def  (i) [ i , i#1, i#2, i#3 ] //                                      \n"
  "  macro init (i) [ i ,  i ,  i,  i   ] //                                      \n";
-
-
- if(bodyforce)
- writeIt 
- "  macro BF [fx,fy,fz] //                                                       \n";
  
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
@@ -563,7 +606,97 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
  "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n";  
  } 
+
+
+ if(dirichletconditions>=1)
+ {
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//         ------- Dirichlet boundary condition macros -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// DirichletBc'I' : will define the full Dirichlet boundary condition on       \n"
+ "//                  border I                                                   \n" 
+ "//=============================================================================\n"; 
  
+ for(int i=0; i<dirichletconditions; i++) 
+ writeIt
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)          \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)          \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)          \n"
+ "    NewMacro DirichletBc"<<i<<"() Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)           \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)           \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)           \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)            \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n";
+ } 
+
+
+ if(bodyforceconditions>=1)
+ {
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//      ------- volumetric bodyforce  conditions macro -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// BodyforceBc'I' : will define the body force boundary condition on region I  \n"
+ "//=============================================================================\n"; 
+ 
+ for(int i=0; i<bodyforceconditions; i++) 
+ writeIt
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fz*v2  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1  EndMacro     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fz*v2  EndMacro     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
+ "                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)            \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"    
+ "                                                                               \n";
+ }  
+ 
+   
 } //-- [if loop terminator] space==3 ended --//
 
 

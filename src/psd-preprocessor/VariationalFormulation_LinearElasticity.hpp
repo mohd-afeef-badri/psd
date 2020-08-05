@@ -35,16 +35,14 @@ if(!fastmethod)
  writeIt
  "                     )                                                                          \n";
 
-if(bodyforce)
+for(int i=0; i<bodyforceconditions; i++)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\Omega}(f.v)$                                                                   \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN(Th,qforder=3)(BF'*def(v))                                                           \n";
+ "     + intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
 
-
-if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
  writeIt
  "                                                                                                \n"
@@ -54,13 +52,12 @@ for(int i=0; i<tractionconditions; i++)
  "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 for(int i=0; i<dirichletconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on (DirichletBorder"<<i<<")                                                             \n";
+ "      + on (Dbc"<<i<<"On,DirichletBc"<<i<<")                                                    \n";
 
 
 

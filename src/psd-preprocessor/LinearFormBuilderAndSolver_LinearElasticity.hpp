@@ -33,21 +33,11 @@ if(dirichletpointconditions>=1){
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt 
  "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
-// "  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                           \n"
  writeIt
  "                                                                                \n" 
 <<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""              );
 }
-/*
- writeIt
- "                                                                                \n"
- " //------------Memory optimization-----------------//                           \n";
 
-if(dirichletpointconditions>=1)
- writeIt
- "                                                                                \n"
- "  Dpointlab.resize(0); PnV.resize(0);                                           \n";
-*/
 
  writeIt
  "                                                                                \n"

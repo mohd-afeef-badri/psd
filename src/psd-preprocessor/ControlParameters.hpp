@@ -597,53 +597,69 @@ if(Prblm=="soildynamics")
  "                                                                              \n";
  }
 
+
 if(dirichletconditions>=1)
  {
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
- "// -------Dirichlet boundary-condition parameters-------                      \n"
+ "//        ------- Dirichlet boundary-condition parameters -------             \n"
+ "// ---------------------------------------------------------------------------\n"
+ "// Dbc       : acronym for Dirichlet boundary condition                       \n" 
+ "// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     \n"
+ "//             Dirichlet boundary conditions is to be applied.                \n"
+ "// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    \n"
+ "//             border (I) denoted by label(s) Dbc(I)On in the mesh.           \n"
+ "// -------------------------------------------------------------------------- \n"
+ "// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   \n"
+ "//       or deleted if the user does not wish to apply Dirichlet  condition   \n"
+ "//       on that particular  direction (let it free)                          \n" 
  "//============================================================================\n"
  "                                                                              \n";
-
- int trickLoop = 1;
- if(Prblm=="damage") trickLoop = 2;
-
+ 
+ if(Prblm!="damage"){
  if(spc==2)
- writeIt
- "                                                                              \n"
- " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
- "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n";
- for(int i=trickLoop; i<dirichletconditions; i++)
-  writeIt
- "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0      //\n";
+  for(int i=0; i<dirichletconditions; i++)
+   writeIt
+   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"   
+   "  macro  Dbc"<<i<<"Ux 0.  //                                               \n"
+   "  macro  Dbc"<<i<<"Uy 0.  //                                               \n";
 
  if(spc==3)
- writeIt
- "                                                                              \n"
- " //------------NAME------------LABEL----CONDITION(S)-----//                   \n"
- "   macro  DirichletBorder0       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n";
- for(int i=trickLoop; i<dirichletconditions; i++)
-  writeIt
- "   macro  DirichletBorder"<<i<<"       "<<labelDirichlet<<",      Ux=0, Uy=0, Uz=0//\n";
-
- if(Prblm=="damage" && Model=="hybrid-phase-field")
- writeIt
- "   macro  DirichletBorder1       2,      Uy=tr           //                   \n"
- " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n"
- " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
- " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"
- "                                                                              \n";
- else
- writeIt
- " //macro  DirichletBorder1       1,2     Ux=1, Uy=0      //                   \n"
- " //macro  DirichletBorder2       33,     Ux=1, Uy=12     //                   \n"
- " //macro  DirichletBorder3       1,2,3   Ux=0            //                   \n"
- " //macro  DirichletBorder4       1,2,3   Ux=x + y*(x<1.) //                   \n"
- "                                                                              \n";
+  for(int i=0; i<dirichletconditions; i++)
+   writeIt
+   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"   
+   "  macro  Dbc"<<i<<"Ux 0. //                                                \n"
+   "  macro  Dbc"<<i<<"Uy 0. //                                                \n"
+   "  macro  Dbc"<<i<<"Uz 0. //                                                \n";
  }
+ if(Prblm=="damage" && Model=="hybrid-phase-field"){
+  if(spc==2)
+   writeIt
+   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
+   "  macro  Dbc0Ux 0.  //                                                     \n"
+   "  macro  Dbc0Uy 0.  //                                                     \n"
+   "                                                                           \n"
+   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
+   "  macro  Dbc1Uy tr  //                                                     \n";    
 
-
+  if(spc==3)
+   writeIt
+   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
+   "  macro  Dbc0Ux 0.  //                                                     \n"
+   "  macro  Dbc0Uy 0.  //                                                     \n"
+   "  macro  Dbc0Uz 0.  //                                                     \n"   
+   "                                                                           \n"
+   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
+   "  macro  Dbc1Uy tr  //                                                     \n"; 
+  
+  for(int i=2; i<dirichletconditions; i++)
+   writeIt
+   "  macro  Dbc"<<i<<"On "<<labelDirichlet + 1<<"   //                        \n"   
+   "  macro  Dbc"<<i<<"Ux 0. //                                                \n"
+   "  macro  Dbc"<<i<<"Uy 0. //                                                \n";
+ }     
+}
 
 if(dirichletpointconditions>=1)
  {
@@ -729,8 +745,7 @@ if(tractionconditions>=1)
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On 4   //                                               \n"   
-   "  macro  Tbc"<<i<<"Tx 10. //                                               \n"
-   "//macro  Tbc"<<i<<"Ty 0.  //                                               \n";
+   "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
 
   if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
@@ -742,28 +757,33 @@ if(tractionconditions>=1)
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On 4   //                                               \n"   
-   "  macro  Tbc"<<i<<"Tx 10. //                                               \n"
-   "//macro  Tbc"<<i<<"Ty 10. //                                               \n"
-   "//macro  Tbc"<<i<<"Tz 0   //                                               \n";     
+   "  macro  Tbc"<<i<<"Tx 10. //                                               \n";     
  }
 
-if(bodyforce)
+
+if(bodyforceconditions>=1)
  {
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "//        ------- volumetric bodyforce  parameters -------                    \n"
- "// -------------------------------------------------------------------        \n"
- "// fx, fy, fz : are the components of body force in x, y, and z axis.         \n"
- "//              Note that these can be finite element fields as well.         \n"
+ "// ---------------------------------------------------------------------------\n"
+ "// Fbc       : acronym for  force boundary condition (body force)             \n" 
+ "// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which     \n"
+ "//             force boundary conditions is to be applied.                    \n"
+ "// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)    \n"
+ "//             denoted by label(s) Fbc(I)On in the mesh.                      \n"
+ "// -------------------------------------------------------------------------- \n"
+ "// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented   \n"
+ "//       or deleted if the user  does not wish to apply body force in  that   \n"
+ "//       particular  direction (let it free)                                  \n" 
  "//============================================================================\n"
- "                                                                              \n"
- "  macro fx  0.         //                                                     \n"
- "  macro fy  -78480.0   //  {/rho*g=8.e3*(-9.81)=-78480.0}                     \n";
- if(spc==3)
-  writeIt
-  "  macro fz  0.       //                                                      \n"
-  "                                                                             \n";
+ "                                                                              \n";
+ 
+  for(int i=0; i<bodyforceconditions; i++)
+   writeIt
+   "  macro  Fbc"<<i<<"On "<<labelBodyForce<<"   //                             \n"   
+   "  macro  Fbc"<<i<<"Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             \n";     
  }
 
 writeIt

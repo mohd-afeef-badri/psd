@@ -31,11 +31,13 @@
 
   -------------------------------------------------------------------------------------
 
-  -dirichletpointconditions [int]  Number of Dirchlet points.  Default 1.
+  -dirichletpointconditions [int]  # of Dirchlet points.  Default 0.
 
-  -dirichletconditions      [int]  Number of Dirchlet boundaries.  Default 1.
+  -bodyforceconditions      [int]  # of regions in which body force is define.  Default 0.
+  
+  -dirichletconditions      [int]  # of Dirchlet boundaries.  Default 1.
 
-  -tractionconditions       [int]  Number of Neumann/traction boundaries.  Default 1.
+  -tractionconditions       [int]  # of Neumann/traction boundaries.  Default 0.
 
   -parmetis_worker          [int]  Active when mesh partitioner is parmetis.
 
@@ -74,8 +76,6 @@
 
   -pipegnu      [bool]     To activate realtime pipe plotting using GnuPlot.
 
-  -bodyforce    [bool]     To activate volumetric source term (body force).
-
   -vectorial    [bool]     To generate vectorial space solver for non-linear.
 
   -supercomp    [bool]     To be used when using a cluster/supercomputer.
@@ -105,6 +105,7 @@ using namespace std;
 int main(int argc, char *argv[]){
 
   int dirichletpointconditions = 0;
+  int bodyforceconditions      = 0;  
   int dirichletconditions      = 1;
   int tractionconditions       = 0;
   int spc                      = 2;
@@ -121,7 +122,6 @@ int main(int argc, char *argv[]){
   bool plotTime     = false;
   bool testflags    = false;
   bool vectorial    = false;
-  bool bodyforce    = false;
   bool supercomp    = false;
   bool fastmethod   = true;
   bool Sequential   = false;
@@ -150,6 +150,7 @@ int main(int argc, char *argv[]){
 
     if( argvdummy == "-dirichletpointconditions") dirichletpointconditions = stoi(argv[i+1]);
     if( argvdummy == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
+    if( argvdummy == "-bodyforceconditions"     ) bodyforceconditions      = stoi(argv[i+1]);        
     if( argvdummy == "-tractionconditions"      ) tractionconditions       = stoi(argv[i+1]);
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
@@ -164,7 +165,6 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-testflags"       ) testflags                        = true;
     if( argvdummy == "-timelog"         ) timelog                          = true;
     if( argvdummy == "-vectorial"       ) vectorial                        = true;
-    if( argvdummy == "-bodyforce"       ) bodyforce                        = true;
     if( argvdummy == "-supercomp"       ) supercomp                        = true;
     if( argvdummy == "-fastmethod"      ) fastmethod                       = true;
     if( argvdummy == "-sequential"      ) Sequential                       = true;
@@ -186,7 +186,9 @@ int main(int argc, char *argv[]){
 
   }
 
+  int labelBodyForce=1;
   int labelDirichlet=2;
+  int labelDirichletTraction=2;  
   if(Prblm=="damage" && Model=="hybrid-phase-field")labelDirichlet=1;
   if(Prblm=="damage" && Model=="hybrid-phase-field")dirichletbc=true;
   if(Prblm=="damage" && Model=="Mazar")dirichletbc=true;
@@ -194,6 +196,8 @@ int main(int argc, char *argv[]){
 
   int labLface=2;if(spc==3)labLface=1;
   int labRface=4;if(spc==3)labRface=2;
+  
+  if(spc==3)labelBodyForce=6;
 
 //=====================================================================================
 //---- PSD Logo on commandline -----
@@ -216,6 +220,7 @@ int main(int argc, char *argv[]){
 
   cout << " dirichletpointconditions are -------> "<<  dirichletpointconditions << endl;
   cout << " dirichletconditions are ------------> "<<  dirichletconditions      << endl;
+  cout << " bodyforceconditions are ------------> "<<  bodyforceconditions      << endl;  
   cout << " tractionconditions are -------------> "<<  tractionconditions       << endl;
   cout << " lagrange order is ------------------> "<<  lag                      << endl;
   cout << " problem dimension is ---------------> "<<  spc                      << endl;
@@ -246,7 +251,6 @@ int main(int argc, char *argv[]){
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
-  cout << " bodyforce is -----------------------> " << bodyforce                << endl;
   cout << " supercomp is -----------------------> " << supercomp                << endl;
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;

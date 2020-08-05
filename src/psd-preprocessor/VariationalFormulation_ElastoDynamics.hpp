@@ -107,13 +107,12 @@ for(int i=0; i<tractionconditions; i++)
 
 
 for(int i=0; i<dirichletconditions; i++)
-
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on (DirichletBorder"<<i<<")                                                             \n";
+ "      + on (Dbc"<<i<<"On,DirichletBc"<<i<<")                                                    \n";
 
 
  writeIt
