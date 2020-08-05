@@ -536,7 +536,160 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
 
 
 if(dirichletpointconditions>=1)
-{
+ {
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                 ------- Point boundary condition macros -------             \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// PointCoordinates : macro to define point x,y,z coordinates                  \n"
+ "// GetPointIndiciesMpiRank : macro to get the finite element space index (PCi) \n"
+ "//                         of vector of points PC and the MPIrank (mpirankPCi) \n" 
+ "//                         that holds the distributed chuck of mesh containing \n"
+ "//                         points PC.                                          \n"
+ "// ApplyPointBc(I) : will define the full point boundary condition on point I  \n"              
+ "//=============================================================================\n";
+  
+ if(spc==2){
+ writeIt 
+ "                                                                               \n" 
+ "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
+ "   for (int i = 0; i < Th.nv; i++){                                            \n" 
+ "     for(int j = 0; j < PC.n; j++){                                            \n" 
+ "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                               \n" 
+ "         PCi[j]=i; mpirankPCi[j]=mpirank;                                      \n" 
+ "       }                                                                       \n" 
+ "     }                                                                         \n" 
+ "   }                                                                           \n"  
+ "  //                                                                           \n";            
+    
+      
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt
+ "                                                                               \n"  
+ "  IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy)                                  \n"                 
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"  
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy)                                 \n"  
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*2,PCi["<<i<<"]*2)=tgv;                                \n"
+ "          b[PCi["<<i<<"]*2]= PC"<<i<<"Ux*tgv;}                                 \n"        
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"  
+ "                                                                               \n" 
+ "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy)                                 \n"  
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*2+1 , PCi["<<i<<"]*2+1)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*2+1]= PC"<<i<<"Uy*tgv;}                               \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"  
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy)                                  \n"  
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*2  ,PCi["<<i<<"]*2  )=tgv;                            \n"
+ "          b[PCi["<<i<<"]*2  ] = PC"<<i<<"Ux*tgv;                               \n"  
+ "          A(PCi["<<i<<"]*2+1,PCi["<<i<<"]*2+1)=tgv;                            \n"
+ "          b[PCi["<<i<<"]*2+1] = PC"<<i<<"Uy*tgv; }                             \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"  
+ "                                                                               \n"; 
+ }      
+                        
+   
+  
+ if(spc==3){
+ writeIt
+ "                                                                               \n" 
+ "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
+ "   for (int i = 0; i < Th.nv; i++){                                            \n" 
+ "     for(int j = 0; j < PC.n; j++){                                            \n" 
+ "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1) && Th(i).z==PC(j,2)){           \n" 
+ "         PCi[j]=i; mpirankPCi[j]=mpirank;                                      \n" 
+ "       }                                                                       \n" 
+ "     }                                                                         \n" 
+ "   }                                                                           \n"  
+ "  //                                                                           \n";
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt
+ "                                                                               \n"  
+ "  IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)            \n"                 
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)           \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
+ "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;}                                 \n"        
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n" 
+ "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)           \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;}                               \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n"
+ "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)           \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)            \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
+ "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;                                  \n"
+ "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;}                               \n"           
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)            \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
+ "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;                                  \n"
+ "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"         
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"
+ "                                                                               \n" 
+ "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)            \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;                                \n" 
+ "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
+ "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"  
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"    
+ "                                                                               \n" 
+ "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)             \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
+ "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
+ "          A(PCi["<<i<<"]*3  ,PCi["<<i<<"]*3  )=tgv;                            \n"
+ "          b[PCi["<<i<<"]*3  ] = PC"<<i<<"Ux*tgv;                               \n"  
+ "          A(PCi["<<i<<"]*3+1,PCi["<<i<<"]*3+1)=tgv;                            \n"
+ "          b[PCi["<<i<<"]*3+1] = PC"<<i<<"Uy*tgv;                               \n" 
+ "          A(PCi["<<i<<"]*3+2,PCi["<<i<<"]*3+2)=tgv;                            \n"
+ "          b[PCi["<<i<<"]*3+2] = PC"<<i<<"Uz*tgv; }                             \n"   
+ "      EndMacro                                                                 \n"  
+ "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
+ "                                                                               \n";  
+  }
+/*
   writeIt
   "                                                                           \n"
   "//----------------------------Point BC macro-----------------------------//\n"
@@ -582,7 +735,7 @@ if(dirichletpointconditions>=1)
  "  }//                                                                      \n"
  "                                                                           \n"
  "                                                                           \n";
-
+*/
 } //-- [if loop terminator] pointbc ended --//
 
 

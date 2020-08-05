@@ -412,8 +412,8 @@ if(Prblm=="soildynamics"){
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
-  "// ------- double couple  parameters  -------                                  \n"
-  "// -------------------------------------------------------------------         \n"
+  "//                  ------- double couple  parameters  -------                 \n"
+  "// --------------------------------------------------------------------------- \n"
   "// iNorth : is the integer index of the northern degree of freedom             \n"
   "//          as it is assembled in the linear system. This is  used             \n"
   "//          to force boundary coditions of double-couple whcih can             \n"
@@ -423,13 +423,33 @@ if(Prblm=="soildynamics"){
   "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
+  "// --------------------------------------------------------------------------- \n"
+  "//  values of  iNorth,....,iWest and Nrank,...,Wrank are set to -1 as          \n" 
+  "//  this will sereve as error indicator should anything go wrong.              \n"         
   "//=============================================================================\n"
   "                                                                               \n"
-  "  int iNorth, iSouth, iEast, iWest;                                            \n"
-  "  int Nrank , Srank , Erank, Wrank;                                            \n"
-  "  bool DcFlag;                                                                 \n";
+  "  int iNorth=-1, iSouth=-1, iEast=-1, iWest=-1;                                \n"
+  "  int Nrank=-1, Srank=-1, Erank=-1, Wrank=-1;                                  \n"
+  "  bool DcFlag=false;                                                           \n";
 
  }
+
+if(dirichletpointconditions>=1)
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//       ------- point boundary condition  parameters  -------                 \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// PCi        : point index in finite element space.                           \n"
+  "// mpirankPCi : MPI rank that hold point PCi                                   \n"
+  "// --------------------------------------------------------------------------- \n"
+  "//  values of  PCi and mpirankPCi are set to -1 as this will sereve as error   \n" 
+  "//  indicator should anything go wrong.                                        \n"         
+  "//=============================================================================\n"
+  "                                                                               \n"
+  "  int[int]    PCi(PC.n); PCi=-1;                                               \n"
+  "  int[int]    mpirankPCi(PC.n); mpirankPCi=-1;                                 \n";
+
 
 
 if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){

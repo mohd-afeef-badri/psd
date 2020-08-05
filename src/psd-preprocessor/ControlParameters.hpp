@@ -540,44 +540,6 @@ if(Prblm=="soildynamics")
    "  int [int]   LoadLabels = [6];                                               \n";
   }
 
-
-/*
- if(doublecouple=="force-based")
- writeIt
- "//============================================================================\n"
- "//     -------Parameters for double couple point source-------                \n"
- "// -------------------------------------------------------------------        \n"
- "// DcLabelNorth : is the label of the (line/surface) containing the           \n"
- "//                double couple north point. North point is  loaded           \n"
- "//                in x direction. Idiom nomenclature applies to the           \n"
- "//                south, east, and west points. (S/W loaded in z).            \n"
- "// DcNorthPointCord : is the vector  containing  coordinates of the           \n"
- "//                double couple north point. Idiom nomenclature ap-           \n"
- "//                lies to the south, east, and west points.                   \n"
- "// DcNorthCondition : is the macro containing the applied condition           \n"
- "//                of the double couple north point.                           \n"
- "//============================================================================\n"
- "                                                                              \n"
- "   int  DcLabelNorth = 6,                                                     \n"
- "        DcLabelSouth = 7,                                                     \n"
- "        DcLabelEast  = 7,                                                     \n"
- "        DcLabelWest  = 6;                                                     \n"
- "                                                                              \n"
- "                                                                              \n"
- "   real [int]   DcNorthPointCord = [5.,5.1];                                  \n"
- "   real [int]   DcSouthPointCord = [5.,5.];                                   \n"
- "   real [int]   DcEastPointCord  = [5.05,5.05];                               \n"
- "   real [int]   DcWestPointCord  = [4.95,5.05];                               \n"
- "                                                                              \n"
- "                                                                              \n"
- "   macro DcNorthCondition() -100.  //                                         \n"
- "   macro DcSouthCondition()  100.  //                                         \n"
- "   macro DcEastCondition()   100.  //                                         \n"
- "   macro DcWestCondition()  -100.  //                                         \n"
- "                                                                              \n"
- "                                                                              \n";
-*/
-
  if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  writeIt
  "                                                                              \n"
@@ -688,42 +650,58 @@ if(dirichletpointconditions>=1)
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
- "// -------Dirichlet point boundary-condition parameters-------                \n"
+ "//       -------Dirichlet point boundary-condition parameters-------          \n"
+ "// -------------------------------------------------------------------------- \n"
+ "// PC : short for point coordinates is the table  containing coordinates of   \n"
+ "//      the  points for which boundary-condition is to be applied             \n"
+ "// PC(I)Ux  : is x displacement value of the point I. Similar logic applies   \n"
+ "//            to PC(I)Uy, PC(I)Uz                                             \n"
+ "// -------------------------------------------------------------------------- \n"
+ "// NOTE: either the macro PC(I)Ux or PC(I)Uy or PC(I)Uz should be commented   \n"
+ "//       if the user does not wish to apply restriction on that  particular   \n"
+ "//       displacement direction (let it free)                                 \n"                               
  "//============================================================================\n"
  "                                                                              \n"
- "  int [int]   Dpointlab = ["<<labelDirichlet<<"\t// Labels containing point 0 \n";
+ "  real[int,int] PC = [                                                        \n"; 
 
+ if(spc==2){
+ writeIt 
+ "//-------------------- [  x  , y  ] --------------------//                   \n"; 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "                       [  0. , 0. ]    // point "<<i<<"                       \n";
 
- for(int i=1; i<dirichletpointconditions; i++)
-  writeIt
-  "                          ,"<<labelDirichlet<<"\t//  Labels containing point "<<i<<" \n";
+ writeIt 
+ "//------------------------------------------------------//                    \n"  
+ "                      ];                                                      \n";
 
- writeIt
- "                          ];                                                  \n"
- "                                                                              \n";
-
-
- if(spc==2)
- {
- writeIt
- "  real[int]   PnV = [ 0., 0., 0., 0. // [x, y, u1, u2] of point border 0      \n";
- for(int i=1; i<dirichletpointconditions; i++)
-  writeIt
-  "                     ,0., 0., 0., 0. // [x, y, u1, u2] of point border "<<i<<"\n";
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt  
+ "                                                                              \n"
+ "   macro PC"<<i<<"Ux  -0. //                                                  \n"
+ "   macro PC"<<i<<"Uy  -0. //                                                  \n" 
+ "                                                                              \n";  
  }
-
- if(spc==3)
- {
+ 
+ if(spc==3){
  writeIt
- "  real[int]   PnV = [ 0., 0., 0., 0., 0., 0.  // [x,y,z,u1,u2,u3] of point 0  \n";
- for(int i=1; i<dirichletpointconditions; i++)
-  writeIt
-  "                     ,0., 0., 0., 0., 0., 0. // [x,y,z,u1,u2,u3] of point "<<i<<" \n";
+ "//-------------------- [  x  , y  , z  ]--------------------//                \n"; 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "                       [  0. , 0. , 0. ]    // point "<<i<<"                  \n";
+ writeIt 
+ "//----------------------------------------------------------//                \n"  
+ "                      ];                                                      \n";
+
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt  
+ "                                                                              \n"
+ "   macro PC"<<i<<"Ux  -0. //                                                  \n"
+ "   macro PC"<<i<<"Uy  -0. //                                                  \n" 
+ "   macro PC"<<i<<"Uz  -0. //                                                  \n"  
+ "                                                                              \n"; 
+  
  }
-
- writeIt
- "                    ];                                                        \n"
- "                                                                              \n";
 }
 
 
@@ -734,11 +712,16 @@ if(tractionconditions>=1)
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
  "// -------------------------------------------------------------------        \n"
+ "// Tb        : acronym for traction border                                    \n" 
+ "// Labs      : acronym for traction labels                                    \n"  
  "// Tb(I)Labs : is/are the  surface  labels tags (integers) to which           \n"
  "//             traction boundary conditions is to be applied.                 \n"
  "// Tb(I)Tx   : is the x component of traction forces on the surface           \n"
  "//             border (I) denoted by  label Tb(I)Labs.                        \n"
- "//                                                                            \n"     
+ "// -------------------------------------------------------------------------- \n"
+ "// NOTE: either the macro Tb(I)Tx or Tb(I)Ty or Tb(I)Tz should be commented   \n"
+ "//       or deleted  if  the  user  does not wish to apply traction on that   \n"
+ "//       particular  direction (let it free)                                  \n" 
  "//============================================================================\n"
  "                                                                              \n";
 
@@ -746,8 +729,8 @@ if(tractionconditions>=1)
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
-   "//macro  Tb"<<i<<"Tx   0   //                                             \n"
-   "  macro  Tb"<<i<<"Ty   10. //                                             \n";
+   "  macro  Tb"<<i<<"Tx   10. //                                             \n"
+   "//macro  Tb"<<i<<"Ty   0.  //                                             \n";
 
   if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
@@ -759,8 +742,8 @@ if(tractionconditions>=1)
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
-   "//macro  Tb"<<i<<"Tx   0   //                                             \n"
-   "  macro  Tb"<<i<<"Ty   10. //                                             \n"
+   "  macro  Tb"<<i<<"Tx   10. //                                             \n"
+   "//macro  Tb"<<i<<"Ty   10. //                                             \n"
    "//macro  Tb"<<i<<"Tz   0   //                                             \n";     
  }
 

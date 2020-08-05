@@ -22,16 +22,23 @@ if(!Sequential){
  "  real[int]    b = elast(0,Vh);                                                 \n"
 <<(timelog ? "  MPItimerend  (\"RHS assembly\",t0)\n" : ""                          );
 
-if(dirichletpointconditions>=1)
+if(dirichletpointconditions>=1){
  writeIt
  "                                                                                \n"
  "//---------Additional assembly for A & b----------//                            \n"
  "                                                                                \n"
 <<(timelog ? "  MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : ""             )<<
- "  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                             \n"
-<<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""                );
-
-
+ "  GetPointIndiciesMpiRank(PC, PCi, mpirankPCi);                                 \n";
+ 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
+// "  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                             \n"
+ writeIt
+ "                                                                                \n" 
+<<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""               );
+}
+/*
  writeIt
  "                                                                                \n"
  " //------------Memory optimization-----------------//                           \n";
@@ -40,7 +47,7 @@ if(dirichletpointconditions>=1)
  writeIt
  "                                                                                \n"
  "  Dpointlab.resize(0); PnV.resize(0);                                           \n";
-
+*/
 
  writeIt
  "                                                                                \n"
