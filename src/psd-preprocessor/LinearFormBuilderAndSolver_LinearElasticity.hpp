@@ -27,16 +27,16 @@ if(dirichletpointconditions>=1){
  "                                                                                \n"
  "//---------Additional assembly for A & b----------//                            \n"
  "                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : ""             )<<
- "  GetPointIndiciesMpiRank(PC, PCi, mpirankPCi);                                 \n";
+<<(timelog ? "  MPItimerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
+ "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n";
  
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt 
  "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
-// "  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                             \n"
+// "  Pointbc(Dpointlab,Vh,ALoc,b,PnV);                                           \n"
  writeIt
  "                                                                                \n" 
-<<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""               );
+<<(timelog ? "  MPItimerend(\"point Dirichlet assembly\",t0)\n" : ""              );
 }
 /*
  writeIt

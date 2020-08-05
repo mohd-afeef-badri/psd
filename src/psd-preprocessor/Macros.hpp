@@ -28,12 +28,16 @@ if(spc==2)
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
  if(bodyforce)writeIt 
- "// BF          : body force vector                                             \n";  
+ "// BF          : body force vector                                             \n";
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(plotAll || debug)
+ "// Pltk        : paraview post-processing macro on P1 function possible        \n"
+ "// def0(i)     : macro needed post-processing via paraview                     \n";   
  writeIt
  "// Ux, Uy      : x and y displacements                                         \n"
  "// Pk          : finite element space definition                               \n"
- "// def(i)      : to define a vectorial field of same order as Pk               \n"
- "// init(i)     : to initialize a vectorial field of same order as Pk           \n"   
+ "// def(i)      : to define a vectorial field                                   \n"
+ "// init(i)     : to initialize a vectorial field                               \n"   
  "//=============================================================================\n"
  "                                                                               \n"; 
 
@@ -128,14 +132,6 @@ if(spc==2)
   "                                                                              \n";
   }   //-- [if loop terminator] !vectorial ended --//
 
- writeIt
- "                                                                              \n"
- "//--------------------Divergence and epsilion macros---------------------//   \n"
- "                                                                              \n"
- "  macro divergence(i)(dx(i) + dy(i#1))          // Divergence function        \n"
- "  macro epsilon(i) [dx(i), dy(i#1),                                           \n"
- "                   (dy(i)+dx(i#1))/SQ2]        // Strain definition           \n";
-
  if(!vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
  "                                                                              \n"
@@ -146,6 +142,23 @@ if(spc==2)
  "  macro def   (i)     i                               // Scalar field         \n"
  "  macro init  (i)     i                               // Initialize           \n"
  "  macro Zk            P1                              // FE space             \n";
+
+ writeIt
+ "                                                                               \n" 
+ "//=============================================================================\n"
+ "//                 ------- operator definition macros  -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// divergence(i) : divergence operator definition, given a displacement vector \n"
+ "//                 'i' returns scalar value                                    \n"  
+ "// epsilon(i)    : symmetric strain tensor operator given  displacement vector \n"
+ "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"         
+ "//=============================================================================\n"
+ "                                                                               \n" 
+ "  macro divergence(i)(dx(i) + dy(i#1)) //                                      \n"
+ "  macro epsilon(i) [dx(i), dy(i#1),                                            \n"
+ "                   (dy(i)+dx(i#1))/SQ2] //                                     \n";
+
+
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
  writeIt
@@ -272,16 +285,16 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  for(int i=0; i<tractionconditions; i++) 
  writeIt
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty)                                \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v  EndMacro                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty)                              \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                  \n"
  "  ENDIFMACRO ENDIFMACRO                                                     \n"
  "                                                                            \n"
- "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty)                                \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1  EndMacro                  \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                              \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                 \n"
  "  ENDIFMACRO ENDIFMACRO                                                     \n"
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty)                                 \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v+(Tb"<<i<<"Ty)*v1  EndMacro  \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty)                               \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v+(Tbc"<<i<<"Ty)*v1  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO                                                     \n"
  "                                                                            \n";
  } 
@@ -291,49 +304,62 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 
 
 if(spc==3){
+
  writeIt
- "                                                                            \n"
- "//--------------------Macros needed by DDmacro.idp------------------------//\n"
- "                                                                            \n";
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                     ------- Essential Macros -------                        \n"
+ "// --------------------------------------------------------------------------- \n";
+ if(!Sequential)writeIt
+ "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
+ "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
+ if(bodyforce)writeIt 
+ "// BF          : body force vector                                             \n";
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(plotAll || debug)
+ "// Pltk        : paraview post-processing macro on P1 function possible        \n"
+ "// def0(i)     : macro needed post-processing via paraview                     \n";
+ writeIt
+ "// Ux, Uy      : x and y displacements                                         \n"
+ "// Pk          : finite element space definition                               \n"
+ "// def(i)      : to define a vectorial field of same order as Pk               \n"
+ "// init(i)     : to initialize a vectorial field of same order as Pk           \n"   
+ "//=============================================================================\n"
+ "                                                                               \n"; 
 
  if(!Sequential)
   writeIt
-  "  macro partitioner "<<Partitioner<<"\t          // Mesh partitioner used   \n"
-  "  macro dimension   3                          // Three-D problem           \n";
+  "  macro partitioner "<<Partitioner<<" //                                      \n"
+  "  macro dimension   3 //                                                      \n";
 
  if(Prblm=="elastodynamics")
  writeIt
- "  macro Ux   du                                  // x displacement           \n"
- "  macro Uy   du1                                 // y displacement           \n"
- "  macro Uz   du2                                 // z displacement           \n";
+ "  macro Ux   du  //                                                            \n"
+ "  macro Uy   du1 //                                                            \n"
+ "  macro Uz   du2 //                                                            \n";
 
  if(Prblm=="linear-elasticity" || Prblm=="damage")
  writeIt
- "  macro Ux    u                                  // x displacement           \n"
- "  macro Uy    u1                                 // y displacement           \n"
- "  macro Uz    u2                                 // z displacement           \n";
+ "  macro Ux    u  //                                                            \n"
+ "  macro Uy    u1 //                                                            \n"
+ "  macro Uz    u2 //                                                            \n";
 
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
- "  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]// FE space   \n"
- "  macro def  (i) [ i , i#1, i#2, i#3 ]           // Vect. field definition  \n"
- "  macro init (i) [ i ,  i ,  i,  i  ]            // Vect. field initialize  \n";
+ "  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]//               \n"
+ "  macro def  (i) [ i , i#1, i#2, i#3 ] //                                      \n"
+ "  macro init (i) [ i ,  i ,  i,  i   ] //                                      \n";
 
 
  if(bodyforce)
  writeIt 
- "  macro BF [fx,fy,fz]                             //  Body forces            \n";
-
- if(tractionconditions>=1) 
-  writeIt
-  "                                                                            \n"
-  "  macro T(i,j,k) [i,j,k]                        // Traction vector          \n"; 
+ "  macro BF [fx,fy,fz] //                                                       \n";
  
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
   writeIt
-  "  macro Pltk         P1                          // FE space                \n"
-  "  macro def0 (i)           i                     // Vect. field definition  \n";
+  "  macro Pltk      P1  //                                                      \n"
+  "  macro def0 (i)  i   //                                                      \n";
 
  if(Prblm=="soildynamics" && top2vol)
  writeIt
@@ -349,36 +375,43 @@ if(spc==3){
   "  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition   \n";
 
 if(!vectorial){write
-<<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]\t\t  // Finite element space  \n";
+<<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]  //                           \n";
 
 if(Prblm!="damage")write
 <<"                                                                            \n"
-<<"  macro def(i)  [i, i#1, i#2]                    // Vect. field definition  \n";
+<<"  macro def(i)  [i, i#1, i#2]  //                                           \n";
 
 if(Prblm!="damage")if(!Sequential)write
-<<"  macro init(i) [i,   i,   i]                    // Vect. field initialize  \n"
+<<"  macro init(i) [i,   i,   i]  //                                           \n"
 <<"                                                                            \n";
 
 if(Prblm=="damage" && Model=="Mazar")write
 <<"                                                                            \n"
-<<"  macro def(i)  [i, i#1, i#2]                    // Vect. field definition  \n";
+<<"  macro def(i)  [i, i#1, i#2]  //                                           \n";
 
 if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
-<<"  macro init(i) [i,   i,   i]                    // Vect. field initialize  \n"
+<<"  macro init(i) [i,   i,   i]  //                                           \n"
 <<"                                                                            \n";
 
 } //-- [if loop terminator] !vectorial ended --//
 
-write
-<<"                                                                           \n"
-<<"//--------------------Divergence and epsilion macros---------------------//\n"
-<<"                                                                           \n"
-<<"  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )   // Divergence macro\n"
-<<"  macro epsilon   (i) [ dx( i ) , dy(i#1) , dz(i#2) ,                      \n"
-<<"                       (dz(i#1) + dy(i#2))/SQ2,                            \n"
-<<"                       (dz( i ) + dx(i#2))/SQ2,                            \n"
-<<"                       (dy( i ) + dx(i#1))/SQ2]        // Strain macro     \n"
-<<"                                                                           \n";
+ writeIt
+ "                                                                               \n" 
+ "//=============================================================================\n"
+ "//                 ------- operator definition macros  -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// divergence(i) : divergence operator definition, given a displacement vector \n"
+ "//                 'i' returns scalar value                                    \n"  
+ "// epsilon(i)    : symmetric strain tensor operator given  displacement vector \n"
+ "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"         
+ "//=============================================================================\n"
+ "                                                                               \n"
+ "  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )   //                     \n"
+ "  macro epsilon   (i) [ dx( i ) , dy(i#1) , dz(i#2) ,                          \n"
+ "                       (dz(i#1) + dy(i#2))/SQ2,                                \n"
+ "                       (dz( i ) + dx(i#2))/SQ2,                                \n"
+ "                       (dy( i ) + dx(i#1))/SQ2 ]        //                     \n"
+ "                                                                               \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)write
 <<"                                                                           \n"
@@ -502,32 +535,32 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
  for(int i=0; i<tractionconditions; i++) 
  writeIt
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)          \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v  EndMacro                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)       \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                  \n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)          \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1  EndMacro                  \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)       \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                 \n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)          \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tz)*v2  EndMacro                  \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)       \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tz)*v2  EndMacro                 \n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(!Tb"<<i<<"Tz)           \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Ty)*v1  EndMacro\n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)        \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(!Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)           \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)        \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Tz)*v2  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(!Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)           \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Ty)*v1 +(Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)        \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
  "                                                                            \n"
- "  IFMACRO(Tb"<<i<<"Tx) IFMACRO(Tb"<<i<<"Ty) IFMACRO(Tb"<<i<<"Tz)            \n"
- "    NewMacro NeumannBc"<<i<<"() (Tb"<<i<<"Tx)*v + (Tb"<<i<<"Ty)*v1 +(Tb"<<i<<"Tz)*v2  EndMacro\n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)         \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro\n"
  "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n";  
  } 
  
@@ -567,34 +600,34 @@ if(dirichletpointconditions>=1)
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
  "                                                                               \n"  
- "  IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy)                                  \n"                 
+ "  IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                                \n"                 
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy)                                 \n"  
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                               \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*2,PCi["<<i<<"]*2)=tgv;                                \n"
- "          b[PCi["<<i<<"]*2]= PC"<<i<<"Ux*tgv;}                                 \n"        
+ "          b[PCi["<<i<<"]*2]= Pbc"<<i<<"Ux*tgv;}                                \n"        
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n" 
- "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy)                                 \n"  
+ "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                               \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*2+1 , PCi["<<i<<"]*2+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*2+1]= PC"<<i<<"Uy*tgv;}                               \n"  
+ "          b[PCi["<<i<<"]*2+1]= Pbc"<<i<<"Uy*tgv;}                              \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy)                                  \n"  
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                                \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*2  ,PCi["<<i<<"]*2  )=tgv;                            \n"
- "          b[PCi["<<i<<"]*2  ] = PC"<<i<<"Ux*tgv;                               \n"  
+ "          b[PCi["<<i<<"]*2  ] = Pbc"<<i<<"Ux*tgv;                              \n"  
  "          A(PCi["<<i<<"]*2+1,PCi["<<i<<"]*2+1)=tgv;                            \n"
- "          b[PCi["<<i<<"]*2+1] = PC"<<i<<"Uy*tgv; }                             \n"  
+ "          b[PCi["<<i<<"]*2+1] = Pbc"<<i<<"Uy*tgv; }                            \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n"; 
@@ -617,74 +650,74 @@ if(dirichletpointconditions>=1)
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
  "                                                                               \n"  
- "  IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)            \n"                 
+ "  IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)         \n"                 
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)           \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;}                                 \n"        
+ "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;}                                \n"        
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
- "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)           \n"
+ "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;}                               \n"  
+ "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;}                              \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n"
- "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)           \n"
+ "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"  
+ "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(!PC"<<i<<"Uz)            \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;                                  \n"
+ "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;                                 \n"
  "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;}                               \n"           
+ "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;}                              \n"           
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(!PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)            \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= PC"<<i<<"Ux*tgv;                                  \n"
+ "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;                                 \n"
  "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"         
+ "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"         
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"
  "                                                                               \n" 
- "    IFMACRO(!PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)            \n"
+ "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= PC"<<i<<"Uy*tgv;                                \n" 
+ "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;                               \n" 
  "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= PC"<<i<<"Uz*tgv;}                               \n"  
+ "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"    
  "                                                                               \n" 
- "    IFMACRO(PC"<<i<<"Ux) IFMACRO(PC"<<i<<"Uy) IFMACRO(PC"<<i<<"Uz)             \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)          \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
  "          A(PCi["<<i<<"]*3  ,PCi["<<i<<"]*3  )=tgv;                            \n"
- "          b[PCi["<<i<<"]*3  ] = PC"<<i<<"Ux*tgv;                               \n"  
+ "          b[PCi["<<i<<"]*3  ] = Pbc"<<i<<"Ux*tgv;                              \n"  
  "          A(PCi["<<i<<"]*3+1,PCi["<<i<<"]*3+1)=tgv;                            \n"
- "          b[PCi["<<i<<"]*3+1] = PC"<<i<<"Uy*tgv;                               \n" 
+ "          b[PCi["<<i<<"]*3+1] = Pbc"<<i<<"Uy*tgv;                              \n" 
  "          A(PCi["<<i<<"]*3+2,PCi["<<i<<"]*3+2)=tgv;                            \n"
- "          b[PCi["<<i<<"]*3+2] = PC"<<i<<"Uz*tgv; }                             \n"   
+ "          b[PCi["<<i<<"]*3+2] = Pbc"<<i<<"Uz*tgv; }                            \n"   
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n";  
@@ -912,10 +945,8 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "//  the distributed mesh.                                                      \n"
   "// -------------------------------------------------------------------         \n"
   "//  Inputs  : PnN, PnS, PnE, PnW                                               \n"
-  "//  Outputs : DcFlag,  iN, iS, iE, iW,  Nrank, Srank, Erank, Wrank             \n"
+  "//  Outputs : iN, iS, iE, iW,  Nrank, Srank, Erank, Wrank                      \n"
   "// -------------------------------------------------------------------         \n"
-  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"
   "//  PnN : is the vector containing the point coordinates of the North          \n"
   "//        point of the double couple. Same is true for PnS, PnE, PnW.          \n"
   "//  iN  : is finite element degree of freedom of the Northern  double          \n"
@@ -929,37 +960,37 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   if(spc==2)
   writeIt    
   "                                                                               \n"
-  "  macro GetDoubelCoupleIndicies(DcFlag,                                        \n"
+  "  macro GetDoubelCoupleIndicies(                                               \n"
   "                                PnN,   PnS,   PnE,   PnW,                      \n"
   "                                iN,    iS,    iE,    iW,                       \n"
   "                                Nrank, Srank, Erank, Wrank)                    \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1])                                    \n"
-  "       {iN=i*2; Nrank=mpirank; DcFlag=true;}                                   \n"
+  "       {iN=i*2; Nrank=mpirank; }                                               \n"
   "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1])                                    \n"
-  "       {iS=i*2; Srank=mpirank; DcFlag=true;}                                   \n"
+  "       {iS=i*2; Srank=mpirank; }                                               \n"
   "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1])                                    \n"
-  "       {iE=i*2+1; Erank=mpirank; DcFlag=true;}                                 \n"
+  "       {iE=i*2+1; Erank=mpirank; }                                             \n"
   "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1])                                    \n"
-  "       {iW=i*2+1; Wrank=mpirank; DcFlag=true;}                                 \n"
+  "       {iW=i*2+1; Wrank=mpirank; }                                             \n"
   "     }//                                                                       \n";
   
   if(spc==3)
   writeIt    
   "                                                                               \n"
-  "  macro GetDoubelCoupleIndicies(DcFlag,                                        \n"
+  "  macro GetDoubelCoupleIndicies(                                               \n"
   "                                PnN,   PnS,   PnE,   PnW,                      \n"
   "                                iN,    iS,    iE,    iW,                       \n"
   "                                Nrank, Srank, Erank, Wrank)                    \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1] && abs(Th(i).z-PnN[2])<.01)         \n"
-  "       {iN=i*3; Nrank=mpirank; DcFlag=true;}                                   \n"
+  "       {iN=i*3; Nrank=mpirank;}                                                \n"
   "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1] && abs(Th(i).z-PnS[2])<.01)         \n"
-  "       {iS=i*3; Srank=mpirank; DcFlag=true;}                                   \n"
+  "       {iS=i*3; Srank=mpirank;}                                                \n"
   "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1] && abs(Th(i).z-PnE[2])<.01)         \n"
-  "       {iE=i*3+2; Erank=mpirank; DcFlag=true;}                                 \n"
+  "       {iE=i*3+2; Erank=mpirank;}                                              \n"
   "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && abs(Th(i).z-PnW[2])<.01)         \n"
-  "       {iW=i*3+2; Wrank=mpirank; DcFlag=true;}                                 \n"
+  "       {iW=i*3+2; Wrank=mpirank;}                                              \n"
   "     }//                                                                       \n";
     
 /*
@@ -1001,8 +1032,6 @@ if(doublecouple=="displacement-based")
   "//  these degrees of freedom.                                                  \n"
   "// -------------------------------------------------------------------         \n"
   "//  A : is the stiffness matrix assembled from bilinear.                       \n"
-  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"
   "//  iN  : is finite element degree of freedom of the Northern  double          \n"
   "//        couple point. Same is true for iS, iE, iW.                           \n"
   "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
@@ -1011,8 +1040,7 @@ if(doublecouple=="displacement-based")
   "//  tgv  : is the large penalization term tgv=1e30.                            \n"
   "//=============================================================================\n"
   "                                                                               \n"
-  "  macro ApplyDoubleCoupleToA(A,DcFlag,iN,iS,iE,iW,Nrank,Srank,Erank,Wrank)     \n"
-  "   if(DcFlag){                                                                 \n"
+  "  macro ApplyDoubleCoupleToA(A,iN,iS,iE,iW,Nrank,Srank,Erank,Wrank)            \n"
   "     if(mpirank==Nrank)                                                        \n"
   "       A(iN,iN)= tgv;                                                          \n"
   "     if(mpirank==Srank)                                                        \n"
@@ -1021,7 +1049,6 @@ if(doublecouple=="displacement-based")
   "       A(iE,iE)= tgv;                                                          \n"
   "     if(mpirank==Wrank)                                                        \n"
   "       A(iW,iW)= tgv;                                                          \n"
-  "    }                                                                          \n"
   "  //                                                                           \n"
   "                                                                               \n"
   "//=============================================================================\n"
@@ -1034,8 +1061,6 @@ if(doublecouple=="displacement-based")
   "//  these degrees of freedom.                                                  \n"
   "// -------------------------------------------------------------------         \n"
   "//  RHS : is the right hand side vector  assembled from linear.                \n"
-  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"
   "//  CondN  : is boundary condition displacement applied to the norther         \n"
   "//           point of the double couple. Same is true for Conds, CondW,        \n"
   "//           and CondE.                                                        \n"
@@ -1047,11 +1072,10 @@ if(doublecouple=="displacement-based")
   "//  tgv  : is the large penalization term tgv=1e30.                            \n"
   "//=============================================================================\n"
   "                                                                               \n"
-  "  macro ApplyDoubleCoupleToRHS( RHS, DcFlag,                                   \n"
+  "  macro ApplyDoubleCoupleToRHS( RHS,                                           \n"
   "                                CondN,CondS,CondE,CondW,                       \n"
   "                                iN,   iS,   iE,   iW,                          \n"
   "                                Nrank,Srank,Erank,Wrank)                       \n"
-  "   if(DcFlag){                                                                 \n"
   "     if(mpirank==Nrank)                                                        \n"
   "       RHS[iN]= CondN*tgv;                                                     \n"
   "     if(mpirank==Srank)                                                        \n"
@@ -1060,7 +1084,6 @@ if(doublecouple=="displacement-based")
   "       RHS[iE]= CondE*tgv;                                                     \n"
   "     if(mpirank==Wrank)                                                        \n"
   "       RHS[iW]= CondW*tgv;                                                     \n"
-  "    }                                                                          \n"
   "  //                                                                           \n"
   "                                                                               \n";
 
@@ -1077,8 +1100,6 @@ if(doublecouple=="force-based")
   "//  freedom.                                                                   \n"
   "// -------------------------------------------------------------------         \n"
   "//  RHS : is the right hand side vector  assembled from linear.                \n"
-  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"
   "//  CondN  : is boundary condition force applied to the norther point          \n"
   "//           of the double couple. Same is true for Conds, CondW, and          \n"
   "//           CondE.                                                            \n"
@@ -1089,11 +1110,10 @@ if(doublecouple=="force-based")
   "//           Same is true for Srank, Erank, Wrank.                             \n"
   "//=============================================================================\n"
   "                                                                               \n"
-  "  macro ApplyDoubleCoupleToRHS( RHS, DcFlag,                                   \n"
+  "  macro ApplyDoubleCoupleToRHS( RHS,                                           \n"
   "                                CondN,CondS,CondE,CondW,                       \n"
   "                                iN,   iS,   iE,   iW,                          \n"
   "                                Nrank,Srank,Erank,Wrank)                       \n"
-  "   if(DcFlag){                                                                 \n"
   "     if(mpirank==Nrank)                                                        \n"
   "       RHS[iN]= CondN;                                                         \n"
   "     if(mpirank==Srank)                                                        \n"
@@ -1102,7 +1122,6 @@ if(doublecouple=="force-based")
   "       RHS[iE]= CondE;                                                         \n"
   "     if(mpirank==Wrank)                                                        \n"
   "       RHS[iW]= CondW;                                                         \n"
-  "    }                                                                          \n"
   "  //                                                                           \n"
   "                                                                               \n";
 }

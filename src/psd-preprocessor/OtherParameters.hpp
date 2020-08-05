@@ -418,8 +418,6 @@ if(Prblm=="soildynamics"){
   "//          as it is assembled in the linear system. This is  used             \n"
   "//          to force boundary coditions of double-couple whcih can             \n"
   "//          be a point load or a force. Same is true for iSouth,..             \n"
-  "//  DcFlag : is a Boolean flag to assert if the  processor  holds any          \n"
-  "//           double couple points.                                             \n"
   "//  Nrank  : is rank of the MPI process that holds the finite element          \n"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
@@ -429,8 +427,7 @@ if(Prblm=="soildynamics"){
   "//=============================================================================\n"
   "                                                                               \n"
   "  int iNorth=-1, iSouth=-1, iEast=-1, iWest=-1;                                \n"
-  "  int Nrank=-1, Srank=-1, Erank=-1, Wrank=-1;                                  \n"
-  "  bool DcFlag=false;                                                           \n";
+  "  int Nrank=-1, Srank=-1, Erank=-1, Wrank=-1;                                  \n";
 
  }
 
@@ -447,8 +444,8 @@ if(dirichletpointconditions>=1)
   "//  indicator should anything go wrong.                                        \n"         
   "//=============================================================================\n"
   "                                                                               \n"
-  "  int[int]    PCi(PC.n); PCi=-1;                                               \n"
-  "  int[int]    mpirankPCi(PC.n); mpirankPCi=-1;                                 \n";
+  "  int[int]    PCi(PbcCord.n); PCi=-1;                                          \n"
+  "  int[int]    mpirankPCi(PbcCord.n); mpirankPCi=-1;                            \n";
 
 
 

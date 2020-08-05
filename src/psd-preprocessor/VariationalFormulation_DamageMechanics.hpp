@@ -41,7 +41,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
+ "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 
 if(dirichletbc){
@@ -180,7 +180,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
+ "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 
 if(dirichletbc){
@@ -399,7 +399,7 @@ for(int i=0; i<tractionconditions; i++)
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
  "    //--------------------------------------------------------------------------                \n"
- "     + intN1(Th,Tb"<<i<<"Labs,qforder=3)(NeumannBc"<<i<<")                                      \n";
+ "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 
 if(dirichletbc)if(spc==3)

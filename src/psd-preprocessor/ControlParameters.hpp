@@ -652,9 +652,10 @@ if(dirichletpointconditions>=1)
  "//============================================================================\n"
  "//       -------Dirichlet point boundary-condition parameters-------          \n"
  "// -------------------------------------------------------------------------- \n"
- "// PC : short for point coordinates is the table  containing coordinates of   \n"
- "//      the  points for which boundary-condition is to be applied             \n"
- "// PC(I)Ux  : is x displacement value of the point I. Similar logic applies   \n"
+ "// Pbc       : acronym for point boundary condition                           \n"  
+ "// PbcCord   : is the table  containing coordinates of the points for which   \n"
+ "//             point  boundary condition(s) is to be applied                  \n"
+ "// Pbc(I)Ux : is x displacement value of the point I. Similar logic applies   \n"
  "//            to PC(I)Uy, PC(I)Uz                                             \n"
  "// -------------------------------------------------------------------------- \n"
  "// NOTE: either the macro PC(I)Ux or PC(I)Uy or PC(I)Uz should be commented   \n"
@@ -662,7 +663,7 @@ if(dirichletpointconditions>=1)
  "//       displacement direction (let it free)                                 \n"                               
  "//============================================================================\n"
  "                                                                              \n"
- "  real[int,int] PC = [                                                        \n"; 
+ "  real[int,int] PbcCord = [                                                   \n"; 
 
  if(spc==2){
  writeIt 
@@ -678,8 +679,8 @@ if(dirichletpointconditions>=1)
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt  
  "                                                                              \n"
- "   macro PC"<<i<<"Ux  -0. //                                                  \n"
- "   macro PC"<<i<<"Uy  -0. //                                                  \n" 
+ "   macro Pbc"<<i<<"Ux  -0. //                                                 \n"
+ "   macro Pbc"<<i<<"Uy  -0. //                                                 \n" 
  "                                                                              \n";  
  }
  
@@ -696,9 +697,9 @@ if(dirichletpointconditions>=1)
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt  
  "                                                                              \n"
- "   macro PC"<<i<<"Ux  -0. //                                                  \n"
- "   macro PC"<<i<<"Uy  -0. //                                                  \n" 
- "   macro PC"<<i<<"Uz  -0. //                                                  \n"  
+ "   macro Pbc"<<i<<"Ux  -0. //                                                 \n"
+ "   macro Pbc"<<i<<"Uy  -0. //                                                 \n" 
+ "   macro Pbc"<<i<<"Uz  -0. //                                                 \n"  
  "                                                                              \n"; 
   
  }
@@ -711,15 +712,14 @@ if(tractionconditions>=1)
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
- "// -------------------------------------------------------------------        \n"
- "// Tb        : acronym for traction border                                    \n" 
- "// Labs      : acronym for traction labels                                    \n"  
- "// Tb(I)Labs : is/are the  surface  labels tags (integers) to which           \n"
+ "// ---------------------------------------------------------------------------\n"
+ "// Tbc       : acronym for traction boundary condition                        \n" 
+ "// Tbc(I)On  : is/are the  surface labels tags (integer list) on to which     \n"
  "//             traction boundary conditions is to be applied.                 \n"
- "// Tb(I)Tx   : is the x component of traction forces on the surface           \n"
- "//             border (I) denoted by  label Tb(I)Labs.                        \n"
+ "// Tbc(I)Tx  : is the x component of traction forces on the surface           \n"
+ "//             border (I) denoted by label(s) Tb(I)On in the mesh.            \n"
  "// -------------------------------------------------------------------------- \n"
- "// NOTE: either the macro Tb(I)Tx or Tb(I)Ty or Tb(I)Tz should be commented   \n"
+ "// NOTE: either macro Tbc(I)Tx or Tbc(I)Ty or Tbc(I)Tz should  be commented   \n"
  "//       or deleted  if  the  user  does not wish to apply traction on that   \n"
  "//       particular  direction (let it free)                                  \n" 
  "//============================================================================\n"
@@ -728,23 +728,23 @@ if(tractionconditions>=1)
  if(spc==2)if(Prblm!="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
-   "  macro  Tb"<<i<<"Tx   10. //                                             \n"
-   "//macro  Tb"<<i<<"Ty   0.  //                                             \n";
+   "  macro  Tbc"<<i<<"On 4   //                                               \n"   
+   "  macro  Tbc"<<i<<"Tx 10. //                                               \n"
+   "//macro  Tbc"<<i<<"Ty 0.  //                                               \n";
 
   if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
-   "  macro  Tb"<<i<<"Ty   tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //               \n";
+   "  macro  Tbc"<<i<<"On  4   //                                              \n"   
+   "  macro  Tbc"<<i<<"Ty  tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //                \n";
 
  if(spc==3)if(Prblm!="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tb"<<i<<"Labs 4   //                                             \n"   
-   "  macro  Tb"<<i<<"Tx   10. //                                             \n"
-   "//macro  Tb"<<i<<"Ty   10. //                                             \n"
-   "//macro  Tb"<<i<<"Tz   0   //                                             \n";     
+   "  macro  Tbc"<<i<<"On 4   //                                               \n"   
+   "  macro  Tbc"<<i<<"Tx 10. //                                               \n"
+   "//macro  Tbc"<<i<<"Ty 10. //                                               \n"
+   "//macro  Tbc"<<i<<"Tz 0   //                                               \n";     
  }
 
 if(bodyforce)

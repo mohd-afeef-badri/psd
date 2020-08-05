@@ -221,7 +221,6 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  "  GetDoubelCoupleIndicies(                                                      \n"
 /*"           DcLabelPoints,                                                       \n"
  "           Vh,                                                                  \n"*/
- "           DcFlag,                                                              \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
  "           Nrank,Srank,Erank,Wrank                                              \n"
@@ -233,7 +232,7 @@ if(doublecouple=="displacement-based")
  writeIt
  "                                                                                \n"
  "   ApplyDoubleCoupleToA(                                                        \n"
- "           ALoc,  DcFlag,                                                       \n"
+ "           ALoc,                                                                \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
  "           Nrank,Srank,Erank,Wrank                                              \n"
  "   );                                                                           \n";
@@ -325,11 +324,11 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based" )
  "                                                                                 \n"
 <<(timelog ? "  MPItimerbegin(\"Applying double couple b\",t0)\n"  : ""             )<<
  "   ApplyDoubleCoupleToRHS(                                                       \n"
- "           b, DcFlag,                                                           \n"
- "           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,   \n"
- "           iNorth,iSouth,iEast,iWest,                                           \n"
- "           Nrank,Srank,Erank,Wrank                                              \n"
- "   );                                                                           \n"
+ "           b,                                                                    \n"
+ "           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,    \n"
+ "           iNorth,iSouth,iEast,iWest,                                            \n"
+ "           Nrank,Srank,Erank,Wrank                                               \n"
+ "   );                                                                            \n"
 <<(timelog ? "  MPItimerend  (\"Applying double couple b\",t0)\n" : ""             )<<
  "                                                                                 \n";
 
