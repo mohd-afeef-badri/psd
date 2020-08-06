@@ -12,6 +12,7 @@ All notable changes to PSD solver will be documented in this file.
 - New dummy city mesh and analysis 2D for soil dynamics. 
 - Automatic identification of FreeFEM and Gmsh during `./configure`.
 - New flags for `--with-FreeFEM=` and `--with-Gmsh=` during `./configure`.
+- New flag `-bodyforceconditions` [int] to include body force.
 - New flag `-problem` linear-elasticity | damage | elastodynamics | soildynamics to define physics.
 - New flag `-model` to set approximation for damage mechanics hybrid-phase-field | Mazar | pseudo-nonlinear | Hujeux.
 - Better energy splitting included Hybrid phase-field compressibility vs tensile energy condition.
@@ -36,6 +37,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Removed
 - No more `FFINSTALLDIR` and `GMSH` variables during `make` and `make check`.
 - No more `-nonlinear` flag now handled by `-problem` and `-model`.
+- No more `-bodyforce` flag now handled by an `int` valued `-bodyforceconditions`.
 - No more `-dynamic` flag now handled by `-problem` and `-model`.
 - No more `-soildynamic` flag now handled by `-problem` and `-model`.
 - No more `-quasistatic` flag now handled by `-problem` and `-model`.
