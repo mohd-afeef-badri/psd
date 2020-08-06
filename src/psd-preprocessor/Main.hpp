@@ -28,7 +28,7 @@ if(!Sequential)
  writeIt
  "  load    \"PETSc\"                                // PETSc plugin activated  \n";
 
-if(Sequential)if(plotAll || plotTime)
+if(Sequential)if(ParaViewPostProcess)
  writeIt
  "  load    \"../Plugins/iovtk\"                     // Paraview support files \n";
 
@@ -55,7 +55,7 @@ if(!Sequential&& Prblm=="soildynamics" && top2vol)
  "  load    \"../Plugins/top-ii-vol\"                // top-ii-vol meshing     \n";
 
 
-if(debug || plotAll || plotTime)if(!Sequential && !top2vol)
+if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)
  writeIt
  "  include \"../Plugins/DDplotMacro.edp\"           // Domain decomp plotting \n";
 
@@ -93,7 +93,7 @@ if(!Sequential)
  }
 
 
-if(plotAll)
+if(ParaViewPostProcess)
  writeIt
  "  include \"PostProcessor.edp\"                    // Post Processing        \n";
 

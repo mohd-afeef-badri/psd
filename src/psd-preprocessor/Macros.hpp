@@ -28,7 +28,7 @@ if(spc==2)
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
- if(plotAll || debug)
+ if(ParaViewPostProcess || debug)
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
  "// def0(i)     : macro needed post-processing via paraview                     \n";   
  writeIt
@@ -69,8 +69,15 @@ if(spc==2)
  "                  i ] //                                                        \n"
  "                                                                                \n";   
 
+ if(ParaViewPostProcess)
+ writeIt
+ "  macro PlotVec(i) [ i   ,                                                      \n"
+ "                     i#1 ,                                                      \n"
+ "                     0   ] //                                                   \n"
+ "                                                                                \n";   
+  
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
- if(plotAll || debug)
+ if(ParaViewPostProcess || debug)
  writeIt
  "  macro Pltk    P1 //                                                           \n"
  "  macro def0(i) i  //                                                           \n";
@@ -434,7 +441,7 @@ if(spc==3){
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
- if(plotAll || debug)
+ if(ParaViewPostProcess || debug)
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
  "// def0(i)     : macro needed post-processing via paraview                     \n";
  writeIt
@@ -479,9 +486,16 @@ if(spc==3){
  "                  i ,                                                          \n"
  "                  i ] //                                                       \n"
  "                                                                               \n";  
+
+ if(ParaViewPostProcess)
+ writeIt
+ "  macro PlotVec(i) [ i   ,                                                      \n"
+ "                     i#1 ,                                                      \n"
+ "                     i#2 ] //                                                   \n"
+ "                                                                                \n"; 
  
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
- if(plotAll || debug)
+ if(ParaViewPostProcess || debug)
   writeIt
   "  macro Pltk      P1  //                                                      \n"
   "  macro def0 (i)  i   //                                                      \n";
@@ -997,14 +1011,14 @@ if(dirichletpointconditions>=1)
  if(!Sequential)
   writeIt
   "                                                                           \n"
-  "  macro MPItimerbegin(str1,t0){                                            \n"
+  "  macro timerbegin(str1,t0){                                               \n"
   "    mpiBarrier(mpiCommWorld);                                              \n"
   "    t0 = mpiWtime();                                                       \n"
   "    if(mpirank==0)                                                         \n"
   "    cout << \"-->\"+str1+\" began....\\n\";                                \n"
   "  }//                                                                      \n"
   "                                                                           \n"
-  "  macro MPItimerend(str1,t0){                                              \n"
+  "  macro timerend(str1,t0){                                                 \n"
   "    mpiBarrier(mpiCommWorld);                                              \n"
   "    if(mpirank==0)                                                         \n"
   "    cout.scientific << \"finished in [ \"<< mpiWtime()-t0                  \n"

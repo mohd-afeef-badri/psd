@@ -84,7 +84,7 @@ if(!Sequential){
   " fespace Q3vh   ( Th , Sk );            // Quadrature 3  vector FE space       \n"
   " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || plotAll)
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || ParaViewPostProcess)
   writeIt
   " fespace VhPlt  ( Th , P1 );            // Damage field    FE space            \n";
 
@@ -191,11 +191,11 @@ if(!Sequential){
  "                                                                                \n"
  " }                                                                              \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"Solver\",t1)\n" : ""                             )
+ <<(timelog ? "  timerbegin(\"Solver\",t1)\n" : ""                             )
  <<(timelog ? "  if(mpirank==0)cout<<\"\"<<endl;\n" : ""                          )
- <<(timelog ? "  MPItimerbegin(\"Mesh Partitioning\",t0)\n" : ""                  )<<
+ <<(timelog ? "  timerbegin(\"Mesh Partitioning\",t0)\n" : ""                  )<<
  "  PartThAndBuildCommunication();                                                \n"
- <<(timelog ? "  MPItimerend(\"Mesh Partitioning\",t0)\n" : " "                   )<<
+ <<(timelog ? "  timerend(\"Mesh Partitioning\",t0)\n" : " "                   )<<
  "                                                                                \n"
  "                                                                                \n";
  }

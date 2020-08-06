@@ -93,7 +93,7 @@ Via the command line options you will embed the physics within the solver. This 
 For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
 ```
-/PSD_PreProcess -dimension 2 -bodyforce -dirichletconditions 1
+/PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1
 ```
 
 **Step 3: Launching the solver**
@@ -123,7 +123,6 @@ These are a set of commandline flags/options that control your simulation. You c
 | Option         | Type      | Comment                                                      |
 | -------------- | --------- | :----------------------------------------------------------- |
 | `-help`        | `[bool]`  | To activate helping message on the terminal. |
-| `-plot`        | `[bool]`  | Use -plot to activate plotting using ParaView. |
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
 | `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
@@ -144,7 +143,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-dimension`   	| `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |  		 | 	     |                     					    |
 | `-nonlinearmethod` | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons". |
-| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", "phi", "uphi", or  "uav". |
+| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", "uv" , "ud", "ua", "d", "ud", or  "uav". |
 | `-problem` | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
 | `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
 

@@ -158,14 +158,14 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "// -------  Fem matrices and vectors -------                                 \n"
    "//===========================================================================\n"
    "                                                                             \n"
-   <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""        )<<
+   <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""        )<<
    "  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ;                        \n";
 
    if(!vectorial)
     writeIt
     "                                                                            \n"
     "  Mat A1( Vh1.ndof,  restrictionIntersectionZ, DZ);                         \n"
-    <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
+    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
     "                                                                            \n"
     "  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear  \n"
     "  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear    \n";
@@ -173,7 +173,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    if(vectorial)
     writeIt
     "                                                                            \n"
-    <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
+    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
     "  matrix     ALoc           ;      // Local vectorial matrix for bilinear   \n"
     "  real[int]  b(Vh.ndof)     ;      // Local vectorial real vector for linear\n";
 
@@ -233,17 +233,17 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
   if(!top2vol)
   writeIt
   "                                                                              \n"
-  <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
   "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
-  <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
   "                                                                              \n";
 
   if(top2vol)
   writeIt
   "                                                                              \n"
-  <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
   "  Mat A; createMat(Th, A, Pk);                                                \n"
-  <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
   "                                                                              \n";
     
  }
@@ -288,9 +288,9 @@ if(Prblm=="damage" && Model=="Mazar"){
   "// -------  Fem matrices and vectors -------                                  \n"
   "//============================================================================\n"
   "                                                                              \n"
-  <<(timelog ? "  MPItimerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
   "  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ;                         \n"
-  <<(timelog ? "  MPItimerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
   "                                                                              \n"
   "  matrix     ALoc           ;        // Local vectorial matrix for bilinear   \n"
   "  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear\n"

@@ -4,7 +4,7 @@
 
 cout << " building PostProcessor.edp";
 
-if(plotAll){
+if(ParaViewPostProcess){
 ofstream  write("PostProcessor.edp");
 
 writeHeader;
@@ -62,49 +62,17 @@ if(!Sequential)if(Prblm=="linear-elasticity"){
  "     system(\"mkdir -p VTUs/\");                                                \n"
  "  mpiBarrier(mpiCommWorld);                                                     \n"
  "                                                                                \n"
-<<(timelog ? "  MPItimerbegin(\"Paraview Plotting\",t0)\n" : ""                   )<<
- "  int[int] vtuorder=[1];                     // Solution export order           \n";
-
-/*
-<<"     string   namevtu=\"VTUs/Solution\";             // Name of PV files        \n"
-<<"     string   namedata=\"U\";                        // Name of export data     \n"
-<<"     bool     withsur=true;                          // Export surface mesh     \n";
-*/
-/*
-if(spc==2)
- writeIt
- "                                                                                \n"
-<<"     exportpvd(namevtu, Th,[u,u1,0], vtuorder, withsur, namedata, mpiCommWorld);\n";
-
-if(spc==3)
- writeIt
- "                                                                                \n"
-<<"     exportpvd(namevtu, Th,[u,u1,u2], vtuorder, withsur,namedata, mpiCommWorld);\n";
-*/
-
-if(spc==2)
- writeIt
- "  savevtk( \"VTUs/Solution.vtu\"     ,                                          \n"
+<<(timelog ? "  timerbegin(\"Paraview Plotting\",t0)\n" : ""                      )<<
+ "  int[int] vtuorder=[1];                     // Solution export order           \n"
+ "  savevtk( \"VTUs/Solution.vtu\"  ,                                             \n"
  "            Th                  ,                                               \n"
- "            [u,u1,0]                 ,                                          \n";
-
-if(spc==3)
- writeIt
- "  savevtk(\"VTUs/Solution.vtu\"      ,                                          \n"
- "            Th                  ,                                               \n"
- "            [u,u1,u2]                ,                                          \n";
-
-
- writeIt
- "             order=vtuorder          ,                                          \n"
- "             dataname=\"U\"                                                     \n"
+ "            PlotVec(u)          ,                                               \n"
+ "            order=vtuorder      ,                                               \n"
+ "            dataname=\"U\"                                                      \n"
  "         );                                                                     \n"
-<<(timelog  ? " MPItimerend(\"Paraview Plotting\",t0)\n" : " "                    )
-<<(timelog ? "  MPItimerend(\"Solver\",t1)\n" : " "                               )<<
- "                                                                                \n";
-
-
- writeIt
+<<(timelog  ? " timerend(\"Paraview Plotting\",t0)\n" : " "                       )
+<<(timelog ? "  timerend(\"Solver\",t1)\n" : " "                                  )<<
+ "                                                                                \n"
  "  if(mpirank==0){                                                               \n"
  "     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
  "     system(\"echo \\\"Elasticity\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
@@ -122,30 +90,17 @@ if(Sequential)if(Prblm=="linear-elasticity"){
  "                                                                                \n"
  "     system(\"mkdir -p VTUs/\");                                                \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Post-Processing\",t0)\n" : " "                       )<<
- "  int[int] vtuorder=[1];                             // Solution export order   \n";
-
-if(spc==2)
- writeIt
- "  savevtk( \"VTUs/Solution-Seq.vtu\" ,                                          \n"
+<<(timelog ? "  timerbegin(\"Paraview Plotting\",t0)\n" : " "                     )<<
+ "  int[int] vtuorder=[1];                             // Solution export order   \n"
+ "  savevtk( \"VTUs/Solution-Seq.vtu\"   ,                                        \n"
  "            Th                       ,                                          \n"
- "            [u,u1,0]                 ,                                          \n";
-
-if(spc==3)
- writeIt
- "  savevtk(\"VTUs/Solution-Seq.vtu\"  ,                                          \n"
- "            Th                       ,                                          \n"
- "            [u,u1,u2]                ,                                          \n";
-
-
- writeIt
- "             order=vtuorder          ,                                          \n"
- "             dataname=\"U\"                                                     \n"
+ "            PlotVec(u)               ,                                          \n"
+ "            order=vtuorder           ,                                          \n"
+ "            dataname=\"U\"                                                      \n"
  "         );                                                                     \n"
-<<(timelog ? "  timerend  (\"Post-Processing\",t0)\n" : " "                       )
+<<(timelog ? "  timerend  (\"Paraview Plotting\",t0)\n" : " "                     )
 <<(timelog ? "  timerend  (\"Solver\",t1)\n" : " "                                )<<
  "                                                                                \n";
-
 
  writeIt
  "     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"

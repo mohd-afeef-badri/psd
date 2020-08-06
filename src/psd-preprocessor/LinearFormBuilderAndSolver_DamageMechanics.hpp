@@ -18,28 +18,6 @@ if(Sequential)
  "  lo = lo*lfac              ;                                                   \n"
  "}                                                                               \n";
 
-/************************OLD METHOD*************************************************
-if(pipegnu)if(!supercomp)
- writeIt
- "                                                                                \n"
- "  matrix  And                        ;        // PostProcessing                 \n";
-if(vectorial)
- writeIt
- "  Vh def(fr)                         ;        // Variables for force            \n"
- "                                                                                \n"
- "  int[int]  ldof( 1 )                        ;                                  \n"
- "  ExtractDofBorderVectorial(2,Vh,ldof)        ;                                 \n"
- "                                                                                \n";
-
-if(!vectorial)
- writeIt
- "  Vh def2(fr)                        ;        // Variables for force            \n"
- "                                                                                \n"
- "  int[int]  ldof( 1 )                ;                                          \n"
- "  ExtractDofBorderP1(2,Vh,ldof)        ;                                        \n"
- "                                                                                \n";
-/************************OLD METHOD*************************************************/
-
 if(!Sequential)
  writeIt
  "                                                                                \n"
@@ -131,10 +109,10 @@ if(energydecomp)
  writeIt
  "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""             )<<
  "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""             )<<
  "                                                                                \n";
 
 
@@ -179,14 +157,6 @@ if(pipegnu){
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                      )<<
  "  real forcetot  = 0.;                                                          \n"
  "  forcetot = intN1(Th,qforder=2,2)(lambda*divergence(u)+2.*mu*dy(u1));          \n"
-/************************OLD METHOD************************************************
- "      And = elastNoDirc(Vh,Vh);                                                 \n"
- "      fr[] = And*u[];                                                           \n"
- "                                                                                \n"
- "      real forcetot  = 0. ;                                                     \n"
- "      for(int i = 0; i < ldof.n; ++i)                                           \n"
- "        forcetot = forcetot + fr1[][ldof[i]];                                   \n"
-/************************OLD METHOD************************************************/
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << tr << \"        \" << forcetot*1e-3 << endl;                            \n";
 
@@ -200,7 +170,7 @@ if(!supercomp)
  (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
 }
 
-if(plotAll)
+if(ParaViewPostProcess){
  writeIt
  "                                                                                \n"
  "  //-------Paraview plotting every nth iteration -----------//                  \n"
@@ -209,18 +179,44 @@ if(plotAll)
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
  "  if(int(iterout%10)==0){                                                       \n"
- "    string   namevtu=\"VTUs/Solution_\"+iterout1+\".vtu\";                      \n"
- "    savevtk(     namevtu            ,                                           \n"
- "                 Th                 ,                                           \n"
- <<(spc==2 ? "\t\t [u,u1,0]\t\t,\n" : "\t\t [u,u1,u2]\t\t,\n"                     )<<
- "                 phi                ,                                           \n"
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=namedata                                              \n"
+ "    savevtk(     \"VTUs/Solution_\"+iterout1+\".vtu\"  ,                        \n"
+ "                 Th                 ,                                           \n";
+ 
+ if(PostProcess=="u")
+ writeIt
+ "                 PlotVec(u)         ,                                           \n";
+
+ if(PostProcess=="d")
+ writeIt
+ "                 phi                ,                                           \n"; 
+ 
+ if(PostProcess=="ud" || PostProcess=="du")
+ writeIt
+ "                 PlotVec(u)         ,                                           \n"
+ "                 phi                ,                                           \n"; 
+ 
+ writeIt
+ "                 order=vtuorder     ,                                           \n";
+ 
+ if(PostProcess=="u")
+ writeIt
+ "                 dataname = \"U\"                                               \n";
+
+ if(PostProcess=="d")
+ writeIt
+ "                 dataname = \"d\"                                               \n";
+ 
+ if(PostProcess=="ud" || PostProcess=="du")
+ writeIt
+ "                 dataname = \"U d\"                                             \n";
+  
+ writeIt
  "          );                                                                    \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
  <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
+}  
 
 if(debug)
  writeIt
@@ -333,10 +329,10 @@ if(energydecomp)
  writeIt
  "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
  "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
  "                                                                                \n";
 
 
@@ -391,7 +387,7 @@ if(!supercomp)
  (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                       );
 }
 
-if(plotAll)
+if(ParaViewPostProcess){
  writeIt
  "                                                                                \n"
  "  //-------Paraview plotting every nth iteration -----------//                  \n"
@@ -400,18 +396,44 @@ if(plotAll)
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
  "  if(int(iterout%10)==0){                                                       \n"
- "    string   namevtu=\"VTUs/Solution_\"+iterout1+\".vtu\";                      \n"
- "    savevtk(     namevtu            ,                                           \n"
- "                 Th                 ,                                           \n"
- <<(spc==2 ? "\t\t [u,u1,0]\t\t,\n" : "\t\t [u,u1,u2]\t\t,\n"                     )<<
- "                 phi                ,                                           \n"
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=namedata                                              \n"
+ "    savevtk(     \"VTUs/Solution_\"+iterout1+\".vtu\" ,                         \n"
+ "                 Th                 ,                                           \n";
+
+ if(PostProcess=="u")
+ writeIt
+ "                 PlotVec(u)         ,                                           \n";
+
+ if(PostProcess=="d")
+ writeIt
+ "                 phi                ,                                           \n"; 
+ 
+ if(PostProcess=="ud" || PostProcess=="du")
+ writeIt
+ "                 PlotVec(u)         ,                                           \n"
+ "                 phi                ,                                           \n"; 
+ 
+ writeIt
+ "                 order=vtuorder     ,                                           \n";
+ 
+ if(PostProcess=="u")
+ writeIt
+ "                 dataname = \"U\"                                               \n";
+
+ if(PostProcess=="d")
+ writeIt
+ "                 dataname = \"d\"                                               \n";
+ 
+ if(PostProcess=="ud" || PostProcess=="du")
+ writeIt
+ "                 dataname = \"U d\"                                             \n"; 
+ 
+ writeIt
  "          );                                                                    \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
  <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""                );
+} 
 
 if(debug)
  writeIt
@@ -448,9 +470,9 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
  "  b = elast(0,Vh);                                                              \n"
- <<(timelog ? "  MPItimerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
@@ -458,22 +480,22 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
  "     A = ALoc;   //changeOperator(A, ALoc);                                     \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
- <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "                       )<<
+ <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : " "                       )<<
  "    u[] = A^-1*b;                                                               \n"
- <<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "                         );
+ <<(timelog ? "    timerend  (\"solving U\",t0)\n" : " "                         );
 
 if(!vectorial){
 if(energydecomp)
@@ -481,55 +503,55 @@ if(energydecomp)
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
+ <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
  "    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);                                     \n"
- <<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
+ <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
  "                                                                                \n"
  "    //----------------Assembly for linear------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    MPItimerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
- <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                      )<<
  "    phi[] = A1^-1*b1;                                                           \n"
- <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                      )<<
  "                                                                                \n";
 
 if(energydecomp)
  writeIt
  "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
  "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
   "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                       \n"
- <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
  "                                                                                \n";
 
 
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )<<
  "    uold[]   = uold[]-u[]                ;                                      \n"
  "    phiold[] = phiold[]-phi[]        ;                                          \n"
  "    real err1Gather,err2Gather;                                                 \n"
@@ -537,14 +559,14 @@ if(energydecomp)
  "    real err2Loc=sqrt( intN(Th,qforder=2) ( DZspc*(phiold)^2 )  );              \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                       \n"
  "    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);                       \n"
- <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )<<
+ <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""                    )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
  "    phiold[]=phi[];                                                             \n"
  "    uold[]=u[];                                                                 \n"
- <<(timelog ? "    MPItimerend (\"solution update\",t0)\n" : ""                     )<<
+ <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     )<<
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -556,28 +578,28 @@ if(vectorial){
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )<<
  "    uold[]   = uold[]-u[]                                          ;            \n"
  "    real err1Gather                                                ;            \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;            \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;            \n"
- <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                   )<<
+ <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""                    )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
  "    uold[] = u[];                                                               \n"
- <<(timelog ? "    MPItimerend (\"solution update\",t0)\n" : ""                     );
+ <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     );
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""               )<<
+ <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""               )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
+ <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
  writeIt
@@ -587,25 +609,6 @@ if(energydecomp)
  "    if(err1Gather < 1e-2){                                                      \n";
 
 }  //-- [if loop terminator] vectorial ended --//
-
-
-/************************OLD METHOD*************************************************
-if(pipegnu){
- writeIt
- "                                                                                \n"
- "      //-------------------Force calculation-----------------------//           \n"
- "                                                                                \n"
- "        And = elastNoDirc(Vh,Vh);                                               \n"
- "        changeOperator(A2, And);                                                \n"
- "        fr[] = And*u[];                                                         \n"
- "                                                                                \n"
- "        fr[] .*= DP;                                                            \n"
- "                                                                                \n"
- "        real forcetot  = 0.,forcetotGath  = 0. ;                                \n"
- "                for(int i = 0; i < ldof.n; ++i)                                 \n"
- "                forcetot = forcetot + fr1[][ldof[i]];                           \n"
- "                                                                                \n"
-/************************OLD METHOD*************************************************/
 
 if(!vectorial)
  writeIt
@@ -640,7 +643,7 @@ if(pipegnu){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"force calculation\",t0)\n" : ""                    )<<
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                    )<<
  "  real forcetot  = 0., forcetotGath  = 0. ;                                     \n"
  "  forcetot=intN1(Th,qforder=2,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));    \n"
  "  mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);                      \n"
@@ -651,24 +654,23 @@ if(pipegnu){
 if(!supercomp)
  writeIt
  "  pgnuplot<<\"plot \\\"force.data\\\" u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\\n\";  \n"
-//<<"      <<\",\\\"ambati.data\\\"u 1:2 w p pt 4 ps 2  t \\\"Ref\\\"\"            \n"
  "  flush(pgnuplot);                                                              \n";
 
 
  writeIt
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)if(!vectorial){
+if(ParaViewPostProcess)if(!vectorial){
  writeIt
  "                                                                                \n"
  "  //-------Paraview plotting every nth iteration -----------//                  \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""             )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""             )<<
  "  if(int(iterout%10)==0){                                                       \n";
 
 
@@ -677,29 +679,36 @@ if(plotAll)if(!vectorial){
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
  "                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")
- writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )<<
- "                 phi                ,                                           \n";
-
-
 if(PostProcess=="u")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
+ "              PlotVec(uold)        ,                                            \n";
 
-if(PostProcess=="phi")
+if(PostProcess=="d")
  writeIt
  "                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")
+if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )<<
- "                 phi                ,                                           \n";
+ "              PlotVec(uold)        ,                                            \n"
+ "              phi                  ,                                            \n";
 
 
  writeIt
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=\"U  d\"    ,                                         \n"
+ "                 order=vtuorder     ,                                           \n";
+ 
+if(PostProcess=="u")
+ writeIt
+ "                 dataname=\"U\"  ,                                             \n";
+ 
+if(PostProcess=="d")
+ writeIt
+ "                 dataname=\"d\"  ,                                             \n"; 
+
+if(PostProcess=="ud" || PostProcess=="du")
+ writeIt   
+ "                 dataname=\"U  d\"  ,                                           \n";
+ 
+ writeIt
  "                 append=true                                                    \n"
  "              );                                                                \n";
 
@@ -708,17 +717,17 @@ if(PostProcess=="uphi")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(plotAll)if(vectorial){
+if(ParaViewPostProcess)if(vectorial){
  writeIt
  "                                                                                \n"
  "  //--------Paraview plotting every nth iteration ----------//                  \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
@@ -729,29 +738,37 @@ if(plotAll)if(vectorial){
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
  "                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")
- writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )<<
- "                 phi                ,                                           \n";
-
-
 if(PostProcess=="u")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
+ "              PlotVec(uold)        ,                                            \n";
 
-if(PostProcess=="phi")
+if(PostProcess=="d")
  writeIt
  "                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")
+if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   )<<
- "                 phi                ,                                           \n";
+ "              PlotVec(uold)        ,                                            \n"
+ "              phi                  ,                                            \n";
 
 
  writeIt
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=\"U  d\"    ,                                         \n"
+ "                 order=vtuorder     ,                                           \n";
+ 
+if(PostProcess=="u")
+ writeIt
+ "                 dataname=\"U\"  ,                                             \n";
+ 
+if(PostProcess=="d")
+ writeIt
+ "                 dataname=\"d\"  ,                                             \n"; 
+
+if(PostProcess=="ud" || PostProcess=="du")
+ writeIt   
+ "                 dataname=\"U  d\"  ,                                           \n";
+
+
+ writeIt
  "                 append=true                                                    \n"
  "              );                                                                \n";
 
@@ -761,7 +778,7 @@ if(PostProcess=="uphi")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
 if(debug)if(!vectorial)
@@ -788,7 +805,7 @@ if(debug)if(vectorial)
  "                                                                                \n"
  <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
  (timelog ? "cout << \" all operations ended, they \";\n" : ""                    )<<
- (timelog ? "MPItimerend  (\"solver\",t1)\n" : " "                                )<<
+ (timelog ? "timerend  (\"solver\",t1)\n" : " "                                )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
@@ -818,28 +835,28 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "                                                                                \n"
  "    //--------------------Assembly for linear----------------------//           \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
  "    b = elast(0,Vh);                                                            \n"
- <<(timelog ? "  MPItimerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
  "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
- <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : " "                       )<<
+ <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : " "                       )<<
  "    du[] = A^-1*b;                                                              \n"
- <<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : " "                       )<<
+ <<(timelog ? "    timerend  (\"solving U\",t0)\n" : " "                       )<<
  "                                                                                \n"
  "    //--------------Update of displacement u---------------------//             \n"
  "                                                                                \n"
@@ -854,38 +871,38 @@ if(energydecomp)
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
+ <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
  "    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);                                     \n"
- <<(timelog ? "    MPItimerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
+ <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
  "                                                                                \n"
  "    //----------------Assembly for linear------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    MPItimerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
- <<(timelog ? "    MPItimerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                      )<<
  "    dphi[] = A1^-1*b1;                                                          \n"
- <<(timelog ? "    MPItimerend  (\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                      )<<
  "                                                                                \n"
  "    //--------------Update of phase-field phi-------------------//              \n"
  "                                                                                \n"
@@ -898,10 +915,10 @@ if(energydecomp)
  writeIt
  "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
  "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    MPItimerend  (\"Phase-field condition\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
  "                                                                                \n";
 
 /******************************  Old Method **********************************************
@@ -909,13 +926,13 @@ if(energydecomp)
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- (timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                  )
+ (timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )
  "    real err1Gather,err2Gather;                                                 \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(du)^2   )  );                \n"
  "    real err2Loc=sqrt( intN(Th,qforder=2) ( DZspc*(dphi)^2 )  );                \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                       \n"
  "    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);                       \n"
- (timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                            )
+ (timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                            )
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -926,7 +943,7 @@ if(energydecomp)
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                )<<
+ <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                )<<
  "    real err1Gather,err2Gather, err1Loc, err2Loc;                               \n"
  "                                                                                \n"
  "        b = b .* DP                                   ;                         \n"
@@ -941,7 +958,7 @@ if(energydecomp)
  "        mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM)  ;                 \n"
  "        err1Gather = sqrt(err2Gather)                                 ;         \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                 )<<
+ <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -955,28 +972,28 @@ if(vectorial){
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"NL error checking\",t0)\n" : ""                )<<
+ <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                )<<
  "    uold[]   = uold[]-u[]                                          ;            \n"
  "    real err1Gather                                                ;            \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;            \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;            \n"
- <<(timelog ? "    MPItimerend (\"NL error checking\",t0)\n" : ""                 )<<
+ <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                  )<<
  "    uold[] = u[];                                                               \n"
- <<(timelog ? "    MPItimerend (\"solution update\",t0)\n" : ""                     );
+ <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     );
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- <<(timelog ? "    MPItimerend  (\"energy decomposition\",t0)\n" : ""               );
+ <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
  writeIt
@@ -1028,7 +1045,7 @@ if(pipegnu){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"force calculation\",t0)\n" : ""                  )<<
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                  )<<
  "  real forcetot  = 0., forcetotGath  = 0. ;                                     \n"
  "  forcetot=intN1(Th,qforder=2,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));    \n"
  "  mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);                      \n"
@@ -1044,18 +1061,18 @@ if(!supercomp)
 
  writeIt
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator] !pipegnu ended --//
 
-if(plotAll)if(!vectorial){
+if(ParaViewPostProcess)if(!vectorial){
  writeIt
  "                                                                                \n"
  "  //-------Paraview plotting every nth iteration -----------//                  \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
  "  if(int(iterout%10)==0){                                                       \n";
 
 
@@ -1064,48 +1081,51 @@ if(plotAll)if(!vectorial){
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
  "                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")
- writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                 )<<
- "                 phi                ,                                           \n";
-
-
 if(PostProcess=="u")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
+ "              PlotVec(uold)        ,                                            \n";
 
-if(PostProcess=="phi")
+if(PostProcess=="d")
  writeIt
  "                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")
+if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                 )<<
- "                 phi                ,                                           \n";
+ "              PlotVec(uold)        ,                                            \n"
+ "              phi                  ,                                            \n";
 
 
  writeIt
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=\"U  d\"    ,                                         \n"
+ "                 order=vtuorder     ,                                           \n";
+ 
+if(PostProcess=="u")
+ writeIt
+ "                 dataname=\"U\"  ,                                             \n";
+ 
+if(PostProcess=="d")
+ writeIt
+ "                 dataname=\"d\"  ,                                             \n"; 
+
+if(PostProcess=="ud" || PostProcess=="du")
+ writeIt   
+ "                 dataname=\"U  d\"  ,                                           \n";
+ writeIt
  "                 append=true                                                    \n"
- "              );                                                                \n";
-
-
- writeIt
+ "              );                                                                \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
-if(plotAll)if(vectorial){
+if(ParaViewPostProcess)if(vectorial){
  writeIt
  "                                                                                \n"
  "  //--------Paraview plotting every nth iteration ----------//                  \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
@@ -1116,39 +1136,44 @@ if(plotAll)if(vectorial){
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
  "                 Th                 ,                                           \n";
 
-if(PostProcess!="u" & PostProcess!="phi")
- writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                 )<<
- "                 phi                ,                                           \n";
-
-
 if(PostProcess=="u")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                   );
+ "              PlotVec(uold)        ,                                            \n";
 
-if(PostProcess=="phi")
+if(PostProcess=="d")
  writeIt
  "                 phi                ,                                           \n";
 
-if(PostProcess=="uphi")
+if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- (spc==2 ? "\t\t [u,u1,0]\t    ,\n" : "\t\t [u,u1,u2]\t    ,\n"                 )<<
- "                 phi                ,                                           \n";
+ "              PlotVec(uold)        ,                                            \n"
+ "              phi                  ,                                            \n";
 
 
  writeIt
- "                 order=vtuorder     ,                                           \n"
- "                 dataname=\"U  d\"    ,                                         \n"
+ "                 order=vtuorder     ,                                           \n";
+ 
+if(PostProcess=="u")
+ writeIt
+ "                 dataname=\"U\"  ,                                             \n";
+ 
+if(PostProcess=="d")
+ writeIt
+ "                 dataname=\"d\"  ,                                             \n"; 
+
+if(PostProcess=="ud" || PostProcess=="du")
+ writeIt   
+ "                 dataname=\"U  d\"  ,                                           \n";
+
+
+
+ writeIt
  "                 append=true                                                    \n"
- "              );                                                                \n";
-
-
-
- writeIt
+ "              );                                                                \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  MPItimerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
 }
 
 if(debug)if(!vectorial)
@@ -1172,7 +1197,7 @@ if(debug)if(vectorial)
  "                                                                                \n"
  <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
  (timelog ? "cout << \" all operations ended, they \";\n" : ""                  )<<
- (timelog ? "MPItimerend  (\"solver\",t1)\n" : " "                              )<<
+ (timelog ? "timerend  (\"solver\",t1)\n" : " "                              )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
@@ -1211,14 +1236,14 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "    //--------------------Assembly for linear---------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"RHS assembly for U\",t0)\n" : ""               )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""               )<<
  "     b = varIncr(0,Vh);                                                         \n"
- <<(timelog ? "    MPItimerend  (\"RHS assembly for U\",t0)\n" : ""               )<<
+ <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""               )<<
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
  "     if(i>0){                                                                   \n"
- <<(timelog ? "       MPItimerbegin(\"NL error checking\",t0)\n" : ""             )<<
+ <<(timelog ? "       timerbegin(\"NL error checking\",t0)\n" : ""             )<<
  "        b = b .* DP                                         ;                   \n"
  "        real errLoc, err                                 ;                      \n"
  "        errLoc = b.l2                                  ;                        \n"
@@ -1228,33 +1253,33 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "        if(mpirank == 0)                                                        \n"
  "        cout << \"    iteration =\" << i << \", NR error =\" << err << endl ;   \n"
- <<(timelog ? "       MPItimerend (\"NL error checking\",t0)\n" : ""              )<<
+ <<(timelog ? "       timerend (\"NL error checking\",t0)\n" : ""              )<<
  "       if(err <= tol) break;                                                    \n"
  "     }                                                                          \n"
 
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
  "     ALoc = varIncr(Vh,Vh);                                                     \n"
- <<(timelog ? "    MPItimerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
  "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "     set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");                     \n"
- <<(timelog ? "    MPItimerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solving U\",t0)\n" : ""                        )<<
+ <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                        )<<
  "     du[] = A^-1*b;                                                             \n"
- <<(timelog ? "    MPItimerend  (\"solving U\",t0)\n" : ""                        )<<
+ <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                        )<<
  "                                                                                \n"
  "    //-------------Intermediate solution update-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    MPItimerbegin(\"solution update\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                  )<<
  "     u[]   += du[]  ;                                                           \n"
  "                                                                                \n"
  "    //----------Damage field calulation using Mazrs model---------//            \n";
@@ -1305,7 +1330,7 @@ else{
 
  writeIt
  "                                                                                \n"
- <<(timelog ? "    MPItimerend  (\"solution update\",t0)\n" : " "                   )<<
+ <<(timelog ? "    timerend  (\"solution update\",t0)\n" : " "                   )<<
  "                                                                                \n"
  "  }                                                                             \n"
  "                                                                                \n"
@@ -1319,7 +1344,7 @@ if(pipegnu){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  MPItimerbegin(\"force calculation\",t0)\n" : ""                  )<<
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                  )<<
  "   real ForceXloc , ForceXGather ;                                              \n"
  "   ForceXloc = intN1(Th,4,qforder=2)                                            \n"
  "                          (DPspc*(1-damage)*stress(u,lambdafield,mufield)[0]);  \n"
@@ -1341,7 +1366,7 @@ if(!supercomp)
 
  writeIt
  "   }                                                                            \n"
- <<(timelog ? "  MPItimerend  (\"force calculation\",t0)\n" : ""                    );
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
@@ -1351,7 +1376,7 @@ if(!supercomp)
  "                                                                                \n"
  <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
  (timelog ? "cout << \" all operations ended, they \";\n" : " "                   )<<
- (timelog ? "MPItimerend  (\"solver\",t1)\n" : " "                                )<<
+ (timelog ? "timerend  (\"solver\",t1)\n" : " "                                )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 }

@@ -54,21 +54,26 @@ if(!Sequential){
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
- if(plotAll)
+ if(ParaViewPostProcess){
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Paraview plotting parameters -------                               \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  int[int] vtuorder=[1,1];                                                    \n"
-  "  string   namedata=\"U Phi\";                                                \n"
-  "  bool     withsur=true;                                                      \n"
-  "                                                                              \n"
   "  int iterout  = 0 ,               // Loop Counter                            \n"
   "      iterout1 = 0 ;               // Loop Counter                            \n";
+  
+ if(PostProcess=="u" || PostProcess=="d")
+ writeIt
+ "              int[int] vtuorder=[1];                                           \n";
 
- if(plotAll && !Sequential)
+ if(PostProcess=="ud" || PostProcess=="du")
+ writeIt
+ "              int[int] vtuorder=[1,1];                                         \n";  
+  }
+
+ if(ParaViewPostProcess && !Sequential)
   writeIt
   "                                                                              \n"
   "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");           \n"
@@ -182,46 +187,35 @@ if(Prblm=="elastodynamics"){
   "  real tt ;                                                                    \n"
   "                                                                               \n";  
   
- if(plotAll || plotTime)
+ if(ParaViewPostProcess){
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
   "//  ------- Paraview plotting parameters -------                               \n"
   "//=============================================================================\n"
   "                                                                               \n"
-  "  string   namedata = \"U\"              ;  // Name of export data             \n"
-  "  bool     withsur  = true             ;  // With surfaces                     \n"
   "  int      iterout  = 0                ;  // Loop counter                      \n";
 
- if(PostProcess!="v" && PostProcess!="a" && PostProcess!="uva")
+ if(PostProcess=="u" || PostProcess=="v" || PostProcess=="a")
   writeIt
   "  int[int] vtuorder = [1]                ;  // Solution export order           \n";
 
- if(PostProcess=="v" || PostProcess=="a")
+ if(   PostProcess=="uv" || PostProcess=="vu" || PostProcess=="au" || PostProcess=="ua"
+    || PostProcess=="av" || PostProcess=="va" )
   writeIt
   "  int[int] vtuorder = [1,1]              ;  // Solution export order           \n";
 
- if(PostProcess=="uva")
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+   || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
   writeIt
   "  int[int] vtuorder = [1,1,1]            ;  // Solution export order           \n";
 
- if(plotAll && !Sequential)
+ if(!Sequential)
   writeIt
   "                                                                               \n"
-  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n";
-
- if(plotAll && !Sequential)
-  writeIt
-  "                                                                               \n"
+  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n"  
   "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");            \n";
-
- if(plotTime)
-  writeIt
-  "  string   namevtu  = \"VTUs/Result\"    ;  // File name                       \n"
-  "  exportBegin(                                                                 \n"
-  <<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu")<<
-  " )                                                                             \n"
-  "                                                                               \n";
+  }
 
  if(pipegnu){
   writeIt
@@ -318,68 +312,37 @@ if(Prblm=="soildynamics"){
   "  c[9] =   rho*(1.-alpf)*dt*(1.-gamma/(2.*beta))                               ;\n"
   "                                                                                \n";
 
- if(plotAll || plotTime)
+ if(ParaViewPostProcess){
   writeIt
   "                                                                                \n"
   "//==============================================================================\n"
   "//  ------- Paraview plotting parameters -------                                \n"
   "//==============================================================================\n"
   "                                                                                \n";
-
  if(Sequential)
   writeIt
-  "  bool     withsur  = true             ;  // With surfaces                      \n"
   "  int      iterout  = 0                ;  // Loop counter                       \n";
 
- if(PostProcess=="u")
+ if(PostProcess=="u" || PostProcess=="v" || PostProcess=="a")
   writeIt
-  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"U\"       // Name of export data                         \n";
+  "  int[int] vtuorder = [1]                ;  // Solution export order           \n";
 
- if(PostProcess=="v")
+ if(   PostProcess=="uv" || PostProcess=="vu" || PostProcess=="au" || PostProcess=="ua"
+    || PostProcess=="av" || PostProcess=="va" )
   writeIt
-  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"V\"       // Name of export data                         \n";
+  "  int[int] vtuorder = [1,1]              ;  // Solution export order           \n";
 
- if(PostProcess=="a")
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+   || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
   writeIt
-  "  int[int] vtuorder = [1]  ;  // Solution export order                         \n"
-  "  macro   namedata()\"A\"       // Name of export data                         \n";
+  "  int[int] vtuorder = [1,1,1]            ;  // Solution export order           \n";
 
- if(PostProcess=="uv" || PostProcess=="vu")
-  writeIt
-  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
-  "  macro   namedata()\"U V\"       // Name of export data                        \n";
-
- if(PostProcess=="ua" || PostProcess=="au")
-  writeIt
-  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
-  "  macro   namedata()\"U A\"       // Name of export data                        \n";
-
- if(PostProcess=="va" || PostProcess=="av")
-  writeIt
-  "  int[int] vtuorder = [1,1]  ;  // Solution export order                        \n"
-  "  macro   namedata()\"V A\"       // Name of export data                        \n";
-
- if(PostProcess=="uva" || PostProcess=="uav" || PostProcess=="auv" ||
-    PostProcess=="avu" || PostProcess=="vau" || PostProcess=="vua"  )
-  writeIt
-  "  int[int] vtuorder = [1,1,1]  ;  // Solution export order                      \n"
-  "  macro   namedata()\"U V A\"       // Name of export data                      \n";
-
- if(plotAll && !Sequential)
+ if(!Sequential)
   writeIt
   "                                                                                \n"
   "  if(mpirank==0)system(\"mkdir -p VTUs\");                                      \n";
-
- if(plotTime)
-  writeIt
-  "  string   namevtu  = \"VTUs/Result\"    ;  // File name                        \n"
-  "  exportBegin(                                                                  \n"
-  <<(!Sequential ? "              namevtu, mpiCommWorld" : "              namevtu" )<<
-  " )                                                                              \n"
-  "                                                                                \n";
-
+  }
+  
  if(pipegnu){
   writeIt
   "                                                                               \n"

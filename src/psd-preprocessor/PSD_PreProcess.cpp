@@ -116,10 +116,8 @@ int main(int argc, char *argv[]){
   bool debug        = false;
   bool useGFP       = false;
   bool timelog      = false;
-  bool top2vol      = false;    
-  bool plotAll      = false;
+  bool top2vol      = false;
   bool pipegnu      = false;
-  bool plotTime     = false;
   bool testflags    = false;
   bool vectorial    = false;
   bool supercomp    = false;
@@ -159,9 +157,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-help"            ) help                             = true;
     if( argvdummy == "-debug"           ) debug                            = true;
     if( argvdummy == "-useGFP"          ) useGFP                           = true;
-    if( argvdummy == "-plot"            ) plotAll                          = true;
     if( argvdummy == "-pipegnu"         ) pipegnu                          = true;
-    if( argvdummy == "-timepvd"         ) plotTime                         = true;
     if( argvdummy == "-testflags"       ) testflags                        = true;
     if( argvdummy == "-timelog"         ) timelog                          = true;
     if( argvdummy == "-vectorial"       ) vectorial                        = true;
@@ -193,11 +189,17 @@ int main(int argc, char *argv[]){
   if(Prblm=="damage" && Model=="hybrid-phase-field")dirichletbc=true;
   if(Prblm=="damage" && Model=="Mazar")dirichletbc=true;
   if(Prblm=="soildynamics")dirichletconditions      = 0;
-
   int labLface=2;if(spc==3)labLface=1;
-  int labRface=4;if(spc==3)labRface=2;
-  
+  int labRface=4;if(spc==3)labRface=2;  
   if(spc==3)labelBodyForce=6;
+  
+  bool ParaViewPostProcess = false; 
+  
+if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProcess=="d"
+   || PostProcess=="uv"  || PostProcess=="vu"  || PostProcess=="au"  || PostProcess=="ua"
+   || PostProcess=="av"  || PostProcess=="va"  || PostProcess=="ud"  || PostProcess=="du"
+   || PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" || PostProcess=="vua"
+   || PostProcess=="auv" || PostProcess=="ava" )  ParaViewPostProcess = true;
 
 //=====================================================================================
 //---- PSD Logo on commandline -----
@@ -245,9 +247,7 @@ int main(int argc, char *argv[]){
   cout << " help is ----------------------------> " << help                     << endl;
   cout << " debug is ---------------------------> " << debug                    << endl;
   cout << " useGFP is --------------------------> " << useGFP                   << endl;
-  cout << " plot is ----------------------------> " << plotAll                  << endl;
   cout << " pipegnu is -------------------------> " << pipegnu                  << endl;
-  cout << " timepvd is -------------------------> " << plotTime                 << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
@@ -277,7 +277,7 @@ if(!help){
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 
- if(plotAll)
+ if(ParaViewPostProcess)
   system("mkdir -p VTUs");
 
   cout << "                                                                   " << endl;
