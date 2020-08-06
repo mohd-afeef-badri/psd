@@ -46,84 +46,162 @@ if(spc==2)
 
  if(Prblm=="elastodynamics")
  writeIt
- "  macro Ux   du  //                                                            \n"
- "  macro Uy   du1 //                                                            \n";
+ "  macro Ux du  //                                                              \n"
+ "  macro Uy du1 //                                                              \n";
 
  if(Prblm=="linear-elasticity" || Prblm=="damage")
  writeIt
- "  macro Ux    u  //                                                            \n"
- "  macro Uy    u1 //                                                            \n";   
+ "  macro Ux u  //                                                                \n"
+ "  macro Uy u1 //                                                                \n";   
     
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
- "  macro Pk       [ P"<<lag<<", P"<<lag<<" , P"<<lag<<"  ] //                   \n"
- "  macro def  (i) [ i , i#1, i#2 ] //                                           \n"
- "  macro init (i) [ i ,  i ,  i  ] //                                           \n";
+ "  macro Pk [ P"<<lag<<" ,                                                       \n"
+ "             P"<<lag<<" ,                                                       \n"
+ "             P"<<lag<<" ] //                                                    \n"
+ "                                                                                \n" 
+ "  macro def(i) [ i   ,                                                          \n"
+ "                 i#1 ,                                                          \n"
+ "                 i#2 ] //                                                       \n"
+ "                                                                                \n" 
+ "  macro init(i) [ i ,                                                           \n"
+ "                  i ,                                                           \n"
+ "                  i ] //                                                        \n"
+ "                                                                                \n";   
 
  if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
  writeIt
- "  macro Pltk     P1 //                                                         \n"
- "  macro def0 (i) i  //                                                         \n";
+ "  macro Pltk    P1 //                                                           \n"
+ "  macro def0(i) i  //                                                           \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
  writeIt
- "  macro Sk       [ P0, P0, P0 ]       // Third order strain vector            \n";
+ "  macro Sk [ P0 ,                                                               \n"
+ "             P0 ,                                                               \n"
+ "             P0 ] // Third order strain vector                                  \n"
+ "                                                                                \n"
+ "                                                                                \n";  
  
  if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
- "                                                                              \n"
- "  macro Sk [ FEQF1, FEQF1 , FEQF1 ]       // Quadrature element space order 3 \n"
- "  macro defSh (i) [ i , i#1, i#2 ]        // 3rd order Vect. field definition \n"
- "                                                                              \n"
- "  macro Ik [FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
- "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,FEQF1,      \n"
- "            FEQF1,FEQF1,FEQF1,FEQF1,FEQF1]// Quadrature element space order 25\n"
- "  macro defIh (i) [ i,        i#1,i#2,i#3,i#4,i#5,i#6,i#7,i#8,i#9,i#10,       \n"
- "                     i#11,i#12,i#13,i#14,i#15,i#16,i#17,i#18,i#19,i#20,       \n"
- "                     i#21,i#22,i#23,i#24]// 25th order Vect. field definition \n"
- "                                                                              \n"
- "                                                                              \n"
- "  macro calculateStress(i,j,lambdaVal,muVal)                                  \n"
- "     defSh (i) = [ lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dx(j),                  \n"
- "                   lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dy(j#1) ,               \n"
- "                   2.*muVal*(dx(j#1)+dy(j))];                                 \n"
- "     //                                                                       \n"
- "                                                                              \n"
- "  macro calculateStrain(i,j){                                                 \n"
- "     defSh (i) = [ dx(j), dy(j#1), 0.5*(dx(j#1)+dy(j))];                      \n"
- "     }//                                                                      \n"
- "                                                                              \n"
- "  macro Epsl(i) [dx(i), dy(i#1), (dy(i)+dx(i#1))/2.]   // Strain definition   \n"
- "                                                                              \n";
+ "                                                                                \n"
+ "  macro Sk [ FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ] // Quadrature element space order 3                        \n"
+ "                                                                                \n" 
+ "  macro defSh(i) [ i   ,                                                        \n"
+ "                   i#1 ,                                                        \n"
+ "                   i#2 ] // 3rd order Vect. field definition                    \n"
+ "                                                                                \n"
+ "  macro Ik [ FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ,                                                            \n"
+ "             FEQF1 ] // Quadrature element space order 25                       \n"
+ "                                                                                \n" 
+ "  macro defIh(i) [ i    ,                                                       \n"
+ "                   i#1  ,                                                       \n"
+ "                   i#2  ,                                                       \n"
+ "                   i#3  ,                                                       \n"
+ "                   i#4  ,                                                       \n"
+ "                   i#5  ,                                                       \n"
+ "                   i#6  ,                                                       \n"
+ "                   i#7  ,                                                       \n"
+ "                   i#8  ,                                                       \n"
+ "                   i#9  ,                                                       \n"
+ "                   i#10 ,                                                       \n"
+ "                   i#11 ,                                                       \n"
+ "                   i#12 ,                                                       \n"
+ "                   i#13 ,                                                       \n"
+ "                   i#14 ,                                                       \n"
+ "                   i#15 ,                                                       \n"
+ "                   i#16 ,                                                       \n"
+ "                   i#17 ,                                                       \n"
+ "                   i#18 ,                                                       \n"
+ "                   i#19 ,                                                       \n"
+ "                   i#20 ,                                                       \n"
+ "                   i#21 ,                                                       \n"
+ "                   i#22 ,                                                       \n"
+ "                   i#23 ,                                                       \n"
+ "                   i#24 ] // 25th order Vect. field definition                  \n"
+ "                                                                                \n"
+ "  macro calculateStress(i,j,lambdaVal,muVal)                                    \n"
+ "     defSh(i) = [ lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dx(j)   ,                  \n"
+ "                  lambdaVal*(dx(j)+dy(j#1))+2.*muVal*dy(j#1) ,                  \n"
+ "                  2.*muVal*(dx(j#1)+dy(j))                   ]; //              \n"
+ "                                                                                \n"
+ "  macro calculateStrain(i,j)                                                    \n"
+ "     defSh(i) = [ dx(j)               ,                                         \n"
+ "                  dy(j#1)             ,                                         \n"
+ "                  0.5*(dx(j#1)+dy(j)) ];  //                                    \n"
+ "                                                                                \n"
+ "  macro Epsl(i) [ dx(i)              ,                                          \n"
+ "                  dy(i#1)            ,                                          \n"
+ "                  (dy(i)+dx(i#1))/2. ]   // Strain definition                   \n"
+ "                                                                                \n";
 
  if(useGFP && Prblm=="damage" && Model=="Mazar")
  writeIt
- "  macro Sk           [ P0, P0 , P0  ]       // Third order strain vector     \n"
- "  macro defStrain(i) [ i , i#1, i#2 ]       // Vect. field definition        \n";
+ "  macro Sk [ P0 ,                                                               \n"
+ "             P0 ,                                                               \n"
+ "             P0 ]       // Third order strain vector                            \n"
+ "                                                                                \n" 
+ "  macro defStrain(i) [ i   ,                                                    \n"
+ "                       i#1 ,                                                    \n"
+ "                       i#2 ] // Vect. field definition                          \n"
+  "                                                                               \n"; 
 
  if(!vectorial)
   {
   writeIt
-  "  macro Pk       [ P"<<lag<<", P"<<lag<<"  ] //                              \n";
+  "  macro Pk     [ P"<<lag<<" ,                                                  \n"
+  "                 P"<<lag<<" ] //                                               \n"
+  "                                                                               \n";  
 
   if(Prblm!="damage")
   writeIt
-  "  macro def  (i) [ i , i#1 ] //                                               \n";
+  "  macro def(i) [ i   ,                                                         \n"
+  "                 i#1 ] //                                                      \n"
+  "                                                                               \n";  
 
   if(!Sequential && Prblm!="damage")
   writeIt
-  "  macro init (i) [ i ,  i  ] //                                               \n"
-  "                                                                              \n";
+  "  macro init(i) [ i ,                                                          \n"
+  "                  i ] //                                                       \n"
+  "                                                                               \n";
 
   if(Prblm=="damage" && Model=="Mazar")
   writeIt
-  "  macro def  (i) [ i , i#1 ] //                                               \n";
+  "  macro def(i) [ i   ,                                                         \n"
+  "                 i#1 ] //                                                      \n"
+  "                                                                               \n";  
 
   if(!Sequential  && Prblm=="damage" && Model=="Mazar")
   writeIt
-  "  macro init (i) [ i ,  i  ] //                                               \n"
-  "                                                                              \n";
+  "  macro init(i) [ i ,                                                          \n"
+  "                  i ] //                                                       \n"
+  "                                                                               \n";
   }   //-- [if loop terminator] !vectorial ended --//
 
  if(!vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
@@ -148,9 +226,10 @@ if(spc==2)
  "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"         
  "//=============================================================================\n"
  "                                                                               \n" 
- "  macro divergence(i)(dx(i) + dy(i#1)) //                                      \n"
- "  macro epsilon(i) [dx(i), dy(i#1),                                            \n"
- "                   (dy(i)+dx(i#1))/SQ2] //                                     \n";
+ "  macro divergence(i) (dx(i) + dy(i#1)) //                                     \n"
+ "  macro epsilon(i) [ dx(i)               ,                                     \n"
+ "                     dy(i#1)             ,                                     \n"
+ "                     (dy(i)+dx(i#1))/SQ2 ] //                                  \n";
 
 
 
@@ -165,15 +244,6 @@ if(spc==2)
  "                   + mu*epsilon(i)[2]*epsilon(i)[2]                           \n"
  "                  )                                           // Hplus        \n"
  "                                                                              \n";
-
-
-/************************OLD METHOD*************************************************
-<<"  macro sxx  (i) ( lambda*divergence(i) + 2*mu*dx( i ) )     // Sigma_xx   \n"
-<<"  macro syy  (i) ( lambda*divergence(i) + 2*mu*dy(i#1) )     // Sigma_yy   \n"
-<<"  macro sxy  (i) ( mu*( dy(i) + dx(i#1) ) )                  // Sigma_yx   \n"
-<<"  macro sig  (i) [ sxx(i), syy(i), SQ2*sxy(i) ]        // Sigma            \n"
-<<"  macro Hplus(i) (0.5*(sig(i)'*epsilon(i)))                  // Hplus      \n"
-/************************OLD METHOD*************************************************/
 
 /************************OLD METHOD*************************************************
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
@@ -248,9 +318,9 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  "//-----------------------Stess calculation macro--------------------------//  \n"
  "                                                                              \n"
  "  macro stress(i,lambdaVal,muVal)                                             \n"
- "     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[0],         \n"
- "     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1] ,         \n"
- "     2.*muVal*epsilon(i)[2]]//                                                \n"
+ "     [lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[0] ,        \n"
+ "     lambdaVal*(epsilon(i)[0]+epsilon(i)[1])+2.*muVal*epsilon(i)[1]  ,        \n"
+ "     2.*muVal*epsilon(i)[2]                                          ] //     \n"
  "                                                                              \n";
 
  if(Sequential)
@@ -394,9 +464,21 @@ if(spc==3){
 
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
- "  macro Pk       [P"<<lag<<",P"<<lag<<",P"<<lag<<",P"<<lag<<"]//               \n"
- "  macro def  (i) [ i , i#1, i#2, i#3 ] //                                      \n"
- "  macro init (i) [ i ,  i ,  i,  i   ] //                                      \n";
+ "  macro Pk [ P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ] //                                                   \n"
+ "                                                                               \n" 
+ "  macro def(i) [ i   ,                                                         \n"
+ "                 i#1 ,                                                         \n"
+ "                 i#2 ,                                                         \n"
+ "                 i#3 ] //                                                      \n"
+ "                                                                               \n"  
+ "  macro init(i) [ i ,                                                          \n"
+ "                  i ,                                                          \n"
+ "                  i ,                                                          \n"
+ "                  i ] //                                                       \n"
+ "                                                                               \n";  
  
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
  if(plotAll || debug)
@@ -406,35 +488,69 @@ if(spc==3){
 
  if(Prblm=="soildynamics" && top2vol)
  writeIt
- "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                   \n";
+ "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                     \n";
  
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
   writeIt
-  "  macro Sk           [ P0,P0,P0,P0,P0,P0  ]  // Sixth order strain vector   \n";
+  "  macro Sk [ P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ] // Sixth order strain vector                                \n"
+  "                                                                              \n";  
 
  if(Prblm=="damage" && Model=="Mazar")if(useGFP)
   writeIt
-  "  macro Sk           [   P0,P0,P0,P0,P0,P0   ]  // Sixth order strain vector\n"
-  "  macro defStrain(i) [ i,i#1,i#2,i#3,i#4,i#5 ]  // Vect. field definition   \n";
+  "  macro Sk [ P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ,                                                             \n"
+  "             P0 ] // Sixth order strain vector                                \n"
+  "                                                                              \n"
+  "  macro defStrain(i) [ i   ,                                                  \n"
+  "                       i#1 ,                                                  \n"
+  "                       i#2 ,                                                  \n"
+  "                       i#3 ,                                                  \n"
+  "                       i#4 ,                                                  \n"
+  "                       i#5 ]  // Vect. field definition                       \n"
+  "                                                                              \n";   
 
-if(!vectorial){write
-<<"  macro Pk [P"<<lag<<",P"<<lag<<",P"<<lag<<"]  //                           \n";
+if(!vectorial){
+  writeIt
+  "  macro Pk [ P"<<lag<<" ,                                                     \n"
+  "             P"<<lag<<" ,                                                     \n"
+  "             P"<<lag<<" ] //                                                  \n"
+  "                                                                              \n";  
 
-if(Prblm!="damage")write
-<<"                                                                            \n"
-<<"  macro def(i)  [i, i#1, i#2]  //                                           \n";
+if(Prblm!="damage")
+  writeIt
+  "  macro def(i)  [i   ,                                                        \n"
+  "                 i#1 ,                                                        \n"
+  "                 i#2 ] //                                                     \n"
+  "                                                                              \n";    
 
-if(Prblm!="damage")if(!Sequential)write
-<<"  macro init(i) [i,   i,   i]  //                                           \n"
-<<"                                                                            \n";
+if(Prblm!="damage" && !Sequential)
+  writeIt
+  "  macro init(i) [ i ,                                                         \n"
+  "                  i ,                                                         \n"
+  "                  i ] //                                                      \n"
+  "                                                                              \n";
 
-if(Prblm=="damage" && Model=="Mazar")write
-<<"                                                                            \n"
-<<"  macro def(i)  [i, i#1, i#2]  //                                           \n";
+if(Prblm=="damage" && Model=="Mazar")
+  writeIt
+  "  macro def(i)  [ i  ,                                                        \n"
+  "                  i#1,                                                        \n"
+  "                  i#2] //                                                     \n"
+  "                                                                              \n";  
 
-if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
-<<"  macro init(i) [i,   i,   i]  //                                           \n"
-<<"                                                                            \n";
+if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
+  writeIt
+  "  macro init(i) [ i ,                                                         \n"
+  "                  i ,                                                         \n"
+  "                  i ] //                                                      \n"
+  "                                                                              \n";
 
 } //-- [if loop terminator] !vectorial ended --//
 
@@ -456,62 +572,52 @@ if(Prblm=="damage" && Model=="Mazar")if(!Sequential)write
  "                       (dy( i ) + dx(i#1))/SQ2 ]        //                     \n"
  "                                                                               \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")if(!vectorial)write
-<<"                                                                           \n"
-<<"//---------------------------Non-linear macros---------------------------//\n"
-<<"                                                                           \n"
-<<"  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]        // Vect. field definition\n"
-<<"  macro init2 (i)  [   i  ,   i  ,   i   ]        // Vect. field initialize\n"
-<<"  macro def   (i)     i                                 // Scalar field    \n"
-<<"  macro init  (i)     i                                 // Initialize      \n"
-<<"  macro Zk            P1                                // FE space        \n";
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
+  writeIt
+  "                                                                              \n"
+  "//---------------------------Non-linear macros---------------------------//   \n"
+  "                                                                              \n"
+  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]        // Vect. field definition   \n"
+  "  macro init2 (i)  [   i  ,   i  ,   i   ]        // Vect. field initialize   \n"
+  "  macro def   (i)     i                                 // Scalar field       \n"
+  "  macro init  (i)     i                                 // Initialize         \n"
+  "  macro Zk            P1                                // FE space           \n";
 
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)write
-<<"                                                                           \n"
-<<"//------------------------------Hplus macros-----------------------------//\n"
-<<"                                                                           \n"
-/*
-<<"  macro sxx (i) ( lambda*divergence(i)+2*mu*dx( i ) )        // Sigma_xx   \n"
-<<"  macro syy (i) ( lambda*divergence(i)+2*mu*dy(i#1) )        // Sigma_yy   \n"
-<<"  macro szz (i) ( lambda*divergence(i)+2*mu*dz(i#2) )        // Sigma_zz   \n"
-<<"  macro sxy (i) (     mu*( dy( i ) + dx(i#1) )      )        // Sigma_xy   \n"
-<<"  macro sxz (i) (     mu*( dz( i ) + dx(i#2) )      )        // Sigma_xz   \n"
-<<"  macro syz (i) (     mu*( dz(i#1) + dy(i#2) )      )        // Sigma_yz   \n"
-<<"  macro sig (i) [     sxx(i), syy(i), szz(i)        ,                      \n"
-<<"                         SQ2 * syz(i)         ,                            \n"
-<<"                         SQ2 * sxz(i)         ,                            \n"
-<<"                         SQ2 * sxy(i)         ]        // Sigma            \n"
-<<"  macro Hplus(i) (    0.5*( sig(i)'*epsilon(i) )    )        // Hplus      \n"
-*/
-<<"  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0]         \n"
-<<"                                     + epsilon(i)[1]*epsilon(i)[1]         \n"
-<<"                                     + epsilon(i)[2]*epsilon(i)[2] )       \n"
-<<"                   + lambda*(epsilon(i)[0]*epsilon(i)[1]                   \n"
-<<"                   +         epsilon(i)[0]*epsilon(i)[2]                   \n"
-<<"                   +         epsilon(i)[1]*epsilon(i)[2] )                 \n"
-<<"                   + mu*(epsilon(i)[5]*epsilon(i)[5]                       \n"
-<<"                   +     epsilon(i)[4]*epsilon(i)[4]                       \n"
-<<"                   +     epsilon(i)[3]*epsilon(i)[3] )                     \n"
-<<"                  )                                           // Hplus     \n"
-<<"                                                                           \n";
+if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
+  writeIt
+  "                                                                              \n"
+  "//------------------------------Hplus macros-----------------------------//   \n"
+  "                                                                              \n"
+  "  macro Hplus (i) ( (0.5*lambda+mu)*(  epsilon(i)[0]*epsilon(i)[0]            \n"
+  "                                     + epsilon(i)[1]*epsilon(i)[1]            \n"
+  "                                     + epsilon(i)[2]*epsilon(i)[2] )          \n"
+  "                   + lambda*(epsilon(i)[0]*epsilon(i)[1]                      \n"
+  "                   +         epsilon(i)[0]*epsilon(i)[2]                      \n"
+  "                   +         epsilon(i)[1]*epsilon(i)[2] )                    \n"
+  "                   + mu*(epsilon(i)[5]*epsilon(i)[5]                          \n"
+  "                   +     epsilon(i)[4]*epsilon(i)[4]                          \n"
+  "                   +     epsilon(i)[3]*epsilon(i)[3] )                        \n"
+  "                  )                                           // Hplus        \n"
+  "                                                                              \n";
 
-if(Prblm=="damage" && Model=="Mazar")write
-<<"                                                                           \n"
-<<"//-----------------------Stess calculation macro-------------------------//\n"
-<<"                                                                           \n"
-<<"  macro stress(i,lambdaVal,muVal)                                          \n"
-<<"  [                                                                        \n"
-<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[0],\n"
-<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[1],\n"
-<<"   lambdaVal*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*muVal*epsilon(i)[2],\n"
-<<"   2.*muVal*epsilon(i)[3],                                                 \n"
-<<"   2.*muVal*epsilon(i)[4],                                                 \n"
-<<"   2.*muVal*epsilon(i)[5]                                                  \n"
-<<"  ]//                                                                      \n"
-<<"                                                                           \n";
+if(Prblm=="damage" && Model=="Mazar")
+  writeIt
+  "                                                                              \n"
+  "//-----------------------Stess calculation macro-------------------------//   \n"
+  "                                                                              \n"
+  "  macro stress(i,lmd,mu)                                                      \n"
+  "  [                                                                           \n"
+  "   lmd*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*mu*epsilon(i)[0],       \n"
+  "   lmd*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*mu*epsilon(i)[1],       \n"
+  "   lmd*(epsilon(i)[0]+epsilon(i)[1]+epsilon(i)[2])+2.*mu*epsilon(i)[2],       \n"
+  "   2.*mu*epsilon(i)[3],                                                       \n"
+  "   2.*mu*epsilon(i)[4],                                                       \n"
+  "   2.*mu*epsilon(i)[5]                                                        \n"
+  "  ]//                                                                         \n"
+  "                                                                              \n";
 
-/******************************************************************************************
+/********************************************************************************
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-----------------------------//\n"
@@ -533,38 +639,60 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<(vectorial  ? "    e5=0.5*(dz(uold)+dx(uold2));\n"              : ""        )
 <<(vectorial  ? "    e6=0.5*(dz(uold1)+dy(uold2));\n"             : ""        )
 <<"                                                                           \n"
-<<"    GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);  \n"
+<<"GFPDecompEnergy3D(e1[],e2[],e3[],e4[],e5[],e6[],                           \n"
+<<"                  PsiPlus[],PsiMinus[],                                    \n"
+<<"                  HistPlus[],HistMinus[],par   );                          \n"
 <<"  }//                                                                      \n"
 <<"                                                                           \n";
-/********************************************************************************************/
+/*******************************************************************************/
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write<<
-"                                                                             \n"
-
-"//----------------------------Hplus macros---------------------------------//\n"
- "                                                                            \n"
- "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){        \n"
- "    real[int] par = [lambda,mu];                                            \n"
- <<(!vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(u),dy(u1),dz(u2),0.5*(dx(u1)+dy(u)),0.5*(dx(u2)+dz(u)),0.5*(dy(u2)+dz(u1))]; \n": "")
- <<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] = [dx(uold),dy(uold1),dz(uold2),0.5*(dx(uold1)+dy(uold)),0.5*(dx(uold2)+dz(uold)),0.5*(dy(uold2)+dz(uold1))]; \n": "")<<
- "                                                                            \n"
- "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par); \n"
- "  }//                                                                       \n"
- "                                                                            \n";
+if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
+ writeIt
+ "                                                                               \n"
+ "//----------------------------Hplus macros---------------------------------//  \n"
+ "                                                                               \n"
+ "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){           \n"
+ "    real[int] par = [lambda,mu];                                               \n"
+ "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] =                                   \n"
+ "                                                                               \n";  
+ 
+ if(!vectorial)
+ writeIt
+ "                               [ dx(u) ,                                       \n"
+ "                                 dy(u1),                                       \n"
+ "                                 dz(u2),                                       \n"
+ "                                 0.5*(dx(u1)+dy(u)),                           \n"
+ "                                 0.5*(dx(u2)+dz(u)),                           \n"
+ "                                 0.5*(dy(u2)+dz(u1)) ];                        \n";
+ if(vectorial)
+ writeIt 
+ "                              [ dx(uold) ,                                     \n"
+ "                                dy(uold1),                                     \n"
+ "                                dz(uold2),                                     \n"
+ "                                0.5*(dx(uold1)+dy(uold)),                      \n"
+ "                                0.5*(dx(uold2)+dz(uold)),                      \n"
+ "                                0.5*(dy(uold2)+dz(uold1)) ];                   \n";
+ 
+ writeIt 
+ "                                                                               \n"
+ "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);    \n"
+ "  }//                                                                          \n"
+ "                                                                               \n";
+ }
 
  if(Sequential)
   writeIt
-  "                                                                           \n"
-  "//---------------------Sequential remapping macros-----------------------//\n"
-  "                                                                           \n"
-  "  load \"msh3\"                           // Loading 3D mesh               \n"
-  "  macro meshN()mesh3                    // Three-dimensional problem       \n"
-  "  macro intN()int3d                     // Three-dimensional integral      \n"
-  "  macro intN1()int2d                    // Two-dimensional integral        \n"
-  "  macro readmeshN()readmesh3            // Three-dimensional problem       \n"
-  "  macro gmshloadN()gmshload3            // Three-dimensional 'msh' reader  \n"
-  "  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient      \n"
-  "                                                                           \n";
+  "                                                                              \n"
+  "//---------------------Sequential remapping macros-----------------------//   \n"
+  "                                                                              \n"
+  "  load \"msh3\"                           // Loading 3D mesh                  \n"
+  "  macro meshN()mesh3                    // Three-dimensional problem          \n"
+  "  macro intN()int3d                     // Three-dimensional integral         \n"
+  "  macro intN1()int2d                    // Two-dimensional integral           \n"
+  "  macro readmeshN()readmesh3            // Three-dimensional problem          \n"
+  "  macro gmshloadN()gmshload3            // Three-dimensional 'msh' reader     \n"
+  "  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient         \n"
+  "                                                                              \n";
 
  if(tractionconditions>=1){
  writeIt
@@ -780,6 +908,7 @@ if(dirichletpointconditions>=1)
  "     }                                                                         \n" 
  "   }                                                                           \n"  
  "  //                                                                           \n";
+ 
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
  "                                                                               \n"  
@@ -855,53 +984,7 @@ if(dirichletpointconditions>=1)
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n";  
   }
-/*
-  writeIt
-  "                                                                           \n"
-  "//----------------------------Point BC macro-----------------------------//\n"
-  "                                                                           \n"
-  "  macro Pointbc(Dpointlab,Wh,A,b,PnV){                                     \n"
-  "    int count=0;                                                           \n"
-  "    meshN Th=Wh.Th;                                                        \n"
-  "                                                                           \n";
 
- if(spc==2)
-  writeIt
-  "                                                                           \n"
-  "        varf vlabs(def(u),def(v))                                          \n"
-  "        = on( Dpointlab,                                                   \n"
-  "                u  = -1*( x==PnV[0] && y==PnV[1] ),                        \n"
-  "                u1 = -1*( x==PnV[0] && y==PnV[1] )                         \n"
-  "             );                                                            \n"
-  "                                                                           \n";
-
- if(spc==3)
-  writeIt
-  "                                                                           \n"
-  "    varf vlabs(def(u),def(v))                                              \n"
-  "        = on( Dpointlab,                                                   \n"
-  "                u  = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
-  "                u1 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] ),           \n"
-  "                u2 = -1*( x==PnV[0] && y==PnV[1] && z==PnV[2] )            \n"
-  "            );                                                             \n"
-  "                                                                           \n";
-
- writeIt
- "                                                                           \n"
- "    real[int] absc=vlabs(0,Wh);                                            \n"
- "                                                                           \n"
- "    for (int i=0; i<Wh.ndof; i++){                                         \n"
- "      if(abs(-1e+30-absc(i))==0 ){                                         \n"
- "        A(i,i)=tgv;                                                        \n"
- "        b[i]=PnV["<<spc<<"+count]*tgv;                                     \n"
- "        count++;                                                           \n"
- "         if(count=="<<spc<<") break;                                       \n"
- "      }                                                                    \n"
- "    }                                                                      \n"
- "  }//                                                                      \n"
- "                                                                           \n"
- "                                                                           \n";
-*/
 } //-- [if loop terminator] pointbc ended --//
 
 
@@ -1023,48 +1106,6 @@ if(dirichletpointconditions>=1)
   "  //                                                                       \n"
   "                                                                           \n";
 
-/*
-if(doublecouple=="force-based"){
-write
-<<"                                                                           \n"
-<<"//-----------------------Double Couple macro-----------------------------//\n"
-<<"                                                                           \n"
-<<"  macro DcNorthSouth(Dpointlab,Wh,b,PnV,Cond){                             \n"
-<<"        varf vlabs(def(u),def(v))                                          \n"
-<<"        = on( Dpointlab,                                                   \n"
-<<"              u  = 1*( x==PnV[0] && y==PnV[1]                              \n"
-<<(spc==3 ? "    && z==PnV[2] ) \n":   "                       )\n"            )
-<<"             );                                                            \n"
-<<"    real[int] absc=vlabs(0,Wh, tgv = -1);                                  \n"
-<<"                                                                           \n"
-<<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
-<<"      if(absc(i)>0.1){                                                     \n"
-<<"        b[i]=Cond;                                                         \n"
-<<"        break;                                                             \n"
-<<"      }                                                                    \n"
-<<"    }                                                                      \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n"
-<<"  macro DcEastWest(Dpointlab,Wh,b,PnV,Cond){                               \n"
-<<"        varf vlabs(def(u),def(v))                                          \n"
-<<"        = on( Dpointlab,                                                   \n"
-<<(spc==3 ? "               u2 \n"    :   "               u1 \n"               )
-<<"                = 1*( x==PnV[0] && y==PnV[1]                                \n"
-<<(spc==3 ? "    && z==PnV[2] ) \n":                   ")\n"                   )
-<<"             );                                                            \n"
-<<"    real[int] absc=vlabs(0,Wh, tgv = -1);                                  \n"
-<<"                                                                           \n"
-<<"    for (int i=0; i<Wh.ndof; i++){                                         \n"
-<<"      if(absc(i)>0.1){                                                     \n"
-<<"        b[i]=Cond;                                                         \n"
-<<"        break;                                                             \n"
-<<"      }                                                                    \n"
-<<"    }                                                                      \n"
-<<"  }//                                                                      \n"
-<<"                                                                           \n";
-}
-*/
-
 if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   writeIt
   "                                                                               \n"
@@ -1125,33 +1166,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && abs(Th(i).z-PnW[2])<.01)         \n"
   "       {iW=i*3+2; Wrank=mpirank;}                                              \n"
   "     }//                                                                       \n";
-    
-/*
-  "  macro GetDoubelCoupleIndicies(DcLabelPoints, Wh, DcFlag,                 \n"
-  "                                PnN,   PnS,   PnE,   PnW,                  \n"
-  "                                iN,    iS,    iE,    iW,                   \n"
-  "                                Nrank, Srank, Erank, Wrank)                \n"
-  "   {                                                                       \n"
-  "    varf VarfPointLabs(def(u),def(v))                                      \n"
-  "    = on( DcLabelPoints,                                                   \n"
-  "          u  =  1*( x==PnN[0] && y==PnN[1]) + 2*( x==PnS[0] && y==PnS[1]), \n"
-  "          u1 =  3*( x==PnE[0] && y==PnE[1]) + 4*( x==PnW[0] && y==PnW[1])  \n"
-  "        );                                                                 \n"
-  "                                                                           \n"
-  "    real[int] PointMarker=VarfPointLabs(0,Wh, tgv = -1);                   \n"
-  "                                                                           \n"
-  "    for (int i=0; i<Wh.ndof; i++){                                         \n"
-  "      if(PointMarker(i)>0.1 && PointMarker(i)<1.1)                         \n"
-  "      {iN=i; Nrank=mpirank; DcFlag=true;}                                  \n"
-  "      if(PointMarker(i)>1.1 && PointMarker(i)<2.1)                         \n"
-  "      {iS=i; Srank=mpirank; DcFlag=true;}                                  \n"
-  "      if(PointMarker(i)>2.1 && PointMarker(i)<3.1)                         \n"
-  "      {iE=i; Erank=mpirank; DcFlag=true;}                                  \n"
-  "      if(PointMarker(i)>3.1 && PointMarker(i)<4.1)                         \n"
-  "      {iW=i; Wrank=mpirank; DcFlag=true;}                                  \n"
-  "    }                                                                      \n"
-  "  }//                                                                      \n";
-*/
+
 if(doublecouple=="displacement-based")
   writeIt
   "                                                                               \n"
@@ -1258,44 +1273,6 @@ if(doublecouple=="force-based")
   "  //                                                                           \n"
   "                                                                               \n";
 }
-
-
-/*
-  "//-----------------------Double Couple macro-----------------------------//\n"
-  "                                                                           \n"
-  "  macro DcNorthSouth(Dpointlab,Wh,A,b,PnV,Cond){                           \n"
-  "        varf vlabs(def(u),def(v))                                          \n"
-  "        = on( Dpointlab,                                                   \n"
-  "              u  = 1*( x==PnV[0] && y==PnV[1]                              \n"
-  (spc==3 ? "    && z==PnV[2] ) \n":   "                       )\n"            )
-  "             );                                                            \n"
-  "    real[int] absc=vlabs(0,Wh, tgv = -1);                                  \n"
-  "                                                                           \n"
-  "    for (int i=0; i<Wh.ndof; i++){                                         \n"
-  "      if(absc(i)>0.1){                                                     \n"
-  "        A(i,i)=tgv; b[i]=Cond*tgv; break;                                  \n"
-  "      }                                                                    \n"
-  "    }                                                                      \n"
-  "  }//                                                                      \n"
-  "                                                                           \n"
-  "  macro DcEastWest(Dpointlab,Wh,A,b,PnV,Cond){                             \n"
-  "        varf vlabs(def(u),def(v))                                          \n"
-  "        = on( Dpointlab,                                                   \n"
-  (spc==3 ? "               u2 \n"    :   "               u1 \n"               )
-  "                = 1*( x==PnV[0] && y==PnV[1]                                \n"
-  (spc==3 ? "    && z==PnV[2] ) \n":                   ")\n"                   )
-  "             );                                                            \n"
-  "    real[int] absc=vlabs(0,Wh, tgv = -1);                                  \n"
-  "                                                                           \n"
-  "    for (int i=0; i<Wh.ndof; i++){                                         \n"
-  "      if(absc(i)>0.1){                                                     \n"
-  "        A(i,i)=tgv; b[i]=Cond*tgv; break;                                  \n"
-  "      }                                                                    \n"
-  "    }                                                                      \n"
-  "  }//                                                                      \n"
-  "                                                                           \n";
-}
-*/
 
 }
 
