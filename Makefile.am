@@ -108,7 +108,7 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1conditions 1 -sequential -dirichletconditions 1  -testflags > PSD-check.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1  -testflags > PSD-check.log &&  \
 	$(FF) Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
