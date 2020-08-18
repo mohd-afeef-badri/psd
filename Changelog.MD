@@ -3,6 +3,9 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+
+## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
+### Added
 - New processing via C++, PSD_PreProcess binary (MAJOR CHANGE).
 - New solving via shell wrapper PSD_Solve instead of FreeFem++ or FreeFem++-mpi.
 - New examples of using the solver.
@@ -199,3 +202,4 @@ All notable changes to PSD solver will be documented in this file.
 | [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6)        |f359dd049fb1ddde376e8ad8e5177c663e430418 |
 | [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7)        |aee9bfec868a70b3d9974d7692bc19f9739ab7dc |
 | [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8)        |2f26292636c7248133e31ae912ee58113de2ef71 |
+| [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0)        |2f26292636c7248133e31ae912ee58113de2ef71 |
