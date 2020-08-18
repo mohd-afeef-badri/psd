@@ -90,7 +90,7 @@
 
 */
 
-
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -260,6 +260,16 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
 
   cout << "                                                                   " << endl;
+
+if(Sequential){
+	system("sed -i 's/^ffmpi=FreeFem++-mpi$/ffmpi=FreeFem++/g' PSD_Solve;");
+	system("sed -i 's/^j=1;$/j=1;mpi_run_option=;a[0]=;/g' PSD_Solve;"); 
+}
+
+if(!Sequential){
+	system("sed -i 's/^ffmpi=FreeFem++$/ffmpi=FreeFem++-mpi/g' PSD_Solve;");
+	system("sed -i 's#^j=1;mpi_run_option=;a\\[0\\]=;$#j=1;#g' PSD_Solve;"); 
+}			 
 
  #include "Help.hpp"
 

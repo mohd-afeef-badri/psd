@@ -55,6 +55,7 @@ install-exec-local:
 	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD/Solver/.
 #	@cp  ./src/scripts/* ${prefix}/PSD/Solver/ScriptModules/.	
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
+	@cp  ./src/psd-solve/PSD_Solve ${prefix}/PSD/Solver/PSD_Solve		
 	@cp  ./etc/*.xyz ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile					
 	@cp  ./man/*.html ${prefix}/PSD/Doc/.
 	@cp  ./man/*.pdf ${prefix}/PSD/Doc/.
@@ -88,6 +89,7 @@ install-devel:
 	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD-devel/Plugins/MacroTools.edp	
 	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD-devel/Solver/.	
 	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD-devel/Solver/PSD_PreProcess
+	@cp  ./src/psd-solve/PSD_Solve ${prefix}/PSD-devel/Solver/PSD_Solve	
 	@cp  ./src/psd-preprocessor/*.cpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.	
 	@cp  ./src/psd-preprocessor/*.hpp ${prefix}/PSD-devel/PSD_PreProcess-devel/.
 	@cp  ./etc/Makefile-psd-preprocess-devel ${prefix}/PSD-devel/PSD_PreProcess-devel/Makefile
@@ -141,7 +143,7 @@ check-local:
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1  -testflags >> PSD-check.log && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D linear-elasticity                   "
@@ -149,7 +151,7 @@ check-local:
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1  -testflags >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D linear-elasticity      fastmethod             "
@@ -157,7 +159,7 @@ check-local:
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D linear-elasticity     fastmethod              "
@@ -165,7 +167,7 @@ check-local:
 	@echo ""	
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags >> PSD-check.log &&  \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log 	 
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log 	 
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential  2D phase-field fracture mechanics      "
@@ -192,7 +194,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture mechanics      "
@@ -201,7 +203,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D  phase-field fracture mechanics energydecomp "
@@ -228,7 +230,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture mechanics energydecomp "
@@ -237,7 +239,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture mechanics with GFP     "
@@ -264,7 +266,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture mechanics with GFP     "
@@ -273,7 +275,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture mechanics with energydecomp & GFP     "
@@ -300,7 +302,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log	 &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 3D phase-field fracture mechanics with energydecomp & GFP     "
@@ -309,7 +311,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -useGFP  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	$(FFMPI) -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D Elastodynamics                      "
@@ -336,7 +338,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics                      "
@@ -345,7 +347,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	$(FFMPI)  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve  -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D Soildynamics                        "
@@ -372,7 +374,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	./PSD_Solve -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics                        "
@@ -381,7 +383,7 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	$(FFMPI) -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
+	./PSD_Solve -np 2 Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log &&  \
 	rm  -rf *.edp	
 	@echo ""
 	@echo "*============================================================*"

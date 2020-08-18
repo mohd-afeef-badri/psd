@@ -1,27 +1,30 @@
-SUBDIRS=plugins psd-preprocessor psd-solve
-EXTRA_DIST=   	      \
-./ff-files/DDmacro.edp  \
-./ff-files/DDplotMacro.edp  \
-./ff-files/MacroTools.edp  \
-./ff-files/SolverGenerator.edp  \
-./ff-files/simulation-log.csv  \
-./plugins/gofastplugins.cpp  \
-./plugins/iovtk.cpp  \
-./plugins/MatrixPlotter.cpp
+FF_IS = `which $(FFMPI)`
 
+all-local: PSD_Solve
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Compilation done in :"; pwd
+	@echo "*============================================================*"
+	@echo ""
+
+PSD_Solve:
+	cat $(FF_IS) > PSD_Solve
+	chmod a+x PSD_Solve	
+	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm -f *~ 
+	rm  -f *~  PSD_Solve
 	@echo ""
-	
+
+
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -rf Makefile Makefile.in
+	rm  -rf Makefile Makefile.in	

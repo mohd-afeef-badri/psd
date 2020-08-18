@@ -4,6 +4,7 @@ All notable changes to PSD solver will be documented in this file.
 ## Unreleased
 ### Added
 - New processing via C++, PSD_PreProcess binary (MAJOR CHANGE).
+- New solving via shell wrapper PSD_Solve instead of FreeFem++ or FreeFem++-mpi.
 - New examples of using the solver.
 - New Pdf documentation containing tutorials, function definitions, verbos on PSD c++ library.
 - New option `-nonlinearmethod` (Picard|Newton-Raphsons).
@@ -20,7 +21,7 @@ All notable changes to PSD solver will be documented in this file.
 - Introduce point boundary conditions via `-dirichletpointcondition` [int] flag. 
 - Introduce traction boundary conditions via `-tractionconditions` [int] flag.
 - New folder `tests` containing unit-tests for modules.
-- New Hujeux law (nonlinear soil law) coupling using c++ class (Thanks to Evelyne Foerster).
+- New Hujeux law (nonlinear soil law) interface using C++ class (Thanks to Evelyne Foerster).
 - New pseudo-nonlinear model for solving elastodynamics and soildynamics with nonlinear Newton-Raphsons.
 - Introduced double couple earthquake source boundary condition for soildynamics.
 - New flag `-doublecouple` force-based | displacement-based   to use double couple source for soildynamics.
@@ -30,6 +31,7 @@ All notable changes to PSD solver will be documented in this file.
 - Moved to FreeFEM 4.6.
 - Moved to PETSc 13.13.
 - Moved to C++ for preprocessing.
+- Moved to shell wrapper PSD_Solve for solving.
 - Changes to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.
 - Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.
 - Postprocessing flag `-postprocess` options now support  `u` , `v`,  `a` , `uv`, `ua`, `av` or `uav`. 

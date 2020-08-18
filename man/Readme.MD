@@ -103,16 +103,16 @@ Now you are all set to run your simulation. To do so you will need to do the run
 if you complied a parallel PSD version
 
 ```
-ff-mpirun -np $N Main.edp -v 0 -nw
+PSD_Solve -np $N Main.edp -v 0 -nw
 ```
 if you complied a sequential PSD version
 ```
-FreeFem++ Main.edp -v 0 -nw
+PSD_Solve Main.edp -v 0 -nw
 ```
 
 - In the parallel command **$N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel.
 
-- Additional flag `-gult ffglut` may be required while launching the solver, this is in case debug mode is on.
+- Additional flag `-wg` may be required while launching the solver, this is in case debug mode is on.
 
 *Sit back and be amazed at the speed of the solver.* 
 
@@ -137,6 +137,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
 |  		 | 	     |                     					    |
 | `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |
+| `-bodyforceconditions` | `[int]`   | Number of regions acted upon by bodyforce.   |
 | `-tractionconditions`| `[int]`   | Number of Neumann/traction bounders. |
 | `-parmetis_worker`| `[int]`   | Number of parallel workers used by ParMetis for partiotining.   |
 | `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. |
