@@ -83,6 +83,11 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "  Vh  def(u)    ,    // Vectorial variable for [u,phi]                        \n"
   "      def(uold) ,    // Vectorial variable for old [u,phi]                    \n"
   "      def(DPspc);    // Vectorial variables for partition of unity            \n";
+  
+  if(ParaViewPostProcess)
+   writeIt
+   "                                                                             \n"
+   "  Vh1  phi      ;    // Scalar P1 visulization field phi                     \n";   
 
   if(energydecomp)
    writeIt

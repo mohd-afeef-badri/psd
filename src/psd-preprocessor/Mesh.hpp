@@ -86,7 +86,7 @@ if(!Sequential){
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || ParaViewPostProcess)
   writeIt
-  " fespace VhPlt  ( Th , P1 );            // Damage field    FE space            \n";
+  " fespace Vh1  ( Th , P1 );            // Damage field    FE space              \n";
 
  if(Prblm=="damage" && Model=="Mazar")
   writeIt
