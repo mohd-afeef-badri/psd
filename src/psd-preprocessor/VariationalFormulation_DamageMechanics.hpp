@@ -275,7 +275,7 @@ if(spc==3)
 }  //-- [if loop terminator] hybrid-phase-field Newton-Raphsons non-vectorial ended --//
 
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(Model=="hybrid-phase-field")
 if(vectorial){
  writeIt
  "                                                                                                \n"
@@ -431,3 +431,42 @@ if(dirichletbc)if(spc==2)
  "                                                                                                \n";
 
 }  //-- [if loop terminator] quasistatic ended --//
+
+if(reactionforce && vectorial)
+{
+ writeIt
+ "                                                                                                \n"
+ "//==============================================================================                \n"
+ "// -------Variation formulation for calculating force -------                                   \n"
+ "//==============================================================================                \n"
+ "                                                                                                \n"
+ "varf varfForce(def(u),def(v)) =                                                                 \n"
+ "                                                                                                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "    // $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                               \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "      intN(Th,qforder=3)(                                                                       \n"
+ "         (lambda*divergence(u)*divergence(v)                                                    \n"
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) )))                                                   \n"
+ ";                                                                                               \n";
+}
+
+if(reactionforce && !vectorial)
+{
+ writeIt
+ "                                                                                                \n"
+ "//==============================================================================                \n"
+ "// -------Variation formulation for calculating force -------                                   \n"
+ "//==============================================================================                \n"
+ "                                                                                                \n"
+ "varf varfForce(def2(u),def2(v)) =                                                               \n"
+ "                                                                                                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "    // $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                               \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "      intN(Th,qforder=3)(                                                                       \n"
+ "         (lambda*divergence(u)*divergence(v)                                                    \n"
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) )))                                                   \n"
+ ";                                                                                               \n";
+}
+

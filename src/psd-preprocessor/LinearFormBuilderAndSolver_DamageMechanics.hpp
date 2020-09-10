@@ -149,22 +149,97 @@ if(energydecomp)
  "                                                                                \n"
  "  }                                                                             \n";
 
-if(pipegnu){
+if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
+ "                                                                                \n" 
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                      )<<
- "  real forcetot  = 0.;                                                          \n"
- "  forcetot = intN1(Th,qforder=2,2)(lambda*divergence(u)+2.*mu*dy(u1));          \n"
- "  ofstream ff(\"force.data\",append);                                           \n"
- "  ff << tr << \"        \" << forcetot*1e-3 << endl;                            \n";
-
-if(!supercomp)
+ "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
+ 
+ if(reactionforcemethod=="stress-based" && spc==2 )
  writeIt
- "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"FEM\\\"\\n\";    \n"
- "  flush(pgnuplot);                                                              \n";
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dy(u1)      \n"
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                                                                \n";
 
+ if(reactionforcemethod=="stress-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n" 
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u)      \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u)      \n" 
+ "                                            + mu*(dx(u2)+dz(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                                                                \n"; 
+
+ if(reactionforcemethod=="variational-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n" 
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";
+ 
+ if(reactionforcemethod=="variational-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"   
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";   
+
+ if(spc==2)
+ writeIt
+ "                                                                                \n"
+ "  ofstream ff(\"force.data\",append);                                           \n"
+ "  ff << tr << \"  \" << forcetotx*1e-3 << \"  \" << forcetoty*1e-3 << endl;     \n";
+
+ if(spc==3)
+ writeIt
+ "                                                                                \n"
+ "  ofstream ff(\"force.data\",append);                                           \n"
+ "  ff << tr << \"  \" << forcetotx*1e-3 << \"  \" << forcetoty*1e-3 <<           \n"
+ "              \"  \" << forcetotz*1e-3 <<                             endl;     \n"; 
+ 
+ if(plotreaction && spc==2)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
+ "  flush(pgnuplot);                                                              \n";
+ 
+ if(plotreaction && spc==3)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
+ "  flush(pgnuplot);                                                              \n"; 
 
  writeIt
  (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
@@ -366,25 +441,102 @@ if(energydecomp)
  "    TractionIn     = tr;                                                        \n"
  "    TractionTotal += dtr;                                                       \n";
 
-if(pipegnu){
+if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
- "                                                                                \n"
+ "                                                                                \n" 
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
- "  real forcetot  = 0.;                                                          \n"
- "  forcetot = intN1(Th,qforder=2,2)(lambda*divergence(u)+2.*mu*dy(u1));          \n"
+ "                                                                                \n"
+ "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
+ 
+ if(reactionforcemethod=="stress-based" && spc==2 )
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dy(u1)      \n"
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                                                                \n";
+
+ if(reactionforcemethod=="stress-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n" 
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u)      \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u)      \n" 
+ "                                            + mu*(dx(u2)+dz(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                                                                \n"; 
+
+ if(reactionforcemethod=="variational-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n" 
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";
+ 
+ if(reactionforcemethod=="variational-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"   
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";   
+
+ if(spc==2)
+ writeIt
+ "                                                                                \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
- "  ff << TractionTotal << \"        \" << forcetot*1e-3 << endl;                 \n";
+ "  ff << TractionTotal << \"  \" << forcetotx*1e-3 <<                            \n"
+ "                         \"  \" << forcetoty*1e-3 << endl;                      \n";
 
-if(!supercomp)
+ if(spc==3)
  writeIt
- "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"FEM\\\"\\n\";    \n"
+ "                                                                                \n"
+ "  ofstream ff(\"force.data\",append);                                           \n"
+ "  ff << TractionTotal << \"  \" << forcetotx*1e-3 <<                            \n"
+ "                         \"  \" << forcetoty*1e-3 <<                            \n"
+ "                         \"  \" << forcetotz*1e-3 <<                  endl;     \n"; 
+ 
+ if(plotreaction && spc==2)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
  "  flush(pgnuplot);                                                              \n";
-
+ 
+ if(plotreaction && spc==3)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
+ "  flush(pgnuplot);                                                              \n"; 
 
  writeIt
- (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                       );
+ (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
 }
 
 if(ParaViewPostProcess){
@@ -638,30 +790,120 @@ if(vectorial)
  "  }                                                                             \n";
 
 
-if(pipegnu){
+if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
+ "                                                                                \n" 
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                    )<<
- "  real forcetot  = 0., forcetotGath  = 0. ;                                     \n"
- "  forcetot=intN1(Th,qforder=2,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));    \n"
- "  mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);                      \n"
- "  if(mpirank==0){                                                               \n"
+ "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
+ "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
+ "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
+ 
+ if(reactionforcemethod=="stress-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))              ) );\n" 
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))             ) );\n"  
+ "                                                                                \n"
+ "                                                                                \n"; 
+
+ if(reactionforcemethod=="stress-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n" 
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u) \n" 
+ "                                            + mu*(dx(u2)+dz(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
+ "                                                                                \n";  
+
+ if(reactionforcemethod=="variational-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n" 
+ "     }                                                                          \n"
+ "  }                                                                             \n"  
+ "                                                                                \n";
+ 
+ if(reactionforcemethod=="variational-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"   
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";   
+
+ if(spc==2)
+ writeIt
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n"  
+ "  if(mpirank==0){                                                               \n" 
  "  ofstream ff(\"force.data\",append);                                           \n"
- "  ff << tr << \"        \" << forcetotGath*1e-3 << endl;                        \n";
+ "  ff << tr << \"  \" << forcetotGathx*1e-3 <<                                   \n"
+ "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n"; 
 
-if(!supercomp)
+ if(spc==3)
  writeIt
- "  pgnuplot<<\"plot \\\"force.data\\\" u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\\n\";  \n"
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n" 
+ "                                                                                \n" 
+ "  if(mpirank==0){                                                               \n" 
+ "  ofstream ff(\"force.data\",append);                                           \n"
+ "  ff << tr << \"  \" << forcetotGathx*1e-3  <<                                  \n"
+ "                         \"  \" << forcetotGathy*1e-3  <<                       \n" 
+ "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n"; 
+ 
+ if(plotreaction && spc==2)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
  "  flush(pgnuplot);                                                              \n";
-
+ 
+ if(plotreaction && spc==3)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
+ "  flush(pgnuplot);                                                              \n"; 
 
  writeIt
- "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
-
-}  //-- [if loop terminator] !pipegnu ended --//
+ "  }                                                                             \n" 
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
+}
 
 if(ParaViewPostProcess)if(!vectorial){
  writeIt
@@ -977,20 +1219,20 @@ if(vectorial){
  "    real err1Gather                                                ;            \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;            \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;            \n"
- <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                 )<<
+ <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
  "    uold[] = u[];                                                               \n"
- <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     );
+ <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                      );
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""                )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
@@ -1040,30 +1282,122 @@ if(vectorial)
  "    TractionTotal += dtr;                                                       \n";
 
 
-if(pipegnu){
+
+if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
+ "                                                                                \n" 
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                  )<<
- "  real forcetot  = 0., forcetotGath  = 0. ;                                     \n"
- "  forcetot=intN1(Th,qforder=2,2)(DPspc*(lambda*divergence(u)+2.*mu*dy(u1)));    \n"
- "  mpiAllReduce(forcetot,forcetotGath,mpiCommWorld,mpiSUM);                      \n"
- "  if(mpirank==0){                                                               \n"
+ "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
+ "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
+ "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
+ 
+ if(reactionforcemethod=="stress-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))              ) );\n" 
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))             ) );\n"  
+ "                                                                                \n"
+ "                                                                                \n"; 
+
+ if(reactionforcemethod=="stress-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n" 
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
+ "                                                                                \n"
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u) \n" 
+ "                                            + mu*(dx(u2)+dz(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
+ "                                                                                \n";  
+
+ if(reactionforcemethod=="variational-based" && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n" 
+ "     }                                                                          \n"
+ "  }                                                                             \n"  
+ "                                                                                \n";
+ 
+ if(reactionforcemethod=="variational-based" && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
+ "  F[] = A*u[];                                                                  \n"
+ "                                                                                \n"
+ "  for(int i=0; i < Th.nv; i++){                                                 \n"
+ "     if(abs(Th(i).y-1.)<.000001){                                               \n"
+ "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"   
+ "     }                                                                          \n"
+ "  }                                                                             \n"   
+ "                                                                                \n";   
+
+ if(spc==2)
+ writeIt
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n"  
+ "  if(mpirank==0){                                                               \n" 
  "  ofstream ff(\"force.data\",append);                                           \n"
- "  ff << TractionTotal << \"        \" << forcetotGath*1e-3 << endl;             \n";
+ "  ff << TractionTotal << \"  \" << forcetotGathx*1e-3 <<                        \n"
+ "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n"; 
 
-if(!supercomp)
+ if(spc==3)
  writeIt
- "  pgnuplot<<\"plot \\\"force.data\\\" u 1:2 w lp pt 6 ps 2 t \\\"FEM\\\"\\n\";  \n"
+ "                                                                                \n"
+ "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n" 
+ "                                                                                \n" 
+ "  if(mpirank==0){                                                               \n" 
+ "  ofstream ff(\"force.data\",append);                                           \n"
+ "  ff << TractionTotal << \"  \" << forcetotGathx*1e-3  <<                       \n"
+ "                         \"  \" << forcetotGathy*1e-3  <<                       \n" 
+ "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n"; 
+ 
+ if(plotreaction && spc==2)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
  "  flush(pgnuplot);                                                              \n";
-
+ 
+ if(plotreaction && spc==3)
+ writeIt
+ "                                                                                \n" 
+ "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
+ "  flush(pgnuplot);                                                              \n"; 
 
  writeIt
- "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
+ "  }                                                                             \n" 
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
+}
 
-}  //-- [if loop terminator] !pipegnu ended --//
 
 if(ParaViewPostProcess)if(!vectorial){
  writeIt
@@ -1072,7 +1406,7 @@ if(ParaViewPostProcess)if(!vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
  "  if(int(iterout%10)==0){                                                       \n";
 
 
@@ -1115,7 +1449,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
 }
 
 if(ParaViewPostProcess)if(vectorial){
@@ -1125,7 +1459,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
@@ -1163,7 +1497,7 @@ if(PostProcess=="d")
 
 if(PostProcess=="ud" || PostProcess=="du")
  writeIt   
- "                 dataname=\"U  d\"  ,                                           \n";
+ "                 dataname=\"U  d\"  ,                                          \n";
 
 
 
@@ -1173,7 +1507,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
 }
 
 if(debug)if(!vectorial)
@@ -1196,8 +1530,8 @@ if(debug)if(vectorial)
  "}                                                                               \n"
  "                                                                                \n"
  <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
- (timelog ? "cout << \" all operations ended, they \";\n" : ""                  )<<
- (timelog ? "timerend  (\"solver\",t1)\n" : " "                              )<<
+ (timelog ? "cout << \" all operations ended, they \";\n" : ""                    )<<
+ (timelog ? "timerend  (\"solver\",t1)\n" : " "                                   )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
@@ -1236,14 +1570,14 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "    //--------------------Assembly for linear---------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""               )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""                  )<<
  "     b = varIncr(0,Vh);                                                         \n"
- <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""               )<<
+ <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                  )<<
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
  "     if(i>0){                                                                   \n"
- <<(timelog ? "       timerbegin(\"NL error checking\",t0)\n" : ""             )<<
+ <<(timelog ? "       timerbegin(\"NL error checking\",t0)\n" : ""                )<<
  "        b = b .* DP                                         ;                   \n"
  "        real errLoc, err                                 ;                      \n"
  "        errLoc = b.l2                                  ;                        \n"
@@ -1253,16 +1587,16 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "        if(mpirank == 0)                                                        \n"
  "        cout << \"    iteration =\" << i << \", NR error =\" << err << endl ;   \n"
- <<(timelog ? "       timerend (\"NL error checking\",t0)\n" : ""              )<<
+ <<(timelog ? "       timerend (\"NL error checking\",t0)\n" : ""                 )<<
  "       if(err <= tol) break;                                                    \n"
  "     }                                                                          \n"
 
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""               )<<
  "     ALoc = varIncr(Vh,Vh);                                                     \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""               )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
@@ -1354,7 +1688,7 @@ if(pipegnu){
  "     ofstream outputFile(\"output.data\", append);                              \n"
  "     outputFile << n*Duimp << \" \" << ForceXGather << endl;                    \n";
 
-if(!supercomp)
+if(plotreaction)
  writeIt
  "     pgnuplot                                                                   \n"
  "      <<\"plot\"                                                                \n"

@@ -48,6 +48,10 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      DZspc     ;     //  Partition of unity                                 \n";
 
 
+  if(reactionforce && reactionforcemethod=="variational-based")
+   writeIt
+   "  Vh  def2(F)    ;    //  Force internal                                     \n";
+
   if(NonLinearMethod=="Newton-Raphson")
    writeIt
    "  Vh  def2(du)   ,    //  Displacement                                       \n"
@@ -83,6 +87,12 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "  Vh  def(u)    ,    // Vectorial variable for [u,phi]                        \n"
   "      def(uold) ,    // Vectorial variable for old [u,phi]                    \n"
   "      def(DPspc);    // Vectorial variables for partition of unity            \n";
+  
+
+
+  if(reactionforce && reactionforcemethod=="variational-based")
+   writeIt
+   "  Vh  def(F)    ;    //  Force internal                                     \n";  
   
   if(ParaViewPostProcess)
    writeIt

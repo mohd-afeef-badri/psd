@@ -79,25 +79,26 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");           \n"
   "  if(mpirank==0)system(\"mkdir -p VTUs\");                                    \n";
 
- if(pipegnu){
+ if(reactionforce){
   writeIt
-  "                                                                              \n"
-  "//============================================================================\n"
-  "// ------- Gnuplot pipeing parameters ------                                  \n"
-  "//============================================================================\n"
   "                                                                              \n"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                      )<<
   "  system(\"rm force.data\");                                                  \n"
   "                                                                              \n";
 
-  if(!supercomp)
+  if(plotreaction)
    writeIt
+   "                                                                             \n"
+   "//===========================================================================\n"
+   "// ------- Gnuplot pipeing parameters ------                                 \n"
+   "//===========================================================================\n"
+   "                                                                             \n"   
    "  pstream pgnuplot(\"gnuplot -p\");                                          \n"
    <<(Sequential ? "" : "  if(mpirank==0)\n"                                     )<<
    "  pgnuplot                                                                   \n"
    "  <<\" set title  \\\"Traction = \"+tr+\"\\\";                        \\n\"  \n"
    "  <<\" set termoption font \\\"Arial-Bold,20\\\";                \\n\"       \n"
-   "  <<\" set xrange [0:.008]; set yrange [0:.9];                \\n\"          \n"
+//   "  <<\" set xrange [0:.008]; set yrange [0:.9];                \\n\"          \n"
    "  <<\" set xlabel \\\" Displacement \\\";                        \\n\"       \n"
    "  <<\" set ylabel \\\" Force (kN)\\\";                        \\n\"          \n"
    "  <<\" set grid x y;    set key left;                        \\n\";          \n";
@@ -230,7 +231,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
   "  system(\"rm energies.data\");                                                \n";
 
- if(!supercomp)
+ if(plotreaction)
   writeIt
   "                                                                               \n"
   "  pstream pgnuplot(\"gnuplot -p\");                                            \n"
@@ -356,7 +357,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
   "  system(\"rm energies.data\");                                                \n";
 
- if(!supercomp)
+ if(plotreaction)
   writeIt
   "                                                                               \n"
   "  pstream pgnuplot(\"gnuplot -p\");                                            \n"
@@ -412,19 +413,20 @@ if(dirichletpointconditions>=1)
 
 
 
-if(pipegnu)if(Prblm=="damage" && Model=="Mazar"){
+if(reactionforce)if(Prblm=="damage" && Model=="Mazar"){
  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- Gnuplot pipeing parameters ------                                    \n"
- "//==============================================================================\n"
  "                                                                                \n"
  <<(Sequential ? "" : "  if(mpirank==0)\n"                                        )<<
  "  system(\"rm output.data\");                                                   \n"
  "                                                                                \n";
 
- if(!supercomp)
+ if(plotreaction)
   writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "// ------- Gnuplot pipeing parameters ------                                   \n"
+  "//=============================================================================\n"
+  "                                                                               \n"  
   "  pstream pgnuplot(\"gnuplot -p\");                                            \n"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
   "  pgnuplot                                                                     \n"

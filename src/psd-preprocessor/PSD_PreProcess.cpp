@@ -51,7 +51,9 @@
   -doublecouple    [string] Soil dynamics double couple. Use force-based|displacement-based.
 
   -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons.
-
+  
+  -reactionforce   [string] Reaction force calculation method stress-based|variational-based.
+  
   -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
@@ -86,7 +88,11 @@
 
   -sequential   [bool]     To generate a sequential ff++ solver.
 
-  -top2vol-meshing [bool]  To activate top-ii-vol point source meshing for soil-dynamics.
+  -top2vol-meshing   [bool] To activate top-ii-vol point source meshing for soil-dynamics.
+
+  -getreactionforce  [bool] To activate routine for extraction reactions at surface.
+  
+  -plotreactionforce [bool] To activate realtime pipe plotting using GnuPlot.          
 
 */
 
@@ -125,6 +131,9 @@ int main(int argc, char *argv[]){
   bool Sequential   = false;
   bool dirichletbc  = false;
   bool energydecomp = false;
+  bool plotreaction = false;  
+  bool reactionforce= false;
+
 
 
   string Model                   = "hybrid-phase-field";
@@ -135,6 +144,7 @@ int main(int argc, char *argv[]){
   string doublecouple            = "unused";
   string Preconditioner          = "jacobi";
   string NonLinearMethod         = "Picard";
+  string reactionforcemethod     = "stress-based";  
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized-alpha";
 
@@ -153,20 +163,22 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"          ) RCM                              = true;
-    if( argvdummy == "-help"            ) help                             = true;
-    if( argvdummy == "-debug"           ) debug                            = true;
-    if( argvdummy == "-useGFP"          ) useGFP                           = true;
-    if( argvdummy == "-pipegnu"         ) pipegnu                          = true;
-    if( argvdummy == "-testflags"       ) testflags                        = true;
-    if( argvdummy == "-timelog"         ) timelog                          = true;
-    if( argvdummy == "-vectorial"       ) vectorial                        = true;
-    if( argvdummy == "-supercomp"       ) supercomp                        = true;
-    if( argvdummy == "-fastmethod"      ) fastmethod                       = true;
-    if( argvdummy == "-sequential"      ) Sequential                       = true;
-    if( argvdummy == "-dirichletbc"     ) dirichletbc                      = true;
-    if( argvdummy == "-energydecomp"    ) energydecomp                     = true;
-    if( argvdummy == "-top2vol-meshing" ) top2vol                          = true;        
+    if( argvdummy == "-useRCM"            ) RCM                            = true;
+    if( argvdummy == "-help"              ) help                           = true;
+    if( argvdummy == "-debug"             ) debug                          = true;
+    if( argvdummy == "-useGFP"            ) useGFP                         = true;
+    if( argvdummy == "-pipegnu"           ) pipegnu                        = true;
+    if( argvdummy == "-testflags"         ) testflags                      = true;
+    if( argvdummy == "-timelog"           ) timelog                        = true;
+    if( argvdummy == "-vectorial"         ) vectorial                      = true;
+    if( argvdummy == "-supercomp"         ) supercomp                      = true;
+    if( argvdummy == "-fastmethod"        ) fastmethod                     = true;
+    if( argvdummy == "-sequential"        ) Sequential                     = true;
+    if( argvdummy == "-dirichletbc"       ) dirichletbc                    = true;
+    if( argvdummy == "-energydecomp"      ) energydecomp                   = true;
+    if( argvdummy == "-top2vol-meshing"   ) top2vol                        = true;
+    if( argvdummy == "-getreactionforce"  ) reactionforce                  = true;
+    if( argvdummy == "-plotreactionforce" ) plotreaction                   = true;           
 
     if( argvdummy == "-model"              ) Model                         = argv[i+1];
     if( argvdummy == "-solver"             ) Solver                        = argv[i+1];
@@ -176,6 +188,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-doublecouple"       ) doublecouple                  = argv[i+1];
     if( argvdummy == "-preconditioner"     ) Preconditioner                = argv[i+1];
     if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod               = argv[i+1];
+    if( argvdummy == "-reactionforce"      ) reactionforcemethod           = argv[i+1];       
     if( argvdummy == "-subpreconditioner"  ) SubPreconditioner             = argv[i+1];
     if( argvdummy == "-timediscretization" ) TimeDiscretization            = argv[i+1];
 
@@ -193,7 +206,14 @@ int main(int argc, char *argv[]){
   int labRface=4;if(spc==3)labRface=2;  
   if(spc==3)labelBodyForce=6;
   
-  bool ParaViewPostProcess = false; 
+  if(plotreaction)
+    pipegnu = true;
+  
+  bool ParaViewPostProcess = false;
+  
+  int Fdofs = spc;
+  if(vectorial)
+      Fdofs = spc+1; 
   
 if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProcess=="d"
    || PostProcess=="uv"  || PostProcess=="vu"  || PostProcess=="au"  || PostProcess=="ua"
@@ -236,6 +256,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " postProcess is----------------------> "<<  PostProcess              << endl;
   cout << " doublecouple is---------------------> "<<  doublecouple             << endl;
   cout << " preconditioner is-------------------> "<<  Preconditioner           << endl;
+  cout << " reactionforce is--------------------> "<<  reactionforcemethod      << endl;  
   cout << " subPreconditioner is----------------> "<<  SubPreconditioner        << endl;
   cout << " timeDiscretization is---------------> "<<  TimeDiscretization       << endl;
 
@@ -247,7 +268,6 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " help is ----------------------------> " << help                     << endl;
   cout << " debug is ---------------------------> " << debug                    << endl;
   cout << " useGFP is --------------------------> " << useGFP                   << endl;
-  cout << " pipegnu is -------------------------> " << pipegnu                  << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
@@ -256,6 +276,8 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
+  cout << " getreactionforce is ----------------> " << reactionforce            << endl;  
+  cout << " plotreactionforce is ---------------> " << pipegnu                  << endl;  
   }
 
 
