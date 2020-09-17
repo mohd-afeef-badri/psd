@@ -220,13 +220,67 @@ check-local:
 	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics  with reaction-force    "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -getreactionforce -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics  with reaction-force (stress-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -getreactionforce -reactionforce stress-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics  with reaction-force (variational-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -getreactionforce -reactionforce variational-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log			
+	@echo ""
+	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture mechanics   vectorial   "
 	@echo "*============================================================*"
 	@echo ""
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -vectorial -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics   vectorial   with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics  with vectorial reaction-force (stress-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -getreactionforce -vectorial -reactionforce stress-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics  with vectorial reaction-force (variational-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2  -getreactionforce -vectorial -reactionforce variational-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log				
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture mechanics      "
@@ -244,7 +298,61 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2  -vectorial -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics  with reaction-force    "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics   vectorial  with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics  with reaction-force (stress-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce stress-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics   vectorial  with reaction-force  (stress-based) "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce stress-based  -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics  with reaction-force (variational-based)   "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce variational-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics   vectorial  with reaction-force  (variational-based) "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce variational-based  -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log					
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D  phase-field fracture mechanics energydecomp "
@@ -283,6 +391,60 @@ check-local:
 	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -getreactionforce -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp  with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp with reaction-force (stress-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -getreactionforce -reactionforce stress-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp  with reaction-force  (stress-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress-based  -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp with reaction-force (variational-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -getreactionforce -reactionforce variational-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp  with reaction-force  (variational-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational-based  -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log					
+	@echo ""
+	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture mechanics energydecomp vectorial"
 	@echo "*============================================================*"
 	@echo ""
@@ -298,7 +460,61 @@ check-local:
 	cd ${prefix}/PSD/Solver &&  \
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -testflags >> PSD-check.log &&  \
 	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
-	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log	
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp vectorial   with reaction-force  (variational-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational-based -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp vectorial   with reaction-force  (variational-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -vectorial -getreactionforce -reactionforce variational-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp vectorial   with reaction-force  (stress-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress-based -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp vectorial   with reaction-force  (stress-based)"
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -vectorial -getreactionforce -reactionforce stress-based -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture mechanics energydecomp vectorial   with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -vectorial -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 3D phase-field fracture mechanics energydecomp vectorial   with reaction-force "
+	@echo "*============================================================*"
+	@echo ""
+	cd ${prefix}/PSD/Solver &&  \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp  -vectorial -getreactionforce -testflags >> PSD-check.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
+	./PSD_Solve -np 2  Main.edp -v 0 -ns -nw  -testflags >> PSD-check.log							
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture mechanics with GFP     "

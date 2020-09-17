@@ -3,6 +3,12 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Unreleased
 ### Added
+- New accurate force calculations via matrix-vector product: new flag `-getreactionforce`.
+- New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
+- New flag `-plotreactionforce` to activate real time pipe plotting using GnuPlot. 
+
+### Removed 
+- Flag `-pipegnu` not supported for damage mechanics (to be further deprecated from elsto/soildynamics)
 
 ## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
 ### Added

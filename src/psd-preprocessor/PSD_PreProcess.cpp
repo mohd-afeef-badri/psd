@@ -48,6 +48,8 @@
 
   -------------------------------------------------------------------------------------
 
+  -timediscretization [string] Time discretization type. Use generalized-alpha|newmark-beta...
+  
   -doublecouple    [string] Soil dynamics double couple. Use force-based|displacement-based.
 
   -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons.

@@ -6,13 +6,15 @@
 ## [ONGOING] Distributed meshing interface for soil dynamics with top-ii-vol
 
 
+## [TODO] Optimize force calculation (matrix-vector type)
 ## [TODO] Druker-Prager law for soil dynamics
 ## [TODO] Couple damage and seismic solver
 ## [TODO] Heterogeneous materials class of problems
 ## [TODO] Parallel interpolation on surface from volume
-## [TODO] Extract point field in MPI
 
 
+## [DONE] Extract point field in MPI
+## [DONE] Force calculation via matrix vector product
 ## [DONE] Fully commented control parameters file
 ## [DONE] Including material properties as macros not real type
 ## [DONE] Quadrature point based stress, strain variables  
