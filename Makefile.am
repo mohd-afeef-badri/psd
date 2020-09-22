@@ -684,6 +684,21 @@ check-local:
 	@echo "*============================================================*"	
 	@echo ""
 
+documentation:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " making documentation :"; pwd
+	@echo "*============================================================*"
+	@echo ""	
+	pandoc Readme.MD -o Readme.pdf
+	pandoc Readme.MD -o Readme.html
+	mv Readme.html man/.
+	mv Readme.pdf  man/.
+	pandoc 	Changelog.MD -o Changelog.pdf
+	pandoc 	Changelog.MD -o Changelog.html
+	mv Changelog.html man/.
+	mv Changelog.pdf  man/.		
+	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
