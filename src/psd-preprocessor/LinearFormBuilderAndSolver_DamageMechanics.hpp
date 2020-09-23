@@ -618,17 +618,34 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "  <<  \"Applied traction \" << tr << \"\\n\" << endl;                           \n"
  "                                                                                \n"
  "  if (tr >= 5e-3)                                                               \n"
- "    dtr = 1e-6;                                                                 \n"
+ "    dtr = 1e-6;                                                                 \n";
+ 
+ if(!vectorial)
+ writeIt
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
  "  b = elast(0,Vh);                                                              \n"
  <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
- "                                                                                \n"
+ "                                                                                \n";
+ 
+ writeIt
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
- "  for(int iter=0; iter<100; iter++){                                            \n"
+ "  for(int iter=0; iter<100; iter++){                                            \n";
+
+ if(vectorial)
+ writeIt 
+ "                                                                                \n"
+ "  //--------------------Assembly for linear----------------------//             \n"
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  b = elast(0,Vh);                                                              \n"
+ <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "                                                                                \n";
+ 
+ writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
@@ -751,7 +768,15 @@ if(energydecomp)
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""               )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
+ <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               )<<
+ "                                                                                \n"
+ "    //-------------Hybrid phase-field condition-----------------//              \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
+ "    for(int i=0; i < HistPlusP1[].n; i++ )                                      \n"
+  "        if(HistPlusP1[][i]<HistMinusP1[][i])uold[][i*"<<spc+1<<"]=0.;          \n"
+ <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
+ "                                                                                \n";
 
 
  writeIt
