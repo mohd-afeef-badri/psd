@@ -45,11 +45,13 @@ if(!Sequential){
  " real[int] DP;                               // Partition of unity             \n";
 
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(!vectorial || constrainHPF)
   writeIt
   "                                                                              \n"
   " int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering\n"
   " real[int] DZ;                               // Partition of unity            \n";
+   
 }
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){

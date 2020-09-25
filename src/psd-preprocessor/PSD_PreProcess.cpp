@@ -90,11 +90,13 @@
 
   -sequential   [bool]     To generate a sequential ff++ solver.
 
+  -constrainHPF     [bool] To use constrain condition in hybrid phase-field model.          
+
   -top2vol-meshing   [bool] To activate top-ii-vol point source meshing for soil-dynamics.
 
   -getreactionforce  [bool] To activate routine for extraction reactions at surface.
   
-  -plotreactionforce [bool] To activate realtime pipe plotting using GnuPlot.          
+  -plotreactionforce [bool] To activate realtime pipe plotting using GnuPlot.
 
 */
 
@@ -135,12 +137,11 @@ int main(int argc, char *argv[]){
   bool energydecomp = false;
   bool plotreaction = false;  
   bool reactionforce= false;
-
-
+  bool constrainHPF = false;  
 
   string Model                   = "hybrid-phase-field";
   string Solver                  = "cg";
-  string PostProcess             = "u";
+  string PostProcess             = "null";
   string Prblm                   = "linear-elasticity";
   string Partitioner             = "parmetis";
   string doublecouple            = "unused";
@@ -180,7 +181,8 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-energydecomp"      ) energydecomp                   = true;
     if( argvdummy == "-top2vol-meshing"   ) top2vol                        = true;
     if( argvdummy == "-getreactionforce"  ) reactionforce                  = true;
-    if( argvdummy == "-plotreactionforce" ) plotreaction                   = true;           
+    if( argvdummy == "-plotreactionforce" ) plotreaction                   = true;
+    if( argvdummy == "-constrainHPF"      ) constrainHPF                   = true;              
 
     if( argvdummy == "-model"              ) Model                         = argv[i+1];
     if( argvdummy == "-solver"             ) Solver                        = argv[i+1];
@@ -246,19 +248,19 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " dirichletconditions are ------------> "<<  dirichletconditions      << endl;
   cout << " bodyforceconditions are ------------> "<<  bodyforceconditions      << endl;  
   cout << " tractionconditions are -------------> "<<  tractionconditions       << endl;
+  cout << " problem dimension is ---------------> "<<  spc                      << endl;  
   cout << " lagrange order is ------------------> "<<  lag                      << endl;
-  cout << " problem dimension is ---------------> "<<  spc                      << endl;
 
   cout << "===================================================================" << endl;
   cout << "                        STRING ARGUMENTS                           " << endl;
   cout << "===================================================================" << endl;
 
-  cout << " partitioner is----------------------> "<<  Partitioner              << endl;
   cout << " solver is---------------------------> "<<  Solver                   << endl;
+  cout << " partitioner is----------------------> "<<  Partitioner              << endl;  
   cout << " postProcess is----------------------> "<<  PostProcess              << endl;
   cout << " doublecouple is---------------------> "<<  doublecouple             << endl;
+  cout << " reactionforce is--------------------> "<<  reactionforcemethod      << endl;    
   cout << " preconditioner is-------------------> "<<  Preconditioner           << endl;
-  cout << " reactionforce is--------------------> "<<  reactionforcemethod      << endl;  
   cout << " subPreconditioner is----------------> "<<  SubPreconditioner        << endl;
   cout << " timeDiscretization is---------------> "<<  TimeDiscretization       << endl;
 
@@ -266,19 +268,20 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << "                        BOOL ARGUMENTS                             " << endl;
   cout << "===================================================================" << endl;
 
-  cout << " useRCM is --------------------------> " << RCM                      << endl;
   cout << " help is ----------------------------> " << help                     << endl;
   cout << " debug is ---------------------------> " << debug                    << endl;
   cout << " useGFP is --------------------------> " << useGFP                   << endl;
-  cout << " testflags is -----------------------> " << testflags                << endl;
+  cout << " useRCM is --------------------------> " << RCM                      << endl;  
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
   cout << " supercomp is -----------------------> " << supercomp                << endl;
+  cout << " testflags is -----------------------> " << testflags                << endl; 
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
-  cout << " getreactionforce is ----------------> " << reactionforce            << endl;  
+  cout << " constrainedHPF is ------------------> " << constrainHPF             << endl;        
+  cout << " getreactionforce is ----------------> " << reactionforce            << endl;
   cout << " plotreactionforce is ---------------> " << pipegnu                  << endl;  
   }
 

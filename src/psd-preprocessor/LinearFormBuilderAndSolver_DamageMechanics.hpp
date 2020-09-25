@@ -34,6 +34,16 @@ if(!Sequential)
  "}                                                                               \n";
 
 
+if(dirichletpointconditions>=1 && !Sequential)
+ writeIt
+ "                                                                                \n"
+ "//---------Preprocessing for point bounday conditions----------//               \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"point Dirichlet preprocessing\",t0)\n" : ""          )<<
+ "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n"
+ <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ 
+ 
 if(Sequential)if(NonLinearMethod=="Picard"){
  writeIt
  "                                                                                \n"
@@ -48,7 +58,18 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "  if (tr >= 5e-3)                                                               \n"
  "    dtr = 1e-6;                                                                 \n"
+ "                                                                                \n";
+ 
+ if(constrainHPF)
+ writeIt
  "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ "   uoldp[]=uold[];                                                              \n"
+ <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "                                                                                \n";  
+ 
+ 
+ writeIt
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                    )<<
@@ -79,8 +100,8 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n"         : ""        )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus)                 \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""        );
+
 
 
  writeIt
@@ -105,15 +126,28 @@ if(energydecomp)
  <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                            )<<
  "                                                                                \n";
 
-if(energydecomp)
+
+if(energydecomp && constrainHPF && vectorial)
  writeIt
- "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""             )<<
- "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
- "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""             )<<
- "                                                                                \n";
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
  writeIt
@@ -368,7 +402,6 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n"         : ""         )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus)                 \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""           );
 
 
@@ -400,15 +433,31 @@ if(energydecomp)
  <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                   )<<
  "                                                                                \n";
 
-if(energydecomp)
+if(energydecomp && constrainHPF && vectorial)
  writeIt
- "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
- "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
- "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
- "                                                                                \n";
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
  writeIt
@@ -640,9 +689,9 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
- "  b = elast(0,Vh);                                                              \n"
- <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "    b = elast(0,Vh);                                                            \n"
+ <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
  "                                                                                \n";
  
  writeIt
@@ -652,7 +701,25 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
  <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ "                                                                                \n";
+
+ if(dirichletpointconditions>=1){
+ writeIt
  "                                                                                \n"
+ "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"point Dirichlet assembly\",t0)\n" : ""             );
+ 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n"; 
+
+ writeIt 
+ (timelog ? "    timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ }
+ 
+ writeIt
+ "                                                                                \n" 
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
@@ -674,7 +741,6 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
@@ -706,15 +772,31 @@ if(energydecomp)
  <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                      )<<
  "                                                                                \n";
 
-if(energydecomp)
+if(energydecomp && constrainHPF && vectorial)
  writeIt
- "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
- "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
-  "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                       \n"
- <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
- "                                                                                \n";
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
  writeIt
@@ -767,16 +849,35 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""               )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               )<<
- "                                                                                \n"
- "    //-------------Hybrid phase-field condition-----------------//              \n"
- "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
- "    for(int i=0; i < HistPlusP1[].n; i++ )                                      \n"
-  "        if(HistPlusP1[][i]<HistMinusP1[][i])uold[][i*"<<spc+1<<"]=0.;          \n"
- <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
  "                                                                                \n";
+ 
+ 
+if(energydecomp && constrainHPF && vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
  writeIt
@@ -1111,7 +1212,27 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
  <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
  <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ "                                                                                \n";
+ 
+ 
+ if(dirichletpointconditions>=1){
+ writeIt
  "                                                                                \n"
+ "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
+ "                                                                                \n";
+ 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
+
+ writeIt
+ "                                                                                \n" 
+ <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
+ }
+ 
+ writeIt
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
@@ -1140,7 +1261,6 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
 
 
@@ -1148,28 +1268,28 @@ if(energydecomp)
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
+ <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""             )<<
  "    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);                                     \n"
- <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
+ <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "    //----------------Assembly for linear------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""                )<<
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""                )<<
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""              )<<
  "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""              )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                         )<<
  "    dphi[] = A1^-1*b1;                                                          \n"
- <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                      )<<
+ <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                         )<<
  "                                                                                \n"
  "    //--------------Update of phase-field phi-------------------//              \n"
  "                                                                                \n"
@@ -1178,15 +1298,31 @@ if(energydecomp)
  <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                  )<<
  "                                                                                \n";
 
-if(energydecomp)
+if(energydecomp && constrainHPF && vectorial)
  writeIt
- "    //-------------Hybrid phase-field condition-----------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Phase-field condition\",t0)\n" : ""            )<<
- "    for(int i=0; i < Vh1.ndof; i++ )                                            \n"
- "        if(HistPlusP1[][i]<HistMinusP1[][i])phi[][i]=0.;                        \n"
- <<(timelog ? "    timerend  (\"Phase-field condition\",t0)\n" : ""            )<<
- "                                                                                \n";
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 /******************************  Old Method **********************************************
 
@@ -1259,8 +1395,33 @@ if(energydecomp)
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""                )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
+ 
+if(energydecomp && constrainHPF && vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+
+if(energydecomp && constrainHPF && !vectorial)
+ writeIt
+ "                                                                                \n"
+ "    //---------------Hybrid phase field constrain-------------------//          \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : ""); 
 
 
  writeIt
@@ -1625,20 +1786,20 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""                )<<
  "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "     set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");                     \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""                )<<
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                        )<<
+ <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                           )<<
  "     du[] = A^-1*b;                                                             \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                        )<<
+ <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                           )<<
  "                                                                                \n"
  "    //-------------Intermediate solution update-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                  )<<
+ <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                     )<<
  "     u[]   += du[]  ;                                                           \n"
  "                                                                                \n"
  "    //----------Damage field calulation using Mazrs model---------//            \n";
@@ -1703,7 +1864,7 @@ if(pipegnu){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                  )<<
+ <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "   real ForceXloc , ForceXGather ;                                              \n"
  "   ForceXloc = intN1(Th,4,qforder=2)                                            \n"
  "                          (DPspc*(1-damage)*stress(u,lambdafield,mufield)[0]);  \n"
@@ -1725,7 +1886,7 @@ if(plotreaction)
 
  writeIt
  "   }                                                                            \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                    );
+ <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
@@ -1735,7 +1896,7 @@ if(plotreaction)
  "                                                                                \n"
  <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
  (timelog ? "cout << \" all operations ended, they \";\n" : " "                   )<<
- (timelog ? "timerend  (\"solver\",t1)\n" : " "                                )<<
+ (timelog ? "timerend  (\"solver\",t1)\n" : " "                                   )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 }

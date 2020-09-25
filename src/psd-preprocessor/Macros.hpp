@@ -54,7 +54,8 @@ if(spc==2)
  "  macro Ux u  //                                                                \n"
  "  macro Uy u1 //                                                                \n";   
     
- if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && !constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                       \n"
  "             P"<<lag<<" ,                                                       \n"
@@ -67,7 +68,15 @@ if(spc==2)
  "  macro init(i) [ i ,                                                           \n"
  "                  i ,                                                           \n"
  "                  i ] //                                                        \n"
- "                                                                                \n";   
+ "                                                                                \n"; 
+ 
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && constrainHPF) 
+ writeIt
+ "  macro Pk [ P"<<lag<<" ,                                                       \n"
+ "             P"<<lag<<" ,                                                       \n"
+ "             P"<<lag<<" ] //                                                    \n"
+ "                                                                                \n";    
 
  if(ParaViewPostProcess)
  writeIt
@@ -211,7 +220,9 @@ if(spc==2)
   "                                                                               \n";
   }   //-- [if loop terminator] !vectorial ended --//
 
- if(!vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+
+ if(Prblm=="damage" && Model=="hybrid-phase-field") 
+ if(vectorial && constrainHPF)  
  writeIt
  "                                                                              \n"
  "//---------------------------Non-linear macros---------------------------//   \n"
@@ -221,7 +232,19 @@ if(spc==2)
  "  macro def   (i)     i                               // Scalar field         \n"
  "  macro init  (i)     i                               // Initialize           \n"
  "  macro Zk            P1                              // FE space             \n";
-
+ 
+ if(Prblm=="damage" && Model=="hybrid-phase-field") 
+ if(!vectorial)  
+ writeIt
+ "                                                                              \n"
+ "//---------------------------Non-linear macros---------------------------//   \n"
+ "                                                                              \n"
+ "  macro def2  (i) [ i , i#1 ]                         // Vect. field          \n"
+ "  macro init2 (i) [ i ,  i  ]                         // Vect. initialize     \n"
+ "  macro def   (i)     i                               // Scalar field         \n"
+ "  macro init  (i)     i                               // Initialize           \n"
+ "  macro Zk            P1                              // FE space             \n";   
+ 
  writeIt
  "                                                                               \n" 
  "//=============================================================================\n"
@@ -305,19 +328,39 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n";
 /************************OLD METHOD*************************************************/
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  writeIt
  "                                                                              \n"
  "//------------------------------Hplus macros-------------------------------// \n"
  "                                                                              \n"
  "  macro DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus){          \n"
- "    real[int] par = [lambda,mu];                                              \n"
-<<(vectorial  ? "    Sh0 [Eps1,Eps2,Eps12] = [dx(uold),dy(uold1),0.5*(dx(uold1)+dy(uold))]; \n": "")
-<<(!vectorial ? "    Sh0 [Eps1,Eps2,Eps12] = [dx(u),dy(u1),0.5*(dx(u1)+dy(u))];\n": "")
-<<"                                                                             \n"
+ "    real[int] par = [lambda,mu];                                              \n";
+ 
+ if(vectorial && !constrainHPF)
+ writeIt
+ "                                                                              \n" 
+ "    Sh0 [Eps1,Eps2,Eps12] = [dx(uold),dy(uold1),0.5*(dx(uold1)+dy(uold))];    \n";
+ 
+ if(vectorial && constrainHPF)
+ writeIt
+ "                                                                              \n" 
+ "    Sh0 [Eps1,Eps2,Eps12] = [dx(up),dy(up1),0.5*(dx(up1)+dy(up))];            \n"; 
+ 
+ if(!vectorial && !constrainHPF)
+ writeIt
+ "                                                                              \n" 
+ "    Sh0 [Eps1,Eps2,Eps12] = [dx(u),dy(u1),0.5*(dx(u1)+dy(u))];                \n";
+ 
+ if(!vectorial && constrainHPF)
+ writeIt
+ "                                                                              \n" 
+ "    Sh0 [Eps1,Eps2,Eps12] = [dx(up),dy(up1),0.5*(dx(up1)+dy(up))];            \n"; 
+ 
+ writeIt
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ; \n"
  "  }//                                                                         \n"
  "                                                                              \n";
+ }
 
  if(Prblm=="damage" && Model=="Mazar")
  writeIt
@@ -469,7 +512,8 @@ if(spc==3){
  "  macro Uy    u1 //                                                            \n"
  "  macro Uz    u2 //                                                            \n";
 
- if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && !constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                      \n"
  "             P"<<lag<<" ,                                                      \n"
@@ -487,6 +531,16 @@ if(spc==3){
  "                  i ] //                                                       \n"
  "                                                                               \n";  
 
+
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && constrainHPF) 
+ writeIt
+ "  macro Pk [ P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ,                                                      \n"
+ "             P"<<lag<<" ] //                                                   \n"
+ "                                                                               \n";  
+ 
  if(ParaViewPostProcess)
  writeIt
  "  macro PlotVec(i) [ i   ,                                                      \n"
@@ -597,6 +651,18 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
   "  macro init  (i)     i                                 // Initialize         \n"
   "  macro Zk            P1                                // FE space           \n";
 
+if(Prblm=="damage" && Model=="hybrid-phase-field")  
+if(vectorial && constrainHPF)
+  writeIt
+  "                                                                              \n"
+  "//---------------------------Non-linear macros---------------------------//   \n"
+  "                                                                              \n"
+  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]        // Vect. field definition   \n"
+  "  macro init2 (i)  [   i  ,   i  ,   i   ]        // Vect. field initialize   \n"
+  "  macro def   (i)     i                                 // Scalar field       \n"
+  "  macro init  (i)     i                                 // Initialize         \n"
+  "  macro Zk            P1                                // FE space           \n";   
+
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
   writeIt
@@ -670,7 +736,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  "    Sh0 [Eps1,Eps2,Eps3,Eps12,Eps13,Eps23] =                                   \n"
  "                                                                               \n";  
  
- if(!vectorial)
+ if(!vectorial && !constrainHPF)
  writeIt
  "                               [ dx(u) ,                                       \n"
  "                                 dy(u1),                                       \n"
@@ -678,7 +744,17 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  "                                 0.5*(dx(u1)+dy(u)),                           \n"
  "                                 0.5*(dx(u2)+dz(u)),                           \n"
  "                                 0.5*(dy(u2)+dz(u1)) ];                        \n";
- if(vectorial)
+ 
+ if(!vectorial && constrainHPF)
+ writeIt
+ "                               [ dx(up) ,                                      \n"
+ "                                 dy(up1),                                      \n"
+ "                                 dz(up2),                                      \n"
+ "                                 0.5*(dx(up1)+dy(up)),                         \n"
+ "                                 0.5*(dx(up2)+dz(up)),                         \n"
+ "                                 0.5*(dy(up2)+dz(up1)) ];                      \n";
+  
+ if(vectorial && !constrainHPF)
  writeIt 
  "                              [ dx(uold) ,                                     \n"
  "                                dy(uold1),                                     \n"
@@ -686,6 +762,15 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  "                                0.5*(dx(uold1)+dy(uold)),                      \n"
  "                                0.5*(dx(uold2)+dz(uold)),                      \n"
  "                                0.5*(dy(uold2)+dz(uold1)) ];                   \n";
+ 
+ if(vectorial && constrainHPF)
+ writeIt
+ "                               [ dx(up) ,                                      \n"
+ "                                 dy(up1),                                      \n"
+ "                                 dz(up2),                                      \n"
+ "                                 0.5*(dx(up1)+dy(up)),                         \n"
+ "                                 0.5*(dx(up2)+dz(up)),                         \n"
+ "                                 0.5*(dy(up2)+dz(up1)) ];                      \n"; 
  
  writeIt 
  "                                                                               \n"
@@ -883,26 +968,26 @@ if(dirichletpointconditions>=1)
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                               \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*2,PCi["<<i<<"]*2)=tgv;                                \n"
- "          b[PCi["<<i<<"]*2]= Pbc"<<i<<"Ux*tgv;}                                \n"        
+ "          A(PCi["<<i<<"]*"<<Fdofs<<",PCi["<<i<<"]*"<<Fdofs<<")=tgv;            \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"]= Pbc"<<i<<"Ux*tgv;}                      \n"        
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n" 
  "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                               \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*2+1 , PCi["<<i<<"]*2+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*2+1]= Pbc"<<i<<"Uy*tgv;}                              \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1 , PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1]= Pbc"<<i<<"Uy*tgv;}                    \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n" 
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                                \n"  
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*2  ,PCi["<<i<<"]*2  )=tgv;                            \n"
- "          b[PCi["<<i<<"]*2  ] = Pbc"<<i<<"Ux*tgv;                              \n"  
- "          A(PCi["<<i<<"]*2+1,PCi["<<i<<"]*2+1)=tgv;                            \n"
- "          b[PCi["<<i<<"]*2+1] = Pbc"<<i<<"Uy*tgv; }                            \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"  ,PCi["<<i<<"]*"<<Fdofs<<"  )=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"  ] = Pbc"<<i<<"Ux*tgv;                    \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1,PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1] = Pbc"<<i<<"Uy*tgv; }                  \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO                                                      \n"  
  "                                                                               \n"; 
@@ -934,66 +1019,66 @@ if(dirichletpointconditions>=1)
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;}                                \n"        
+ "          A(PCi["<<i<<"]*"<<Fdofs<<",PCi["<<i<<"]*"<<Fdofs<<")=tgv;            \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"]= Pbc"<<i<<"Ux*tgv;}                      \n"        
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
  "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;}                              \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1 , PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1]= Pbc"<<i<<"Uy*tgv;}                    \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n"
  "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)        \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+2 , PCi["<<i<<"]*"<<Fdofs<<"+2)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+2]= Pbc"<<i<<"Uz*tgv;}                    \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(!Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;                                 \n"
- "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;}                              \n"           
+ "          A(PCi["<<i<<"]*"<<Fdofs<<",PCi["<<i<<"]*"<<Fdofs<<")=tgv;            \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"]= Pbc"<<i<<"Ux*tgv;                       \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1 , PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1]= Pbc"<<i<<"Uy*tgv;}                    \n"           
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n" 
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3,PCi["<<i<<"]*3)=tgv;                                \n"
- "          b[PCi["<<i<<"]*3]= Pbc"<<i<<"Ux*tgv;                                 \n"
- "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"         
+ "          A(PCi["<<i<<"]*"<<Fdofs<<",PCi["<<i<<"]*"<<Fdofs<<")=tgv;            \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"]= Pbc"<<i<<"Ux*tgv;                       \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+2 , PCi["<<i<<"]*"<<Fdofs<<"+2)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+2]= Pbc"<<i<<"Uz*tgv;}                    \n"         
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"
  "                                                                               \n" 
  "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)         \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3+1 , PCi["<<i<<"]*3+1)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+1]= Pbc"<<i<<"Uy*tgv;                               \n" 
- "          A(PCi["<<i<<"]*3+2 , PCi["<<i<<"]*3+2)=tgv;                          \n"
- "          b[PCi["<<i<<"]*3+2]= Pbc"<<i<<"Uz*tgv;}                              \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1 , PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1]= Pbc"<<i<<"Uy*tgv;                     \n" 
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+2 , PCi["<<i<<"]*"<<Fdofs<<"+2)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+2]= Pbc"<<i<<"Uz*tgv;}                    \n"  
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"    
  "                                                                               \n" 
  "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy) IFMACRO(Pbc"<<i<<"Uz)          \n"
  "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"  
  "         if(mpirank==mpirankPCi["<<i<<"]){                                     \n"  
- "          A(PCi["<<i<<"]*3  ,PCi["<<i<<"]*3  )=tgv;                            \n"
- "          b[PCi["<<i<<"]*3  ] = Pbc"<<i<<"Ux*tgv;                              \n"  
- "          A(PCi["<<i<<"]*3+1,PCi["<<i<<"]*3+1)=tgv;                            \n"
- "          b[PCi["<<i<<"]*3+1] = Pbc"<<i<<"Uy*tgv;                              \n" 
- "          A(PCi["<<i<<"]*3+2,PCi["<<i<<"]*3+2)=tgv;                            \n"
- "          b[PCi["<<i<<"]*3+2] = Pbc"<<i<<"Uz*tgv; }                            \n"   
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"  ,PCi["<<i<<"]*"<<Fdofs<<"  )=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"  ] = Pbc"<<i<<"Ux*tgv;                    \n"  
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1,PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1] = Pbc"<<i<<"Uy*tgv;                    \n" 
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+2,PCi["<<i<<"]*"<<Fdofs<<"+2)=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+2] = Pbc"<<i<<"Uz*tgv; }                  \n"   
  "      EndMacro                                                                 \n"  
  "    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          \n"  
  "                                                                               \n";  

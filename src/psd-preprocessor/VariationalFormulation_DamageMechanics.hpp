@@ -275,16 +275,25 @@ if(spc==3)
 }  //-- [if loop terminator] hybrid-phase-field Newton-Raphsons non-vectorial ended --//
 
 
-if(Model=="hybrid-phase-field")
-if(vectorial){
+if(Model=="hybrid-phase-field" && vectorial){
  writeIt
  "                                                                                                \n"
  "//==============================================================================                \n"
  "// -------Variation formulation hybrid phase-field (Vectorial)-------                           \n"
  "//==============================================================================                \n"
- "                                                                                                \n"
+ "                                                                                                \n";
+
+ if(!constrainHPF) 
+ writeIt 
  "varf elast(def(u),def(v)) =                                                                     \n"
- "                                                                                                \n"
+ "                                                                                                \n";
+
+ if(constrainHPF) 
+ writeIt 
+ "varf elast(def2(u),def2(v)) =                                                                   \n"
+ "                                                                                                \n";
+ 
+ writeIt 
  "    //--------------------------------------------------------------------------                \n"
  "    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
  "    //--------------------------------------------------------------------------                \n"
@@ -299,6 +308,7 @@ if(vectorial){
  "    // $+int_{\\Omega}(G_cl_0(\\nabl{\\phi}.\\nabla{q})+(G_c/l_0+2H^{+})\\phi q)$               \n"
  "    //--------------------------------------------------------------------------                \n"
  "         (Gc*lo*(grad(u"<<spc<<")'*grad(v"<<spc<<"))) +                                         \n";
+
 
 if(!energydecomp)
  writeIt
@@ -439,9 +449,19 @@ if(reactionforce && vectorial)
  "//==============================================================================                \n"
  "// -------Variation formulation for calculating force -------                                   \n"
  "//==============================================================================                \n"
- "                                                                                                \n"
+ "                                                                                                \n";
+
+ if(!constrainHPF)  
+ writeIt
  "varf varfForce(def(u),def(v)) =                                                                 \n"
- "                                                                                                \n"
+ "                                                                                                \n";
+
+ if(constrainHPF)  
+ writeIt
+ "varf varfForce(def2(u),def2(v)) =                                                               \n"
+ "                                                                                                \n";
+  
+ writeIt
  "    //--------------------------------------------------------------------------                \n"
  "    // $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                               \n"
  "    //--------------------------------------------------------------------------                \n"

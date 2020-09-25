@@ -47,7 +47,6 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      phiold    ,     //  Previous iteration phase field                     \n"
    "      DZspc     ;     //  Partition of unity                                 \n";
 
-
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
    "  Vh  def2(F)    ;    //  Force internal                                     \n";
@@ -63,7 +62,11 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      phi       ,     //  Previous iteration phase field                     \n"
    "      DZspc     ;     //  Partition of unity                                 \n";
 
-
+   if(constrainHPF)
+   writeIt
+   "                                                                             \n"   
+   "  Vh  def2(up)    ;    //  Previous state                                    \n";
+   
   if(energydecomp)
    writeIt
    "                                                                             \n"
@@ -77,7 +80,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      PsiMinus  ;    // Compressive nergy                                    \n";
  }
 
- if(vectorial){
+ if(vectorial && !constrainHPF){
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -87,11 +90,10 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "  Vh  def(u)    ,    // Vectorial variable for [u,phi]                        \n"
   "      def(uold) ,    // Vectorial variable for old [u,phi]                    \n"
   "      def(DPspc);    // Vectorial variables for partition of unity            \n";
-  
-
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
+   "                                                                            \n"   
    "  Vh  def(F)    ;    //  Force internal                                     \n";  
   
   if(ParaViewPostProcess)
@@ -111,6 +113,42 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      PsiPlus   ,    // Tensile energy                                       \n"
    "      PsiMinus  ;    // Compressive nergy                                    \n";
  }
+ 
+ if(vectorial && constrainHPF){
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Finite element variables -------                                   \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  Vh  def2(u)    ,    // Vectorial variable for [u,phi]                       \n"
+  "      def2(uold) ,    // Vectorial variable for old [u,phi]                   \n"
+  "      def2(DPspc);    // Vectorial variables for partition of unity           \n"
+  "                                                                              \n"   
+  "  Vh  def2(up)    ;    //  Previous state                                     \n";  
+
+  if(reactionforce && reactionforcemethod=="variational-based")
+   writeIt
+   "                                                                            \n"   
+   "  Vh  def2(F)    ;    //  Force internal                                    \n";  
+  
+  if(ParaViewPostProcess)
+   writeIt
+   "                                                                             \n"
+   "  Vh1  phi      ;    // Scalar P1 visulization field phi                     \n";   
+
+  if(energydecomp)
+   writeIt
+   "                                                                             \n"
+   "  Vh1 HistPlusP1   ,    //  History tesile energy P1 field                   \n"
+   "      HistMinusP1  ;    //  History compressive energy P1 fiels              \n"
+   "                                                                             \n"
+   "                                                                             \n"
+   "  Wh0 HistPlus  ,    // Tensile history                                      \n"
+   "      HistMinus ,    // Compressive energy history                           \n"
+   "      PsiPlus   ,    // Tensile energy                                       \n"
+   "      PsiMinus  ;    // Compressive nergy                                    \n";
+ } 
 }
 
 if(Prblm=="elastodynamics"  || Prblm=="soildynamics"){
@@ -173,14 +211,19 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "// -------  Fem matrices and vectors -------                                 \n"
    "//===========================================================================\n"
    "                                                                             \n"
-   <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""        )<<
+   <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""           )<<
    "  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ;                        \n";
+
+   if(vectorial && constrainHPF)
+    writeIt
+    "                                                                            \n"
+    "  Mat A1( DZ.n,  restrictionIntersectionZ, DZ);                             \n";
 
    if(!vectorial)
     writeIt
     "                                                                            \n"
     "  Mat A1( Vh1.ndof,  restrictionIntersectionZ, DZ);                         \n"
-    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
+    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
     "                                                                            \n"
     "  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear  \n"
     "  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear    \n";
@@ -188,7 +231,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    if(vectorial)
     writeIt
     "                                                                            \n"
-    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "        )<<
+    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
     "  matrix     ALoc           ;      // Local vectorial matrix for bilinear   \n"
     "  real[int]  b(Vh.ndof)     ;      // Local vectorial real vector for linear\n";
 

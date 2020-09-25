@@ -1,5 +1,5 @@
-LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo soil-dc.geo
-MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh  quasistatic.msh  soil.msh soil-dc.msh 
+LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo soil-dc.geo  L-shaped-crack.geo  city.geo
+MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh  quasistatic.msh  soil.msh soil-dc.msh  L-shaped-crack.msh  city.msh 
 	
 all-local: $(MESH_FILES) 
 	@echo ""
@@ -23,7 +23,15 @@ bar-dynamic.msh: bar-dynamic.geo
 	
 Notched-Plate.msh: Notched-Plate.geo
 	$(GMSH) -2 Notched-Plate.geo -o Notched-Plate.msh -format msh2 -v 0
-	@echo ""		
+	@echo ""
+	
+city.msh: city.geo
+	$(GMSH) -2 city.geo -o city.msh -format msh2 -v 0
+	@echo ""	
+	
+L-shaped-crack.msh: L-shaped-crack.geo
+	$(GMSH) -2 L-shaped-crack.geo -o L-shaped-crack.msh -format msh2 -v 0
+	@echo ""				
 
 tensile-crack.msh: tensile-crack.geo
 	$(GMSH) -2 tensile-crack.geo -o tensile-crack.msh -format msh2 -v 0
@@ -58,7 +66,9 @@ install-exec-local:
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} cp {} ../Meshes/.	
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^sparsity.msh" | xargs -I {} cp {} ../Meshes/.
-	@ls | egrep "^Notched-Plate.msh" | xargs -I {} cp {} ../Meshes/.		
+	@ls | egrep "^Notched-Plate.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^L-shaped-crack.msh" | xargs -I {} cp {} ../Meshes/.			
+	@ls | egrep "^city.msh" | xargs -I {} cp {} ../Meshes/.
 	
 install-devel-local:
 	@mkdir -p ../Meshes
@@ -70,6 +80,8 @@ install-devel-local:
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^sparsity.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^Notched-Plate.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^L-shaped-crack.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^city.msh" | xargs -I {} cp {} ../Meshes/.					
 	
 clean-local:
 	@echo ""

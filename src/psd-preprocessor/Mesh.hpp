@@ -84,7 +84,7 @@ if(!Sequential){
   " fespace Q3vh   ( Th , Sk );            // Quadrature 3  vector FE space       \n"
   " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)if(debug || ParaViewPostProcess)
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)
   writeIt
   " fespace Vh1  ( Th , P1 );            // Damage field    FE space              \n";
 
@@ -134,7 +134,8 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(!vectorial) 
   writeIt
   "                                                                                \n"
   "  fespace Ph(Th, P0);                                                           \n"
@@ -172,7 +173,47 @@ if(!Sequential){
   "           init2                // Scalar initilization                         \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && constrainHPF) 
+  writeIt
+  "                                                                                \n"
+  "  fespace Ph(Th, P0);                                                           \n"
+  "           Ph part;                                                             \n"
+  "                                                                                \n"
+  "                                                                                \n"
+  "  if(mpirank == 0)                                                              \n"
+  "    partitionerSeq(part[], Th, mpisize);                                        \n"
+  "                                                                                \n"
+  "  partitionerPar(part[], Th, mpiCommWorld, mpisize);                            \n"
+  "                                                                                \n"
+  "  PETScMPIBuildWithPartitioning(                                                \n"
+  "           Th                , // Local  mesh                                   \n"
+  "           part[]            , // Partitions                                    \n"
+  "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+  "           restrictionIntersectionZ    , // Restriction matrix                  \n"
+  "           DZ                , // Partition of unity                            \n"
+  "           Zk                , // Vectorial FE space                            \n"
+  "           mpiCommWorld              // MPI world                               \n"
+  "          )                                                                     \n"
+  "                                                                                \n"
+  "  Th = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded             \n"
+  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
+  "                                                                                \n"
+  "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
+  "           Th                , // Local  mesh                                   \n"
+  "           part[]            , // Partitions                                    \n"
+  "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+  "           restrictionIntersectionP    , // Restriction matrix                  \n"
+  "           DP                , // Partition of unity                            \n"
+  "           Pk                , // Vectorial FE space                            \n"
+  "           mpiCommWorld            , // MPI world                               \n"
+  "           Pk                , // Vectorial FE space                            \n"
+  "           def2                , // Scalar definition                           \n"
+  "           init2                // Scalar initilization                         \n"
+  "          )                                                                     \n";
+
+ if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && !constrainHPF)  
   writeIt
   "                                                                                \n"
   "  PETScMPIBuild(                                                                \n"
