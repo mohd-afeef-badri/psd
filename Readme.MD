@@ -126,7 +126,6 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
 | `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
-| `-timepvd`     | `[bool]`  | To activate time pvd plotting for ParaView                   |
 | `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
 | `-timelog`     | `[bool]`  | To activate time logging the different phases of the solver. |
 | `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm. support .        |
@@ -135,7 +134,12 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-sequential`  | `[bool]`  | To solve via a sequential solver.        |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
 | `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
+| `-constrainHPF`| `[bool]`  | To use constrain condition in hybrid phase-field model.      |
+| `-top2vol-meshing`| `[bool]`  | To activate top-ii-vol point source meshing for soil-dynamics.      |
+| `-getreactionforce`| `[bool]`  | To activate routine for extraction reactions at surface.      |
+| `-plotreactionforce`| `[bool]`  | To activate realtime pipe plotting using GnuPlot.      |
 |  		 | 	     |                     					    |
+| `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.   |
 | `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |
 | `-bodyforceconditions` | `[int]`   | Number of regions acted upon by bodyforce.   |
 | `-tractionconditions`| `[int]`   | Number of Neumann/traction bounders. |
@@ -143,10 +147,14 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. |
 | `-dimension`   	| `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |  		 | 	     |                     					    |
+| `-timediscretization` | `[sting]` | Time discretization type. Use "generalized-alpha" or "newmark-beta" or "hht-alpha" or "central-difference" |
 | `-nonlinearmethod` | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons". |
+| `-reactionforce` | `[sting]` | Reaction force calculation method "stress-based" or "variational-based". |
+| `-doublecouple` | `[sting]` | Soil dynamics double couple. Use "force-based" or "displacement-based". |
 | `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", "uv" , "ud", "ua", "d", "ud", or  "uav". |
-| `-problem` | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
 | `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
+| `-problem` | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
+| `-model` | `[sting]` | Interested model. Use "hybrid-phase-field" or "Mazar". |
 
 
 

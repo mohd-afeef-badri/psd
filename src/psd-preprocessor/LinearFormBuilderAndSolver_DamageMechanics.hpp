@@ -64,7 +64,7 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  writeIt
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
- "   uoldp[]=uold[];                                                              \n"
+ "   up[]=uold[];                                                              \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "                                                                                \n";  
  
@@ -133,7 +133,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -144,7 +144,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -364,7 +364,18 @@ if(Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "       <<  \"Applied traction \" << TractionTotal << \"\\n\" << endl;           \n"
  "                                                                                \n"
  "  if (TractionTotal >= 5e-3){                                                   \n"
- "    tr = 1e-6; dtr = 1e-6;}                                                     \n"
+ "    tr = 1e-6; dtr = 1e-6;}                                                     \n";
+ 
+  
+ if(constrainHPF)
+ writeIt
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ "   up[]=uold[];                                                              \n"
+ <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "                                                                                \n"; 
+ 
+ writeIt
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
  "  for(int iter=0; iter<100; iter++){                                            \n"
@@ -439,9 +450,9 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -452,9 +463,9 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -669,6 +680,14 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "  if (tr >= 5e-3)                                                               \n"
  "    dtr = 1e-6;                                                                 \n";
  
+ if(constrainHPF)
+ writeIt
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ "   up[]=uold[];                                                              \n"
+ <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "                                                                                \n"; 
+ 
  if(!vectorial)
  writeIt
  "                                                                                \n"
@@ -778,9 +797,9 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -791,9 +810,9 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -859,9 +878,9 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -872,9 +891,9 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -1196,6 +1215,17 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "                                                                                \n"
  "  if (TractionTotal >= 5e-3){                                                   \n"
  "    tr = 1e-6; dtr = 1e-6;}                                                     \n"
+ "                                                                                \n";
+ 
+ if(constrainHPF)
+ writeIt
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ "   up[]=uold[];                                                              \n"
+ <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "                                                                                \n"; 
+ 
+ writeIt
  "                                                                                \n"
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
@@ -1304,9 +1334,9 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -1317,9 +1347,9 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -1403,9 +1433,9 @@ if(energydecomp && constrainHPF && vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])uold[][i*"<<Fdofs<<"+"<<spc<<"]=0.;     \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
@@ -1416,9 +1446,9 @@ if(energydecomp && constrainHPF && !vectorial)
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
- "    HistPlusP1=HistPlus; HistMinusP1=HistMinus;                                 \n"
- "    exchange(AZ,PsiPlusP1[],scaled=true);                                       \n"
- "    exchange(AZ,PsiMinusP1[],scaled=true);                                      \n"
+ "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
+ "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
+ "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phi[][i]=0.;                            \n"    
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : ""); 

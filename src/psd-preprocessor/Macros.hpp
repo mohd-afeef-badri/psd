@@ -227,8 +227,8 @@ if(spc==2)
  "                                                                              \n"
  "//---------------------------Non-linear macros---------------------------//   \n"
  "                                                                              \n"
- "  macro def2  (i) [ i , i#1 ]                         // Vect. field          \n"
- "  macro init2 (i) [ i ,  i  ]                         // Vect. initialize     \n"
+ "  macro def2  (i) [ i , i#1 , i#2 ]                   // Vect. field          \n"
+ "  macro init2 (i) [ i ,  i  , i   ]                   // Vect. initialize     \n"
  "  macro def   (i)     i                               // Scalar field         \n"
  "  macro init  (i)     i                               // Initialize           \n"
  "  macro Zk            P1                              // FE space             \n";

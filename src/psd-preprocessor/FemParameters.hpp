@@ -70,8 +70,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 HistPlusP1   ,    //  History tesile energy P1 field                   \n"
-   "      HistMinusP1  ;    //  History compressive energy P1 fiels              \n"
+   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
+   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
    "                                                                             \n"
    "                                                                             \n"
    "  Wh0 HistPlus  ,    // Tensile history                                      \n"
@@ -104,8 +104,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 HistPlusP1   ,    //  History tesile energy P1 field                   \n"
-   "      HistMinusP1  ;    //  History compressive energy P1 fiels              \n"
+   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
+   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
    "                                                                             \n"
    "                                                                             \n"
    "  Wh0 HistPlus  ,    // Tensile history                                      \n"
@@ -140,8 +140,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 HistPlusP1   ,    //  History tesile energy P1 field                   \n"
-   "      HistMinusP1  ;    //  History compressive energy P1 fiels              \n"
+   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
+   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
    "                                                                             \n"
    "                                                                             \n"
    "  Wh0 HistPlus  ,    // Tensile history                                      \n"
