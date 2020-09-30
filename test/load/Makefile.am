@@ -18,40 +18,40 @@ check-local: gofastplugins.edp
 	@echo " Checking gofastplugins plugin                                "
 	@echo "*============================================================*"
 	@echo ""
-	$(FF) gofastplugins.edp > PSD-check.log
-	$(FF) gofastplugins_GFPeigenAlone.edp  >> PSD-check.log
-	$(FF) gofastplugins_GFPeigen.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve gofastplugins.edp > PSD-check.log
+	./../../src/psd-solve/PSD_Solve gofastplugins_GFPeigenAlone.edp  >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve gofastplugins_GFPeigen.edp >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking iovtk  plugin                                       "
 	@echo "*============================================================*"
 	@echo ""	 
-	$(FF) iovtk.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve iovtk.edp >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking MatrixPlotter  plugin                               "
 	@echo "*============================================================*"
 	@echo ""		 
-	$(FF) MatrixPlotter.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve MatrixPlotter.edp >> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking top-ii-vol  plugin                                  "
 	@echo "*============================================================*"
 	@echo ""	
-	$(FF) top-ii-vol.edp >> PSD-check.log
-	$(FFMPI) -np 2 top-ii-vol.edp  >> PSD-check.log	
-	$(FFMPI) -np 2 top-ii-vol_partitioningAndMeshingAndReconstruction.edp  >> PSD-check.log
-	$(FFMPI) -np 2 top-ii-vol_partitioningAndMeshing.edp >> PSD-check.log
-	$(FFMPI) -np 2 top-ii-vol_partitioning.edp	>> PSD-check.log
+	./../../src/psd-solve/PSD_Solve top-ii-vol.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol.edp  >> PSD-check.log	
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshingAndReconstruction.edp  >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshing.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioning.edp	>> PSD-check.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking soil-laws  plugin                                  "
 	@echo "*============================================================*"
 	@echo ""		 
-	$(FF) soil-laws.edp >> PSD-check.log
-	$(FF) soil-laws_hujeux.edp  >> PSD-check.log		 	
-	$(FFMPI) -np 2 soil-laws.edp >> PSD-check.log
-	$(FFMPI) -np 2 soil-laws_hujeux.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve soil-laws.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve soil-laws_hujeux.edp  >> PSD-check.log		 	
+	./../../src/psd-solve/PSD_Solve -np 2 soil-laws.edp >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 soil-laws_hujeux.edp >> PSD-check.log
 	
 hujeux: soil-laws_hujeux.edp 	soil-laws.edp
 	@echo ""
@@ -59,7 +59,7 @@ hujeux: soil-laws_hujeux.edp 	soil-laws.edp
 	@echo " Checking Hujeux soil-law plugin                              "
 	@echo "*============================================================*"
 	@echo ""
-	$(FFMPI) -np 2 soil-laws_hujeux.edp -v 0
+	./../../src/psd-solve/PSD_Solve -np 2 soil-laws_hujeux.edp -v 0
 	
 clean-local:
 	@echo ""
