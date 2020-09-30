@@ -56,15 +56,15 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  "  cout <<  \"-------------------------------------------------------\\n\"       \n"
  "       <<  \"Applied traction \" << tr << \"\\n\" << endl;                      \n"
  "                                                                                \n"
- "  if (tr >= 5e-3)                                                               \n"
- "    dtr = 1e-6;                                                                 \n"
+ " // if (tr >= 5e-3)                                                             \n"
+ " //   dtr = 1e-6;                                                               \n"
  "                                                                                \n";
  
  if(constrainHPF)
  writeIt
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
- "   up[]=uold[];                                                              \n"
+ "   up[]=uold[];                                                                 \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "                                                                                \n";  
  
@@ -363,8 +363,8 @@ if(Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "  cout <<  \"-------------------------------------------------------\\n\"       \n"
  "       <<  \"Applied traction \" << TractionTotal << \"\\n\" << endl;           \n"
  "                                                                                \n"
- "  if (TractionTotal >= 5e-3){                                                   \n"
- "    tr = 1e-6; dtr = 1e-6;}                                                     \n";
+ " // if (TractionTotal >= 5e-3){                                                 \n"
+ " //   tr = 1e-6; dtr = 1e-6;}                                                   \n";
  
   
  if(constrainHPF)
@@ -677,8 +677,8 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
  "  <<  \"Applied traction \" << tr << \"\\n\" << endl;                           \n"
  "                                                                                \n"
- "  if (tr >= 5e-3)                                                               \n"
- "    dtr = 1e-6;                                                                 \n";
+ "//  if (tr >= 5e-3)                                                             \n"
+ "//    dtr = 1e-6;                                                               \n";
  
  if(constrainHPF)
  writeIt
@@ -1213,8 +1213,8 @@ if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
  "  cout.scientific<<\"-----------------------------------------------------\\n\" \n"
  "  <<  \"Applied traction \" << TractionTotal << \"\\n\" << endl;                \n"
  "                                                                                \n"
- "  if (TractionTotal >= 5e-3){                                                   \n"
- "    tr = 1e-6; dtr = 1e-6;}                                                     \n"
+ "  //if (TractionTotal >= 5e-3){                                                 \n"
+ "  //  tr = 1e-6; dtr = 1e-6;}                                                   \n"
  "                                                                                \n";
  
  if(constrainHPF)
