@@ -21,8 +21,11 @@ VariationalFormulation.hpp \
 VariationalFormulation_LinearElasticity.hpp \
 VariationalFormulation_SoilDynamics.hpp
 
+AM_CPPFLAGS=-std=c++11 
+bin_PROGRAMS = PSD_PreProcess
+PSD_PreProcess_SOURCES = PSD_PreProcess.cpp
 
-all-local: PSD_PreProcess
+all-local: PSD_PreProcess.o
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -31,12 +34,12 @@ all-local: PSD_PreProcess
 	@echo " Compilation list $(LIST_COMPILE)"
 
 
-PSD_PreProcess: PSD_PreProcess.o
-	$(CXX) -o PSD_PreProcess PSD_PreProcess.o
-	@echo ""
+#PSD_PreProcess: PSD_PreProcess.o
+#	$(CXX) -o PSD_PreProcess PSD_PreProcess.o
+#	@echo ""
 
 
-PSD_PreProcess.o: $(PSD_PREPROCESSOR_HPP_LIST)
+PSD_PreProcess.o: PSD_PreProcess.cpp $(PSD_PREPROCESSOR_HPP_LIST)
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11
 
 check-local:
