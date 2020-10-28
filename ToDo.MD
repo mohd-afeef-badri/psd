@@ -3,7 +3,8 @@
 
 ## [ONGOING] Hujeux soil law make it work with PSD
 ## [ONGOING] Nonlinear damage mechanics with nested matrices 
-## [ONGOING] Distributed meshing interface for soil dynamics with top-ii-vol
+
+## [TODO] make check examples for soildynamaics with doublecouple/top-ii-vol
 
 
 ## [TODO] Optimize force calculation (matrix-vector type)
@@ -11,6 +12,8 @@
 ## [TODO] Couple damage and seismic solver
 ## [TODO] Heterogeneous materials class of problems
 ## [TODO] Parallel interpolation on surface from volume
+
+## [DONE] Distributed meshing interface for soil dynamics with top-ii-vol
 
 
 ## [DONE] Extract point field in MPI
