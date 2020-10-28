@@ -1,8 +1,10 @@
 <h1 id="psd-a-parallel-structural-dynamics-solver">PSD: a Parallel Structural Dynamics solver</h1>
-<p><img src="./man/markdownimage.png" /></p>
-<p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math inline"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math inline"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
+<div class="figure">
+<img src="./man/markdownimage.png" />
+</div>
+<p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
 <p>Besides the parallel suite, PSD also includes a sequential solver which does not require <a href="https://www.mcs.anl.gov/petsc/">PETSc</a>.</p>
-<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT’s</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh’s</a> <code>.msh</code> format. PSD post processing is done via <code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
+<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
 <h2 id="installation-procedure">Installation procedure</h2>
 <p>PSD is built to work with Linux platforms. (Windows comping up soon)</p>
 <p><strong>Dependencies</strong></p>
@@ -17,28 +19,22 @@
 </ul>
 <p><strong>Now that I have all the dependencies what next</strong></p>
 <ul>
-<li>Go ahead and grab the latest copy of PSD. The code is hosted on CEA’s internal git <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&amp;hb=devel-dynamic">repository</a>.</li>
-</ul>
-<pre><code>git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources</code></pre>
-<ul>
-<li>Autoconf PSD within the cloned folder</li>
-</ul>
-<pre><code>autoreconf -i</code></pre>
-<ul>
-<li>Configure PSD within the cloned folder</li>
-</ul>
+<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on CEA's internal git <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&amp;hb=devel-dynamic">repository</a>.</p>
+<pre><code>git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources</code></pre></li>
+<li><p>Autoconf PSD within the cloned folder</p>
+<pre><code>autoreconf -i</code></pre></li>
+<li><p>Configure PSD within the cloned folder</p>
 <pre><code>./configure </code></pre>
 <p><em>Note</em>: <code>./configure</code> will install PSD in <code>$HOME/PSD</code> to change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. <em>Note</em>: <code>./configure</code> will try to look for installation of <a href="https://freefem.org/">FreeFEM</a> and <a href="http://gmsh.info/">Gmsh</a> in <code>usr/bin/</code> or <code>usr/local/bin/</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> and <code>--with-Gmsh=</code>. For example, if <a href="https://freefem.org/">FreeFEM</a> is installed at <code>home/FreeFem/bin</code> and <a href="http://gmsh.info/">Gmsh</a> in <code>home/Gmsh/bin</code> then one should use</p>
-<pre><code>./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</code></pre>
-<ul>
-<li>Make PSD directives</li>
+<pre><code>./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</code></pre></li>
+<li><p>Make PSD directives</p></li>
 </ul>
 <pre><code>make</code></pre>
 <ul>
-<li>Install PSD</li>
-</ul>
+<li><p>Install PSD</p>
 <pre><code>make install</code></pre>
-<p>Now you should have the solver at <code>$HOME/PSD</code>. To use the solver please go to <code>$HOME/PSD</code>.</p>
+<p>Now you should have the solver at <code>$HOME/PSD</code>. To use the solver please go to <code>$HOME/PSD</code>.</p></li>
+</ul>
 <p><strong>Additional FreeFEM tweak for brittle fracture mechanics</strong></p>
 <p>Note that this procedure is only recommended if you are interested in using PSD for brittle fracture problems. In your FreeFEM source files (installation) go to <code>src/femlib/fem.cpp</code> , in this file replace the lines of code</p>
 <pre><code>R seuil=hm/splitmax/4.0;</code></pre>
@@ -48,7 +44,7 @@
 <p>The parallel/sequential solvers can be run on Linux platforms and can be used with command line options to control the solver. In order to make your choice of physics, command line options need to be typed right into the bash.</p>
 <p>To perform a simulation three steps are involved</p>
 <p><strong>Step 1: Providing the mesh</strong></p>
-<p>A valid finite element mesh needs to be provided to the solver. PSD accepts only unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT’s</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh’s</a> <code>.msh</code> format. Once you have your mesh please copy the mesh to <code>Meshes</code> folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.</p>
+<p>A valid finite element mesh needs to be provided to the solver. PSD accepts only unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. Once you have your mesh please copy the mesh to <code>Meshes</code> folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.</p>
 <p><em>Note</em>: There is a native mesher <code>bmag</code> within <a href="https://freefem.org/">FreeFEM</a> which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the <code>Meshes</code> folder.</p>
 <p><strong>Step 2: Setting up the solver</strong></p>
 <p>Now that the mesh has been loaded. Its time to set up the solver. Open the <code>terminal</code> window at the location of the solver, i.e., <code>$HOME/PSD/Solver.</code> Then run the following command in the <code>terminal</code>.</p>
@@ -70,183 +66,178 @@
 <h2 id="options-psd-explained">[Options-PSD] explained</h2>
 <p>These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).</p>
 <table>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 10%" />
-<col style="width: 72%" />
-</colgroup>
 <thead>
 <tr class="header">
-<th>Option</th>
-<th>Type</th>
-<th style="text-align: left;">Comment</th>
+<th align="left">Option</th>
+<th align="left">Type</th>
+<th align="left">Comment</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>-help</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate helping message on the terminal.</td>
+<td align="left"><code>-help</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate helping message on the terminal.</td>
 </tr>
 <tr class="even">
-<td><code>-debug</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate debug mode with a wait plot. Development flag.</td>
+<td align="left"><code>-debug</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate debug mode with a wait plot. Development flag.</td>
 </tr>
 <tr class="odd">
-<td><code>-useGFP</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate use of GoFastPlugins. A suite of C++ plugins.</td>
+<td align="left"><code>-useGFP</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate use of GoFastPlugins. A suite of C++ plugins.</td>
 </tr>
 <tr class="even">
-<td><code>-useRCM</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate mesh level renumbering via Reverse Cuthill Mckee.</td>
+<td align="left"><code>-useRCM</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate mesh level renumbering via Reverse Cuthill Mckee.</td>
 </tr>
 <tr class="odd">
-<td><code>-pipegnu</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">Use to activate realtime pipe plotting using <a href="http://www.gnuplot.info/">gnuplot</a>.</td>
+<td align="left"><code>-pipegnu</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">Use to activate realtime pipe plotting using <a href="http://www.gnuplot.info/">gnuplot</a>.</td>
 </tr>
 <tr class="even">
-<td><code>-timelog</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate time logging the different phases of the solver.</td>
+<td align="left"><code>-timelog</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate time logging the different phases of the solver.</td>
 </tr>
 <tr class="odd">
-<td><code>-supercomp</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">Use when using a super computer without Xterm. support .</td>
+<td align="left"><code>-supercomp</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">Use when using a super computer without Xterm. support .</td>
 </tr>
 <tr class="even">
-<td><code>-bodyforce</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate volumetric source term (body force).</td>
+<td align="left"><code>-bodyforce</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate volumetric source term (body force).</td>
 </tr>
 <tr class="odd">
-<td><code>-vectorial</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To use vectorial finite element method.</td>
+<td align="left"><code>-vectorial</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To use vectorial finite element method.</td>
 </tr>
 <tr class="even">
-<td><code>-sequential</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To solve via a sequential solver.</td>
+<td align="left"><code>-sequential</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To solve via a sequential solver.</td>
 </tr>
 <tr class="odd">
-<td><code>-energydecomp</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate energy decomposition, only for phase-field.</td>
+<td align="left"><code>-energydecomp</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate energy decomposition, only for phase-field.</td>
 </tr>
 <tr class="even">
-<td><code>-doublecouple</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate double couple source for soildynamics.</td>
+<td align="left"><code>-doublecouple</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate double couple source for soildynamics.</td>
 </tr>
 <tr class="odd">
-<td><code>-constrainHPF</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To use constrain condition in hybrid phase-field model.</td>
+<td align="left"><code>-constrainHPF</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To use constrain condition in hybrid phase-field model.</td>
 </tr>
 <tr class="even">
-<td><code>-top2vol-meshing</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate top-ii-vol point source meshing for soil-dynamics.</td>
+<td align="left"><code>-top2vol-meshing</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate top-ii-vol point source meshing for soil-dynamics.</td>
 </tr>
 <tr class="odd">
-<td><code>-getreactionforce</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate routine for extraction reactions at surface.</td>
+<td align="left"><code>-getreactionforce</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate routine for extraction reactions at surface.</td>
 </tr>
 <tr class="even">
-<td><code>-plotreactionforce</code></td>
-<td><code>[bool]</code></td>
-<td style="text-align: left;">To activate realtime pipe plotting using GnuPlot.</td>
+<td align="left"><code>-plotreactionforce</code></td>
+<td align="left"><code>[bool]</code></td>
+<td align="left">To activate realtime pipe plotting using GnuPlot.</td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
-<td><code>-dirichletpointconditions</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Number of Dirchlet points.</td>
+<td align="left"><code>-dirichletpointconditions</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Number of Dirchlet points.</td>
 </tr>
 <tr class="odd">
-<td><code>-dirichletconditions</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Number of Dirchlet boundaries.</td>
+<td align="left"><code>-dirichletconditions</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Number of Dirchlet boundaries.</td>
 </tr>
 <tr class="even">
-<td><code>-bodyforceconditions</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Number of regions acted upon by bodyforce.</td>
+<td align="left"><code>-bodyforceconditions</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Number of regions acted upon by bodyforce.</td>
 </tr>
 <tr class="odd">
-<td><code>-tractionconditions</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Number of Neumann/traction bounders.</td>
+<td align="left"><code>-tractionconditions</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Number of Neumann/traction bounders.</td>
 </tr>
 <tr class="even">
-<td><code>-parmetis_worker</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Number of parallel workers used by ParMetis for partiotining.</td>
+<td align="left"><code>-parmetis_worker</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Number of parallel workers used by ParMetis for partiotining.</td>
 </tr>
 <tr class="odd">
-<td><code>-lagrange</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Lagrange order used for FE spaces. 1 for P1 or 2 for P2.</td>
+<td align="left"><code>-lagrange</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Lagrange order used for FE spaces. 1 for P1 or 2 for P2.</td>
 </tr>
 <tr class="even">
-<td><code>-dimension</code></td>
-<td><code>[int]</code></td>
-<td style="text-align: left;">Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.</td>
+<td align="left"><code>-dimension</code></td>
+<td align="left"><code>[int]</code></td>
+<td align="left">Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.</td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
-<td><code>-timediscretization</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Time discretization type. Use “generalized-alpha” or “newmark-beta” or “hht-alpha” or “central-difference”</td>
+<td align="left"><code>-timediscretization</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Time discretization type. Use &quot;generalized-alpha&quot; or &quot;newmark-beta&quot; or &quot;hht-alpha&quot; or &quot;central-difference&quot;</td>
 </tr>
 <tr class="odd">
-<td><code>-nonlinearmethod</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Nonlinear method type. Use “Picard” or “Newton-Raphsons”.</td>
+<td align="left"><code>-nonlinearmethod</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Nonlinear method type. Use &quot;Picard&quot; or &quot;Newton-Raphsons&quot;.</td>
 </tr>
 <tr class="even">
-<td><code>-reactionforce</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Reaction force calculation method “stress-based” or “variational-based”.</td>
+<td align="left"><code>-reactionforce</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Reaction force calculation method &quot;stress-based&quot; or &quot;variational-based&quot;.</td>
 </tr>
 <tr class="odd">
-<td><code>-doublecouple</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Soil dynamics double couple. Use “force-based” or “displacement-based”.</td>
+<td align="left"><code>-doublecouple</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Soil dynamics double couple. Use &quot;force-based&quot; or &quot;displacement-based&quot;.</td>
 </tr>
 <tr class="even">
-<td><code>-postprocess</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">To communicate what to postprocess “u”, “v”, “a”, “uv” , “ud”, “ua”, “d”, “ud”, or “uav”.</td>
+<td align="left"><code>-postprocess</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">To communicate what to postprocess &quot;u&quot;, &quot;v&quot;, &quot;a&quot;, &quot;uv&quot; , &quot;ud&quot;, &quot;ua&quot;, &quot;d&quot;, &quot;ud&quot;, or &quot;uav&quot;.</td>
 </tr>
 <tr class="odd">
-<td><code>-partitioner</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Mesh partitioner could be “<a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">metis</a>” “<a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview">parmetis</a>” or “<a href="http://www.labri.fr/perso/pelegrin/scotch/">scotch</a>”.</td>
+<td align="left"><code>-partitioner</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Mesh partitioner could be &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">metis</a>&quot; &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview">parmetis</a>&quot; or &quot;<a href="http://www.labri.fr/perso/pelegrin/scotch/">scotch</a>&quot;.</td>
 </tr>
 <tr class="even">
-<td><code>-problem</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Interested problem. Use “linear-elasticity”, “damage”, “elastodynamics”, or “soildynamics”.</td>
+<td align="left"><code>-problem</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Interested problem. Use &quot;linear-elasticity&quot;, &quot;damage&quot;, &quot;elastodynamics&quot;, or &quot;soildynamics&quot;.</td>
 </tr>
 <tr class="odd">
-<td><code>-model</code></td>
-<td><code>[sting]</code></td>
-<td style="text-align: left;">Interested model. Use “hybrid-phase-field” or “Mazar”.</td>
+<td align="left"><code>-model</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Interested model. Use &quot;hybrid-phase-field&quot; or &quot;Mazar&quot;.</td>
 </tr>
 </tbody>
 </table>

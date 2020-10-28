@@ -7,6 +7,11 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
 - New flag `-plotreactionforce` to activate real time pipe plotting using GnuPlot. 
 
+### Changed
+
+- Moved to FreeFEM 4.7.
+- Moved to PETSc 3.14.
+
 ### Removed 
 - Flag `-pipegnu` not supported for damage mechanics (to be further deprecated from elsto/soildynamics)
 
@@ -197,9 +202,9 @@ All notable changes to PSD solver will be documented in this file.
 
 ## Version git tags ##
 
-| Version    | Git tag                                 | 
+| Version    | Git tag                                 |
 | ---------- | ----------------------------------------|
-| [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0)        |8a8ecb2746b7da792073358c60df33bae647f788 | 
+| [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0)        |8a8ecb2746b7da792073358c60df33bae647f788 |
 | [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1)        |a667e6085ba1f92f8dd619bd40e18f85c593bc0a |
 | [1.2](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2)        |e48b7b3a30c05ad4c343efa6a17fee386031f437 |
 | [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3)        |39f4324550365849852c5264b8d4535aae05e30d |

@@ -7,6 +7,11 @@
 <li>New flag <code>-reactionforce</code> variational-based | stress-based to get reaction force on a surface.</li>
 <li>New flag <code>-plotreactionforce</code> to activate real time pipe plotting using GnuPlot.</li>
 </ul>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Moved to FreeFEM 4.7.</li>
+<li>Moved to PETSc 3.14.</li>
+</ul>
 <h3 id="removed">Removed</h3>
 <ul>
 <li>Flag <code>-pipegnu</code> not supported for damage mechanics (to be further deprecated from elsto/soildynamics)</li>
@@ -38,13 +43,13 @@
 <li>New flag <code>-doublecouple</code> force-based | displacement-based to use double couple source for soildynamics.</li>
 <li>New top-ii-vol parallel meshing via <code>-top2vol-meshing</code> flag (compatible with soildynamics).</li>
 </ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed-1">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.6.</li>
 <li>Moved to PETSc 13.13.</li>
 <li>Moved to C++ for preprocessing.</li>
 <li>Moved to shell wrapper PSD_Solve for solving.</li>
-<li>Changes to GFP energydecopostion plugin ‘DecompEnergy_Op’, now includes compressibility history.</li>
+<li>Changes to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.</li>
 <li>Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.</li>
 <li>Postprocessing flag <code>-postprocess</code> options now support <code>u</code> , <code>v</code>, <code>a</code> , <code>uv</code>, <code>ua</code>, <code>av</code> or <code>uav</code>.</li>
 </ul>
@@ -71,7 +76,7 @@
 <li>New timeplotting support <code>-timepvd</code></li>
 <li>New <code>-postprocess</code> option for postprocessing <code>u</code> , <code>v</code>, <code>a</code> , or <code>uav</code>.</li>
 </ul>
-<h3 id="changed-1">Changed</h3>
+<h3 id="changed-2">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.4.2.</li>
 <li>Moved to PETSc 13.12.</li>
@@ -84,14 +89,14 @@
 <ul>
 <li>New mesh reordering via Reverse Cuthill-Mackee via <code>-useRCM</code>.</li>
 <li>New quasi-static parallel solver (Extension of B.Masseron &amp; G.Rastiello sequential version).</li>
-<li>New GFP plugin for Mazar’s damage update for 2D/3D problems <code>GFPMazarsDamageUpdate(...)</code>.</li>
+<li>New GFP plugin for Mazar's damage update for 2D/3D problems <code>GFPMazarsDamageUpdate(...)</code>.</li>
 <li>New MPI plotting routine <code>plotJustMeshMPI()</code>.</li>
 <li>New option <code>-fastmethod</code> to switch back to default variational formulation.</li>
 <li>New make flag for compiling on supercomputer.</li>
 </ul>
-<h3 id="changed-2">Changed</h3>
+<h3 id="changed-3">Changed</h3>
 <ul>
-<li>Changed variational formulation now using <span class="math inline"><em>ϵ</em>(<em>u</em>) : <em>A</em> : <em>ϵ</em>(<em>v</em>)</span>.</li>
+<li>Changed variational formulation now using <span class="math"><em>ε</em>(<em>u</em>) : <em>A</em> : <em>ε</em>(<em>v</em>)</span>.</li>
 <li>Using GFP becomes optional <code>-useGFP</code>.</li>
 <li>Better documentation via <code>.md</code> and <code>.html</code> files.</li>
 <li>Better plotting support for <code>PlotMPI()</code>.</li>
@@ -101,9 +106,9 @@
 <h3 id="added-4">Added</h3>
 <ul>
 <li>Dynamic linear solver in 2D and 3D parallel/sequential.</li>
-<li>New finite element variable for partition of unity– for fixing integrals.</li>
+<li>New finite element variable for partition of unity-- for fixing integrals.</li>
 </ul>
-<h3 id="changed-3">Changed</h3>
+<h3 id="changed-4">Changed</h3>
 <ul>
 <li>Better documentation via <code>.md</code> and <code>.html</code> files.</li>
 <li>Correct quadrature order for faster computations.</li>
@@ -125,7 +130,7 @@
 <li>Checking modules <code>make check</code>.</li>
 <li>Faster sparsity pattern calculations.</li>
 </ul>
-<h3 id="changed-4">Changed</h3>
+<h3 id="changed-5">Changed</h3>
 <ul>
 <li>Better documentation via <code>.md</code> and <code>.html</code> files.</li>
 <li>Major restructuring of the codes.</li>
@@ -144,7 +149,7 @@
 <li>New <code>MatViz()</code> function for matrix sparsity visualization.</li>
 <li>Introduced <code>GFP</code> plugin support (Go Fast Plugins).</li>
 </ul>
-<h3 id="changed-5">Changed</h3>
+<h3 id="changed-6">Changed</h3>
 <ul>
 <li>Elastic energy decomposition is now optional <code>-energydecomp</code>.</li>
 <li>Force calculation using integrals (Thanks to G.Rastiello).</li>
@@ -158,7 +163,7 @@
 <li>New <code>-timelog</code> for time logging the solver.</li>
 <li>New <code>-pipegnu</code> for GNUplot piping.</li>
 </ul>
-<h3 id="changed-6">Changed</h3>
+<h3 id="changed-7">Changed</h3>
 <ul>
 <li>Scripting now performed using <code>.script</code> files:
 <ul>
@@ -167,7 +172,7 @@
 <li><code>Macros.script</code></li>
 <li><code>Main.script</code></li>
 <li><code>VariationalFormulation.script</code></li>
-<li>….</li>
+<li>....</li>
 </ul></li>
 <li>Move to FreeFEM version 4.0.</li>
 <li>Move to PETSc version 3.11.</li>
@@ -175,7 +180,7 @@
 <h2 id="section-7"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.2">1.2</a> - 2019-03-18</h2>
 <h3 id="added-8">Added</h3>
 <ul>
-<li>Support for Gmsh’s <code>.msh</code> or Medit’s <code>.mesh</code> meshes in folder <code>Meshes</code>.</li>
+<li>Support for Gmsh's <code>.msh</code> or Medit's <code>.mesh</code> meshes in folder <code>Meshes</code>.</li>
 <li>Advance to 3D physics.</li>
 <li>New MPI based parallel solver linear elasticity.</li>
 <li>New approach for solver generation via scripting (PhD thesis MA Badri) with <code>scriptGenerator.edp</code>.</li>
@@ -184,7 +189,7 @@
 <li>New point boundary condition macro <code>pointbc(Real[int], fespace, matrix)</code>.</li>
 <li>New flags for communicating with the solver: <code>-dimension</code>, <code>-plot</code>, <code>-bodyforce</code>, <code>-lagrange</code>, etc.</li>
 </ul>
-<h3 id="changed-7">Changed</h3>
+<h3 id="changed-8">Changed</h3>
 <ul>
 <li>More advance README.MD.</li>
 <li>Sequential solver now merged within scripting via flag <code>-sequential</code>.</li>
@@ -199,7 +204,7 @@
 <li>Added README.MD for explaining the solver.</li>
 <li>ParaView plotting activated.</li>
 </ul>
-<h3 id="changed-8">Changed</h3>
+<h3 id="changed-9">Changed</h3>
 <ul>
 <li>Moved to Tuleap git hosting from CEA.</li>
 <li>Separate folder of manufactured solutions and the linear elastic solver.</li>
@@ -214,50 +219,50 @@
 <table>
 <thead>
 <tr class="header">
-<th>Version</th>
-<th>Git tag</th>
+<th align="left">Version</th>
+<th align="left">Git tag</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.0">1.0</a></td>
-<td>8a8ecb2746b7da792073358c60df33bae647f788</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.0">1.0</a></td>
+<td align="left">8a8ecb2746b7da792073358c60df33bae647f788</td>
 </tr>
 <tr class="even">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.1">1.1</a></td>
-<td>a667e6085ba1f92f8dd619bd40e18f85c593bc0a</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.1">1.1</a></td>
+<td align="left">a667e6085ba1f92f8dd619bd40e18f85c593bc0a</td>
 </tr>
 <tr class="odd">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.2">1.2</a></td>
-<td>e48b7b3a30c05ad4c343efa6a17fee386031f437</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.2">1.2</a></td>
+<td align="left">e48b7b3a30c05ad4c343efa6a17fee386031f437</td>
 </tr>
 <tr class="even">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.3">1.3</a></td>
-<td>39f4324550365849852c5264b8d4535aae05e30d</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.3">1.3</a></td>
+<td align="left">39f4324550365849852c5264b8d4535aae05e30d</td>
 </tr>
 <tr class="odd">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.4">1.4</a></td>
-<td>f51f678630eb9b2fed355e5cedf976ce8b5fa341</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.4">1.4</a></td>
+<td align="left">f51f678630eb9b2fed355e5cedf976ce8b5fa341</td>
 </tr>
 <tr class="even">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.5">1.5</a></td>
-<td>07293ba09a69d3d6a16278220a0b4a7a9f318f96</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.5">1.5</a></td>
+<td align="left">07293ba09a69d3d6a16278220a0b4a7a9f318f96</td>
 </tr>
 <tr class="odd">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.6">1.6</a></td>
-<td>f359dd049fb1ddde376e8ad8e5177c663e430418</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.6">1.6</a></td>
+<td align="left">f359dd049fb1ddde376e8ad8e5177c663e430418</td>
 </tr>
 <tr class="even">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.7">1.7</a></td>
-<td>aee9bfec868a70b3d9974d7692bc19f9739ab7dc</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.7">1.7</a></td>
+<td align="left">aee9bfec868a70b3d9974d7692bc19f9739ab7dc</td>
 </tr>
 <tr class="odd">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.8">1.8</a></td>
-<td>2f26292636c7248133e31ae912ee58113de2ef71</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.8">1.8</a></td>
+<td align="left">2f26292636c7248133e31ae912ee58113de2ef71</td>
 </tr>
 <tr class="even">
-<td><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v2.0">1.8</a></td>
-<td>6e721edfafe4ebf3aceebce01e292332a27f980a</td>
+<td align="left"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v2.0">1.8</a></td>
+<td align="left">6e721edfafe4ebf3aceebce01e292332a27f980a</td>
 </tr>
 </tbody>
 </table>
