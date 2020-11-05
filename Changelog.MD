@@ -1,15 +1,16 @@
 # Changelog
 All notable changes to PSD solver will be documented in this file.
 
-## Unreleased
+## Rolling Release
 ### Added
 - New accurate force calculations via matrix-vector product: new flag `-getreactionforce`.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
 - New flag `-plotreactionforce` to activate real time pipe plotting using GnuPlot. 
+- More verbos info on `-help` 
 
 ### Changed
 
-- Moved to FreeFEM 4.7.
+- Moved to FreeFEM 4.7-1.
 - Moved to PETSc 3.14.
 
 ### Removed 

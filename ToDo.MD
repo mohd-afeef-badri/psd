@@ -1,10 +1,20 @@
 # PSD todo list: 
 
 
+
+
+
 ## [ONGOING] Hujeux soil law make it work with PSD
+
 ## [ONGOING] Nonlinear damage mechanics with nested matrices 
 
-## [TODO] make check examples for soildynamaics with doublecouple/top-ii-vol
+
+
+
+
+## [TODO] Probe flag for probing field values
+
+## [TODO] make check examples for time-discretization
 
 
 ## [TODO] Optimize force calculation (matrix-vector type)
@@ -13,10 +23,16 @@
 ## [TODO] Heterogeneous materials class of problems
 ## [TODO] Parallel interpolation on surface from volume
 
+
+
+
+
+
+
 ## [DONE] Distributed meshing interface for soil dynamics with top-ii-vol
 
-
 ## [DONE] Extract point field in MPI
+
 ## [DONE] Force calculation via matrix vector product
 ## [DONE] Fully commented control parameters file
 ## [DONE] Including material properties as macros not real type
