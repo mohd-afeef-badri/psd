@@ -7,6 +7,7 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
 - New flag `-plotreactionforce` to activate real time pipe plotting using GnuPlot. 
 - More verbos info on `-help` 
+- New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
 
 ### Changed
 
@@ -18,10 +19,10 @@ All notable changes to PSD solver will be documented in this file.
 
 ## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
 ### Added
-- New processing via C++, PSD_PreProcess binary (MAJOR CHANGE).
-- New solving via shell wrapper PSD_Solve instead of FreeFem++ or FreeFem++-mpi.
+- New processing via C++, `PSD_PreProcess` binary (MAJOR CHANGE).
+- New solving via shell wrapper `PSD_Solve` instead of `FreeFem++` or `FreeFem++-mpi`.
 - New examples of using the solver.
-- New Pdf documentation containing tutorials, function definitions, verbos on PSD c++ library.
+- New Pdf documentation containing tutorials, function definitions, verbos on PSD C++ library.
 - New option `-nonlinearmethod` (Picard|Newton-Raphsons).
 - New time discretization option `-timediscretization`.
 - New point boundary conditions.

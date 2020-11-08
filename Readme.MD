@@ -2,7 +2,7 @@
 
 ![](./man/markdownimage.png)
 
-PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around [FreeFEM](https://freefem.org/) for finite element discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear*  and *nonlinear* solid mechanics problems. Besides these [*hybrid-phase field fracture mechanics*](https://link.springer.com/article/10.1007/s00466-014-1109-y) models have also been incorporated within PSD. For dynamics the [*genralized-$\alpha$ model*](https://hal.archives-ouvertes.fr/hal-00345290/document)  for time discretization is used, this models enable straightforward use of Newmark-$\beta$, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via [*vectorial finite elements*](https://www.sciencedirect.com/science/article/pii/S0022407317309597) for parallel computing and all solvers are  proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.
+PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around [FreeFEM](https://freefem.org/) for finite element discretization, and [PETSc](https://www.mcs.anl.gov/petsc/) for linear algebra/Preconditioning. PSD solver contains straightforward supports for *static* or *dynamic* simulations with *linear*  and *nonlinear* solid mechanics problems. Besides these [*hybrid-phase field fracture mechanics*](https://link.springer.com/article/10.1007/s00466-014-1109-y) models have also been incorporated within PSD. For dynamics the [*genralized-$\alpha$ model*](https://hal.archives-ouvertes.fr/hal-00345290/document)  for time discretization is used, this models enable straightforward use of Newmark-$\beta$, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via [*vectorial finite elements*](https://www.sciencedirect.com/science/article/pii/S0022407317309597) for parallel computing and all solvers are  proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.
 
 Besides the parallel suite, PSD also includes a sequential solver which does not require [PETSc](https://www.mcs.anl.gov/petsc/). 
 
@@ -74,13 +74,7 @@ The parallel/sequential solvers can be run on Linux platforms and can be used wi
 
 To perform a simulation three steps are involved
 
-**Step 1: Providing the mesh**
-
-A valid finite element mesh needs to be provided to the solver. PSD accepts only  unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in  [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. Once you have your mesh please copy the mesh to `Meshes` folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.
-
-*Note*: There is a native mesher `bmag` within [FreeFEM](https://freefem.org/) which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the `Meshes` folder. 
-
-**Step 2: Setting up the solver**
+**Step 1: Setting up the solver**
 
 Now that the mesh has been loaded. Its time to set up the solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
 
@@ -96,7 +90,7 @@ For example to generate a sequential 2D elasticity solver for a problem with bod
 /PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1
 ```
 
-**Step 3: Launching the solver**
+**Step 2: Launching the solver**
 
 Now you are all set to run your simulation. To do so you will need to do the run the following in the `terminal`:
 
@@ -147,6 +141,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. |
 | `-dimension`   	| `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |  		 | 	     |                     					    |
+| `-mesh` | `[sting]` | Provide mesh to be solved by `PSD_Solve`. |
 | `-timediscretization` | `[sting]` | Time discretization type. Use "generalized-alpha" or "newmark-beta" or "hht-alpha" or "central-difference" |
 | `-nonlinearmethod` | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons". |
 | `-reactionforce` | `[sting]` | Reaction force calculation method "stress-based" or "variational-based". |

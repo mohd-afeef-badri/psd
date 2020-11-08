@@ -64,6 +64,8 @@
 
   -model           [string] Interested model. Use hybrid-phase-field|Mazar.
 
+  -mesh            [string] Mesh to be used, use a .mesh or .msh mesh.  
+
   -------------------------------------------------------------------------------------
 
   -help         [bool]     To activate helping message on the terminal.

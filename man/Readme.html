@@ -2,7 +2,7 @@
 <div class="figure">
 <img src="./man/markdownimage.png" />
 </div>
-<p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 13,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
+<p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
 <p>Besides the parallel suite, PSD also includes a sequential solver which does not require <a href="https://www.mcs.anl.gov/petsc/">PETSc</a>.</p>
 <p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
 <h2 id="installation-procedure">Installation procedure</h2>
@@ -43,16 +43,13 @@
 <h2 id="using-procedure">Using procedure</h2>
 <p>The parallel/sequential solvers can be run on Linux platforms and can be used with command line options to control the solver. In order to make your choice of physics, command line options need to be typed right into the bash.</p>
 <p>To perform a simulation three steps are involved</p>
-<p><strong>Step 1: Providing the mesh</strong></p>
-<p>A valid finite element mesh needs to be provided to the solver. PSD accepts only unstructured meshes: triangular for 2D and tetrahedral for 3D. These meshes need to be in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. Once you have your mesh please copy the mesh to <code>Meshes</code> folder of your installed PSD directory. The 2D meshes need to be separated by the 2D ones.</p>
-<p><em>Note</em>: There is a native mesher <code>bmag</code> within <a href="https://freefem.org/">FreeFEM</a> which could also be used. However, it can only be used to generate simple geometries. In this case no need to copy the mesh to the <code>Meshes</code> folder.</p>
-<p><strong>Step 2: Setting up the solver</strong></p>
+<p><strong>Step 1: Setting up the solver</strong></p>
 <p>Now that the mesh has been loaded. Its time to set up the solver. Open the <code>terminal</code> window at the location of the solver, i.e., <code>$HOME/PSD/Solver.</code> Then run the following command in the <code>terminal</code>.</p>
 <pre><code>./PSD_PreProcess [Options-PSD]</code></pre>
 <p>Via the command line options you will embed the physics within the solver. This step generates a bunch of <code>.edp</code> files which are native to <a href="https://freefem.org/">FreeFEM</a> and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be <code>vim</code>, <code>gedit</code> ,<code>Notepad++</code>, etc. To facilitate the edit process for your will have to go through the instructions printed on the terminal.</p>
 <p>For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use</p>
 <pre><code>/PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1</code></pre>
-<p><strong>Step 3: Launching the solver</strong></p>
+<p><strong>Step 2: Launching the solver</strong></p>
 <p>Now you are all set to run your simulation. To do so you will need to do the run the following in the <code>terminal</code>:</p>
 <p>if you complied a parallel PSD version</p>
 <pre><code>PSD_Solve -np $N Main.edp -v 0 -nw</code></pre>
@@ -200,41 +197,46 @@
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"><code>-mesh</code></td>
+<td align="left"><code>[sting]</code></td>
+<td align="left">Provide mesh to be solved by <code>PSD_Solve</code>.</td>
+</tr>
+<tr class="odd">
 <td align="left"><code>-timediscretization</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Time discretization type. Use &quot;generalized-alpha&quot; or &quot;newmark-beta&quot; or &quot;hht-alpha&quot; or &quot;central-difference&quot;</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>-nonlinearmethod</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Nonlinear method type. Use &quot;Picard&quot; or &quot;Newton-Raphsons&quot;.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>-reactionforce</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Reaction force calculation method &quot;stress-based&quot; or &quot;variational-based&quot;.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>-doublecouple</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Soil dynamics double couple. Use &quot;force-based&quot; or &quot;displacement-based&quot;.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>-postprocess</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">To communicate what to postprocess &quot;u&quot;, &quot;v&quot;, &quot;a&quot;, &quot;uv&quot; , &quot;ud&quot;, &quot;ua&quot;, &quot;d&quot;, &quot;ud&quot;, or &quot;uav&quot;.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>-partitioner</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Mesh partitioner could be &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">metis</a>&quot; &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview">parmetis</a>&quot; or &quot;<a href="http://www.labri.fr/perso/pelegrin/scotch/">scotch</a>&quot;.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>-problem</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Interested problem. Use &quot;linear-elasticity&quot;, &quot;damage&quot;, &quot;elastodynamics&quot;, or &quot;soildynamics&quot;.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>-model</code></td>
 <td align="left"><code>[sting]</code></td>
 <td align="left">Interested model. Use &quot;hybrid-phase-field&quot; or &quot;Mazar&quot;.</td>
