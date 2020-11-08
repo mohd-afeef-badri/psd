@@ -11,8 +11,10 @@
 
 
 
-
 **Todo**
+
+-  To add examples for -mesh flag in make check
+
 -  Probe flag for probing field values
 -  make check examples for time-discretization
 -  Optimize force calculation (matrix-vector type)
