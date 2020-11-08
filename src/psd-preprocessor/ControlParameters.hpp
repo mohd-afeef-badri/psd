@@ -32,42 +32,42 @@ if(top2vol)
  "// ------- Mesh parameters (Un-partitioned) -------                            \n"
  "// -------------------------------------------------------------------         \n"
  "//  PcName : Name of the point cloud                                           \n"
- "//  PcNx : Number of points in x in the point cloud                            \n"
- "//  PcNy : Number of points in x in the point cloud                            \n"
- "//  PcNz : Number of points in x in the point cloud                            \n"
- "//  Dptz : Depth in z for the mesh produced by top-ii-vol                      \n"
+ "//  PcNx   : Number of points in x in the point cloud                          \n"
+ "//  PcNy   : Number of points in x in the point cloud                          \n"
+ "//  PcNz   : Number of points in x in the point cloud                          \n"
+ "//  Dptz   : Depth in z for the mesh produced by top-ii-vol                    \n"
  "//=============================================================================\n";
 
 if(Prblm=="linear-elasticity")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/bar\";                               \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar.msh\";                           \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack\";                     \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack.msh\";                 \n";
 
 if(Prblm=="elastodynamics")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic\";                       \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic.msh\";                   \n";
 
 if(Prblm=="damage" && Model=="Mazar")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic\";                       \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic.msh\";                   \n";
 
 if(Prblm=="soildynamics")
  {
  if(doublecouple=="force-based" || doublecouple=="displacement-based" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc\";                          \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc.msh\";                      \n";
  if(doublecouple=="unused" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil\";                             \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil.msh\";                         \n";
  if(top2vol)
   writeIt
   "                                                                             \n"

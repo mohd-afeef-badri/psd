@@ -16,6 +16,23 @@ cout << " building MeshAndFeSpace.edp";
 
 writeHeader;
 
+
+if(!top2vol)
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element mesh name from commandline-------                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  ThName = getARGV( \"-mesh\" , ThName );                                       \n"
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- Erro message if wrong mesh detected -------                          \n"
+ "//==============================================================================\n"
+ "                                                                                \n" 
+ "  if(ThName.find(\".mesh\") == -1 && ThName.find(\".msh\") == -1)               \n"
+ "   cout <<\"INVALID MESH: PSD only accepts '.mesh' and '.msh' formats\"<< endl; \n";        
+   
 if(Sequential){
  writeIt
  "                                                                                \n"
@@ -27,8 +44,15 @@ if(Sequential){
  "                                                                                \n"
  <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                               )
  <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                         )<<
- "  load \"gmsh\"                                                                 \n"
- "  meshN Th = gmshloadN(\"\"+ThName+\".msh\");                                   \n"
+ "                                                                                \n" 
+ "  meshN Th;                                                                     \n"
+ "                                                                                \n"  
+ "  if(ThName.find(\".msh\") > -1)                                                \n" 
+ "    {                                                                           \n"   
+ "      load \"gmsh\"                                                             \n"
+ "      Th = gmshloadN(ThName);                                                   \n"
+ "    }                                                                           \n"
+ "                                                                                \n"  
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )
  <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                          )<<
  "                                                                                \n"
@@ -188,8 +212,12 @@ if(!Sequential){
  "                                                                                \n"
  " func int PartThAndBuildCommunication(){                                        \n"
  "                                                                                \n"
- "  load \"gmsh\"                                      // Load meshes from gmsh   \n"
- "  Th = gmshloadN(\"\"+ThName+\".msh\");            // Global mesh loaded        \n"
+ "  if(ThName.find(\".msh\") > -1)                                                \n" 
+ "    {                                                                           \n"   
+ "      load \"gmsh\"                                                             \n"
+ "      Th = gmshloadN(ThName);                                                   \n"
+ "    }                                                                           \n"
+ "                                                                                \n"
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                     );
 
  if(Prblm!="damage")
@@ -239,7 +267,11 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n"
   "                                                                                \n"
-  "  Th = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded             \n"
+  "  if(ThName.find(\".msh\") > -1)                                                \n" 
+  "    {                                                                           \n"   
+  "      Th = gmshloadN(ThName);                                                   \n"
+  "    }                                                                           \n"
+  "                                                                                \n"  
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
@@ -278,7 +310,12 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n"
   "                                                                                \n"
-  "  Th = gmshloadN(\"\"+ThName+\".msh\");    // Global mesh re-loaded             \n"
+  "                                                                                \n"
+  "  if(ThName.find(\".msh\") > -1)                                                \n" 
+  "    {                                                                           \n"   
+  "      Th = gmshloadN(ThName);                                                   \n"
+  "    }                                                                           \n"
+  "                                                                                \n"
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
