@@ -21,37 +21,70 @@ if(Sequential){
  "                                                                                \n"
  "//==============================================================================\n"
  "// ------- The finite element mesh -------                                      \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Th        : Finite element mesh                                             \n"
  "//==============================================================================\n"
  "                                                                                \n"
  <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                               )
  <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                         )<<
- "  load \"gmsh\"                    // Load  gmsh                                \n"
- "  meshN Th = gmshloadN(\"\"+ThName+\".msh\");    // Mesh loaded                 \n"
+ "  load \"gmsh\"                                                                 \n"
+ "  meshN Th = gmshloadN(\"\"+ThName+\".msh\");                                   \n"
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )
  <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                          )<<
  "                                                                                \n"
  "//==============================================================================\n"
- "// ------- The finite element spaces -------                                    \n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh        : Mixed finite element space  for displacement                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Vh   ( Th , Pk );            // Mixed FE space (displacemnt)           \n";
+ " fespace Vh   ( Th , Pk );                                                      \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field")
   writeIt
-  " fespace Vh1  ( Th , Zk );            // Damage field    FE space              \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh1       : P1 finite element space  for damage                             \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Vh1  ( Th , Zk );                                                      \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
   writeIt
-  " fespace Wh0  ( Th , P0 );            // Energy decomposition FE space         \n"
-  " fespace Sh0  ( Th , Sk );            // Strain vector FE space                \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element spaces -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Wh0       : P0 finite element space  for damage decomposition               \n"
+ "//  Sh0       : P0 finite element space  for stress/strain decomposition        \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Wh0  ( Th , P0 );            // Energy decomposition FE space          \n"
+ " fespace Sh0  ( Th , Sk );            // Strain vector FE space                 \n";
 
  if(Prblm=="damage" && Model=="Mazar")
   writeIt
-  " fespace Wh0    ( Th , P0 );            // stress/strain/damage FE space       \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Wh0       : P0 finite element space  for stress/strain/damage               \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Wh0    ( Th , P0 );                                                    \n";
 
  if(Prblm=="damage" && Model=="Mazar" && useGFP)
   writeIt
-  " fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space       \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  VhStr     : P0 finite element space  for stress/strain/damage               \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace VhStr  ( Th , Sk );                                                    \n";
 
 }
 
@@ -60,48 +93,97 @@ if(!Sequential){
  "                                                                                \n"
  "//==============================================================================\n"
  "// ------- The finite element mesh -------                                      \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Th        : Finite element mesh                                             \n"
+ "//  DummyMesh : Dummy mesh i.e, square for 2D and cube for 3D                   \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " meshN   Th = DummyMesh;            // This is a dummy mesh for now             \n"
+ " meshN   Th = DummyMesh;                                                        \n"
  "                                                                                \n"
  "//==============================================================================\n"
  "// ------- The finite element spaces -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh        : Mixed finite element space  for displacement                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Vh     ( Th , Pk );            // Local mixed FE space                 \n";
+ " fespace Vh     ( Th , Pk );                                                    \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
   writeIt
-  " fespace Vh1    ( Th , Zk );            // Damage field    FE space            \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh1       : P1 finite element space  for damage                             \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Vh1    ( Th , Zk );                                                    \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
   writeIt
-  " fespace Wh0    ( Th , P0 );            // Energy decomposition field          \n"
-  " fespace Sh0    ( Th , Sk );            // Strain vector FE space              \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element spaces -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Wh0       : P0 finite element space  for damage decomposition               \n"
+ "//  Sh0       : P0 finite element space  for stress/strain decomposition        \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Wh0    ( Th , P0 );                                                    \n"
+ " fespace Sh0    ( Th , Sk );                                                    \n";
 
  if(Prblm=="soildynamics" && Model=="Hujeux")
   writeIt
-  " fespace Q3vh   ( Th , Sk );            // Quadrature 3  vector FE space       \n"
-  " fespace Q25vh  ( Th , Ik );            // Quadrature 25 vector FE space       \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element spaces -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Q3vh      : Quadrature 3  vector finite element space                       \n"
+ "//  Q25vh     : Quadrature 25 vector finite element space                       \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Q3vh   ( Th , Sk );                                                    \n"
+ " fespace Q25vh  ( Th , Ik );                                                    \n";
 
  if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)
   writeIt
-  " fespace Vh1  ( Th , P1 );            // Damage field    FE space              \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh1       : P1 finite element space  for damage                             \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Vh1  ( Th , P1 );                                                      \n";
 
  if(Prblm=="damage" && Model=="Mazar")
   writeIt
-  " fespace Wh0    ( Th , P0 );            // stress/strain/damage FE space       \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Wh0       : P0 finite element space  for stress/strain/damage               \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Wh0    ( Th , P0 );                                                    \n";
 
  if(Prblm=="damage" && Model=="Mazar" && useGFP)
   writeIt
-  " fespace VhStr  ( Th , Sk );            // stress/strain/damage FE space       \n";
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  VhStr     : P0 finite element space  for stress/strain/damage               \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace VhStr  ( Th , Sk );                                                    \n";
 
  if(!top2vol)
  {
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
- "// ---- Function for building the restriction matrix and partion of unity ----  \n"
+ "// ---- Function for building the restriction matrix and partiton of unity ----  \n"
  "//==============================================================================\n"
  "                                                                                \n"
  " func int PartThAndBuildCommunication(){                                        \n"
