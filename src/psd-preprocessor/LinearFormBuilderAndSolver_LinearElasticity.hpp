@@ -22,12 +22,13 @@ if(!Sequential){
  "  real[int]    b = elast(0,Vh);                                                 \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                          );
 
-if(dirichletpointconditions>=1){
+if(dirichletpointconditions>=1 && !pointprobe){
  writeIt
  "                                                                                \n"
  "//---------Additional assembly for A & b----------//                            \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
+<<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""               )<<
+ "                                                                                \n"
  "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n";
  
  for(int i=0; i<dirichletpointconditions; i++)
@@ -38,6 +39,39 @@ if(dirichletpointconditions>=1){
 <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
 }
 
+
+if(dirichletpointconditions>=1 && pointprobe){
+ writeIt
+ "                                                                                \n"
+ "//---------Additional assembly for A & b----------//                            \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""               )<<
+ "                                                                                \n"
+ "  GetPointIndiciesMpiRank( PbcCord, PCi, mpirankPCi,                            \n"
+ "                           ProbePointCord, iProbe, Prank);                      \n";
+ 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt 
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
+ writeIt
+ "                                                                                \n" 
+<<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
+}
+
+if(dirichletpointconditions<1 && pointprobe){
+ writeIt
+ "                                                                                \n"
+ "//---------Point Probe coordinate detection----------//                         \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"finding point probe cords\",t0)\n" : ""              )<<
+ "                                                                                \n"
+ "  GetPointProbeIndicies( ProbePointCord, iProbe, Prank);                        \n"
+ "                                                                                \n";
+ 
+ writeIt
+ "                                                                                \n" 
+<<(timelog ? "  timerend(\"finding point probe cords\",t0)\n" : ""                 );
+}
 
  writeIt
  "                                                                                \n"
