@@ -42,8 +42,8 @@ all-local: PSD_PreProcess.o
 PSD_PreProcess.o: PSD_PreProcess.cpp $(PSD_PREPROCESSOR_HPP_LIST)
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11
 
-check-local:
-	cp ./../psd-solve/PSD_Solve .				
+check-linear-elasticity:
+	cp ./../psd-solve/PSD_Solve .
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential  2D linear-elasticity                   "
@@ -111,7 +111,18 @@ check-local:
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_fastmethod.log &&  \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_linear-elasticity_Parallel_fastmethod.log
+	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_linear-elasticity_Parallel_fastmethod.log	
+
+
+
+
+
+
+
+
+
+check-fracture-mechanics:
+	cp ./../psd-solve/PSD_Solve .
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential  2D phase-field fracture mechanics      "
@@ -595,7 +606,15 @@ check-local:
 	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log
+	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log	
+		
+
+
+
+
+
+check-Elastodynamics:
+	cp ./../psd-solve/PSD_Solve .
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D Elastodynamics                      "
@@ -651,6 +670,11 @@ check-local:
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve Main.edp -v 1 -ns -nw   > PSD_Solve-2D_soildynamics.log
+
+
+
+check-Soildynamics:
+	cp ./../psd-solve/PSD_Solve .
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 3D Soildynamics                        "
@@ -743,7 +767,11 @@ check-local:
 	find  -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log
+	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log	
+	
+		
+check-local: check-linear-elasticity check-fracture-mechanics check-Elastodynamics  check-Soildynamics
+
 
 clean-local:
 	@echo ""
