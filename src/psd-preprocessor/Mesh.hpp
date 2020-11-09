@@ -27,11 +27,11 @@ if(!top2vol)
  "  ThName = getARGV( \"-mesh\" , ThName );                                       \n"
  "                                                                                \n"
  "//==============================================================================\n"
- "// ------- Erro message if wrong mesh detected -------                          \n"
+ "// ------- Error message if wrong mesh detected -------                         \n"
  "//==============================================================================\n"
  "                                                                                \n" 
  "  if(ThName.find(\".mesh\") == -1 && ThName.find(\".msh\") == -1)               \n"
- "   cout <<\"INVALID MESH: PSD only accepts '.mesh' and '.msh' formats\"<< endl; \n";        
+ "   cout <<\"INVALID MESH: PSD only accepts '.msh' or '.mesh' formats\"<< endl;  \n";        
    
 if(Sequential){
  writeIt
@@ -52,7 +52,11 @@ if(Sequential){
  "      load \"gmsh\"                                                             \n"
  "      Th = gmshloadN(ThName);                                                   \n"
  "    }                                                                           \n"
- "                                                                                \n"  
+ "  if(ThName.find(\".mesh\") > -1)                                               \n" 
+ "    {                                                                           \n"   
+ "      Th = readmeshN(ThName);                                                   \n"
+ "    }                                                                           \n"
+ "                                                                                \n" 
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )
  <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                          )<<
  "                                                                                \n"
@@ -217,6 +221,10 @@ if(!Sequential){
  "      load \"gmsh\"                                                             \n"
  "      Th = gmshloadN(ThName);                                                   \n"
  "    }                                                                           \n"
+ "  if(ThName.find(\".mesh\") > -1)                                               \n" 
+ "    {                                                                           \n"   
+ "      Th = readmeshN(ThName);                                                   \n"
+ "    }                                                                           \n"
  "                                                                                \n"
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                     );
 
@@ -271,6 +279,10 @@ if(!Sequential){
   "    {                                                                           \n"   
   "      Th = gmshloadN(ThName);                                                   \n"
   "    }                                                                           \n"
+  "  if(ThName.find(\".mesh\") > -1)                                               \n" 
+  "    {                                                                           \n"   
+  "      Th = readmeshN(ThName);                                                   \n"
+  "    }                                                                           \n"
   "                                                                                \n"  
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
@@ -315,7 +327,11 @@ if(!Sequential){
   "    {                                                                           \n"   
   "      Th = gmshloadN(ThName);                                                   \n"
   "    }                                                                           \n"
-  "                                                                                \n"
+  "  if(ThName.find(\".mesh\") > -1)                                               \n" 
+  "    {                                                                           \n"   
+  "      Th = readmeshN(ThName);                                                   \n"
+  "    }                                                                           \n"
+  "                                                                                \n" 
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
