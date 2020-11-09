@@ -1246,6 +1246,60 @@ if(dirichletpointconditions>=1)
   "  //                                                                       \n"
   "                                                                           \n";
 
+  if(pointprobe && doublecouple=="unused"){
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//            ------ point probe  Indicies macro  -------                      \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  GetPointProbeIndicies is a  macro designed to  get the  point probe        \n"
+  "//  indicies of the fi nite  element degree  of freedom that correspond        \n"
+  "//  to the  point probe indices. The  macro  also  gives information of        \n"
+  "//  the ranks holding the point probe points in the distributed mesh.          \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  Inputs  : PnP                                                              \n"
+  "//  Outputs : iProbe, Prank                                                    \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  PnP : is the vector containing the point coordinates of the point          \n"
+  "//        probe points.                                                        \n"
+  "//  iProbe : is finite element degree of freedom vector of the  point          \n"
+  "//        probe points.                                                        \n"
+  "//  Prank  : is rank of the MPI process that holds the finite element          \n"
+  "//           degree of freedom of the  point probe points vector.              \n"
+  "//=============================================================================\n"
+  "                                                                               \n";
+
+  if(spc==2  && dirichletpointconditions<1)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetPointProbeIndicies(                                                 \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                             )                                                 \n"   
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
+  "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
+  "     }//                                                                       \n";
+
+
+  if(spc==3  && dirichletpointconditions<1)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetPointProbeIndicies(                                                 \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                               )                                               \n"
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
+  "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
+  "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
+  "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"  
+  "     }//                                                                       \n";  
+  
+  
+  }  
+  
+
 if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   writeIt
   "                                                                               \n"

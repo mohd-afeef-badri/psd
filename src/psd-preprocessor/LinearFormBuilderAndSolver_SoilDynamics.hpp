@@ -151,24 +151,41 @@ if(!Sequential){
 
 if(doublecouple=="displacement-based" || doublecouple=="force-based"){
 
- writeIt
+
+ if(!pointprobe) 
+ writeIt 
  "                                                                                \n"
  "//==============================================================================\n"
  "//  ------- Applying double couple point boundary condition -------             \n"
  "//==============================================================================\n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Applying double couple A\",t0)\n"  : ""            )<<
+ <<(timelog ? "  timerbegin(\"Applying double couple A\",t0)\n"  : ""             )<<
+ "                                                                                \n" 
  "  GetDoubelCoupleIndicies(                                                      \n"
-/*"           DcLabelPoints,                                                       \n"
- "           Vh,                                                                  \n"*/
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
  "           Nrank,Srank,Erank,Wrank                                              \n"
  "   );                                                                           \n"
  "                                                                                \n";
 
-if(doublecouple=="displacement-based")
+ if(pointprobe && dirichletpointconditions<1) 
+ writeIt 
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "//  ----- Applying double couple point boundary condition and point probe-----  \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"Applying double couple A & point probe\",t0)\n" : "")<<
+ "                                                                                \n"  
+ "  GetDoubelCoupleIndicies(                                                      \n"
+ "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
+ "           iNorth,iSouth,iEast,iWest,                                           \n"
+ "           Nrank,Srank,Erank,Wrank,                                             \n"
+ "           PnP,   iProbe, Prank                                                 \n"  
+ "   );                                                                           \n"
+ "                                                                                \n";
 
+if(doublecouple=="displacement-based")
  writeIt
  "                                                                                \n"
  "   ApplyDoubleCoupleToA(                                                        \n"
@@ -184,6 +201,59 @@ if(doublecouple=="displacement-based")
  "                                                                                \n";
 }
 
+
+if(doublecouple=="unused" && pointprobe && dirichletpointconditions<1){
+ writeIt
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"Finding point probe indicies\",t0)\n" : ""          )<<
+ "  GetPointProbeIndicies(                                                        \n"
+ "           PnP,   iProbe, Prank                                                 \n"  
+ "   );                                                                           \n"
+ "                                                                                \n"
+ <<(timelog ? "  timerend  (\"Finding point probe indicies\",t0)\n" : ""          )<< 
+ "                                                                                \n";
+}
+
+if(pointprobe && spc==3)
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "//  ------- Writing probe file  headers -------                                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  for(int j=0; j < iProbe.n; j++)                                               \n"
+ "    if(mpirank==Prank[j]){                                                      \n"
+ "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\");           \n"
+ "      writeprobe << \"# Probe location: P(x,y,z) = P(\"                         \n"
+ "                 << ProbePointCord (j,0) << \" , \"                             \n"
+ "                 << ProbePointCord (j,1) << \" , \"                             \n"
+ "                 << ProbePointCord (j,2) << \")\"                               \n"
+ "                 << \" Probe Rank :  \" << Prank[j]                             \n"
+ "                 <<  endl;                                                      \n"
+ "                                                                                \n"
+ "      writeprobe << \"# u1  u2  u3  v1  v2  v3  a1  a2  a3\" << endl;           \n"
+ "    }                                                                           \n"
+ "                                                                                \n";      
+
+if(pointprobe && spc==2)
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "//  ------- Writing probe file  headers -------                                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  for(int j=0; j < iProbe.n; j++)                                               \n"
+ "    if(mpirank==Prank[j]){                                                      \n"
+ "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\");           \n"
+ "      writeprobe << \"# Probe location: P(x,y) = P(\"                           \n"
+ "                 << ProbePointCord (j,0) << \" , \"                             \n"
+ "                 << ProbePointCord (j,1) << \")\"                               \n"
+ "                 << \" Probe Rank :  \" << Prank[j]                             \n"
+ "                 <<  endl;                                                      \n"
+ "                                                                                \n"
+ "      writeprobe << \"# u1  u2   v1  v2   a1  a2\" << endl;                     \n"
+ "    }                                                                           \n"
+ "                                                                                \n";
 
 
  writeIt
@@ -381,6 +451,47 @@ if(debug && top2vol)
 <<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
 <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )
 <<(timelog ? "  timerend(\"updating variables\",t0)\n" : ""                     );
+
+
+if(pointprobe && spc==3)
+ writeIt
+ "                                                                                \n"
+ "  //-----------------pointprobe writing------------//                           \n"
+ "                                                                                \n"
+ "  for(int j=0; j < iProbe.n; j++)                                               \n"
+ "     if(mpirank==Prank[j]){                                                     \n"
+ "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\",append);    \n"
+ "      writeprobe << t                   << \"\\t\"                              \n" 
+ "                 << uold[][iProbe[j]]   << \"\\t\"                              \n"  
+ "                 << uold[][iProbe[j]+1] << \"\\t\"                              \n" 
+ "                 << uold[][iProbe[j]+2] << \"\\t\"                              \n"  
+ "                 << vold[][iProbe[j]]   << \"\\t\"                              \n"  
+ "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n"  
+ "                 << vold[][iProbe[j]+2] << \"\\t\"                              \n" 
+ "                 << aold[][iProbe[j]]   << \"\\t\"                              \n"  
+ "                 << aold[][iProbe[j]+1] << \"\\t\"                              \n"  
+ "                 << aold[][iProbe[j]+2] << \"\\t\"                              \n" 
+ "                 << endl;                                                       \n" 
+ "     }                                                                          \n";  
+
+
+if(pointprobe && spc==2)
+ writeIt
+ "                                                                                \n"
+ "  //-----------------pointprobe writing------------//                           \n"
+ "                                                                                \n"
+ "  for(int j=0; j < iProbe.n; j++)                                               \n"
+ "     if(mpirank==Prank[j]){                                                     \n"
+ "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\",append);    \n"
+ "      writeprobe << t                   << \"\\t\"                              \n"
+ "                 << uold[][iProbe[j]]   << \"\\t\"                              \n" 
+ "                 << uold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << vold[][iProbe[j]]   << \"\\t\"                              \n" 
+ "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n" 
+ "                 << aold[][iProbe[j]]   << \"\\t\"                              \n" 
+ "                 << aold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << endl;                                                       \n"
+ "     }                                                                          \n"; 
 
 
 if(ParaViewPostProcess){
