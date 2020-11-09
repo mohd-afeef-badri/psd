@@ -4,7 +4,6 @@
 
 
 **Ongoing**
--  mesh flag for PSD_Solve
 -  Install binaries and libraries in usr/bin and usr/include/psd
 -  Hujeux soil law make it work with PSD
 -  Nonlinear damage mechanics with nested matrices 
@@ -29,6 +28,7 @@
 
 
 **Done**
+-  mesh flag for PSD_Solve
 -  Distributed meshing interface for soil dynamics with top-ii-vol
 -  Extract point field in MPI
 -  Force calculation via matrix vector product
