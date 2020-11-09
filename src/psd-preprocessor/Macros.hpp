@@ -15,7 +15,7 @@ cout << " building Macros.edp";
 {ofstream  write("Macros.edp");
 
 writeHeader;
-
+  
 if(spc==2)
  {
 
@@ -28,9 +28,12 @@ if(spc==2)
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
  if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
- if(ParaViewPostProcess || debug)
+ if(ParaViewPostProcess || debug)writeIt
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
- "// def0(i)     : macro needed post-processing via paraview                     \n";   
+ "// def0(i)     : macro needed post-processing via paraview                     \n";
+ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ writeIt
+ "// Sk          : third order strain vector                                     \n";  
  writeIt
  "// Ux, Uy      : x and y displacements                                         \n"
  "// Pk          : finite element space definition                               \n"
@@ -95,7 +98,7 @@ if(spc==2)
  writeIt
  "  macro Sk [ P0 ,                                                               \n"
  "             P0 ,                                                               \n"
- "             P0 ] // Third order strain vector                                  \n"
+ "             P0 ] //                                                            \n"
  "                                                                                \n"
  "                                                                                \n";  
  
@@ -804,34 +807,34 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  
  for(int i=0; i<tractionconditions; i++) 
  writeIt
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)       \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                  \n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)       \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                 \n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)       \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tz)*v2  EndMacro                 \n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)        \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1  EndMacro\n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)        \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Tz)*v2  EndMacro\n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)        \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro\n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n"
- "                                                                            \n"
- "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)         \n"
- "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro\n"
- "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                         \n";  
+ "                                                                                                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)                              \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v  EndMacro                                         \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)                              \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1  EndMacro                                        \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)                              \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tz)*v2  EndMacro                                        \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(!Tbc"<<i<<"Tz)                               \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(!Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)                               \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Tz)*v2  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(!Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)                               \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n"
+ "                                                                                                   \n"
+ "  IFMACRO(Tbc"<<i<<"Tx) IFMACRO(Tbc"<<i<<"Ty) IFMACRO(Tbc"<<i<<"Tz)                                \n"
+ "    NewMacro NeumannBc"<<i<<"() (Tbc"<<i<<"Tx)*v + (Tbc"<<i<<"Ty)*v1 +(Tbc"<<i<<"Tz)*v2  EndMacro  \n"
+ "  ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                                                \n";  
  } 
 
 
@@ -848,35 +851,35 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  
  for(int i=0; i<dirichletconditions; i++) 
  writeIt
- "                                                                               \n"
- "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)          \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)          \n"
- "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)          \n"
- "    NewMacro DirichletBc"<<i<<"() Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)           \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)           \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)           \n"
- "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)            \n"
+ "                                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                          \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                          \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                          \n"
+ "    NewMacro DirichletBc"<<i<<"() Uz=Dbc"<<i<<"Uz  EndMacro                                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                           \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                           \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                           \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                            \n"
  "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n";
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n";
  } 
 
 
@@ -892,40 +895,92 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  
  for(int i=0; i<bodyforceconditions; i++) 
  writeIt
- "                                                                               \n"
- "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)          \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v  EndMacro                     \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)          \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1  EndMacro                    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)          \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fz*v2  EndMacro                    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)           \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1  EndMacro     \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)           \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fz*v2  EndMacro     \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)           \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"
- "                                                                               \n"
- "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)            \n"
- "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro    \n"
- "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                             \n"    
- "                                                                               \n";
+ "                                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)                          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v  EndMacro                                     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)                          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1  EndMacro                                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)                          \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fz*v2  EndMacro                                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(!Fbc"<<i<<"Fz)                           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(!Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)                           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fz*v2  EndMacro                     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(!Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)                           \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro                    \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
+ "                                                                                               \n"
+ "  IFMACRO(Fbc"<<i<<"Fx) IFMACRO(Fbc"<<i<<"Fy) IFMACRO(Fbc"<<i<<"Fz)                            \n"
+ "    NewMacro BodyforceBc"<<i<<"() Fbc"<<i<<"Fx*v+Fbc"<<i<<"Fy*v1+Fbc"<<i<<"Fz*v2  EndMacro     \n"
+ "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"    
+ "                                                                                               \n";
  }  
  
    
 } //-- [if loop terminator] space==3 ended --//
 
+
+if(dirichletpointconditions<1 && !Sequential)
+ {
+  writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//            ------ point probe  Indicies macro  -------                      \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  GetPointProbeIndicies is a  macro designed to  get the  point probe        \n"
+  "//  indicies of the fi nite  element degree  of freedom that correspond        \n"
+  "//  to the  point probe indices. The  macro  also  gives information of        \n"
+  "//  the ranks holding the point probe points in the distributed mesh.          \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  Inputs  : PnP                                                              \n"
+  "//  Outputs : iProbe, Prank                                                    \n"
+  "// -------------------------------------------------------------------         \n"
+  "//  PnP : is the vector containing the point coordinates of the point          \n"
+  "//        probe points.                                                        \n"
+  "//  iProbe : is finite element degree of freedom vector of the  point          \n"
+  "//        probe points.                                                        \n"
+  "//  Prank  : is rank of the MPI process that holds the finite element          \n"
+  "//           degree of freedom of the  point probe points vector.              \n"
+  "//=============================================================================\n";
+
+  if(spc==2)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetPointProbeIndicies(                                                 \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                             )                                                 \n"   
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
+  "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
+  "     }//                                                                       \n";
+
+
+  if(spc==3)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetPointProbeIndicies(                                                 \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                             )                                                 \n"
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
+  "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
+  "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
+  "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"  
+  "     }//                                                                       \n";   
+  
+ } 
 
 
 if(dirichletpointconditions>=1)
@@ -1019,7 +1074,7 @@ if(dirichletpointconditions>=1)
  if(!pointprobe) 
  writeIt
  "                                                                               \n" 
- "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi, PnP, iProbe, Prank)       \n" 
+ "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
  "   for (int i = 0; i < Th.nv; i++){                                            \n" 
  "     for(int j = 0; j < PC.n; j++){                                            \n" 
  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1) && Th(i).z==PC(j,2)){           \n" 
@@ -1032,7 +1087,7 @@ if(dirichletpointconditions>=1)
  if(pointprobe) 
  writeIt
  "                                                                               \n" 
- "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
+ "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi, PnP, iProbe, Prank)       \n" 
  "   for (int i = 0; i < Th.nv; i++){                                            \n" 
  "     for(int j = 0; j < PC.n; j++){                                            \n" 
  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1) && Th(i).z==PC(j,2)){           \n" 
@@ -1208,44 +1263,44 @@ if(dirichletpointconditions>=1)
 
  if(spc==3)
   writeIt
-  "  macro PA0(i)                                                             \n"
-  "        [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
-  "          cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
-  "          cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
-  "        ]//                                                                \n";
+  "  macro PA0(i)                                                                                             \n"
+  "   [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
+  "     cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
+  "     cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
+  "    ]//                                                                                                    \n";
 
  if(Sequential)
   writeIt
-  "                                                                           \n"
-  "//----------------------ParaView plotting macro--------------------------//\n"
-  "                                                                           \n"
-  "  macro exportBegin(name)                                                  \n"
-  "    {ofstream pvd(name +\".pvd\");                                         \n"
-  "      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";                           \n"
-  "      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";  \n"
-  "      pvd << \"         byte_order=\\\"LittleEndian\\\"\\n\";              \n"
-  "      pvd << \"         compressor=\\\"vtkZLibDataCompressor\\\">\\n\";    \n"
-  "      pvd << \"  <Collection>\\n\";                                        \n"
-  "    }//                                                                    \n"
-  "                                                                           \n"
-  "                                                                           \n"
-  "  macro exportEnd(name)                                                    \n"
-  "    {ofstream pvd(name +\".pvd\", append);                                 \n"
-  "    pvd << \"  </Collection>\\n\";                                         \n"
-  "    pvd << \"</VTKFile>\\n\";}                                             \n"
-  "    system(\"mv \"+name+\".pvd .\");                                       \n"
-  "  //                                                                       \n"
-  "                                                                           \n"
-  "                                                                           \n"
-  "  macro exportTimeStep(name, mesh, sol, forder, iterno, ts, nam )          \n"
-  "    savevtk(name+\"_\"+int(iterno)+\".vtu\",mesh,sol,order=forder,dataname=nam);\n"
-  "    ofstream pvd(name +\".pvd\", append);                                  \n"
-  "      pvd << \"    <DataSet timestep=\\\"\" + real(ts) + \"\\\"\\n\";      \n"
-  "      pvd << \"             file=\\\"\";                                   \n"
-  "      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";            \n"
-  "  //                                                                       \n"
-  "                                                                           \n";
-
+  "                                                                                   \n"
+  "//----------------------ParaView plotting macro--------------------------//        \n"
+  "                                                                                   \n"
+  "  macro exportBegin(name)                                                          \n"
+  "    {ofstream pvd(name +\".pvd\");                                                 \n"
+  "      pvd << \"<?xml version=\\\"1.0\\\"?>\\n\";                                   \n"
+  "      pvd << \"<VTKFile type=\\\"Collection\\\" version=\\\"0.1\\\"\\n\";          \n"
+  "      pvd << \"         byte_order=\\\"LittleEndian\\\"\\n\";                      \n"
+  "      pvd << \"         compressor=\\\"vtkZLibDataCompressor\\\">\\n\";            \n"
+  "      pvd << \"  <Collection>\\n\";                                                \n"
+  "    }//                                                                            \n"
+  "                                                                                   \n"
+  "                                                                                   \n"
+  "  macro exportEnd(name)                                                            \n"
+  "    {ofstream pvd(name +\".pvd\", append);                                         \n"
+  "    pvd << \"  </Collection>\\n\";                                                 \n"
+  "    pvd << \"</VTKFile>\\n\";}                                                     \n"
+  "    system(\"mv \"+name+\".pvd .\");                                               \n"
+  "  //                                                                               \n"
+  "                                                                                   \n"
+  "                                                                                   \n"
+  "  macro exportTimeStep(name, mesh, sol, forder, iterno, ts, nam )                  \n"
+  "    savevtk(name+\"_\"+int(iterno)+\".vtu\",mesh,sol,order=forder,dataname=nam);   \n"
+  "    ofstream pvd(name +\".pvd\", append);                                          \n"
+  "      pvd << \"    <DataSet timestep=\\\"\" + real(ts) + \"\\\"\\n\";              \n"
+  "      pvd << \"             file=\\\"\";                                           \n"
+  "      pvd << name << \"_\" << int(iterno) << \".vtu\\\"/>\\n\";                    \n"
+  "  //                                                                               \n"
+  "                                                                                   \n";
+  
   if(pointprobe && doublecouple=="unused"){
   writeIt
   "                                                                               \n"
@@ -1515,7 +1570,7 @@ if(doublecouple=="force-based")
   "       RHS[iW]= CondW;                                                         \n"
   "  //                                                                           \n"
   "                                                                               \n";
-}
+}  // if(doublecouple=="displacement-based" || doublecouple=="force-based") ENDED
 
 }
 
