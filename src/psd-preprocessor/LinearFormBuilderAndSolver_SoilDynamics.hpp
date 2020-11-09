@@ -181,7 +181,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
  "           Nrank,Srank,Erank,Wrank,                                             \n"
- "           PnP,   iProbe, Prank                                                 \n"  
+ "           ProbePointCord,   iProbe, Prank                                      \n"  
  "   );                                                                           \n"
  "                                                                                \n";
 
@@ -207,7 +207,7 @@ if(doublecouple=="unused" && pointprobe && dirichletpointconditions<1){
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"Finding point probe indicies\",t0)\n" : ""          )<<
  "  GetPointProbeIndicies(                                                        \n"
- "           PnP,   iProbe, Prank                                                 \n"  
+ "           ProbePointCord,   iProbe, Prank                                      \n"  
  "   );                                                                           \n"
  "                                                                                \n"
  <<(timelog ? "  timerend  (\"Finding point probe indicies\",t0)\n" : ""          )<< 
