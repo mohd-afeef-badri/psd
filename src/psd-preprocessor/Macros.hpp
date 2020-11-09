@@ -944,18 +944,37 @@ if(dirichletpointconditions>=1)
  "//=============================================================================\n";
   
  if(spc==2){
- writeIt 
- "                                                                               \n" 
- "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
- "   for (int i = 0; i < Th.nv; i++){                                            \n" 
- "     for(int j = 0; j < PC.n; j++){                                            \n" 
- "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                               \n" 
- "         PCi[j]=i; mpirankPCi[j]=mpirank;                                      \n" 
- "       }                                                                       \n" 
- "     }                                                                         \n" 
- "   }                                                                           \n"  
- "  //                                                                           \n";            
-    
+ 
+ if(!pointprobe)
+  writeIt 
+  "                                                                              \n"
+  "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                          \n"
+  "   for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j = 0; j < PC.n; j++){                                           \n"
+  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
+  "         PCi[j]=i; mpirankPCi[j]=mpirank;                                     \n"
+  "       }                                                                      \n"
+  "     }                                                                        \n"
+  "   }                                                                          \n" 
+  "  //                                                                          \n";            
+
+ if(pointprobe)
+  writeIt 
+  "                                                                              \n"
+  "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi, PnP, iProbe, Prank)      \n"
+  "   for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     for(int j = 0; j < PC.n; j++){                                           \n"
+  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
+  "         PCi[j]=i; mpirankPCi[j]=mpirank;                                     \n"
+  "       }                                                                      \n"
+  "     }                                                                        \n"
+  "     for(int j=0; j < iProbe.n; j++){                                         \n"
+  "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 ){          \n"
+  "           iProbe[j]=i*2; Prank[j]=mpirank;                                   \n"
+  "       }                                                                      \n"
+  "     }                                                                        \n"
+  "   }                                                                          \n"         
+  "  //                                                                          \n";    
       
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
@@ -996,6 +1015,21 @@ if(dirichletpointconditions>=1)
    
   
  if(spc==3){
+ 
+ if(!pointprobe) 
+ writeIt
+ "                                                                               \n" 
+ "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi, PnP, iProbe, Prank)       \n" 
+ "   for (int i = 0; i < Th.nv; i++){                                            \n" 
+ "     for(int j = 0; j < PC.n; j++){                                            \n" 
+ "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1) && Th(i).z==PC(j,2)){           \n" 
+ "         PCi[j]=i; mpirankPCi[j]=mpirank;                                      \n" 
+ "       }                                                                       \n" 
+ "     }                                                                         \n" 
+ "   }                                                                           \n"  
+ "  //                                                                           \n";
+ 
+ if(pointprobe) 
  writeIt
  "                                                                               \n" 
  "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           \n" 
@@ -1005,7 +1039,14 @@ if(dirichletpointconditions>=1)
  "         PCi[j]=i; mpirankPCi[j]=mpirank;                                      \n" 
  "       }                                                                       \n" 
  "     }                                                                         \n" 
- "   }                                                                           \n"  
+ "     for(int j=0; j < iProbe.n; j++){                                          \n"
+ "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
+ "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
+ "            abs(Th(i).z-PnP(j,2))<.01    ){                                    \n"
+ "           iProbe[j]=i*3; Prank[j]=mpirank;                                    \n"
+ "       }                                                                       \n"  
+ "     }                                                                         \n"   
+ "   }                                                                           \n"   
  "  //                                                                           \n";
  
  for(int i=0; i<dirichletpointconditions; i++)
@@ -1230,7 +1271,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "//=============================================================================\n"
   "                                                                               \n";
   
-  if(spc==2)
+  if(spc==2 && !pointprobe)
   writeIt    
   "                                                                               \n"
   "  macro GetDoubelCoupleIndicies(                                               \n"
@@ -1247,8 +1288,32 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1])                                    \n"
   "       {iW=i*2+1; Wrank=mpirank; }                                             \n"
   "     }//                                                                       \n";
+
+  if(spc==2 && pointprobe && dirichletpointconditions<1)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetDoubelCoupleIndicies(                                               \n"
+  "                                PnN,   PnS,   PnE,   PnW,                      \n"
+  "                                iN,    iS,    iE,    iW,                       \n"
+  "                                Nrank, Srank, Erank, Wrank,                    \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                               )                                               \n"   
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1])                                    \n"
+  "       {iN=i*2; Nrank=mpirank; }                                               \n"
+  "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1])                                    \n"
+  "       {iS=i*2; Srank=mpirank; }                                               \n"
+  "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1])                                    \n"
+  "       {iE=i*2+1; Erank=mpirank; }                                             \n"
+  "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1])                                    \n"
+  "       {iW=i*2+1; Wrank=mpirank; }                                             \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
+  "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
+  "     }//                                                                       \n";
+
   
-  if(spc==3)
+  if(spc==3  && !pointprobe)
   writeIt    
   "                                                                               \n"
   "  macro GetDoubelCoupleIndicies(                                               \n"
@@ -1264,6 +1329,31 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "       {iE=i*3+2; Erank=mpirank;}                                              \n"
   "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && abs(Th(i).z-PnW[2])<.01)         \n"
   "       {iW=i*3+2; Wrank=mpirank;}                                              \n"
+  "     }//                                                                       \n";
+
+  if(spc==3  && pointprobe && dirichletpointconditions<1)
+  writeIt    
+  "                                                                               \n"
+  "  macro GetDoubelCoupleIndicies(                                               \n"
+  "                                PnN,   PnS,   PnE,   PnW,                      \n"
+  "                                iN,    iS,    iE,    iW,                       \n"
+  "                                Nrank, Srank, Erank, Wrank,                    \n"
+  "                                PnP,   iProbe, Prank                           \n" 
+  "                               )                                               \n"
+  "    for (int i = 0; i < Th.nv; i++){                                           \n"
+  "     if(Th(i).x==PnN[0] && Th(i).y==PnN[1] && abs(Th(i).z-PnN[2])<.01)         \n"
+  "       {iN=i*3; Nrank=mpirank;}                                                \n"
+  "     if(Th(i).x==PnS[0] && Th(i).y==PnS[1] && abs(Th(i).z-PnS[2])<.01)         \n"
+  "       {iS=i*3; Srank=mpirank;}                                                \n"
+  "     if(Th(i).x==PnE[0] && Th(i).y==PnE[1] && abs(Th(i).z-PnE[2])<.01)         \n"
+  "       {iE=i*3+2; Erank=mpirank;}                                              \n"
+  "     if(Th(i).x==PnW[0] && Th(i).y==PnW[1] && abs(Th(i).z-PnW[2])<.01)         \n"
+  "       {iW=i*3+2; Wrank=mpirank;}                                              \n"
+  "     for(int j=0; j < iProbe.n; j++)                                           \n"
+  "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
+  "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
+  "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
+  "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"  
   "     }//                                                                       \n";
 
 if(doublecouple=="displacement-based")
