@@ -413,8 +413,25 @@ if(dirichletpointconditions>=1)
   "  int[int]    PCi(PbcCord.n); PCi=-1;                                          \n"
   "  int[int]    mpirankPCi(PbcCord.n); mpirankPCi=-1;                            \n";
 
-
-
+if(pointprobe)
+ writeIt
+  "                                                                               \n"
+  "//============================================================================ \n"
+  "//        ------- parameters for point probe -------                           \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// iProbe     : point index of the probe in finite element space.              \n"
+  "// Prank      : MPI rank that hold point iProbe                                \n"
+  "// --------------------------------------------------------------------------- \n"
+  "//  values of  iProbe and Prank are set to -1 as this will sereve as error     \n" 
+  "//  indicator should anything go wrong.                                        \n" 
+  "//============================================================================ \n"
+  "                                                                               \n"
+  "  int[int] iProbe(ProbePointCord.n), Prank(ProbePointCord.n);                  \n"
+  "  iProbe=-1;    Prank=-1;                                                      \n"
+  "                                                                               \n";
+  
+  
+  
 if(reactionforce)if(Prblm=="damage" && Model=="Mazar"){
  writeIt
  "                                                                                \n"

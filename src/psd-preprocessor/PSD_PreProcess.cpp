@@ -91,6 +91,8 @@
   -energydecomp [bool]     To activate hybrid phase field energy decomposition.
 
   -sequential   [bool]     To generate a sequential ff++ solver.
+  
+  -pointprobe   [bool]     To insert point probes for post processing.  
 
   -constrainHPF     [bool] To use constrain condition in hybrid phase-field model.          
 
@@ -135,11 +137,13 @@ int main(int argc, char *argv[]){
   bool supercomp    = false;
   bool fastmethod   = true;
   bool Sequential   = false;
+  bool pointprobe   = false; 
   bool dirichletbc  = false;
   bool energydecomp = false;
-  bool plotreaction = false;  
+  bool plotreaction = false; 
+  bool constrainHPF = false;   
   bool reactionforce= false;
-  bool constrainHPF = false;  
+  
 
   string Model                   = "hybrid-phase-field";
   string Solver                  = "cg";
@@ -181,6 +185,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-sequential"        ) Sequential                     = true;
     if( argvdummy == "-dirichletbc"       ) dirichletbc                    = true;
     if( argvdummy == "-energydecomp"      ) energydecomp                   = true;
+    if( argvdummy == "-pointprobe"        ) pointprobe                     = true;    
     if( argvdummy == "-top2vol-meshing"   ) top2vol                        = true;
     if( argvdummy == "-getreactionforce"  ) reactionforce                  = true;
     if( argvdummy == "-plotreactionforce" ) plotreaction                   = true;
@@ -280,6 +285,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " testflags is -----------------------> " << testflags                << endl; 
   cout << " fastmethod is ----------------------> " << fastmethod               << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
+  cout << " pointprobe is ----------------------> " << pointprobe               << endl;  
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
   cout << " constrainedHPF is ------------------> " << constrainHPF             << endl;        
