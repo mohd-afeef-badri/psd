@@ -1,4 +1,5 @@
 PSD_PreProcess
 PSD_Solve
+PSD_Solve_Seq
 top-ii-vol-meshes/*
 *.edp
