@@ -560,7 +560,7 @@ AnyType SplitEnergy_Op<K>::operator()(Stack stack) const {
     lw = w[0];
     w.resize(lw);
 
-    int    probDimP1   = problemDimension + 1;
+ //   int    probDimP1   = problemDimension + 1;  // BUG  BUG  BUG  BUG  BUG
 	   
     if(problemDimension==2)
 	    {
@@ -573,7 +573,8 @@ AnyType SplitEnergy_Op<K>::operator()(Stack stack) const {
       for(int j = 0; j < pPlus->n; ++j)
        {
         
-        indexEx  = j*probDimP1;
+  //      indexEx  = j*probDimP1;   // BUG  BUG  BUG  BUG  BUG
+        indexEx  = j*3;  
         indexEy  = indexEx + 1;
         indexExy = indexEx + 2;
 
@@ -614,7 +615,8 @@ AnyType SplitEnergy_Op<K>::operator()(Stack stack) const {
       for(int j = 0; j < pPlus->n; ++j)
        {
   
-	      indexEx  = j*probDimP1; 
+      //      indexEx  = j*probDimP1;   // BUG  BUG  BUG  BUG  BUG  
+	      indexEx  = j*6; 
 	      indexEy  = indexEx + 1;  
 	      indexEz  = indexEx + 2; 
 	      indexExy = indexEx + 3;
