@@ -1,13 +1,16 @@
 # Changelog
 All notable changes to PSD solver will be documented in this file.
 
-## Rolling Release
+## Rolling Release (2.1)
 ### Added
 - New accurate force calculations via matrix-vector product: new flag `-getreactionforce`.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
 - New flag `-plotreactionforce` to activate real time pipe plotting using GnuPlot. 
 - More verbos info on `-help` 
 - New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
+- New flag `-probe` to postprocess FE variables at a point. 
+
+### 
 
 ### Changed
 
@@ -16,6 +19,14 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Removed 
 - Flag `-pipegnu` not supported for damage mechanics (to be further deprecated from elsto/soildynamics)
+
+### Bugs removed
+
+- Stain vector inccorect numbering in split fuction of GFP
+
+   ( see hash  [5ec7b882494f71984d07f468b518ec886e942d32](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&h=5ec7b882494f71984d07f468b518ec886e942d32))
+
+
 
 ## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
 ### Added

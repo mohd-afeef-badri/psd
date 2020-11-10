@@ -1,6 +1,6 @@
 <h1 id="changelog">Changelog</h1>
 <p>All notable changes to PSD solver will be documented in this file.</p>
-<h2 id="rolling-release">Rolling Release</h2>
+<h2 id="rolling-release-2.1">Rolling Release (2.1)</h2>
 <h3 id="added">Added</h3>
 <ul>
 <li>New accurate force calculations via matrix-vector product: new flag <code>-getreactionforce</code>.</li>
@@ -8,7 +8,9 @@
 <li>New flag <code>-plotreactionforce</code> to activate real time pipe plotting using GnuPlot.</li>
 <li>More verbos info on <code>-help</code></li>
 <li>New flag <code>-mesh</code> to provide the name of mesh to <code>PSD_Solve</code>.</li>
+<li>New flag <code>-probe</code> to postprocess FE variables at a point.</li>
 </ul>
+<h3 id="section"></h3>
 <h3 id="changed">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.7-1.</li>
@@ -18,7 +20,12 @@
 <ul>
 <li>Flag <code>-pipegnu</code> not supported for damage mechanics (to be further deprecated from elsto/soildynamics)</li>
 </ul>
-<h2 id="section"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v2.0">2.0</a> - 2020-08-18</h2>
+<h3 id="bugs-removed">Bugs removed</h3>
+<ul>
+<li>Stain vector inccorect numbering in split fuction of GFP</li>
+</ul>
+<p>( see hash <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&amp;h=5ec7b882494f71984d07f468b518ec886e942d32">5ec7b882494f71984d07f468b518ec886e942d32</a>)</p>
+<h2 id="section-1"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v2.0">2.0</a> - 2020-08-18</h2>
 <h3 id="added-1">Added</h3>
 <ul>
 <li>New processing via C++, <code>PSD_PreProcess</code> binary (MAJOR CHANGE).</li>
@@ -52,7 +59,7 @@
 <li>Moved to C++ for preprocessing.</li>
 <li>Moved to shell wrapper PSD_Solve for solving.</li>
 <li>Changes to GFP energydecopostion plugin 'DecompEnergy_Op', now includes compressibility history.</li>
-<li>Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.</li>
+<li>Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1<a href="#section"></a>,PsiPlus<a href="#section"></a>,PsiMinus<a href="#section"></a>,HistPlus<a href="#section"></a>,HistMinus<a href="#section"></a>,par);.</li>
 <li>Postprocessing flag <code>-postprocess</code> options now support <code>u</code> , <code>v</code>, <code>a</code> , <code>uv</code>, <code>ua</code>, <code>av</code> or <code>uav</code>.</li>
 </ul>
 <h3 id="removed-1">Removed</h3>
@@ -66,11 +73,11 @@
 <li>No more <code>-quasistatic</code> flag now handled by <code>-problem</code> and <code>-model</code>.</li>
 <li>No more <code>-dirichletbc</code> flag now handled by <code>-dirichletconditions</code>.</li>
 </ul>
-<h3 id="bugs-removed">Bugs removed</h3>
+<h3 id="bugs-removed-1">Bugs removed</h3>
 <ul>
 <li>Bug in 3D paraxial loading (see hash <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=blobdiff&amp;h=f23846d41b3eee27b9f2c3b852b9c5e2f90080c5&amp;hp=0af4cfcc1355b98cc09a94e42c8ec521c6c0bb00&amp;hb=8fcbe7390e526423cd24b5f0ab1c06899b36c67f&amp;f=src%2Fpsd-preprocessor%2FMacros.hpp">8fcbe7390e526423cd24b5f0ab1c06899b36c67f</a>)</li>
 </ul>
-<h2 id="section-1"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.8">1.8</a> - 2020-01-21</h2>
+<h2 id="section-2"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.8">1.8</a> - 2020-01-21</h2>
 <h3 id="added-2">Added</h3>
 <ul>
 <li>New soil dynamic module <code>-soildynamics</code></li>
@@ -86,7 +93,7 @@
 <li>VTU files get stored with a date and time stamp.</li>
 <li>New way of maintaining a logfile for all simulations (date,time,case,..) in <code>simulation-log.csv</code>.</li>
 </ul>
-<h2 id="section-2"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.7">1.7</a> - 2019-11-08</h2>
+<h2 id="section-3"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.7">1.7</a> - 2019-11-08</h2>
 <h3 id="added-3">Added</h3>
 <ul>
 <li>New mesh reordering via Reverse Cuthill-Mackee via <code>-useRCM</code>.</li>
@@ -104,7 +111,7 @@
 <li>Better plotting support for <code>PlotMPI()</code>.</li>
 <li>Moved to FreeFEM 4.4.</li>
 </ul>
-<h2 id="section-3"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.6">1.6</a> - 2019-06-11</h2>
+<h2 id="section-4"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.6">1.6</a> - 2019-06-11</h2>
 <h3 id="added-4">Added</h3>
 <ul>
 <li>Dynamic linear solver in 2D and 3D parallel/sequential.</li>
@@ -124,7 +131,7 @@
 <ul>
 <li>Bug in integrals fixed.</li>
 </ul>
-<h2 id="section-4"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.5">1.5</a> - 2019-05-29</h2>
+<h2 id="section-5"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.5">1.5</a> - 2019-05-29</h2>
 <h3 id="added-5">Added</h3>
 <ul>
 <li>Dynamic linear solver in 2D and 3D sequential.</li>
@@ -143,7 +150,7 @@
 <ul>
 <li>Removed the manufactured solution codes.</li>
 </ul>
-<h2 id="section-5"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.4">1.4</a> - 2019-05-14</h2>
+<h2 id="section-6"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.4">1.4</a> - 2019-05-14</h2>
 <h3 id="added-6">Added</h3>
 <ul>
 <li>Fully vectorial finite element solver for phase-filed <code>-vectorial</code>.</li>
@@ -156,7 +163,7 @@
 <li>Elastic energy decomposition is now optional <code>-energydecomp</code>.</li>
 <li>Force calculation using integrals (Thanks to G.Rastiello).</li>
 </ul>
-<h2 id="section-6"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.3">1.3</a> - 2019-04-08</h2>
+<h2 id="section-7"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.3">1.3</a> - 2019-04-08</h2>
 <h3 id="added-7">Added</h3>
 <ul>
 <li>New meshes in 2D/3D<code>Notched-plate</code> , <code>square-crack</code>, etc.</li>
@@ -179,7 +186,7 @@
 <li>Move to FreeFEM version 4.0.</li>
 <li>Move to PETSc version 3.11.</li>
 </ul>
-<h2 id="section-7"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.2">1.2</a> - 2019-03-18</h2>
+<h2 id="section-8"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.2">1.2</a> - 2019-03-18</h2>
 <h3 id="added-8">Added</h3>
 <ul>
 <li>Support for Gmsh's <code>.msh</code> or Medit's <code>.mesh</code> meshes in folder <code>Meshes</code>.</li>
@@ -198,7 +205,7 @@
 <li>Move to FreeFEM version 3.62.</li>
 <li>Moved manufactured solutions to <code>validation-test</code> folder.</li>
 </ul>
-<h2 id="section-8"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.1">1.1</a> - 2019-03-04</h2>
+<h2 id="section-9"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.1">1.1</a> - 2019-03-04</h2>
 <h3 id="added-9">Added</h3>
 <ul>
 <li>Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).</li>
@@ -212,7 +219,7 @@
 <li>Separate folder of manufactured solutions and the linear elastic solver.</li>
 <li>Move to FreeFEM version 3.61.</li>
 </ul>
-<h2 id="section-9"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.0">1.0</a> - 2019-02-15</h2>
+<h2 id="section-10"><a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&amp;hb=v1.0">1.0</a> - 2019-02-15</h2>
 <h3 id="added-10">Added</h3>
 <ul>
 <li>Initial FreeFEM files Method of manufactured solution for linear elasticity in 2D.</li>

@@ -79,7 +79,7 @@ To perform a simulation three steps are involved
 Now that the mesh has been loaded. Its time to set up the solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
 
 ```
-./PSD_PreProcess [Options-PSD]
+PSD_PreProcess [Options-PSD]
 ```
 
 Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal.
@@ -87,7 +87,7 @@ Via the command line options you will embed the physics within the solver. This 
 For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
 ```
-/PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1
+PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1
 ```
 
 **Step 2: Launching the solver**
@@ -122,9 +122,10 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
 | `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
 | `-timelog`     | `[bool]`  | To activate time logging the different phases of the solver. |
-| `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm. support .        |
+| `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm support       |
 | `-bodyforce`   | `[bool]`  | To activate volumetric source term (body force).             |
 | `-vectorial`   | `[bool]`  | To use vectorial finite element method.			    |
+| `-pointprobe` | `[bool]` | To postprocess point fields.	|
 | `-sequential`  | `[bool]`  | To solve via a sequential solver.        |
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
 | `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
@@ -158,5 +159,3 @@ These are a set of commandline flags/options that control your simulation. You c
 
 - **mohd-afeef.badri@cea.fr**
 - **mohd-afeef.badri@hotmail.com**
-- **mohd-afeef.badri@etu.univ-nantes.fr** 
-

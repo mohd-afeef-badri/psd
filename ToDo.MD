@@ -5,15 +5,17 @@
 
 **Ongoing**
 -  Install binaries and libraries in usr/bin and usr/include/psd
--  Hujeux soil law make it work with PSD
--  Nonlinear damage mechanics with nested matrices 
+-  Extend -probe flag to all physics
 
 
 
 **Todo**
 
--  To add examples for -mesh flag in make check
+-  Hujeux soil law make it work with PSD
+-  Nonlinear damage mechanics with nested matrices 
 
+-  To add examples for -probe flag in make check
+-  To add examples for -mesh flag in make check
 -  Probe flag for probing field values
 -  make check examples for time-discretization
 -  Optimize force calculation (matrix-vector type)
