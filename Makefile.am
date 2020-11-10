@@ -48,6 +48,10 @@ install-exec-local:
 tutorials:
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes
 	@mkdir -p $${HOME}/PSD-tutorials
+	@mkdir -p $${HOME}/PSD-tutorials/elastodynamics
+	@mkdir -p $${HOME}/PSD-tutorials/soildynamics
+	@mkdir -p $${HOME}/PSD-tutorials/fracture-mechanics
+	@mkdir -p $${HOME}/PSD-tutorials/linear-elasticity				
 	@mkdir -p $${HOME}/PSD-tutorials/Doc
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/2D
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/3D		
@@ -64,7 +68,14 @@ tutorials:
 	@cp  ./data/meshes/2D/Geo-Files/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.			
 	@cp  ./data/meshes/3D/Geo-Files/*.msh  $${HOME}/PSD-tutorials/Meshes/3D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.geo  $${HOME}/PSD-tutorials/Meshes/3D/.
-	@cp  ./etc/*.xyz 	               $${HOME}/PSD-tutorials/Meshes/3D/.		
+	@cp  ./etc/*.xyz 	               $${HOME}/PSD-tutorials/Meshes/3D/.
+	@echo ""
+	@echo " ## tutorials ##   Copying text                  "	
+	@echo ""			
+	@cp  ./demos/elastodynamics/*.pdf      $${HOME}/PSD-tutorials/elastodynamics/.
+	@cp  ./demos/soildynamics/*.pdf        $${HOME}/PSD-tutorials/soildynamics/.
+	@cp  ./demos/linear-elasticity/*.pdf   $${HOME}/PSD-tutorials/linear-elasticity/.
+	@cp  ./demos/fracture-mechanics/*.pdf  $${HOME}/PSD-tutorials/fracture-mechanics/.
 	@echo "  			  "
 	@echo "*============================================================*"
 	@echo " Finished installing  PSD version $(VERSION) developers edition"

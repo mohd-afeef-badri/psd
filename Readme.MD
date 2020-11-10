@@ -36,8 +36,10 @@ autoreconf -i
 ```
 ./configure 
 ```
-*Note*:   `./configure` will install PSD in `$HOME/PSD` to change this directory use `--prefix=Your/Own/Path` with `./configure`. 
+*Note*:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider chaning directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`
+
 *Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+
 ```
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
 ```
@@ -50,9 +52,11 @@ make
 
 - Install PSD
 ```
-make install
+sudo make install  
 ```
-Now you should have the solver at `$HOME/PSD`. To use the solver please go to `$HOME/PSD`.
+*Note* : You should not use `sudo` if you have used `--prefix` during the `./configure` 
+
+Now you should have the PSD solvers installed. 
 
 **Additional FreeFEM tweak for brittle fracture mechanics**
 

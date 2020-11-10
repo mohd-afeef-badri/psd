@@ -25,16 +25,20 @@
 <pre><code>autoreconf -i</code></pre></li>
 <li><p>Configure PSD within the cloned folder</p>
 <pre><code>./configure </code></pre>
-<p><em>Note</em>: <code>./configure</code> will install PSD in <code>$HOME/PSD</code> to change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. <em>Note</em>: <code>./configure</code> will try to look for installation of <a href="https://freefem.org/">FreeFEM</a> and <a href="http://gmsh.info/">Gmsh</a> in <code>usr/bin/</code> or <code>usr/local/bin/</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> and <code>--with-Gmsh=</code>. For example, if <a href="https://freefem.org/">FreeFEM</a> is installed at <code>home/FreeFem/bin</code> and <a href="http://gmsh.info/">Gmsh</a> in <code>home/Gmsh/bin</code> then one should use</p>
-<pre><code>./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</code></pre></li>
-<li><p>Make PSD directives</p></li>
+<p><em>Note</em>: <code>./configure</code> will install PSD in <code>/usr/local/bin</code> and you would need sudo rights to perform installation, for non sudo users or for local install consider chaning directory of installation. To change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. Remember to add <code>Your/Own/Path</code> to your <code>$PATH</code> variable, you can do so by <code>export PATH=$PATH:Your/Own/Path</code></p></li>
+</ul>
+<p><em>Note</em>: <code>./configure</code> will try to look for installation of <a href="https://freefem.org/">FreeFEM</a> and <a href="http://gmsh.info/">Gmsh</a> in <code>usr/bin/</code> or <code>usr/local/bin/</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> and <code>--with-Gmsh=</code>. For example, if <a href="https://freefem.org/">FreeFEM</a> is installed at <code>home/FreeFem/bin</code> and <a href="http://gmsh.info/">Gmsh</a> in <code>home/Gmsh/bin</code> then one should use</p>
+<pre><code>./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</code></pre>
+<ul>
+<li>Make PSD directives</li>
 </ul>
 <pre><code>make</code></pre>
 <ul>
 <li><p>Install PSD</p>
-<pre><code>make install</code></pre>
-<p>Now you should have the solver at <code>$HOME/PSD</code>. To use the solver please go to <code>$HOME/PSD</code>.</p></li>
+<pre><code>sudo make install  </code></pre>
+<p><em>Note</em> : You should not use <code>sudo</code> if you have used <code>--prefix</code> during the <code>./configure</code></p></li>
 </ul>
+<p>Now you should have the PSD solvers installed.</p>
 <p><strong>Additional FreeFEM tweak for brittle fracture mechanics</strong></p>
 <p>Note that this procedure is only recommended if you are interested in using PSD for brittle fracture problems. In your FreeFEM source files (installation) go to <code>src/femlib/fem.cpp</code> , in this file replace the lines of code</p>
 <pre><code>R seuil=hm/splitmax/4.0;</code></pre>
