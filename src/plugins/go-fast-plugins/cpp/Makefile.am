@@ -12,6 +12,9 @@ gofastplugins.so: gofastplugins.cpp
 	$(FFCXX) -auto gofastplugins.cpp
 	@echo ""	
 
+install-exec-local:
+	@cp gofastplugins.so ${prefix}/include/psd/gofastplugins.so	
+		
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

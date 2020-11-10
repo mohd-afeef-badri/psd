@@ -9,7 +9,11 @@ all-local: PSD_Solve
 
 PSD_Solve:
 	cat $(FF_IS) > PSD_Solve
-	chmod a+x PSD_Solve	
+	find  -name PSD_Solve -exec sed -i 's#mpirun=mpirun#mpirun=mpirun; export FF_LOADPATH="${prefix}/include/psd"; export FF_INCLUDEPATH="${prefix}/include/psd";#g' {} \;
+	chmod a+x PSD_Solve
+	
+install-exec-local:
+	@cp  PSD_Solve ${prefix}/bin/.			
 	
 clean-local:
 	@echo ""

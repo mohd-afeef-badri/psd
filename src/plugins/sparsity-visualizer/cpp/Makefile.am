@@ -10,8 +10,11 @@ all-local: MatrixPlotter.so
 
 MatrixPlotter.so: MatrixPlotter.cpp
 	$(FFCXX) -auto MatrixPlotter.cpp
-	@echo ""	
-
+	@echo ""
+		
+install-exec-local:
+	@cp MatrixPlotter.so ${prefix}/include/psd/MatrixPlotter.so
+	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

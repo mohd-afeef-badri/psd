@@ -104,7 +104,8 @@ test "$FFMPI" == "no" && AC_MSG_ERROR([
 
 SECTION_TITLE([    generating the required makefiles   ])
 
-AC_PREFIX_DEFAULT($HOME)
+#AC_PREFIX_DEFAULT($HOME)
+#AC_PREFIX_DEFAULT()
 AC_CONFIG_FILES([
  Makefile
  src/Makefile 
@@ -121,7 +122,8 @@ AC_CONFIG_FILES([
  src/plugins/soil-laws/cpp/Makefile 
  src/plugins/soil-laws/hujeux-law-lib/Makefile   
  src/psd-preprocessor/Makefile
- src/psd-solve/Makefile 
+ src/psd-solve/Makefile
+ src/ff-files/Makefile   
  test/load/Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile

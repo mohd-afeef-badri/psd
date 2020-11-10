@@ -12,6 +12,9 @@ top-ii-vol.so: top-ii-vol.cpp
 	$(FFCXX) -auto top-ii-vol.cpp
 	@echo ""	
 
+install-exec-local:
+	@cp top-ii-vol.so ${prefix}/include/psd/top-ii-vol.so
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

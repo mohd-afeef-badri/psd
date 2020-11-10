@@ -12,6 +12,9 @@ soil-laws.so: soil-laws.cpp
 	$(FFCXX) -auto soil-laws.cpp './../hujeux-law-lib/hujeux.o' './../hujeux-law-lib/utils.o'
 	@echo ""	
 
+install-exec-local:
+	@cp soil-laws.so ${prefix}/include/psd/soil-laws.so
+	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

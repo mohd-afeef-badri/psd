@@ -1,33 +1,23 @@
-LIST_COMPILE= iovtk.cpp
-	
-all-local: iovtk.so
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Compilation done in :"; pwd
-	@echo "*============================================================*"
-	@echo ""
-	@echo " Compilation list $(LIST_COMPILE)"
 
-iovtk.so: iovtk.cpp
-	$(FFCXX) -auto iovtk.cpp
-	@echo ""	
 
 install-exec-local:
-	@cp iovtk.so ${prefix}/include/psd/iovtk.so
-	
+	@cp DDmacro.edp ${prefix}/include/psd/DDmacro.edp
+	@cp DDplotMacro.edp ${prefix}/include/psd/DDplotMacro.edp
+	@cp MacroTools.edp ${prefix}/include/psd/MacroTools.edp
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
-
-
+	rm -f *~ 
+	@echo ""
+	
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -rf Makefile Makefile.in	
+	rm  -rf Makefile Makefile.in

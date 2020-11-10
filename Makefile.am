@@ -15,7 +15,7 @@ config.log \
 stamp-h1 \
 .swp
 
-
+homepsd = $${HOME}
 all-local: logo
 	@echo "*============================================================*"
 	@echo " 'make' finished now do 'make check'"
@@ -33,48 +33,17 @@ logo:
 	@echo "*============================================================*"
 	@echo ""
 
+#        ifeq ("x","y")	
+#	   THIS IS COMMENTED
+#        endif
+
 install-exec-local:
-	@echo ""
+	@mkdir -p ${prefix}/include/psd
+	@echo "  			  "
 	@echo "*============================================================*"
-	@echo " # Making required directories                   "
-	@mkdir -p ${prefix}/PSD
-	@mkdir -p ${prefix}/PSD/Meshes		
-	@mkdir -p ${prefix}/PSD/Meshes/2D
-	@mkdir -p ${prefix}/PSD/Meshes/3D
-	@mkdir -p ${prefix}/PSD/Plugins
-	@mkdir -p ${prefix}/PSD/Solver
-	@mkdir -p ${prefix}/PSD/Doc	
-	@echo ""
-	@echo " # Copying meshes                   "	
-	@cp  ./data/meshes/2D/Meshes/* ${prefix}/PSD/Meshes/2D/.	
-	@cp  ./data/meshes/3D/Meshes/* ${prefix}/PSD/Meshes/3D/.
-	@cp  ./etc/*.xyz 	${prefix}/PSD/Meshes/3D/.						
-	@echo ""
-	@echo " # Copying PSD plugins/support-files                  "	
-	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so ${prefix}/PSD/Plugins/gofastplugins.so
-	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so ${prefix}/PSD/Plugins/top-ii-vol.so	
-	@cp  ./src/plugins/paraview-output/cpp/iovtk.so ${prefix}/PSD/Plugins/iovtk.so
-	@cp  ./src/plugins/sparsity-visualizer/cpp/MatrixPlotter.so ${prefix}/PSD/Plugins/MatrixPlotter.so
-	@cp  ./src/ff-files/DDmacro.edp ${prefix}/PSD/Plugins/DDmacro.edp
-	@cp  ./src/ff-files/DDplotMacro.edp ${prefix}/PSD/Plugins/DDplotMacro.edp	
-	@cp  ./src/ff-files/MacroTools.edp ${prefix}/PSD/Plugins/MacroTools.edp	
-	@cp  ./src/ff-files/simulation-log.csv ${prefix}/PSD/Solver/.
-	@echo ""
-	@echo " # Copying PSD PreProcessor and solver                  "	
-	@cp  ./src/psd-preprocessor/PSD_PreProcess ${prefix}/PSD/Solver/PSD_PreProcess
-	@cp  ./src/psd-solve/PSD_Solve ${prefix}/PSD/Solver/PSD_Solve
-	@echo ""
-	@echo " # Copying PSD documentation                  "
+	@echo " Finished installing  PSD version $(VERSION)"
 	@echo "*============================================================*"
-	@echo ""		
-	@cp  ./man/*.html ${prefix}/PSD/Doc/.
-	@cp  ./man/*.pdf ${prefix}/PSD/Doc/.
-	@cp  ./man/*.png  ${prefix}/PSD/Doc/.	
-	@echo ""
-	@echo "*============================================================*"
-	@echo "  Finished installing PSD version $(VERSION)"
-	@echo "*============================================================*"
-	@echo ""
+	@echo ""	
 	
 install-devel:
 	@echo ""
