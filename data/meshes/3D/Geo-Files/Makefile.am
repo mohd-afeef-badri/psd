@@ -1,5 +1,5 @@
-LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo  soil.geo 
-MESH_FILES  = bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  soil.msh  
+LIST_COMPILE= bar.geo  tensile-crack.geo  bar-dynamic.geo quasistatic.geo  soil.geo L-shape.geo
+MESH_FILES  = bar.msh tensile-crack.msh bar-dynamic.msh  quasistatic.msh  soil.msh L-shape.msh 
 	
 all-local: $(MESH_FILES) 
 	@echo ""
@@ -19,7 +19,11 @@ quasistatic.msh: quasistatic.geo
 
 bar.msh: bar.geo
 	$(GMSH) -3 bar.geo -o bar.msh -format msh2 -v 0
-	@echo ""		
+	@echo ""
+	
+L-shape.msh: L-shape.geo
+	$(GMSH) -3 L-shape.geo -o L-shape.msh -format msh2 -v 0
+	@echo ""			
 
 bar-dynamic.msh: bar-dynamic.geo
 	$(GMSH) -3 bar-dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
@@ -36,6 +40,7 @@ install-exec-local:
 	@mkdir -p ../Meshes
 	@ls | egrep "^soil.msh" | xargs -I {} cp {} ../Meshes/.		
 	@ls | egrep "^bar.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^L-shape.msh" | xargs -I {} cp {} ../Meshes/.			
 	@ls | egrep "^quasistatic.msh" | xargs -I {} cp {} ../Meshes/.		
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} cp {} ../Meshes/.	
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
@@ -44,6 +49,7 @@ install-devel-local:
 	@mkdir -p ../Meshes
 	@ls | egrep "^soil.msh" | xargs -I {} cp {} ../Meshes/.		
 	@ls | egrep "^bar.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^L-shape.msh" | xargs -I {} cp {} ../Meshes/.	
 	@ls | egrep "^quasistatic.msh" | xargs -I {} cp {} ../Meshes/.		
 	@ls | egrep "^bar-dynamic.msh" | xargs -I {} cp {} ../Meshes/.	
 	@ls | egrep "^tensile-crack.msh" | xargs -I {} cp {} ../Meshes/.
