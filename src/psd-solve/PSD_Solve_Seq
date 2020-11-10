@@ -1,0 +1,41 @@
+#!/bin/bash
+# 	./config.status  --file=ff-mpirun:ff-mpirun.in
+mpirun=mpirun; export FF_LOADPATH="/usr/local/include/psd"; export FF_INCLUDEPATH="/usr/local/include/psd";
+dir=`dirname $0`
+prefix="/volatile/home/badri/Install/FreeFEM"
+exec_prefix="${prefix}"
+bindir="${exec_prefix}/bin"
+nw=1
+if [ -n "/usr/lib64/openmpi/bin/mpirun"  ] ;then mpirun="/usr/lib64/openmpi/bin/mpirun"  ; fi
+if [ -n "--oversubscribe"  ] ;then mpi_run_option="--oversubscribe"  ; fi	
+ffmpi=FreeFem++
+if [ -x "$0" -a -x "$dir/$ffmpi" ]; then 
+ if [ -n "" -a -x "$dir/../bin-win32/$ffmpi.exe" ] ; then 
+   ffmpi="$dir/../bin-win32/$ffmpi.exe";
+ else 
+   ffmpi="$dir/$ffmpi";
+ fi    
+fi
+if [ -d "$bindir" ]  ;then export PATH="${exec_prefix}/bin:$PATH"  ; fi
+a[0]="'$mpirun'"
+j=1;mpi_run_option=;a[0]=;
+test -n "$mpi_run_option" && a[((j++))]="$mpi_run_option"
+#echo $1 ---
+while test -n "$1" ; do
+((j++))
+
+case "$1" in
+"-nw") nw=1;;
+"-win") nw=0;;
+*.edp) a[$j]="${ffmpi}";
+if [ "$nw" -eq 1 ]; then ((j=$j+1));a[$j]="-nw"; fi
+((j++));a[$j]="$1";;
+#if[ ! -f "$1" ]; then echo error file no found "$1"; dry=2; fi;;
+-dry) dry=1;; 
+*)  a[$j]="$1";;
+esac
+shift
+done
+echo "${a[*]}"
+if [ -n "$dry" ]; then echo which $ffmpi : `which  "$ffmpi"`; fi
+if [ -z "$dry" ]; then eval  "${a[*]}"; fi

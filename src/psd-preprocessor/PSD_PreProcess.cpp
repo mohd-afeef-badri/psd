@@ -140,6 +140,7 @@ int main(int argc, char *argv[]){
   bool pointprobe   = false; 
   bool dirichletbc  = false;
   bool energydecomp = false;
+  bool versionpsd   = false;  
   bool plotreaction = false; 
   bool constrainHPF = false;   
   bool reactionforce= false;
@@ -180,6 +181,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-testflags"         ) testflags                      = true;
     if( argvdummy == "-timelog"           ) timelog                        = true;
     if( argvdummy == "-vectorial"         ) vectorial                      = true;
+    if( argvdummy == "-version"           ) versionpsd                     = true;    
     if( argvdummy == "-supercomp"         ) supercomp                      = true;
     if( argvdummy == "-fastmethod"        ) fastmethod                     = true;
     if( argvdummy == "-sequential"        ) Sequential                     = true;
@@ -296,6 +298,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
   cout << "                                                                   " << endl;
 
+/*
 if(Sequential){
 	system("sed -i 's/^ffmpi=FreeFem++-mpi$/ffmpi=FreeFem++/g' PSD_Solve;");
 	system("sed -i 's/^j=1;$/j=1;mpi_run_option=;a[0]=;/g' PSD_Solve;"); 
@@ -304,8 +307,24 @@ if(Sequential){
 if(!Sequential){
 	system("sed -i 's/^ffmpi=FreeFem++$/ffmpi=FreeFem++-mpi/g' PSD_Solve;");
 	system("sed -i 's#^j=1;mpi_run_option=;a\\[0\\]=;$#j=1;#g' PSD_Solve;"); 
-}			 
+}
+*/			 
 
+
+if(versionpsd){
+  cout << "  PSD Version 2.1 " << endl; 
+  cout << "    Copyright (C) CEA 2019 - 2020 "<< endl; 
+  cout << "                                                                   " << endl;  
+  cout << "    This is free software; see the source for copying conditions.  " << endl;
+  cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;
+  cout << "    FOR A PARTICULAR PURPOSE.                                      " << endl;
+  cout << "                                                                   " << endl;   
+  cout << "    Report bugs/issues ::    mohd-afeef.badr@cea.fr                " << endl;
+  cout << "                                                                   " << endl;     
+  cout << "===================================================================" << endl;     
+  
+}
+if(!versionpsd){
  #include "Help.hpp"
 
 if(!help){
@@ -330,13 +349,14 @@ if(!help){
   cout << "                                                                   " << endl;
   cout << " For a simulation with $ number of processes run your solver with  " << endl;
   cout << "                                                                   " << endl;
-  cout << "     ff-mpirun -np $ Main.edp                                      " << endl;
+  cout << "     PSD_Solve -np $ Main.edp                                      " << endl;
   cout << "                                                                   " << endl;
   cout << " For a sequential simulation run your solver with                  " << endl;
   cout << "                                                                   " << endl;
-  cout << "     FreeFem++ Main.edp                                            " << endl;
+  cout << "     PSD_Solve_Seq Main.edp                                        " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
+}
 }
 return 0;
 }

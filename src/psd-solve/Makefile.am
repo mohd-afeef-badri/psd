@@ -1,11 +1,18 @@
 FF_IS = `which $(FFMPI)`
 
-all-local: PSD_Solve
+all-local: PSD_Solve PSD_Solve_Seq
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
+
+PSD_Solve_Seq:
+	cat $(FF_IS) > PSD_Solve_Seq
+	find  -name PSD_Solve_Seq -exec sed -i 's#mpirun=mpirun#mpirun=mpirun; export FF_LOADPATH="${prefix}/include/psd"; export FF_INCLUDEPATH="${prefix}/include/psd";#g' {} \;
+	find  -name PSD_Solve_Seq -exec sed -i 's#^ffmpi=FreeFem++-mpi#ffmpi=FreeFem++#g' {} \;
+	find  -name PSD_Solve_Seq -exec sed -i 's#^j=1;#j=1;mpi_run_option=;a[0]=;#g' {} \;
+	chmod a+x PSD_Solve_Seq
 
 PSD_Solve:
 	cat $(FF_IS) > PSD_Solve
@@ -13,7 +20,8 @@ PSD_Solve:
 	chmod a+x PSD_Solve
 	
 install-exec-local:
-	@cp  PSD_Solve ${prefix}/bin/.			
+	@cp  PSD_Solve     ${prefix}/bin/.	
+	@cp  PSD_Solve_Seq ${prefix}/bin/.						
 	
 clean-local:
 	@echo ""
@@ -21,7 +29,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  PSD_Solve
+	rm  -f *~  PSD_Solve PSD_Solve_Seq
 	@echo ""
 
 
