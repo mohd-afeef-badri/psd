@@ -30,15 +30,15 @@ if(!Sequential)
 
 if(Sequential)if(ParaViewPostProcess)
  writeIt
- "  load    \"../Plugins/iovtk\"                     // Paraview support files \n";
+ "  load    \"iovtk\"                                // Paraview support files \n";
 
 if(useGFP)if(!energydecomp)
  writeIt
- "  load    \"../Plugins/gofastplugins\"             // GoFastPlugins Library  \n";
+ "  load    \"gofastplugins\"                        // GoFastPlugins Library  \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
  writeIt
- "  load    \"../Plugins/gofastplugins\"             // GoFastPlugins Library  \n";
+ "  load    \"gofastplugins\"                       // GoFastPlugins Library  \n";
 
 if(pipegnu)if(!supercomp)
  writeIt
@@ -47,17 +47,17 @@ if(pipegnu)if(!supercomp)
 if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
  "  load    \"Element_QF\"                           // Quadrature elements     \n"
- "  load    \"../Plugins/soil-laws\"                 // Soil law PSD library    \n";
+ "  load    \"soil-laws\"                            // Soil law PSD library    \n";
 
 if(!Sequential&& Prblm=="soildynamics" && top2vol)
  writeIt
  "  load    \"msh3\"                                 // to get cube function   \n" 
- "  load    \"../Plugins/top-ii-vol\"                // top-ii-vol meshing     \n";
+ "  load    \"top-ii-vol\"                           // top-ii-vol meshing     \n";
 
 
 if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)
  writeIt
- "  include \"../Plugins/DDplotMacro.edp\"           // Domain decomp plotting \n";
+ "  include \"DDplotMacro.edp\"                     // Domain decomp plotting \n";
 
 if(Sequential)
  writeIt
@@ -80,7 +80,7 @@ if(!Sequential)
 
  if(!top2vol)
   writeIt 
-  "  include \"../Plugins/DDmacro.edp\"               // Domain decomp macros  \n";
+  "  include \"DDmacro.edp\"                          // Domain decomp macros  \n";
  if(top2vol)
   writeIt 
   "  include \"macro_ddm.idp\"                        // Domain decomp macros  \n";
