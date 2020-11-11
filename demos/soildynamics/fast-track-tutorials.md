@@ -7,7 +7,7 @@
 Single dirichlet condition
 
 ```
-./PSD_PreProcess -dimension 2 -problem soildynamics  -dirichletconditions 1 -timediscretization newmark-beta
+PSD_PreProcess -dimension 2 -problem soildynamics  -dirichletconditions 1 -timediscretization newmark-beta
 ```
 
 ```
@@ -23,7 +23,7 @@ PSD_Solve  -np 4 Main.edp  -mesh ./../Meshes/2D/soil.msh -v 0
 Single dirichlet condition and newmark-beta time discretization
 
 ```
-./PSD_PreProcess -dimension 3 -problem soildynamics  -dirichletconditions 1 -timediscretization newmark-beta
+PSD_PreProcess -dimension 3 -problem soildynamics  -dirichletconditions 1 -timediscretization newmark-beta
 ```
 
 ```
@@ -105,5 +105,5 @@ PSD_Solve  -np 3 Main.edp -v 0 -ns -nw
 
 
 - *Optionally try using `-fastmethod` flag with `PSD_PreProcess`  optimized solver*
-
+- *Optionally try using `-timediscretization generalized-alpha` instead of `-timediscretization newmark-beta` to change time discretization scheme*
 - *Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve`*
