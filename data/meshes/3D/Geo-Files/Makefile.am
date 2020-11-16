@@ -36,7 +36,7 @@ soil.msh: soil.geo
 	$(GMSH) -1 soil.msh -o soil.msh -format msh2 -refine -v 0
 	@echo ""				
 
-install-exec-local:
+tutorials:
 	@mkdir -p ../Meshes
 	@ls | egrep "^soil.msh" | xargs -I {} cp {} ../Meshes/.		
 	@ls | egrep "^bar.msh" | xargs -I {} cp {} ../Meshes/.
