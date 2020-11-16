@@ -13,6 +13,8 @@ iovtk.so: iovtk.cpp
 	@echo ""	
 
 install-exec-local:
+	@mkdir -p ${prefix}/include
+	@mkdir -p ${prefix}/include/psd
 	@cp iovtk.so ${prefix}/include/psd/iovtk.so
 	
 clean-local:

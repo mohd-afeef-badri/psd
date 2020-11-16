@@ -96,43 +96,43 @@ install-devel:
 	@mkdir -p $${HOME}/PSD-devel/Doc
 	@echo ""
 	@echo " # Copying meshes                   "	
-	@cp  ./data/meshes/2D/Geo-Files/*.msh ${HOME}/PSD-devel/Meshes/2D/.
-	@cp  ./data/meshes/2D/Geo-Files/*.geo ${HOME}/PSD-devel/Meshes/2D/.			
-	@cp  ./data/meshes/3D/Geo-Files/*.msh ${HOME}/PSD-devel/Meshes/3D/.
-	@cp  ./data/meshes/3D/Geo-Files/*.geo ${HOME}/PSD-devel/Meshes/3D/.
-	@cp  ./etc/*.xyz 	${prefix}/PSD-devel/Meshes/3D/.					
+	@cp  ./data/meshes/2D/Geo-Files/*.msh $${HOME}/PSD-devel/Meshes/2D/.
+	@cp  ./data/meshes/2D/Geo-Files/*.geo $${HOME}/PSD-devel/Meshes/2D/.			
+	@cp  ./data/meshes/3D/Geo-Files/*.msh $${HOME}/PSD-devel/Meshes/3D/.
+	@cp  ./data/meshes/3D/Geo-Files/*.geo $${HOME}/PSD-devel/Meshes/3D/.
+	@cp  ./etc/*.xyz 	              $${HOME}/PSD-devel/Meshes/3D/.					
 	@echo ""
 	@echo " # Copying PSD plugins/support-files                  "		
-	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so          ${HOME}/PSD/Plugins/top-ii-vol.so	
-	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so  ${HOME}/PSD/Plugins/gofastplugins.so
-	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp ${HOME}/PSD/Plugins/gofastplugins.cpp	
-	@cp  ./src/plugins/paraview-output/cpp/iovtk.so          ${HOME}/PSD/Plugins/iovtk.so
-	@cp  ./src/plugins/paraview-output/cpp/iovtk.cpp         ${HOME}/PSD/Plugins/iovtk.cpp	
-	@cp  ./src/ff-files/DDmacro.edp                          ${HOME}/PSD-devel/Plugins/DDmacro.edp
-	@cp  ./src/ff-files/DDplotMacro.edp                      ${HOME}/PSD-devel/Plugins/DDplotMacro.edp	
-	@cp  ./src/ff-files/MacroTools.edp                       ${HOME}/PSD-devel/Plugins/MacroTools.edp	
-	@cp  ./src/ff-files/simulation-log.csv                   ${HOME}/PSD-devel/Solver/.
+	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so          $${HOME}/PSD-devel/Plugins/top-ii-vol.so	
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so  $${HOME}/PSD-devel/Plugins/gofastplugins.so
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp $${HOME}/PSD-devel/Plugins/gofastplugins.cpp	
+	@cp  ./src/plugins/paraview-output/cpp/iovtk.so          $${HOME}/PSD-devel/Plugins/iovtk.so
+	@cp  ./src/plugins/paraview-output/cpp/iovtk.cpp         $${HOME}/PSD-devel/Plugins/iovtk.cpp	
+	@cp  ./src/ff-files/DDmacro.edp                          $${HOME}/PSD-devel/Plugins/DDmacro.edp
+	@cp  ./src/ff-files/DDplotMacro.edp                      $${HOME}/PSD-devel/Plugins/DDplotMacro.edp	
+	@cp  ./src/ff-files/MacroTools.edp                       $${HOME}/PSD-devel/Plugins/MacroTools.edp	
+	@cp  ./src/ff-files/simulation-log.csv                   $${HOME}/PSD-devel/Solver/.
 	@echo ""
 	@echo " # Copying PSD PreProcessor and solver                  "	
-	@cp  ./src/psd-preprocessor/PSD_PreProcess ${HOME}/PSD-devel/Solver/PSD_PreProcess
-	@cp  ./src/psd-solve/PSD_Solve             ${HOME}/PSD-devel/Solver/PSD_Solve	
-	@cp  ./src/psd-preprocessor/*.cpp          ${HOME}/PSD-devel/PSD_PreProcess-devel/.	
-	@cp  ./src/psd-preprocessor/*.hpp          ${HOME}/PSD-devel/PSD_PreProcess-devel/.
-	@cp  ./etc/Makefile-psd-preprocess-devel   ${HOME}/PSD-devel/PSD_PreProcess-devel/Makefile
+	@cp  ./src/psd-preprocessor/PSD_PreProcess $${HOME}/PSD-devel/Solver/PSD_PreProcess
+	@cp  ./src/psd-solve/PSD_Solve             $${HOME}/PSD-devel/Solver/PSD_Solve	
+	@cp  ./src/psd-preprocessor/*.cpp          $${HOME}/PSD-devel/PSD_PreProcess-devel/.	
+	@cp  ./src/psd-preprocessor/*.hpp          $${HOME}/PSD-devel/PSD_PreProcess-devel/.
+	@cp  ./etc/Makefile-psd-preprocess-devel   $${HOME}/PSD-devel/PSD_PreProcess-devel/Makefile
 	@echo ""
 	@echo " # Copying PSD documentation                  "
 	@echo "*============================================================*"
 	@echo ""	
-	@cp  ./man/*.html ${HOME}/PSD-devel/Doc/.
-	@cp  ./man/*.pdf  ${HOME}/PSD-devel/Doc/.
-	@cp  ./man/*.png  ${HOME}/PSD-devel/Doc/.	
+	@cp  ./man/*.html $${HOME}/PSD-devel/Doc/.
+	@cp  ./man/*.pdf  $${HOME}/PSD-devel/Doc/.
+	@cp  ./man/*.png  $${HOME}/PSD-devel/Doc/.	
 	@echo "  			  "
 	@echo "*============================================================*"
 	@echo " Finished installing  PSD version $(VERSION) developers edition"
 	@echo "*============================================================*"
 	@echo ""	
 	
-check-local: 				 		 																			
+check-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " 'make check' finished now do 'make install'"
@@ -174,7 +174,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -f *~
+	rm  -f *~ *.pdf *.html
 		
 maintainer-clean-local: clean-local
 	@echo ""

@@ -13,6 +13,8 @@ gofastplugins.so: gofastplugins.cpp
 	@echo ""	
 
 install-exec-local:
+	@mkdir -p ${prefix}/include
+	@mkdir -p ${prefix}/include/psd
 	@cp gofastplugins.so ${prefix}/include/psd/gofastplugins.so	
 		
 clean-local:

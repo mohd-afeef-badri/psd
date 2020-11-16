@@ -13,6 +13,8 @@ top-ii-vol.so: top-ii-vol.cpp
 	@echo ""	
 
 install-exec-local:
+	@mkdir -p ${prefix}/include
+	@mkdir -p ${prefix}/include/psd
 	@cp top-ii-vol.so ${prefix}/include/psd/top-ii-vol.so
 
 clean-local:

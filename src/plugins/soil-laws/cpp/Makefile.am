@@ -13,6 +13,8 @@ soil-laws.so: soil-laws.cpp
 	@echo ""	
 
 install-exec-local:
+	@mkdir -p ${prefix}/include
+	@mkdir -p ${prefix}/include/psd
 	@cp soil-laws.so ${prefix}/include/psd/soil-laws.so
 	
 clean-local:

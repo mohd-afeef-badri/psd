@@ -13,6 +13,8 @@ MatrixPlotter.so: MatrixPlotter.cpp
 	@echo ""
 		
 install-exec-local:
+	@mkdir -p ${prefix}/include
+	@mkdir -p ${prefix}/include/psd
 	@cp MatrixPlotter.so ${prefix}/include/psd/MatrixPlotter.so
 	
 clean-local:
