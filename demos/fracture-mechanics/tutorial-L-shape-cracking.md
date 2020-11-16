@@ -2,6 +2,10 @@
 
 This tutorial involves cracking of L shaped specimen, where loading is controled by a point boundry condition.
 
+
+
+<img src="/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/geometry.png" alt="geometry" style="zoom:80%;" />
+
 ### Preprocessing ###
 
 Generation of solver
