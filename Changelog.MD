@@ -10,8 +10,6 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
 - New flag `-probe` to postprocess FE variables at a point. 
 
-### 
-
 ### Changed
 
 - Moved to FreeFEM 4.7-1.
@@ -25,8 +23,12 @@ All notable changes to PSD solver will be documented in this file.
 - Stain vector inccorect numbering in split fuction of GFP
 
    ( see hash  [5ec7b882494f71984d07f468b518ec886e942d32](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&h=5ec7b882494f71984d07f468b518ec886e942d32))
+   
+- Hybrid phase-field with constrain with wrong update
 
+   (see has [20ebfbc3cc58b9f1407658543bf3b239e74bd089](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&h=20ebfbc3cc58b9f1407658543bf3b239e74bd089))
 
+   
 
 ## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
 ### Added

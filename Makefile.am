@@ -139,20 +139,34 @@ check-local:
 	@echo "*============================================================*"	
 	@echo ""
 
-documentation:
+documentation-readme: Readme.pdf Readme.html
+	@echo ""
+
+Readme.pdf: Readme.MD
+	pandoc Readme.MD -o Readme.pdf
+	cp Readme.pdf  man/.	
+
+Readme.html: Readme.MD
+	pandoc Readme.MD -o Readme.html
+	cp Readme.html man/.			
+	
+documentation-Changelog: Changelog.MD 
+	@echo ""
+
+Changelog.pdf: Changelog.MD
+	pandoc 	Changelog.MD -o Changelog.pdf
+	cp Changelog.html man/.
+
+Changelog.html: Changelog.MD
+	pandoc 	Changelog.MD -o Changelog.html
+	cp Changelog.pdf  man/.			
+	
+documentation: documentation-readme documentation-Changelog
 	@echo ""
 	@echo "*============================================================*"
 	@echo " making documentation :"; pwd
 	@echo "*============================================================*"
-	@echo ""	
-	pandoc Readme.MD -o Readme.pdf
-	pandoc Readme.MD -o Readme.html
-	mv Readme.html man/.
-	mv Readme.pdf  man/.
-	pandoc 	Changelog.MD -o Changelog.pdf
-	pandoc 	Changelog.MD -o Changelog.html
-	mv Changelog.html man/.
-	mv Changelog.pdf  man/.		
+	
 	
 clean-local:
 	@echo ""

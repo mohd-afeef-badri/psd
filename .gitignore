@@ -53,3 +53,7 @@ Makefile.in
 *.l[ao]
 *.in
 *.nfs*
+
+## DOCUMENTATION FILES ##
+Readme.html
+Readme.pdf
