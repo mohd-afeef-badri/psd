@@ -5,6 +5,7 @@ AUTOMAKE_LIST=autom4te.cache \
 config.h \
 config.status \
 configure \
+depcomp  \
 install-sh \
 missing \
 Makefile \
