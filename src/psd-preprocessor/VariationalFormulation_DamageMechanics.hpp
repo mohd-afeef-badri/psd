@@ -286,21 +286,28 @@ if(Model=="hybrid-phase-field" && vectorial){
  if(!constrainHPF) 
  writeIt 
  "varf elast(def(u),def(v)) =                                                                     \n"
- "                                                                                                \n";
-
- if(constrainHPF) 
- writeIt 
- "varf elast(def2(u),def2(v)) =                                                                   \n"
- "                                                                                                \n";
- 
- writeIt 
+ "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
  "    //--------------------------------------------------------------------------                \n"
  "      intN(Th,qforder=3)(                                                                       \n"
  "         ((1 - uold"<<spc<<")*(1 - uold"<<spc<<") + 1e-6)*                                      \n"
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
- "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"; 
+
+ if(constrainHPF) 
+ writeIt 
+ "varf elast(def2(u),def2(v)) =                                                                   \n"
+ "                                                                                                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "      intN(Th,qforder=3)(                                                                       \n"
+ "         ((1 - up"<<spc<<")*(1 - up"<<spc<<") + 1e-6)*                                          \n"
+ "         (lambda*divergence(u)*divergence(v)                                                    \n"
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"; 
+ 
+ writeIt 
  "                                                                                                \n"
  "                    +                                                                           \n"
  "                                                                                                \n"
