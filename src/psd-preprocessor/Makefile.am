@@ -43,8 +43,8 @@ PSD_PreProcess.o: PSD_PreProcess.cpp $(PSD_PREPROCESSOR_HPP_LIST)
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11
 
 check-linear-elasticity:
-	cp ./../psd-solve/PSD_Solve .
-	cp ./../psd-solve/PSD_Solve_Seq .
+	@cp ./../psd-solve/PSD_Solve ./PSD_Solve
+	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential  2D linear-elasticity                   "
@@ -123,8 +123,8 @@ check-linear-elasticity:
 
 
 check-fracture-mechanics:
-	cp ./../psd-solve/PSD_Solve .
-	cp ./../psd-solve/PSD_Solve_Seq .	
+	cp ./../psd-solve/PSD_Solve ./PSD_Solve
+	cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential  2D phase-field fracture mechanics      "
@@ -616,8 +616,8 @@ check-fracture-mechanics:
 
 
 check-Elastodynamics:
-	cp ./../psd-solve/PSD_Solve .
-	cp ./../psd-solve/PSD_Solve_Seq .	
+	@cp ./../psd-solve/PSD_Solve ./PSD_Solve
+	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq	
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D Elastodynamics                      "
@@ -682,8 +682,8 @@ check-Elastodynamics:
 
 
 check-Soildynamics:
-	cp ./../psd-solve/PSD_Solve .
-	cp ./../psd-solve/PSD_Solve_Seq .	
+	@cp ./../psd-solve/PSD_Solve ./PSD_Solve
+	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq	
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 3D Soildynamics                        "
@@ -788,8 +788,8 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  PSD_PreProcess *.o *.edp *.log
-	rm  -rf VTUs
+	rm  -f *~  PSD_PreProcess PSD_Solve PSD_Solve_Seq *.o *.edp *.log *.data
+	rm  -rf VTUs top-ii-vol-meshes
 	@echo ""
 
 
