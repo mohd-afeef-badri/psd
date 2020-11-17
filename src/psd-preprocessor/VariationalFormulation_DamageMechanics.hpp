@@ -5,6 +5,8 @@
 
 if(Model=="hybrid-phase-field" && NonLinearMethod=="Picard")
 if(!vectorial){
+
+ if(!constrainHPF)
  writeIt
  "                                                                                                \n"
  "//==============================================================================                \n"
@@ -25,6 +27,29 @@ if(!vectorial){
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
  "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
  "                        )                                                                       \n";
+ 
+
+ if(constrainHPF)
+ writeIt
+ "                                                                                                \n"
+ "//==============================================================================                \n"
+ "// -------Variation formulation hybrid phase-field (Staggered)-------                           \n"
+ "//==============================================================================                \n"
+ "                                                                                                \n"
+ " //-----------------------------                                                                \n"
+ " // Eq. 1 Linear momentum     //                                                                \n"
+ " //-----------------------------                                                                \n"
+ "                                                                                                \n"
+ " varf elast(def2(u),def2(v)) =                                                                  \n"
+ "                                                                                                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "    // $+int_{\\Omega}(((1-\\phi)^2+k)(\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                \n"
+ "    //--------------------------------------------------------------------------                \n"
+ "      intN(Th,qforder=3)(                                                                       \n"
+ "         ((1 - phip)*(1 - phip) + 1e-6)*                                                        \n"
+ "         (lambda*divergence(u)*divergence(v)                                                    \n"
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
+ "                        )                                                                       \n"; 
 
 for(int i=0; i<bodyforceconditions; i++)
  writeIt

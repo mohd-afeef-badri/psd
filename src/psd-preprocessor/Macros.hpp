@@ -357,7 +357,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
  if(!vectorial && constrainHPF)
  writeIt
  "                                                                              \n" 
- "    Sh0 [Eps1,Eps2,Eps12] = [dx(up),dy(up1),0.5*(dx(up1)+dy(up))];            \n"; 
+ "    Sh0 [Eps1,Eps2,Eps12] = [dx(u),dy(u1),0.5*(dx(u1)+dy(u))];                \n"; 
  
  writeIt
  "    GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par)  ; \n"
@@ -768,12 +768,12 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
  
  if(vectorial && constrainHPF)
  writeIt
- "                               [ dx(up) ,                                      \n"
- "                                 dy(up1),                                      \n"
- "                                 dz(up2),                                      \n"
- "                                 0.5*(dx(up1)+dy(up)),                         \n"
- "                                 0.5*(dx(up2)+dz(up)),                         \n"
- "                                 0.5*(dy(up2)+dz(up1)) ];                      \n"; 
+ "                               [ dx(u) ,                                       \n"
+ "                                 dy(u1),                                       \n"
+ "                                 dz(u2),                                       \n"
+ "                                 0.5*(dx(u1)+dy(u)),                           \n"
+ "                                 0.5*(dx(u2)+dz(u)),                           \n"
+ "                                 0.5*(dy(u2)+dz(u1)) ];                        \n"; 
  
  writeIt 
  "                                                                               \n"

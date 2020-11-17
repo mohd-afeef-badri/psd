@@ -38,6 +38,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
   if(NonLinearMethod=="Picard")
    writeIt
+   "                                                                             \n"   
    "  Vh  def2(u)    ,    //  Displacement                                       \n"
    "      def2(uold) ,    //  Previous displacement                              \n"
    "      def2(DPspc);    //  Partition of unity                                 \n"
@@ -49,10 +50,12 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
+   "                                                                             \n" 
    "  Vh  def2(F)    ;    //  Force internal                                     \n";
 
   if(NonLinearMethod=="Newton-Raphson")
    writeIt
+   "                                                                             \n"   
    "  Vh  def2(du)   ,    //  Displacement                                       \n"
    "      def2(u)    ,    //  Previous displacement                              \n"
    "      def2(DPspc);    //  Partition of unity                                 \n"
@@ -65,7 +68,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    if(constrainHPF)
    writeIt
    "                                                                             \n"   
-   "  Vh  def2(up)    ;    //  Previous state                                    \n";
+   "  Vh1  phip      ;    //  Previous state                                     \n";
    
   if(energydecomp)
    writeIt
@@ -125,7 +128,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "      def2(uold) ,    // Vectorial variable for old [u,phi]                   \n"
   "      def2(DPspc);    // Vectorial variables for partition of unity           \n"
   "                                                                              \n"   
-  "  Vh  def2(up)    ;    //  Previous state                                     \n";  
+  "  Vh  def2(up)    ;   //  Previous state                                      \n";  
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
@@ -319,10 +322,12 @@ if(Prblm=="damage" && Model=="Mazar"){
  "      def(DPspc)  ;    // Partition of unity                                   \n"
  "                                                                               \n"
  "  Wh0 damage      ,    //  Isotropic damage                                    \n"
- "      intVar      ,    //  Internal variable                                   \n";
+ "      intVar      ,    //  Internal variable                                   \n"
+ "                                                                               \n"; 
 
  if(!useGFP)
   writeIt
+  "                                                                              \n"  
   "      e11         ,    //  11 component of strain                             \n"
   "      e22         ,    //  22 component of strain                             \n"
   "      e12         ,    //  12 component of strain                             \n"
@@ -331,12 +336,14 @@ if(Prblm=="damage" && Model=="Mazar"){
   "      eqStrain    ,    //  Equivalent strain                                  \n";
 
  writeIt
+ "                                                                               \n" 
  "      lambdafield ,    //  lambda                                              \n"
  "      mufield     ;    //  mu                                                  \n"
  "                                                                               \n";
 
  if(useGFP)
   writeIt
+  "                                                                              \n"  
   "  VhStr defStrain(strain)     ;    //  Stain defenition                       \n";
 
  if(!Sequential)
