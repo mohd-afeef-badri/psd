@@ -21,9 +21,11 @@ if(Prblm=="linear-elasticity")
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Finite element variables -------                                   \n"
+ "// -------------------------------------------------------------------        \n"
+ "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n"
  "//============================================================================\n"
  "                                                                              \n"
- "  Vh  def(u)    ;    //  Displacement                                         \n";
+ "  Vh  def(u)    ;                                                             \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field"){
 
@@ -33,54 +35,81 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "                                                                              \n"
   "//============================================================================\n"
   "// -------Finite element variables -------                                    \n"
+  "// -------------------------------------------------------------------        \n";
+  if(NonLinearMethod=="Picard")writeIt
+  "// def2(u) :   displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D  \n"
+  "// def2(uold)  :   previous iteration displacement vector                     \n" 
+  "// def2(DPspc) :   Partition of unity for domain decomp. (displacement space) \n"
+  "// phi    :   phase field variable for damage                                 \n"
+  "// phiold :   previous iteration phase field variable                         \n"
+  "// DZspc  :   Partition of unity for domain decomp. (damage space)            \n";
+  if(reactionforce && reactionforcemethod=="variational-based")writeIt
+  "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
+  if(NonLinearMethod=="Newton-Raphson")writeIt
+  "// def2(du) :   displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D \n"
+  "// def2(u)  :   previous iteration displacement vector                        \n" 
+  "// def2(DPspc) :   Partition of unity for domain decomp. (displacement space) \n"
+  "// dphi    :   phase field variable for damage                                \n"
+  "// phi     :   previous iteration phase field variable                        \n"
+  "// DZspc   :   Partition of unity for domain decomp. (damage space)           \n";
+  if(constrainHPF)writeIt
+  "// phip    :   previous iteration phase field variable                        \n";
+  if(energydecomp)writeIt
+  "// PsiPlusP1    :   tensile energy P1 field                                   \n"
+  "// PsiMinusP1   :   compressive energy P1 field                               \n"
+  "// PsiPlus      :   tensile energy P0 field                                   \n"
+  "// PsiMinus     :   compressive energy P0 field                               \n"  
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";   
+  writeIt    
   "//============================================================================\n"
   "                                                                              \n";
 
   if(NonLinearMethod=="Picard")
    writeIt
    "                                                                             \n"   
-   "  Vh  def2(u)    ,    //  Displacement                                       \n"
-   "      def2(uold) ,    //  Previous displacement                              \n"
-   "      def2(DPspc);    //  Partition of unity                                 \n"
+   "  Vh  def2(u)    ,                                                           \n"
+   "      def2(uold) ,                                                           \n"
+   "      def2(DPspc);                                                           \n"
    "                                                                             \n"
    "                                                                             \n"
-   "  Vh1 phi       ,     //  Phase field                                        \n"
-   "      phiold    ,     //  Previous iteration phase field                     \n"
-   "      DZspc     ;     //  Partition of unity                                 \n";
+   "  Vh1 phi       ,                                                            \n"
+   "      phiold    ,                                                            \n"
+   "      DZspc     ;                                                            \n";
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
    "                                                                             \n" 
-   "  Vh  def2(F)    ;    //  Force internal                                     \n";
+   "  Vh  def2(F)    ;                                                           \n";
 
   if(NonLinearMethod=="Newton-Raphson")
    writeIt
    "                                                                             \n"   
-   "  Vh  def2(du)   ,    //  Displacement                                       \n"
-   "      def2(u)    ,    //  Previous displacement                              \n"
-   "      def2(DPspc);    //  Partition of unity                                 \n"
+   "  Vh  def2(du)   ,                                                           \n"
+   "      def2(u)    ,                                                           \n"
+   "      def2(DPspc);                                                           \n"
    "                                                                             \n"
    "                                                                             \n"
-   "  Vh1 dphi      ,     //  Phase field                                        \n"
-   "      phi       ,     //  Previous iteration phase field                     \n"
-   "      DZspc     ;     //  Partition of unity                                 \n";
+   "  Vh1 dphi      ,                                                            \n"
+   "      phi       ,                                                            \n"
+   "      DZspc     ;                                                            \n";
 
    if(constrainHPF)
    writeIt
    "                                                                             \n"   
-   "  Vh1  phip      ;    //  Previous state                                     \n";
+   "  Vh1  phip      ;                                                           \n";
    
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
-   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
+   "  Vh1 PsiPlusP1   ,                                                          \n"
+   "      PsiMinusP1  ;                                                          \n"
    "                                                                             \n"
    "                                                                             \n"
-   "  Wh0 HistPlus  ,    // Tensile history                                      \n"
-   "      HistMinus ,    // Compressive energy history                           \n"
-   "      PsiPlus   ,    // Tensile energy                                       \n"
-   "      PsiMinus  ;    // Compressive nergy                                    \n";
+   "  Wh0 HistPlus  ,                                                            \n"
+   "      HistMinus ,                                                            \n"
+   "      PsiPlus   ,                                                            \n"
+   "      PsiMinus  ;                                                            \n";
  }
 
  if(vectorial && !constrainHPF){
@@ -88,33 +117,50 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Finite element variables -------                                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "// def(u)     :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n" 
+  "//                2D and [ux,uy,uz,phi] in 3D                                 \n"
+  "// def(uold)  :   previous iteration vectorial displacement-damage vector     \n" 
+  "// def(DPspc) :   Partition of unity for domain decomp. (displacement-damage) \n";
+  if(reactionforce && reactionforcemethod=="variational-based")writeIt 
+  "// def(F)  : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
+  if(ParaViewPostProcess)writeIt
+  "// phi     : Scalar P1 visulization field phi                                 \n";
+  if(energydecomp)writeIt
+  "// PsiPlusP1    :   tensile energy P1 field                                   \n"
+  "// PsiMinusP1   :   compressive energy P1 field                               \n"
+  "// PsiPlus      :   tensile energy P0 field                                   \n"
+  "// PsiMinus     :   compressive energy P0 field                               \n"  
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";          
+  writeIt 
   "//============================================================================\n"
   "                                                                              \n"
-  "  Vh  def(u)    ,    // Vectorial variable for [u,phi]                        \n"
-  "      def(uold) ,    // Vectorial variable for old [u,phi]                    \n"
-  "      def(DPspc);    // Vectorial variables for partition of unity            \n";
+  "  Vh  def(u)    ,                                                             \n"
+  "      def(uold) ,                                                             \n"
+  "      def(DPspc);                                                             \n";
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
    "                                                                            \n"   
-   "  Vh  def(F)    ;    //  Force internal                                     \n";  
+   "  Vh  def(F)    ;                                                           \n";  
   
   if(ParaViewPostProcess)
    writeIt
    "                                                                             \n"
-   "  Vh1  phi      ;    // Scalar P1 visulization field phi                     \n";   
+   "  Vh1  phi      ;                                                            \n";   
 
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
-   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
+   "  Vh1 PsiPlusP1   ,                                                          \n"
+   "      PsiMinusP1  ;                                                          \n"
    "                                                                             \n"
    "                                                                             \n"
-   "  Wh0 HistPlus  ,    // Tensile history                                      \n"
-   "      HistMinus ,    // Compressive energy history                           \n"
-   "      PsiPlus   ,    // Tensile energy                                       \n"
-   "      PsiMinus  ;    // Compressive nergy                                    \n";
+   "  Wh0 HistPlus  ,                                                            \n"
+   "      HistMinus ,                                                            \n"
+   "      PsiPlus   ,                                                            \n"
+   "      PsiMinus  ;                                                            \n";
  }
  
  if(vectorial && constrainHPF){
@@ -122,76 +168,116 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Finite element variables -------                                   \n"
+  "// -------------------------------------------------------------------        \n"  
+  "// def2(u)    :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n" 
+  "//                2D and [ux,uy,uz,phi] in 3D                                 \n"
+  "// def2(uold) :   previous iteration vectorial displacement-damage vector     \n" 
+  "// def2(DPspc):   Partition of unity for domain decomp. (displacement-damage) \n" 
+  "// def2(up)   :   previous iteration vectorial displacement-damage vector     \n";
+  if(reactionforce && reactionforcemethod=="variational-based")writeIt 
+  "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n"; 
+  if(ParaViewPostProcess)writeIt
+  "// phi     : Scalar P1 visulization field phi                                 \n";   
+  if(energydecomp)writeIt
+  "// PsiPlusP1    :   tensile energy P1 field                                   \n"
+  "// PsiMinusP1   :   compressive energy P1 field                               \n"
+  "// PsiPlus      :   tensile energy P0 field                                   \n"
+  "// PsiMinus     :   compressive energy P0 field                               \n"  
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";     
+  writeIt
   "//============================================================================\n"
   "                                                                              \n"
-  "  Vh  def2(u)    ,    // Vectorial variable for [u,phi]                       \n"
-  "      def2(uold) ,    // Vectorial variable for old [u,phi]                   \n"
-  "      def2(DPspc);    // Vectorial variables for partition of unity           \n"
+  "  Vh  def2(u)    ,                                                            \n"
+  "      def2(uold) ,                                                            \n"
+  "      def2(DPspc);                                                            \n"
   "                                                                              \n"   
-  "  Vh  def2(up)    ;   //  Previous state                                      \n";  
+  "  Vh  def2(up)    ;                                                           \n";  
 
   if(reactionforce && reactionforcemethod=="variational-based")
    writeIt
    "                                                                            \n"   
-   "  Vh  def2(F)    ;    //  Force internal                                    \n";  
+   "  Vh  def2(F)    ;                                                          \n";  
   
   if(ParaViewPostProcess)
    writeIt
    "                                                                             \n"
-   "  Vh1  phi      ;    // Scalar P1 visulization field phi                     \n";   
+   "  Vh1  phi      ;                                                            \n";   
 
   if(energydecomp)
    writeIt
    "                                                                             \n"
-   "  Vh1 PsiPlusP1   ,    //  Tesile energy P1 field                            \n"
-   "      PsiMinusP1  ;    //  Compressive energy P1 fiels                       \n"
+   "  Vh1 PsiPlusP1   ,                                                          \n"
+   "      PsiMinusP1  ;                                                          \n"
    "                                                                             \n"
    "                                                                             \n"
-   "  Wh0 HistPlus  ,    // Tensile history                                      \n"
-   "      HistMinus ,    // Compressive energy history                           \n"
-   "      PsiPlus   ,    // Tensile energy                                       \n"
-   "      PsiMinus  ;    // Compressive nergy                                    \n";
+   "  Wh0 HistPlus  ,                                                            \n"
+   "      HistMinus ,                                                            \n"
+   "      PsiPlus   ,                                                            \n"
+   "      PsiMinus  ;                                                            \n";
  } 
 }
 
 if(Prblm=="elastodynamics"  || Prblm=="soildynamics"){
+
+
 if(Model!="pseudo-nonlinear" && Model!="Hujeux")
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
  "// -------Finite element variables -------                                     \n"
+ "// -------------------------------------------------------------------         \n"   
+ "// def(du)    : Displacement FE field                                          \n"
+ "// def(uold)  : Previous iteration displacement FE field                       \n"
+ "// def(vold)  : Previous iteration velocity FE field                           \n"
+ "// def(aold)  : Previous iteration acceleration FE field                       \n"
+ "// def(DPspc) : Partition of unity field for integral                          \n"
  "//=============================================================================\n"
  "                                                                               \n"
- "  Vh  def(du)    ,      // Displacement FE field                               \n"
- "      def(uold)  ,      // Previous iteration displacement FE field            \n"
- "      def(vold)  ,      // Previous iteration velocity FE field                \n"
- "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
- "      def(DPspc) ;      // Partition of unity field for integral               \n"
+ "  Vh  def(du)    ,                                                             \n"
+ "      def(uold)  ,                                                             \n"
+ "      def(vold)  ,                                                             \n"
+ "      def(aold)  ,                                                             \n"
+ "      def(DPspc) ;                                                             \n"
  "                                                                               \n";
 
-if(Model=="pseudo-nonlinear" || Model=="Hujeux" )
+if(Model=="pseudo-nonlinear" || Model=="Hujeux" ){
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
  "// -------Finite element variables -------                                     \n"
+ "// -------------------------------------------------------------------         \n"
+ "// def(du)    :  Displacement FE field                                         \n"
+ "// def(uold)  :  Previous iteration displacement FE field                      \n"
+ "// def(uNL)   :  Nonlinear iteration displacement FE field                     \n"
+ "// def(vold)  :  Previous iteration velocity FE field                          \n"
+ "// def(aold)  :  Previous iteration acceleration FE field                      \n"
+ "// def(DPspc) :  Partition of unity field for integral                         \n";
+ if(Model=="Hujeux")writeIt
+ "// defSh(Sig) :  Three stress components                                       \n"
+ "// defSh(Eps) :  Three strain components                                       \n"
+ "// defIh(Iv)  :  25 component internal variables components                    \n";
+ writeIt
  "//=============================================================================\n"
  "                                                                               \n"
- "  Vh  def(du)    ,      // Displacement FE field                               \n"
- "      def(uold)  ,      // Previous iteration displacement FE field            \n"
- "      def(uNL)   ,      // Nonlinear iteration displacement FE field           \n"
- "      def(vold)  ,      // Previous iteration velocity FE field                \n"
- "      def(aold)  ,      // Previous iteration acceleration FE field            \n"
- "      def(DPspc) ;      // Partition of unity field for integral               \n"
+ "  Vh  def(du)    ,                                                             \n"
+ "      def(uold)  ,                                                             \n"
+ "      def(uNL)   ,                                                             \n"
+ "      def(vold)  ,                                                             \n"
+ "      def(aold)  ,                                                             \n"
+ "      def(DPspc) ;                                                             \n"
  "                                                                               \n";
-
+ 
  if(Model=="Hujeux")
  writeIt
  "                                                                               \n"
- "  Q3vh  defSh(Sig),      // Three stress components                            \n"
- "        defSh(Eps);      // Three strain components                            \n"
+ "  Q3vh  defSh(Sig),                                                            \n"
+ "        defSh(Eps);                                                            \n"
  "                                                                               \n"
- "  Q25vh defIh(Iv);       // 25 component internal variables components         \n"
- "                                                                               \n";
+ "  Q25vh defIh(Iv);                                                             \n"
+ "                                                                               \n"; 
+ 
+ }
 
 }
 
@@ -202,6 +288,11 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Fem matrices and vectors -------                                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "// A  :  FEM matrix assembled  linear momentum Eq. (stiffness matrix)         \n"
+  "// A1 :  FEM matrix assembled  phase-field/Helmothz Eq.(stiffness matrix)     \n"
+  "// b  :  RHS vector for the FE linear system  from linear momentum Eq.        \n"
+  "// b1 :  RHS vector for the FE linear system  from lphase-field/Helmothz Eq.  \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  matrix  A, A1                              ;                                \n"
@@ -212,6 +303,8 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "                                                                             \n"
    "//===========================================================================\n"
    "// -------  Fem matrices and vectors -------                                 \n"
+   "// -------------------------------------------------------------------       \n"
+   "// A  : distributed FE matrix for PETSc                                      \n"   
    "//===========================================================================\n"
    "                                                                             \n"
    <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""           )<<
