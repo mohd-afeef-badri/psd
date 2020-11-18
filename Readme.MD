@@ -105,7 +105,7 @@ PSD_Solve -np $N Main.edp -v 0 -nw
 ```
 if you complied a sequential PSD version
 ```
-PSD_Solve Main.edp -v 0 -nw
+PSD_Solve_Seq Main.edp -v 0 -nw
 ```
 
 - In the parallel command **$N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel.
@@ -119,8 +119,8 @@ PSD_Solve Main.edp -v 0 -nw
 These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
 
 | Option         | Type      | Comment                                                      |
-| -------------- | --------- | :----------------------------------------------------------- |
-| `-help`        | `[bool]`  | To activate helping message on the terminal. |
+| -------------- | --------- | :----------------------------------------------------------: |
+| `-help` | `[bool]`  | To activate helping message on the terminal. |
 | `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
 | `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
 | `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
@@ -137,6 +137,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-top2vol-meshing`| `[bool]`  | To activate top-ii-vol point source meshing for soil-dynamics.      |
 | `-getreactionforce`| `[bool]`  | To activate routine for extraction reactions at surface.      |
 | `-plotreactionforce`| `[bool]`  | To activate realtime pipe plotting using GnuPlot.      |
+| `-crackdirichletcondition` | `[bool]` | To activate pre-cracked surface Dirichlet. |
 |  		 | 	     |                     					    |
 | `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.   |
 | `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |

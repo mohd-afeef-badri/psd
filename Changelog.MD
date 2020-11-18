@@ -9,6 +9,7 @@ All notable changes to PSD solver will be documented in this file.
 - More verbos info on `-help` 
 - New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
 - New flag `-probe` to postprocess FE variables at a point. 
+- New flag `-crackdirichletcondition` to include a pre-cracked Dirichlet in damage models.
 
 ### Changed
 

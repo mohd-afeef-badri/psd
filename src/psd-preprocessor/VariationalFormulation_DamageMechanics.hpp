@@ -123,13 +123,13 @@ if(pipegnu)
 <<(!energydecomp ? "\t+ intN(Th,qforder=3)(  2.*Hplus(u)*q  )\n"  : ""                            )<<
  "                                                                                                \n";
 
-
+ if(precracked)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on(4,phi=1)             //  Cracked (Dirichlet)                                         \n";
+ "      + on(DbcCrackOn,phi=1)             //  Cracked (Dirichlet)                                \n";
 
 
  writeIt
@@ -283,14 +283,14 @@ if(spc==3)
  "                       )                                                                        \n"
  "                                                                                                \n";
 
-
+ if(precracked)
  writeIt
  "                                                                                                \n"
  "                             //--- Dirichlet ---//                                              \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "      + on(4,dphi=PhiCracked)                                                                   \n";
+ "      + on(DbcCrackOn,dphi=PhiCracked)                                                          \n";
 
 
 
@@ -375,13 +375,13 @@ if(energydecomp)
 <<(energydecomp   ? "\t+ intN(Th,qforder=3)(  2.*H*v"<<spc<<"  )\n"          : ""                 )<<
 */
 
-
+ if(precracked)
  writeIt
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
  "    //--------------------------------------------------------------------------                \n"
- "    + on(4,u"<<spc<<" = 1)                          // Cracked (Dirichlet)                      \n";
+ "    + on(DbcCrackOn,u"<<spc<<" = 1)                          // Cracked (Dirichlet)             \n";
 
 if(dirichletbc){
 

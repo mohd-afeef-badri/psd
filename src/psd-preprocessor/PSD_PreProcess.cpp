@@ -101,6 +101,8 @@
   -getreactionforce  [bool] To activate routine for extraction reactions at surface.
   
   -plotreactionforce [bool] To activate realtime pipe plotting using GnuPlot.
+  
+  -crackdirichletcondition [bool] To activate pre-cracked surface Dirichlet.
 
 */
 
@@ -142,7 +144,8 @@ int main(int argc, char *argv[]){
   bool energydecomp = false;
   bool versionpsd   = false;  
   bool plotreaction = false; 
-  bool constrainHPF = false;   
+  bool constrainHPF = false;
+  bool precracked   = false;     
   bool reactionforce= false;
   
 
@@ -173,25 +176,27 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"            ) RCM                            = true;
-    if( argvdummy == "-help"              ) help                           = true;
-    if( argvdummy == "-debug"             ) debug                          = true;
-    if( argvdummy == "-useGFP"            ) useGFP                         = true;
-    if( argvdummy == "-pipegnu"           ) pipegnu                        = true;
-    if( argvdummy == "-testflags"         ) testflags                      = true;
-    if( argvdummy == "-timelog"           ) timelog                        = true;
-    if( argvdummy == "-vectorial"         ) vectorial                      = true;
-    if( argvdummy == "-version"           ) versionpsd                     = true;    
-    if( argvdummy == "-supercomp"         ) supercomp                      = true;
-    if( argvdummy == "-fastmethod"        ) fastmethod                     = true;
-    if( argvdummy == "-sequential"        ) Sequential                     = true;
-    if( argvdummy == "-dirichletbc"       ) dirichletbc                    = true;
-    if( argvdummy == "-energydecomp"      ) energydecomp                   = true;
-    if( argvdummy == "-pointprobe"        ) pointprobe                     = true;    
-    if( argvdummy == "-top2vol-meshing"   ) top2vol                        = true;
-    if( argvdummy == "-getreactionforce"  ) reactionforce                  = true;
-    if( argvdummy == "-plotreactionforce" ) plotreaction                   = true;
-    if( argvdummy == "-constrainHPF"      ) constrainHPF                   = true;              
+    if( argvdummy == "-useRCM"             ) RCM                           = true;
+    if( argvdummy == "-help"               ) help                          = true;
+    if( argvdummy == "-debug"              ) debug                         = true;
+    if( argvdummy == "-useGFP"             ) useGFP                        = true;
+    if( argvdummy == "-pipegnu"            ) pipegnu                       = true;
+    if( argvdummy == "-testflags"          ) testflags                     = true;
+    if( argvdummy == "-timelog"            ) timelog                       = true;
+    if( argvdummy == "-vectorial"          ) vectorial                     = true;
+    if( argvdummy == "--version"           ) versionpsd                    = true;        
+    if( argvdummy == "-version"            ) versionpsd                    = true;    
+    if( argvdummy == "-supercomp"          ) supercomp                     = true;
+    if( argvdummy == "-fastmethod"         ) fastmethod                    = true;
+    if( argvdummy == "-sequential"         ) Sequential                    = true;
+    if( argvdummy == "-dirichletbc"        ) dirichletbc                   = true;
+    if( argvdummy == "-energydecomp"       ) energydecomp                  = true;
+    if( argvdummy == "-pointprobe"         ) pointprobe                    = true;    
+    if( argvdummy == "-top2vol-meshing"    ) top2vol                       = true;
+    if( argvdummy == "-getreactionforce"   ) reactionforce                 = true;
+    if( argvdummy == "-plotreactionforce"  ) plotreaction                  = true;
+    if( argvdummy == "-constrainHPF"       ) constrainHPF                  = true;
+    if( argvdummy == "-crackdirichletcondition") precracked                = true;                     
 
     if( argvdummy == "-model"              ) Model                         = argv[i+1];
     if( argvdummy == "-solver"             ) Solver                        = argv[i+1];
@@ -292,7 +297,8 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
   cout << " constrainedHPF is ------------------> " << constrainHPF             << endl;        
   cout << " getreactionforce is ----------------> " << reactionforce            << endl;
-  cout << " plotreactionforce is ---------------> " << pipegnu                  << endl;  
+  cout << " plotreactionforce is ---------------> " << pipegnu                  << endl;
+  cout << " crackdirichletcondition is ---------> " << precracked               << endl;     
   }
 
 

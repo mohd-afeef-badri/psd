@@ -201,15 +201,15 @@ if(Prblm=="damage")
 
  if(Model=="hybrid-phase-field")
   writeIt
- "                                                                              \n"
- "//============================================================================\n"
- "//                   ------- Material parameters -------                      \n"
- "// -------------------------------------------------------------------        \n"
- "//  mu, lambda : Lame parameter of the material                               \n"
- "//  Gc : Material fracture toughness                                          \n"
- "//  kappa0 : Damage initiation threshold of the Material                      \n"
- "//  kappac :  Critical strain level of the Material                           \n"
- "//============================================================================\n"
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                   ------- Material parameters -------                       \n"
+ "// -------------------------------------------------------------------         \n"
+ "//  mu, lambda : Lame parameter of the material                                \n"
+ "//  Gc : Material fracture toughness                                           \n"
+ "//  kappa0 : Damage initiation threshold of the Material                       \n"
+ "//  kappac :  Critical strain level of the Material                            \n"
+ "//=============================================================================\n"
   "                                                                              \n"
   "  real lambda = 121.15e3 ,                                                    \n"
   "       mu     = 80.77e3  ,                                                    \n"
@@ -644,23 +644,34 @@ if(dirichletconditions>=1)
    "  macro  Dbc"<<i<<"Uy 0. //                                                \n"
    "  macro  Dbc"<<i<<"Uz 0. //                                                \n";
  }
+ 
  if(Prblm=="damage" && Model=="hybrid-phase-field"){
-  if(spc==2)
+ 
+ 
+  if(spc==2 && dirichletconditions>=1)
    writeIt
+   "                                                                           \n"   
    "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
    "  macro  Dbc0Ux 0.  //                                                     \n"
-   "  macro  Dbc0Uy 0.  //                                                     \n"
+   "  macro  Dbc0Uy 0.  //                                                     \n";
+   
+  if(spc==2 && dirichletconditions<=2)
+   writeIt   
    "                                                                           \n"
    "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
    "  macro  Dbc1Uy tr  //                                                     \n";    
 
-  if(spc==3)
+  if(spc==3  && dirichletconditions>=1)
    writeIt
+   "                                                                           \n"      
    "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
    "  macro  Dbc0Ux 0.  //                                                     \n"
    "  macro  Dbc0Uy 0.  //                                                     \n"
-   "  macro  Dbc0Uz 0.  //                                                     \n"   
-   "                                                                           \n"
+   "  macro  Dbc0Uz 0.  //                                                     \n";
+   
+  if(spc==3  && dirichletconditions<=2)
+   writeIt
+   "                                                                           \n"       
    "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
    "  macro  Dbc1Uy tr  //                                                     \n"; 
   
@@ -668,9 +679,24 @@ if(dirichletconditions>=1)
    writeIt
    "  macro  Dbc"<<i<<"On "<<labelDirichlet + 1<<"   //                        \n"   
    "  macro  Dbc"<<i<<"Ux 0. //                                                \n"
-   "  macro  Dbc"<<i<<"Uy 0. //                                                \n";
- }     
+   "  macro  Dbc"<<i<<"Uy 0. //                                                \n";      
+     
+ }
+   
 }
+
+if(Prblm=="damage" && precracked)
+ writeIt
+ "                                                                              \n"
+ "//============================================================================\n"
+ "//    ------- Dirichlet boundary-condition on pre-cracked border -------      \n"
+ "// ---------------------------------------------------------------------------\n"
+ "// DbcCrackOn : mention the tag of the surface(s) which are pre-cracked       \n" 
+ "//              list of surfaces should be comma separated, e.g., 1,2,3       \n"
+ "//============================================================================\n"
+ "                                                                              \n" 
+ "  macro  DbcCrackOn 4   //                                                    \n"
+ "                                                                              \n"; 
 
 if(dirichletpointconditions>=1)
  {
@@ -687,7 +713,7 @@ if(dirichletpointconditions>=1)
  "// -------------------------------------------------------------------------- \n"
  "// NOTE: either the macro PC(I)Ux or PC(I)Uy or PC(I)Uz should be commented   \n"
  "//       if the user does not wish to apply restriction on that  particular   \n"
- "//       displacement direction (let it free)                                 \n"                               
+ "//       displacement direction (let it free)                                 \n"
  "//============================================================================\n"
  "                                                                              \n"
  "  real[int,int] PbcCord = [                                                   \n"; 
