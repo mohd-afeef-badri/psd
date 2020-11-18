@@ -150,16 +150,16 @@ Readme.html: Readme.MD
 	pandoc Readme.MD -o Readme.html
 	cp Readme.html man/.			
 	
-documentation-Changelog: Changelog.MD 
+documentation-Changelog: Changelog.pdf Changelog.html
 	@echo ""
 
 Changelog.pdf: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.pdf
-	cp Changelog.html man/.
+	cp Changelog.pdf man/.
 
 Changelog.html: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.html
-	cp Changelog.pdf  man/.			
+	cp Changelog.html  man/.			
 	
 documentation: documentation-readme documentation-Changelog
 	@echo ""
