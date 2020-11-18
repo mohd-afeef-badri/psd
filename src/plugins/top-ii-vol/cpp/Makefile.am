@@ -9,7 +9,7 @@ all-local: top-ii-vol.so
 	@echo " Compilation list $(LIST_COMPILE)"
 
 top-ii-vol.so: top-ii-vol.cpp
-	$(FFCXX) -auto top-ii-vol.cpp
+	$(FFCXX) -auto -mpi top-ii-vol.cpp
 	@echo ""	
 
 install-exec-local:

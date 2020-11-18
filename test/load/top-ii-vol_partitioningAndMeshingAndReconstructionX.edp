@@ -15,12 +15,9 @@
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
-*******************************************************************************/ 
+*******************************************************************************/
 
 load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
-
-//topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
-//topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
 
 topiivolpart( "./../../etc/Point-Cloud", 
               outfile ="point-cloud-strip", 
@@ -28,17 +25,52 @@ topiivolpart( "./../../etc/Point-Cloud",
               pointsy=57, 
               pointsz=4, 
               zdepth=-1920.0, 
-              partx=1, 
-              party=mpisize, 
+              partx=mpisize, 
+              party=1, 
               partz=1
             ); 
-            
+//topiivolpart("../../etc/Point-Cloud",outfile="point-cloud-strip",pointsx=63,pointsy=57);
 mpiBarrier(mpiCommWorld);
    topiivolmesh( "point-cloud-strip",
                  outfile="top-ii-vol-mesh",
                  pointsz=4,
                  zdepth=-1920.0,
-                 partx=1,
-                 party=mpisize,
+                 partx=mpisize,
+                 party=1,
                  partz=1
                );
+   
+//topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
+
+
+load "PETSc"
+func Pk = P1;
+macro grad(u)[dx(u), dy(u), dz(u)]//three-dimensional gradient
+macro def(u)u//
+
+{
+    macro dimension()3// EOM
+    include "macro_ddm.idp"
+    mesh3 Th;
+
+    Th=readmesh3("top-ii-vol-mesh_"+mpirank+".mesh");   
+    reconstructDmesh(Th);
+    
+    fespace Wh(Th, Pk);
+    Wh<real> u;
+        
+    Mat A;
+    createMat(Th, A, Pk)
+      
+
+    varf vPb(u, v) = intN(Th)(grad(u)' * grad(v)) + on(6, u = 15.0)+ on(3, u = 1.0);
+           
+    real[int] rhs = vPb(0, Wh);
+    set(A, sparams = "-ksp_type cg" );
+    A = vPb(Wh, Wh);
+     
+    u[] = A^-1 * rhs; 
+
+    int[int] fforder=[1];
+    savevtk("solutionX.vtu",Th,u,order=fforder, dataname = "u");
+}    

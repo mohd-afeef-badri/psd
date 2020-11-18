@@ -28,6 +28,10 @@ double zz	  ;
 double delz	  ;
 double zznew      ;
 
+int zglobal = pntz;
+int localZmove    ;
+int layerZ        ;
+
 int IJK	          ;
 int Ip1JK	  ;
 int IJp1K	  ;
@@ -37,7 +41,56 @@ int IJp1Kp1	  ;
 int Ip1Jp1K	  ;
 int Ip1Jp1Kp1     ;
 
+//-----------------------------------------------------------------------------------//
+//---- Setting triangle label colors -----
+//-----------------------------------------------------------------------------------//
 
+int lab_x_min = 1 ;
+int lab_y_min = 2 ;
+int lab_z_min = 6 ;
+int lab_x_max = 4 ;
+int lab_y_max = 5 ;
+int lab_z_max = 3 ;
+
+lab_y_min = 99099;
+lab_y_max = 99099;
+        
+for(int i=0; i <NpZ; i++)
+{
+    for(int j=0; j <NpX; j++)
+    {
+        if(mpirank==i*NpX*NpY+j)
+            lab_y_min = 2;
+        if(mpirank==( (mpisize-1)-i*NpX*NpY  -j ))
+            lab_y_max = 5;        
+    }
+}
+ 
+lab_x_min = 99099;
+lab_x_max = 99099;
+        
+for(int i=0; i <NpZ; i++)
+{
+    for(int j=0; j <NpY; j++)
+    {
+        if(mpirank==i*NpX*NpY + j*NpX )
+            lab_x_min = 1;
+        if(mpirank==( (mpisize-1)  -i*NpX*NpY  -j*NpX ))
+            lab_x_max = 4;        
+    }
+}
+                
+lab_z_min = 99099;
+lab_z_max = 99099;
+        
+for(int j=0; j <NpX*NpY; j++)
+{
+    if(mpirank==j)
+        lab_z_max = 3;
+    if(mpirank==( (mpisize-1)  -j))
+        lab_z_min = 6;
+}         
+       
 //-----------------------------------------------------------------------------------//
 //---- Calculating Parameters -----
 //-----------------------------------------------------------------------------------//
@@ -51,7 +104,7 @@ in1.open(*inputfile+"_"+std::to_string(mpirank)+".info");
 ofstream wrgmsh;
 wrgmsh.open(*outputfile+"_"+std::to_string(mpirank)+".mesh");
 
-in1 >> pnty >> pntx;
+in1 >> pnty >> pntx >> pntz >> localZmove >> layerZ;
 in1.close() ;
 
 // --------------------------------------- BUG --------------------------------------//
@@ -67,100 +120,13 @@ in1.close() ;
 int PxM1 = pntx-1                                       ;
 int PyM1 = pnty-1                                       ;
 int PzM1 = pntz-1                                       ;
-int PxPz = pntx*pntz									;
-int PxPy = pntx*pnty									;
+int PxPz = pntx*pntz					;
+int PxPy = pntx*pnty					;
 
-int NPnt = pntx * pnty * pntz					        ;
+int NPnt = pntx * pnty * pntz				;
 int NTri = 4*( PzM1*PxM1 + PyM1*PzM1 + PxM1*PyM1 )      ;
-int NTet = PxM1 * PyM1 * PzM1 * 6			            ;
+int NTet = PxM1 * PyM1 * PzM1 * 6			;
 
-int lab_x_min = 1                                       ;
-int lab_y_min = 2                                       ;
-int lab_z_min = 3                                       ;
-int lab_x_max = 4                                       ;
-int lab_y_max = 5                                       ;
-int lab_z_max = 6                                       ;
-
-
-if(*method=="1D")
-  {
-  if(pnty<=pntx)
-    {
-    lab_y_min = 99099;
-    if(mpirank==0)
-      lab_y_min = 2;
-    lab_y_max = 99099;
-    if(mpirank==(mpisize-1))
-      lab_y_max = 5;
-    }
-  else
-    {
-    lab_x_min = 99099;
-    if(mpirank==0)
-      lab_x_min = 1;
-    lab_x_max = 99099;
-    if(mpirank==(mpisize-1))
-      lab_x_max = 4;
-    }
-  }
-
-if(*method=="2D")
-  {
-   if(NpY==1 || NpX==1)
-   {
-   if(NpY > 1)
-     {
-      lab_y_min = 99099;
-      lab_y_max = 99099;
-      for(int i=0; i <NpX; i++)
-        {
-         if(mpirank==0+i)
-           lab_y_min = 2;
-         if(mpirank==(mpisize-1-i))
-           lab_y_max = 5;
-        }
-      }
-   if(NpX > 1)
-     {
-      lab_x_min = 99099;
-      lab_x_max = 99099;
-      for(int i=0; i <NpY; i++)
-        {
-         if(mpirank==0+i)
-           lab_x_min = 1;
-         if(mpirank==(mpisize-1-i))
-           lab_x_max = 4;
-        }
-      }
-    }
-    else
-   {
-   if(NpY > 1)
-     {
-      lab_y_min = 99099;
-      lab_y_max = 99099;
-      for(int i=0; i <NpX; i++)
-        {
-         if(mpirank==0+i)
-           lab_y_min = 2;
-         if(mpirank==(mpisize-1-i))
-           lab_y_max = 5;
-        }
-      }
-   if(NpX > 1)
-     {
-      lab_x_min = 99099;
-      lab_x_max = 99099;
-      for(int i=0; i <NpY; i++)
-        {
-         if(mpirank==0+i*NpX)
-           lab_x_min = 1;
-         if(mpirank==(mpisize-1-i*NpX))
-           lab_x_max = 4;
-        }
-      }
-    }
-  }
 
 /*
 //=============================================================================
@@ -204,7 +170,7 @@ for(int i=0; i<PxPy; i++)
         wrgmsh << std::fixed << xx << "\t" << yy << "\t" << zz << " 0\n"     ;
 
         zznew=zz;
-        delz= (zmax-zz)/PzM1;
+        delz= (zmax-zz)/(((zglobal-1)-(localZmove-1*layerZ)));          
         for(int j=0; j<PzM1; j++)
             {
                 zznew  = zznew + delz;
@@ -312,7 +278,7 @@ for(int i=0; i<PxM1;  i++)
     }
 
 
-//----Z-MIN-PLANE----//
+//----Z-MAX-PLANE----//
 
 for(int i=0; i<PyM1;  i++)
     {
@@ -324,8 +290,8 @@ for(int i=0; i<PyM1;  i++)
                 IJp1K	  =	IJK + pntz		    	;
                 Ip1Jp1K   =	Ip1JK + pntz			;
 
-                wrgmsh << std::fixed << IJK   << "\t" << IJp1K << "\t" << Ip1Jp1K << "\t" << lab_z_min << "\n"
-                       << Ip1JK << "\t" << IJK   << "\t" << Ip1Jp1K << "\t" << lab_z_min << "\n";
+                wrgmsh << std::fixed << IJK   << "\t" << IJp1K << "\t" << Ip1Jp1K << "\t" << lab_z_max << "\n"
+                       << Ip1JK << "\t" << IJK   << "\t" << Ip1Jp1K << "\t" << lab_z_max << "\n";
             }
     }
 
@@ -366,9 +332,8 @@ for(int i=0; i<PxM1;  i++)
 
             }
     }
-//}
 
-//----Z-MAX-PLANE----//
+//----Z-MIN-PLANE----//
 
 for(int i=0; i<PyM1;  i++)
     {
@@ -380,8 +345,8 @@ for(int i=0; i<PyM1;  i++)
                 IJp1K	  =	IJK + pntz				    ;
                 Ip1Jp1K   =	Ip1JK + pntz				;
 
-                wrgmsh << std::fixed << IJp1K << "\t" << IJK   << "\t" << Ip1Jp1K << "\t" << lab_z_max << "\n"
-                       << IJK   << "\t" << Ip1JK << "\t" << Ip1Jp1K << "\t" << lab_z_max<< "\n";
+                wrgmsh << std::fixed << IJp1K << "\t" << IJK   << "\t" << Ip1Jp1K << "\t" << lab_z_min << "\n"
+                       << IJK   << "\t" << Ip1JK << "\t" << Ip1Jp1K << "\t" << lab_z_min << "\n";
             }
     }
 
@@ -391,7 +356,7 @@ t_phase = MPI_Wtime() - t_phase;
 t1 +=  t_phase;
 *time_log = string( *time_log+"\tTriangles generation     : "
                         +std::to_string(t_phase)+" s\n"           );
-
+/**/
 //-----------------------------------------------------------------------------------//
 //---- Finishing footer -----
 //-----------------------------------------------------------------------------------//

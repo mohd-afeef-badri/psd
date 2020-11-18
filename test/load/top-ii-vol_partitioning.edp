@@ -19,4 +19,15 @@
 
 load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
 
-topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
+topiivolpart( "./../../etc/DEM_160m", 
+              outfile ="point-cloud-strip", 
+              pointsx=32, 
+              pointsy=29, 
+              pointsz=4, 
+              zdepth=-1920.0, 
+              partx=1, 
+              party=mpisize, 
+              partz=1
+            ); 
+            
+//topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);

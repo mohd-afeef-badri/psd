@@ -10,11 +10,13 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
 - New flag `-probe` to postprocess FE variables at a point. 
 - New flag `-crackdirichletcondition` to include a pre-cracked Dirichlet in damage models.
+- New tests for more advance top-ii-vol partitioning. 
 
 ### Changed
 
 - Moved to FreeFEM 4.7-1.
 - Moved to PETSc 3.14.
+- New version of top-ii-vol v 1.2 support for exascale computing (includes new 2D 3D partitioning)
 
 ### Removed 
 - Flag `-pipegnu` not supported for damage mechanics (to be further deprecated from elsto/soildynamics)

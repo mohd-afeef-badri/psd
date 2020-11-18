@@ -19,9 +19,28 @@
 
 load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
 
-topiivolpart("../../etc/Point-Cloud",outfile="point-cloud-strip",pointsx=63,pointsy=57);
+topiivolpart( "./../../etc/Point-Cloud", 
+              outfile ="point-cloud-strip", 
+              pointsx=63, 
+              pointsy=57, 
+              pointsz=4, 
+              zdepth=-1920.0, 
+              partx=1, 
+              party=1, 
+              partz=mpisize
+            ); 
+//topiivolpart("../../etc/Point-Cloud",outfile="point-cloud-strip",pointsx=63,pointsy=57);
 mpiBarrier(mpiCommWorld);
-topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
+   topiivolmesh( "point-cloud-strip",
+                 outfile="top-ii-vol-mesh",
+                 pointsz=4,
+                 zdepth=-1920.0,
+                 partx=1,
+                 party=1,
+                 partz=mpisize
+               );
+   
+//topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
 
 
 load "PETSc"
@@ -53,5 +72,5 @@ macro def(u)u//
     u[] = A^-1 * rhs; 
 
     int[int] fforder=[1];
-    savevtk("solution.vtu",Th,u,order=fforder, dataname = "u");
+    savevtk("solutionZ.vtu",Th,u,order=fforder, dataname = "u");
 }    

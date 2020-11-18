@@ -36,6 +36,11 @@ if(top2vol)
  "//  PcNy   : Number of points in x in the point cloud                          \n"
  "//  PcNz   : Number of points in x in the point cloud                          \n"
  "//  Dptz   : Depth in z for the mesh produced by top-ii-vol                    \n"
+ "//  PartX  : Number of partitions in x direction                               \n"
+ "//  PartY  : Number of partitions in y direction                               \n"
+ "//  PartZ  : Number of partitions in z direction                               \n"
+ "// -------------------------------------------------------------------         \n"
+ "// Note that make sure PartX*PartY*PartZ = mpisize                             \n"    
  "//=============================================================================\n";
 
 if(Prblm=="linear-elasticity")
@@ -76,6 +81,9 @@ if(Prblm=="soildynamics")
   "  macro PcNy() 57 //                                                         \n"
   "  macro PcNz() 29 //                                                         \n"
   "  macro Dptz() -1920.0 //                                                    \n"
+  "  macro PartX() 1 //                                                         \n"
+  "  macro PartY() mpisize //                                                   \n"
+  "  macro PartZ() 1 //                                                         \n"     
   "                                                                             \n";
  }
 

@@ -40,7 +40,9 @@ check-local: gofastplugins.edp
 	@echo ""	
 	./../../src/psd-solve/PSD_Solve top-ii-vol.edp >> PSD-check.log
 	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol.edp  >> PSD-check.log	
-	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshingAndReconstruction.edp  >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshingAndReconstructionX.edp  >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshingAndReconstructionY.edp  >> PSD-check.log
+	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshingAndReconstructionZ.edp  >> PSD-check.log
 	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioningAndMeshing.edp >> PSD-check.log
 	./../../src/psd-solve/PSD_Solve -np 2 top-ii-vol_partitioning.edp	>> PSD-check.log
 	@echo ""
