@@ -299,12 +299,27 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "  real[int]  b(Vh.ndof), b1(Vh1.ndof)        ;                                \n";
 
   if(!Sequential){
+  
    writeIt
    "                                                                             \n"
    "//===========================================================================\n"
    "// -------  Fem matrices and vectors -------                                 \n"
    "// -------------------------------------------------------------------       \n"
-   "// A  : distributed FE matrix for PETSc                                      \n"   
+   "// A  : distributed FE matrix for PETSc                                      \n";
+   if(vectorial && constrainHPF)writeIt
+   "// A1 : distributed FE matrix for PETSc (for damage)                         \n";
+   if(!vectorial)writeIt
+   "// A1    : distributed FE matrix for PETSc (for damage)                      \n"
+   "// ALoc  : local matrices for assembling bilinear form linear momentum Eq    \n"
+   "// ALoc1 : local matrices for assembling bilinear form phase field Eq        \n"
+   "// b     : local vector for assembling bc vector form linear momentum Eq     \n"
+   "// b1    : local vector for assembling bc vector form phase field Eq         \n";
+   if(vectorial)writeIt   
+   "// ALoc  : local matrices for assembling bilinear form of vectorial equation \n"
+   "//         linear momentum Eq  coupled to phase-field equation               \n"
+   "// b     : local vector for assembling bc vector form of vectorial equation  \n"
+   "//         linear momentum Eq  coupled to phase-field equation               \n";             
+   writeIt  
    "//===========================================================================\n"
    "                                                                             \n"
    <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""           )<<
@@ -321,15 +336,15 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
     "  Mat A1( Vh1.ndof,  restrictionIntersectionZ, DZ);                         \n"
     <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
     "                                                                            \n"
-    "  matrix     ALoc, ALoc1                 ;  // Local matrices for bilinear  \n"
-    "  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;  // Local vectors for  linear    \n";
+    "  matrix     ALoc, ALoc1                 ;                                  \n"
+    "  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;                                  \n";
 
    if(vectorial)
     writeIt
     "                                                                            \n"
     <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
-    "  matrix     ALoc           ;      // Local vectorial matrix for bilinear   \n"
-    "  real[int]  b(Vh.ndof)     ;      // Local vectorial real vector for linear\n";
+    "  matrix     ALoc           ;                                               \n"
+    "  real[int]  b(Vh.ndof)     ;                                               \n";
 
 
    writeIt

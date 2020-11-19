@@ -2,21 +2,22 @@
 
 
 
-
 **Ongoing**
--  Install binaries and libraries in usr/bin and usr/include/psd
+
+- Optimizing damage solver
+
 -  Extend -probe flag to all physics
 
 
 
 **Todo**
 
+- Optimize interpolation via building of interpolation matrix
+
 -  Hujeux soil law make it work with PSD
 -  Nonlinear damage mechanics with nested matrices 
 
 -  To add examples for -probe flag in make check
--  To add examples for -mesh flag in make check
--  Probe flag for probing field values
 -  make check examples for time-discretization
 -  Optimize force calculation (matrix-vector type)
 -  Druker-Prager law for soil dynamics
@@ -28,8 +29,13 @@
 
 
 
-
 **Done**
+
+- Activate top-ii-vol version 1.2 for PSD
+
+-  Install binaries and libraries in usr/bin and usr/include/psd
+-  seperate precracked dirichlet flag
+
 -  mesh flag for PSD_Solve
 -  Distributed meshing interface for soil dynamics with top-ii-vol
 -  Extract point field in MPI
@@ -48,8 +54,8 @@
 -  GFP single function for Energy decomposition
 -  Material tensor of damage problems
 -  Tag Modification
--  Dynamic solver via $\epsilon(u):A:\epsilon(v)$
--  New variational formulations $\epsilon(u):A:\epsilon(v)$ instead of $\sigma(u):\epsilion(v)$
+-  Dynamic solver via $\varepsilon(u):A:\varepsilon(v)$
+-  New variational formulations $\varepsilon(u):A:\varepsilon(v)$ instead of $\sigma(u): \varepsilon (v)$
 -  2D/3D Quasistatic damage via GFP 
 	- Idea is to take  Bruno/Giuseppe's serial solver and  parallelize the solver.
 	- As EigenValue analysis of each element is required to get the principal directions there is a need to implement c++ GFP macros. 

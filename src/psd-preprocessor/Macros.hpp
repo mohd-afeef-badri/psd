@@ -378,16 +378,25 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 
  if(Sequential)
  writeIt
- "                                                                              \n"
- "//--------------------Sequential remapping macros-------------------------//  \n"
- "                                                                              \n"
- "  macro meshN()mesh                   // Two-dimensional problem              \n"
- "  macro intN()int2d                   // Two-dimensional integral             \n"
- "  macro intN1()int1d                  // One-dimensional integral             \n"
- "  macro readmeshN()readmesh           // Two-dimensional 'mesh' reader        \n"
- "  macro gmshloadN()gmshload           // Two-dimensional 'msh' reader         \n"
- "  macro grad(i) [dx(i),dy(i)]         // two-dimensional gradient             \n"
- "                                                                              \n";
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//      ------- remapping Macros -------                                       \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// meshN     : Two-dimensional problem mesh                                    \n"
+  "// intN      : Two-dimensional integral                                        \n"
+  "// intN1     : One-dimensional integral                                        \n"
+  "// grad      : Two-dimensional gradient                                        \n"    
+  "// readmeshN : Two-dimensional mesh reading .mesh format                       \n"
+  "// gmshloadN : Two-dimensional mesh reading .msh format                        \n"
+  "//=============================================================================\n" 
+ "                                                                                \n"
+ "  macro meshN()mesh                   //                                        \n"
+ "  macro intN()int2d                   //                                        \n"
+ "  macro intN1()int1d                  //                                        \n"
+ "  macro readmeshN()readmesh           //                                        \n"
+ "  macro gmshloadN()gmshload           //                                        \n"
+ "  macro grad(i) [dx(i),dy(i)]         //                                        \n"
+ "                                                                                \n";
 
 
  if(tractionconditions>=1)
@@ -645,26 +654,42 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
   writeIt
-  "                                                                              \n"
-  "//---------------------------Non-linear macros---------------------------//   \n"
-  "                                                                              \n"
-  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]        // Vect. field definition   \n"
-  "  macro init2 (i)  [   i  ,   i  ,   i   ]        // Vect. field initialize   \n"
-  "  macro def   (i)     i                                 // Scalar field       \n"
-  "  macro init  (i)     i                                 // Initialize         \n"
-  "  macro Zk            P1                                // FE space           \n";
+  "                                                                               \n" 
+  "//=============================================================================\n"
+  "//                 ------- FE field definition macros  -------                 \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// def2(i)   : Three component vectorial field definition                      \n"
+  "// init2(i)  : Three component vectorial field initilization                   \n"
+  "// def(i)    : Scalar field definition                                         \n"
+  "// init(i)   : Scalar field initilization                                      \n"
+  "// Zk        : Synonym of P1 fespace                                           \n"  
+  "//=============================================================================\n"  
+  "                                                                               \n"
+  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]   //                                \n"
+  "  macro init2 (i)  [   i  ,   i  ,   i   ]   //                                \n"
+  "  macro def   (i)     i                      //                                \n"
+  "  macro init  (i)     i                      //                                \n"
+  "  macro Zk            P1                     //                                \n";
 
 if(Prblm=="damage" && Model=="hybrid-phase-field")  
 if(vectorial && constrainHPF)
   writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//                 ------- FE field definition macros  -------                 \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// def2(i)   : Three component vectorial field definition                      \n"
+  "// init2(i)  : Three component vectorial field initilization                   \n"
+  "// def(i)    : Scalar field definition                                         \n"
+  "// init(i)   : Scalar field initilization                                      \n"
+  "// Zk        : Synonym of P1 fespace                                           \n"  
+  "//=============================================================================\n"
   "                                                                              \n"
-  "//---------------------------Non-linear macros---------------------------//   \n"
-  "                                                                              \n"
-  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]        // Vect. field definition   \n"
-  "  macro init2 (i)  [   i  ,   i  ,   i   ]        // Vect. field initialize   \n"
-  "  macro def   (i)     i                                 // Scalar field       \n"
-  "  macro init  (i)     i                                 // Initialize         \n"
-  "  macro Zk            P1                                // FE space           \n";   
+  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]  //                                \n"
+  "  macro init2 (i)  [   i  ,   i  ,   i   ]  //                                \n"
+  "  macro def   (i)     i                     //                                \n"
+  "  macro init  (i)     i                     //                                \n"
+  "  macro Zk            P1                    //                                \n";   
 
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
@@ -784,16 +809,25 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
 
  if(Sequential)
   writeIt
+  "                                                                               \n"
+  "//=============================================================================\n"
+  "//      ------- remapping Macros -------                                       \n"
+  "// --------------------------------------------------------------------------- \n"
+  "// meshN     : Three-dimensional problem mesh                                  \n"
+  "// intN      : Three-dimensional integral                                      \n"
+  "// intN1     : Two-dimensional integral                                        \n"
+  "// grad      : Three-dimensional gradient                                      \n"    
+  "// readmeshN : Three-dimensional mesh reading .mesh format                     \n"
+  "// gmshloadN : Three-dimensional mesh reading .msh format                      \n"
+  "//=============================================================================\n" 
   "                                                                              \n"
-  "//---------------------Sequential remapping macros-----------------------//   \n"
-  "                                                                              \n"
-  "  load \"msh3\"                           // Loading 3D mesh                  \n"
-  "  macro meshN()mesh3                    // Three-dimensional problem          \n"
-  "  macro intN()int3d                     // Three-dimensional integral         \n"
-  "  macro intN1()int2d                    // Two-dimensional integral           \n"
-  "  macro readmeshN()readmesh3            // Three-dimensional problem          \n"
-  "  macro gmshloadN()gmshload3            // Three-dimensional 'msh' reader     \n"
-  "  macro grad(i)[dx(i),dy(i),dz(i)]      // three-dimensional gradient         \n"
+  "  load \"msh3\"                          //                                   \n"
+  "  macro meshN()mesh3                     //                                   \n"
+  "  macro intN()int3d                      //                                   \n"
+  "  macro intN1()int2d                     //                                   \n"
+  "  macro readmeshN()readmesh3             //                                   \n"
+  "  macro gmshloadN()gmshload3             //                                   \n"
+  "  macro grad(i)[dx(i),dy(i),dz(i)]       //                                   \n"
   "                                                                              \n";
 
  if(tractionconditions>=1){
@@ -1305,19 +1339,27 @@ if(dirichletpointconditions>=1)
 
  if(spc==2)
   writeIt
-  "  macro PA0(i)                                                             \n"
-  "        [ cp*(N.x*N.x*i + N.x*N.y*i#1) + cs*( N.y*N.y*i - N.x*N.y*i#1),    \n"
-  "          cp*(N.x*N.y*i + N.y*N.y*i#1) + cs*(-N.x*N.y*i + N.x*N.x*i#1)     \n"
-  "        ]//                                                                \n";
+  "  macro PA0(i)                                                               \n"
+  "        [  cp*(N.x*N.x*i + N.x*N.y*i#1)                                      \n"
+  "          +cs*( N.y*N.y*i - N.x*N.y*i#1) ,                                   \n"
+  "                                                                             \n"  
+  "           cp*(N.x*N.y*i + N.y*N.y*i#1)                                      \n"
+  "          +cs*(-N.x*N.y*i + N.x*N.x*i#1) ]//                                 \n"
+  "                                                                             \n";
 
 
  if(spc==3)
   writeIt
-  "  macro PA0(i)                                                                                             \n"
-  "   [ cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2) + cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,      \n"
-  "     cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2) + cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,      \n"
-  "     cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2) + cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2)         \n"
-  "    ]//                                                                                                    \n";
+  "  macro PA0(i)                                                               \n"
+  "   [  cp*(N.x*N.x*i + N.x*N.y*i#1 + N.x*N.z*i#2)                             \n"
+  "     +cs*( (1.-N.x*N.x)*i - N.x*N.y*i#1 - N.x*N.z*i#2)  ,                    \n"
+  "                                                                             \n"
+  "     cp*(N.x*N.y*i + N.y*N.y*i#1 + N.y*N.z*i#2)                              \n"
+  "     +cs*(-N.x*N.y*i + (1.-N.y*N.y)*i#1 - N.y*N.z*i#2)  ,                    \n"
+  "                                                                             \n"  
+  "     cp*(N.x*N.z*i + N.y*N.z*i#1 + N.z*N.z*i#2)                              \n"
+  "     +cs*(-N.x*N.z*i - N.y*N.z*i#1 + (1.-N.z*N.z)*i#2) ]//                   \n"
+  "                                                                             \n";
 
  if(Sequential)
   writeIt
