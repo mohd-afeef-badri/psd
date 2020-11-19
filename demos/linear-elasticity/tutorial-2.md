@@ -11,7 +11,7 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal `cd` to the folder `\home\PSD-tutorials\linear-elasticity` .  Launch  `PSD_PreProcess` from the terminal, to do so run the following command.
 
 ```bash
-PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 2 -postprocess u
+PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 2 -postprocess u
 ```
 
 After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. 
@@ -48,7 +48,7 @@ You are all done with your 2D linear-elasticty simulation.
 
 
 
-## What else should you try ##
+## What else should you try to become an advanced user ##
 
 - Try running the 3D problem. Keep in mind to rerun the `PSD_PreProcess` with `-dimension 3` flag and using the approprite mesh via `-mesh` flag with `-PSD_Solve` . It goes without saying you will need to adjust the direchlet border lables in `ControlParameters.edp`. 
 

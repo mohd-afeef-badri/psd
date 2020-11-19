@@ -9,7 +9,7 @@
 Single dirichlet condition (clamped end bar) and body force source term
 
 ```
-PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1
+PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
 ```
 
 ```
@@ -25,7 +25,7 @@ PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/2D/bar.msh -v 0
 Single dirichlet condition (clamped end bar) and body force source term
 
 ```
-PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1
+PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
 ```
 
 ```

@@ -11,7 +11,7 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal `cd` to the folder `\home\PSD-tutorials\linear-elasticity` .  Launch  `PSD_PreProcess` from the terminal, to do so run the following command.
 
 ```bash
-PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1 -postprocess u
+PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
 ```
 
 After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. 
@@ -51,7 +51,7 @@ You are all done with your 2D linear-elasticty simulation.
 3D follows the same logic as 2D, in the preprocessing step
 
 ```bash
-PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1
+PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
 ```
 
 note that all what has changed `-dimension 3` instead of `-dimension 2`
@@ -68,7 +68,7 @@ PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0
 
 <img src="./3d-bar-clamped-pulled-partioned.png" alt="3d-bar-clamped-pulled-partioned" style="zoom:80%;" />
 
-## What else should you try ##
+## What else should you try to become an advanced user ##
 
 - Optionally try using `-fastmethod` flag with `PSD_PreProcess` for producing optimized codes, you are encouraged to have a look at `ControlParameters.edp` file produced with `-fastmethod` flag and without `-fastmethod` flag.
 
@@ -79,8 +79,10 @@ PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0
   ```
 
   ```bash
-  PSD_Solve_Seq -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0
+  PSD_Solve_Seq Main.edp  -mesh ./../Meshes/2D/bar.msh -v 0
   ```
+
+  Do the same simulation in 3D. 
 
 - You are encouraged to time your the PSD solver and see if you have considerable gains when using more processes in parallel PSD or when comparing a a sequential solver with a parallel one. To time the solver use `-timelog` flag during `PSD_PreProcess`. 
 

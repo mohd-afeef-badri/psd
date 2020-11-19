@@ -46,7 +46,7 @@ You are all done with your 2D linear-elasticty simulation.
 
 
 
-## What else should you try ##
+## What else should you try  to become an advanced user ##
 
 - On the non clamped dirichlet condition try removing the constrain on $y$ direction ` Dbc1Uy 0.` simply comment this line. Rerun the problem and compare to the results above. 
 
