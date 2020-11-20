@@ -965,7 +965,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
 
 
 
-if(dirichletpointconditions<1 && Sequential)
+if(dirichletpointconditions<1 && Sequential && pointprobe)
  {
   writeIt
   "                                                                               \n"
@@ -1014,7 +1014,7 @@ if(dirichletpointconditions<1 && Sequential)
   
  } 
 
-if(dirichletpointconditions<1 && !Sequential)
+if(dirichletpointconditions<1 && !Sequential  && pointprobe)
  {
   writeIt
   "                                                                               \n"
