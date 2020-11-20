@@ -47,7 +47,7 @@ check-linear-elasticity:
 	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Sequential  2D linear-elasticity                   "
+	@echo " Sequential 2D linear-elasticity                   "
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1  -testflags > PSD_PreProcess-2D_linear-elasticity.log &&  \
@@ -55,7 +55,7 @@ check-linear-elasticity:
 	./PSD_Solve_Seq  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Sequential  3D linear-elasticity                   "
+	@echo " Sequential 3D linear-elasticity                   "
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1  -testflags > PSD_PreProcess-3D_linear-elasticity.log &&  \
@@ -63,23 +63,23 @@ check-linear-elasticity:
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Sequential  2D linear-elasticity fastmethod       "
+	@echo " Sequential 2D linear-elasticity with material tensor      "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1 -fastmethod  -testflags > PSD_PreProcess-2D_linear-elasticity_fastmethod.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-2D_linear-elasticity_withmaterialtensor.log &&  \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_fastmethod.log
+	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Sequential  3D linear-elasticity   fastmethod      "
+	@echo " Sequential 3D linear-elasticity with material tensor      "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1 -fastmethod  -testflags > PSD_PreProcess-3D_linear-elasticity_fastmethod.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_withmaterialtensor.log &&  \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_fastmethod.log
+	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 2D linear-elasticity                   "
+	@echo " Parallel 2D linear-elasticity             "
 	@echo "*============================================================*"
 	@echo ""	
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1  -testflags  > PSD_PreProcess-2D_linear-elasticity_Parallel.log &&  \
@@ -97,25 +97,22 @@ check-linear-elasticity:
 	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_linear-elasticity_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 2D linear-elasticity fastmethod                   "
+	@echo " Parallel 2D linear-elasticity with material tensor     "
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod -testflags  > PSD_PreProcess-2D_linear-elasticity_Parallel_fastmethod.log &&  \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1  -dirichletconditions 1 -withmaterialtensor -testflags  > PSD_PreProcess-2D_linear-elasticity_Parallel_withmaterialtensor.log &&  \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw  > PSD_Solve-2D_linear-elasticity_Parallel_fastmethod.log
+	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw  > PSD_Solve-2D_linear-elasticity_Parallel_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D linear-elasticity  fastmethod                  "
+	@echo " Parallel 3D linear-elasticity with material tensor     "
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1 -fastmethod  -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_fastmethod.log &&  \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1  -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_withmaterialtensor.log &&  \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_linear-elasticity_Parallel_fastmethod.log	
-
-
-
+	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_linear-elasticity_Parallel_withmaterialtensor.log
 
 
 
@@ -468,7 +465,7 @@ check-fracture-mechanics:
 	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw  > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D phase-field fracture mechanics energydecomp vectorial with reaction-force (stress-based)"
+	@echo " Parallel 3D phase-field fracture mechanics with energydecomp vectorial reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce  -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log &&  \
@@ -479,7 +476,7 @@ check-fracture-mechanics:
 	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw   > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 2D phase-field fracture mechanics energydecomp vectorial with reaction-force (variational-based)"
+	@echo " Parallel 2D phase-field fracture mechanics with energydecomp vectorial reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce  -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log &&  \
@@ -490,7 +487,7 @@ check-fracture-mechanics:
 	./PSD_Solve -np 2  Main.edp -v 1 -ns -nw  > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D phase-field fracture mechanics energydecomp vectorial with reaction-force (variational-based)"
+	@echo " Parallel 3D phase-field fracture mechanics with energydecomp vectorial reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce  -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log &&  \
@@ -662,17 +659,6 @@ check-Elastodynamics:
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_elastodynamics_Parallel.log
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Sequential 2D Soildynamics                        "
-	@echo "*============================================================*"
-	@echo ""
-	./PSD_PreProcess -dimension 2 -problem soildynamics -sequential -dirichletconditions 1  -testflags > PSD_PreProcess-2D_soildynamics.log &&  \
-	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
-	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve_Seq Main.edp -v 1 -ns -nw   > PSD_Solve-2D_soildynamics.log
 
 
 
@@ -683,7 +669,18 @@ check-Elastodynamics:
 
 check-Soildynamics:
 	@cp ./../psd-solve/PSD_Solve ./PSD_Solve
-	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq	
+	@cp ./../psd-solve/PSD_Solve_Seq ./PSD_Solve_Seq
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential 2D Soildynamics                        "
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 -problem soildynamics -sequential -dirichletconditions 1  -testflags > PSD_PreProcess-2D_soildynamics.log &&  \
+	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
+	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
+	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
+	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics.log		
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 3D Soildynamics                        "
@@ -694,7 +691,7 @@ check-Soildynamics:
 	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve_Seq Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics.log
+	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics                        "
@@ -705,7 +702,7 @@ check-Soildynamics:
 	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve  -np 2  Main.edp -v 1 -ns -nw  > PSD_Solve-2D_soildynamics_Parallel.log
+	./PSD_Solve  -np 2  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics                        "
@@ -716,7 +713,7 @@ check-Soildynamics:
 	find  -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find  -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics_Parallel.log
+	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics with doublecouple (displacement-based)                       "
@@ -743,7 +740,7 @@ check-Soildynamics:
 	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D Soildynamics with  top2vol meshing                       "
+	@echo " Parallel 3D Soildynamics with top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem soildynamics  -model linear  -timediscretization newmark-beta -useGFP  -top2vol-meshing  -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_force-based.log &&  \
@@ -755,7 +752,7 @@ check-Soildynamics:
 	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics_Parallel_top2vol_force-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top2vol meshing                       "
+	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem soildynamics  -model linear  -timediscretization newmark-beta -useGFP  -top2vol-meshing -doublecouple force-based  -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log &&  \
@@ -767,7 +764,7 @@ check-Soildynamics:
 	./PSD_Solve  -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top2vol meshing                       "
+	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top-ii-vol meshing"
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem soildynamics  -model linear  -timediscretization newmark-beta -useGFP  -top2vol-meshing -doublecouple displacement-based  -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log &&  \

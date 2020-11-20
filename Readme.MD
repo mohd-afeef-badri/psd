@@ -119,11 +119,11 @@ PSD_Solve_Seq Main.edp -v 0 -nw
 These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
 
 | Option         | Type      | Comment                                                      |
-| -------------- | --------- | :----------------------------------------------------------: |
+| -------------- | --------- | :----------------------------------------------------------- |
 | `-help` | `[bool]`  | To activate helping message on the terminal. |
-| `-debug`       | `[bool]`  | To activate debug mode with a wait plot.  Development flag.  |
+| `-debug`       | `[bool]`  | To activate openGL plot.  Development flag. |
 | `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
-| `-useRCM`      | `[bool]`  | To activate mesh level renumbering via Reverse Cuthill Mckee.  |
+| `-useRCM`      | `[bool]`  | Activate mesh level renumbering: Reverse Cuthill Mckee. |
 | `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
 | `-timelog`     | `[bool]`  | To activate time logging the different phases of the solver. |
 | `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm support       |
@@ -134,9 +134,10 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
 | `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
 | `-constrainHPF`| `[bool]`  | To use constrain condition in hybrid phase-field model.      |
-| `-top2vol-meshing`| `[bool]`  | To activate top-ii-vol point source meshing for soil-dynamics.      |
-| `-getreactionforce`| `[bool]`  | To activate routine for extraction reactions at surface.      |
-| `-plotreactionforce`| `[bool]`  | To activate realtime pipe plotting using GnuPlot.      |
+| `-top2vol-meshing`| `[bool]`  | Activate top-ii-vol point source meshing for soil-dynamics.      |
+| `-getreactionforce`| `[bool]`  | Activate routine for extraction reactions at surface.      |
+| `-plotreactionforce`| `[bool]`  | Activate realtime pipe plotting using GnuPlot.      |
+| `-withmaterialtensor` | `[bool]` | Activate material tensor for building stiffness matrix. |
 | `-crackdirichletcondition` | `[bool]` | To activate pre-cracked surface Dirichlet. |
 |  		 | 	     |                     					    |
 | `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.   |

@@ -53,7 +53,7 @@ You are all done with your 2D linear-elasticty simulation.
 
 - Try running the 3D problem. Keep in mind to rerun the `PSD_PreProcess` with `-dimension 3` flag and using the approprite mesh via `-mesh` flag with `-PSD_Solve` . It goes without saying you will need to adjust the direchlet border lables in `ControlParameters.edp`. 
 
-- Optionally try using `-fastmethod` flag with `PSD_PreProcess` for producing optimized codes, you are encouraged to have a look at `Controlparameters.edp` file produced with `-fastmethod` flag and without `-fastmethod` flag.
+- Optionally try using `-withmaterialtensor` flag with `PSD_PreProcess` , and run the simulation. You are encouraged to have a look at `ControlParameters.edp`  and ` VariationalFormulations.edp` file produced with `-withmaterialtensor` flag and without this flag.
 
 - Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
 

@@ -55,7 +55,7 @@ You are all done with your 2D linear-elasticty simulation.
 
 - Since gravity is the main force involved in the problem, try redoing the test with diffrent graviational constant. Imagine, you wish to know how the test would compare if performed on Moon and Jupiter. The only thing that will change now is the gravitational pull, for Moon $g=1.32$ and for Jupiter $g=24.79$. To perform the moon test simply change  `Fbc0Fy -10560.0` in ` ControlParameters.edp` and redo step 2 and step 3. Similarly, for the Jupiter test `Fbc0Fy -198320.0` in ` ControlParameters.edp` and redo step 2 and step 3.
 
-- Optionally try using `-fastmethod` flag with `PSD_PreProcess` for producing optimized codes, you are encouraged to have a look at `Controlparameters.edp` file produced with `-fastmethod` flag and without `-fastmethod` flag.
+- Optionally try using `-withmaterialtensor` flag with `PSD_PreProcess` , and run the simulation. You are encouraged to have a look at `ControlParameters.edp`  and ` VariationalFormulations.edp` file produced with `-withmaterialtensor` flag and without this flag.
 
 - Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
 

@@ -72,7 +72,7 @@ PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0
 
 ## What else should you try to become an advanced user ##
 
-- Optionally try using `-fastmethod` flag with `PSD_PreProcess` for producing optimized codes, you are encouraged to have a look at `ControlParameters.edp` file produced with `-fastmethod` flag and without `-fastmethod` flag.
+- Optionally try using `-withmaterialtensor` flag with `PSD_PreProcess` , and run the simulation. You are encouraged to have a look at `ControlParameters.edp`  and ` VariationalFormulations.edp` file produced with `-withmaterialtensor` flag and without this flag.
 
 - Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
 

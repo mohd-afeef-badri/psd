@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
   int spc                      = 2;
   int lag                      = 1;
 
-  bool RCM          = true;  
+  bool RCM          = true ;  
   bool help         = false;
   bool debug        = false;
   bool useGFP       = false;
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
   bool testflags    = false;
   bool vectorial    = false;
   bool supercomp    = false;
-  bool fastmethod   = true;
+  bool fastmethod   = true ;
   bool Sequential   = false;
   bool pointprobe   = false; 
   bool dirichletbc  = false;
@@ -176,40 +176,39 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"             ) RCM                           = true;
-    if( argvdummy == "-help"               ) help                          = true;
-    if( argvdummy == "-debug"              ) debug                         = true;
-    if( argvdummy == "-useGFP"             ) useGFP                        = true;
-    if( argvdummy == "-pipegnu"            ) pipegnu                       = true;
-    if( argvdummy == "-testflags"          ) testflags                     = true;
-    if( argvdummy == "-timelog"            ) timelog                       = true;
-    if( argvdummy == "-vectorial"          ) vectorial                     = true;
-    if( argvdummy == "--version"           ) versionpsd                    = true;        
-    if( argvdummy == "-version"            ) versionpsd                    = true;    
-    if( argvdummy == "-supercomp"          ) supercomp                     = true;
-    if( argvdummy == "-fastmethod"         ) fastmethod                    = true;
-    if( argvdummy == "-sequential"         ) Sequential                    = true;
-    if( argvdummy == "-dirichletbc"        ) dirichletbc                   = true;
-    if( argvdummy == "-energydecomp"       ) energydecomp                  = true;
-    if( argvdummy == "-pointprobe"         ) pointprobe                    = true;    
-    if( argvdummy == "-top2vol-meshing"    ) top2vol                       = true;
-    if( argvdummy == "-getreactionforce"   ) reactionforce                 = true;
-    if( argvdummy == "-plotreactionforce"  ) plotreaction                  = true;
-    if( argvdummy == "-constrainHPF"       ) constrainHPF                  = true;
-    if( argvdummy == "-crackdirichletcondition") precracked                = true;                     
+    if( argvdummy == "-useRCM"                  ) RCM                      = true;
+    if( argvdummy == "-help"                    ) help                     = true;
+    if( argvdummy == "-debug"                   ) debug                    = true;
+    if( argvdummy == "-useGFP"                  ) useGFP                   = true;
+    if( argvdummy == "-pipegnu"                 ) pipegnu                  = true;
+    if( argvdummy == "-testflags"               ) testflags                = true;
+    if( argvdummy == "-timelog"                 ) timelog                  = true;
+    if( argvdummy == "-vectorial"               ) vectorial                = true;
+    if( argvdummy == "--version"                ) versionpsd               = true;        
+    if( argvdummy == "-version"                 ) versionpsd               = true;    
+    if( argvdummy == "-supercomp"               ) supercomp                = true;
+    if( argvdummy == "-sequential"              ) Sequential               = true;
+    if( argvdummy == "-dirichletbc"             ) dirichletbc              = true;
+    if( argvdummy == "-energydecomp"            ) energydecomp             = true;
+    if( argvdummy == "-pointprobe"              ) pointprobe               = true;    
+    if( argvdummy == "-top2vol-meshing"         ) top2vol                  = true;
+    if( argvdummy == "-getreactionforce"        ) reactionforce            = true;
+    if( argvdummy == "-plotreactionforce"       ) plotreaction             = true;
+    if( argvdummy == "-constrainHPF"            ) constrainHPF             = true;
+    if( argvdummy == "-crackdirichletcondition" ) precracked               = true;
+    if( argvdummy == "-withmaterialtensor"      ) fastmethod               = false;                         
 
-    if( argvdummy == "-model"              ) Model                         = argv[i+1];
-    if( argvdummy == "-solver"             ) Solver                        = argv[i+1];
-    if( argvdummy == "-problem"            ) Prblm                         = argv[i+1];
-    if( argvdummy == "-partitioner"        ) Partitioner                   = argv[i+1];
-    if( argvdummy == "-postprocess"        ) PostProcess                   = argv[i+1];
-    if( argvdummy == "-doublecouple"       ) doublecouple                  = argv[i+1];
-    if( argvdummy == "-preconditioner"     ) Preconditioner                = argv[i+1];
-    if( argvdummy == "-nonlinearmethod"    ) NonLinearMethod               = argv[i+1];
-    if( argvdummy == "-reactionforce"      ) reactionforcemethod           = argv[i+1];       
-    if( argvdummy == "-subpreconditioner"  ) SubPreconditioner             = argv[i+1];
-    if( argvdummy == "-timediscretization" ) TimeDiscretization            = argv[i+1];
-
+    if( argvdummy == "-model"                   ) Model                    = argv[i+1];
+    if( argvdummy == "-solver"                  ) Solver                   = argv[i+1];
+    if( argvdummy == "-problem"                 ) Prblm                    = argv[i+1];
+    if( argvdummy == "-partitioner"             ) Partitioner              = argv[i+1];
+    if( argvdummy == "-postprocess"             ) PostProcess              = argv[i+1];
+    if( argvdummy == "-doublecouple"            ) doublecouple             = argv[i+1];
+    if( argvdummy == "-preconditioner"          ) Preconditioner           = argv[i+1];
+    if( argvdummy == "-nonlinearmethod"         ) NonLinearMethod          = argv[i+1];
+    if( argvdummy == "-reactionforce"           ) reactionforcemethod      = argv[i+1];       
+    if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
+    if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
 
   }
 
@@ -290,7 +289,6 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " vectorial is -----------------------> " << vectorial                << endl;
   cout << " supercomp is -----------------------> " << supercomp                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl; 
-  cout << " fastmethod is ----------------------> " << fastmethod               << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;  
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
@@ -298,6 +296,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " constrainedHPF is ------------------> " << constrainHPF             << endl;        
   cout << " getreactionforce is ----------------> " << reactionforce            << endl;
   cout << " plotreactionforce is ---------------> " << pipegnu                  << endl;
+  cout << " withmaterialtensor is --------------> " << fastmethod               << endl;  
   cout << " crackdirichletcondition is ---------> " << precracked               << endl;     
   }
 
@@ -325,7 +324,7 @@ if(versionpsd){
   cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;
   cout << "    FOR A PARTICULAR PURPOSE.                                      " << endl;
   cout << "                                                                   " << endl;   
-  cout << "    Report bugs/issues ::    mohd-afeef.badr@cea.fr                " << endl;
+  cout << "    Report bugs/issues ::    mohd-afeef.badri@cea.fr               " << endl;
   cout << "                                                                   " << endl;     
   cout << "===================================================================" << endl;     
   
@@ -353,9 +352,9 @@ if(!help){
   cout << "                                                                   " << endl;
   cout << " PSD solver is now ready to run.                                   " << endl;
   cout << "                                                                   " << endl;
-  cout << " For a simulation with $ number of processes run your solver with  " << endl;
+  cout << " For a simulation with N number of processes run your solver with  " << endl;
   cout << "                                                                   " << endl;
-  cout << "     PSD_Solve -np $ Main.edp                                      " << endl;
+  cout << "     PSD_Solve -np N Main.edp                                      " << endl;
   cout << "                                                                   " << endl;
   cout << " For a sequential simulation run your solver with                  " << endl;
   cout << "                                                                   " << endl;
