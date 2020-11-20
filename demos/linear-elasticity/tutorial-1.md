@@ -11,12 +11,13 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal `cd` to the folder `\home\PSD-tutorials\linear-elasticity` .  Launch  `PSD_PreProcess` from the terminal, to do so run the following command.
 
 ```bash
-PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
+PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u
 ```
 
 After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. 
 
-*What do the arguments mean ?* `-dimension 2` means it is a 2D simulation, `-bodyforceconditions 1` with body force; `-dirichletconditions 1` says we have one Dirichlet border; and `-postprocess u` means we would like to have ParaView post processing files.
+*What do the arguments mean ?* `-problem linear-elasticity` means that we are solving linear elasticity problem, `-dimension 2` means it is a 2D simulation, `-bodyforceconditions 1` with applied body force acting on the domain; `-dirichletconditions 1` says we have one Dirichlet border; and `-postprocess u` means we would like to have ParaView post processing files.
 
 At this stage the input properties $E,\nu$ can be mentioned in ` ControlParameters.edp`, use `E  = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`,  i.e ($\rho*g=8.e3*(-9.81)=-78480.0$).  One can also provide the mesh to be used in ` ControlParameters.edp` , via `ThName = "../Meshes/2D/bar.msh"`  (*note that mesh can also be provided in the next step*) .In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables   ` Dbc0On 2`,  ` Dbc0Ux 0.`,  and `Dbc0Uy 0.`  are used, which means for Dirichlet border `2` (` Dbc0On 2`) where `2` is the clamped border label of the mesh  Dirichlet constrain is applied and ` Dbc0Ux 0.`, ` Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
 
@@ -51,7 +52,8 @@ You are all done with your 2D linear-elasticty simulation.
 3D follows the same logic as 2D, in the preprocessing step
 
 ```bash
-PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u
+PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u
 ```
 
 note that all what has changed `-dimension 3` instead of `-dimension 2`
@@ -75,7 +77,8 @@ PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0
 - Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
 
   ```bash
-  PSD_PreProcess -dimension 2 -sequential -bodyforceconditions 1  -dirichletconditions 2 -postprocess u
+  PSD_PreProcess -problem linear-elasticity -dimension 2 -sequential \
+  -bodyforceconditions 1  -dirichletconditions 2 -postprocess u
   ```
 
   ```bash

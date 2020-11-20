@@ -9,12 +9,13 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal `cd` to the folder `\home\PSD-tutorials\linear-elasticity` .  Launch  `PSD_PreProcess` from the terminal, to do so run the following command.
 
 ```bash
-PSD_PreProcess -dimension 2 -dirichletconditions 2 -postprocess u
+PSD_PreProcess -problem linear-elasticity -dimension 2 -dirichletconditions 2 \
+-postprocess u
 ```
 
 After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. 
 
-*What do the arguments mean ?* `-dimension 2` means it is a 2D simulation; `-dirichletconditions 2` says we have two Dirichlet border; and `-postprocess u` means we would like to have ParaView post processing files.
+*What do the arguments mean ?* `-problem linear-elasticity` means that we are solving linear elasticity problem,  `-dimension 2` means it is a 2D simulation; `-dirichletconditions 2` says we have two Dirichlet border; and `-postprocess u` means we would like to have ParaView post processing files.
 
 In comparison to preprocessing from other two tutorials (tutorial 1 and 2), notice that the body force  flag  ` -bodyforceconditions 1` is missing. This is due to the fact that for this problem we assume null body force.  ` -dirichletconditions 2`, which notifies to PSD that there are two Dirichlet borders in this simulation  i) the clamped end and ii) the pulled ends of the bar. To provide these Dirichlet conditions of the two ends in `ControlParameters.edp` set the variables  ` Dbc0On 2`,  ` Dbc0Ux 0.`, and ` Dbc0Uy 0.` signifying the clamped end ($u_x=0,u_y=0$ on mesh label 2) and ` Dbc1On 4`, ` Dbc1Ux 1.`, and ` Dbc1Uy 0.` signifying the pulled end ($u_x=1,u_y=0$  on label `4`). Note that here at border `4` we have explicitly set $u_2=0$ this means the bar is not allowed to shrink (compress) in $y$ direction, however you might wish to allow the bar to compress. For such a simulation simply use `Dbc1On 4` and `Dbc1Ux 1.`, and remove the term `Dbc1Uy 0.` therefor asking PSD not to apply constrain in $y$ direction on the pulled end.
 
@@ -57,7 +58,8 @@ You are all done with your 2D linear-elasticty simulation.
 - Add `-sequential` flag to `PSD_PreProcess`  for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
 
   ```bash
-  PSD_PreProcess -dimension 2 -sequential -bodyforceconditions 1  -dirichletconditions 2 -postprocess u
+  PSD_PreProcess -problem linear-elasticity  -dimension 2 -sequential \
+  -bodyforceconditions 1  -dirichletconditions 2 -postprocess u
   ```
 
   ```bash
