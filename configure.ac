@@ -56,7 +56,7 @@ AC_ARG_WITH(FreeFEM,
 	   
 AC_ARG_WITH(Gmsh,
 	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
-	   GMSH="${withval}/Gmsh")	   
+	   GMSH="${withval}/gmsh")	   
 
 SECTION_TITLE([    checking for a C++  compilers       ])
 AC_PROG_CXX
