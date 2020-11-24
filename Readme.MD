@@ -25,33 +25,33 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 **Now that I have all the dependencies what next**
 
 - Go ahead and grab the latest copy of PSD. The code is hosted on CEA's internal git [repository](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&hb=devel-dynamic).
-```
+```bash
 git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources
 ```
 - Autoconf PSD within the  cloned folder
-```
+```bash
 autoreconf -i
 ```
 - Configure  PSD within the  cloned folder
-```
+```bash
 ./configure 
 ```
 *Note*:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider chaning directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`
 
 *Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
 
-```
+```bash
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
 ```
 
 - Make PSD directives
 
-```
+```bash
 make
 ```
 
 - Install PSD
-```
+```bash
 sudo make install  
 ```
 *Note* : You should not use `sudo` if you have used `--prefix` during the `./configure` 
@@ -62,13 +62,13 @@ Now you should have the PSD solvers installed.
 
 Note that this procedure is only recommended if you are interested in using PSD for brittle fracture problems. In your FreeFEM source files (installation)  go to `src/femlib/fem.cpp` ,  in this file replace the lines of code
 
-```
+```bash
 R seuil=hm/splitmax/4.0;
 ```
 
 by the following 
 
-```
+```bash
 R seuil=hm/splitmax/4.0/1000.0;
 ```
 
@@ -82,7 +82,7 @@ To perform a simulation three steps are involved
 
 Now that the mesh has been loaded. Its time to set up the solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
 
-```
+```bash
 PSD_PreProcess [Options-PSD]
 ```
 
@@ -90,7 +90,7 @@ Via the command line options you will embed the physics within the solver. This 
 
 For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
-```
+```bash
 PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1
 ```
 
@@ -100,11 +100,11 @@ Now you are all set to run your simulation. To do so you will need to do the run
 
 if you complied a parallel PSD version
 
-```
+```bash
 PSD_Solve -np $N Main.edp -v 0 -nw
 ```
 if you complied a sequential PSD version
-```
+```bash
 PSD_Solve_Seq Main.edp -v 0 -nw
 ```
 
@@ -118,45 +118,45 @@ PSD_Solve_Seq Main.edp -v 0 -nw
 
 These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
 
-| Option         | Type      | Comment                                                      |
-| -------------- | --------- | :----------------------------------------------------------- |
-| `-help` | `[bool]`  | To activate helping message on the terminal. |
-| `-debug`       | `[bool]`  | To activate openGL plot.  Development flag. |
-| `-useGFP`      | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins. |
-| `-useRCM`      | `[bool]`  | Activate mesh level renumbering: Reverse Cuthill Mckee. |
-| `-pipegnu`     | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
-| `-timelog`     | `[bool]`  | To activate time logging the different phases of the solver. |
-| `-supercomp`   | `[bool]`  | Use when using a super computer without Xterm support       |
-| `-bodyforce`   | `[bool]`  | To activate volumetric source term (body force).             |
-| `-vectorial`   | `[bool]`  | To use vectorial finite element method.			    |
-| `-pointprobe` | `[bool]` | To postprocess point fields.	|
-| `-sequential`  | `[bool]`  | To solve via a sequential solver.        |
-| `-energydecomp`| `[bool]`  | To activate energy decomposition, only for phase-field.      |
-| `-doublecouple`| `[bool]`  | To activate double couple source for soildynamics.      |
-| `-constrainHPF`| `[bool]`  | To use constrain condition in hybrid phase-field model.      |
-| `-top2vol-meshing`| `[bool]`  | Activate top-ii-vol point source meshing for soil-dynamics.      |
-| `-getreactionforce`| `[bool]`  | Activate routine for extraction reactions at surface.      |
-| `-plotreactionforce`| `[bool]`  | Activate realtime pipe plotting using GnuPlot.      |
-| `-withmaterialtensor` | `[bool]` | Activate material tensor for building stiffness matrix. |
-| `-crackdirichletcondition` | `[bool]` | To activate pre-cracked surface Dirichlet. |
-|  		 | 	     |                     					    |
-| `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.   |
-| `-dirichletconditions` | `[int]`   | Number of Dirchlet boundaries.   |
-| `-bodyforceconditions` | `[int]`   | Number of regions acted upon by bodyforce.   |
-| `-tractionconditions`| `[int]`   | Number of Neumann/traction bounders. |
-| `-parmetis_worker`| `[int]`   | Number of parallel workers used by ParMetis for partiotining.   |
-| `-lagrange`		| `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2. |
-| `-dimension`   	| `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
-|  		 | 	     |                     					    |
-| `-mesh` | `[sting]` | Provide mesh to be solved by `PSD_Solve`. |
-| `-timediscretization` | `[sting]` | Time discretization type. Use "generalized-alpha" or "newmark-beta" or "hht-alpha" or "central-difference" |
-| `-nonlinearmethod` | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons". |
-| `-reactionforce` | `[sting]` | Reaction force calculation method "stress-based" or "variational-based". |
-| `-doublecouple` | `[sting]` | Soil dynamics double couple. Use "force-based" or "displacement-based". |
-| `-postprocess` | `[sting]` | To communicate what to postprocess "u", "v", "a", "uv" , "ud", "ua", "d", "ud", or  "uav". |
-| `-partitioner` | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
-| `-problem` | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
-| `-model` | `[sting]` | Interested model. Use "hybrid-phase-field" or "Mazar". |
+| Option                      | Type      | Comment                                                      |
+| --------------------------- | --------- | :----------------------------------------------------------- |
+| `-help`                     | `[bool]`  | To activate helping message on the terminal.                 |
+| `-debug`                    | `[bool]`  | To activate openGL plot.  Development flag.                  |
+| `-useGFP`                   | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins.    |
+| `-useRCM`                   | `[bool]`  | Activate mesh level renumbering: Reverse Cuthill Mckee.      |
+| `-pipegnu`                  | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
+| `-timelog`                  | `[bool]`  | To activate time logging the different phases of the solver. |
+| `-supercomp`                | `[bool]`  | Use when using a super computer without Xterm support        |
+| `-bodyforce`                | `[bool]`  | To activate volumetric source term (body force).             |
+| `-vectorial`                | `[bool]`  | To use vectorial finite element method.                      |
+| `-pointprobe`               | `[bool]`  | To postprocess point fields.                                 |
+| `-sequential`               | `[bool]`  | To solve via a sequential solver.                            |
+| `-energydecomp`             | `[bool]`  | To activate energy decomposition, only for phase-field.      |
+| `-doublecouple`             | `[bool]`  | To activate double couple source for soildynamics.           |
+| `-constrainHPF`             | `[bool]`  | To use constrain condition in hybrid phase-field model.      |
+| `-top2vol-meshing`          | `[bool]`  | Activate top-ii-vol point source meshing for soil-dynamics.  |
+| `-getreactionforce`         | `[bool]`  | Activate routine for extraction reactions at surface.        |
+| `-plotreactionforce`        | `[bool]`  | Activate realtime pipe plotting using GnuPlot.               |
+| `-withmaterialtensor`       | `[bool]`  | Activate material tensor for building stiffness matrix.      |
+| `-crackdirichletcondition`  | `[bool]`  | To activate pre-cracked surface Dirichlet.                   |
+|                             |           |                                                              |
+| `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.                                   |
+| `-dirichletconditions`      | `[int]`   | Number of Dirchlet boundaries.                               |
+| `-bodyforceconditions`      | `[int]`   | Number of regions acted upon by bodyforce.                   |
+| `-tractionconditions`       | `[int]`   | Number of Neumann/traction bounders.                         |
+| `-parmetis_worker`          | `[int]`   | Number of parallel workers used by ParMetis for partiotining. |
+| `-lagrange`                 | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2.     |
+| `-dimension`                | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
+|                             |           |                                                              |
+| `-mesh`                     | `[sting]` | Provide mesh to be solved by `PSD_Solve`.                    |
+| `-timediscretization`       | `[sting]` | Time discretization type. Use "generalized-alpha" or "newmark-beta" or "hht-alpha" or "central-difference" |
+| `-nonlinearmethod`          | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons".    |
+| `-reactionforce`            | `[sting]` | Reaction force calculation method "stress-based" or "variational-based". |
+| `-doublecouple`             | `[sting]` | Soil dynamics double couple. Use "force-based" or "displacement-based". |
+| `-postprocess`              | `[sting]` | To communicate what to postprocess "u", "v", "a", "uv" , "ud", "ua", "d", "ud", or  "uav". |
+| `-partitioner`              | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
+| `-problem`                  | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
+| `-model`                    | `[sting]` | Interested model. Use "hybrid-phase-field" or "Mazar".       |
 
 
 
