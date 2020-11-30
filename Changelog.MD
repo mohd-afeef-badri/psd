@@ -16,7 +16,7 @@ All notable changes to PSD solver will be documented in this file.
 
 - Moved to FreeFEM 4.7-1.
 - Moved to PETSc 3.14.
-- New version of top-ii-vol v 1.2 support for exascale computing (includes new 2D 3D partitioning)
+- New version of top-ii-vol v 1.3 support for exascale computing (includes new 2D 3D partitioning)
 - `-fastmethod`  now replaced by `-withmaterialtensor` (this is now inverse of `-fastmethod`)
 
 ### Removed 
