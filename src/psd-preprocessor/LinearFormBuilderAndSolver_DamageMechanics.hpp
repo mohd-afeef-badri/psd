@@ -1143,7 +1143,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
- "    phi=u2;              														                            \n";
+ "    phi=u"<<spc<<";              														                            \n";
 
 
  writeIt
@@ -1712,7 +1712,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
- "    fespace Vhplot(Th,P1); Vhplot phi=u2;              //interpolation for phi  \n";
+ "    fespace Vhplot(Th,P1); Vhplot phi=u"<<spc<<";      //interpolation for phi  \n";
 
 
  writeIt

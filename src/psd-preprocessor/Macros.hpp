@@ -684,12 +684,12 @@ if(vectorial && constrainHPF)
   "// init(i)   : Scalar field initilization                                      \n"
   "// Zk        : Synonym of P1 fespace                                           \n"  
   "//=============================================================================\n"
-  "                                                                              \n"
-  "  macro def2  (i)  [   i  ,  i#1 ,  i#2  ]  //                                \n"
-  "  macro init2 (i)  [   i  ,   i  ,   i   ]  //                                \n"
-  "  macro def   (i)     i                     //                                \n"
-  "  macro init  (i)     i                     //                                \n"
-  "  macro Zk            P1                    //                                \n";   
+  "                                                                               \n"
+  "  macro def2  (i)  [   i  ,  i#1 ,  i#2 , i#3  ]  //                           \n"
+  "  macro init2 (i)  [   i  ,   i  ,   i  , i    ]  //                           \n"
+  "  macro def   (i)     i                           //                           \n"
+  "  macro init  (i)     i                           //                           \n"
+  "  macro Zk            P1                          //                           \n";   
 
 
 if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
