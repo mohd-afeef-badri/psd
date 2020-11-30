@@ -3,8 +3,7 @@
 This tutorial involves cracking of L shaped specimen, where loading is controled by a point boundry condition.
 
 
-
-<img src="/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/geometry.png" alt="geometry" style="zoom:80%;" />
+<img src="./geometry.png" alt="geometry" style="zoom:80%;" />
 
 ### Preprocessing ###
 
@@ -13,15 +12,20 @@ You can either solver the problem using vectorial approach (recomemned) or using
 - Generation of solver (vectorial)
 
 ```bash
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud -energydecomp -constrainHPF -vectorial -getreactionforce  -plotreactionforce -reactionforce variational-based
+PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
+-dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
+-energydecomp -constrainHPF -vectorial -getreactionforce -plotreactionforce \
+-reactionforce variational-based
 ```
 
 - Gnerating solver (staggerred)
 
 ```bash
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud -energydecomp -constrainHPF -getreactionforce  -plotreactionforce -reactionforce variational-based
+PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
+-dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
+-energydecomp -constrainHPF -getreactionforce -plotreactionforce \
+-reactionforce variational-based
 ```
-
 
 
 
@@ -150,13 +154,13 @@ to
      tr += dtr; 
 ```
 
-![mesh](/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/mesh.png)
+![mesh](./mesh.png)
 
 
 
 ### Solving ###
 
-```
+```bash
 PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../../Meshes/2D/L-shaped-crack.msh -v 0 -ksp_rtol 1e-6 -split 1
 ```
 
@@ -166,20 +170,20 @@ Use paraview to post process results.
 
 
 
-![d1](/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/d1.png)
+![d1](./d1.png)
 
 
 
 
 
-![d2](/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/d2.png)
+![d2](./d2.png)
 
 
 
 
 
-![d3](/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/d3.png)
+![d3](./d3.png)
 
 On you screen, the force diplacment curve which plots (force.data) should look something like this
 
-<img src="/volatile/home/badri/Work/PSD_Sources/demos/fracture-mechanics/force-displacement.png" alt="force-displacement" style="zoom: 80%;" />
+<img src="./force-displacement.png" alt="force-displacement" style="zoom: 80%;" />
