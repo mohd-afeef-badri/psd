@@ -4,7 +4,7 @@
 
 ### Parallel 2D ###
 
-Single dirichlet condition (clamped end bar) and traction loading
+Single Dirichlet condition (clamped end bar) and traction loading
 
 ```bash
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 \
@@ -21,7 +21,7 @@ PSD_Solve Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
 
 ### Parallel 3D ###
 
-Single dirichlet condition (clamped end bar) and traction loading
+Single Dirichlet condition (clamped end bar) and traction loading
 
 ```bash
 PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 \

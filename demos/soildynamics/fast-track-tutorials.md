@@ -4,7 +4,7 @@
 
 ### Parallel 2D with 4 MPI processes ###
 
-Single dirichlet condition
+Single Dirichlet condition
 
 ```bash
 PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 \
@@ -21,7 +21,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
 
 ### Parallel 3D with 3 MPI processes ###
 
-Single dirichlet condition and newmark-beta time discretization
+Single Dirichlet condition and Newmark-beta time discretization
 
 ```bash
 PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1 \
@@ -40,7 +40,7 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/soil.msh -v 0
 
 ### Parallel 2D with double couple with 2 MPI processes ###
 
-Single dirichlet via double couple and using GFP. Double couple is displacement based. 
+Single Dirichlet via double couple and using GFP. Double couple is displacement based. 
 
 ```bash
 PSD_PreProcess -dimension 2 -problem soildynamics -model linear \
@@ -59,7 +59,7 @@ PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
 
 ### Parallel 3D with double couple with 4 MPI processes ###
 
-Single dirichlet via double couple and using GFP. Double couple is displacement based. 
+Single Dirichlet via double couple and using GFP. Double couple is displacement based. 
 
 ```bash
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear \
@@ -78,7 +78,7 @@ PSD_Solve -np 4 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
 
 ### Parallel 3D with top-ii-vol meshing with 4 MPI processes ###
 
-Single dirichlet at the bottom and using GFP.
+Single Dirichlet at the bottom and using GFP.
 
 ```bash
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear \
@@ -95,7 +95,7 @@ PSD_Solve -np 4 Main.edp -v 0 -ns -nw
 
 ### Parallel 3D with top-ii-vol meshing with 3 MPI processes ###
 
-Single dirichlet via double couple and using GFP. Double couple is displacement based. 
+Single Dirichlet via double couple and using GFP. Double couple is displacement based. 
 
 ```bash
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear \

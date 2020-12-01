@@ -1,13 +1,12 @@
 ## L-shape cracking ##
 
-This tutorial involves cracking of L shaped specimen, where loading is controled by a point boundry condition.
-
+This tutorial involves cracking of L shaped specimen, where loading is controlled by a point boundary condition.
 
 <img src="./geometry.png" alt="geometry" style="zoom:80%;" />
 
 ### Preprocessing ###
 
-You can either solver the problem using vectorial approach (recomemned) or using staggered approach. To generate the solver use either from below.
+You can either solver the problem using vectorial approach (recommended) or using staggered approach. To generate the solver use either from below.
 
 - Generation of solver (vectorial)
 
@@ -18,7 +17,7 @@ PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
 -reactionforce variational-based
 ```
 
-- Gnerating solver (staggerred)
+- Generating solver (staggered)
 
 ```bash
 PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
@@ -44,9 +43,9 @@ PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
 to
 
 ```c++
-  real lambda = 6.16e3   ,                                                    
-       mu     = 10.95e3  ,                                                    
-       Gc     = 8.9e-2   ; 
+real	lambda	= 6.16e3 ,
+		mu		= 10.95e3 ,
+		Gc		= 8.9e-2 ;
 ```
 - Update solver parameter , change
 ```c++
@@ -58,15 +57,15 @@ to
 ```
 to
 ```c++
-  real lfac  = 2.0  ,                                                         
-       maxtr = 1    ,                                                         
-       tr    = 1e-2 ,                                                         
-       dtr   = 1e-2 ,                                                         
-       lo           ; 
+real	lfac	= 2.0	,
+		maxtr	= 1		,
+		tr		= 1e-2	,
+		dtr		= 1e-2	,
+		lo				;
 ```
 - Enter the correct Point boundary condition, change
 ```c++
-  real[int,int] PbcCord = [                                                   
+  real[int,int] PbcCord = [                                                
 //-------------------- [  x  , y  ] --------------------//                   
                        [  0. , 0. ]    // point 0                       
 //------------------------------------------------------//                    
@@ -86,21 +85,11 @@ to
    macro Pbc0Uy  tr //
 ```
 
-**Edit VariationalFormulation.edp:**
-
-- Remove the pre-cracked Dirichlet from VariationalFormulation, delete these lines if present in the script
-```c++
-    //--------------------------------------------------------------------------                
-    //  $\forall x\in\partial\Omega_D u=ug: ug\to\mathbb R$                               
-    //--------------------------------------------------------------------------                
-    + on(4,u2 = 1)                          // Cracked (Dirichlet) 
-```
-
 
 **Edit LinearFormBuilderAndSolver.edp:**
 
 - To postprocess correct reaction forces in LinearFormBuilderAndSolver.edp for vectorial solver, change
-```
+```c++
   for(int i=0; i < Th.nv; i++){                                                 
      if(abs(Th(i).y-1.)<.000001){                                               
         forcetotx = forcetotx + F[][i*3]*DP[i*3];           
@@ -109,7 +98,7 @@ to
   } 
 ```
 to
-```
+```c++
   if(mpirank==mpirankPCi[0]){
      forcetotx = forcetotx + F[][PCi[0]*3+0]*DP[PCi[0]*3+0];           
      forcetoty = forcetoty + F[][PCi[0]*3+1]*DP[PCi[0]*3+1]; 
@@ -118,7 +107,7 @@ to
 
 - To postprocess correct reaction forces in LinearFormBuilderAndSolver.edp for staggered solver, change
 
-```
+```c++
   for(int i=0; i < Th.nv; i++){                                                 
      if(abs(Th(i).y-1.)<.000001){                                               
         forcetotx = forcetotx + F[][i*2]*DP[i*2];           
@@ -129,7 +118,7 @@ to
 
 to
 
-```
+```c++
   if(mpirank==mpirankPCi[0]){
      forcetotx = forcetotx + F[][PCi[0]*2+0]*DP[PCi[0]*2+0];           
      forcetoty = forcetoty + F[][PCi[0]*2+1]*DP[PCi[0]*2+1]; 
@@ -137,13 +126,13 @@ to
 ```
 
 - Finally to include cyclic loading, change
-```
+```c++
   //-----------------updating traction----------------//                        
                                                                                 
   tr += dtr; 
 ```
 to
-```
+```c++
   //-----------------updating traction----------------//                        
   
   if(iterout<50)                                                                         
@@ -161,29 +150,20 @@ to
 ### Solving ###
 
 ```bash
-PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../../Meshes/2D/L-shaped-crack.msh -v 0 -ksp_rtol 1e-6 -split 1
+PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
 ```
 
 ### Postprocessing
 
-Use paraview to post process results. 
+Use ParaView to post process results. 
 
 
+ Crack initiating | Crack moving | Crack developed
+- | - | -
+![d1](./d1.png) | ![d2](./d2.png) | ![d3](./d3.png)
 
-![d1](./d1.png)
+On you screen, the force displacement curve which plots (force.data) should look something like this
 
-
-
-
-
-![d2](./d2.png)
-
-
-
-
-
-![d3](./d3.png)
-
-On you screen, the force diplacment curve which plots (force.data) should look something like this
-
-<img src="./force-displacement.png" alt="force-displacement" style="zoom: 80%;" />
+| **Force-displacement curve with cyclic loading**  |
+| :-----------------------------------------------: |
+|        ![d1](./force-displacement.png)            |

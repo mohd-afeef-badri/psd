@@ -4,7 +4,7 @@
 
 ### Parallel 2D linear-elasticity ###
 
-Single dirichlet condition (clamped end bar) and body force source term
+Single Dirichlet condition (clamped end bar) and body force source term
 
 ```bash
 PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
@@ -21,7 +21,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 ### Parallel 3D linear-elasticity ###
 
-Single dirichlet condition (clamped end bar) and body force source term
+Single Dirichlet condition (clamped end bar) and body force source term
 
 ```bash
 PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
