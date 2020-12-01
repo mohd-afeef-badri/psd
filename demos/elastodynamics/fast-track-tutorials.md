@@ -34,6 +34,5 @@ PSD_Solve Main.edp -mesh ./../Meshes/3D/bar-dynamic.msh -v 0
 
 
 
-- *Optionally try using `-fastmethod` flag with `PSD_PreProcess` optimized solver*
 - *Optionally try using `-timediscretization generalized-alpha` instead of `-timediscretization newmark-beta` to change time discretization scheme*
 - *Add `-sequential` flag to `PSD_PreProcess` for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve`*
