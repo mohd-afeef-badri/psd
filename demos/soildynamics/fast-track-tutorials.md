@@ -99,7 +99,8 @@ Single Dirichlet via double couple and using GFP. Double couple is displacement 
 
 ```bash
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear \
--timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple displacement-based
+-timediscretization newmark-beta -useGFP -top2vol-meshing \
+-doublecouple displacement-based
 ```
 
 ```bash
