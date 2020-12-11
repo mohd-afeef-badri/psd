@@ -105,9 +105,11 @@ AnyType partPointCloud_Op<K>::operator()(Stack stack) const
         {
 
 #include "./../lib/LogoTopiiVolCpp.hpp"
-#include "./../lib/TopiiVolPartAlgo1D2D3D.hpp"
-
+//#include "./../lib/TopiiVolPartAlgo1D2D3D.hpp"       
         }
+        {                                              // Temporary solution
+#include "./../lib/TopiiVolParPartAlgo1D2D3D.hpp"      // Temporary solution        
+        }                                              // Temporary solution
 
 
     t_phase = MPI_Wtime() - t_phase;
