@@ -86,21 +86,21 @@
 
   -supercomp    [bool]     To be used when using a cluster/supercomputer.
 
-  -fastmethod   [bool]     Fast method for linear elasticity (expanded material tensor).
-
   -energydecomp [bool]     To activate hybrid phase field energy decomposition.
 
   -sequential   [bool]     To generate a sequential ff++ solver.
   
   -pointprobe   [bool]     To insert point probes for post processing.  
 
-  -constrainHPF     [bool] To use constrain condition in hybrid phase-field model.          
+  -constrainHPF       [bool] To use constrain condition in hybrid phase-field model.          
 
-  -top2vol-meshing   [bool] To activate top-ii-vol point source meshing for soil-dynamics.
+  -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
 
-  -getreactionforce  [bool] To activate routine for extraction reactions at surface.
+  -getreactionforce   [bool] To activate routine for extraction reactions at surface.
   
-  -plotreactionforce [bool] To activate realtime pipe plotting using GnuPlot.
+  -plotreactionforce  [bool] To activate realtime pipe plotting using GnuPlot.
+  
+  -withmaterialtensor [bool] Generate variational form that includes material tensor.  
   
   -crackdirichletcondition [bool] To activate pre-cracked surface Dirichlet.
 
