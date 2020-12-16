@@ -11,6 +11,7 @@ autom4te.cache
 configure
 Makefile.in
 Makefile
+.git
 
 *Makefile.in
 *Makefile
