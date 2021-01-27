@@ -1,7 +1,14 @@
 # Changelog
 All notable changes to PSD solver will be documented in this file.
 
-## Rolling Release (2.1)
+## Rolling Release (2.2)
+### Added
+
+### Changed
+
+### Removed 
+
+## [2.1] - 2021-01-27
 ### Added
 - New accurate force calculations via matrix-vector product: new flag `-getreactionforce`.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
@@ -10,7 +17,10 @@ All notable changes to PSD solver will be documented in this file.
 - New flag `-mesh` to provide the name of mesh to `PSD_Solve`. 
 - New flag `-probe` to postprocess FE variables at a point. 
 - New flag `-crackdirichletcondition` to include a pre-cracked Dirichlet in damage models.
-- New tests for more advance top-ii-vol partitioning. 
+- New tests for more advance top-ii-vol partitioning.
+- New flag `-constrainHPF` to enable constrain conditions in hybrid phase-field (WIP).
+- New developments in parallel interpolations. 
+- Tutorials added, use `make tutorials` to install  
 
 ### Changed
 
