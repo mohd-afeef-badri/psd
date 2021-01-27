@@ -4,10 +4,6 @@
 
 **Ongoing**
 
-- Optimizing damage solver
-
--  Extend -probe flag to all physics
-
 
 
 **Todo**
@@ -31,7 +27,7 @@
 
 **Done**
 
-- Activate top-ii-vol version 1.2 for PSD
+- Activate top-ii-vol version 1.3 for PSD
 
 -  Install binaries and libraries in usr/bin and usr/include/psd
 -  seperate precracked dirichlet flag
