@@ -1,0 +1,125 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2019‑12‑15                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+
+
+ fespace VhP0(Th, P0);    // P0 finite element space
+ VhP0  tb;                // tb is tag basin ($tb /in P_0$)
+ VhP0  cp, cs, Rho, zFEM, lambda, mu; 
+ 
+ macro zlength             1920.                // depth of box
+ macro TopologyLabel       3                    // label number of topology
+ macro BotBoxLabel         6                    // label number of bottom box
+
+ string BasinMeshName = "basin-mesh-r.msh";    // Name of Basin mesh
+
+                                                                              
+{
+
+  load "gmsh"
+
+  func PkP0 = P0;
+  func PkP1 = P1;  
+  mesh3 ThBasin;
+
+  fespace Qh(Th, P1);      // P1 finite element space
+  Qh d;                    // d is the depth  ($d  /in P_1$)
+  Qh     cd;
+
+  fespace VhTag(ThBasin, P0);
+  VhTag  ta;
+
+  varf diffuse(u, v, solver = CG, tgv = -1)
+    = int3d(Th,qforder=3)(dz(u)*dz(v))
+    + on(TopologyLabel, u = 0.)
+    + on(BotBoxLabel, u = cd + zlength);
+
+  varf convec(u, v, solver = CG, tgv = -1)
+    = int3d(Th,qforder=3)(dz(u)*dz(v))
+    + on(TopologyLabel, u = z);
+              
+//ProcedureStartTime("Mesh Reading",CpuTime);    
+    ThBasin = gmshload3(BasinMeshName);
+//ProcedureEndTime(CpuTime);
+
+//ProcedureStartTime("Dmesh Building",CpuTime);
+    buildDmesh(ThBasin)
+//ProcedureEndTime(CpuTime);      
+ 
+//ProcedureStartTime("Tag Initialization",CpuTime);    
+    ta[]   = 200;
+    tb[]   = -1 ;
+//ProcedureEndTime(CpuTime);
+
+//ProcedureStartTime("Tag Interpolation",CpuTime);
+    transfer(ThBasin, PkP0, ta, Th, PkP0, tb);
+//ProcedureEndTime(CpuTime);
+
+//ProcedureStartTime("ParaView Export",CpuTime);
+    savevtk("VTUs/tagged-site.vtu" , Th, tb, dataname = "TagBasin" );
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("Dmatrix Creation",CpuTime);
+    Mat B;
+    createMat(Th, B, PkP1);
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("Dmatrix-vector Assembly",CpuTime);
+    B = convec(Qh,Qh, tgv = -1);
+    real[int] b1 = convec(0,Qh, tgv = -1);
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("Linear System Solving",CpuTime);
+    cd[] = B^-1*b1;
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("ParaView Export",CpuTime);
+    int[int] fforder=[1];
+//    savevtk("stage1-layerd-site.vtu", Th, cd, order=fforder, dataname="convected-data");
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("Dmatrix-vector Assembly",CpuTime);
+    B  = diffuse(Qh,Qh, tgv=-1);
+    b1 = diffuse(0,Qh, tgv=-1);
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("Linear System Solving",CpuTime);
+    d[] = B^-1*b1; 
+//ProcedureEndTime(CpuTime); 
+
+//ProcedureStartTime("ParaView Export",CpuTime);
+//    savevtk("VTUs/layerd-site.vtu", Th, d, order=fforder, dataname="depth");
+//ProcedureEndTime(CpuTime);
+
+//ProcedureStartTime("Properties Buildup",CpuTime);  
+    zFEM = d;
+    cp  = (BedRockCp(zFEM))*(tb<=0.)  + (BasinCp(zFEM))*(tb>0.);
+    cs  = (BedRockCs(zFEM))*(tb<=0.)  + (BasinCs(zFEM))*(tb>0.);
+    Rho = (BedRockRho(zFEM))*(tb<=0.) + (BasinRho(zFEM))*(tb>0.);
+    mu  =  cs*cs*Rho;
+    lambda =  cp*cp*Rho - 2*mu;        
+//ProcedureEndTime(CpuTime);
+
+//ProcedureStartTime("ParaView Export",CpuTime);   
+    savevtk("VTUs/properties-site.vtu", Th, cp,cs,Rho,zFEM,  dataname="cp cs rho z");
+//    savevtk("depth-site.vtu", Th, zFEM, dataname="zFEM");    
+//ProcedureEndTime(CpuTime);
+/*
+*/
+}   
+                                                   
