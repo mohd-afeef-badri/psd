@@ -683,11 +683,22 @@ if(dirichletconditions>=1)
    "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
    "  macro  Dbc1Uy tr  //                                                     \n"; 
   
-  for(int i=2; i<dirichletconditions; i++)
-   writeIt
-   "  macro  Dbc"<<i<<"On "<<labelDirichlet + 1<<"   //                        \n"   
-   "  macro  Dbc"<<i<<"Ux 0. //                                                \n"
-   "  macro  Dbc"<<i<<"Uy 0. //                                                \n";      
+  if(spc==3 && dirichletconditions>2)
+   for(int i=1; i<dirichletconditions; i++)
+    writeIt
+    "                                                                          \n"
+    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"   
+    "  macro  Dbc"<<i<<"Ux 0. //                                               \n"
+    "  macro  Dbc"<<i<<"Uy 0. //                                               \n"
+    "  macro  Dbc"<<i<<"Uz 0. //                                               \n";  
+
+  if(spc==2 && dirichletconditions>2)
+   for(int i=1; i<dirichletconditions; i++)
+    writeIt
+    "                                                                          \n"
+    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"   
+    "  macro  Dbc"<<i<<"Ux 0. //                                               \n"
+    "  macro  Dbc"<<i<<"Uy 0. //                                               \n";     
      
  }
    
