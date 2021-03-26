@@ -6,9 +6,11 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Changed
 
+- Moved to GitLab for hosting the repository.
+
 ### Removed 
 
-## [2.1] - 2021-01-27
+## [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) - 2021-01-27
 ### Added
 - New accurate force calculations via matrix-vector product: new flag `-getreactionforce`.
 - New flag `-reactionforce` variational-based | stress-based to get reaction force on a surface.
@@ -44,7 +46,7 @@ All notable changes to PSD solver will be documented in this file.
 
    
 
-## [2.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0) - 2020-08-18
+## [2.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0) - 2020-08-18
 ### Added
 - New processing via C++, `PSD_PreProcess` binary (MAJOR CHANGE).
 - New solving via shell wrapper `PSD_Solve` instead of `FreeFem++` or `FreeFem++-mpi`.
@@ -95,7 +97,7 @@ All notable changes to PSD solver will be documented in this file.
 
 
 
-## [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8) - 2020-01-21
+## [1.8](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8) - 2020-01-21
 ### Added
 - New soil dynamic module `-soildynamics`
 - New paraxial element support in 2D.
@@ -110,7 +112,7 @@ All notable changes to PSD solver will be documented in this file.
 - New way of maintaining a logfile for all simulations (date,time,case,..) in `simulation-log.csv`.
 
 
-## [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7) - 2019-11-08
+## [1.7](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.7) - 2019-11-08
 ### Added
 - New  mesh reordering via Reverse Cuthill-Mackee via `-useRCM`. 
 - New quasi-static parallel solver (Extension of B.Masseron & G.Rastiello sequential version).
@@ -127,7 +129,7 @@ All notable changes to PSD solver will be documented in this file.
 - Moved to FreeFEM 4.4.
 
 
-## [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6) - 2019-06-11
+## [1.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.6) - 2019-06-11
 ### Added
 - Dynamic linear solver in 2D and 3D  parallel/sequential.
 - New finite element variable for partition of unity-- for fixing integrals.
@@ -145,7 +147,7 @@ All notable changes to PSD solver will be documented in this file.
 ### Bugs
 - Bug in integrals fixed.
 
-## [1.5](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5) - 2019-05-29
+## [1.5](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.5) - 2019-05-29
 ### Added
 - Dynamic linear solver in 2D and 3D  sequential.
 - New meshes for dynamics tests `bar-dynamic.msh`.
@@ -163,7 +165,7 @@ All notable changes to PSD solver will be documented in this file.
 
 
 
-## [1.4](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4) - 2019-05-14
+## [1.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4) - 2019-05-14
 ### Added
 - Fully vectorial finite element solver for phase-filed `-vectorial`.
 - New `-supercomp` for avoiding xterm issues on super computers.
@@ -174,7 +176,7 @@ All notable changes to PSD solver will be documented in this file.
 - Elastic energy decomposition is now optional `-energydecomp`.
 - Force calculation using integrals (Thanks to G.Rastiello).
 
-## [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3) - 2019-04-08
+## [1.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.3) - 2019-04-08
 ### Added
 - New meshes in 2D/3D`Notched-plate` , `square-crack`, etc.
 - New fracture mechanics module.
@@ -194,7 +196,7 @@ All notable changes to PSD solver will be documented in this file.
 - Move to FreeFEM version 4.0.
 - Move to PETSc version 3.11.
 
-## [1.2](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2) - 2019-03-18
+## [1.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1) - 2019-03-18
 ### Added
 - Support for Gmsh's `.msh`  or Medit's `.mesh` meshes in folder `Meshes`.
 - Advance to 3D physics.
@@ -213,7 +215,7 @@ All notable changes to PSD solver will be documented in this file.
 - Moved manufactured solutions to `validation-test` folder.
 
 
-## [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1) - 2019-03-04
+## [1.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1) - 2019-03-04
 ### Added
 - Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).
 - More cases of manufactured solution for linear elasticity in 2D.
@@ -225,21 +227,22 @@ All notable changes to PSD solver will be documented in this file.
 - Separate folder of manufactured solutions and the linear elastic solver.
 - Move to FreeFEM version 3.61.
 
-## [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0) - 2019-02-15
+## [1.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.0) - 2019-02-15
 ### Added
 - Initial FreeFEM files  Method of manufactured solution for linear elasticity in 2D.
 
 ## Version git tags ##
 
-| Version    | Git tag                                 |
-| ---------- | ----------------------------------------|
-| [1.0](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.0)        |8a8ecb2746b7da792073358c60df33bae647f788 |
-| [1.1](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.1)        |a667e6085ba1f92f8dd619bd40e18f85c593bc0a |
-| [1.2](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.2)        |e48b7b3a30c05ad4c343efa6a17fee386031f437 |
-| [1.3](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.3)        |39f4324550365849852c5264b8d4535aae05e30d |
-| [1.4](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.4)        |f51f678630eb9b2fed355e5cedf976ce8b5fa341 |
-| [1.5](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.5)        |07293ba09a69d3d6a16278220a0b4a7a9f318f96 |
-| [1.6](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.6)        |f359dd049fb1ddde376e8ad8e5177c663e430418 |
-| [1.7](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.7)        |aee9bfec868a70b3d9974d7692bc19f9739ab7dc |
-| [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v1.8)        |2f26292636c7248133e31ae912ee58113de2ef71 |
-| [1.8](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=tree&hb=v2.0)        |6e721edfafe4ebf3aceebce01e292332a27f980a |
+| Version                                                     | Git tag                                  |
+| ----------------------------------------------------------- | ---------------------------------------- |
+| [1.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.0) | 8a8ecb2746b7da792073358c60df33bae647f788 |
+| [1.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1) | a667e6085ba1f92f8dd619bd40e18f85c593bc0a |
+| [1.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.2) | e48b7b3a30c05ad4c343efa6a17fee386031f437 |
+| [1.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.3) | 39f4324550365849852c5264b8d4535aae05e30d |
+| [1.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4) | f51f678630eb9b2fed355e5cedf976ce8b5fa341 |
+| [1.5](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.5) | 07293ba09a69d3d6a16278220a0b4a7a9f318f96 |
+| [1.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.6) | f359dd049fb1ddde376e8ad8e5177c663e430418 |
+| [1.7](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.7) | aee9bfec868a70b3d9974d7692bc19f9739ab7dc |
+| [1.8](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8) | 2f26292636c7248133e31ae912ee58113de2ef71 |
+| [2.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0) | 1e1a4d7f10df30d106b52eba1c5caf69e8bc0f36 |
+| [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) | 8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2 |
