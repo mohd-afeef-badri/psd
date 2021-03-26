@@ -143,7 +143,7 @@ documentation-readme: Readme.pdf Readme.html
 	@echo ""
 
 Readme.pdf: Readme.MD
-	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso
+	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
 	cp Readme.pdf  man/.	
 
 Readme.html: Readme.MD
@@ -154,7 +154,7 @@ documentation-Changelog: Changelog.pdf Changelog.html
 	@echo ""
 
 Changelog.pdf: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso
+	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
 	cp Changelog.pdf man/.
 
 Changelog.html: Changelog.MD

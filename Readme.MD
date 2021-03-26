@@ -6,7 +6,7 @@ PSD is a finite elements-based solid mechanics solver with capabilities of perfo
 
 Besides the parallel suite, PSD also includes a sequential solver which does not require [PETSc](https://www.mcs.anl.gov/petsc/). 
 
-PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. PSD post processing is done via `.vtk` and `.vtu` files of the [ParaView](https://www.paraview.org/) platform. 
+PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. PSD post processing is done via `.pvd` ,`.vtk` and `.vtu` files of the [ParaView](https://www.paraview.org/) platform. 
 
 ## Installation procedure ##
 
@@ -24,11 +24,17 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 
 **Now that I have all the dependencies what next**
 
-- Go ahead and grab the latest copy of PSD. The code is hosted on CEA's internal git [repository](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&hb=devel-dynamic).
+- Go ahead and grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
-git clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources
+git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
-- Autoconf PSD within the  cloned folder
+*Note:* You can also use SSH protocol if your key had been added to the repo in that case use
+
+```bash
+git clone git@gitlab.com:PsdSolver/psd_sources.git
+```
+
+- Use automake PSD within the  cloned folder
 ```bash
 autoreconf -i
 ```

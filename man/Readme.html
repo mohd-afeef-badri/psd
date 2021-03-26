@@ -4,7 +4,7 @@
 </div>
 <p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
 <p>Besides the parallel suite, PSD also includes a sequential solver which does not require <a href="https://www.mcs.anl.gov/petsc/">PETSc</a>.</p>
-<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
+<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.pvd</code> ,<code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
 <h2 id="installation-procedure">Installation procedure</h2>
 <p>PSD is built to work with Linux platforms. (Windows comping up soon)</p>
 <p><strong>Dependencies</strong></p>
@@ -19,9 +19,13 @@
 </ul>
 <p><strong>Now that I have all the dependencies what next</strong></p>
 <ul>
-<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on CEA's internal git <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=shortlog&amp;hb=devel-dynamic">repository</a>.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem.git PSD-Sources</code></pre></li>
-<li><p>Autoconf PSD within the cloned folder</p>
+<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources</code></pre>
+<p><em>Note:</em> You can also use SSH protocol if your key had been added to the repo in that case use</p></li>
+</ul>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone git@gitlab.com:PsdSolver/psd_sources.git</code></pre>
+<ul>
+<li><p>Use automake PSD within the cloned folder</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">autoreconf</span> -i</code></pre></li>
 <li><p>Configure PSD within the cloned folder</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./configure</span> </code></pre>
