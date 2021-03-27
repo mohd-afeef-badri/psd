@@ -27,7 +27,7 @@ header-includes: |
     }
 ---
 
-\newcommand{\sh}[1]{\small\sffamily{#1}}
+\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
 
 ### Parallel 2D ###
 
