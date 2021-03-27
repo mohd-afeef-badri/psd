@@ -6,6 +6,8 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Changed
 
+- Moved to FreeFEM 4.8 
+
 - Moved to GitLab for hosting the repository.
 
 ### Removed 
