@@ -26,7 +26,7 @@ header-includes: |
 	{~}{{\centeredtilde}}1
 	,
     }
-abstract: This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start users/developers for using PSD's soildynamics module. 
+abstract: This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's soildynamics module. 
 ---
 \newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
 
@@ -53,10 +53,10 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
 \includegraphics[width=0.4\textwidth]{./u2.png}
 \includegraphics[width=0.4\textwidth]{./u3.png}\\
 \includegraphics[width=0.4\textwidth]{./u4.png}
-\caption{Finite element displacement and velocity fields visualized for the 2D problem with ParaView at different timesteps. \label{bar}}
+\caption{Finite element displacement and velocity fields visualized for the 2D problem with ParaView at different timesteps. \label{bar-sd}}
 \end{figure}
 
-Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar} can be extracted.
+Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar-sd} can be extracted.
 
 
 \subsection{Parallel 3D}
@@ -81,10 +81,10 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/soil.msh -v 0
 \includegraphics[width=0.4\textwidth]{./3du2.png}
 \includegraphics[width=0.4\textwidth]{./3du3.png}\\
 \includegraphics[width=0.4\textwidth]{./3du4.png}
-\caption{Finite element displacement and velocity fields visualized for the 2D problem with ParaView at different timesteps. \label{bar3d}}
+\caption{Finite element displacement and velocity fields visualized for the 3D problem with ParaView at different timesteps. \label{bar3d-sd}}
 \end{figure}
 
-Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar3d} can be extracted.
+Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar3d-sd} can be extracted.
 
 \subsection{Parallel 2D with double couple}
 
@@ -106,10 +106,10 @@ PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
 \includegraphics[width=0.45\textwidth]{./2ddcu0.png}
 \includegraphics[width=0.45\textwidth]{./2ddcu1.png}\\
 \includegraphics[width=0.45\textwidth]{./2ddcu2.png}
-\caption{Finite element displacement and acceleration fields visualized for the 2D problem with ParaView at different timesteps. \label{bar2ddc}}
+\caption{Finite element displacement and acceleration fields visualized for the 2D problem with ParaView at different timesteps. \label{bar2ddc-sd}}
 \end{figure}
 
-Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar2ddc} can be extracted.
+Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar2ddc-sd} can be extracted.
 
 Similarly try out the 3D problem. However take note that a the mesh \sh{./../Meshes/2D/soil-dc.msh} is not provided, so you will have to create your own mesh. 
 
@@ -126,9 +126,6 @@ PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretizat
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -v 0 -ns -nw 
 \end{lstlisting}
-
-
-
 
 
 \subsection{Parallel 3D with top-ii-vol meshing and double couple source}
@@ -167,5 +164,22 @@ For soildynamic problems with double couple source, the double couple source can
 
 \subsection{Exercise 3}
 
-You are encouraged to try out timelogging and find out if the code (parallel/sequential) is any faster when we use Newmark-$\beta$ or Generalized-$\alpha$. Read the documentation for other types of time discretizations that can be performed with PSD, try each one out with \sh{-timelog} and compare. 
+You are encouraged to try out timelogging and find out if the code (parallel/sequential) is any faster when we use Newmark-$\beta$ or Generalized-$\alpha$. Read the documentation for other types of time discretizations that can be performed with PSD, try each one out with \sh{-timelog} and compare.
+
+\subsection{Exercise  4}
+
+PSD comes with additional set of plugins/functions that are highly optimized for performing certain operations during solving. These operations are handled by GoFast Plugins (GFP) kernel of PSD (optimize C++ classes/templates/structures), by default this functionality is turned off and not used. You are encouraged to try out using GFP functions in a solver by using \sh{-useGFP} flag flag to \sh{PSD\_PreProcess} For example, the PSD solver workflow for the first 2D example in this tutorial would be:
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark-beta \
+-postprocess uav -useGFP
+\end{lstlisting}
+
+Once the step above has been performed, we solve the problem using, with the given mesh file \sh{soil.msh}. 
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
+\end{lstlisting}
+
+Try it out for other problems of this tutorial. \sh{-useGFP} should lead to a faster solver, it might be a good idea to always use this option. To go one step further, use \sh{-timelog} flag and determine if you have some speed up. 
 

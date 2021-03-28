@@ -1,6 +1,7 @@
 ---
 title: Elastodynamics Tutorials
 geometry: margin=2cm
+author: Mohd Afeef Badri
 header-includes: |
     \usepackage{tikz,pgfplots}
     \usepackage{listings}
@@ -25,6 +26,7 @@ header-includes: |
 	{~}{{\centeredtilde}}1
 	,
     }
+abstract: This document details some tutorials of elastodynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's elastodynamics module. 
 ---
 
 \newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
@@ -50,10 +52,10 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
 \includegraphics[width=0.19\textwidth]{./u3.png}
 \includegraphics[width=0.19\textwidth]{./u4.png}
 \includegraphics[width=0.19\textwidth]{./u5.png}
-\caption{Finite element displacement field on warped mesh shown at different time steps. \label{bar}}
+\caption{Finite element displacement field on warped mesh shown at different time steps. \label{bar-ed}}
 \end{figure}
 
-Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar} can be extracted. 
+Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar-ed} can be extracted. 
 
 \subsection{Parallel 3D}
 
@@ -126,17 +128,17 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.4\textwidth]{./time-par.png}
-\caption{Time logging output produced for parallel run on 2 processes.\label{time-par}}
+\caption{Time logging output produced for parallel run on 2 processes.\label{time-par-ed}}
 \end{figure}
 
-The figure~\ref{time-par} shows the time logging output produced for parallel run on 2 processes using \sh{-timelog} flag. Similar output is produced for sequential solver of the same problem shown in figure~\ref{time-seq}. Take note of the speed up, which should be two folds - parallel solver solves the full problem in half the time (1.5 sec) than that of sequential solver (3.3 sec). This is due to the fact we used 2 MPI processes.
+The figure~\ref{time-par-ed} shows the time logging output produced for parallel run on 2 processes using \sh{-timelog} flag. Similar output is produced for sequential solver of the same problem shown in figure~\ref{time-seq-ed}. Take note of the speed up, which should be two folds - parallel solver solves the full problem in half the time (1.5 sec) than that of sequential solver (3.3 sec). This is due to the fact we used 2 MPI processes.
 
-Also take note of timings produced for different operations of the solver. Note that in figures~\ref{time-par}, \ref{time-seq}, we only see the final time step of the solved problem. 
+Also take note of timings produced for different operations of the solver. Note that in figures~\ref{time-par-ed}, \ref{time-seq-ed}, we only see the final time step of the solved problem. 
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.4\textwidth]{./time-seq.png}
-\caption{Time logging output produced for parallel run on 2 processes.\label{time-seq}}
+\caption{Time logging output produced for parallel run on 2 processes.\label{time-seq-ed}}
 \end{figure}
 
 \subsection{Exercise 1}
@@ -169,4 +171,20 @@ Then to run the problem we need aditional \sh{-wg} flag
 PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
 \end{lstlisting}
 
+\subsection{Exercise  4}
+
+PSD comes with additional set of plugins/functions that are highly optimized for performing certain operations during solving. These operations are handled by GoFast Plugins (GFP) kernel of PSD (optimize C++ classes/templates/structures), by default this functionality is turned off and not used. You are encouraged to try out using GFP functions in a solver by using \sh{-useGFP} flag flag to \sh{PSD\_PreProcess} For example, the PSD solver workflow for the first 2D example in this tutorial would be:
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
+-timediscretization newmark-beta -postprocess uav -useGFP
+\end{lstlisting}
+
+Once the step above has been performed, we solve the problem using, with the given mesh file \sh{bar-dynamic}. 
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+\end{lstlisting}
+
+Try it out for other problems of this tutorial. \sh{-useGFP} should lead to a faster solver, it might be a good idea to always use this option. To go one step further, use \sh{-timelog} flag and determine if you have some speed up.
 
