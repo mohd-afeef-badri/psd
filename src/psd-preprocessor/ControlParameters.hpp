@@ -507,7 +507,7 @@ if(Prblm=="soildynamics")
 
  if(spc==3 && !top2vol)
   writeIt
-  "  int [int]   PAlabels = [1,2,3,5];                                          \n";
+  "  int [int]   PAlabels = [1,2,4,5];                                          \n";
 
  if(spc==3 && top2vol)
   writeIt
@@ -539,7 +539,7 @@ if(Prblm=="soildynamics")
    "  func v1in = (                                                               \n"
    "                 tt <= 1.0  ?                                                 \n"
    "                  real( sin(tt*(2.*pi/1.0))) *                                \n"
-   "                  (x>10.&&x<40.) * (y>10.&&y<40.)                             \n"
+   "                  (x>10.&&x<40.) * (z>10.&&z<40.)                             \n"
    "                 :                                                            \n"
    "                   0.                                                         \n"
    "               );                                                             \n"
