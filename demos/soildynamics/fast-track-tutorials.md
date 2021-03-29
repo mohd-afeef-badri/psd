@@ -48,11 +48,11 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./u0.png}
-\includegraphics[width=0.4\textwidth]{./u1.png}\\
-\includegraphics[width=0.4\textwidth]{./u2.png}
-\includegraphics[width=0.4\textwidth]{./u3.png}\\
-\includegraphics[width=0.4\textwidth]{./u4.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-u0.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-u1.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/sd-u2.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-u3.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/sd-u4.png}
 \caption{Finite element displacement and velocity fields visualized for the 2D problem with ParaView at different timesteps. \label{bar-sd}}
 \end{figure}
 
@@ -76,11 +76,11 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/soil.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./3du0.png}
-\includegraphics[width=0.4\textwidth]{./3du1.png}\\
-\includegraphics[width=0.4\textwidth]{./3du2.png}
-\includegraphics[width=0.4\textwidth]{./3du3.png}\\
-\includegraphics[width=0.4\textwidth]{./3du4.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-3du0.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-3du1.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/sd-3du2.png}
+\includegraphics[width=0.4\textwidth]{./Images/sd-3du3.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/sd-3du4.png}
 \caption{Finite element displacement and velocity fields visualized for the 3D problem with ParaView at different timesteps. \label{bar3d-sd}}
 \end{figure}
 
@@ -103,9 +103,9 @@ PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.45\textwidth]{./2ddcu0.png}
-\includegraphics[width=0.45\textwidth]{./2ddcu1.png}\\
-\includegraphics[width=0.45\textwidth]{./2ddcu2.png}
+\includegraphics[width=0.45\textwidth]{./Images/sd-2ddcu0.png}
+\includegraphics[width=0.45\textwidth]{./Images/sd-2ddcu1.png}\\
+\includegraphics[width=0.45\textwidth]{./Images/sd-2ddcu2.png}
 \caption{Finite element displacement and acceleration fields visualized for the 2D problem with ParaView at different timesteps. \label{bar2ddc-sd}}
 \end{figure}
 

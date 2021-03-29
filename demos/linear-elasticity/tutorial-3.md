@@ -76,8 +76,8 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./2d-bar-clamped-pulled-partioned}\\
-\includegraphics[width=0.4\textwidth]{./2d-bar-clamped-pulled.png}
+\includegraphics[width=0.4\textwidth]{./Images/le-2d-bar-clamped-pulled-partioned}\\
+\includegraphics[width=0.4\textwidth]{./Images/le-2d-bar-clamped-pulled.png}
 \caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le-full-clamped}}
 \end{figure}
 

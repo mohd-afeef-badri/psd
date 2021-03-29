@@ -47,11 +47,11 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]
-\includegraphics[width=0.19\textwidth]{./u0.png}
-\includegraphics[width=0.19\textwidth]{./u2.png}
-\includegraphics[width=0.19\textwidth]{./u3.png}
-\includegraphics[width=0.19\textwidth]{./u4.png}
-\includegraphics[width=0.19\textwidth]{./u5.png}
+\includegraphics[width=0.19\textwidth]{./Images/ed-u0.png}
+\includegraphics[width=0.19\textwidth]{./Images/ed-u2.png}
+\includegraphics[width=0.19\textwidth]{./Images/ed-u3.png}
+\includegraphics[width=0.19\textwidth]{./Images/ed-u4.png}
+\includegraphics[width=0.19\textwidth]{./Images/ed-u5.png}
 \caption{Finite element displacement field on warped mesh shown at different time steps. \label{bar-ed}}
 \end{figure}
 
@@ -127,7 +127,7 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./time-par.png}
+\includegraphics[width=0.4\textwidth]{./Images/ed-time-par.png}
 \caption{Time logging output produced for parallel run on 2 processes.\label{time-par-ed}}
 \end{figure}
 
@@ -137,7 +137,7 @@ Also take note of timings produced for different operations of the solver. Note 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./time-seq.png}
+\includegraphics[width=0.4\textwidth]{./Images/ed-time-seq.png}
 \caption{Time logging output produced for parallel run on 2 processes.\label{time-seq-ed}}
 \end{figure}
 

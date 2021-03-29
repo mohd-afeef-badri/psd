@@ -33,7 +33,7 @@ abstract: This document details some tutorials of 'linear elasticity' module of 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{./2d-bar.png}
+\includegraphics[width=0.5\textwidth]{./Images/le-2d-bar.png}
 \caption{The 2D clamped bar problem. \label{2dbar-le}}
 \end{figure}
 
@@ -54,8 +54,8 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./2d-bar-partioned.png}\\
-\includegraphics[width=0.4\textwidth]{./2d-bar-results.png}
+\includegraphics[width=0.4\textwidth]{./Images/le-2d-bar-partioned.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/le-2d-bar-results.png}
 \caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le}}
 \end{figure}
 
@@ -78,8 +78,8 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./3d-bar-clamped-ends.png}\\
-\includegraphics[width=0.4\textwidth]{./3d-bar-clamped-pulled-partioned.png}
+\includegraphics[width=0.4\textwidth]{./Images/le-3d-bar-clamped-ends.png}\\
+\includegraphics[width=0.4\textwidth]{./Images/le-3d-bar-clamped-pulled-partioned.png}
 \caption{The 3D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{3dbar-le}}
 \end{figure}
 
@@ -122,7 +122,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\textwidth]{./time-par.png}
+\includegraphics[width=0.4\textwidth]{./Images/le-time-par.png}
 \caption{Time logging output produced for parallel run on 4 processes.\label{time-par-le}}
 \end{figure}
 

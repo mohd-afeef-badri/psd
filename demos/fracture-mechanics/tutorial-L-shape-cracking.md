@@ -56,7 +56,7 @@ abstract: This document details a tutorial of 'fracture mechanics' module of PSD
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.3\textwidth]{./geometry.png}
+\includegraphics[width=0.3\textwidth]{./Images/fm-geometry.png}
 \caption{Geometry of the L-shaped test used in this tutorial. \label{L-shape-geo}}
 \end{figure}
 
@@ -222,7 +222,7 @@ to
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.3\textwidth]{./mesh.png}
+\includegraphics[width=0.3\textwidth]{./Images/fm-mesh.png}
 \caption{Finite element mesh of the L-shaped test. \label{L-shape-mesh}}
 \end{figure}
 
@@ -244,9 +244,9 @@ Use ParaView to post process results.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.3\textwidth]{./d1.png}
-\includegraphics[width=0.3\textwidth]{./d2.png}
-\includegraphics[width=0.3\textwidth]{./d3.png}
+\includegraphics[width=0.3\textwidth]{./Images/fm-d1.png}
+\includegraphics[width=0.3\textwidth]{./Images/fm-d2.png}
+\includegraphics[width=0.3\textwidth]{./Images/fm-d3.png}
 \caption{Finite element solution showing: Crack initiation,  movement, and  development. \label{L-shape-mesh-crack}}
 \end{figure}
 
@@ -254,6 +254,6 @@ On you screen, the force displacement curve which plots (force.data) should look
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{./force-displacement.png}
+\includegraphics[width=0.5\textwidth]{./Images/fm-force-displacement.png}
 \caption{Force-displacement curve with cyclic loading. \label{L-shape-fd-curve}}
 \end{figure}
