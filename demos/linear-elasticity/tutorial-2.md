@@ -1,69 +1,157 @@
-# Linear Elasticity Tutorial 2: #
+---
+title: Linear Elasticity Tutorial 2
+geometry: margin=2cm
+author: Mohd Afeef Badri
+header-includes: |
+    \usepackage{tikz,pgfplots}
+    \usepackage{listings}
+    \usepackage{textcomp}
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \lstdefinestyle{BashInputStyle}{
+	language=bash,
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	columns=fullflexible,
+	backgroundcolor=\color{yellow!20},
+	linewidth=1.\linewidth,
+	xleftmargin=0.05\linewidth,
+	literate =
+	{"}{{\uprightquote}}1
+	{'}{{\textquotesingle}}1
+	{-}{{-}}1
+	{~}{{\centeredtilde}}1
+	,
+    }
+abstract: This document details a single tutorials of 'linear elasticity' module of PSD in a more verbos manner. 
+---
+
+\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+
 
 To showcase the usage of Linear elasticity, we shall discuss here an example of a 2D bar, which bends under its own load. The bar $5\times1$ m$^2$ in area is made up of material with $\rho=8\times 10^3$, $E=200\times 10^9$, and $\nu=0.3$. Contrary to tutorial 1, now both ends of the bar are clamped.
 
-### Step 1: Preprocessing 
+\subsection{Step 1: Preprocessing}
 
 First step in a PSD simulation is PSD preprocessing , at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve.
 
-In the terminal `cd` to the folder `\home\PSD-tutorials\linear-elasticity` . Launch `PSD_PreProcess` from the terminal, to do so run the following command.
+In the terminal \sh{cd} to the folder \sh{/home/PSD-tutorials/linear-elasticity}. Launch \sh{PSD\_PreProcess} from the terminal, to do so run the following command.
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 2 -postprocess u
-```
+\end{lstlisting}
 
-After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. 
+After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} files in your current folder.
 
-*What do the arguments mean ?* `-problem linear-elasticity` means that we are solving linear elasticity problem, `-dimension 2` means it is a 2D simulation, `-bodyforceconditions 1` with body force; `-dirichletconditions 2` says we have two Dirichlet border; and `-postprocess u` means we would like to have ParaView post processing files.
+\textbf{What do the arguments mean ?}
 
-Since basic nature of both the problems (the one from tutorial 1 and 2) is same the almost the same command for preprocessing used in previous tutorial 1 is used here. The only difference,is that an additional Dirichlet condition needs to be supplied, notified to PSD by ` -dirichletconditions 2`. To provide Dirichlet conditions of the left clamped end ($u_x=u_y=0$) in `ControlParameters.edp` set ` Dbc0On 2`, `Dbc0Ux 0.`, and ` Dbc0Uy 0.`. Similarly, for the right end set variables `Dbc1On 4`, ` Dbc1Ux 0.`, and ` Dbc1Uy 0`. Each one of these is a clamped border respectively labeled as 2 (`Dbc0On 2`) and 4 (` Dbc1On 4`) in the mesh `../Meshes/2D/bar.msh`. 
+\begin{itemize}
+\item \sh{-problem linear-elasticity} means that we are solving linear elasticity problem;
+\item \sh{-dimension 2} means it is a 2D simulation;
+\item \sh{-bodyforceconditions 1} with applied body force acting on the domain;
+\item \sh{-dirichletconditions 2} says we have two Dirichlet border;
+\item \sh{-postprocess u} means we would like to have ParaView post processing files.
 
-Just like the previous tutorial the input properties $E,\nu$ should be mentioned in ` ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in ` ControlParameters.edp` , via `ThName = "../Meshes/2D/bar.msh"` (*note that mesh can also be provided in the next step*) .In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. 
+\end{itemize}
 
-### Step 2: Solving 
+Since basic nature of both the problems (the one from tutorial 1 and 2) is same the almost the same command for preprocessing used in previous tutorial 1 is used here. The only difference,is that an additional Dirichlet condition needs to be supplied, notified to PSD by \sh{ -dirichletconditions 2}. To provide Dirichlet conditions of the left clamped end ($u_x=u_y=0$) in \sh{ControlParameters.edp} set \sh{Dbc0On 2}, \sh{Dbc0Ux 0.}, and \sh{Dbc0Uy 0.}. Similarly, for the right end set variables \sh{Dbc1On 4}, \sh{Dbc1Ux 0.}, and \sh{Dbc1Uy 0}. Each one of these is a clamped border respectively labeled as 2 (\sh{Dbc0On 2}) and 4 (\sh{Dbc1On 4}) in the mesh \sh{../Meshes/2D/bar.msh}. 
+
+Just like the previous tutorial the input properties $E,\nu$ should be mentioned in \sh{ControlParameters.edp}, use \sh{E = 200.e9}, and \sh{nu = 0.3;}. The volumetric body force condition is mentioned in the same file via variable \sh{Fbc0Fy -78480.0}, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in \sh{ControlParameters.edp} , via \sh{ThName = "../Meshes/2D/bar.msh"} (\textit{note that mesh can also be provided in the next step}) .In addition variable \sh{Fbc0On 1} has to be provided in order to indicate the volume (region) for which the body force is acting, here \sh{1} is the integer volume tag of the mesh. 
+
+\subsection{Step 2: Solving} 
 
 As PSD is a parallel solver, let us use 3 parallel processes to solve this 2D bar case. To do so enter the following command:
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
-```
+\end{lstlisting}
 
-Here ` -np 3` denote the argument used to enter the number of parallel processes (MPI processes) used while solving. `-mesh ./../Meshes/2D/bar.msh` is used to provide the mesh file to the solver. `-v 0` denotes the verbosity level on screen. ` PSD_Solve` is a wrapper around ` FreeFem++` or `FreeFem++-mpi`. Note that if your problem is large use more cores. PSD has been tested upto 13,000 parallel processes and problem sizes with billions of unknowns, surely you will now need that many for the 2D bar problem. 
+Here \sh{-np 3} denote the argument used to enter the number of parallel processes (MPI processes) used while solving. \sh{-mesh ./../Meshes/2D/bar.msh} is used to provide the mesh file to the solver. \sh{-v 0} denotes the verbosity level on screen.\sh{PSD\_Solve} is a wrapper around \sh{FreeFem++} or \sh{FreeFem++-mpi}. Note that if your problem is large use more cores. PSD has been tested upto 13,000 parallel processes and problem sizes with billions of unknowns, surely you will now need that many for the 2D bar problem. 
 
 
 
-### Step 3: Postprocessing ###
+\subsection{Step 3: Postprocessing}
 
-PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the `.pvd` file in the `VTUs_DATE_TIME` folder.
+PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the \sh{.pvd} file in the \sh{VTUs\_DATE\_TIME} folder. Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{bar-le-full-n} can be extracted.
 
-<img src="./2d-bar-partitioned3.png" alt="2d-bar-partitioned3" style="zoom:50%;" />
 
-<img src="./2d-bar-clamped-ends.png" alt="2d-bar-clamped-ends" style="zoom:50%;" />
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.4\textwidth]{./2d-bar-partitioned3.png}\\
+\includegraphics[width=0.4\textwidth]{./2d-bar-clamped-ends.png}
+\caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le-full-n}}
+\end{figure}
+
 
 You are all done with your 2D linear-elasticty simulation.
 
 
 
-## What else should you try to become an advanced user ##
+\subsection{What else should you try to become an advanced user}
 
-- Try running the 3D problem. Keep in mind to rerun the `PSD_PreProcess` with `-dimension 3` flag and using the appropriate mesh via `-mesh` flag with `-PSD_Solve` . It goes without saying you will need to adjust the Dirichlet border labels in `ControlParameters.edp`. 
+Try running the 3D problem. Keep in mind to rerun the \sh{PSD\_PreProcess} with \sh{-dimension 3} flag and using the appropriate mesh via \sh{-mesh} flag with \sh{PSD\_Solve}. It goes without saying you will need to adjust the Dirichlet border labels in \sh{ControlParameters.edp}. 
 
-- Since gravity is the main force involved in the problem, try redoing the test with different gravitational constant. Imagine, you wish to know how the test would compare if performed on Moon and Jupiter. The only thing that will change now is the gravitational pull, for Moon $g=1.32$ and for Jupiter $g=24.79$. To perform the moon test simply change `Fbc0Fy -10560.0` in ` ControlParameters.edp` and redo step 2 and step 3. Similarly, for the Jupiter test `Fbc0Fy -198320.0` in ` ControlParameters.edp` and redo step 2 and step 3.
+Since gravity is the main force involved in the problem, try redoing the test with different gravitational constant. Imagine, you wish to know how the test would compare if performed on Moon and Jupiter. The only thing that will change now is the gravitational pull, for Moon $g=1.32$ and for Jupiter $g=24.79$. To perform the moon test simply change \sh{Fbc0Fy -10560.0} in \sh{ControlParameters.edp} and redo step 2 and step 3. Similarly, for the Jupiter test \sh{Fbc0Fy -198320.0} in \sh{ControlParameters.edp} and redo step 2 and step 3.
 
-- Optionally try using `-withmaterialtensor` flag with `PSD_PreProcess` , and run the simulation. You are encouraged to have a look at `ControlParameters.edp` and ` VariationalFormulations.edp` file produced with `-withmaterialtensor` flag and without this flag.
+Optionally try using \sh{-withmaterialtensor} flag with \sh{PSD\_PreProcess} , and run the simulation. You are encouraged to have a look at \sh{ControlParameters.edp} and \sh{VariationalFormulations.edp} file produced with \sh{-withmaterialtensor} flag and without this flag.
 
-- Add `-sequential` flag to `PSD_PreProcess` for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve` and no `-np` flag.
+Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve} and no \sh{-np} flag.
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear-elasticity -dimension 2 -sequential \
 -bodyforceconditions 1 -dirichletconditions 2 -postprocess u
-```
+\end{lstlisting}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
-```
+\end{lstlisting}
 
-- You are encouraged to time your the PSD solver and see if you have considerable gains when using more processes in parallel PSD or when comparing a a sequential solver with a parallel one. To time the solver use `-timelog` flag during `PSD_PreProcess`. 
+\subsection{Advance exercise  1}
 
-- You are encouraged to use more complex meshes for this same problem, but do not forget to update the `ControlParameters.edp` file.
+There is a solver run level flag for mesh refinement \footnote{Mesh refinement is performed after partitioning.}. This flag is called \sh{-split [int]} which splits the triangles (resp. tetrahedrons) of your mesh into  four smaller  triangles (resp. tetrahedrons). As such \sh{-split 2} will produce a mesh with 4 times the elements of the input mesh. Similarly, \sh{-split n} where $n$ is a positive integer produces $2^n$ times more elements than the input mesh. You are encouraged to use this \sh{-split} flag to produce refined meshes and check, mesh convergence of a problem, computational time, etc. Use of parallel computing is recommended. You could try it out with \sh{PSD\_Solve} or \sh{PSD\_Solve\_Seq}, for example:
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0 -split 2
+\end{lstlisting}
+
+for splitting each triangle of the mesh  \sh{bar.msh} into 4. 
+
+\subsection{Advance exercise  2}
+
+There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out 
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+-dirichletconditions 2 -postprocess u -timelog -debug
+\end{lstlisting}
+
+Then to run the problem we need aditional \sh{-wg} flag
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0 -wg
+\end{lstlisting}
+
+\subsection{Advance exercise 3}
+
+There is a preprocess level flag \sh{-withmaterialtensor}, which introduces the full material tensor into the finite element variational formulation. You are encouraged to use this flag and see how the sollver performs.
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+-dirichletconditions 2 -postprocess u -timelog -withmaterialtensor
+\end{lstlisting}
+
+Then to run the problem we need aditional \sh{-wg} flag
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0
+\end{lstlisting}
+
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{ControlParameters.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. 
+ 
+\subsection{Advance exercise  4}
+
+You are encouraged to use more complex meshes for this same problem, but do not forget to update the \sh{ControlParameters.edp} file, with your desired boundary conditions.
