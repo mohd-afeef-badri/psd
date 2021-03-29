@@ -1,69 +1,108 @@
-# Fracture mechanics Tutorials #
+---
+title: Fracture mechanics Tutorials
+geometry: margin=2cm
+author: Mohd Afeef Badri
+header-includes: |
+    \usepackage{tikz,pgfplots}
+    \usepackage{listings}
+    \usepackage{textcomp}
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \lstdefinestyle{BashInputStyle}{
+	language=bash,
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	columns=fullflexible,
+	backgroundcolor=\color{yellow!20},
+	linewidth=1.\linewidth,
+	xleftmargin=0.05\linewidth,
+	literate =
+	{"}{{\uprightquote}}1
+	{'}{{\textquotesingle}}1
+	{-}{{-}}1
+	{~}{{\centeredtilde}}1
+	,
+    }
+abstract: This document details some tutorials of 'fracture mechanics' module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's 'fracture mechanics' module. 
+---
+
+\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
 
 
-### Parallel 2D with 4 MPI processes ###
 
-```bash
+\subsection{Parallel 2D}
+
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
 -dirichletconditions 2
-```
+\end{lstlisting}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
-```
+\end{lstlisting}
 
 
 
 
-### Parallel 3D with 3 MPI processes ###
+\subsection{Parallel 3D}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field \
 -dirichletconditions 2
-```
+\end{lstlisting}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
-```
+\end{lstlisting}
 
 
 
 
+\subsection{Parallel 2D and calculate reactionforce}
 
-### Parallel 2D with 4 MPI processes and calculate reactionforce ###
-
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
 -dirichletconditions 2 -getreactionforce -reactionforce stress-based
-```
+\end{lstlisting}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
-```
+\end{lstlisting}
 
 
 
+\subsection{Parallel 3D and calculate reactionforce}
 
 
-### Parallel 3D with 3 MPI processes and calculate reactionforce ###
-
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field \
 -dirichletconditions 2 -getreactionforce -reactionforce stress-based
-```
+\end{lstlisting}
 
-```bash
+\begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
-```
+\end{lstlisting}
 
-- *Optionally try changing `-reactionforce stress-based` to `-reactionforce variational-based` for changing the method to extract reaction force, note that stress based method is way faster*
+\subsection{Exercise 1}
 
-- *Optionally try using  `-useGFP` flag with `PSD_PreProcess` optimized solver*
+Optionally try changing \sh{-reactionforce stress-based} to \sh{-reactionforce variational-based} for changing the method to extract reaction force, note that stress based method is way faster.
 
-- *Add `-sequential` flag to `PSD_PreProcess` for sequential solver, but remember to use `PSD_Solve_Seq` instead of `PSD_Solve`*
+\subsection{Exercise 2}
 
-### ADVANCE USER ###
+Optionally try using  \sh{-useGFP} flag with \sh{PSD\_PreProcess} optimized solver
 
-- *try the `-vectorial` flag for vectorial finite element method*
-- *try the `-energydecomp` flag for using split of tensile energy*
-- *try using `-constrainHPF` flag for using the constrain condition in hybrid phase field model*
+\subsection{Exercise 3}
+
+Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve}
+
+\subsection{Advanced Exercise 1}
+try the \sh{-vectorial} flag for vectorial finite element method
+
+\subsection{Advanced Exercise 2}
+try the \sh{-energydecomp} flag for using split of tensile energy
+
+\subsection{Advanced Exercise 3}
+try using \sh{-constrainHPF} flag for using the constrain condition in hybrid phase field model
