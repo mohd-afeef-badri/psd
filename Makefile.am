@@ -18,9 +18,11 @@ stamp-h1 \
 
 homepsd = $${HOME}
 all-local: logo
+	@echo "  			  "
 	@echo "*============================================================*"
-	@echo " 'make' finished now do 'make check'"
+	@echo " 'make' finished now do 'make install' or 'sudo make install'"
 	@echo "*============================================================*"
+	@echo "  			  "
 
 logo:
 	@echo ""
@@ -43,6 +45,10 @@ install-exec-local:
 	@echo "  			  "
 	@echo "*============================================================*"
 	@echo " Finished installing  PSD version $(VERSION)"
+	@echo "*============================================================*"
+	@echo "  			  "
+	@echo "*============================================================*"
+	@echo " IMPORTANT: In order to test everthing is ok do 'make check'"
 	@echo "*============================================================*"
 	@echo ""	
 
