@@ -6,7 +6,9 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Changed
 
-- Moved to FreeFEM 4.8 
+- Maximum CPU procs are now used for make check
+
+- Moved to FreeFEM 4.9 and PETSc 3.15.0 
 
 - Moved to GitLab for hosting the repository.
 

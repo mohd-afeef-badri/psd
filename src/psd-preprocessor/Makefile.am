@@ -85,7 +85,7 @@ check-linear-elasticity:
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D linear-elasticity"
@@ -94,7 +94,7 @@ check-linear-elasticity:
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D linear-elasticity with material tensor"
@@ -103,7 +103,7 @@ check-linear-elasticity:
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_withmaterialtensor.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_withmaterialtensor.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D linear-elasticity with material tensor"
@@ -112,7 +112,7 @@ check-linear-elasticity:
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_withmaterialtensor.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel_withmaterialtensor.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel_withmaterialtensor.log
 
 
 
@@ -149,7 +149,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture"
@@ -159,7 +159,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture with reaction-force"
@@ -169,7 +169,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with reaction-force"
@@ -179,7 +179,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture with reaction-force (stress-based)"
@@ -189,7 +189,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with reaction-force (stress-based)"
@@ -199,7 +199,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture with reaction-force (variational-based)"
@@ -209,7 +209,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with reaction-force (variational-based)"
@@ -219,7 +219,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture vectorial"
@@ -229,7 +229,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture vectorial"
@@ -239,7 +239,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force"
@@ -249,7 +249,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force "
@@ -259,7 +259,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force (stress-based)"
@@ -269,7 +269,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force (stress-based)"
@@ -279,7 +279,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force (variational-based)"
@@ -289,7 +289,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force (variational-based)"
@@ -299,7 +299,7 @@ check-fracture-mechanics:
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture energydecomp "
@@ -330,7 +330,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture energydecomp "
@@ -341,7 +341,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw  > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force"
@@ -352,7 +352,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture energydecomp with reaction-force"
@@ -363,7 +363,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force (stress-based)"
@@ -374,7 +374,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture mechanics energydecomp with reaction-force (stress-based)"
@@ -385,7 +385,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force (variational-based)"
@@ -396,7 +396,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture energydecomp with reaction-force (variational-based)"
@@ -407,7 +407,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial"
@@ -418,7 +418,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture energydecomp vectorial"
@@ -429,7 +429,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial with reaction-force"
@@ -440,7 +440,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture energydecomp vectorial with reaction-force"
@@ -451,7 +451,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial with reaction-force (stress-based)"
@@ -462,7 +462,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with energydecomp vectorial reaction-force (stress-based)"
@@ -473,7 +473,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture with energydecomp vectorial reaction-force (variational-based)"
@@ -484,7 +484,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with energydecomp vectorial reaction-force (variational-based)"
@@ -495,7 +495,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture with GFP"
@@ -528,7 +528,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with GFP"
@@ -539,7 +539,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture with GFP vectoiral"
@@ -550,7 +550,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_vectoiral.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_vectoiral.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with GFP vectoiral"
@@ -561,7 +561,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_vectoiral.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_vectoiral.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture with GFP energydecomp"
@@ -594,7 +594,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D phase-field fracture with GFP energydecomp"
@@ -605,7 +605,7 @@ check-fracture-mechanics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log	
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log	
 		
 
 
@@ -647,7 +647,7 @@ check-Elastodynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_elastodynamics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_elastodynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics"
@@ -658,7 +658,7 @@ check-Elastodynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_elastodynamics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_elastodynamics_Parallel.log
 
 
 
@@ -702,7 +702,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics"
@@ -713,7 +713,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics with doublecouple (displacement-based)"
@@ -725,7 +725,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_displacement-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_displacement-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics with doublecouple (force-based)"
@@ -737,7 +737,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with top-ii-vol meshing "
@@ -749,7 +749,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_force-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top-ii-vol meshing "
@@ -761,7 +761,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top-ii-vol meshing"
@@ -773,7 +773,7 @@ check-Soildynamics:
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np 2 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log	
+	./PSD_Solve -np 4 Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log	
 	
 		
 check-local: check-linear-elasticity check-fracture-mechanics check-Elastodynamics check-Soildynamics

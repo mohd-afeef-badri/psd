@@ -4,6 +4,8 @@
 
 **Ongoing**
 
+- update developer install with plugins 
+
 
 
 **Todo**
@@ -27,6 +29,7 @@
 
 **Done**
 
+- Use max system procs for tests
 - Activate top-ii-vol version 1.3 for PSD
 
 -  Install binaries and libraries in usr/bin and usr/include/psd
