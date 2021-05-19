@@ -147,7 +147,9 @@ int main(int argc, char *argv[]){
   bool constrainHPF = false;
   bool precracked   = false;     
   bool reactionforce= false;
-  
+
+  bool   wrongArgument         = false  ;
+  string wrongArgumentWarning  = ""     ;  
 
   string Model                   = "hybrid-phase-field";
   string Solver                  = "cg";
@@ -168,6 +170,63 @@ int main(int argc, char *argv[]){
   for(int i=0; i<argc; i++){
 
     string argvdummy  = argv[i]   ;
+
+    if (argvdummy.find("-") != string::npos)
+      if ( 
+           argvdummy != "-dirichletpointconditions" &&
+           argvdummy != "-dirichletconditions"      &&
+           argvdummy != "-bodyforceconditions"      &&        
+           argvdummy != "-tractionconditions"       &&
+           argvdummy != "-dimension"                &&
+           argvdummy != "-lagrange"                 &&
+
+           argvdummy != "-useRCM"                   &&
+           argvdummy != "-help"                     &&
+           argvdummy != "-debug"                    &&
+           argvdummy != "-useGFP"                   &&
+           argvdummy != "-pipegnu"                  &&
+           argvdummy != "-testflags"                &&
+           argvdummy != "-timelog"                  &&
+           argvdummy != "-vectorial"                &&
+           argvdummy != "--version"                 &&        
+           argvdummy != "-version"                  &&    
+           argvdummy != "-supercomp"                &&
+           argvdummy != "-sequential"               &&
+           argvdummy != "-dirichletbc"              &&
+           argvdummy != "-energydecomp"             &&
+           argvdummy != "-pointprobe"               &&    
+           argvdummy != "-top2vol-meshing"          &&
+           argvdummy != "-getreactionforce"         &&
+           argvdummy != "-plotreactionforce"        &&
+           argvdummy != "-constrainHPF"             &&
+           argvdummy != "-crackdirichletcondition"  &&
+           argvdummy != "-withmaterialtensor"       && 
+
+           argvdummy != "-model"                    &&
+           argvdummy != "-solver"                   &&
+           argvdummy != "-problem"                  &&
+           argvdummy != "-partitioner"              &&
+           argvdummy != "-postprocess"              &&
+           argvdummy != "-doublecouple"             &&
+           argvdummy != "-preconditioner"           &&
+           argvdummy != "-nonlinearmethod"          &&
+           argvdummy != "-reactionforce"            &&       
+           argvdummy != "-subpreconditioner"        &&
+           argvdummy != "-timediscretization"                      
+         ){
+         wrongArgument = true;
+         wrongArgumentWarning +=
+          "===================================================================\n"
+          " ** WARNING **\n"
+          "===================================================================\n"
+          "\n"
+          " The commmandline argument\n"
+          "    \033[1;31m"+ argvdummy + "\033[0m\n"
+          " not recognized, it is suggested to take appropriate action\n"
+          " to eliminate this warning before running the simulation\n"
+          "\n"
+          "===================================================================\n";
+        }
 
     if( argvdummy == "-dirichletpointconditions") dirichletpointconditions = stoi(argv[i+1]);
     if( argvdummy == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
@@ -361,6 +420,9 @@ if(!help){
   cout << "     PSD_Solve_Seq Main.edp                                        " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
+
+  if(wrongArgument)
+   cout << wrongArgumentWarning << endl;
 }
 }
 return 0;
