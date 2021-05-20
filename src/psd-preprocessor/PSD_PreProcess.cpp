@@ -30,6 +30,10 @@
 /*
 
   -------------------------------------------------------------------------------------
+                             INTEGER TYPE ARGUMENTS
+  -------------------------------------------------------------------------------------
+            Integer type arguments these expect an integer after the flag
+  -------------------------------------------------------------------------------------
 
   -dirichletpointconditions [int]  # of Dirchlet points.  Default 0.
 
@@ -46,6 +50,10 @@
   -lagrange                 [int]  Lagrange order used for building FE space. Options
                                    are  1 for P1 or 2 for P2. Default is P1.
 
+  -------------------------------------------------------------------------------------
+                             STRING TYPE ARGUMENTS
+  -------------------------------------------------------------------------------------
+            String type arguments these expect an string after the flag
   -------------------------------------------------------------------------------------
 
   -timediscretization [string] Time discretization type. Use generalized-alpha|newmark-beta...
@@ -66,6 +74,11 @@
 
   -mesh            [string] Mesh to be used, use a .mesh or .msh mesh.  
 
+  -------------------------------------------------------------------------------------
+                             BOOLEAN TYPE ARGUMENTS
+  -------------------------------------------------------------------------------------
+            Boolean type arguments these expect an bool after the flag
+            One can use     1|0|yes|no|on|off|true|false      as vales
   -------------------------------------------------------------------------------------
 
   -help         [bool]     To activate helping message on the terminal.
@@ -113,6 +126,9 @@
 #include "HeaderMacro.hpp"
 
 #define writeIt  write<<
+
+#define IsArgumentValueTrue   if(argvalue=="yes"||argvalue=="on"||argvalue=="true"||argvalue=="1")
+#define IsArgumentValueFalse  if(argvalue=="no"||argvalue=="off"||argvalue=="false"||argvalue=="0")
 
 
 using namespace std;
@@ -168,9 +184,12 @@ int main(int argc, char *argv[]){
 //---- Comandline Parameters -----
 //=====================================================================================
 
+  argv[argc] = argv[argc-1];       // Hacky way to avoid C++ warning, ignore this line
+
   for(int i=0; i<argc; i++){
 
     string argvdummy  = argv[i]   ;
+    string argvalue   = argv[i+1] ;
 
     #include "DetectWrongArgument.hpp"
 
@@ -181,27 +200,92 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
-    if( argvdummy == "-useRCM"                  ) RCM                      = true;
-    if( argvdummy == "-help"                    ) help                     = true;
-    if( argvdummy == "-debug"                   ) debug                    = true;
-    if( argvdummy == "-useGFP"                  ) useGFP                   = true;
-    if( argvdummy == "-pipegnu"                 ) pipegnu                  = true;
-    if( argvdummy == "-testflags"               ) testflags                = true;
-    if( argvdummy == "-timelog"                 ) timelog                  = true;
-    if( argvdummy == "-vectorial"               ) vectorial                = true;
-    if( argvdummy == "--version"                ) versionpsd               = true;        
-    if( argvdummy == "-version"                 ) versionpsd               = true;    
-    if( argvdummy == "-supercomp"               ) supercomp                = true;
-    if( argvdummy == "-sequential"              ) Sequential               = true;
-    if( argvdummy == "-dirichletbc"             ) dirichletbc              = true;
-    if( argvdummy == "-energydecomp"            ) energydecomp             = true;
-    if( argvdummy == "-pointprobe"              ) pointprobe               = true;    
-    if( argvdummy == "-top2vol-meshing"         ) top2vol                  = true;
-    if( argvdummy == "-getreactionforce"        ) reactionforce            = true;
-    if( argvdummy == "-plotreactionforce"       ) plotreaction             = true;
-    if( argvdummy == "-constrainHPF"            ) constrainHPF             = true;
-    if( argvdummy == "-crackdirichletcondition" ) precracked               = true;
-    if( argvdummy == "-withmaterialtensor"      ) fastmethod               = false;                         
+    if( argvdummy == "-useRCM"                  ) {                     RCM          = true;
+                                                   IsArgumentValueTrue  RCM          = true;
+                                                   IsArgumentValueFalse RCM          = false;
+                                                  }
+
+    if( argvdummy == "-useGFP"                  ) {                     useGFP       = true;
+                                                   IsArgumentValueTrue  useGFP       = true;
+                                                   IsArgumentValueFalse useGFP       = false;
+                                                  }
+
+    if( argvdummy == "-pipegnu"                 ) {                     pipegnu      = true;
+                                                   IsArgumentValueTrue  pipegnu      = true;
+                                                   IsArgumentValueFalse pipegnu      = false;
+                                                  }
+
+    if( argvdummy == "-timelog"                 ) {                     timelog      = true;
+                                                   IsArgumentValueTrue  timelog      = true;
+                                                   IsArgumentValueFalse timelog      = false;
+                                                  }
+
+    if( argvdummy == "-vectorial"               ) {                    vectorial     = true;
+    if( argvdummy == "-vectorial"               ) IsArgumentValueTrue  vectorial     = true;
+    if( argvdummy == "-vectorial"               ) IsArgumentValueFalse vectorial     = false;
+                                                  }
+    
+    if( argvdummy == "-supercomp"               ) {                    supercomp     = true;
+                                                   IsArgumentValueTrue  supercomp    = true;
+                                                   IsArgumentValueFalse supercomp    = false;
+                                                  }
+
+    if( argvdummy == "-sequential"              ) {                     Sequential   = true;
+                                                   IsArgumentValueTrue  Sequential   = true;
+                                                   IsArgumentValueFalse Sequential   = false;
+                                                  }
+
+    if( argvdummy == "-dirichletbc"             ) {                     dirichletbc  = true;
+                                                   IsArgumentValueTrue  dirichletbc  = true;
+                                                   IsArgumentValueFalse dirichletbc  = false;
+                                                  }
+
+    if( argvdummy == "-energydecomp"            ) {                     energydecomp = true;
+                                                   IsArgumentValueTrue  energydecomp = true;
+                                                   IsArgumentValueFalse energydecomp = false;
+                                                  }
+
+    if( argvdummy == "-pointprobe"              ) {                     pointprobe   = true;    
+                                                   IsArgumentValueTrue  pointprobe   = true;
+                                                   IsArgumentValueFalse pointprobe   = false;    
+                                                  }
+   
+    if( argvdummy == "-top2vol-meshing"         ) {                     top2vol      = true;
+                                                   IsArgumentValueTrue  top2vol      = true;
+                                                   IsArgumentValueFalse top2vol      = false;
+                                                  }
+
+    if( argvdummy == "-getreactionforce"        ) {                     reactionforce = true;
+                                                   IsArgumentValueTrue  reactionforce = true;
+                                                   IsArgumentValueFalse reactionforce = false;
+                                                  }
+
+    if( argvdummy == "-plotreactionforce"       ) {                     plotreaction = true;
+                                                   IsArgumentValueTrue  plotreaction = true;
+                                                   IsArgumentValueFalse plotreaction = false;
+                                                  }
+
+    if( argvdummy == "-constrainHPF"            ) {                     constrainHPF = true;
+                                                   IsArgumentValueTrue  constrainHPF = true;
+                                                   IsArgumentValueFalse constrainHPF = false;
+                                                  }
+
+    if( argvdummy == "-crackdirichletcondition" ) {                     precracked   = true;
+                                                   IsArgumentValueTrue  precracked   = true;
+                                                   IsArgumentValueFalse precracked   = false;
+                                                  }
+
+    if( argvdummy == "-withmaterialtensor"      ) {                     fastmethod   = false;
+                                                   IsArgumentValueTrue  fastmethod   = false;
+                                                   IsArgumentValueFalse fastmethod   = true;
+                                                  }
+
+
+    if( argvdummy == "-testflags"               ) testflags  = true;
+    if( argvdummy == "-debug"                   ) debug      = true;
+    if( argvdummy == "-help"                    ) help       = true;
+    if( argvdummy == "-version"                 ) versionpsd = true;
+
 
     if( argvdummy == "-model"                   ) Model                    = argv[i+1];
     if( argvdummy == "-solver"                  ) Solver                   = argv[i+1];
