@@ -8,10 +8,9 @@ All notable changes to PSD solver will be documented in this file.
 
 - 4 CPU procs are now used for `make check`, user can control this by `make
 check NP=USER_PROCS`.
-
 - Moved to FreeFEM 4.9 and PETSc 3.15.0 .
-
 - Moved to GitLab for hosting the repository.
+- New checks for wrong flag. Now if wrong flag or values is entered PSD will give error.
 
 ### Removed 
 

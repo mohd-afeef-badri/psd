@@ -19,7 +19,9 @@ VariationalFormulation_DamageMechanics.hpp \
 VariationalFormulation_ElastoDynamics.hpp \
 VariationalFormulation.hpp \
 VariationalFormulation_LinearElasticity.hpp \
-VariationalFormulation_SoilDynamics.hpp
+VariationalFormulation_SoilDynamics.hpp \
+DetectWrongArgument.hpp \
+ErrorWrongArgument.hpp
 
 
 NP = 4

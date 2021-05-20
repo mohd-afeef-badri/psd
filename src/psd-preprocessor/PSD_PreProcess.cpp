@@ -148,6 +148,7 @@ int main(int argc, char *argv[]){
   bool precracked   = false;     
   bool reactionforce= false;
 
+  bool   errorArgument         = false  ;
   bool   wrongArgument         = false  ;
   string wrongArgumentWarning  = ""     ;  
 
@@ -171,62 +172,7 @@ int main(int argc, char *argv[]){
 
     string argvdummy  = argv[i]   ;
 
-    if (argvdummy.find("-") != string::npos)
-      if ( 
-           argvdummy != "-dirichletpointconditions" &&
-           argvdummy != "-dirichletconditions"      &&
-           argvdummy != "-bodyforceconditions"      &&        
-           argvdummy != "-tractionconditions"       &&
-           argvdummy != "-dimension"                &&
-           argvdummy != "-lagrange"                 &&
-
-           argvdummy != "-useRCM"                   &&
-           argvdummy != "-help"                     &&
-           argvdummy != "-debug"                    &&
-           argvdummy != "-useGFP"                   &&
-           argvdummy != "-pipegnu"                  &&
-           argvdummy != "-testflags"                &&
-           argvdummy != "-timelog"                  &&
-           argvdummy != "-vectorial"                &&
-           argvdummy != "--version"                 &&        
-           argvdummy != "-version"                  &&    
-           argvdummy != "-supercomp"                &&
-           argvdummy != "-sequential"               &&
-           argvdummy != "-dirichletbc"              &&
-           argvdummy != "-energydecomp"             &&
-           argvdummy != "-pointprobe"               &&    
-           argvdummy != "-top2vol-meshing"          &&
-           argvdummy != "-getreactionforce"         &&
-           argvdummy != "-plotreactionforce"        &&
-           argvdummy != "-constrainHPF"             &&
-           argvdummy != "-crackdirichletcondition"  &&
-           argvdummy != "-withmaterialtensor"       && 
-
-           argvdummy != "-model"                    &&
-           argvdummy != "-solver"                   &&
-           argvdummy != "-problem"                  &&
-           argvdummy != "-partitioner"              &&
-           argvdummy != "-postprocess"              &&
-           argvdummy != "-doublecouple"             &&
-           argvdummy != "-preconditioner"           &&
-           argvdummy != "-nonlinearmethod"          &&
-           argvdummy != "-reactionforce"            &&       
-           argvdummy != "-subpreconditioner"        &&
-           argvdummy != "-timediscretization"                      
-         ){
-         wrongArgument = true;
-         wrongArgumentWarning +=
-          "===================================================================\n"
-          " ** WARNING **\n"
-          "===================================================================\n"
-          "\n"
-          " The commmandline argument\n"
-          "    \033[1;31m"+ argvdummy + "\033[0m\n"
-          " not recognized, it is suggested to take appropriate action\n"
-          " to eliminate this warning before running the simulation\n"
-          "\n"
-          "===================================================================\n";
-        }
+    #include "DetectWrongArgument.hpp"
 
     if( argvdummy == "-dirichletpointconditions") dirichletpointconditions = stoi(argv[i+1]);
     if( argvdummy == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
@@ -271,6 +217,8 @@ int main(int argc, char *argv[]){
 
   }
 
+ #include "ErrorWrongArgument.hpp"
+
   int labelBodyForce=1;
   int labelDirichlet=2;
   int labelDirichletTraction=2;  
@@ -295,7 +243,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
    || PostProcess=="uv"  || PostProcess=="vu"  || PostProcess=="au"  || PostProcess=="ua"
    || PostProcess=="av"  || PostProcess=="va"  || PostProcess=="ud"  || PostProcess=="du"
    || PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" || PostProcess=="vua"
-   || PostProcess=="auv" || PostProcess=="ava" )  ParaViewPostProcess = true;
+   || PostProcess=="auv" || PostProcess=="avu" )  ParaViewPostProcess = true;
 
 //=====================================================================================
 //---- PSD Logo on commandline -----
