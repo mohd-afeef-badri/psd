@@ -725,7 +725,7 @@ check-Soildynamics:
 	@echo " Parallel 2D Soildynamics with doublecouple (displacement-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem soildynamics -model linear -timediscretization newmark-beta -useGFP -doublecouple displacement-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_displacement-based.log && \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark-beta -useGFP -doublecouple displacement-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_displacement-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -737,7 +737,7 @@ check-Soildynamics:
 	@echo " Parallel 2D Soildynamics with doublecouple (force-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem soildynamics -model linear -timediscretization newmark-beta -useGFP -doublecouple force-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_force-based.log && \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark-beta -useGFP -doublecouple force-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -749,7 +749,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark-beta -useGFP -top2vol-meshing -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_force-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -761,7 +761,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple force-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple force-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -773,7 +773,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top-ii-vol meshing"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple displacement-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple displacement-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
