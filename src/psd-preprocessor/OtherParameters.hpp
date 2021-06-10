@@ -45,7 +45,7 @@ if(!Sequential){
  " real[int] DP;                               // Partition of unity             \n";
 
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(!vectorial || constrainHPF)
   writeIt
   "                                                                              \n"
@@ -54,7 +54,7 @@ if(!Sequential){
    
 }
 
-if(Prblm=="damage" && Model=="hybrid-phase-field"){
+if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
  if(ParaViewPostProcess){
   writeIt
@@ -120,7 +120,7 @@ if(Prblm=="elastodynamics"){
  "  real[int] c(11);                                                             \n"
  "                                                                               \n";
 
- if(TimeDiscretization=="generalized-alpha")
+ if(TimeDiscretization=="generalized_alpha")
   writeIt
   "  c[0] =   rho*(1.-alpm)/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt       ;\n"
   "  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt              ;\n"
@@ -135,7 +135,7 @@ if(Prblm=="elastodynamics"){
   "  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))           ;\n"
   "                                                                               \n";
 
- if(TimeDiscretization=="newmark-beta")
+ if(TimeDiscretization=="newmark_beta")
   writeIt
   "  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma/beta/dt                          ;\n"
   "  c[1] =   lambda + lambda*etak*gamma/beta/dt                                 ;\n"
@@ -150,7 +150,7 @@ if(Prblm=="elastodynamics"){
   "  c[10]=   etak*2*mu*dt*((1.-2*beta)/2./beta -(1.-gamma))                     ;\n"
   "                                                                               \n";
 
- if(TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="central_difference")
   writeIt
   "  c[0] =   rho/(dt*dt) + etam*rho*gamma/dt                                    ;\n"
   "  c[1] =   lambda + lambda*etak*gamma/dt                                      ;\n"
@@ -165,7 +165,7 @@ if(Prblm=="elastodynamics"){
   "  c[10]=   etak*2*mu*dt*(1./2. -(1.-gamma))                                   ;\n"
   "                                                                               \n";
 
- if(TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="hht_alpha")
   writeIt
   "  c[0] =   rho/(beta*dt*dt) + etam*rho*gamma*(1-alpf)/beta/dt                 ;\n"
   "  c[1] =   lambda*(1.-alpf) + lambda*etak*gamma*(1-alpf)/beta/dt              ;\n"
@@ -259,7 +259,7 @@ if(Prblm=="soildynamics"){
  "  real[int] c(10);                                                              \n"
  "                                                                                \n";
 
- if(TimeDiscretization=="generalized-alpha")
+ if(TimeDiscretization=="generalized_alpha")
   writeIt
   "  c[0] =   rho*(1.-alpm)/(beta*dt*dt)                                          ;\n"
   "  c[1] =   lambda*(1.-alpf)                                                    ;\n"
@@ -273,7 +273,7 @@ if(Prblm=="soildynamics"){
   "  c[9] =   rho*(1.-alpf)*dt*(1.-gamma/(2.*beta))                               ;\n"
   "                                                                                \n";
 
- if(TimeDiscretization=="newmark-beta")
+ if(TimeDiscretization=="newmark_beta")
   writeIt
   "  c[0] =   rho/(beta*dt*dt)                                                    ;\n"
   "  c[1] =   lambda                                                              ;\n"
@@ -287,7 +287,7 @@ if(Prblm=="soildynamics"){
   "  c[9] =   rho*dt*(1.-gamma/(2.*beta))                                         ;\n"
   "                                                                                \n";
 
- if(TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="central_difference")
   writeIt
   "  c[0] =   rho/(dt*dt)                                                         ;\n"
   "  c[1] =   lambda                                                              ;\n"
@@ -301,7 +301,7 @@ if(Prblm=="soildynamics"){
   "  c[9] =   rho*dt*(1.-gamma/2.)                                                ;\n"
   "                                                                                \n";
 
- if(TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="hht_alpha")
   writeIt
   "  c[0] =   rho/(beta*dt*dt)                                                    ;\n"
   "  c[1] =   lambda*(1.-alpf)                                                    ;\n"
@@ -374,7 +374,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   "                                                                               \n";
  }
 
- if(doublecouple=="force-based" || doublecouple=="displacement-based")
+ if(doublecouple=="force_based" || doublecouple=="displacement_based")
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"

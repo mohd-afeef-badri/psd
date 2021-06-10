@@ -3,7 +3,7 @@
 //=================================================================================================
 
 
-if(Model=="hybrid-phase-field" && NonLinearMethod=="Picard")
+if(Model=="hybrid_phase_field" && NonLinearMethod=="Picard")
 if(!vectorial){
 
  if(!constrainHPF)
@@ -135,11 +135,11 @@ if(pipegnu)
  writeIt
  ";                                                                                               \n";
 
-}  //-- [if loop terminator] hybrid-phase-field picard non-vectorial ended --//
+}  //-- [if loop terminator] hybrid_phase_field picard non-vectorial ended --//
 
 
 
-if(Model=="hybrid-phase-field" && NonLinearMethod=="Newton-Raphson")
+if(Model=="hybrid_phase_field" && NonLinearMethod=="Newton-Raphson")
 if(!vectorial){
  writeIt
  "                                                                                                \n"
@@ -297,10 +297,10 @@ if(spc==3)
  writeIt
  ";                                                                                               \n";
 
-}  //-- [if loop terminator] hybrid-phase-field Newton-Raphsons non-vectorial ended --//
+}  //-- [if loop terminator] hybrid_phase_field Newton-Raphsons non-vectorial ended --//
 
 
-if(Model=="hybrid-phase-field" && vectorial){
+if(Model=="hybrid_phase_field" && vectorial){
  writeIt
  "                                                                                                \n"
  "//==============================================================================                \n"
@@ -411,7 +411,7 @@ if(pipegnu)
 <<"                );                                                                              \n";
 /************************OLD METHOD*************************************************/
 
-}  //-- [if loop terminator] hybrid-phase-field picard vectorial ended --//
+}  //-- [if loop terminator] hybrid_phase_field picard vectorial ended --//
 
 if(Model=="Mazar"){
  writeIt

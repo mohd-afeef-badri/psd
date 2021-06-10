@@ -84,7 +84,7 @@
  "  )                                                                                             \n"
 /************************OLD METHOD*************************************************/
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                                \n"
  "    - intN(Th,qforder=3)                                                                        \n"
