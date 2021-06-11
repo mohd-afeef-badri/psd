@@ -6,6 +6,8 @@ All notable changes to PSD solver will be documented in this file.
 
 ### Changed
 
+- Flag values now donot contain hyphens '-' use underscore instead '_', e.g, 
+`linear-elasticity` is now `linear_elasticity`
 - 4 CPU procs are now used for `make check`, user can control this by `make
 check NP=USER_PROCS`.
 - Moved to FreeFEM 4.9 and PETSc 3.15.0 .
@@ -27,7 +29,7 @@ check NP=USER_PROCS`.
 - New tests for more advance top-ii-vol partitioning.
 - New flag `-constrainHPF` to enable constrain conditions in hybrid phase-field (WIP).
 - New developments in parallel interpolations. 
-- Tutorials added, use `make tutorials` to install  
+- Tutorials added, use `make tutorials` to install
 
 ### Changed
 
@@ -41,7 +43,7 @@ check NP=USER_PROCS`.
 
 ### Bugs removed
 
-- Stain vector inccorect numbering in split fuction of GFP
+- Stain vector incorrect numbering in split function of GFP
 
    ( see hash  [5ec7b882494f71984d07f468b518ec886e942d32](https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&h=5ec7b882494f71984d07f468b518ec886e942d32))
    

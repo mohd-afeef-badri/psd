@@ -4,7 +4,9 @@
 
 **Ongoing**
 
-- update developer install with plugins 
+- update developer install with plugins
+- PSD configures PETSc and FreeFEM
+- Include Medfile support
 
 
 
