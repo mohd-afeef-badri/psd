@@ -35,7 +35,7 @@ abstract: This document details some tutorials of soildynamics module of PSD. Th
 The problem of interest is a single Dirichlet condition problem of soildynamics in 2D. For this problem we use Newmark-$\beta$ time discretization. Additionally postrocessing is demanded for displacement, acceleration, and velocity ($u,a,v$).
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark-beta \
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark_beta \
 -postprocess uav
 \end{lstlisting}
 
@@ -64,7 +64,7 @@ Using ParaView for postprocessing the results that are provided in the \sh{VTUs.
 The problem of interest is a single Dirichlet condition problem of soildynamics in 3D. For this problem we use Newmark-$\beta$ time discretization. Additionally postrocessing is demanded for displacement, acceleration, and velocity ($u,a,v$).
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1 -timediscretization newmark-beta \
+PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1 -timediscretization newmark_beta \
 -postprocess uav
 \end{lstlisting}
 
@@ -119,7 +119,7 @@ Similarly try out the 3D problem. However take note that a the mesh \sh{./../Mes
 Single Dirichlet at the bottom and using GFP.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark-beta \
+PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
 -useGFP -top2vol-meshing -timediscretization newmark-beta -postprocess uav
 \end{lstlisting}
 
@@ -133,7 +133,7 @@ PSD_Solve -np 4 Main.edp -v 0 -ns -nw
 Single Dirichlet via double couple and using GFP. Double couple is displacement based. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark-beta \
+PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
 -useGFP -top2vol-meshing -doublecouple displacement-based -postprocess uav
 \end{lstlisting}
 
@@ -146,7 +146,7 @@ PSD_Solve -np 3 Main.edp -v 0 -ns -nw
 You are encouraged to try out sequential PSD solver, to do so used add \sh{-sequential} flag to \sh{PSD\_PreProcess} step and run the solver with \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve}. For example, the PSD sequential solver workflow for the first 2D example in this tutorial would be:
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark-beta \
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark_beta \
 -postprocess uav -sequential
 \end{lstlisting}
 
@@ -160,7 +160,7 @@ Try it out for other problems of this tutorial.
 
 \subsection{Exercise 2}
 
-For soildynamic problems with double couple source, the double couple source can be introduced into the solver either by displacement-based operator -- providing displacements at the double couple points that will be converted to moments -- or by force-based operators -- providing forces at the double couple points that  will be converted to moments. In the tutorials above we already tried displacement-based way of introducing double couple source by using \sh{-doublecouple displacement-based}. You are encouraged to try out the force-based double couple source by using \sh{-doublecouple force-based}.
+For soildynamic problems with double couple source, the double couple source can be introduced into the solver either by displacement-based operator -- providing displacements at the double couple points that will be converted to moments -- or by force-based operators -- providing forces at the double couple points that  will be converted to moments. In the tutorials above we already tried displacement-based way of introducing double couple source by using \sh{-doublecouple displacement\_based}. You are encouraged to try out the force-based double couple source by using \sh{-doublecouple force\_based}.
 
 \subsection{Exercise 3}
 
@@ -171,7 +171,7 @@ You are encouraged to try out timelogging and find out if the code (parallel/seq
 PSD comes with additional set of plugins/functions that are highly optimized for performing certain operations during solving. These operations are handled by GoFast Plugins (GFP) kernel of PSD (optimize C++ classes/templates/structures), by default this functionality is turned off and not used. You are encouraged to try out using GFP functions in a solver by using \sh{-useGFP} flag flag to \sh{PSD\_PreProcess} For example, the PSD solver workflow for the first 2D example in this tutorial would be:
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark-beta \
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 -timediscretization newmark\_beta \
 -postprocess uav -useGFP
 \end{lstlisting}
 
