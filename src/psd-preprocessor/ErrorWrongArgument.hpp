@@ -207,28 +207,28 @@
      }
 
 
-  if ( Model != "hybrid-phase-field" && Model != "Mazar" && Model != "pseudo-nonlinear" 
+  if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear" 
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-model\033[0m only accepts \033[1;34mhybrid-phase-field|Mazar|pseudo-nonlinear\033[0m\n"
+          "The flag \033[1;31m-model\033[0m only accepts \033[1;34mhybrid_phase_field|Mazar|pseudo_nonlinear\033[0m\n"
           "\033[1;31m-model "<< Model << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
       errorArgument = true;
      }
 
-  if ( Prblm != "linear-elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics" 
+  if ( Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics" 
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear-elasticity|damage|elastodynamics|soildynamics\033[0m\n"
+          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear_elasticity|damage|elastodynamics|soildynamics\033[0m\n"
           "\033[1;31m-problem "<< Prblm << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
@@ -267,42 +267,42 @@
       errorArgument = true;
      }
 
-  if ( doublecouple != "force-based" && doublecouple != "displacement-based" && doublecouple != "unused"  
+  if ( doublecouple != "force_based" && doublecouple != "displacement_based" && doublecouple != "unused"  
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-doublecouple\033[0m only accepts \033[1;34mforce-based|displacement-based\033[0m\n"
+          "The flag \033[1;31m-doublecouple\033[0m only accepts \033[1;34mforce_based|displacement_based\033[0m\n"
           "\033[1;31m-doublecouple "<< doublecouple << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
       errorArgument = true;
      }
 
-  if ( NonLinearMethod != "Picard" && NonLinearMethod != "Newton-Raphsons"  
+  if ( NonLinearMethod != "Picard" && NonLinearMethod != "Newton_Raphsons"  
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-nonlinearmethod\033[0m only accepts \033[1;34mPicard|Newton-Raphsons\033[0m\n"
+          "The flag \033[1;31m-nonlinearmethod\033[0m only accepts \033[1;34mPicard|Newton_Raphsons\033[0m\n"
           "\033[1;31m-nonlinearmethod "<< NonLinearMethod << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
       errorArgument = true;
      }
 
-  if ( reactionforcemethod != "stress-based" && reactionforcemethod != "variational-based"  
+  if ( reactionforcemethod != "stress_based" && reactionforcemethod != "variational_based"  
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-reactionforce\033[0m only accepts \033[1;34mstress-based|variational-based\033[0m\n"
+          "The flag \033[1;31m-reactionforce\033[0m only accepts \033[1;34mstress_based|variational_based\033[0m\n"
           "\033[1;31m-reactionforce "<< reactionforcemethod << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
@@ -310,14 +310,14 @@
      }
 
 
-  if ( TimeDiscretization != "generalized-alpha" && TimeDiscretization != "newmark-beta"   && TimeDiscretization != "hht-alpha"   && TimeDiscretization != "central-difference"  
+  if ( TimeDiscretization != "generalized_alpha" && TimeDiscretization != "newmark_beta"   && TimeDiscretization != "hht_alpha"   && TimeDiscretization != "central_difference"  
      ){
       cout << 
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"          
-          "The flag \033[1;31m-timediscretization\033[0m only accepts \033[1;34mgeneralized-alpha|newmark-beta|hht-alpha|central-difference\033[0m\n"
+          "The flag \033[1;31m-timediscretization\033[0m only accepts \033[1;34mgeneralized_alpha|newmark_beta|hht_alpha|central_difference\033[0m\n"
           "\033[1;31m-timediscretization "<< TimeDiscretization << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";

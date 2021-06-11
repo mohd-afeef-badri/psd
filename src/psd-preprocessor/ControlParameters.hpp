@@ -43,12 +43,12 @@ if(top2vol)
  "// Note that make sure PartX*PartY*PartZ = mpisize                             \n"    
  "//=============================================================================\n";
 
-if(Prblm=="linear-elasticity")
+if(Prblm=="linear_elasticity")
  writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/bar.msh\";                           \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(Prblm=="damage" && Model=="hybrid_phase_field")
  writeIt
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack.msh\";                 \n";
@@ -65,7 +65,7 @@ if(Prblm=="damage" && Model=="Mazar")
 
 if(Prblm=="soildynamics")
  {
- if(doublecouple=="force-based" || doublecouple=="displacement-based" && !top2vol)
+ if(doublecouple=="force_based" || doublecouple=="displacement_based" && !top2vol)
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc.msh\";                      \n";
@@ -90,7 +90,7 @@ if(Prblm=="soildynamics")
 
 
 
-if(Prblm=="linear-elasticity")
+if(Prblm=="linear_elasticity")
  {
 
 
@@ -207,7 +207,7 @@ if(Prblm=="damage")
   "       duimp        ;                                                         \n";
 
 
- if(Model=="hybrid-phase-field")
+ if(Model=="hybrid_phase_field")
   writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -271,7 +271,7 @@ if(Prblm=="elastodynamics")
  "       mu     = 384.6153846  ;           // E=1000. & nu=0.3                  \n"
  "                                                                              \n";
 
- if(TimeDiscretization=="generalized-alpha")
+ if(TimeDiscretization=="generalized_alpha")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -295,7 +295,7 @@ if(Prblm=="elastodynamics")
   "       beta  = (1./4.)*(gamma+0.5)^2     ;                                   \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="newmark-beta")
+ if(TimeDiscretization=="newmark_beta")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -316,7 +316,7 @@ if(Prblm=="elastodynamics")
   "       beta  = (1./4.)*(gamma+0.5)^2     ;                                   \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="central_difference")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -335,7 +335,7 @@ if(Prblm=="elastodynamics")
   "       gamma = 0.5 ;                                                         \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="hht_alpha")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -365,7 +365,7 @@ if(Prblm=="soildynamics")
  {
 
 
- if(doublecouple=="displacement-based" || doublecouple=="force-based" || top2vol)
+ if(doublecouple=="displacement_based" || doublecouple=="force_based" || top2vol)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -412,7 +412,7 @@ if(Prblm=="soildynamics")
   "       cp   = sqrt((lambda+(2.*mu))/rho) ;                                   \n";
 
 
- if(TimeDiscretization=="generalized-alpha")
+ if(TimeDiscretization=="generalized_alpha")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -433,7 +433,7 @@ if(Prblm=="soildynamics")
   "       beta  = (1./4.)*(gamma+0.5)^2     ;                                   \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="newmark-beta")
+ if(TimeDiscretization=="newmark_beta")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -451,7 +451,7 @@ if(Prblm=="soildynamics")
   "       beta  = (1./4.)*(gamma+0.5)^2     ;                                   \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="central_difference")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -467,7 +467,7 @@ if(Prblm=="soildynamics")
   "       gamma = 0.5    ;                                                      \n"
   "                                                                             \n";
 
- if(TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="hht_alpha")
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -559,7 +559,7 @@ if(Prblm=="soildynamics")
    "  int [int]   LoadLabels = [6];                                               \n";
   }
 
- if(doublecouple=="displacement-based" || doublecouple=="force-based"){
+ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
@@ -592,7 +592,7 @@ if(Prblm=="soildynamics")
  "                                                                              \n"; 
  }
 
- if(doublecouple=="displacement-based")
+ if(doublecouple=="displacement_based")
  writeIt
  "                                                                              \n"
  "   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//                       \n"
@@ -602,7 +602,7 @@ if(Prblm=="soildynamics")
  "                                                                              \n"
  "                                                                              \n";
 
- if(doublecouple=="force-based")
+ if(doublecouple=="force_based")
  writeIt
  "                                                                              \n"
  "   macro DcNorthCondition() rho*64.*tanh(8*(t-0.2))*(1.-(tanh(8*(t-0.2)))^2)//\n"
@@ -653,7 +653,7 @@ if(dirichletconditions>=1)
    "  macro  Dbc"<<i<<"Uz 0. //                                                \n";
  }
  
- if(Prblm=="damage" && Model=="hybrid-phase-field"){
+ if(Prblm=="damage" && Model=="hybrid_phase_field"){
  
  
   if(spc==2 && dirichletconditions>=1)

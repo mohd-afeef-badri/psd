@@ -36,7 +36,7 @@ abstract: This document details some tutorials of 'fracture mechanics' module of
 \subsection{Parallel 2D}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
+PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2
 \end{lstlisting}
 
@@ -50,7 +50,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 \subsection{Parallel 3D}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field \
+PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2
 \end{lstlisting}
 
@@ -64,8 +64,8 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
 \subsection{Parallel 2D and calculate reactionforce}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
--dirichletconditions 2 -getreactionforce -reactionforce stress-based
+PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
+-dirichletconditions 2 -getreactionforce -reactionforce stress_based
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
@@ -78,8 +78,8 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field \
--dirichletconditions 2 -getreactionforce -reactionforce stress-based
+PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
+-dirichletconditions 2 -getreactionforce -reactionforce stress_based
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
@@ -88,7 +88,7 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
 
 \subsection{Exercise 1}
 
-Optionally try changing \sh{-reactionforce stress-based} to \sh{-reactionforce variational-based} for changing the method to extract reaction force, note that stress based method is way faster.
+Optionally try changing \sh{-reactionforce stress\_based} to \sh{-reactionforce variational\_based} for changing the method to extract reaction force, note that stress based method is way faster.
 
 \subsection{Exercise 2}
 

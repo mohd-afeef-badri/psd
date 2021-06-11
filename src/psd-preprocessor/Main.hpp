@@ -36,7 +36,7 @@ if(useGFP)if(!energydecomp)
  writeIt
  "  load    \"gofastplugins\"                        // GoFastPlugins Library  \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
  writeIt
  "  load    \"gofastplugins\"                       // GoFastPlugins Library  \n";
 

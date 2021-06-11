@@ -19,7 +19,7 @@ cout << " building VariationalFormulations.edp";
 
 writeHeader;
 
-if(Prblm=="linear-elasticity")
+if(Prblm=="linear_elasticity")
 {
 #include "VariationalFormulation_LinearElasticity.hpp"
 }

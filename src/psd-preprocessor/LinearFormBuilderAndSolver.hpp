@@ -8,7 +8,7 @@ cout << " building LinearFormBuilderAndSolver.edp";
 
 writeHeader;
 
-if(Prblm=="linear-elasticity")
+if(Prblm=="linear_elasticity")
 {
 #include "LinearFormBuilderAndSolver_LinearElasticity.hpp"
 }

@@ -27,11 +27,11 @@ if(spc==2)
  if(!Sequential)writeIt
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
- if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(ParaViewPostProcess || debug)writeIt
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
  "// def0(i)     : macro needed post-processing via paraview                     \n";
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
  writeIt
  "// Sk          : third order strain vector                                     \n";  
  writeIt
@@ -52,12 +52,12 @@ if(spc==2)
  "  macro Ux du  //                                                              \n"
  "  macro Uy du1 //                                                              \n";
 
- if(Prblm=="linear-elasticity" || Prblm=="damage")
+ if(Prblm=="linear_elasticity" || Prblm=="damage")
  writeIt
  "  macro Ux u  //                                                                \n"
  "  macro Uy u1 //                                                                \n";   
     
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && !constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                       \n"
@@ -73,7 +73,7 @@ if(spc==2)
  "                  i ] //                                                        \n"
  "                                                                                \n"; 
  
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                       \n"
@@ -88,13 +88,13 @@ if(spc==2)
  "                     0   ] //                                                   \n"
  "                                                                                \n";   
   
- if(vectorial && Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial && Prblm=="damage" && Model=="hybrid_phase_field")
  if(ParaViewPostProcess || debug)
  writeIt
  "  macro Pltk    P1 //                                                           \n"
  "  macro def0(i) i  //                                                           \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
  writeIt
  "  macro Sk [ P0 ,                                                               \n"
  "             P0 ,                                                               \n"
@@ -224,7 +224,7 @@ if(spc==2)
   }   //-- [if loop terminator] !vectorial ended --//
 
 
- if(Prblm=="damage" && Model=="hybrid-phase-field") 
+ if(Prblm=="damage" && Model=="hybrid_phase_field") 
  if(vectorial && constrainHPF)  
  writeIt
  "                                                                              \n"
@@ -236,7 +236,7 @@ if(spc==2)
  "  macro init  (i)     i                               // Initialize           \n"
  "  macro Zk            P1                              // FE space             \n";
  
- if(Prblm=="damage" && Model=="hybrid-phase-field") 
+ if(Prblm=="damage" && Model=="hybrid_phase_field") 
  if(!vectorial)  
  writeIt
  "                                                                              \n"
@@ -266,7 +266,7 @@ if(spc==2)
 
 
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && !energydecomp)
  writeIt
  "                                                                              \n"
  "//------------------------------Hplus macros-------------------------------   \n"
@@ -279,7 +279,7 @@ if(spc==2)
  "                                                                              \n";
 
 /************************OLD METHOD*************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
+if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-------------------------------\n"
 <<"  macro DecomposeElasticEnergy(Hplus,Hminus,H){                            \n"
@@ -314,7 +314,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 /************************OLD METHOD*************************************************/
 
 /************************OLD METHOD*************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
+if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros----------------------------------//\n"
 <<"                                                                           \n"
@@ -331,7 +331,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n";
 /************************OLD METHOD*************************************************/
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp){
  writeIt
  "                                                                              \n"
  "//------------------------------Hplus macros-------------------------------// \n"
@@ -495,7 +495,7 @@ if(spc==3){
  if(!Sequential)writeIt
  "// partitioner : mesh partitioner to be used use metis, parmetis, or scotch    \n"
  "// dimension   : dimension of the problem 2 or 3 for 2D or 3D                  \n";
- if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(ParaViewPostProcess || debug)
  "// Pltk        : paraview post-processing macro on P1 function possible        \n"
  "// def0(i)     : macro needed post-processing via paraview                     \n";
@@ -518,13 +518,13 @@ if(spc==3){
  "  macro Uy   du1 //                                                            \n"
  "  macro Uz   du2 //                                                            \n";
 
- if(Prblm=="linear-elasticity" || Prblm=="damage")
+ if(Prblm=="linear_elasticity" || Prblm=="damage")
  writeIt
  "  macro Ux    u  //                                                            \n"
  "  macro Uy    u1 //                                                            \n"
  "  macro Uz    u2 //                                                            \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && !constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                      \n"
@@ -544,7 +544,7 @@ if(spc==3){
  "                                                                               \n";  
 
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && constrainHPF) 
  writeIt
  "  macro Pk [ P"<<lag<<" ,                                                      \n"
@@ -560,7 +560,7 @@ if(spc==3){
  "                     i#2 ] //                                                   \n"
  "                                                                                \n"; 
  
- if(vectorial)if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(vectorial)if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(ParaViewPostProcess || debug)
   writeIt
   "  macro Pltk      P1  //                                                      \n"
@@ -570,7 +570,7 @@ if(spc==3){
  writeIt
  "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                     \n";
  
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
   writeIt
   "  macro Sk [ P0 ,                                                             \n"
   "             P0 ,                                                             \n"
@@ -652,7 +652,7 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
  "                       (dy( i ) + dx(i#1))/SQ2 ]        //                     \n"
  "                                                                               \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
+if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt
   "                                                                               \n" 
   "//=============================================================================\n"
@@ -671,7 +671,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
   "  macro init  (i)     i                      //                                \n"
   "  macro Zk            P1                     //                                \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field")  
+if(Prblm=="damage" && Model=="hybrid_phase_field")  
 if(vectorial && constrainHPF)
   writeIt
   "                                                                               \n"
@@ -692,7 +692,7 @@ if(vectorial && constrainHPF)
   "  macro Zk            P1                          //                           \n";   
 
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && !energydecomp)
+if(Prblm=="damage" && Model=="hybrid_phase_field" && !energydecomp)
   writeIt
   "                                                                              \n"
   "//------------------------------Hplus macros-----------------------------//   \n"
@@ -726,7 +726,7 @@ if(Prblm=="damage" && Model=="Mazar")
   "                                                                              \n";
 
 /********************************************************************************
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
+if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)write
 <<"                                                                           \n"
 <<"//------------------------------Hplus macros-----------------------------//\n"
 <<"                                                                           \n"
@@ -754,7 +754,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)write
 <<"                                                                           \n";
 /*******************************************************************************/
 
-if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp){
+if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp){
  writeIt
  "                                                                               \n"
  "//----------------------------Hplus macros---------------------------------//  \n"
@@ -1447,7 +1447,7 @@ if(dirichletpointconditions>=1)
   }  
   
 
-if(doublecouple=="displacement-based" || doublecouple=="force-based"){
+if(doublecouple=="displacement_based" || doublecouple=="force_based"){
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
@@ -1557,7 +1557,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
   "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"  
   "     }//                                                                       \n";
 
-if(doublecouple=="displacement-based")
+if(doublecouple=="displacement_based")
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
@@ -1625,7 +1625,7 @@ if(doublecouple=="displacement-based")
   "  //                                                                           \n"
   "                                                                               \n";
 
-if(doublecouple=="force-based")
+if(doublecouple=="force_based")
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
@@ -1662,7 +1662,7 @@ if(doublecouple=="force-based")
   "       RHS[iW]= CondW;                                                         \n"
   "  //                                                                           \n"
   "                                                                               \n";
-}  // if(doublecouple=="displacement-based" || doublecouple=="force-based") ENDED
+}  // if(doublecouple=="displacement_based" || doublecouple=="force_based") ENDED
 
 }
 
