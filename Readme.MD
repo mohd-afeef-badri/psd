@@ -155,14 +155,14 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-dimension`                | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |                             |           |                                                              |
 | `-mesh`                     | `[sting]` | Provide mesh to be solved by `PSD_Solve`.                    |
-| `-timediscretization`       | `[sting]` | Time discretization type. Use "generalized-alpha" or "newmark-beta" or "hht-alpha" or "central-difference" |
-| `-nonlinearmethod`          | `[sting]` | Nonlinear method type. Use "Picard" or "Newton-Raphsons".    |
+| `-timediscretization`       | `[sting]` | Time discretization type. Use "generalized_alpha" or "newmark_beta" or "hht_alpha" or "central_difference" |
+| `-nonlinearmethod`          | `[sting]` | Nonlinear method type. Use "Picard" or "Newton_Raphsons".    |
 | `-reactionforce`            | `[sting]` | Reaction force calculation method "stress-based" or "variational-based". |
 | `-doublecouple`             | `[sting]` | Soil dynamics double couple. Use "force-based" or "displacement-based". |
 | `-postprocess`              | `[sting]` | To communicate what to postprocess "u", "v", "a", "uv" , "ud", "ua", "d", "ud", or  "uav". |
 | `-partitioner`              | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
-| `-problem`                  | `[sting]` | Interested problem. Use "linear-elasticity", "damage", "elastodynamics", or "soildynamics". |
-| `-model`                    | `[sting]` | Interested model. Use "hybrid-phase-field" or "Mazar".       |
+| `-problem`                  | `[sting]` | Interested problem. Use "linear_elasticity", "damage", "elastodynamics", or "soildynamics". |
+| `-model`                    | `[sting]` | Interested model. Use "hybrid_phase_field" or "Mazar".       |
 
 
 
