@@ -16,7 +16,7 @@ cout << " building FemParameters.edp";
 
 writeHeader;
 
-if(Prblm=="linear-elasticity")
+if(Prblm=="linear_elasticity")
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
@@ -27,7 +27,7 @@ if(Prblm=="linear-elasticity")
  "                                                                              \n"
  "  Vh  def(u)    ;                                                             \n";
 
-if(Prblm=="damage" && Model=="hybrid-phase-field"){
+if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
  if(!vectorial){
 
@@ -43,9 +43,9 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "// phi    :   phase field variable for damage                                 \n"
   "// phiold :   previous iteration phase field variable                         \n"
   "// DZspc  :   Partition of unity for domain decomp. (damage space)            \n";
-  if(reactionforce && reactionforcemethod=="variational-based")writeIt
+  if(reactionforce && reactionforcemethod=="variational_based")writeIt
   "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
-  if(NonLinearMethod=="Newton-Raphson")writeIt
+  if(NonLinearMethod=="Newton_Raphson")writeIt
   "// def2(du) :   displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D \n"
   "// def2(u)  :   previous iteration displacement vector                        \n" 
   "// def2(DPspc) :   Partition of unity for domain decomp. (displacement space) \n"
@@ -77,12 +77,12 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
    "      phiold    ,                                                            \n"
    "      DZspc     ;                                                            \n";
 
-  if(reactionforce && reactionforcemethod=="variational-based")
+  if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
    "                                                                             \n" 
    "  Vh  def2(F)    ;                                                           \n";
 
-  if(NonLinearMethod=="Newton-Raphson")
+  if(NonLinearMethod=="Newton_Raphson")
    writeIt
    "                                                                             \n"   
    "  Vh  def2(du)   ,                                                           \n"
@@ -122,7 +122,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "//                2D and [ux,uy,uz,phi] in 3D                                 \n"
   "// def(uold)  :   previous iteration vectorial displacement-damage vector     \n" 
   "// def(DPspc) :   Partition of unity for domain decomp. (displacement-damage) \n";
-  if(reactionforce && reactionforcemethod=="variational-based")writeIt 
+  if(reactionforce && reactionforcemethod=="variational_based")writeIt 
   "// def(F)  : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
   if(ParaViewPostProcess)writeIt
   "// phi     : Scalar P1 visulization field phi                                 \n";
@@ -140,7 +140,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "      def(uold) ,                                                             \n"
   "      def(DPspc);                                                             \n";
 
-  if(reactionforce && reactionforcemethod=="variational-based")
+  if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
    "                                                                            \n"   
    "  Vh  def(F)    ;                                                           \n";  
@@ -174,7 +174,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "// def2(uold) :   previous iteration vectorial displacement-damage vector     \n" 
   "// def2(DPspc):   Partition of unity for domain decomp. (displacement-damage) \n" 
   "// def2(up)   :   previous iteration vectorial displacement-damage vector     \n";
-  if(reactionforce && reactionforcemethod=="variational-based")writeIt 
+  if(reactionforce && reactionforcemethod=="variational_based")writeIt 
   "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n"; 
   if(ParaViewPostProcess)writeIt
   "// phi     : Scalar P1 visulization field phi                                 \n";   
@@ -194,7 +194,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
   "                                                                              \n"   
   "  Vh  def2(up)    ;                                                           \n";  
 
-  if(reactionforce && reactionforcemethod=="variational-based")
+  if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
    "                                                                            \n"   
    "  Vh  def2(F)    ;                                                          \n";  
@@ -221,7 +221,7 @@ if(Prblm=="damage" && Model=="hybrid-phase-field"){
 if(Prblm=="elastodynamics"  || Prblm=="soildynamics"){
 
 
-if(Model!="pseudo-nonlinear" && Model!="Hujeux")
+if(Model!="pseud_nonlinear" && Model!="Hujeux")
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -241,7 +241,7 @@ if(Model!="pseudo-nonlinear" && Model!="Hujeux")
  "      def(DPspc) ;                                                             \n"
  "                                                                               \n";
 
-if(Model=="pseudo-nonlinear" || Model=="Hujeux" ){
+if(Model=="pseudo_nonlinear" || Model=="Hujeux" ){
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -281,7 +281,7 @@ if(Model=="pseudo-nonlinear" || Model=="Hujeux" ){
 
 }
 
-if(Prblm=="damage" && Model=="hybrid-phase-field"){
+if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
  if(Sequential)
   writeIt

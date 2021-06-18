@@ -11,7 +11,7 @@
 *                                                                                     *
 **************************************************************************************/
 
-    if (argvdummy.find("-") != string::npos && argvdummy != "newmark-beta" && argvdummy != "hybrid-phase-field" && argvdummy != "linear-elasticity" && argvdummy != "generalized-alpha")
+    if (argvdummy.find("-") != string::npos )
       if ( 
            argvdummy != "-dirichletpointconditions" &&
            argvdummy != "-dirichletconditions"      &&

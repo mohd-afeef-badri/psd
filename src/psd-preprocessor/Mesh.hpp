@@ -68,7 +68,7 @@ if(Sequential){
  "                                                                                \n"
  " fespace Vh   ( Th , Pk );                                                      \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -79,7 +79,7 @@ if(Sequential){
  "                                                                                \n"
  " fespace Vh1  ( Th , Zk );                                                      \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -136,7 +136,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Vh     ( Th , Pk );                                                    \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && !vectorial)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -147,7 +147,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Vh1    ( Th , Zk );                                                    \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && energydecomp)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -173,7 +173,7 @@ if(!Sequential){
  " fespace Q3vh   ( Th , Sk );                                                    \n"
  " fespace Q25vh  ( Th , Ik );                                                    \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field" && vectorial)
+ if(Prblm=="damage" && Model=="hybrid_phase_field" && vectorial)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -252,7 +252,7 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(!vectorial) 
   writeIt
   "                                                                                \n"
@@ -299,7 +299,7 @@ if(!Sequential){
   "           init2                // Scalar initilization                         \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && constrainHPF) 
   writeIt
   "                                                                                \n"
@@ -347,7 +347,7 @@ if(!Sequential){
   "           init2                // Scalar initilization                         \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid-phase-field")
+ if(Prblm=="damage" && Model=="hybrid_phase_field")
  if(vectorial && !constrainHPF)  
   writeIt
   "                                                                                \n"

@@ -40,7 +40,7 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal \sh{cd} to the folder \sh{/home/PSD-tutorials/linear-elasticity}. Launch \sh{PSD\_PreProcess} from the terminal, to do so run the following command.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -dirichletconditions 2 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -dirichletconditions 2 \
 -postprocess u
 \end{lstlisting}
  
@@ -49,7 +49,7 @@ After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} f
 \textbf{What do the arguments mean ?}
 
 \begin{itemize}
-\item \sh{-problem linear-elasticity} means that we are solving linear elasticity problem;
+\item \sh{-problem linear\_elasticity} means that we are solving linear elasticity problem;
 \item \sh{-dimension 2} means it is a 2D simulation;
 \item \sh{-dirichletconditions 2} says we have two Dirichlet border;
 \item \sh{-postprocess u} means we would like to have ParaView post processing files.
@@ -81,7 +81,7 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 \caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le-full-clamped}}
 \end{figure}
 
-You are all done with your 2D linear-elasticty simulation. 
+You are all done with your 2D linear-elasticity simulation. 
 
 \subsection{What else should you try to become an advanced user}
 

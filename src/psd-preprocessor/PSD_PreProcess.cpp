@@ -56,21 +56,21 @@
             String type arguments these expect an string after the flag
   -------------------------------------------------------------------------------------
 
-  -timediscretization [string] Time discretization type. Use generalized-alpha|newmark-beta...
+  -timediscretization [string] Time discretization type. Use generalized_alpha|newmark_beta...
   
-  -doublecouple    [string] Soil dynamics double couple. Use force-based|displacement-based.
+  -doublecouple    [string] Soil dynamics double couple. Use force_based|displacement_based.
 
-  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton-Raphsons.
+  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton_Raphsons.
   
-  -reactionforce   [string] Reaction force calculation method stress-based|variational-based.
+  -reactionforce   [string] Reaction force calculation method stress_based|variational_based.
   
   -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
 
-  -problem         [string] Interested problem. Use linear-elasticity|damage|elastodynamics.
+  -problem         [string] Interested problem. Use linear_elasticity|damage|elastodynamics.
 
-  -model           [string] Interested model. Use hybrid-phase-field|Mazar.
+  -model           [string] Interested model. Use hybrid_phase_field|Mazar.
 
   -mesh            [string] Mesh to be used, use a .mesh or .msh mesh.  
 
@@ -95,7 +95,7 @@
 
   -pipegnu      [bool]     To activate realtime pipe plotting using GnuPlot.
 
-  -vectorial    [bool]     To generate vectorial space solver for non-linear.
+  -vectorial    [bool]     To generate vectorial space solver for nonlinear.
 
   -supercomp    [bool]     To be used when using a cluster/supercomputer.
 
@@ -168,17 +168,17 @@ int main(int argc, char *argv[]){
   bool   wrongArgument         = false  ;
   string wrongArgumentWarning  = ""     ;  
 
-  string Model                   = "hybrid-phase-field";
+  string Model                   = "hybrid_phase_field";
   string Solver                  = "cg";
   string PostProcess             = "null";
-  string Prblm                   = "linear-elasticity";
+  string Prblm                   = "linear_elasticity";
   string Partitioner             = "parmetis";
   string doublecouple            = "unused";
   string Preconditioner          = "jacobi";
   string NonLinearMethod         = "Picard";
-  string reactionforcemethod     = "stress-based";  
+  string reactionforcemethod     = "stress_based";  
   string SubPreconditioner       = "ilu";
-  string TimeDiscretization      = "generalized-alpha";
+  string TimeDiscretization      = "generalized_alpha";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -306,8 +306,8 @@ int main(int argc, char *argv[]){
   int labelBodyForce=1;
   int labelDirichlet=2;
   int labelDirichletTraction=2;  
-  if(Prblm=="damage" && Model=="hybrid-phase-field")labelDirichlet=1;
-  if(Prblm=="damage" && Model=="hybrid-phase-field")dirichletbc=true;
+  if(Prblm=="damage" && Model=="hybrid_phase_field")labelDirichlet=1;
+  if(Prblm=="damage" && Model=="hybrid_phase_field")dirichletbc=true;
   if(Prblm=="damage" && Model=="Mazar")dirichletbc=true;
   if(Prblm=="soildynamics")dirichletconditions      = 0;
   int labLface=2;if(spc==3)labLface=1;
@@ -409,7 +409,7 @@ if(!Sequential){
 
 if(versionpsd){
   cout << "  PSD Version 2.1 " << endl; 
-  cout << "    Copyright (C) CEA 2019 - 2020 "<< endl; 
+  cout << "    Copyright (C) CEA 2019 - 2021 "<< endl; 
   cout << "                                                                   " << endl;  
   cout << "    This is free software; see the source for copying conditions.  " << endl;
   cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;

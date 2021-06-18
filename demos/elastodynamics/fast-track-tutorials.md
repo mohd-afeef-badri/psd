@@ -37,7 +37,7 @@ The problem of interest is a single Dirichlet condition (clamped end bar) and tr
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta -postprocess uav
+-timediscretization newmark_beta -postprocess uav
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \sh{bar-dynamic.msh}. 
@@ -63,7 +63,7 @@ The problem of interest is a single Dirichlet condition (clamped end bar) and tr
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta
+-timediscretization newmark_beta
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \sh{bar-dynamic.msh}. 
@@ -79,7 +79,7 @@ To the same problems above Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta -postprocess uav -sequential
+-timediscretization newmark_beta -postprocess uav -sequential
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using the given mesh file \sh{bar-dynamic.msh}. 
@@ -92,11 +92,11 @@ Similarly try out the 3D problem as well.
 
 \subsection{Different time discretization}
 
-PSD offers different time discretization techniques for solving time dependent problems. For this example instead of using Newmark-$\beta$ time  discretization let us switch to more advanced Generalized-$\alpha$ one. This can be done by \sh{-timediscretization generalized-alpha}, so for example for a 2D problem we use:
+PSD offers different time discretization techniques for solving time dependent problems. For this example instead of using Newmark-$\beta$ time  discretization let us switch to more advanced Generalized-$\alpha$ one. This can be done by \sh{-timediscretization generalized\_alpha}, so for example for a 2D problem we use:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization generalized-alpha -postprocess uav
+-timediscretization generalized_alpha -postprocess uav
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file \sh{bar-dynamic.msh}. 
@@ -115,7 +115,7 @@ An example work flow of 2D solver with timelogging:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta -postprocess uav -timelog
+-timediscretization newmark_beta -postprocess uav -timelog
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \sh{bar-dynamic.msh}. 
@@ -162,7 +162,7 @@ There is a preprocess level flag \sh{-debug}, which as the name suggests should 
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta -postprocess uav -timelog -debug
+-timediscretization newmark_beta -postprocess uav -timelog -debug
 \end{lstlisting}
 
 Then to run the problem we need aditional \sh{-wg} flag
@@ -177,7 +177,7 @@ PSD comes with additional set of plugins/functions that are highly optimized for
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark-beta -postprocess uav -useGFP
+-timediscretization newmark_beta -postprocess uav -useGFP
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using, with the given mesh file \sh{bar-dynamic}. 

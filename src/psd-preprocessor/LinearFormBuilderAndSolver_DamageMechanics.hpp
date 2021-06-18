@@ -2,7 +2,7 @@
 // ------ Damage Mechanics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
-if(Model=="hybrid-phase-field"){
+if(Model=="hybrid_phase_field"){
 
 if(Sequential)
  writeIt
@@ -200,7 +200,7 @@ if(reactionforce){
  "                                                                                \n"
  "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
  
- if(reactionforcemethod=="stress-based" && spc==2 )
+ if(reactionforcemethod=="stress_based" && spc==2 )
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
@@ -210,7 +210,7 @@ if(reactionforce){
  "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
  "                                                                                \n";
 
- if(reactionforcemethod=="stress-based" && spc==3)
+ if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
@@ -226,7 +226,7 @@ if(reactionforce){
  "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
  "                                                                                \n"; 
 
- if(reactionforcemethod=="variational-based" && spc==2)
+ if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
@@ -240,7 +240,7 @@ if(reactionforce){
  "  }                                                                             \n"   
  "                                                                                \n";
  
- if(reactionforcemethod=="variational-based" && spc==3)
+ if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
@@ -357,7 +357,7 @@ if(debug)
 
 
 
-if(Sequential)if(NonLinearMethod=="Newton-Raphson"){
+if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  writeIt
  "                                                                                \n"
  "  real TractionTotal=tr;                                                        \n"
@@ -527,7 +527,7 @@ if(reactionforce){
  "                                                                                \n"
  "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
  
- if(reactionforcemethod=="stress-based" && spc==2 )
+ if(reactionforcemethod=="stress_based" && spc==2 )
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
@@ -537,7 +537,7 @@ if(reactionforce){
  "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
  "                                                                                \n";
 
- if(reactionforcemethod=="stress-based" && spc==3)
+ if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
@@ -553,7 +553,7 @@ if(reactionforce){
  "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
  "                                                                                \n"; 
 
- if(reactionforcemethod=="variational-based" && spc==2)
+ if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
@@ -567,7 +567,7 @@ if(reactionforce){
  "  }                                                                             \n"   
  "                                                                                \n";
  
- if(reactionforcemethod=="variational-based" && spc==3)
+ if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  A = varfForce(Vh,Vh,solver=CG,sym=1);                                         \n"
@@ -971,7 +971,7 @@ if(reactionforce){
  "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
  "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
  
- if(reactionforcemethod=="stress-based" && spc==2)
+ if(reactionforcemethod=="stress_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
@@ -982,7 +982,7 @@ if(reactionforce){
  "                                                                                \n"
  "                                                                                \n"; 
 
- if(reactionforcemethod=="stress-based" && spc==3)
+ if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
@@ -1002,7 +1002,7 @@ if(reactionforce){
  "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
  "                                                                                \n";  
 
- if(reactionforcemethod=="variational-based" && spc==2)
+ if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
@@ -1016,7 +1016,7 @@ if(reactionforce){
  "  }                                                                             \n"  
  "                                                                                \n";
  
- if(reactionforcemethod=="variational-based" && spc==3)
+ if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
@@ -1223,7 +1223,7 @@ if(debug)if(vectorial)
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(!Sequential)if(NonLinearMethod=="Newton-Raphson"){
+if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  writeIt
  "                                                                                \n"
  "real TractionTotal=tr;                                                          \n"
@@ -1543,7 +1543,7 @@ if(reactionforce){
  "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
  "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
  
- if(reactionforcemethod=="stress-based" && spc==2)
+ if(reactionforcemethod=="stress_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
@@ -1554,7 +1554,7 @@ if(reactionforce){
  "                                                                                \n"
  "                                                                                \n"; 
 
- if(reactionforcemethod=="stress-based" && spc==3)
+ if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
@@ -1574,7 +1574,7 @@ if(reactionforce){
  "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
  "                                                                                \n";  
 
- if(reactionforcemethod=="variational-based" && spc==2)
+ if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
  "                                                                                \n"
  "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"
@@ -1588,7 +1588,7 @@ if(reactionforce){
  "  }                                                                             \n"  
  "                                                                                \n";
  
- if(reactionforcemethod=="variational-based" && spc==3)
+ if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
  "  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;                           \n"

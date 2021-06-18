@@ -56,7 +56,7 @@ check-linear-elasticity:
 	@echo " Sequential 2D linear-elasticity"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity.log && \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity.log
 	@echo ""
@@ -64,7 +64,7 @@ check-linear-elasticity:
 	@echo " Sequential 3D linear-elasticity"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity.log && \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity.log
 	@echo ""
@@ -72,7 +72,7 @@ check-linear-elasticity:
 	@echo " Sequential 2D linear-elasticity with material tensor"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_withmaterialtensor.log && \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_withmaterialtensor.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_withmaterialtensor.log
 	@echo ""
@@ -80,7 +80,7 @@ check-linear-elasticity:
 	@echo " Sequential 3D linear-elasticity with material tensor"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_withmaterialtensor.log && \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_withmaterialtensor.log && \
 	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_withmaterialtensor.log
 	@echo ""
@@ -88,7 +88,7 @@ check-linear-elasticity:
 	@echo " Parallel 2D linear-elasticity"
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel.log && \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel.log
@@ -97,7 +97,7 @@ check-linear-elasticity:
 	@echo " Parallel 3D linear-elasticity"
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel.log && \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel.log
@@ -106,7 +106,7 @@ check-linear-elasticity:
 	@echo " Parallel 2D linear-elasticity with material tensor"
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_withmaterialtensor.log && \
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_withmaterialtensor.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_withmaterialtensor.log
@@ -115,7 +115,7 @@ check-linear-elasticity:
 	@echo " Parallel 3D linear-elasticity with material tensor"
 	@echo "*============================================================*"
 	@echo ""	
-	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_withmaterialtensor.log && \
+	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_withmaterialtensor.log && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel_withmaterialtensor.log
@@ -133,7 +133,7 @@ check-fracture-mechanics:
 	@echo " Sequential 2D phase-field fracture"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics.log
@@ -142,7 +142,7 @@ check-fracture-mechanics:
 	@echo " Sequential 3D phase-field fracture"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_fracture-mechanics.log
@@ -151,7 +151,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -161,7 +161,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -171,7 +171,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -crackdirichletcondition -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -crackdirichletcondition -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -181,7 +181,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -191,7 +191,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -201,7 +201,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -211,7 +211,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_Parallel_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -221,7 +221,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_Parallel_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -231,7 +231,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture vectorial"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -241,7 +241,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture vectorial"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -251,7 +251,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -crackdirichletcondition -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -261,7 +261,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -271,7 +271,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress-based -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress_based -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -281,7 +281,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress-based -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress_based -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -291,7 +291,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture vectorial with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_vectorial_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -301,7 +301,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture vectorial with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_vectorial_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -311,7 +311,7 @@ check-fracture-mechanics:
 	@echo " Sequential 2D phase-field fracture energydecomp "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
@@ -321,7 +321,7 @@ check-fracture-mechanics:
 	@echo " Sequential 3D phase-field fracture energydecomp "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
@@ -331,7 +331,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -342,7 +342,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture energydecomp "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -353,7 +353,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -364,7 +364,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture energydecomp with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -375,7 +375,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -386,7 +386,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture mechanics energydecomp with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -397,7 +397,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -408,7 +408,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture energydecomp with reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -419,7 +419,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -430,7 +430,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture energydecomp vectorial"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -441,7 +441,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -452,7 +452,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture energydecomp vectorial with reaction-force"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -463,7 +463,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture energydecomp vectorial with reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -474,7 +474,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with energydecomp vectorial reaction-force (stress-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce stress-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce stress_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -485,7 +485,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with energydecomp vectorial reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_variational-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -496,7 +496,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with energydecomp vectorial reaction-force (variational-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce variational-based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -energydecomp -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_energydecomp_Parallel_vectorial_reaction-force_stress-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -507,7 +507,7 @@ check-fracture-mechanics:
 	@echo " Sequential 2D phase-field fracture with GFP"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -518,7 +518,7 @@ check-fracture-mechanics:
 	@echo " Sequential 3D phase-field fracture with GFP"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -sequential -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -529,7 +529,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with GFP"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -540,7 +540,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with GFP"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -551,7 +551,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with GFP vectoiral"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel_vectoiral.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel_vectoiral.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -562,7 +562,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with GFP vectoiral"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel_vectoiral.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -vectorial -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel_vectoiral.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -573,7 +573,7 @@ check-fracture-mechanics:
 	@echo " Sequential 2D phase-field fracture with GFP energydecomp"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -energydecomp -sequential -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_energydecomp.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -energydecomp -sequential -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -584,7 +584,7 @@ check-fracture-mechanics:
 	@echo " Sequential 3D phase-field fracture with GFP energydecomp"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -energydecomp -sequential -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_energydecomp.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -energydecomp -sequential -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -595,7 +595,7 @@ check-fracture-mechanics:
 	@echo " Parallel 2D phase-field fracture with GFP energydecomp"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel_energydecomp.log && \
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-2D_fracture-mechanics_GFP_Parallel_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -606,7 +606,7 @@ check-fracture-mechanics:
 	@echo " Parallel 3D phase-field fracture with GFP energydecomp"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem damage -model hybrid-phase-field -dirichletconditions 2 -useGFP -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel_energydecomp.log && \
+	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -useGFP -energydecomp -crackdirichletcondition -testflags > PSD_PreProcess-3D_fracture-mechanics_GFP_Parallel_energydecomp.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
@@ -725,7 +725,7 @@ check-Soildynamics:
 	@echo " Parallel 2D Soildynamics with doublecouple (displacement-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark-beta -useGFP -doublecouple displacement-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_displacement-based.log && \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark_beta -useGFP -doublecouple displacement_based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_displacement-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -737,7 +737,7 @@ check-Soildynamics:
 	@echo " Parallel 2D Soildynamics with doublecouple (force-based)"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark-beta -useGFP -doublecouple force-based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_force-based.log && \
+	./PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark_beta -useGFP -doublecouple force_based -testflags > PSD_PreProcess-2D_soildynamics_Parallel_doublecouple_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -749,7 +749,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_force-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta -useGFP -top2vol-meshing -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -761,7 +761,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top-ii-vol meshing "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple force-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta -useGFP -top2vol-meshing -doublecouple force_based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
@@ -773,7 +773,7 @@ check-Soildynamics:
 	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top-ii-vol meshing"
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark-beta -useGFP -top2vol-meshing -doublecouple displacement-based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log && \
+	./PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta -useGFP -top2vol-meshing -doublecouple displacement_based -testflags > PSD_PreProcess-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log && \
 	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/t += dt;/break;/g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \

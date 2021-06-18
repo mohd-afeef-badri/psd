@@ -67,19 +67,19 @@ You can either solver the problem using vectorial approach (recommended) or usin
 \textbf{Generation of solver (vectorial)}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
+PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
 -energydecomp -constrainHPF -vectorial -getreactionforce -plotreactionforce \
--reactionforce variational-based
+-reactionforce variational_based
 \end{lstlisting}
 
 \textbf{Generating solver (staggered)}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem damage -model hybrid-phase-field \
+PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
 -energydecomp -constrainHPF -getreactionforce -plotreactionforce \
--reactionforce variational-based
+-reactionforce variational_based
 \end{lstlisting}
 
 
