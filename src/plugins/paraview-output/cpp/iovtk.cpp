@@ -2223,7 +2223,7 @@ class VTK_WriteMesh_Op : public E_F0mps {
     int ddim = 2;
     int stsize = 3;
     int sca = 0, vec = 0, ten = 0;
-    string scas("scalaire");
+    string scas("scalar");
     string vecs("vector");
     string tens("tensor");
 
@@ -4144,7 +4144,7 @@ class VTK_WriteMesh3_Op : public E_F0mps {
     int ddim = 3;
     int stsize = 6;
     int sca = 0, vec = 0, ten = 0;
-    string scas("scalaire");
+    string scas("scalar");
     string vecs("vector");
     string tens("tensor");
 
@@ -4182,7 +4182,7 @@ class VTK_WriteMesh3_Op : public E_F0mps {
         // cout << "taille" << a0->size() << endl;
         if (a0->size( ) != ddim && a0->size( ) != stsize) {
           CompileError(
-            "savesol in 3D: vector solution is 3 composant, tensor solution is 6 composant");
+            "savesol in 3D: vector solution is 3 components, tensor solution is 6 components");
         }
 
         if (a0->size( ) == ddim) {
