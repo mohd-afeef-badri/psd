@@ -149,7 +149,7 @@ if(!Sequential){
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                     )<<
  "                                                                                \n";
 
-if(doublecouple=="displacement-based" || doublecouple=="force-based"){
+if(doublecouple=="displacement_based" || doublecouple=="force_based"){
 
 
  if(!pointprobe) 
@@ -185,7 +185,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based"){
  "   );                                                                           \n"
  "                                                                                \n";
 
-if(doublecouple=="displacement-based")
+if(doublecouple=="displacement_based")
  writeIt
  "                                                                                \n"
  "   ApplyDoubleCoupleToA(                                                        \n"
@@ -287,14 +287,14 @@ if(doublecouple=="unused")
 
 
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
  "  //---------update nonlinear displacement-----------//                         \n"
  "                                                                                \n"
  "  uNL[] = uold[];                                                               \n"
  "                                                                                \n"
- "  for (int k=0; k<5; k++){  // pseudo-nonlinear NR loop                         \n"
+ "  for (int k=0; k<5; k++){  // pseudo_nonlinear NR loop                         \n"
  "                                                                                \n";
 
 if(Model=="Hujeux")
@@ -317,7 +317,7 @@ if(Model=="Hujeux")
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                        )<<
  "                                                                                \n";
 
-if(doublecouple=="displacement-based" || doublecouple=="force-based" )
+if(doublecouple=="displacement_based" || doublecouple=="force_based" )
  writeIt
  "                                                                                 \n"
 <<(timelog ? "  timerbegin(\"Applying double couple b\",t0)\n"  : ""             )<<
@@ -340,7 +340,7 @@ if(doublecouple=="displacement-based" || doublecouple=="force-based" )
  "                                                                                \n";
 
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
  "  //---------update Nonlinear displacement-----------//                         \n"

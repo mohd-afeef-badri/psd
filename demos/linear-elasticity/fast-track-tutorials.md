@@ -42,7 +42,7 @@ abstract: This document details some tutorials of 'linear elasticity' module of 
 The problem of interest is a single Dirichlet condition (clamped end 2D bar) and body force source term (see, figure~\ref{2dbar-le}). Additionally postrocessing is demanded for displacement $u$. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u
 \end{lstlisting}
 
@@ -66,7 +66,7 @@ Using ParaView for postprocessing the results that are provided in the \sh{VTUs.
 The problem of interest is a single Dirichlet condition (clamped end 3D bar) and body force source term. Additionally postrocessing is demanded for displacement $u$. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 3 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u
 \end{lstlisting}
 
@@ -90,7 +90,7 @@ Using ParaView for postprocessing the results that are provided in the \sh{VTUs.
 To the same problems above Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve}. So the work flow for the 2D problem would be:
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -sequential
 \end{lstlisting}
 
@@ -109,7 +109,7 @@ PSD provides mean to time log your solver via \sh{-timelog} flag. What this will
 An example work flow of 2D solver with timelogging:
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -timelog
 \end{lstlisting}
 
@@ -145,11 +145,11 @@ for splitting each triangle of the mesh  \sh{bar.msh} into 4.
 There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -timelog -debug
 \end{lstlisting}
 
-Then to run the problem we need aditional \sh{-wg} flag
+Then to run the problem we need traditional \sh{-wg} flag
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
@@ -157,14 +157,14 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
 
 \subsection{Exercise  3}
 
-There is a preprocess level flag \sh{-withmaterialtensor}, which introduces the full material tensor into the finite element variational formulation. You are encouraged to use this flag and see how the sollver performs.
+There is a preprocess level flag \sh{-withmaterialtensor}, which introduces the full material tensor into the finite element variational formulation. You are encouraged to use this flag and see how the solver performs.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -timelog -withmaterialtensor
 \end{lstlisting}
 
-Then to run the problem we need aditional \sh{-wg} flag
+Then to run the problem we need additional \sh{-wg} flag
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0

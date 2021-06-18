@@ -4,7 +4,12 @@
 <h3 id="added">Added</h3>
 <h3 id="changed">Changed</h3>
 <ul>
+<li>Flag values now donot contain hyphens '-' use underscore instead '_', e.g, <code>linear-elasticity</code> is now <code>linear_elasticity</code></li>
+<li>4 CPU procs are now used for <code>make check</code>, user can control this by <code>make check NP=USER_PROCS</code>.</li>
+<li>Moved to FreeFEM 4.9 and PETSc 3.15.0 .</li>
 <li>Moved to GitLab for hosting the repository.</li>
+<li>New checks for wrong flag. Now if wrong flag or values is entered PSD will give error.</li>
+<li>Boolean flags now also accept value 1|0|yes|no|on|off|true|false for truning on or off.</li>
 </ul>
 <h3 id="removed">Removed</h3>
 <h2 id="section"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1">2.1</a> - 2021-01-27</h2>
@@ -35,7 +40,7 @@
 </ul>
 <h3 id="bugs-removed">Bugs removed</h3>
 <ul>
-<li>Stain vector inccorect numbering in split fuction of GFP</li>
+<li>Stain vector incorrect numbering in split function of GFP</li>
 </ul>
 <p>( see hash <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&amp;h=5ec7b882494f71984d07f468b518ec886e942d32">5ec7b882494f71984d07f468b518ec886e942d32</a>)</p>
 <ul>

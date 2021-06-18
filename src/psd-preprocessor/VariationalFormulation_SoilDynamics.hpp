@@ -23,7 +23,7 @@ writeIt
 "    + (def(vold)'*def(v))*c[3]                                                                  \n"
 "    + (def(aold)'*def(v))*c[4]                                                                  \n";
 
-if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+if(TimeDiscretization=="generalized_alpha" || TimeDiscretization=="hht_alpha")
  writeIt
  "    - (divergence(uold)*divergence(v))*c[5]                                                    \n"
  "    - (epsilon(uold)'*epsilon(v))*c[6]                                                         \n";
@@ -97,7 +97,7 @@ if(doublecouple=="unused"){
  "  )*/                                                                                           \n"; 
 }
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                                \n"
  "    - intN(Th,qforder=3)                                                                        \n"

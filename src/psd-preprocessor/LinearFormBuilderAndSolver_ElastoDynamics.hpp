@@ -19,10 +19,10 @@ if(tractionconditions>=1){
  writeIt
  "  //--------------tt update for loading--------------//                         \n"
  "                                                                                \n"; 
- if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="generalized_alpha" || TimeDiscretization=="hht_alpha")
  writeIt
  "  tt  = t-real(alpf*dt);                                                        \n";
- if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="newmark_beta" || TimeDiscretization=="central_difference")
  writeIt
  "  tt  = t-dt;                                                                   \n";
 }
@@ -209,11 +209,11 @@ if(tractionconditions>=1){
  writeIt
  "  //--------------tt update for loading--------------//                         \n"
  "                                                                                \n"; 
- if(TimeDiscretization=="generalized-alpha" || TimeDiscretization=="hht-alpha")
+ if(TimeDiscretization=="generalized_alpha" || TimeDiscretization=="hht_alpha")
  writeIt
  
  "  tt  = t-real(alpf*dt);                                                        \n";
- if(TimeDiscretization=="newmark-beta" || TimeDiscretization=="central-difference")
+ if(TimeDiscretization=="newmark_beta" || TimeDiscretization=="central_difference")
  writeIt 
  "  tt  = t-dt;                                                                   \n";
 }
@@ -231,7 +231,7 @@ if(tractionconditions>=1){
 <<(timelog ? "  timerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
  "                                                                                \n";
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
  "  //---------update Nonlinear displacement-----------//                         \n"

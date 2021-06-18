@@ -37,7 +37,7 @@ if(Sequential)if(Prblm=="elastodynamics")
  "     system(\"echo \\\"Elasto-dynamics\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
  "\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
 
-if(!Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(!Sequential)if(Prblm=="damage" && Model=="hybrid_phase_field")
  writeIt
  "  if(mpirank==0){                                                               \n"
  "     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
@@ -45,13 +45,13 @@ if(!Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")
  "\\t\"+mpisize+\"\\\" >>simulation-log.csv\");                                           \n"
  "  }                                                                             \n";
 
-if(Sequential)if(Prblm=="damage" && Model=="hybrid-phase-field")
+if(Sequential)if(Prblm=="damage" && Model=="hybrid_phase_field")
  writeIt
  "     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n"
  "     system(\"echo \\\"Phase-field\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
  "\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
 
-if(!Sequential)if(Prblm=="linear-elasticity"){
+if(!Sequential)if(Prblm=="linear_elasticity"){
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"

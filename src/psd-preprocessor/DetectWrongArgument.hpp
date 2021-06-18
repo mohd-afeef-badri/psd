@@ -11,7 +11,7 @@
 *                                                                                     *
 **************************************************************************************/
 
-    if (argvdummy.find("-") != string::npos)
+    if (argvdummy.find("-") != string::npos )
       if ( 
            argvdummy != "-dirichletpointconditions" &&
            argvdummy != "-dirichletconditions"      &&

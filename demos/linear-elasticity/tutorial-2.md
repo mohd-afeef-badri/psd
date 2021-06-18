@@ -41,7 +41,7 @@ First step in a PSD simulation is PSD preprocessing , at this step you tell PSD 
 In the terminal \sh{cd} to the folder \sh{/home/PSD-tutorials/linear-elasticity}. Launch \sh{PSD\_PreProcess} from the terminal, to do so run the following command.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 2 -postprocess u
 \end{lstlisting}
 
@@ -50,7 +50,7 @@ After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} f
 \textbf{What do the arguments mean ?}
 
 \begin{itemize}
-\item \sh{-problem linear-elasticity} means that we are solving linear elasticity problem;
+\item \sh{-problem linear\_elasticity} means that we are solving linear elasticity problem;
 \item \sh{-dimension 2} means it is a 2D simulation;
 \item \sh{-bodyforceconditions 1} with applied body force acting on the domain;
 \item \sh{-dirichletconditions 2} says we have two Dirichlet border;
@@ -87,7 +87,7 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 \end{figure}
 
 
-You are all done with your 2D linear-elasticty simulation.
+You are all done with your 2D linear-elasticity simulation.
 
 
 
@@ -102,7 +102,7 @@ Optionally try using \sh{-withmaterialtensor} flag with \sh{PSD\_PreProcess} , a
 Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve} and no \sh{-np} flag.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 2 -sequential \
+PSD_PreProcess -problem linear_elasticity -dimension 2 -sequential \
 -bodyforceconditions 1 -dirichletconditions 2 -postprocess u
 \end{lstlisting}
 
@@ -125,7 +125,7 @@ for splitting each triangle of the mesh  \sh{bar.msh} into 4.
 There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 3 -bodyforceconditions 1 \
 -dirichletconditions 2 -postprocess u -timelog -debug
 \end{lstlisting}
 
@@ -140,7 +140,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0 -wg
 There is a preprocess level flag \sh{-withmaterialtensor}, which introduces the full material tensor into the finite element variational formulation. You are encouraged to use this flag and see how the sollver performs.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -problem linear-elasticity -dimension 3 -bodyforceconditions 1 \
+PSD_PreProcess -problem linear_elasticity -dimension 3 -bodyforceconditions 1 \
 -dirichletconditions 2 -postprocess u -timelog -withmaterialtensor
 \end{lstlisting}
 
