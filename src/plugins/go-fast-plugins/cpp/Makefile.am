@@ -10,6 +10,7 @@ all-local: gofastplugins.so
 
 gofastplugins.so: gofastplugins.cpp
 	$(FFCXX) -auto gofastplugins.cpp
+#	$(FFCXX) -auto -mpi gofastplugins.cpp -Wl,-rpath,/home/mb258512/Install/local/ff-petsc/r/lib '-L/home/mb258512/Install/local/ff-petsc/r/lib' '-lflapack' '-lfblas'
 	@echo ""	
 
 install-exec-local:
