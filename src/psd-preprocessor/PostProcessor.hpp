@@ -81,7 +81,7 @@ if(!Sequential)if(Prblm=="linear_elasticity"){
 
 }  //-- [if loop terminator] !Sequential ended --//
 
-if(Sequential)if(Prblm=="linear-elasticity"){
+if(Sequential)if(Prblm=="linear_elasticity"){
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
