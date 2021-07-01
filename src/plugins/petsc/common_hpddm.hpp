@@ -423,7 +423,7 @@ void addArray() {
     map_type_of_map[make_pair(atype<long>(), atype<Op*>())] = atype<KN<Op>*>();
 }
 
-void parallelIO(string*& name, MPI_Comm* const& comm, bool const& append) {
+void parallelIO(string*& name, MPI_Comm* const& comm, bool const& append, int* tPvd, int* mpiSize, std::string* baseFilename) {
     std::string base_filename(*name);
     std::string::size_type p(base_filename.find_last_of('.'));
     std::string file_without_extension = base_filename.substr(0, p);
@@ -465,50 +465,9 @@ void parallelIO(string*& name, MPI_Comm* const& comm, bool const& append) {
     }
     str[0] << std::setw(4) << std::setfill('0') << T;
     *name = file_without_extension + "_" + (size > 1 ? str[2].str() + "_" : "") + str[0].str() + (size > 1 ? "_" + str[1].str() : "") + "." + extension;
-
-    if(rank == 0) {
-        pvd.open(file_without_extension + (size > 1 ? "_" + str[2].str() : "") + ".pvd");
-        pvd << "<?xml version=\"1.0\"?>\n";
-        pvd << "<VTKFile T=\"" << T << "\" type=\"Collection\" version=\"0.1\"\n";
-        pvd << "         byte_order=\"LittleEndian\"\n";
-        pvd << "         compressor=\"vtkZLibDataCompressor\">\n";
-        pvd << "  <Collection>\n";
-        for(int t = 0; t < T + 1; ++t){
-            pvtu.open(file_without_extension + "_" + str[0].str() +".pvtu");
-            pvtu << "<?xml version=\"1.0\"?>\n";
-            pvtu << "<VTKFile type=\"PUnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n";
-            pvtu << "  <PUnstructuredGrid GhostLevel=\"0\">\n";
-            pvtu << "    <PPointData>\n";
-            pvtu << "    </PPointData>\n";
-            pvtu << "    <PCellData>\n";
-            pvtu << "      <PDataArray type=\"Int32\" Name=\"Label\"/>\n";            
-            pvtu << "    </PCellData>\n";
-            pvtu << "    <PPoints>\n";
-            pvtu << "      <PDataArray type=\"Float32\" NumberOfComponents=\"3\" Name=\"Points\"/>\n";            
-            pvtu << "    </PPoints>\n";           
-            for(int i = 0; i < size; ++i) {
-                pvd << "    <DataSet timestep=\"" << t << "\" group=\"\" part=\"" << i << "\"\n";
-                pvd << "             file=\"";
-                pvd << base_filename << "_";
-                if(size > 1) pvd << str[2].str() + "_";
-                pvd << std::setw(4) << std::setfill('0') << t;
-                if(size > 1) pvd << "_" << std::setw(str[2].str().length()) << std::setfill('0') << i;
-                pvd << "." << std::setw(0) << extension << "\"/>\n";
-                
-                pvtu << "    <Piece Source=\"";
-                pvtu << base_filename << "_";
-                if(size > 1) pvtu << str[2].str() + "_";
-                pvtu << std::setw(4) << std::setfill('0') << t;
-                if(size > 1) pvtu << "_" << std::setw(str[2].str().length()) << std::setfill('0') << i;
-                pvtu << "." << std::setw(0) << extension << "\"/>\n";                
-            }
-        pvd << "  </Collection>\n";
-        pvd << "</VTKFile>\n";           
-        pvtu << "  </PUnstructuredGrid>\n";
-        pvtu << "</VTKFile>\n";          
-        }
-    } 
-    
+    *tPvd          = T;                          // Time for pvd file
+    *mpiSize       = size;                       // MPI size
+    *baseFilename  = file_without_extension;     // File name without extension
 }
 
 long periodicity(Matrice_Creuse<double>* const& R, KN< KN< long > >* const& interaction, KN< double >* const& D) {
