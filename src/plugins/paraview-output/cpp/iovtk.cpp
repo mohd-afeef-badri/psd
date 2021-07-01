@@ -326,7 +326,7 @@ void VTU_PIECE(FILE *fp, const int &nv, const int &nc) {
 
 
 //---------------------------------------------------------------//
-//  A function to output .pvtu file for parallel ParaView usage.  
+//  A function to output .pvtu file for parallel ParaView usage.
 //  Note that use this function only when  PETSc/Hpddm is used.
 //---------------------------------------------------------------//
 void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const string basVtuFileName, const string CellDataArrayForPvtu,const string PointDataArrayForPvtu  ){
@@ -350,7 +350,7 @@ void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const 
             "    </PPointData>\n"
             "    <PCellData>\n"
             "      <PDataArray type=\"Int32\" Name=\"Label\"/>\n"           
-            ""+ CellDataArrayForPvtu +""    
+            ""+ CellDataArrayForPvtu +""
             "    </PCellData>\n"
             "    <PPoints>\n"
             "      <PDataArray type=\"Float32\" NumberOfComponents=\"3\" Name=\"Points\"/>\n"
@@ -374,10 +374,10 @@ void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const 
 
 
 //---------------------------------------------------------------//
-//  A function to output .pvd file for timeseries ParaView usage.  
+//  A function to output .pvd file for timeseries ParaView usage.
 //  Note that use this function only when  PETSc/Hpddm is used.
 //---------------------------------------------------------------//
-void PvdWriter( string*& pffname , const int mpiSize, const int timePvd, const string basVtuFileName, const string CellDataArrayForPvtu,const string PointDataArrayForPvtu  ){
+void PvdWriter( string*& pffname, const int mpiSize, const int timePvd, const string basVtuFileName, const string CellDataArrayForPvtu, const string PointDataArrayForPvtu  ){
  
   std::string ProcZero = "_0.vtu";                            // This will indicate if Proc is 0
   std::string fullFileName(*pffname);                         
@@ -407,7 +407,7 @@ void PvdWriter( string*& pffname , const int mpiSize, const int timePvd, const s
       if(mpiSize > 1) 
         pvd << to_string(mpiSize) + "_";
         
-      pvd << std::setw(4) << std::setfill('0') << t;        
+      pvd << std::setw(4) << std::setfill('0') << t;
       pvd <<".pvtu\"/>\n";
     }
     
@@ -3044,16 +3044,15 @@ AnyType VTK_WriteMesh_Op::operator( )(Stack stack) const {
       for (int ii = 0; ii < nbofsol; ii++) {
         if (order[ii] == 0) {
           if (datasize == sizeof(float)) {
-
 #ifdef COMMON_HPDDM_PARALLEL_IO            
-	    CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float32\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
+            CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float32\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
 #endif
             VTU_DATA_ARRAY(fp, "Float32", nameofuser[ii], l[ii].nbfloat, binary);       
-            l[ii].writesolutionP0_float(fp, Th, stack, surface, binary, swap, 1);	    
+            l[ii].writesolutionP0_float(fp, Th, stack, surface, binary, swap, 1);    
           } else if (datasize == sizeof(double)) {
 #ifdef COMMON_HPDDM_PARALLEL_IO                      
-	    CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\""+ to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
-#endif 	              
+            CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\""+ to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
+#endif
             VTU_DATA_ARRAY(fp, "Float64", nameofuser[ii], l[ii].nbfloat, binary);
             l[ii].writesolutionP0_double(fp, Th, stack, surface, binary, swap, 1);
           }
@@ -3070,16 +3069,16 @@ AnyType VTK_WriteMesh_Op::operator( )(Stack stack) const {
       for (int ii = 0; ii < nbofsol; ii++) {
         if (order[ii] == 1) {
           if (datasize == sizeof(float)) {
-            VTU_DATA_ARRAY(fp, "Float32", nameofuser[ii], l[ii].nbfloat, binary);
 #ifdef COMMON_HPDDM_PARALLEL_IO             
-	    PointDataArrayForPvtu = PointDataArrayForPvtu + "      <PDataArray type=\"Float32\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
-#endif	    
+            PointDataArrayForPvtu = PointDataArrayForPvtu + "      <PDataArray type=\"Float32\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
+#endif          
+            VTU_DATA_ARRAY(fp, "Float32", nameofuser[ii], l[ii].nbfloat, binary);
             l[ii].writesolutionP1_float(fp, Th, stack, binary, swap, 1);
           } else if (datasize == sizeof(double)) {
-            VTU_DATA_ARRAY(fp, "Float64", nameofuser[ii], l[ii].nbfloat, binary);
 #ifdef COMMON_HPDDM_PARALLEL_IO            
-	    PointDataArrayForPvtu = PointDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
-#endif	    
+            PointDataArrayForPvtu = PointDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
+#endif          
+            VTU_DATA_ARRAY(fp, "Float64", nameofuser[ii], l[ii].nbfloat, binary);
             l[ii].writesolutionP1_double(fp, Th, stack, binary, swap, 1);
           }
 
@@ -4939,7 +4938,7 @@ AnyType VTK_WriteMesh3_Op::operator( )(Stack stack) const {
         }
       }
     }
-  } else if (VTK_FILE == 2) {	  
+  } else if (VTK_FILE == 2) {
     VTU_WRITE_MESH(fp, Th, binary, datasize, surface);
     // Solution Order
     // order 0
@@ -4955,7 +4954,7 @@ AnyType VTK_WriteMesh3_Op::operator( )(Stack stack) const {
           } else if (datasize == sizeof(double)) {
             VTU_DATA_ARRAY(fp, "Float64", nameofuser[ii], l[ii].nbfloat, binary);
 #ifdef COMMON_HPDDM_PARALLEL_IO            
-            CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";            
+            CellDataArrayForPvtu = CellDataArrayForPvtu + "      <PDataArray type=\"Float64\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
 #endif
             l[ii].writesolutionP0_double(fp, Th, stack, surface, binary, swap, 1);
           }
@@ -4972,7 +4971,7 @@ AnyType VTK_WriteMesh3_Op::operator( )(Stack stack) const {
       for (int ii = 0; ii < nbofsol; ii++) {
         if (order[ii] == 1) {
           if (datasize == sizeof(float)) {
-#ifdef COMMON_HPDDM_PARALLEL_IO            
+#ifdef COMMON_HPDDM_PARALLEL_IO
             PointDataArrayForPvtu = PointDataArrayForPvtu + "      <PDataArray type=\"Float32\" NumberOfComponents=\"" + to_string(l[ii].nbfloat) +"\" Name=\"" +nameofuser[ii]+"\"/>\n";
 #endif
             VTU_DATA_ARRAY(fp, "Float32", nameofuser[ii], l[ii].nbfloat, binary);
@@ -4989,7 +4988,7 @@ AnyType VTK_WriteMesh3_Op::operator( )(Stack stack) const {
         }
       }
       
-      ENDTYPE_VTU(fp, "PointData");            
+      ENDTYPE_VTU(fp, "PointData");
     }
 
     ENDTYPE_VTU(fp, "Piece");
@@ -4997,7 +4996,7 @@ AnyType VTK_WriteMesh3_Op::operator( )(Stack stack) const {
     ENDTYPE_VTU(fp, "VTKFile");
     
 #ifdef COMMON_HPDDM_PARALLEL_IO
-    PvtuWriter(pffname,mpiSize,timePvd,basVtuFileName, CellDataArrayForPvtu, PointDataArrayForPvtu );  
+    PvtuWriter(pffname,mpiSize,timePvd,basVtuFileName, CellDataArrayForPvtu, PointDataArrayForPvtu );
     PvdWriter(pffname,mpiSize,timePvd,basVtuFileName, CellDataArrayForPvtu, PointDataArrayForPvtu );
 #endif
    
@@ -5583,7 +5582,7 @@ class VTK_WriteMeshT_Op : public E_F0mps {
     int ddim = 3;
     int stsize = 3;
     int sca = 0, vec = 0, ten = 0;
-    string scas("scalaire");
+    string scas("scalar");
     string vecs("vector");
     string tens("tensor");
 
@@ -5618,7 +5617,7 @@ class VTK_WriteMeshT_Op : public E_F0mps {
         // cout << "taille" << a0->size() << endl;
         if (a0->size( ) != ddim && a0->size( ) != stsize) {
           CompileError(
-            "savesol in 3D: vector solution is 3 composant, tensor solution is 3 composant");
+            "savesol in 3D: vector solution is 3 components, tensor solution is 3 components");
         }
 
         if (a0->size( ) == ddim) {
@@ -6861,7 +6860,7 @@ void saveTecplot(const string &file, const Mesh &Th) {
  * $1 */
 
 #ifndef COMMON_HPDDM_PARALLEL_IO
-static void Load_Init( ) {    // le constructeur qui ajoute la fonction "splitmesh3"  a freefem++
+static void Load_Init( ) {
   typedef Mesh *pmesh;
   typedef Mesh3 *pmesh3;
   typedef MeshS *pmeshS;
