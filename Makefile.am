@@ -111,9 +111,11 @@ install-devel:
 	@echo " # Copying PSD plugins/support-files                  "		
 	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so          $${HOME}/PSD-devel/Plugins/top-ii-vol.so	
 	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so  $${HOME}/PSD-devel/Plugins/gofastplugins.so
-	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp $${HOME}/PSD-devel/Plugins/gofastplugins.cpp	
-	@cp  ./src/plugins/paraview-output/cpp/iovtk.so          $${HOME}/PSD-devel/Plugins/iovtk.so
-	@cp  ./src/plugins/paraview-output/cpp/iovtk.cpp         $${HOME}/PSD-devel/Plugins/iovtk.cpp	
+	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp $${HOME}/PSD-devel/Plugins/gofastplugins.cpp
+	@cp  ./src/plugins/petsc/cpp/PSD-PETSc.so                $${HOME}/PSD-devel/Plugins/PSD-PETSc.so
+	@cp  ./src/plugins/petsc/cpp/PSD-PETSc.cpp               $${HOME}/PSD-devel/Plugins/PSD-PETSc.cpp		
+	@cp  ./src/plugins/paraview-output/cpp/PSD-iovtk.so      $${HOME}/PSD-devel/Plugins/PSD-iovtk.so
+	@cp  ./src/plugins/paraview-output/cpp/PSD-iovtk.cpp     $${HOME}/PSD-devel/Plugins/PSD-iovtk.cpp	
 	@cp  ./src/ff-files/DDmacro.edp                          $${HOME}/PSD-devel/Plugins/DDmacro.edp
 	@cp  ./src/ff-files/DDplotMacro.edp                      $${HOME}/PSD-devel/Plugins/DDplotMacro.edp	
 	@cp  ./src/ff-files/MacroTools.edp                       $${HOME}/PSD-devel/Plugins/MacroTools.edp	

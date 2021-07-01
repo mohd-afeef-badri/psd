@@ -331,16 +331,35 @@ void VTU_PIECE(FILE *fp, const int &nv, const int &nc) {
 //---------------------------------------------------------------//
 void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const string basVtuFileName, const string CellDataArrayForPvtu,const string PointDataArrayForPvtu  ){
  
-  std::string ProcZero = "_0.vtu";                            // This will indicate if Proc is 0
+  std::string ProcZero;
+  
+  if (mpiSize > 1)
+    ProcZero = "_0.vtu";                            // This will indicate if Proc is 0
+  else
+    ProcZero = ".vtu";
+        
   std::string fullFileName(*pffname);                       
   std::size_t foundProcZero = (fullFileName).find(ProcZero); 
 
-  if (foundProcZero!=std::string::npos || mpiSize == 1)           // Only proc 0 does the pvtu/pvd writing 
-  {  
+
+    cout << " fullFileName " << fullFileName << endl;
+        
+  if (foundProcZero!=std::string::npos)           // Only proc 0 does the pvtu/pvd writing 
+  {
+  
+    std::string file_without_extension;
+    
+    if (mpiSize > 1)    
+      file_without_extension = fullFileName.substr(0, (foundProcZero - 6 - string(to_string(mpiSize)).length()));
+    else
+      file_without_extension = fullFileName.substr(0, (foundProcZero - 5));
+              
+    cout << " " << file_without_extension << endl;
+    
     ofstream pvtu;
     
     std::string timeStamp = std::string(4 - string(to_string(timePvd)).length(), '0') + to_string(timePvd);
-    pvtu.open(basVtuFileName + (mpiSize > 1 ? "_" + to_string(mpiSize) : "") + "_" + timeStamp + ".pvtu");
+    pvtu.open(file_without_extension + (mpiSize > 1 ? "_" + to_string(mpiSize) : "") + "_" + timeStamp + ".pvtu");
 
     pvtu << "<?xml version=\"1.0\"?>\n"
             "<VTKFile type=\"PUnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n"
@@ -379,15 +398,28 @@ void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const 
 //---------------------------------------------------------------//
 void PvdWriter( string*& pffname, const int mpiSize, const int timePvd, const string basVtuFileName, const string CellDataArrayForPvtu, const string PointDataArrayForPvtu  ){
  
-  std::string ProcZero = "_0.vtu";                            // This will indicate if Proc is 0
+  std::string ProcZero;
+  
+  if (mpiSize > 1)
+    ProcZero = "_0.vtu";                            // This will indicate if Proc is 0
+  else
+    ProcZero = ".vtu";
+    
   std::string fullFileName(*pffname);                         
   std::size_t foundProcZero = (fullFileName).find(ProcZero);
 
   if (foundProcZero!=std::string::npos || mpiSize == 1)           // Only proc 0 does the pvtu/pvd writing 
   {  
     ofstream pvd;
+  
+    std::string file_without_extension;
     
-    pvd.open(basVtuFileName + (mpiSize > 1 ? "_" + to_string(mpiSize) : "") + ".pvd");
+    if (mpiSize > 1)    
+      file_without_extension = fullFileName.substr(0, (foundProcZero - 6 - string(to_string(mpiSize)).length()));
+    else
+      file_without_extension = fullFileName.substr(0, (foundProcZero - 5));
+          
+    pvd.open(file_without_extension + (mpiSize > 1 ? "_" + to_string(mpiSize) : "") + ".pvd");
 
     pvd << "<?xml version=\"1.0\"?>\n"
            "<VTKFile T=\""

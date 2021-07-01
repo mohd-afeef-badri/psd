@@ -467,7 +467,7 @@ void parallelIO(string*& name, MPI_Comm* const& comm, bool const& append, int* t
     *name = file_without_extension + "_" + (size > 1 ? str[2].str() + "_" : "") + str[0].str() + (size > 1 ? "_" + str[1].str() : "") + "." + extension;
     *tPvd          = T;                          // Time for pvd file
     *mpiSize       = size;                       // MPI size
-    *baseFilename  = file_without_extension;     // File name without extension
+    *baseFilename  = base_filename;              // File name without extension
 }
 
 long periodicity(Matrice_Creuse<double>* const& R, KN< KN< long > >* const& interaction, KN< double >* const& D) {
@@ -503,7 +503,7 @@ long periodicity(Matrice_Creuse<double>* const& R, KN< KN< long > >* const& inte
 }
 
 #define COMMON_HPDDM_PARALLEL_IO
-#include "./../paraview-output/cpp/iovtk.cpp"
+#include "./../../paraview-output/cpp/PSD-iovtk.cpp"
 
 #if defined(PETSCSUB) || HPDDM_PETSC
 namespace PETSc {

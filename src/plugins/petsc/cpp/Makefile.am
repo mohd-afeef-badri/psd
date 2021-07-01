@@ -1,6 +1,6 @@
-LIST_COMPILE= PSD-iovtk.cpp
+LIST_COMPILE= PSD-PETSc.cpp
 	
-all-local: PSD-iovtk.so
+all-local: PSD-PETSc.so
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,14 +8,14 @@ all-local: PSD-iovtk.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-PSD-iovtk.so: PSD-iovtk.cpp ./../../petsc/cpp/common_hpddm.hpp
-	$(FFCXX) -auto PSD-iovtk.cpp
+PSD-PETSc.so: PSD-PETSc.cpp common_hpddm.hpp ./../../paraview-output/cpp/PSD-iovtk.cpp
+	$(FFCXX) -auto -mpi PSD-PETSc.cpp
 	@echo ""	
 
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp PSD-iovtk.so ${prefix}/include/psd/PSD-iovtk.so
+	@cp PSD-PETSc.so ${prefix}/include/psd/PSD-PETSc.so
 	
 clean-local:
 	@echo ""

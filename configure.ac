@@ -108,26 +108,28 @@ SECTION_TITLE([    generating the required makefiles   ])
 #AC_PREFIX_DEFAULT()
 AC_CONFIG_FILES([
  Makefile
- src/Makefile 
- src/plugins/Makefile
- src/plugins/top-ii-vol/Makefile
- src/plugins/top-ii-vol/cpp/Makefile 
- src/plugins/go-fast-plugins/Makefile
- src/plugins/go-fast-plugins/cpp/Makefile
- src/plugins/paraview-output/Makefile
- src/plugins/paraview-output/cpp/Makefile     
- src/plugins/sparsity-visualizer/Makefile 
- src/plugins/sparsity-visualizer/cpp/Makefile  
- src/plugins/soil-laws/Makefile 
- src/plugins/soil-laws/cpp/Makefile 
- src/plugins/soil-laws/hujeux-law-lib/Makefile   
- src/psd-preprocessor/Makefile
- src/psd-solve/Makefile
- src/ff-files/Makefile   
- test/load/Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
  data/meshes/3D/Geo-Files/Makefile 
+ src/Makefile
+ src/plugins/Makefile
+ src/ff-files/Makefile 
+ src/plugins/go-fast-plugins/Makefile
+ src/plugins/go-fast-plugins/cpp/Makefile 
+ src/plugins/paraview-output/Makefile 
+ src/plugins/paraview-output/cpp/Makefile
+ src/plugins/petsc/Makefile
+ src/plugins/petsc/cpp/Makefile
+ src/plugins/soil-laws/Makefile 
+ src/plugins/soil-laws/cpp/Makefile 
+ src/plugins/soil-laws/hujeux-law-lib/Makefile 
+ src/plugins/sparsity-visualizer/Makefile 
+ src/plugins/sparsity-visualizer/cpp/Makefile
+ src/plugins/top-ii-vol/Makefile
+ src/plugins/top-ii-vol/cpp/Makefile      
+ src/psd-preprocessor/Makefile
+ src/psd-solve/Makefile   
+ test/load/Makefile 
 ])
 AC_OUTPUT
 
