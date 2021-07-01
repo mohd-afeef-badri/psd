@@ -2,6 +2,9 @@
 *.~
 *.swp
 
+## ORIGINAL FILES ##
+*.orig
+
 ## MESH FILES ##
 *.msh
 
