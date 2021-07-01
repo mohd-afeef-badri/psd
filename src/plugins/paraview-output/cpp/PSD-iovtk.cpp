@@ -340,9 +340,6 @@ void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const 
         
   std::string fullFileName(*pffname);                       
   std::size_t foundProcZero = (fullFileName).find(ProcZero); 
-
-
-    cout << " fullFileName " << fullFileName << endl;
         
   if (foundProcZero!=std::string::npos)           // Only proc 0 does the pvtu/pvd writing 
   {
@@ -354,7 +351,6 @@ void PvtuWriter( string*& pffname , const int mpiSize, const int timePvd, const 
     else
       file_without_extension = fullFileName.substr(0, (foundProcZero - 5));
               
-    cout << " " << file_without_extension << endl;
     
     ofstream pvtu;
     
