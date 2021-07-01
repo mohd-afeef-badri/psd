@@ -17,7 +17,7 @@
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
 //  load    "iovtk"
-  load    "../../src/plugins/paraview-output/cpp/iovtk"
+  load    "../../src/plugins/paraview-output/cpp/PSD-iovtk"
       
   mesh Th = square(10,10);   
   fespace Vh1 (Th, P1); fespace Vh0 (Th, P0);

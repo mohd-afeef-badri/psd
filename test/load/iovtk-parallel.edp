@@ -17,7 +17,7 @@
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
 //  load    "PETSc"
-  load    "./../../src/plugins/petsc/PETSc"
+  load    "./../../src/plugins/petsc/cpp/PSD-PETSc"
 
 {    
   macro dimension()2                  // 2D or 3D    
