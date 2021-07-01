@@ -29,7 +29,7 @@
   int[int] vtkordermixed=[1,0]; 
   int[int] vtkordermixed1=[1,0,1,1];     
 
-
+  savevtk("squareP0-scalar.vtu",Th,u0,order=vtkorder0,dataname="u0");
   savevtk("squareP0-scalar.vtu",Th,u0,order=vtkorder0,dataname="u0");
   savevtk("squareP1-scalar.vtu",Th,u1,order=vtkorder1,dataname="u1");  
   savevtk("squareP0-vector.vtu",Th,[uv11,uv12],order=vtkorder0,dataname="u0");
@@ -47,7 +47,4 @@
   savevtk("cubeP0-scalar.vtu",Th3,u30,order=vtkorder30,dataname="u0");
   savevtk("cubeP1-scalar.vtu",Th3,u31,order=vtkorder31,dataname="u1");   
   savevtk("cubeP0-vector.vtu",Th3,[uv311,uv312,uv313],order=vtkorder0,dataname="u0");
-  savevtk("cubeP1-vector.vtu",Th3,[uv301,uv302,uv303],order=vtkorder1,dataname="u1");
-   
-  
-   
+  savevtk("cubeP1-vector.vtu",Th3,[uv301,uv302,uv303],order=vtkorder1,dataname="u1"); 
