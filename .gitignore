@@ -22,6 +22,9 @@ MeshAndFeSpace.edp
 VariationalFormulations.edp
 LinearFormBuilderAndSolver.edp
 BoundaryAndSourceConditions.edp
+ControlParameters.edp
+FemParameters.edp
+OtherParameters.edp
 
 ## SHARED OBJECT FILES ##
 *.o
