@@ -464,7 +464,7 @@ void parallelIO(string*& name, MPI_Comm* const& comm, bool const& append, int* t
         MPI_Bcast(&T, 1, MPI_INT, 0, comm ? *comm : MPI_COMM_WORLD);
     }
     str[0] << std::setw(4) << std::setfill('0') << T;
-    *name = file_without_extension + "_" + (size > 1 ? str[2].str() + "_" : "") + str[0].str() + (size > 1 ? "_" + str[1].str() : "") + "." + extension;
+    *name = file_without_extension + "_" + (size > 1 ? str[2].str() + "_" : "") + str[0].str() + (size > 1 ? "_" + /*str[1].str()*/to_string(rank) : "") + "." + extension;
     *tPvd          = T;                          // Time for pvd file
     *mpiSize       = size;                       // MPI size
     *baseFilename  = base_filename;              // File name without extension
