@@ -25,6 +25,7 @@ BoundaryAndSourceConditions.edp
 ControlParameters.edp
 FemParameters.edp
 OtherParameters.edp
+simulation-log.csv
 
 ## SHARED OBJECT FILES ##
 *.o

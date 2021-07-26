@@ -38,6 +38,7 @@ tensile-crack.msh: tensile-crack.geo
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0		
 	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0
+	$(GMSH) -1 tensile-crack.msh -o tensile-crack.msh -format msh2 -refine -v 0	
 	@echo ""		
 
 sparsity.msh: sparsity.geo

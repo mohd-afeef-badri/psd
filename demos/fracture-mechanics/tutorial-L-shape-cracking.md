@@ -52,7 +52,7 @@ header-includes: |
 abstract: This document details a tutorial of 'fracture mechanics' module of PSD. This tutorial involves cracking of L shaped specimen, where loading is controlled by a point boundary condition.
 ---
 
-\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 \begin{figure}[h!]
 \centering
@@ -250,7 +250,7 @@ Use ParaView to post process results.
 \caption{Finite element solution showing: Crack initiation,  movement, and  development. \label{L-shape-mesh-crack}}
 \end{figure}
 
-On you screen, the force displacement curve which plots (force.data) should look something like this
+On you screen, the force displacement curve which plots \sh{force.data} should look something like this
 
 \begin{figure}[h!]
 \centering
