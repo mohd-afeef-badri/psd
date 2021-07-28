@@ -113,7 +113,7 @@ While this test runs, you will see on your screen the amount of traction updated
 
 
 
-\subsection{Tensile cracking of a pre-cracked plate: A 3D example of PSD parallel solver}
+\subsection{Tensile cracking of a pre-cracked cube: A 3D example of PSD parallel solver}
 
 A three-dimensional test synonymous to its two-dimensional counterpart introduced above is used here as an tutorial example.   The problem of interest is now a unit extrusion (along $z$-axis) of the 2D case above. Cracking is initiated and propagated under tensile loading. The unit cube with its  pre existing crack  is clamped at the bottom $u_1=u_2=u_3=0$ (first boundary condition) and is loaded quasi-statically $u_2=u_2 + \Delta u_2$ on its top surface till the crack propagates through its walls. So there are two Dirichlet conditions one on the top border and one on the bottom one.
 
@@ -175,7 +175,7 @@ Run the problem in the usual way bu using \sh{ PSD\_Solve} and appropriate numbe
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 \end{lstlisting}
 
- You can then go ahead and plot \sh{ force.data} to see how $F_y$  evolves vs. $\Delta u_2$.
+ You can then go ahead and plot \sh{ force.data} to see how $F_y$ and $F_x$  evolve  with $\Delta u_2$. Within the file the first column is the loading $\Delta u_2$, the second and the third columns are the forces $F_x$ and $F_y$.
 
 
 
