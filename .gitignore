@@ -61,6 +61,11 @@ Makefile.in
 *.in
 *.nfs*
 
+## MFRONT FILES ##
+/src/plugins/mfront/law/elasticity/src/*
+/src/plugins/mfront/law/elasticity/include/*
+      
+
 ## DOCUMENTATION FILES ##
 Readme.html
 Readme.pdf

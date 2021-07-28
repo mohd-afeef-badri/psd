@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.1], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.2], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -48,8 +48,21 @@ dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
 dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
+AC_ARG_WITH([mgis],
+	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/mgis)],
+        [mgis="$withval"], [mgis="no"])
+
+
+
+AC_ARG_WITH([mfront],
+	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/mgis/bin/mfront)],
+        [mfront="$withval"], [mfront="no"])
+
+
+
+
 AC_ARG_WITH(FreeFEM,
-	[  --with-FreeFEM=         FreeFEM installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
+	[  --with-FreeFEM=         FreeFEM  installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
 	   FF="${withval}/FreeFem++"
 	   FFCXX="${withval}/ff-c++"
 	   FFMPI="${withval}/ff-mpirun")
@@ -99,8 +112,39 @@ test "$FFMPI" == "no" && AC_MSG_ERROR([
   or in  /usr/local/bin  consider  using  the
   '--with-FreeFEM=your/FreeFEM/path/bin' flag  
   with ./configure command. 
-                                   ])
+                                  ])
 
+SECTION_TITLE([      checking for a MFront support     ])
+
+AC_SUBST([mgis])
+AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])                                  
+test "$mgis" == "no" && AC_MSG_WARN([ 
+ You did not provide --with-mgis flag so
+ MGIS SUPPORT = OFF 
+
+ Mfront will not be configured with PSD:
+ 
+ To have Mfront support in PSD, please correctly
+ provide both  --with-mgis   and  --with-mfront 
+ flags 
+ ])
+ 
+AC_SUBST([mfront])
+AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no]) 
+test "$mfront" == "no" && AC_MSG_WARN([
+ You did not provide --with-front flag so
+ MFRONT SUPPORT = OFF 
+
+ Mfront will not be configured with PSD:
+ 
+ To have Mfront support in PSD, please correctly
+ provide both  --with-mgis   and  --with-mfront 
+ flags 
+  
+ ])
+
+
+test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront will be configured with PSD])
 
 SECTION_TITLE([    generating the required makefiles   ])
 
@@ -116,6 +160,10 @@ AC_CONFIG_FILES([
  src/ff-files/Makefile 
  src/plugins/go-fast-plugins/Makefile
  src/plugins/go-fast-plugins/cpp/Makefile 
+ src/plugins/mfront/Makefile
+ src/plugins/mfront/cpp/Makefile
+ src/plugins/mfront/law/Makefile
+ src/plugins/mfront/law/elasticity/Makefile 
  src/plugins/paraview-output/Makefile 
  src/plugins/paraview-output/cpp/Makefile
  src/plugins/petsc/Makefile
@@ -144,4 +192,5 @@ AC_MSG_RESULT([ Using '$CXX' for C++ compiler.])
 AC_MSG_RESULT([ Building with '$CXXFLAGS' for C++ compiler flags.])
 AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 AC_MSG_RESULT([ Building with '$LIBS' libraries.])
+
 AC_MSG_RESULT([])

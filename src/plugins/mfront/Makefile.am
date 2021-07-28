@@ -1,4 +1,4 @@
-SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins  paraview-output petsc mfront
+SUBDIRS = cpp law
 
 clean-local:
 	@echo ""
@@ -7,7 +7,8 @@ clean-local:
 	@echo "*============================================================*"
 	@echo ""
 	rm  -f *~
-	
+
+
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
