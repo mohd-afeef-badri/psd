@@ -4,6 +4,8 @@ All notable changes to PSD solver will be documented in this file.
 ## Rolling Release (2.2)
 ### Added
 
+- New and more verbose tutorials on fracture mechanics, soil-dynamics.
+
 ### Changed
 
 - Flag values now donot contain hyphens '-' use underscore instead '_', e.g, 
