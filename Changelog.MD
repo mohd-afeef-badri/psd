@@ -5,6 +5,9 @@ All notable changes to PSD solver will be documented in this file.
 ### Added
 
 - New and more verbose tutorials on fracture mechanics, soil-dynamics.
+- Fast and parallel post processing is now performed using `pvtu` files.
+- New PETSc interface in plugins that supports pvtu output.
+- Error mechanism to signify wrong PSD flags. 
 
 ### Changed
 
@@ -15,7 +18,7 @@ check NP=USER_PROCS`.
 - Moved to FreeFEM 4.9 and PETSc 3.15.0 .
 - Moved to GitLab for hosting the repository.
 - New checks for wrong flag. Now if wrong flag or values is entered PSD will give error.
-- Boolean flags now also accept value 1|0|yes|no|on|off|true|false for truning on or off.
+- Boolean flags now also accept value 1|0|yes|no|on|off|true|false for turning on or off.
 
 ### Removed 
 

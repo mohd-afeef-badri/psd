@@ -29,7 +29,7 @@ header-includes: |
 abstract: This document details some tutorials of 'linear elasticity' module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's 'linear elasticity' module.
 ---
 
-\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 \begin{figure}[h!]
 \centering

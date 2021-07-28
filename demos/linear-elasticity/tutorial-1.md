@@ -29,7 +29,7 @@ header-includes: |
 abstract: This document details a single tutorials of 'linear elasticity' module of PSD in a more verbos manner. 
 ---
 
-\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 To showcase the usage of Linear elasticity, we shall discuss here an example of a 2D bar, which bends under its own load. The bar $5\times1$ m$^2$ in area is made up of material with $\rho=8\times 10^3$, $E=200\times 10^9$, and $\nu=0.3$.
 

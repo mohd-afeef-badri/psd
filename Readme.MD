@@ -28,11 +28,10 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
-*Note:* You can also use SSH protocol if your key had been added to the repo in that case use
-
-```bash
+   *Note:* You can also use SSH protocol if your key had been added to the repo in that case use
+   ```bash
 git clone git@gitlab.com:PsdSolver/psd_sources.git
-```
+   ```
 
 - Use automake PSD within the  cloned folder
 ```bash
@@ -44,14 +43,13 @@ autoreconf -i
 ```
 *Note*:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider chaning directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`
 
-*Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+   *Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
 
-```bash
+   ```bash
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
-```
+   ```
 
 - Make PSD directives
-
 ```bash
 make
 ```
@@ -78,21 +76,21 @@ by the following
 R seuil=hm/splitmax/4.0/1000.0;
 ```
 
-## Using procedure  ##
+## A quick sneak-peek of a typical PSD simulation  ##
 
-The parallel/sequential solvers can be run on Linux platforms and can be used with command line options  to control the solver. In order to make your choice of physics, command line options need to be typed right into the bash. 
+PSD is a TUI (terminal user interface) based finite element solver. Parallel or sequential PSD simulations can run on Linux platforms.  Command line options (flags) which user enters are used  to control the PSD solver. In order to make your choice of physics, model, mesh, etc., command line options need to be typed right into the bash. 
 
-To perform a simulation three steps are involved
+A typical PSD simulation is performed in three steps.
 
 **Step 1: Setting up the solver**
 
-Now that the mesh has been loaded. Its time to set up the solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
+Its time to set up the PSD solver. Open the `terminal` window at the location of the solver, i.e., `$HOME/PSD/Solver.` Then run the following command in the `terminal`.
 
 ```bash
 PSD_PreProcess [Options-PSD]
 ```
 
-Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favorite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal.
+Via the command line options you will embed the physics within the solver. This step generates a bunch of `.edp` files which are native to [FreeFEM](https://freefem.org/)  and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favourite text editor, which could be `vim`, `gedit` ,`Notepad++`, etc.  To facilitate the edit process for your will have to go through the instructions printed on the terminal.
 
 For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use
 
@@ -118,19 +116,23 @@ PSD_Solve_Seq Main.edp -v 0 -nw
 
 - Additional flag `-wg` may be required while launching the solver, this is in case debug mode is on.
 
-*Sit back and be amazed at the speed of the solver.* 
+**Step 3: Result visualization**
+Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing. ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.   
 
-## [Options-PSD]  explained  ##
 
-These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation).
+## PSD flags  explained  ##
 
-| Option                      | Type      | Comment                                                      |
+These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation). It is advised to print these and have them around when performing a PSD simulation.  
+
+| Flag                        | Type      | Comment                                                      |
 | --------------------------- | --------- | :----------------------------------------------------------- |
-| `-help`                     | `[bool]`  | To activate helping message on the terminal.                 |
-| `-debug`                    | `[bool]`  | To activate openGL plot.  Development flag.                  |
+| **Boolean flags**           |           | These flags accept values   *1\|0\|yes\|no\|on\|off\|true\|false*   and are used to activate or deactivate any functionality of PSD. |
+|                             |           |                                                              |
+| `-help`                     | `[bool]`  | To activate helping message on the terminal. Gives description and list of available flags. |
+| `-debug`                    | `[bool]`  | To activate live plot while PSD runs.  Development flag.     |
 | `-useGFP`                   | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins.    |
 | `-useRCM`                   | `[bool]`  | Activate mesh level renumbering: Reverse Cuthill Mckee.      |
-| `-pipegnu`                  | `[bool]`  | Use to activate realtime pipe plotting using [gnuplot](http://www.gnuplot.info/). |
+| `-pipegnu`                  | `[bool]`  | Use to activate real time pipe plotting using [gnuplot](http://www.gnuplot.info/). |
 | `-timelog`                  | `[bool]`  | To activate time logging the different phases of the solver. |
 | `-supercomp`                | `[bool]`  | Use when using a super computer without Xterm support        |
 | `-bodyforce`                | `[bool]`  | To activate volumetric source term (body force).             |
@@ -146,13 +148,17 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-withmaterialtensor`       | `[bool]`  | Activate material tensor for building stiffness matrix.      |
 | `-crackdirichletcondition`  | `[bool]`  | To activate pre-cracked surface Dirichlet.                   |
 |                             |           |                                                              |
-| `-dirichletpointconditions` | `[int]`   | Number of Dirchlet points.                                   |
-| `-dirichletconditions`      | `[int]`   | Number of Dirchlet boundaries.                               |
+| **Integer flags**           |           | These flags accept a integer value followed by the flag itself. These integer values are used in PSD simulations for various definitions. |
+|                             |           |                                                              |
+| `-dirichletpointconditions` | `[int]`   | Number of Dirichlet points. <br />                           |
+| `-dirichletconditions`      | `[int]`   | Number of Dirichlet boundaries.                              |
 | `-bodyforceconditions`      | `[int]`   | Number of regions acted upon by bodyforce.                   |
-| `-tractionconditions`       | `[int]`   | Number of Neumann/traction bounders.                         |
-| `-parmetis_worker`          | `[int]`   | Number of parallel workers used by ParMetis for partiotining. |
+| `-tractionconditions`       | `[int]`   | Number of Neumann/traction boundaries.                       |
+| `-parmetis_worker`          | `[int]`   | Number of parallel workers used by ParMetis for partitioning. |
 | `-lagrange`                 | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2.     |
 | `-dimension`                | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
+|                             |           |                                                              |
+| **String flags**            |           | These flags accept a string value followed by the flag itself. These string values are used in PSD simulations for various definitions. |
 |                             |           |                                                              |
 | `-mesh`                     | `[sting]` | Provide mesh to be solved by `PSD_Solve`.                    |
 | `-timediscretization`       | `[sting]` | Time discretization type. Use "generalized_alpha" or "newmark_beta" or "hht_alpha" or "central_difference" |

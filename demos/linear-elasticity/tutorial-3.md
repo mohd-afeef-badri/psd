@@ -29,7 +29,7 @@ header-includes: |
 abstract: This document details a single tutorials of 'linear elasticity' module of PSD in a more verbos manner. 
 ---
 
-\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 In this tutorial we showcase the 2D bar problem simulation with one end clamped wile being pulled at the other end. Body force is neglected and the non clamped ends pull is approximated with Dirichlet displacement $u_1=1$. If this simulation is compared to the previous one from tutorial 1 ans tutorial 2, the only difference now is that no body force is applied and an additional Dirichlet condition is applied at the free end of the bar. Here is how PSD simulation of this case can be performed. he bar $5\times1$ m$^2$ in area is made up of material with $\rho=8\times 10^3$, $E=200\times 10^9$, and $\nu=0.3$. 
 

@@ -28,7 +28,7 @@ header-includes: |
     }
 abstract: This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's soildynamics module. 
 ---
-\newcommand{\sh}[1]{\small\sffamily{\color{blue!60}#1}}
+\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 \subsection{Parallel 2D}
 
