@@ -3,6 +3,7 @@
 
 
 **Ongoing**
+- Mfront integration of PSD
 
 - update developer install with plugins
 - PSD configures PETSc and FreeFEM
