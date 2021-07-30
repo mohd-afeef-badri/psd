@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.2], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.3], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -186,20 +186,25 @@ AC_CONFIG_FILES([
 ])
 AC_OUTPUT
 
-SECTION_TITLE([                   status               ])
+SECTION_TITLE([               status               ])
 
 dnl Print results
 AC_MSG_RESULT([])
 AC_MSG_RESULT([ PSD version $VERSION configured successfully.])
 AC_MSG_RESULT([])
-AC_MSG_RESULT([ Using '$prefix' for installation.])
-AC_MSG_RESULT([ Using '$CXX' for C++ compiler.])
-AC_MSG_RESULT([ Building with '$CXXFLAGS' for C++ compiler flags.])
-AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
-AC_MSG_RESULT([ Building with '$LIBS' libraries.])
-
+AC_MSG_RESULT([ PSD install  path  : '$prefix'])
+AC_MSG_RESULT([ PSD tutoirlas path : '$HOME/PSD-tutorials'])
 AC_MSG_RESULT([])
-AC_MSG_RESULT([ -- Configurations --])
-test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront  : YES])
-test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront  : NO])
+AC_MSG_RESULT([ C++ compiler       : '$CXX'])
+AC_MSG_RESULT([ C++ compiler flags : '$CXXFLAGS'])
+test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
+test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
+AC_MSG_RESULT([])
+test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront   : YES])
+test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront   : NO])
+test "$GMSH"   == "no"                    &&  AC_MSG_RESULT([ Gmsh     : NO])
+test "$GMSH"   != "no"                    &&  AC_MSG_RESULT([ Gmsh     : YES])
+test "$FF"     != "no"                    &&  AC_MSG_RESULT([ PSD Seq  : YES])
+test "$FFMPI" == "no"                     &&  AC_MSG_RESULT([ PSD Par  : NO])
+test "$FFMPI" != "no"                     &&  AC_MSG_RESULT([ PSD Par  : YES])
 AC_MSG_RESULT([])
