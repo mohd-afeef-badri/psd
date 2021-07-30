@@ -182,7 +182,11 @@ AC_CONFIG_FILES([
  src/plugins/top-ii-vol/test/Makefile       
  src/psd-preprocessor/Makefile
  src/psd-solve/Makefile   
- test/load/Makefile 
+ test/Makefile
+ test/elastodynamics/Makefile    
+ test/fracture-mechanics/Makefile
+ test/linear-elasticity/Makefile
+ test/soildynamics/Makefile      
 ])
 AC_OUTPUT
 

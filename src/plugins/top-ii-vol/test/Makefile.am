@@ -38,12 +38,12 @@ Test_4: Test_4.edp
 	@echo "  PASSED "
 
 Test_5: Test_5.edp
-	@echo "Test_5 :  top-ii-vol testing point-cloud meshing and X-partitioning"
+	@echo "Test_5 :  top-ii-vol testing point-cloud meshing and Y-partitioning"
 	@./../../../psd-solve/PSD_Solve -np 2 Test_5.edp >  Test_5.log		
 	@echo "  PASSED "
 	
 Test_6: Test_6.edp
-	@echo "Test_6 :  top-ii-vol testing point-cloud meshing and X-partitioning"
+	@echo "Test_6 :  top-ii-vol testing point-cloud meshing and Z-partitioning"
 	@./../../../psd-solve/PSD_Solve -np 2 Test_6.edp >  Test_6.log		
 	@echo "  PASSED "
 						

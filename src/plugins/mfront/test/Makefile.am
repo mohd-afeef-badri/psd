@@ -3,14 +3,22 @@ Test_2.edp
 
 all-local: 
 	@echo ""
-	
+
+if HAVEMGIS	
 check-local: check-header Test_1 Test_2
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking mfront plugin : SUCCESS                      "
 	@echo "*============================================================*"
 	@echo ""
-
+else !HAVEMGIS
+check-local: check-header
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Skipping mfront plugin test                     "
+	@echo "*============================================================*"
+	@echo ""
+endif
 check-header:
 	@echo ""
 	@echo "*============================================================*"
@@ -25,7 +33,7 @@ Test_1: Test_1.edp
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
-	@echo "Test_2 : mfront testing MFrontParameter routiner"
+	@echo "Test_2 : mfront testing MFrontParameter routine"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp >  Test_2.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp >  Test_2_NP2.log		
 	@echo "  PASSED "	

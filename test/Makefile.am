@@ -1,3 +1,5 @@
+SUBDIRS=linear-elasticity fracture-mechanics elastodynamics soildynamics
+
 all-local: 
 	@echo ""
 	

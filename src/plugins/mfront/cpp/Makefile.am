@@ -21,7 +21,9 @@ endif
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
+if HAVEMGIS	
 	@cp mfront.so ${prefix}/include/psd/mfront.so	
+endif
 		
 clean-local:
 	@echo ""

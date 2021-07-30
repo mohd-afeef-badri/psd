@@ -389,6 +389,8 @@ if(!Sequential){
  "// ---- top-ii-vol point cloud partitioning + meshing ----                      \n"
  "//==============================================================================\n"
  "                                                                                \n"
+ "  mpiBarrier(mpiCommWorld);                                                     \n"
+ "                                                                                \n"  
  "  topiivolpart(                                                                 \n"
  "                 PcName,                                                        \n"
  "                 outfile=\"./top-ii-vol-meshes/Pc-strip\",                      \n"
