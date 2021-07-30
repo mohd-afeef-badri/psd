@@ -7,7 +7,9 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test checks how to get eigenValues of a matrix 
+                by using gofastplugins function GFPeigenAlone
+                
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -16,17 +18,34 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/go-fast-plugins/cpp/gofastplugins"
+  load    "../cpp/gofastplugins"
       
-
   real[int]     EvaluesA(3);
   real[int,int] EvectorA(3,3);
   
   real[int,int] A = [[ 3, 2, 4],
                      [ 2, 0, 2],
                      [ 4, 2, 3]];
-                        
-  GFPeigen(A,EvaluesA,EvectorA);  
+
+  GFPeigenAlone(A,EvaluesA);
+
+  real[int]     EvaluesARef(3);
+  EvaluesARef(0) = -1;
+  EvaluesARef(1) = -1;
+  EvaluesARef(2) =  8; 
+     
+  if (abs(EvaluesARef(0)-EvaluesA(0))>=.0000001 || 
+      abs(EvaluesARef(1)-EvaluesA(1))>=.0000001 ||
+      abs(EvaluesARef(2)-EvaluesA(2))>=.0000001    ){
+   cout << "\n*******************************************\n"
+        << "*********************************************\n"  
+        << " Someting worng in Test_2: GFPeigenAlone fuction\n"
+        << "*********************************************\n"
+        << "*********************************************\n";
+   exit(1);             
+   }
+   
+      
+    
+  cout << "Eigen values of A are: "  <<  EvaluesA << endl;  
   
-  cout << "Eigen values of A are: "  <<  EvaluesA << endl;
-  cout << "Eigen vector of A are: "  <<  EvectorA << endl;

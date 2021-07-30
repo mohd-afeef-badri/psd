@@ -4,25 +4,31 @@
                                                                               
      -------------------------------------------------------------------      
                                                                               
-     Author(s): Mohd Afeef Badri                                              
-     Email    : mohd-afeef.badri@cea.fr                                       
-     Date     : 2020‑06‑24                                                    
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@cea.fr
+     Date     : 2020‑06‑24
+     Comment  : This test checks how to get eigen values and eigen vector
+                of a matrix by using gofastplugins function GFPeigen
                                                                               
      -------------------------------------------------------------------      
                                                                               
-     PSD a parallel  finite  element framework  provides tools to  solve      
-     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
-     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/go-fast-plugins/cpp/gofastplugins"
+  load    "../cpp/gofastplugins"
       
+
   real[int]     EvaluesA(3);
   real[int,int] EvectorA(3,3);
   
   real[int,int] A = [[ 3, 2, 4],
                      [ 2, 0, 2],
                      [ 4, 2, 3]];
+                        
+  GFPeigen(A,EvaluesA,EvectorA);  
   
   cout << "Eigen values of A are: "  <<  EvaluesA << endl;
+  cout << "Eigen vector of A are: "  <<  EvectorA << endl;

@@ -159,7 +159,8 @@ AC_CONFIG_FILES([
  src/plugins/Makefile
  src/ff-files/Makefile 
  src/plugins/go-fast-plugins/Makefile
- src/plugins/go-fast-plugins/cpp/Makefile 
+ src/plugins/go-fast-plugins/cpp/Makefile
+ src/plugins/go-fast-plugins/test/Makefile  
  src/plugins/mfront/Makefile
  src/plugins/mfront/cpp/Makefile
  src/plugins/mfront/law/Makefile

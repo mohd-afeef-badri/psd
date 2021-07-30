@@ -7,13 +7,17 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test simply checks if the loading of gofastplugins
+                works well          
+                                                                               
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
      multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+     -------------------------------------------------------------------
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/go-fast-plugins/cpp/gofastplugins"
+  load    "../cpp/gofastplugins"
