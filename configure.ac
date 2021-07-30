@@ -118,33 +118,32 @@ SECTION_TITLE([      checking for a MFront support     ])
 
 AC_SUBST([mgis])
 AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])                                  
-test "$mgis" == "no" && AC_MSG_WARN([ 
- You did not provide --with-mgis flag so
+test "$mgis" == "no" && AC_MSG_WARN([
+ Mfront will not be configured with PSD, 
+ you did not provide --with-mgis flag so
+ 
  MGIS SUPPORT = OFF 
-
- Mfront will not be configured with PSD:
  
  To have Mfront support in PSD, please correctly
  provide both  --with-mgis   and  --with-mfront 
- flags 
+ flags.
  ])
  
 AC_SUBST([mfront])
 AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no]) 
 test "$mfront" == "no" && AC_MSG_WARN([
+ Mfront will not be configured with PSD,
  You did not provide --with-front flag so
+ 
  MFRONT SUPPORT = OFF 
 
- Mfront will not be configured with PSD:
- 
  To have Mfront support in PSD, please correctly
  provide both  --with-mgis   and  --with-mfront 
- flags 
-  
+ flags. 
  ])
 
 
-test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront will be configured with PSD])
+
 
 SECTION_TITLE([    generating the required makefiles   ])
 
@@ -199,4 +198,8 @@ AC_MSG_RESULT([ Building with '$CXXFLAGS' for C++ compiler flags.])
 AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ -- Configurations --])
+test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront  : YES])
+test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront  : NO])
 AC_MSG_RESULT([])
