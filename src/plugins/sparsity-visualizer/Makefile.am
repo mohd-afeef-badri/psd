@@ -1,4 +1,4 @@
-SUBDIRS = cpp
+SUBDIRS = cpp test
 
 clean-local:
 	@echo ""

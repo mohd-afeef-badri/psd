@@ -7,7 +7,9 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test simply checks if the loading of MatrixPlotter
+                works well 
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -15,30 +17,6 @@
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
-*******************************************************************************/ 
-
-load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
-
-//topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
-//topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
-
-topiivolpart( "./../../etc/Point-Cloud", 
-              outfile ="point-cloud-strip", 
-              pointsx=63, 
-              pointsy=57, 
-              pointsz=4, 
-              zdepth=-1920.0, 
-              partx=1, 
-              party=mpisize, 
-              partz=1
-            ); 
-            
-mpiBarrier(mpiCommWorld);
-   topiivolmesh( "point-cloud-strip",
-                 outfile="top-ii-vol-mesh",
-                 pointsz=4,
-                 zdepth=-1920.0,
-                 partx=1,
-                 party=mpisize,
-                 partz=1
-               );
+*******************************************************************************/
+                                                                                                                                                                                                                                    
+  load    "../cpp/MatrixPlotter"   

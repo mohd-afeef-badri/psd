@@ -164,18 +164,23 @@ AC_CONFIG_FILES([
  src/plugins/mfront/Makefile
  src/plugins/mfront/cpp/Makefile
  src/plugins/mfront/law/Makefile
- src/plugins/mfront/law/elasticity/Makefile 
+ src/plugins/mfront/law/elasticity/Makefile
+ src/plugins/mfront/test/Makefile  
  src/plugins/paraview-output/Makefile 
  src/plugins/paraview-output/cpp/Makefile
+ src/plugins/paraview-output/test/Makefile 
  src/plugins/petsc/Makefile
  src/plugins/petsc/cpp/Makefile
  src/plugins/soil-laws/Makefile 
  src/plugins/soil-laws/cpp/Makefile 
- src/plugins/soil-laws/hujeux-law-lib/Makefile 
+ src/plugins/soil-laws/hujeux-law-lib/Makefile
+ src/plugins/soil-laws/test/Makefile  
  src/plugins/sparsity-visualizer/Makefile 
  src/plugins/sparsity-visualizer/cpp/Makefile
+ src/plugins/sparsity-visualizer/test/Makefile 
  src/plugins/top-ii-vol/Makefile
- src/plugins/top-ii-vol/cpp/Makefile      
+ src/plugins/top-ii-vol/cpp/Makefile
+ src/plugins/top-ii-vol/test/Makefile       
  src/psd-preprocessor/Makefile
  src/psd-solve/Makefile   
  test/load/Makefile 

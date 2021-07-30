@@ -7,7 +7,10 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test checks if the saving of matrix and its visuli-
+                zation works well via MatrixPlotter routine MatViz. Tes-
+                t is performed for a simple 2D laplace operator. 
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -17,4 +20,29 @@
                                                                               
 *******************************************************************************/ 
 
-load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
+                                                                                                                                                                                                                                  
+  load    "../cpp/MatrixPlotter"
+
+/*      
+  matrix A =[[1,0,0,0,0],
+             [0,1,0,0,0],
+             [0,0,1,0,0],
+             [0,0,0,1,0],
+             [0,0,0,0,1]];
+  MatViz(A);
+*/  
+  
+  mesh Th=square(5,5);
+  fespace Vh(Th,P1);     
+  func f=1;
+  func g=0;
+ 
+  varf laplace(uh,vh) =                    //  definion of  the problem 
+    int2d(Th)( dx(uh)*dx(vh) + dy(uh)*dy(vh) ) //  bilinear form
+  - int2d(Th)( f*vh )                          //  linear form
+  + on(1,2,uh=g) ;                      //  boundary condition form
+
+  matrix B = laplace(Vh,Vh,tgv=-20);
+  MatViz(B);     
+  
+   

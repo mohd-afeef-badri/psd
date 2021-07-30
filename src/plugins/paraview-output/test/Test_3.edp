@@ -6,7 +6,9 @@
                                                                               
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
-     Date     : 2020‑06‑24                                                    
+     Date     : 2021‑06‑18                                                    
+     Comment  : This test checks if the saving of vtu files via PSD-iovtk
+                in 2D and 3D work well in parallel. 
                                                                               
      -------------------------------------------------------------------      
                                                                               
@@ -16,35 +18,53 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-//  load    "iovtk"
-  load    "../../src/plugins/paraview-output/cpp/PSD-iovtk"
+
+  load    "./../../petsc/cpp/PSD-PETSc"
+
+{    
+  macro dimension()2                  // 2D or 3D    
+  include "macro_ddm.idp"             // DDM Function FreeFEM    
       
-  mesh Th = square(10,10);   
-  fespace Vh1 (Th, P1); fespace Vh0 (Th, P0);
-  Vh1 u1 = x; Vh0 u0 = x;
+  mesh Th = square(5,5);
+  buildDmesh(Th)   
+  fespace Vh1 (Th, P1); fespace Vh0 (Th, P1);
+  Vh1 u1 = y; Vh0 u0 = y;
   fespace Vhv1 (Th, [P1,P1]); fespace Vhv0 (Th, [P0,P0]);
   Vhv1 [uv11,uv12] = [x,y]; Vhv0 [uv01,uv02] = [x,y];  
   int[int] vtkorder0=[0];
   int[int] vtkorder1=[1];
-  int[int] vtkordermixed=[1,0]; 
-  int[int] vtkordermixed1=[1,0,1,1];     
+  int[int] vtkordermixed=[1,0];  
 
-  savevtk("squareP0-scalar.vtu",Th,u0,order=vtkorder0,dataname="u0");
-  savevtk("squareP0-scalar.vtu",Th,u0,order=vtkorder0,dataname="u0");
   savevtk("squareP1-scalar.vtu",Th,u1,order=vtkorder1,dataname="u1");  
   savevtk("squareP0-vector.vtu",Th,[uv11,uv12],order=vtkorder0,dataname="u0");
   savevtk("squareP1-vector.vtu",Th,[uv01,uv02],order=vtkorder1,dataname="u1");
-  savevtk("squareP1-mixed.vtu" ,Th,[uv01,uv02],u0,order=vtkordermixed,dataname="u1 u0");    
-  
+  savevtk("squareP1-mixed.vtu" ,Th,[uv01,uv02],u0,order=vtkordermixed,dataname="u1 u0");
+  savevtk("squareP1-appended.vtu",Th,u1,order=vtkorder1,dataname="u1",append=1);
+  savevtk("squareP1-appended.vtu",Th,[uv11,uv12],order=vtkorder0,dataname="u0",append=1);         
+}
+
+{
+  macro dimension()3                  // 2D or 3D    
+  include "macro_ddm.idp"             // DDM Function FreeFEM
   load "msh3"
-  mesh3 Th3 = cube(10,10,10);
+  
+  mesh3 Th3 = cube(3,3,3);
+  buildDmesh(Th3)     
+
   fespace Vh31 (Th3, P1); fespace Vh30 (Th3, P0);
   Vh31 u31 = x; Vh30 u30 = x;
   fespace Vh3v1 (Th3, [P1,P1,P1]); fespace Vh3v0 (Th3, [P0,P0,P0]);
   Vh3v1 [uv311,uv312,uv313] = [x,y,z]; Vh3v0 [uv301,uv302,uv303] = [x,y,z];  
-  int[int] vtkorder30=[0];
-  int[int] vtkorder31=[1];  
-  savevtk("cubeP0-scalar.vtu",Th3,u30,order=vtkorder30,dataname="u0");
-  savevtk("cubeP1-scalar.vtu",Th3,u31,order=vtkorder31,dataname="u1");   
+  int[int] vtkorder0=[0];
+  int[int] vtkorder1=[1];  
+  int[int] vtkordermixed=[1,0];  
+  
+  savevtk("cubeP0-scalar.vtu",Th3,u30,order=vtkorder0,dataname="u0");
+  savevtk("cubeP1-scalar.vtu",Th3,u31,order=vtkorder1,dataname="u1");   
   savevtk("cubeP0-vector.vtu",Th3,[uv311,uv312,uv313],order=vtkorder0,dataname="u0");
-  savevtk("cubeP1-vector.vtu",Th3,[uv301,uv302,uv303],order=vtkorder1,dataname="u1"); 
+  savevtk("cubeP1-vector.vtu",Th3,[uv301,uv302,uv303],order=vtkorder1,dataname="u1");   
+  savevtk("cubeP1-mixed.vtu",Th3,[uv301,uv302,uv303],u30,order=vtkordermixed,dataname="u1 u0");     
+  savevtk("cubeP0-appended.vtu",Th3,u30,order=vtkorder0,dataname="u0",append=1);
+  savevtk("cubeP0-appended.vtu",Th3,u31,order=vtkorder1,dataname="u1",append=1);
+}
+   

@@ -1,4 +1,4 @@
-SUBDIRS = cpp law
+SUBDIRS = cpp law test
 
 clean-local:
 	@echo ""

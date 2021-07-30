@@ -6,8 +6,10 @@
                                                                               
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
-     Date     : 2020‑06‑24                                                    
-                                                                              
+     Date     : 2021‑07‑29                                                    
+     Comment  : This test checks the MFrontParameter routine provided
+                in the mfront plugin of PSD works well
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -15,25 +17,9 @@
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
-*******************************************************************************/ 
-
-load "../../src/plugins/soil-laws/cpp/soil-laws"
-
-real[int]  vector1(3);
-vector1=-50.e3;
-
-real[int]  vector2(3);
-vector2=0.;
-
-real[int]  vector3(24);
-vector3=0.;
-
-PSDHujeuxSoilLaw (  
-                   ParamaterFile     = "Hujeuxparam.input",
-                   stressVector      =  vector1,
-                   strainVector      =  vector2,                     
-                   InternalVariables =  vector3                   
-                 );
-
-if(0)
- cout << " Vector 2 in PSD is  " << vector2 << endl;
+*******************************************************************************/                                                                                                                                                                                                                                     
+  load    "../cpp/mfront"
+  
+  real mu = 11;
+  
+  MFrontParameter(mu);

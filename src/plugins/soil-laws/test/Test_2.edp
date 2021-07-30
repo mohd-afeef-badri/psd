@@ -7,7 +7,8 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test checks the PSDHujeuxSoilLaw routine provided 
+                in the soil-laws plugin of PSD.                                                                            
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -17,17 +18,23 @@
                                                                               
 *******************************************************************************/ 
 
-load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
+load "../cpp/soil-laws"
 
-topiivolpart( "./../../etc/DEM_160m", 
-              outfile ="point-cloud-strip", 
-              pointsx=32, 
-              pointsy=29, 
-              pointsz=4, 
-              zdepth=-1920.0, 
-              partx=1, 
-              party=mpisize, 
-              partz=1
-            ); 
-            
-//topiivolpart("../../etc/DEM_160m",outfile="point-cloud-strip",pointsx=32,pointsy=29);
+real[int]  vector1(3);
+vector1=-50.e3;
+
+real[int]  vector2(3);
+vector2=0.;
+
+real[int]  vector3(24);
+vector3=0.;
+
+PSDHujeuxSoilLaw (  
+                   ParamaterFile     = "Hujeuxparam.input",
+                   stressVector      =  vector1,
+                   strainVector      =  vector2,                     
+                   InternalVariables =  vector3                   
+                 );
+
+if(0)
+ cout << " Vector 2 in PSD is  " << vector2 << endl;

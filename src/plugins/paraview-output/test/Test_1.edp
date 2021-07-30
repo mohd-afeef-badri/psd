@@ -7,7 +7,9 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test simply checks if the loading of PSD-iovtk
+                works well 
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -15,6 +17,6 @@
      that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
-*******************************************************************************/ 
+*******************************************************************************/                                                                                                                                                                                                                                     
 
-load "../../src/plugins/soil-laws/cpp/soil-laws"
+  load    "../cpp/PSD-iovtk"

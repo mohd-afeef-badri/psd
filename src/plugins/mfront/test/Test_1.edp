@@ -7,7 +7,9 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2021‑07‑29                                                    
-                                                                              
+     Comment  : This test simply checks if the loading of mfront
+                works well
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -16,8 +18,4 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../../src/plugins/mfront/cpp/mfront"
-  
-  real mu = 11;
-  
-  MFrontParameter(mu);
+  load    "../cpp/mfront"

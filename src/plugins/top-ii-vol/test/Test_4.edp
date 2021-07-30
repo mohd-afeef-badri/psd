@@ -7,7 +7,10 @@
      Author(s): Mohd Afeef Badri                                              
      Email    : mohd-afeef.badri@cea.fr                                       
      Date     : 2020‑06‑24                                                    
-                                                                              
+     Comment  : This test  checks partitoning of a pointcloud and prod-
+                duction of a partitioned mesh via the top-ii-vol plugin
+                from PSD. Partitioning is restricted X direction.
+                                                                                              
      -------------------------------------------------------------------      
                                                                               
      PSD a parallel  finite  element framework  provides tools to  solve      
@@ -17,17 +20,17 @@
                                                                               
 *******************************************************************************/
 
-load "../../src/plugins/top-ii-vol/cpp/top-ii-vol"
+load "../cpp/top-ii-vol"
 
-topiivolpart( "./../../etc/Point-Cloud", 
+topiivolpart( "./../../../../etc/Point-Cloud", 
               outfile ="point-cloud-strip", 
               pointsx=63, 
               pointsy=57, 
               pointsz=4, 
               zdepth=-1920.0, 
-              partx=1, 
+              partx=mpisize, 
               party=1, 
-              partz=mpisize
+              partz=1
             ); 
 //topiivolpart("../../etc/Point-Cloud",outfile="point-cloud-strip",pointsx=63,pointsy=57);
 mpiBarrier(mpiCommWorld);
@@ -35,9 +38,9 @@ mpiBarrier(mpiCommWorld);
                  outfile="top-ii-vol-mesh",
                  pointsz=4,
                  zdepth=-1920.0,
-                 partx=1,
+                 partx=mpisize,
                  party=1,
-                 partz=mpisize
+                 partz=1
                );
    
 //topiivolmesh("point-cloud-strip",outfile="top-ii-vol-mesh",pointsz=4,zdepth=-1920.0);
@@ -72,5 +75,5 @@ macro def(u)u//
     u[] = A^-1 * rhs; 
 
     int[int] fforder=[1];
-    savevtk("solutionZ.vtu",Th,u,order=fforder, dataname = "u");
+    savevtk("solutionX.vtu",Th,u,order=fforder, dataname = "u");
 }    
