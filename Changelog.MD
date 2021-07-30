@@ -1,7 +1,25 @@
 # Changelog
 All notable changes to PSD solver will be documented in this file.
 
-## Rolling Release (2.2)
+
+
+## Rolling Release (2.3)
+
+#### Added
+
+- More tests for each plugin and physics, now added in their respective folders.
+- Support for Mfront and Mgis interface for non-linear material laws
+- New plugin `mfront` can now be loaded in PSD. 
+
+#### Changed
+
+- 
+
+#### Bug
+
+- Bug in top-ii-vol meshing due to MPI communication removed.
+
+## [2.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) - 2021-07-28
 ### Added
 
 - New and more verbose tutorials on fracture mechanics, soil-dynamics.
@@ -19,8 +37,6 @@ check NP=USER_PROCS`.
 - Moved to GitLab for hosting the repository.
 - New checks for wrong flag. Now if wrong flag or values is entered PSD will give error.
 - Boolean flags now also accept value 1|0|yes|no|on|off|true|false for turning on or off.
-
-### Removed 
 
 ## [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) - 2021-01-27
 ### Added
@@ -258,3 +274,4 @@ check NP=USER_PROCS`.
 | [1.8](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8) | 2f26292636c7248133e31ae912ee58113de2ef71 |
 | [2.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0) | 1e1a4d7f10df30d106b52eba1c5caf69e8bc0f36 |
 | [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) | 8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2 |
+| [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) | 5e0368f990d505d3bf1960122cb99a23e08567b0 |

@@ -1,14 +1,29 @@
 <h1 id="changelog">Changelog</h1>
 <p>All notable changes to PSD solver will be documented in this file.</p>
-<h2 id="rolling-release-2.2">Rolling Release (2.2)</h2>
-<h3 id="added">Added</h3>
+<h2 id="rolling-release-2.3">Rolling Release (2.3)</h2>
+<h4 id="added">Added</h4>
+<ul>
+<li>More tests for each plugin and physics, now added in their respective folders.</li>
+<li>Support for Mfront and Mgis interface for non-linear material laws</li>
+<li>New plugin <code>mfront</code> can now be loaded in PSD.</li>
+</ul>
+<h4 id="changed">Changed</h4>
+<ul>
+<li></li>
+</ul>
+<h4 id="bug">Bug</h4>
+<ul>
+<li>Bug in top-ii-vol meshing due to MPI communication removed.</li>
+</ul>
+<h2 id="section"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2">2.2</a> - 2021-07-28</h2>
+<h3 id="added-1">Added</h3>
 <ul>
 <li>New and more verbose tutorials on fracture mechanics, soil-dynamics.</li>
 <li>Fast and parallel post processing is now performed using <code>pvtu</code> files.</li>
 <li>New PETSc interface in plugins that supports pvtu output.</li>
 <li>Error mechanism to signify wrong PSD flags.</li>
 </ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed-1">Changed</h3>
 <ul>
 <li>Flag values now donot contain hyphens '-' use underscore instead '_', e.g, <code>linear-elasticity</code> is now <code>linear_elasticity</code></li>
 <li>4 CPU procs are now used for <code>make check</code>, user can control this by <code>make check NP=USER_PROCS</code>.</li>
@@ -17,9 +32,8 @@
 <li>New checks for wrong flag. Now if wrong flag or values is entered PSD will give error.</li>
 <li>Boolean flags now also accept value 1|0|yes|no|on|off|true|false for turning on or off.</li>
 </ul>
-<h3 id="removed">Removed</h3>
-<h2 id="section"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1">2.1</a> - 2021-01-27</h2>
-<h3 id="added-1">Added</h3>
+<h2 id="section-1"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1">2.1</a> - 2021-01-27</h2>
+<h3 id="added-2">Added</h3>
 <ul>
 <li>New accurate force calculations via matrix-vector product: new flag <code>-getreactionforce</code>.</li>
 <li>New flag <code>-reactionforce</code> variational-based | stress-based to get reaction force on a surface.</li>
@@ -33,14 +47,14 @@
 <li>New developments in parallel interpolations.</li>
 <li>Tutorials added, use <code>make tutorials</code> to install</li>
 </ul>
-<h3 id="changed-1">Changed</h3>
+<h3 id="changed-2">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.7-1.</li>
 <li>Moved to PETSc 3.14.</li>
 <li>New version of top-ii-vol v 1.3 support for exascale computing (includes new 2D 3D partitioning)</li>
 <li><code>-fastmethod</code> now replaced by <code>-withmaterialtensor</code> (this is now inverse of <code>-fastmethod</code>)</li>
 </ul>
-<h3 id="removed-1">Removed</h3>
+<h3 id="removed">Removed</h3>
 <ul>
 <li>Flag <code>-pipegnu</code> not supported for damage mechanics (to be further deprecated from elsto/soildynamics)</li>
 </ul>
@@ -53,8 +67,8 @@
 <li>Hybrid phase-field with constrain with wrong update</li>
 </ul>
 <p>(see has <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=commit&amp;h=20ebfbc3cc58b9f1407658543bf3b239e74bd089">20ebfbc3cc58b9f1407658543bf3b239e74bd089</a>)</p>
-<h2 id="section-1"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0">2.0</a> - 2020-08-18</h2>
-<h3 id="added-2">Added</h3>
+<h2 id="section-2"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0">2.0</a> - 2020-08-18</h2>
+<h3 id="added-3">Added</h3>
 <ul>
 <li>New processing via C++, <code>PSD_PreProcess</code> binary (MAJOR CHANGE).</li>
 <li>New solving via shell wrapper <code>PSD_Solve</code> instead of <code>FreeFem++</code> or <code>FreeFem++-mpi</code>.</li>
@@ -80,7 +94,7 @@
 <li>New flag <code>-doublecouple</code> force-based | displacement-based to use double couple source for soildynamics.</li>
 <li>New top-ii-vol parallel meshing via <code>-top2vol-meshing</code> flag (compatible with soildynamics).</li>
 </ul>
-<h3 id="changed-2">Changed</h3>
+<h3 id="changed-3">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.6.</li>
 <li>Moved to PETSc 13.13.</li>
@@ -90,7 +104,7 @@
 <li>Replaced GFPDecompEnergy2D/GFPDecompEnergy3D by a generic 2D/3D function GFPSplitEnergy(Eps1[],PsiPlus[],PsiMinus[],HistPlus[],HistMinus[],par);.</li>
 <li>Postprocessing flag <code>-postprocess</code> options now support <code>u</code> , <code>v</code>, <code>a</code> , <code>uv</code>, <code>ua</code>, <code>av</code> or <code>uav</code>.</li>
 </ul>
-<h3 id="removed-2">Removed</h3>
+<h3 id="removed-1">Removed</h3>
 <ul>
 <li>No more <code>FFINSTALLDIR</code> and <code>GMSH</code> variables during <code>make</code> and <code>make check</code>.</li>
 <li>No more <code>-plot</code> flag now handled by <code>-postprocess</code>.</li>
@@ -105,15 +119,15 @@
 <ul>
 <li>Bug in 3D paraxial loading (see hash <a href="https://codev-tuleap.intra.cea.fr/plugins/git/hpcseism/freefem?a=blobdiff&amp;h=f23846d41b3eee27b9f2c3b852b9c5e2f90080c5&amp;hp=0af4cfcc1355b98cc09a94e42c8ec521c6c0bb00&amp;hb=8fcbe7390e526423cd24b5f0ab1c06899b36c67f&amp;f=src%2Fpsd-preprocessor%2FMacros.hpp">8fcbe7390e526423cd24b5f0ab1c06899b36c67f</a>)</li>
 </ul>
-<h2 id="section-2"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8">1.8</a> - 2020-01-21</h2>
-<h3 id="added-3">Added</h3>
+<h2 id="section-3"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8">1.8</a> - 2020-01-21</h2>
+<h3 id="added-4">Added</h3>
 <ul>
 <li>New soil dynamic module <code>-soildynamics</code></li>
 <li>New paraxial element support in 2D.</li>
 <li>New timeplotting support <code>-timepvd</code></li>
 <li>New <code>-postprocess</code> option for postprocessing <code>u</code> , <code>v</code>, <code>a</code> , or <code>uav</code>.</li>
 </ul>
-<h3 id="changed-3">Changed</h3>
+<h3 id="changed-4">Changed</h3>
 <ul>
 <li>Moved to FreeFEM 4.4.2.</li>
 <li>Moved to PETSc 13.12.</li>
@@ -121,8 +135,8 @@
 <li>VTU files get stored with a date and time stamp.</li>
 <li>New way of maintaining a logfile for all simulations (date,time,case,..) in <code>simulation-log.csv</code>.</li>
 </ul>
-<h2 id="section-3"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.7">1.7</a> - 2019-11-08</h2>
-<h3 id="added-4">Added</h3>
+<h2 id="section-4"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.7">1.7</a> - 2019-11-08</h2>
+<h3 id="added-5">Added</h3>
 <ul>
 <li>New mesh reordering via Reverse Cuthill-Mackee via <code>-useRCM</code>.</li>
 <li>New quasi-static parallel solver (Extension of B.Masseron &amp; G.Rastiello sequential version).</li>
@@ -131,7 +145,7 @@
 <li>New option <code>-fastmethod</code> to switch back to default variational formulation.</li>
 <li>New make flag for compiling on supercomputer.</li>
 </ul>
-<h3 id="changed-4">Changed</h3>
+<h3 id="changed-5">Changed</h3>
 <ul>
 <li>Changed variational formulation now using <span class="math inline"><em>ϵ</em>(<em>u</em>):<em>A</em> : <em>ϵ</em>(<em>v</em>)</span>.</li>
 <li>Using GFP becomes optional <code>-useGFP</code>.</li>
@@ -139,19 +153,19 @@
 <li>Better plotting support for <code>PlotMPI()</code>.</li>
 <li>Moved to FreeFEM 4.4.</li>
 </ul>
-<h2 id="section-4"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.6">1.6</a> - 2019-06-11</h2>
-<h3 id="added-5">Added</h3>
+<h2 id="section-5"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.6">1.6</a> - 2019-06-11</h2>
+<h3 id="added-6">Added</h3>
 <ul>
 <li>Dynamic linear solver in 2D and 3D parallel/sequential.</li>
 <li>New finite element variable for partition of unity-- for fixing integrals.</li>
 </ul>
-<h3 id="changed-5">Changed</h3>
+<h3 id="changed-6">Changed</h3>
 <ul>
 <li>Better documentation via <code>.md</code> and <code>.html</code> files.</li>
 <li>Correct quadrature order for faster computations.</li>
 <li>Major changes/splitting of <code>.script</code> files.</li>
 </ul>
-<h3 id="removed-3">Removed</h3>
+<h3 id="removed-2">Removed</h3>
 <ul>
 <li>Removed the <code>BoundaryAndSourceConditions.script</code> merged with <code>ControlParameters.script</code>.</li>
 </ul>
@@ -159,40 +173,40 @@
 <ul>
 <li>Bug in integrals fixed.</li>
 </ul>
-<h2 id="section-5"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.5">1.5</a> - 2019-05-29</h2>
-<h3 id="added-6">Added</h3>
+<h2 id="section-6"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.5">1.5</a> - 2019-05-29</h2>
+<h3 id="added-7">Added</h3>
 <ul>
 <li>Dynamic linear solver in 2D and 3D sequential.</li>
 <li>New meshes for dynamics tests <code>bar-dynamic.msh</code>.</li>
 <li>Checking modules <code>make check</code>.</li>
 <li>Faster sparsity pattern calculations.</li>
 </ul>
-<h3 id="changed-6">Changed</h3>
+<h3 id="changed-7">Changed</h3>
 <ul>
 <li>Better documentation via <code>.md</code> and <code>.html</code> files.</li>
 <li>Major restructuring of the codes.</li>
 <li>Moved to <code>automake</code> for solver installation.</li>
 <li>Mesh building via <code>make</code>.</li>
 </ul>
-<h3 id="removed-4">Removed</h3>
+<h3 id="removed-3">Removed</h3>
 <ul>
 <li>Removed the manufactured solution codes.</li>
 </ul>
-<h2 id="section-6"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4">1.4</a> - 2019-05-14</h2>
-<h3 id="added-7">Added</h3>
+<h2 id="section-7"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4">1.4</a> - 2019-05-14</h2>
+<h3 id="added-8">Added</h3>
 <ul>
 <li>Fully vectorial finite element solver for phase-filed <code>-vectorial</code>.</li>
 <li>New <code>-supercomp</code> for avoiding xterm issues on super computers.</li>
 <li>New <code>MatViz()</code> function for matrix sparsity visualization.</li>
 <li>Introduced <code>GFP</code> plugin support (Go Fast Plugins).</li>
 </ul>
-<h3 id="changed-7">Changed</h3>
+<h3 id="changed-8">Changed</h3>
 <ul>
 <li>Elastic energy decomposition is now optional <code>-energydecomp</code>.</li>
 <li>Force calculation using integrals (Thanks to G.Rastiello).</li>
 </ul>
-<h2 id="section-7"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.3">1.3</a> - 2019-04-08</h2>
-<h3 id="added-8">Added</h3>
+<h2 id="section-8"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.3">1.3</a> - 2019-04-08</h2>
+<h3 id="added-9">Added</h3>
 <ul>
 <li>New meshes in 2D/3D<code>Notched-plate</code> , <code>square-crack</code>, etc.</li>
 <li>New fracture mechanics module.</li>
@@ -200,7 +214,7 @@
 <li>New <code>-timelog</code> for time logging the solver.</li>
 <li>New <code>-pipegnu</code> for GNUplot piping.</li>
 </ul>
-<h3 id="changed-8">Changed</h3>
+<h3 id="changed-9">Changed</h3>
 <ul>
 <li>Scripting now performed using <code>.script</code> files:
 <ul>
@@ -214,8 +228,8 @@
 <li>Move to FreeFEM version 4.0.</li>
 <li>Move to PETSc version 3.11.</li>
 </ul>
-<h2 id="section-8"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1">1.2</a> - 2019-03-18</h2>
-<h3 id="added-9">Added</h3>
+<h2 id="section-9"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1">1.2</a> - 2019-03-18</h2>
+<h3 id="added-10">Added</h3>
 <ul>
 <li>Support for Gmsh's <code>.msh</code> or Medit's <code>.mesh</code> meshes in folder <code>Meshes</code>.</li>
 <li>Advance to 3D physics.</li>
@@ -226,29 +240,29 @@
 <li>New point boundary condition macro <code>pointbc(Real[int], fespace, matrix)</code>.</li>
 <li>New flags for communicating with the solver: <code>-dimension</code>, <code>-plot</code>, <code>-bodyforce</code>, <code>-lagrange</code>, etc.</li>
 </ul>
-<h3 id="changed-9">Changed</h3>
+<h3 id="changed-10">Changed</h3>
 <ul>
 <li>More advance README.MD.</li>
 <li>Sequential solver now merged within scripting via flag <code>-sequential</code>.</li>
 <li>Move to FreeFEM version 3.62.</li>
 <li>Moved manufactured solutions to <code>validation-test</code> folder.</li>
 </ul>
-<h2 id="section-9"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1">1.1</a> - 2019-03-04</h2>
-<h3 id="added-10">Added</h3>
+<h2 id="section-10"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.1">1.1</a> - 2019-03-04</h2>
+<h3 id="added-11">Added</h3>
 <ul>
 <li>Initial FreeFEM files for sequential linear elasticity in 2D (case of constrained bar).</li>
 <li>More cases of manufactured solution for linear elasticity in 2D.</li>
 <li>Added README.MD for explaining the solver.</li>
 <li>ParaView plotting activated.</li>
 </ul>
-<h3 id="changed-10">Changed</h3>
+<h3 id="changed-11">Changed</h3>
 <ul>
 <li>Moved to Tuleap git hosting from CEA.</li>
 <li>Separate folder of manufactured solutions and the linear elastic solver.</li>
 <li>Move to FreeFEM version 3.61.</li>
 </ul>
-<h2 id="section-10"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.0">1.0</a> - 2019-02-15</h2>
-<h3 id="added-11">Added</h3>
+<h2 id="section-11"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.0">1.0</a> - 2019-02-15</h2>
+<h3 id="added-12">Added</h3>
 <ul>
 <li>Initial FreeFEM files Method of manufactured solution for linear elasticity in 2D.</li>
 </ul>
@@ -304,6 +318,10 @@
 <tr class="odd">
 <td><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1">2.1</a></td>
 <td>8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2</td>
+</tr>
+<tr class="even">
+<td><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2">2.1</a></td>
+<td>5e0368f990d505d3bf1960122cb99a23e08567b0</td>
 </tr>
 </tbody>
 </table>
