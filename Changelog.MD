@@ -9,7 +9,9 @@ All notable changes to PSD solver will be documented in this file.
 
 - More tests for each plugin and physics, now added in their respective folders.
 - Support for Mfront and Mgis interface for non-linear material laws
-- New plugin `mfront` can now be loaded in PSD. 
+- New plugin `mfront` can now be loaded in PSD.
+- `-withmaterialtensor` now uses Quadrature finite elements to build the material tensor.
+- New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.
 
 #### Changed
 
