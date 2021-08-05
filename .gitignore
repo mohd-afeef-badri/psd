@@ -9,6 +9,11 @@
 .output
 .info
 
+##Exec Files ##
+*PSD_PreProcess
+*PSD_Solve
+*PSD_Solve_Seq
+
 ## ORIGINAL FILES ##
 *.orig
 
