@@ -664,6 +664,8 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
 
 } //-- [if loop terminator] !vectorial ended --//
 
+
+ if(fastmethod)
  writeIt
  "                                                                               \n" 
  "//=============================================================================\n"
@@ -681,6 +683,46 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
  "                       (dz( i ) + dx(i#2))/SQ2,                                \n"
  "                       (dy( i ) + dx(i#1))/SQ2 ]        //                     \n"
  "                                                                               \n";
+
+
+
+ if(Prblm=="linear_elasticity" && !fastmethod) 
+ writeIt
+ "                                                                               \n" 
+ "//=============================================================================\n"
+ "//                 ------- operator definition macros  -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// divergence(i) : divergence operator definition, given a displacement vector \n"
+ "//                 'i' returns scalar value                                    \n" 
+ "// epsilon(i)    : symmetric strain tensor operator given  displacement vector \n"
+ "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"
+ "// epsilonXMt(i,Mt) : given  displacement vector 'i' calculates strain X Mt i.e\n"
+ "//                   Strain X material tensor                                  \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ "  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )   //                     \n"
+ "                                                                               \n"  
+ "  macro epsilon   (i) [ dx( i )           ,                                    \n"  
+ "                        dy(i#1)           ,                                    \n"  
+ "                        dz(i#2)           ,                                    \n"
+ "                       (dz(i#1) + dy(i#2)),                                    \n"
+ "                       (dz( i ) + dx(i#2)),                                    \n"
+ "                       (dy( i ) + dx(i#1)) ]        //                         \n"
+ "                                                                               \n"
+ "                                                                               \n"
+ "                                                                               \n"  
+ "  macro epsilonXMt(u,Mt) [                                                     \n"
+ "                                                                               \n" 
+ "  epsilon(u)[0]*Mt[0] + epsilon(u)[1]*Mt[1]  + epsilon(u)[2]*Mt[2]  + epsilon(u)[3]*Mt[3]  + epsilon(u)[4]*Mt[4]  + epsilon(u)[5]*Mt[5] , \n"
+ "  epsilon(u)[0]*Mt[1] + epsilon(u)[1]*Mt[6]  + epsilon(u)[2]*Mt[7]  + epsilon(u)[3]*Mt[8]  + epsilon(u)[4]*Mt[9]  + epsilon(u)[5]*Mt[10], \n"
+ "  epsilon(u)[0]*Mt[2] + epsilon(u)[1]*Mt[7]  + epsilon(u)[2]*Mt[11] + epsilon(u)[3]*Mt[12] + epsilon(u)[4]*Mt[13] + epsilon(u)[5]*Mt[14], \n"
+ "  epsilon(u)[0]*Mt[3] + epsilon(u)[1]*Mt[8]  + epsilon(u)[2]*Mt[12] + epsilon(u)[3]*Mt[15] + epsilon(u)[4]*Mt[16] + epsilon(u)[5]*Mt[17], \n"
+ "  epsilon(u)[0]*Mt[4] + epsilon(u)[1]*Mt[9]  + epsilon(u)[2]*Mt[13] + epsilon(u)[3]*Mt[16] + epsilon(u)[4]*Mt[18] + epsilon(u)[5]*Mt[19], \n"
+ "  epsilon(u)[0]*Mt[5] + epsilon(u)[1]*Mt[10] + epsilon(u)[2]*Mt[14] + epsilon(u)[3]*Mt[17] + epsilon(u)[4]*Mt[19] + epsilon(u)[5]*Mt[20]  \n"
+ "                                                                               \n"   
+ "                        ] //                                                   \n"
+ "                                                                               \n";
+ 
 
 if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt

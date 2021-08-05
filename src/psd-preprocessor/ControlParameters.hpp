@@ -113,6 +113,7 @@ if(Prblm=="linear_elasticity")
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
   "}                                                                             \n";
 
+ /*
  if(!fastmethod)
   {
   writeIt
@@ -142,7 +143,7 @@ if(Prblm=="linear_elasticity")
   "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
   "              [ a2 ,  a1 , 0 ],                                               \n"
   "              [ 0  ,  0  , a3]]//                                             \n";
-*/
+
  if(spc==3)
   writeIt
   "                                                                              \n"
@@ -152,7 +153,10 @@ if(Prblm=="linear_elasticity")
   "              [ 0  ,  0  , 0  , a3 , 0  , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , 0  , a3 , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , 0  , 0  , a3]]//                              \n";
+  
+  
   }
+  */
  }
 
 

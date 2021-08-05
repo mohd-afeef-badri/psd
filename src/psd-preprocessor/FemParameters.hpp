@@ -23,7 +23,7 @@ if(Prblm=="linear_elasticity"){
  "// ------- Finite element variables -------                                   \n"
  "// -------------------------------------------------------------------        \n"
  "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n";
- if(!fastmethod)
+ if(!fastmethod && spc==2)
   writeIt
   "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
   "//            re space Qh. This array is used  to define components of the    \n"
@@ -34,24 +34,50 @@ if(Prblm=="linear_elasticity"){
   "//   Mt =  [ lambda      ,  2*mu+lambda , 0 ] =  [ Mt[1] , Mt[3] , Mt[4] ]    \n"
   "//         [   0         ,     0        , mu]    [ Mt[2] , Mt[4] , Mt[5] ]    \n"
   "                                                                              \n";
+ if(!fastmethod && spc==3)
+  writeIt
+  "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
+  "//            re space Qh. This array is used  to define components of the    \n"
+  "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
+  "//            In 3D the material tensor looks like                            \n"
+  "                                                                              \n"    
+  "//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n" 
+  "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"      
+  "                                                                              \n";
+
       
  writeIt       
   "//============================================================================\n"
   "                                                                              \n"
   "  Vh  def(u)    ;                                                             \n";
 
- if(!fastmethod){
-  writeIt
-  "                                                                              \n"
-  "  Qh[int] Mt(6);    ;                                                         \n";
-  
+ if(!fastmethod){ 
  if(spc==2)
   writeIt
+  "                                                                              \n"
+  "  Qh[int] Mt(6);    ;                                                         \n"
   "                                                                              \n"  
   "  Mt[0] = 2*mu+lambda ;  Mt[1] = lambda      ; Mt[2] = 0           ;          \n"
   "                      ;  Mt[3] = 2*mu+lambda ; Mt[4] = 0           ;          \n"
   "                      ;                      ; Mt[5] = mu          ;          \n"
   "                                                                              \n";
+  
+ if(spc==3)
+  writeIt
+  "                                                                              \n"
+  "  Qh[int] Mt(21);    ;                                                        \n"
+  "                                                                              \n"  
+  "  Mt[0] = 2*mu+lambda ;  Mt[1] = lambda      ; Mt[2]  = lambda      ; Mt[3]  = 0 ;  Mt[4]  = 0 ; Mt[5]  = 0  ;     \n"
+  "                      ;  Mt[6] = 2*mu+lambda ; Mt[7]  = lambda      ; Mt[8]  = 0 ;  Mt[9]  = 0 ; Mt[10] = 0  ;     \n"
+  "                      ;                      ; Mt[11] = 2*mu+lambda ; Mt[12] = 0 ;  Mt[13] = 0 ; Mt[14] = 0  ;     \n"
+  "                      ;                      ;                      ; Mt[15] = mu;  Mt[16] = 0 ; Mt[17] = 0  ;     \n"
+  "                      ;                      ;                      ;            ;  Mt[18] = mu; Mt[19] = 0  ;     \n"
+  "                      ;                      ;                      ;            ;             ; Mt[20] = mu ;     \n"      
+  "                                                                              \n";  
   }  
 
 } 
