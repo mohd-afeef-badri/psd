@@ -22,42 +22,27 @@ if(Prblm=="linear_elasticity"){
  "//============================================================================\n"
  "// ------- Finite element variables -------                                   \n"
  "// -------------------------------------------------------------------        \n"
- "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n";
- if(!fastmethod && spc==2)
-  writeIt
+ "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n"
+ "//============================================================================\n"
+ "                                                                              \n"
+ "  Vh  def(u)    ;                                                             \n";
+
+ if(!fastmethod){ 
+ if(spc==2)
+ writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Material Tensor using Quadrature FE space -------                  \n"
+  "// -------------------------------------------------------------------        \n"
   "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
   "//            re space Qh. This array is used  to define components of the    \n"
   "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
   "//            In 2D the material tensor looks like                            \n"
-  "                                                                              \n"    
+  "//                                                                            \n"    
   "//         [ 2*mu+lambda ,  lambda      , 0 ]    [ Mt[0] , Mt[1] , Mt[2] ]    \n"
   "//   Mt =  [ lambda      ,  2*mu+lambda , 0 ] =  [ Mt[1] , Mt[3] , Mt[4] ]    \n"
   "//         [   0         ,     0        , mu]    [ Mt[2] , Mt[4] , Mt[5] ]    \n"
-  "                                                                              \n";
- if(!fastmethod && spc==3)
-  writeIt
-  "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
-  "//            re space Qh. This array is used  to define components of the    \n"
-  "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
-  "//            In 3D the material tensor looks like                            \n"
-  "                                                                              \n"    
-  "//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         \n"
-  "// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         \n"
-  "//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         \n"
-  "//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         \n"
-  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n" 
-  "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"      
-  "                                                                              \n";
-
-      
- writeIt       
   "//============================================================================\n"
-  "                                                                              \n"
-  "  Vh  def(u)    ;                                                             \n";
-
- if(!fastmethod){ 
- if(spc==2)
-  writeIt
   "                                                                              \n"
   "  Qh[int] Mt(6);    ;                                                         \n"
   "                                                                              \n"  
@@ -68,6 +53,22 @@ if(Prblm=="linear_elasticity"){
   
  if(spc==3)
   writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Material Tensor using Quadrature FE space -------                  \n"
+  "// -------------------------------------------------------------------        \n"  
+  "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
+  "//            re space Qh. This array is used  to define components of the    \n"
+  "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
+  "//            In 3D the material tensor looks like                            \n"
+  "//                                                                            \n"    
+  "//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n" 
+  "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"
+  "//============================================================================\n"
   "                                                                              \n"
   "  Qh[int] Mt(21);    ;                                                        \n"
   "                                                                              \n"  
