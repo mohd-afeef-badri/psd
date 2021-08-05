@@ -93,8 +93,6 @@ if(Prblm=="soildynamics")
 if(Prblm=="linear_elasticity")
  {
 
-
- if(fastmethod)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -137,13 +135,14 @@ if(Prblm=="linear_elasticity")
   "       a3 = E/(2*(1.+nu))                    ;                                \n"
   "}                                                                             \n";
 
+/*
  if(spc==2)
   writeIt
   "                                                                              \n"
   "  macro Mt   [[ a1 ,  a2 , 0 ],                                               \n"
   "              [ a2 ,  a1 , 0 ],                                               \n"
   "              [ 0  ,  0  , a3]]//                                             \n";
-
+*/
  if(spc==3)
   writeIt
   "                                                                              \n"

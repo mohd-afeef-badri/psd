@@ -68,6 +68,18 @@ if(Sequential){
  "                                                                                \n"
  " fespace Vh   ( Th , Pk );                                                      \n";
 
+ if(Prblm=="linear_elasticity" && !fastmethod)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh1       : Quadratur finite element space  for material tensor             \n"
+ "//              FEQF2 implies 3 dof for tria and 4 for Tetra                    \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Qh  ( Th , FEQF2 );                                                    \n";
+ 
  if(Prblm=="damage" && Model=="hybrid_phase_field")
   writeIt
  "                                                                                \n"
@@ -135,6 +147,19 @@ if(!Sequential){
  "//==============================================================================\n"
  "                                                                                \n"
  " fespace Vh     ( Th , Pk );                                                    \n";
+
+ if(Prblm=="linear_elasticity" && !fastmethod)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Vh1       : Quadratur finite element space  for material tensor             \n"
+ "//              FEQF2 implies 3 dof for tria and 4 for Tetra                    \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Qh  ( Th , FEQF2 );                                                    \n";
+  
 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt

@@ -43,7 +43,11 @@ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
 if(pipegnu)if(!supercomp)
  writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
-
+ 
+if(Prblm=="linear_elasticity" && !fastmethod) 
+ writeIt
+ "  load    \"Element_QF\"                           // Quadrature elements     \n";
+ 
 if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
  "  load    \"Element_QF\"                           // Quadrature elements     \n"

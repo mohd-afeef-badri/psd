@@ -29,8 +29,8 @@ if(!fastmethod)
  "    //  $+int_{\\Omega}(\\epsilon(u):\\mathbbm(E):\\epsilon(v))$                                \n"
  "    //--------------------------------------------------------------------------                \n"
  "      intN(Th,qforder=3)(                                                                       \n"
- "                     epsilon(u)'*Mt*epsilon(v)                                                  \n";
-
+ "      //               epsilon(u)'*Mt*epsilon(v)                                                \n"
+ "                       epsilonXMt(u,Mt)'*epsilon(v)                                             \n";
 
  writeIt
  "                     )                                                                          \n";
