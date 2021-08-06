@@ -18,7 +18,7 @@ if(Sequential){
 if(tractionconditions>=1){
  writeIt
  "  //--------------tt update for loading--------------//                         \n"
- "                                                                                \n"; 
+ "                                                                                \n";
  if(TimeDiscretization=="generalized_alpha" || TimeDiscretization=="hht_alpha")
  writeIt
  "  tt  = t-real(alpf*dt);                                                        \n";
@@ -88,37 +88,37 @@ if(ParaViewPostProcess){
 if(PostProcess=="u")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
- "              dataname=\"U\"       ,                                            \n"; 
+ "              dataname=\"U\"       ,                                            \n";
 if(PostProcess=="v")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"V\"       ,                                            \n"; 
+ "              dataname=\"V\"       ,                                            \n";
 if(PostProcess=="a")
  writeIt
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"A\"       ,                                            \n"; 
+ "              dataname=\"A\"       ,                                            \n";
 if(PostProcess=="uv" || PostProcess=="vu")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"U V\"    ,                                             \n"; 
+ "              dataname=\"U V\"    ,                                             \n";
 if(PostProcess=="ua" || PostProcess=="au")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "                 dataname=\"U A\" ,                                             \n"; 
+ "                 dataname=\"U A\" ,                                             \n";
 if(PostProcess=="va" || PostProcess=="av")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"V A\"     ,                                            \n";           
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+ "              dataname=\"V A\"     ,                                            \n";
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U  V  A\" ,                                            \n"; 
+ "              dataname=\"U  V  A\" ,                                            \n";
 
 
  writeIt
@@ -127,7 +127,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "                                                                                \n"
  "  //-----------updating iteration count-----------//                            \n"
  "                                                                                \n"
- "  iterout++;                                                                    \n" 
+ "  iterout++;                                                                    \n"
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""                       );
 }
 
@@ -208,13 +208,13 @@ if(!Sequential){
 if(tractionconditions>=1){
  writeIt
  "  //--------------tt update for loading--------------//                         \n"
- "                                                                                \n"; 
+ "                                                                                \n";
  if(TimeDiscretization=="generalized_alpha" || TimeDiscretization=="hht_alpha")
  writeIt
- 
+
  "  tt  = t-real(alpf*dt);                                                        \n";
  if(TimeDiscretization=="newmark_beta" || TimeDiscretization=="central_difference")
- writeIt 
+ writeIt
  "  tt  = t-dt;                                                                   \n";
 }
 
@@ -258,7 +258,7 @@ if(Model=="pseudo_nonlinear")
 <<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                              )<<
  "                                                                                \n";
 
-if(Model=="pseudo-nonlinear")
+if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
  "  //---------update Nonlinear displacement-----------//                         \n"
@@ -339,37 +339,37 @@ if(ParaViewPostProcess){
 if(PostProcess=="u")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
- "              dataname=\"U\"       ,                                            \n"; 
+ "              dataname=\"U\"       ,                                            \n";
 if(PostProcess=="v")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"V\"       ,                                            \n"; 
+ "              dataname=\"V\"       ,                                            \n";
 if(PostProcess=="a")
  writeIt
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"A\"       ,                                            \n"; 
+ "              dataname=\"A\"       ,                                            \n";
 if(PostProcess=="uv" || PostProcess=="vu")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"U V\"    ,                                             \n"; 
+ "              dataname=\"U V\"    ,                                             \n";
 if(PostProcess=="ua" || PostProcess=="au")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U A\"     ,                                            \n"; 
+ "              dataname=\"U A\"     ,                                            \n";
 if(PostProcess=="va" || PostProcess=="av")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"V A\"     ,                                            \n";           
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+ "              dataname=\"V A\"     ,                                            \n";
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U  V  A\" ,                                            \n"; 
+ "              dataname=\"U  V  A\" ,                                            \n";
 
  writeIt
  "                 order=vtuorder     ,                                           \n"

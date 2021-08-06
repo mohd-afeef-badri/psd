@@ -20,6 +20,7 @@ All notable changes to PSD solver will be documented in this file.
 #### Bug
 
 - Bug in top-ii-vol meshing due to MPI communication removed.
+- Bug in  `pseudo_nonlinear` model for Elastodynamics/soildynamics fixed.
 
 ## [2.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) - 2021-07-28
 ### Added
