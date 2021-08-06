@@ -17,15 +17,26 @@ cout << " building FemParameters.edp";
 writeHeader;
 
 if(Prblm=="linear_elasticity"){
+
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Finite element variables -------                                   \n"
  "// -------------------------------------------------------------------        \n"
  "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n"
- "//============================================================================\n"
+ "//============================================================================\n";
+
+
+ if(Model!="pseudo_nonlinear")
+ writeIt
  "                                                                              \n"
  "  Vh  def(u)    ;                                                             \n";
+
+ if(Model=="pseudo_nonlinear")
+ writeIt
+ "                                                                              \n"
+ "  Vh  def(du)   ,                                                             \n"
+ "      def(u)    ;                                                             \n";
 
  if(!fastmethod){
  if(spc==2)
@@ -418,6 +429,34 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
     "  for(int i=0; i<DZ.n; i++)                                                 \n"
     "    DZspc[][i]=DZ[i];                                                       \n";
   }
+}
+
+if(Prblm=="linear_elasticity"){
+
+ if(Sequential)
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Fem matrices and vectors -------                                   \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  matrix  A;                                                                  \n"
+  "  real[int]  b(Vh.ndof);                                                      \n";
+
+ if(!Sequential)
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//  -------  Fem matrices and vectors -------                                 \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  matrix       ALoc    ;                                                      \n"
+  "  real[int]    b(Vh.ndof);                                                    \n"
+  "                                                                              \n"
+  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
+  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "                                                                              \n";
 }
 
 

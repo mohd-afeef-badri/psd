@@ -265,7 +265,7 @@ if(Model=="pseudo_nonlinear")
  "                                                                                \n"
  "  uNL[] += du[];                                                                \n"
  "                                                                                \n"
- "  //------Newton-Raphsons Error calculation---------//                          \n"
+ "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                      )<<
  "  real err1Gather,  err1Loc ;                                                   \n"

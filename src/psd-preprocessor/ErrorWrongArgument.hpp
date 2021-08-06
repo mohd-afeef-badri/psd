@@ -251,6 +251,19 @@
       errorArgument = true;
      }
 
+  if ( Model == "pseudo_nonlinear"  &&   Prblm == "damage" ){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-model pseudo_nonlinear\033[0m only works with \033[1;34m-problem linear_elasticity|elastodynamics|soildynamics\033[0m\n"
+          "\033[1;31m-problem "<< Prblm << "\033[0m is not an acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+
   if ( Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics"
      ){
       cout <<

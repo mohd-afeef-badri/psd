@@ -73,37 +73,37 @@ if(ParaViewPostProcess){
 if(PostProcess=="u")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
- "              dataname=\"U\"       ,                                            \n"; 
+ "              dataname=\"U\"       ,                                            \n";
 if(PostProcess=="v")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"V\"       ,                                            \n"; 
+ "              dataname=\"V\"       ,                                            \n";
 if(PostProcess=="a")
  writeIt
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"A\"       ,                                            \n";  
+ "              dataname=\"A\"       ,                                            \n";
 if(PostProcess=="uv" || PostProcess=="vu")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"U V\"     ,                                            \n";  
+ "              dataname=\"U V\"     ,                                            \n";
 if(PostProcess=="ua" || PostProcess=="au")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U A\"     ,                                            \n";   
+ "              dataname=\"U A\"     ,                                            \n";
 if(PostProcess=="va" || PostProcess=="av")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"V A\"     ,                                            \n";            
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+ "              dataname=\"V A\"     ,                                            \n";
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U V A\"   ,                                            \n";   
+ "              dataname=\"U V A\"   ,                                            \n";
 
 
  writeIt
@@ -112,7 +112,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "                                                                                \n"
  "  //-----------updating iteration count-----------//                            \n"
  "                                                                                \n"
- "  iterout++;                                                                    \n" 
+ "  iterout++;                                                                    \n"
 <<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""                       );
 }
 
@@ -152,15 +152,15 @@ if(!Sequential){
 if(doublecouple=="displacement_based" || doublecouple=="force_based"){
 
 
- if(!pointprobe) 
- writeIt 
+ if(!pointprobe)
+ writeIt
  "                                                                                \n"
  "//==============================================================================\n"
  "//  ------- Applying double couple point boundary condition -------             \n"
  "//==============================================================================\n"
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"Applying double couple A\",t0)\n"  : ""             )<<
- "                                                                                \n" 
+ "                                                                                \n"
  "  GetDoubelCoupleIndicies(                                                      \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
@@ -168,20 +168,20 @@ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
  "   );                                                                           \n"
  "                                                                                \n";
 
- if(pointprobe && dirichletpointconditions<1) 
- writeIt 
+ if(pointprobe && dirichletpointconditions<1)
+ writeIt
  "                                                                                \n"
  "//==============================================================================\n"
  "//  ----- Applying double couple point boundary condition and point probe-----  \n"
  "//==============================================================================\n"
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"Applying double couple A & point probe\",t0)\n" : "")<<
- "                                                                                \n"  
+ "                                                                                \n"
  "  GetDoubelCoupleIndicies(                                                      \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
  "           iNorth,iSouth,iEast,iWest,                                           \n"
  "           Nrank,Srank,Erank,Wrank,                                             \n"
- "           ProbePointCord,   iProbe, Prank                                      \n"  
+ "           ProbePointCord,   iProbe, Prank                                      \n"
  "   );                                                                           \n"
  "                                                                                \n";
 
@@ -207,10 +207,10 @@ if(doublecouple=="unused" && pointprobe && dirichletpointconditions<1){
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"Finding point probe indicies\",t0)\n" : ""          )<<
  "  GetPointProbeIndicies(                                                        \n"
- "           ProbePointCord,   iProbe, Prank                                      \n"  
+ "           ProbePointCord,   iProbe, Prank                                      \n"
  "   );                                                                           \n"
  "                                                                                \n"
- <<(timelog ? "  timerend  (\"Finding point probe indicies\",t0)\n" : ""          )<< 
+ <<(timelog ? "  timerend  (\"Finding point probe indicies\",t0)\n" : ""          )<<
  "                                                                                \n";
 }
 
@@ -233,7 +233,7 @@ if(pointprobe && spc==3)
  "                                                                                \n"
  "      writeprobe << \"# u1  u2  u3  v1  v2  v3  a1  a2  a3\" << endl;           \n"
  "    }                                                                           \n"
- "                                                                                \n";      
+ "                                                                                \n";
 
 if(pointprobe && spc==2)
  writeIt
@@ -347,7 +347,7 @@ if(Model=="pseudo_nonlinear")
  "                                                                                \n"
  "  uNL[] += du[];                                                                \n"
  "                                                                                \n"
- "  //------Newton-Raphsons Error calculation---------//                          \n"
+ "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                   )<<
  "  real err1Gather,  err1Loc ;                                                   \n"
@@ -461,18 +461,18 @@ if(pointprobe && spc==3)
  "  for(int j=0; j < iProbe.n; j++)                                               \n"
  "     if(mpirank==Prank[j]){                                                     \n"
  "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\",append);    \n"
- "      writeprobe << t                   << \"\\t\"                              \n" 
- "                 << uold[][iProbe[j]]   << \"\\t\"                              \n"  
- "                 << uold[][iProbe[j]+1] << \"\\t\"                              \n" 
- "                 << uold[][iProbe[j]+2] << \"\\t\"                              \n"  
- "                 << vold[][iProbe[j]]   << \"\\t\"                              \n"  
- "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n"  
- "                 << vold[][iProbe[j]+2] << \"\\t\"                              \n" 
- "                 << aold[][iProbe[j]]   << \"\\t\"                              \n"  
- "                 << aold[][iProbe[j]+1] << \"\\t\"                              \n"  
- "                 << aold[][iProbe[j]+2] << \"\\t\"                              \n" 
- "                 << endl;                                                       \n" 
- "     }                                                                          \n";  
+ "      writeprobe << t                   << \"\\t\"                              \n"
+ "                 << uold[][iProbe[j]]   << \"\\t\"                              \n"
+ "                 << uold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << uold[][iProbe[j]+2] << \"\\t\"                              \n"
+ "                 << vold[][iProbe[j]]   << \"\\t\"                              \n"
+ "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << vold[][iProbe[j]+2] << \"\\t\"                              \n"
+ "                 << aold[][iProbe[j]]   << \"\\t\"                              \n"
+ "                 << aold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << aold[][iProbe[j]+2] << \"\\t\"                              \n"
+ "                 << endl;                                                       \n"
+ "     }                                                                          \n";
 
 
 if(pointprobe && spc==2)
@@ -484,14 +484,14 @@ if(pointprobe && spc==2)
  "     if(mpirank==Prank[j]){                                                     \n"
  "      ofstream writeprobe(\"probe_\"+j+\"_rank_\"+mpirank+\".data\",append);    \n"
  "      writeprobe << t                   << \"\\t\"                              \n"
- "                 << uold[][iProbe[j]]   << \"\\t\"                              \n" 
+ "                 << uold[][iProbe[j]]   << \"\\t\"                              \n"
  "                 << uold[][iProbe[j]+1] << \"\\t\"                              \n"
- "                 << vold[][iProbe[j]]   << \"\\t\"                              \n" 
- "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n" 
- "                 << aold[][iProbe[j]]   << \"\\t\"                              \n" 
+ "                 << vold[][iProbe[j]]   << \"\\t\"                              \n"
+ "                 << vold[][iProbe[j]+1] << \"\\t\"                              \n"
+ "                 << aold[][iProbe[j]]   << \"\\t\"                              \n"
  "                 << aold[][iProbe[j]+1] << \"\\t\"                              \n"
  "                 << endl;                                                       \n"
- "     }                                                                          \n"; 
+ "     }                                                                          \n";
 
 
 if(ParaViewPostProcess){
@@ -508,40 +508,40 @@ if(ParaViewPostProcess){
 if(PostProcess=="u")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
- "              dataname=\"U\"       ,                                            \n"; 
+ "              dataname=\"U\"       ,                                            \n";
 if(PostProcess=="v")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"V\"       ,                                            \n"; 
+ "              dataname=\"V\"       ,                                            \n";
 if(PostProcess=="a")
  writeIt
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"A\"       ,                                            \n";  
+ "              dataname=\"A\"       ,                                            \n";
 if(PostProcess=="uv" || PostProcess=="vu")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
- "              dataname=\"U V\"     ,                                            \n";  
+ "              dataname=\"U V\"     ,                                            \n";
 if(PostProcess=="ua" || PostProcess=="au")
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U A\"     ,                                            \n";   
+ "              dataname=\"U A\"     ,                                            \n";
 if(PostProcess=="va" || PostProcess=="av")
  writeIt
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"V A\"     ,                                            \n";            
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+ "              dataname=\"V A\"     ,                                            \n";
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
  writeIt
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U V A\"   ,                                            \n"; 
+ "              dataname=\"U V A\"   ,                                            \n";
 
  writeIt
- "                 order=vtuorder     ,                                           \n" 
+ "                 order=vtuorder     ,                                           \n"
  "                 append=true                                                    \n"
  "              );                                                                \n";
 

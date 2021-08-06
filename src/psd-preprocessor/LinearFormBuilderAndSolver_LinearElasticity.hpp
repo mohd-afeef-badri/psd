@@ -13,16 +13,33 @@ if(!Sequential){
  "//--------------Assembly for bilinear--------------//                           \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"matrix Assembly\",t0)\n" : ""                      )<<
- "  matrix     ALoc = elast(Vh,Vh,solver=CG,sym=1);                               \n"
+ "  ALoc = elast(Vh,Vh,solver=CG,sym=1);                                          \n"
 <<(timelog ? "  timerend  (\"matrix Assembly\",t0)\n" : ""                      )<<
+ "                                                                                \n";
+
+
+if(Model=="pseudo_nonlinear")
+ writeIt
  "                                                                                \n"
+ "//---------------PETSc Assembly---------------------//                          \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"PETSc assembly\",t0)\n" : ""                       )<<
+ "  A = ALoc ;                                                                    \n"
+<<(timelog ? "  timerend(\"PETSc assembly\",t0)\n" : ""                         )<<
+ "                                                                                \n"
+ "  //---------Pseudo Nonlinear Loop-----------//                                 \n"
+ "                                                                                \n"
+ "  for (int k=0; k<5; k++){  // Pseudo-nonlinear NR loop                         \n"
+ "                                                                                \n";
+
+ writeIt
  "//---------------Assembly for linear---------------//                           \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                         )<<
- "  real[int]    b = elast(0,Vh);                                                 \n"
+ "  b = elast(0,Vh);                                                              \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                          );
 
-if(dirichletpointconditions>=1 && !pointprobe){
+if(dirichletpointconditions>=1 && !pointprobe && Model!="pseudo_nonlinear"){
  writeIt
  "                                                                                \n"
  "//---------Additional assembly for A & b----------//                            \n"
@@ -30,17 +47,17 @@ if(dirichletpointconditions>=1 && !pointprobe){
 <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""               )<<
  "                                                                                \n"
  "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n";
- 
+
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
- "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
  writeIt
- "                                                                                \n" 
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n";
+ writeIt
+ "                                                                                \n"
 <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
 }
 
 
-if(dirichletpointconditions>=1 && pointprobe){
+if(dirichletpointconditions>=1 && pointprobe && Model!="pseudo_nonlinear"){
  writeIt
  "                                                                                \n"
  "//---------Additional assembly for A & b----------//                            \n"
@@ -49,16 +66,16 @@ if(dirichletpointconditions>=1 && pointprobe){
  "                                                                                \n"
  "  GetPointIndiciesMpiRank( PbcCord, PCi, mpirankPCi,                            \n"
  "                           ProbePointCord, iProbe, Prank);                      \n";
- 
+
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
- "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
  writeIt
- "                                                                                \n" 
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n";
+ writeIt
+ "                                                                                \n"
 <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
 }
 
-if(dirichletpointconditions<1 && pointprobe){
+if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  writeIt
  "                                                                                \n"
  "//---------Point Probe coordinate detection----------//                         \n"
@@ -67,19 +84,22 @@ if(dirichletpointconditions<1 && pointprobe){
  "                                                                                \n"
  "  GetPointProbeIndicies( ProbePointCord, iProbe, Prank);                        \n"
  "                                                                                \n";
- 
+
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
 <<(timelog ? "  timerend(\"finding point probe cords\",t0)\n" : ""                 );
 }
 
+ if( Model!="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
  "//---------------PETSc Assembly---------------------//                          \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"PETSc assembly\",t0)\n" : ""                       )<<
- "  Mat A (ALoc, restrictionIntersectionP, DP, bs = "<<spc<<");                   \n"
+ "  A = ALoc ;                                                                    \n"
 <<(timelog ? "  timerend(\"PETSc assembly\",t0)\n" : ""                         )<<
+ "                                                                                \n"
+ "                                                                                \n"
  "                                                                                \n"
  "//---------------PETSc solving---------------------//                           \n"
  "                                                                                \n"
@@ -88,6 +108,50 @@ if(dirichletpointconditions<1 && pointprobe){
  "  u[] = A^-1*b;                                                                 \n"
 <<(timelog ? "  timerend(\"PETSc solving\",t0)\n" : ""                          );
 
+ if( Model=="pseudo_nonlinear")
+ writeIt
+ "                                                                                \n"
+ "//---------------PETSc solving---------------------//                           \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"PETSc solving\",t0)\n" : ""                       )<<
+ "  set(A,sparams =\" -ksp_type cg -ksp_rtol 1e-9 \");                            \n"
+ "  du[] = A^-1*b;                                                                 \n"
+<<(timelog ? "  timerend(\"PETSc solving\",t0)\n" : ""                          )<<
+ "                                                                                \n"
+ "//---------------Update Solution---------------------//                         \n"
+ "                                                                                \n"
+ "  u[] += du[];                                                                  \n"
+ "                                                                                \n"
+ "  //------pseudo-nonlinear Error calculation---------//                         \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                      )<<
+ "  real err1Gather,  err1Loc ;                                                   \n"
+ "                                                                                \n"
+ "  b = b .* DP                                   ;                               \n"
+ "  err1Loc = b.l2                                ;                               \n"
+ "  err1Loc = err1Loc*err1Loc                     ;                               \n"
+ "  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
+ "  err1Gather = sqrt(err1Gather) ;                                               \n"
+ "                                                                                \n"
+<<(timelog ? "  timerend (\"NL error checking\",t0)\n" : ""                       )<<
+ "                                                                                \n"
+ "  //--------------- Convergence conditional---------------------//              \n"
+ "                                                                                \n"
+ "  if(err1Gather < 1e-5 || k==4){                                                \n"
+ "                                                                                \n"
+ "    //------------------Screen output norm----------------------//              \n"
+ "                                                                                \n"
+ "    if(mpirank==0)                                                              \n"
+ "      cout.scientific << \"NL iteration number :  [ \"  << k                    \n"
+ "      << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                        \n"
+ "      << \" ]\"      << endl;                                                   \n"
+ "                                                                                \n"
+ "      break;                                                                    \n"
+ "                                                                                \n"
+ "     }                                                                          \n"
+ " }    // Nonlinear NR loop ends                                                 \n"
+ "                                                                                \n"
+ "                                                                                \n";
 
 if(debug)
  writeIt
@@ -115,13 +179,13 @@ if(Sequential){
  "//--------------Assembly for bilinear--------------//                           \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                        )<<
- "  matrix A = elast(Vh,Vh,solver=CG,sym=1);                                      \n"
+ "  A = elast(Vh,Vh,solver=CG,sym=1);                                             \n"
 <<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                        )<<
  "                                                                                \n"
  "//---------------Assembly for linear---------------//                           \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                           )<<
- "  real[int]    b = elast(0,Vh);                                                 \n"
+ "  b = elast(0,Vh);                                                              \n"
 <<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                           )<<
  "                                                                                \n"
  "  //-----------------Solving du=A^-1*b--------------//                          \n"
