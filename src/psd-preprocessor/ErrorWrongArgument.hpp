@@ -140,6 +140,21 @@
           "===================================================================\n";
       errorArgument = true;
      }
+     
+  if ( !fastmethod && Prblm != "linear_elasticity"){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-withmaterialtensor\033[0m only works for \033[1;34m -problem linear_elasticity\033[0m\n"
+          "  It has not been implemented for other models yet. You have used  \n"
+          "  \033[1;31m-problem "<< Prblm << "\033[0m which is not acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+     
 
   if ( lag != 1){
       cout <<
