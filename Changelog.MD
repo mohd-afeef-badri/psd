@@ -12,6 +12,7 @@ All notable changes to PSD solver will be documented in this file.
 - New plugin `mfront` can now be loaded in PSD.
 - `-withmaterialtensor` now uses Quadrature finite elements to build the material tensor.
 - New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.
+- `pseudo_nonlinear` implementation of Linear Elasticity now works.
 
 #### Changed
 

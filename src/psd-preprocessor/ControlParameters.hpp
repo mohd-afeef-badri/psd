@@ -40,7 +40,7 @@ if(top2vol)
  "//  PartY  : Number of partitions in y direction                               \n"
  "//  PartZ  : Number of partitions in z direction                               \n"
  "// -------------------------------------------------------------------         \n"
- "// Note that make sure PartX*PartY*PartZ = mpisize                             \n"    
+ "// Note that make sure PartX*PartY*PartZ = mpisize                             \n"
  "//=============================================================================\n";
 
 if(Prblm=="linear_elasticity")
@@ -65,14 +65,17 @@ if(Prblm=="damage" && Model=="Mazar")
 
 if(Prblm=="soildynamics")
  {
+
  if(doublecouple=="force_based" || doublecouple=="displacement_based" && !top2vol)
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc.msh\";                      \n";
+
  if(doublecouple=="unused" && !top2vol)
   writeIt
   "                                                                             \n"
   "  string ThName = \"../Meshes/"<<spc<<"D/soil.msh\";                         \n";
+
  if(top2vol)
   writeIt
   "                                                                             \n"
@@ -83,7 +86,7 @@ if(Prblm=="soildynamics")
   "  macro Dptz() -1920.0 //                                                    \n"
   "  macro PartX() 1 //                                                         \n"
   "  macro PartY() mpisize //                                                   \n"
-  "  macro PartZ() 1 //                                                         \n"     
+  "  macro PartZ() 1 //                                                         \n"
   "                                                                             \n";
  }
 
@@ -153,8 +156,8 @@ if(Prblm=="linear_elasticity")
   "              [ 0  ,  0  , 0  , a3 , 0  , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , 0  , a3 , 0 ],                                \n"
   "              [ 0  ,  0  , 0  , 0  , 0  , a3]]//                              \n";
-  
-  
+
+
   }
   */
  }
@@ -241,8 +244,8 @@ if(Prblm=="damage")
   "       tr    = 1e-5 ,                                                         \n"
   "       dtr   = 1e-5 ,                                                         \n"
   "       lo           ;                                                         \n";
-  
- if(reactionforce) 
+
+ if(reactionforce)
   writeIt
  "                                                                              \n"
  "//============================================================================\n"
@@ -250,8 +253,8 @@ if(Prblm=="damage")
  "// -------------------------------------------------------------------        \n"
  "//  RFOn : Reaction force surface list                                        \n"
  "//============================================================================\n"
- "                                                                              \n" 
- "  macro  RFOn 2   //                                                          \n";      
+ "                                                                              \n"
+ "  macro  RFOn 2   //                                                          \n";
 
  }
 
@@ -575,7 +578,7 @@ if(Prblm=="soildynamics")
  "//                of the double couple north point.                           \n"
  "//============================================================================\n"
  "                                                                              \n";
- 
+
  if(spc==2)
  writeIt
  "                                                                              \n"
@@ -592,7 +595,7 @@ if(Prblm=="soildynamics")
  "   real [int]   DcSouthPointCord = [877421.00,162180.00, -1600.714286];       \n"
  "   real [int]   DcEastPointCord  = [877341.00,162180.00, -1520.892857];       \n"
  "   real [int]   DcWestPointCord  = [877501.00,162180.00, -1520.892857];       \n"
- "                                                                              \n"; 
+ "                                                                              \n";
  }
 
  if(doublecouple=="displacement_based")
@@ -627,7 +630,7 @@ if(dirichletconditions>=1)
  "//============================================================================\n"
  "//        ------- Dirichlet boundary-condition parameters -------             \n"
  "// ---------------------------------------------------------------------------\n"
- "// Dbc       : acronym for Dirichlet boundary condition                       \n" 
+ "// Dbc       : acronym for Dirichlet boundary condition                       \n"
  "// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     \n"
  "//             Dirichlet boundary conditions is to be applied.                \n"
  "// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    \n"
@@ -635,76 +638,76 @@ if(dirichletconditions>=1)
  "// -------------------------------------------------------------------------- \n"
  "// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   \n"
  "//       or deleted if the user does not wish to apply Dirichlet  condition   \n"
- "//       on that particular  direction (let it free)                          \n" 
+ "//       on that particular  direction (let it free)                          \n"
  "//============================================================================\n"
  "                                                                              \n";
- 
+
  if(Prblm!="damage"){
  if(spc==2)
   for(int i=0; i<dirichletconditions; i++)
    writeIt
-   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"   
+   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"
    "  macro  Dbc"<<i<<"Ux 0.  //                                               \n"
    "  macro  Dbc"<<i<<"Uy 0.  //                                               \n";
 
  if(spc==3)
   for(int i=0; i<dirichletconditions; i++)
    writeIt
-   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"   
+   "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"
    "  macro  Dbc"<<i<<"Ux 0. //                                                \n"
    "  macro  Dbc"<<i<<"Uy 0. //                                                \n"
    "  macro  Dbc"<<i<<"Uz 0. //                                                \n";
  }
- 
+
  if(Prblm=="damage" && Model=="hybrid_phase_field"){
- 
- 
+
+
   if(spc==2 && dirichletconditions>=1)
    writeIt
-   "                                                                           \n"   
-   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
+   "                                                                           \n"
+   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"
    "  macro  Dbc0Ux 0.  //                                                     \n"
    "  macro  Dbc0Uy 0.  //                                                     \n";
-   
+
   if(spc==2 && dirichletconditions<=2)
-   writeIt   
+   writeIt
    "                                                                           \n"
-   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
-   "  macro  Dbc1Uy tr  //                                                     \n";    
+   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"
+   "  macro  Dbc1Uy tr  //                                                     \n";
 
   if(spc==3  && dirichletconditions>=1)
    writeIt
-   "                                                                           \n"      
-   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"   
+   "                                                                           \n"
+   "  macro  Dbc0On "<<labelDirichlet<<"   //                                  \n"
    "  macro  Dbc0Ux 0.  //                                                     \n"
    "  macro  Dbc0Uy 0.  //                                                     \n"
    "  macro  Dbc0Uz 0.  //                                                     \n";
-   
+
   if(spc==3  && dirichletconditions<=2)
    writeIt
-   "                                                                           \n"       
-   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"   
-   "  macro  Dbc1Uy tr  //                                                     \n"; 
-  
+   "                                                                           \n"
+   "  macro  Dbc1On "<<labelDirichletTraction<<"   //                          \n"
+   "  macro  Dbc1Uy tr  //                                                     \n";
+
   if(spc==3 && dirichletconditions>2)
    for(int i=1; i<dirichletconditions; i++)
     writeIt
     "                                                                          \n"
-    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"   
+    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"
     "  macro  Dbc"<<i<<"Ux 0. //                                               \n"
     "  macro  Dbc"<<i<<"Uy 0. //                                               \n"
-    "  macro  Dbc"<<i<<"Uz 0. //                                               \n";  
+    "  macro  Dbc"<<i<<"Uz 0. //                                               \n";
 
   if(spc==2 && dirichletconditions>2)
    for(int i=1; i<dirichletconditions; i++)
     writeIt
     "                                                                          \n"
-    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"   
+    "  macro  Dbc"<<i<<"On "<<labelDirichlet + i<<"   //                       \n"
     "  macro  Dbc"<<i<<"Ux 0. //                                               \n"
-    "  macro  Dbc"<<i<<"Uy 0. //                                               \n";     
-     
+    "  macro  Dbc"<<i<<"Uy 0. //                                               \n";
+
  }
-   
+
 }
 
 if(Prblm=="damage" && precracked)
@@ -713,12 +716,12 @@ if(Prblm=="damage" && precracked)
  "//============================================================================\n"
  "//    ------- Dirichlet boundary-condition on pre-cracked border -------      \n"
  "// ---------------------------------------------------------------------------\n"
- "// DbcCrackOn : mention the tag of the surface(s) which are pre-cracked       \n" 
+ "// DbcCrackOn : mention the tag of the surface(s) which are pre-cracked       \n"
  "//              list of surfaces should be comma separated, e.g., 1,2,3       \n"
  "//============================================================================\n"
- "                                                                              \n" 
+ "                                                                              \n"
  "  macro  DbcCrackOn 4   //                                                    \n"
- "                                                                              \n"; 
+ "                                                                              \n";
 
 if(dirichletpointconditions>=1)
  {
@@ -727,7 +730,7 @@ if(dirichletpointconditions>=1)
  "//============================================================================\n"
  "//       -------Dirichlet point boundary-condition parameters-------          \n"
  "// -------------------------------------------------------------------------- \n"
- "// Pbc       : acronym for point boundary condition                           \n"  
+ "// Pbc       : acronym for point boundary condition                           \n"
  "// PbcCord   : is the table  containing coordinates of the points for which   \n"
  "//             point  boundary condition(s) is to be applied                  \n"
  "// Pbc(I)Ux : is x displacement value of the point I. Similar logic applies   \n"
@@ -738,45 +741,45 @@ if(dirichletpointconditions>=1)
  "//       displacement direction (let it free)                                 \n"
  "//============================================================================\n"
  "                                                                              \n"
- "  real[int,int] PbcCord = [                                                   \n"; 
+ "  real[int,int] PbcCord = [                                                   \n";
 
  if(spc==2){
- writeIt 
- "//-------------------- [  x  , y  ] --------------------//                   \n"; 
+ writeIt
+ "//-------------------- [  x  , y  ] --------------------//                   \n";
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
+ writeIt
  "                       [  0. , 0. ]    // point "<<i<<"                       \n";
 
- writeIt 
- "//------------------------------------------------------//                    \n"  
+ writeIt
+ "//------------------------------------------------------//                    \n"
  "                      ];                                                      \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt  
+ writeIt
  "                                                                              \n"
  "   macro Pbc"<<i<<"Ux  -0. //                                                 \n"
- "   macro Pbc"<<i<<"Uy  -0. //                                                 \n" 
- "                                                                              \n";  
+ "   macro Pbc"<<i<<"Uy  -0. //                                                 \n"
+ "                                                                              \n";
  }
- 
+
  if(spc==3){
  writeIt
- "//-------------------- [  x  , y  , z  ]--------------------//                \n"; 
+ "//-------------------- [  x  , y  , z  ]--------------------//                \n";
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
+ writeIt
  "                       [  0. , 0. , 0. ]    // point "<<i<<"                  \n";
- writeIt 
- "//----------------------------------------------------------//                \n"  
+ writeIt
+ "//----------------------------------------------------------//                \n"
  "                      ];                                                      \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt  
+ writeIt
  "                                                                              \n"
  "   macro Pbc"<<i<<"Ux  -0. //                                                 \n"
- "   macro Pbc"<<i<<"Uy  -0. //                                                 \n" 
- "   macro Pbc"<<i<<"Uz  -0. //                                                 \n"  
- "                                                                              \n"; 
-  
+ "   macro Pbc"<<i<<"Uy  -0. //                                                 \n"
+ "   macro Pbc"<<i<<"Uz  -0. //                                                 \n"
+ "                                                                              \n";
+
  }
 }
 
@@ -788,7 +791,7 @@ if(tractionconditions>=1)
  "//============================================================================\n"
  "// ------- Neumann/traction boundary-condition parameters -------             \n"
  "// ---------------------------------------------------------------------------\n"
- "// Tbc       : acronym for traction boundary condition                        \n" 
+ "// Tbc       : acronym for traction boundary condition                        \n"
  "// Tbc(I)On  : is/are the  surface labels tags (integer list) on to which     \n"
  "//             traction boundary conditions is to be applied.                 \n"
  "// Tbc(I)Tx  : is the x component of traction forces on the surface           \n"
@@ -796,27 +799,27 @@ if(tractionconditions>=1)
  "// -------------------------------------------------------------------------- \n"
  "// NOTE: either macro Tbc(I)Tx or Tbc(I)Ty or Tbc(I)Tz should  be commented   \n"
  "//       or deleted  if  the  user  does not wish to apply traction on that   \n"
- "//       particular  direction (let it free)                                  \n" 
+ "//       particular  direction (let it free)                                  \n"
  "//============================================================================\n"
  "                                                                              \n";
 
  if(spc==2)if(Prblm!="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tbc"<<i<<"On 4   //                                               \n"   
+   "  macro  Tbc"<<i<<"On 4   //                                               \n"
    "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
 
   if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tbc"<<i<<"On  4   //                                              \n"   
+   "  macro  Tbc"<<i<<"On  4   //                                              \n"
    "  macro  Tbc"<<i<<"Ty  tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //                \n";
 
  if(spc==3)if(Prblm!="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
-   "  macro  Tbc"<<i<<"On 4   //                                               \n"   
-   "  macro  Tbc"<<i<<"Tx 10. //                                               \n";     
+   "  macro  Tbc"<<i<<"On 4   //                                               \n"
+   "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
  }
 
 
@@ -827,7 +830,7 @@ if(bodyforceconditions>=1)
  "//============================================================================\n"
  "//        ------- volumetric bodyforce  parameters -------                    \n"
  "// ---------------------------------------------------------------------------\n"
- "// Fbc       : acronym for  force boundary condition (body force)             \n" 
+ "// Fbc       : acronym for  force boundary condition (body force)             \n"
  "// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which     \n"
  "//             force boundary conditions is to be applied.                    \n"
  "// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)    \n"
@@ -835,14 +838,14 @@ if(bodyforceconditions>=1)
  "// -------------------------------------------------------------------------- \n"
  "// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented   \n"
  "//       or deleted if the user  does not wish to apply body force in  that   \n"
- "//       particular  direction (let it free)                                  \n" 
+ "//       particular  direction (let it free)                                  \n"
  "//============================================================================\n"
  "                                                                              \n";
- 
+
   for(int i=0; i<bodyforceconditions; i++)
    writeIt
-   "  macro  Fbc"<<i<<"On "<<labelBodyForce<<"   //                             \n"   
-   "  macro  Fbc"<<i<<"Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             \n";     
+   "  macro  Fbc"<<i<<"On "<<labelBodyForce<<"   //                             \n"
+   "  macro  Fbc"<<i<<"Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             \n";
  }
 
 
@@ -852,31 +855,31 @@ if(pointprobe){
  "//============================================================================\n"
  "//        ------- Parameters for point probe -------                          \n"
  "// ---------------------------------------------------------------------------\n"
- "// ProbePointCord : list of coordinates for the probe  [x,y] for 2D and       \n"  
+ "// ProbePointCord : list of coordinates for the probe  [x,y] for 2D and       \n"
  "//                  [x,y,z] for 3D problems                                   \n"
- "//============================================================================\n" 
+ "//============================================================================\n"
  "                                                                              \n"
  "  real [int,int]   ProbePointCord  =                                          \n"
  "                                     [                                        \n"
- "                                                                              \n";  
- 
+ "                                                                              \n";
+
  if(spc==2)
  writeIt
  "//                                      [ x    ,  y  ]                        \n"
- "                                        [ 1.   ,  2. ],                       \n" 
- "                                        [ 2.   ,  5. ]                        \n";  
+ "                                        [ 1.   ,  2. ],                       \n"
+ "                                        [ 2.   ,  5. ]                        \n";
 
  if(spc==3)
  writeIt
  "//                                      [ x    ,  y    ,  z  ]                \n"
- "                                        [ 1.   ,  2.   ,  5. ],               \n" 
+ "                                        [ 1.   ,  2.   ,  5. ],               \n"
  "                                        [ 2.   ,  5.   ,  6. ]                \n";
 
  writeIt
  "                                                                              \n"
- "                                     ];                                       \n"; 
-}                                       
- 
+ "                                     ];                                       \n";
+}
+
 writeIt
 "                                                                               \n"
 "//=============================================================================\n"

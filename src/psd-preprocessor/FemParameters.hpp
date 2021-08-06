@@ -18,22 +18,27 @@ writeHeader;
 
 if(Prblm=="linear_elasticity"){
 
+ if(Model!="pseudo_nonlinear")
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
  "// ------- Finite element variables -------                                   \n"
  "// -------------------------------------------------------------------        \n"
  "// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    \n"
- "//============================================================================\n";
-
-
- if(Model!="pseudo_nonlinear")
- writeIt
+ "//============================================================================\n"
  "                                                                              \n"
  "  Vh  def(u)    ;                                                             \n";
 
  if(Model=="pseudo_nonlinear")
- writeIt
+  writeIt
+ "                                                                              \n"
+ "//============================================================================\n"
+ "// ------- Finite element variables -------                                   \n"
+ "// -------------------------------------------------------------------        \n"
+ "// def(du)  : displacement vector (u = u_old + du), it is [dux,duy] in 2D     \n"
+ "//            and [dux,duy,duz] in 3D                                         \n"
+ "// def(u)   : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D   \n"
+ "//============================================================================\n"
  "                                                                              \n"
  "  Vh  def(du)   ,                                                             \n"
  "      def(u)    ;                                                             \n";

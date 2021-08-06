@@ -5,11 +5,21 @@
 
  writeIt
  "                                                                                                \n"
- "//==============================================================================                \n"
- "// -------Variation formulation elastodynamic linear-------                                     \n"
- "//==============================================================================                \n"
+ "//==============================================================================\\              \n"
+ "//  **Variation formulation elastodynamic linear**                              \\              \n"
+ "//==============================================================================\\              \n"
  "                                                                                                \n"
  "varf elastodynamics( def(du) , def(v) )                                                         \n"
+ "                                                                                                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                    (du \\cdot v) c_0                                                           \n"
+ "                  + (\\nabla \\cdot du  \\nabla \\cdot v) c_1                                   \n"
+ "                  + (\\varepsilon(du) : \\varepsilon(v) ) c_2                                   \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
  "                                                                                                \n"
  "    = intN(Th,qforder=3)                                                                        \n"
  "  (                                                                                             \n"
@@ -17,6 +27,22 @@
  "    + (divergence(du)*divergence(v))*c[1]                                                       \n"
  "    + (epsilon(du)'*epsilon(v))*c[2]                                                            \n"
  "  )                                                                                             \n"
+ "                                                                                                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                    (U \\cdot v) c_0                                                            \n"
+ "                  + (V \\cdot v) c_3                                                            \n"
+ "                  + (A \\cdot v) c_4                                                            \n"
+ "                  - (\\nabla \\cdot U  \\nabla \\cdot v) c_5                                    \n"
+ "                  - (\\varepsilon(U) : \\varepsilon(v) ) c_6                                    \n"
+ "                  - (\\nabla \\cdot V  \\nabla \\cdot v) c_7                                    \n"
+ "                  - (\\varepsilon(V) : \\varepsilon(v) ) c_8                                    \n"
+ "                  - (\\nabla \\cdot A  \\nabla \\cdot v) c_9                                    \n"
+ "                  - (\\varepsilon(A) : \\varepsilon(v) ) c_{10}                                 \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
  "                                                                                                \n"
  "    + intN(Th,qforder=3)                                                                        \n"
  "  (                                                                                             \n"
@@ -87,6 +113,17 @@
 if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                                \n"
+ "                                                                                                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                    (u_{nl} \\cdot v) c_0                                                       \n"
+ "                  + (\\nabla \\cdot u_{nl}  \\nabla \\cdot v) c_1                               \n"
+ "                  + (\\varepsilon(u_{nl}) : \\varepsilon(v) ) c_2                               \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
  "    - intN(Th,qforder=3)                                                                        \n"
  "  (                                                                                             \n"
  "      (def(uNL)'*def(v))*c[0]                                                                   \n"
@@ -95,30 +132,31 @@ if(Model=="pseudo_nonlinear")
  "  )                                                                                             \n"
  "                                                                                                \n";
 
-
 if(tractionconditions>=1)
 for(int i=0; i<tractionconditions; i++)
  writeIt
  "                                                                                                \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $+int_{\\partial\\Omega_N}(T.v)$                                                        \n"
- "    //--------------------------------------------------------------------------                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\partial\\Omega_N}( T \\cdot v )                                                        \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
  "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 
 for(int i=0; i<dirichletconditions; i++)
  writeIt
  "                                                                                                \n"
- "    //--------------------------------------------------------------------------                \n"
- "    //  $\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R$                               \n"
- "    //--------------------------------------------------------------------------                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\forall x\\in\\partial\\Omega_D u=ug: ug\\to\\mathbb R                                         \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
  "      + on (Dbc"<<i<<"On,DirichletBc"<<i<<")                                                    \n";
 
 
  writeIt
  ";                                                                                               \n"
  "                                                                                                \n";
-
-
-
-
