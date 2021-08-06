@@ -140,7 +140,7 @@
           "===================================================================\n";
       errorArgument = true;
      }
-     
+
   if ( !fastmethod && Prblm != "linear_elasticity"){
       cout <<
           "===================================================================\n"
@@ -154,7 +154,22 @@
           "===================================================================\n";
       errorArgument = true;
      }
-     
+
+
+  if ( Model == "Hujeux" && Prblm != "soildynamics"){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-model Hujeux\033[0m only works for \033[1;34m -problem soildynamics\033[0m\n"
+          "  As it is a soil nonlinear law it does not work for  \n"
+          "  \033[1;31m-model "<< Model << "\033[0m, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+
 
   if ( lag != 1){
       cout <<

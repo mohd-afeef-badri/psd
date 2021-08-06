@@ -27,7 +27,7 @@ if(Prblm=="linear_elasticity"){
  "                                                                              \n"
  "  Vh  def(u)    ;                                                             \n";
 
- if(!fastmethod){ 
+ if(!fastmethod){
  if(spc==2)
  writeIt
   "                                                                              \n"
@@ -38,50 +38,50 @@ if(Prblm=="linear_elasticity"){
   "//            re space Qh. This array is used  to define components of the    \n"
   "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
   "//            In 2D the material tensor looks like                            \n"
-  "//                                                                            \n"    
+  "//                                                                            \n"
   "//         [ 2*mu+lambda ,  lambda      , 0 ]    [ Mt[0] , Mt[1] , Mt[2] ]    \n"
   "//   Mt =  [ lambda      ,  2*mu+lambda , 0 ] =  [ Mt[1] , Mt[3] , Mt[4] ]    \n"
   "//         [   0         ,     0        , mu]    [ Mt[2] , Mt[4] , Mt[5] ]    \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  Qh[int] Mt(6);    ;                                                         \n"
-  "                                                                              \n"  
+  "                                                                              \n"
   "  Mt[0] = 2*mu+lambda ;  Mt[1] = lambda      ; Mt[2] = 0           ;          \n"
   "                      ;  Mt[3] = 2*mu+lambda ; Mt[4] = 0           ;          \n"
   "                      ;                      ; Mt[5] = mu          ;          \n"
   "                                                                              \n";
-  
+
  if(spc==3)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Material Tensor using Quadrature FE space -------                  \n"
-  "// -------------------------------------------------------------------        \n"  
+  "// -------------------------------------------------------------------        \n"
   "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
   "//            re space Qh. This array is used  to define components of the    \n"
   "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
   "//            In 3D the material tensor looks like                            \n"
-  "//                                                                            \n"    
+  "//                                                                            \n"
   "//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         \n"
   "// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         \n"
   "//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         \n"
   "//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         \n"
-  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n" 
+  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n"
   "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  Qh[int] Mt(21);    ;                                                        \n"
-  "                                                                              \n"  
+  "                                                                              \n"
   "  Mt[0] = 2*mu+lambda ;  Mt[1] = lambda      ; Mt[2]  = lambda      ; Mt[3]  = 0 ;  Mt[4]  = 0 ; Mt[5]  = 0  ;     \n"
   "                      ;  Mt[6] = 2*mu+lambda ; Mt[7]  = lambda      ; Mt[8]  = 0 ;  Mt[9]  = 0 ; Mt[10] = 0  ;     \n"
   "                      ;                      ; Mt[11] = 2*mu+lambda ; Mt[12] = 0 ;  Mt[13] = 0 ; Mt[14] = 0  ;     \n"
   "                      ;                      ;                      ; Mt[15] = mu;  Mt[16] = 0 ; Mt[17] = 0  ;     \n"
   "                      ;                      ;                      ;            ;  Mt[18] = mu; Mt[19] = 0  ;     \n"
-  "                      ;                      ;                      ;            ;             ; Mt[20] = mu ;     \n"      
-  "                                                                              \n";  
-  }  
+  "                      ;                      ;                      ;            ;             ; Mt[20] = mu ;     \n"
+  "                                                                              \n";
+  }
 
-} 
+}
 
 if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
@@ -94,7 +94,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "// -------------------------------------------------------------------        \n";
   if(NonLinearMethod=="Picard")writeIt
   "// def2(u) :   displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D  \n"
-  "// def2(uold)  :   previous iteration displacement vector                     \n" 
+  "// def2(uold)  :   previous iteration displacement vector                     \n"
   "// def2(DPspc) :   Partition of unity for domain decomp. (displacement space) \n"
   "// phi    :   phase field variable for damage                                 \n"
   "// phiold :   previous iteration phase field variable                         \n"
@@ -103,7 +103,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
   if(NonLinearMethod=="Newton_Raphson")writeIt
   "// def2(du) :   displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D \n"
-  "// def2(u)  :   previous iteration displacement vector                        \n" 
+  "// def2(u)  :   previous iteration displacement vector                        \n"
   "// def2(DPspc) :   Partition of unity for domain decomp. (displacement space) \n"
   "// dphi    :   phase field variable for damage                                \n"
   "// phi     :   previous iteration phase field variable                        \n"
@@ -114,16 +114,16 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "// PsiPlusP1    :   tensile energy P1 field                                   \n"
   "// PsiMinusP1   :   compressive energy P1 field                               \n"
   "// PsiPlus      :   tensile energy P0 field                                   \n"
-  "// PsiMinus     :   compressive energy P0 field                               \n"  
-  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
-  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";   
-  writeIt    
+  "// PsiMinus     :   compressive energy P0 field                               \n"
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";
+  writeIt
   "//============================================================================\n"
   "                                                                              \n";
 
   if(NonLinearMethod=="Picard")
    writeIt
-   "                                                                             \n"   
+   "                                                                             \n"
    "  Vh  def2(u)    ,                                                           \n"
    "      def2(uold) ,                                                           \n"
    "      def2(DPspc);                                                           \n"
@@ -135,12 +135,12 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
   if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
-   "                                                                             \n" 
+   "                                                                             \n"
    "  Vh  def2(F)    ;                                                           \n";
 
   if(NonLinearMethod=="Newton_Raphson")
    writeIt
-   "                                                                             \n"   
+   "                                                                             \n"
    "  Vh  def2(du)   ,                                                           \n"
    "      def2(u)    ,                                                           \n"
    "      def2(DPspc);                                                           \n"
@@ -152,9 +152,9 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
    if(constrainHPF)
    writeIt
-   "                                                                             \n"   
+   "                                                                             \n"
    "  Vh1  phip      ;                                                           \n";
-   
+
   if(energydecomp)
    writeIt
    "                                                                             \n"
@@ -174,11 +174,11 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "//============================================================================\n"
   "// ------- Finite element variables -------                                   \n"
   "// -------------------------------------------------------------------        \n"
-  "// def(u)     :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n" 
+  "// def(u)     :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n"
   "//                2D and [ux,uy,uz,phi] in 3D                                 \n"
-  "// def(uold)  :   previous iteration vectorial displacement-damage vector     \n" 
+  "// def(uold)  :   previous iteration vectorial displacement-damage vector     \n"
   "// def(DPspc) :   Partition of unity for domain decomp. (displacement-damage) \n";
-  if(reactionforce && reactionforcemethod=="variational_based")writeIt 
+  if(reactionforce && reactionforcemethod=="variational_based")writeIt
   "// def(F)  : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
   if(ParaViewPostProcess)writeIt
   "// phi     : Scalar P1 visulization field phi                                 \n";
@@ -186,10 +186,10 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "// PsiPlusP1    :   tensile energy P1 field                                   \n"
   "// PsiMinusP1   :   compressive energy P1 field                               \n"
   "// PsiPlus      :   tensile energy P0 field                                   \n"
-  "// PsiMinus     :   compressive energy P0 field                               \n"  
-  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
-  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";          
-  writeIt 
+  "// PsiMinus     :   compressive energy P0 field                               \n"
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";
+  writeIt
   "//============================================================================\n"
   "                                                                              \n"
   "  Vh  def(u)    ,                                                             \n"
@@ -198,13 +198,13 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
   if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
-   "                                                                            \n"   
-   "  Vh  def(F)    ;                                                           \n";  
-  
+   "                                                                            \n"
+   "  Vh  def(F)    ;                                                           \n";
+
   if(ParaViewPostProcess)
    writeIt
    "                                                                             \n"
-   "  Vh1  phi      ;                                                            \n";   
+   "  Vh1  phi      ;                                                            \n";
 
   if(energydecomp)
    writeIt
@@ -218,47 +218,47 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
    "      PsiPlus   ,                                                            \n"
    "      PsiMinus  ;                                                            \n";
  }
- 
+
  if(vectorial && constrainHPF){
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
   "// ------- Finite element variables -------                                   \n"
-  "// -------------------------------------------------------------------        \n"  
-  "// def2(u)    :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n" 
+  "// -------------------------------------------------------------------        \n"
+  "// def2(u)    :   vectorial displacement-damage vector, it is [ux,uy,phi] in  \n"
   "//                2D and [ux,uy,uz,phi] in 3D                                 \n"
-  "// def2(uold) :   previous iteration vectorial displacement-damage vector     \n" 
-  "// def2(DPspc):   Partition of unity for domain decomp. (displacement-damage) \n" 
+  "// def2(uold) :   previous iteration vectorial displacement-damage vector     \n"
+  "// def2(DPspc):   Partition of unity for domain decomp. (displacement-damage) \n"
   "// def2(up)   :   previous iteration vectorial displacement-damage vector     \n";
-  if(reactionforce && reactionforcemethod=="variational_based")writeIt 
-  "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n"; 
+  if(reactionforce && reactionforcemethod=="variational_based")writeIt
+  "// def2(F) : force vector, it is [Fx,Fy] in 2D and [Fx,Fy,Fz] in 3D           \n";
   if(ParaViewPostProcess)writeIt
-  "// phi     : Scalar P1 visulization field phi                                 \n";   
+  "// phi     : Scalar P1 visulization field phi                                 \n";
   if(energydecomp)writeIt
   "// PsiPlusP1    :   tensile energy P1 field                                   \n"
   "// PsiMinusP1   :   compressive energy P1 field                               \n"
   "// PsiPlus      :   tensile energy P0 field                                   \n"
-  "// PsiMinus     :   compressive energy P0 field                               \n"  
-  "// HistMinus    :   history function based on  compressive energy P0 field    \n"     
-  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";     
+  "// PsiMinus     :   compressive energy P0 field                               \n"
+  "// HistMinus    :   history function based on  compressive energy P0 field    \n"
+  "// HistPlus     :   history function based on  tensile energy  P0 field       \n";
   writeIt
   "//============================================================================\n"
   "                                                                              \n"
   "  Vh  def2(u)    ,                                                            \n"
   "      def2(uold) ,                                                            \n"
   "      def2(DPspc);                                                            \n"
-  "                                                                              \n"   
-  "  Vh  def2(up)    ;                                                           \n";  
+  "                                                                              \n"
+  "  Vh  def2(up)    ;                                                           \n";
 
   if(reactionforce && reactionforcemethod=="variational_based")
    writeIt
-   "                                                                            \n"   
-   "  Vh  def2(F)    ;                                                          \n";  
-  
+   "                                                                            \n"
+   "  Vh  def2(F)    ;                                                          \n";
+
   if(ParaViewPostProcess)
    writeIt
    "                                                                             \n"
-   "  Vh1  phi      ;                                                            \n";   
+   "  Vh1  phi      ;                                                            \n";
 
   if(energydecomp)
    writeIt
@@ -271,18 +271,18 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
    "      HistMinus ,                                                            \n"
    "      PsiPlus   ,                                                            \n"
    "      PsiMinus  ;                                                            \n";
- } 
+ }
 }
 
 if(Prblm=="elastodynamics"  || Prblm=="soildynamics"){
 
 
-if(Model!="pseud_nonlinear" && Model!="Hujeux")
+if(Model!="pseudo_nonlinear" && Model!="Hujeux")
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
  "// -------Finite element variables -------                                     \n"
- "// -------------------------------------------------------------------         \n"   
+ "// -------------------------------------------------------------------         \n"
  "// def(du)    : Displacement FE field                                          \n"
  "// def(uold)  : Previous iteration displacement FE field                       \n"
  "// def(vold)  : Previous iteration velocity FE field                           \n"
@@ -323,7 +323,7 @@ if(Model=="pseudo_nonlinear" || Model=="Hujeux" ){
  "      def(aold)  ,                                                             \n"
  "      def(DPspc) ;                                                             \n"
  "                                                                               \n";
- 
+
  if(Model=="Hujeux")
  writeIt
  "                                                                               \n"
@@ -331,8 +331,8 @@ if(Model=="pseudo_nonlinear" || Model=="Hujeux" ){
  "        defSh(Eps);                                                            \n"
  "                                                                               \n"
  "  Q25vh defIh(Iv);                                                             \n"
- "                                                                               \n"; 
- 
+ "                                                                               \n";
+
  }
 
 }
@@ -355,7 +355,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "  real[int]  b(Vh.ndof), b1(Vh1.ndof)        ;                                \n";
 
   if(!Sequential){
-  
+
    writeIt
    "                                                                             \n"
    "//===========================================================================\n"
@@ -370,12 +370,12 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
    "// ALoc1 : local matrices for assembling bilinear form phase field Eq        \n"
    "// b     : local vector for assembling bc vector form linear momentum Eq     \n"
    "// b1    : local vector for assembling bc vector form phase field Eq         \n";
-   if(vectorial)writeIt   
+   if(vectorial)writeIt
    "// ALoc  : local matrices for assembling bilinear form of vectorial equation \n"
    "//         linear momentum Eq  coupled to phase-field equation               \n"
    "// b     : local vector for assembling bc vector form of vectorial equation  \n"
-   "//         linear momentum Eq  coupled to phase-field equation               \n";             
-   writeIt  
+   "//         linear momentum Eq  coupled to phase-field equation               \n";
+   writeIt
    "//===========================================================================\n"
    "                                                                             \n"
    <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""           )<<
@@ -470,7 +470,7 @@ if(Prblm=="elastodynamics" || Prblm=="soildynamics"){
   "  Mat A; createMat(Th, A, Pk);                                                \n"
   <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
   "                                                                              \n";
-    
+
  }
 }
 
@@ -487,11 +487,11 @@ if(Prblm=="damage" && Model=="Mazar"){
  "                                                                               \n"
  "  Wh0 damage      ,    //  Isotropic damage                                    \n"
  "      intVar      ,    //  Internal variable                                   \n"
- "                                                                               \n"; 
+ "                                                                               \n";
 
  if(!useGFP)
   writeIt
-  "                                                                              \n"  
+  "                                                                              \n"
   "      e11         ,    //  11 component of strain                             \n"
   "      e22         ,    //  22 component of strain                             \n"
   "      e12         ,    //  12 component of strain                             \n"
@@ -500,14 +500,14 @@ if(Prblm=="damage" && Model=="Mazar"){
   "      eqStrain    ,    //  Equivalent strain                                  \n";
 
  writeIt
- "                                                                               \n" 
+ "                                                                               \n"
  "      lambdafield ,    //  lambda                                              \n"
  "      mufield     ;    //  mu                                                  \n"
  "                                                                               \n";
 
  if(useGFP)
   writeIt
-  "                                                                              \n"  
+  "                                                                              \n"
   "  VhStr defStrain(strain)     ;    //  Stain defenition                       \n";
 
  if(!Sequential)
