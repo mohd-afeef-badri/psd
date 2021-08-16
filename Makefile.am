@@ -158,12 +158,16 @@ Readme.html: Readme.MD
 	pandoc Readme.MD -o Readme.html
 	cp Readme.html man/.			
 	
-documentation-Changelog: Changelog.pdf Changelog.html
+documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
 	@echo ""
 
 Changelog.pdf: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
 	cp Changelog.pdf man/.
+	
+Changelog.tex: Changelog.MD
+	pandoc 	Changelog.MD -o Changelog.tex -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
+	cp Changelog.pdf man/.	
 
 Changelog.html: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.html

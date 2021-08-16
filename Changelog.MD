@@ -1,5 +1,5 @@
 # Changelog
-All notable changes to PSD solver will be documented in this file.
+PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
 
 
@@ -13,6 +13,7 @@ All notable changes to PSD solver will be documented in this file.
 - `-withmaterialtensor` now uses Quadrature finite elements to build the material tensor.
 - New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.
 - `pseudo_nonlinear` implementation of Linear Elasticity now works.
+- New `Notes` section added in the source repo, to help with mathematical and algorithimic resoning.
 
 #### Changed
 
