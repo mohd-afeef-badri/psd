@@ -8,19 +8,23 @@ Besides the parallel suite, PSD also includes a sequential solver which does not
 
 PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in [MEDIT's](https://www.ljll.math.upmc.fr/frey/software.html)  `.mesh` format or [Gmsh's](http://gmsh.info/) `.msh` format. PSD post processing is done via `.pvd` ,`.vtk` and `.vtu` files of the [ParaView](https://www.paraview.org/) platform. 
 
-## Installation procedure ##
 
-PSD is built to work with Linux platforms. (Windows comping up soon)
+
+## Installation ##
+
+PSD is a cross-platform solver built to work with Linux platforms (Windows comping up soon). PSD has successfully been deployed on the following platforms,  CentOS 7/8,  Ubuntu 16.04/18.04/20.04,  Raspberry Pi,  Fedora 32, etc. Before installing PSD please ensure that you have the following dependencies installed on your OS. 
 
 **Dependencies**
 
 - [automake](https://www.gnu.org/software/automake/)
 - [FreeFEM](https://freefem.org/)
-- [PETSc](https://www.mcs.anl.gov/petsc/)      (optional)
+- [PETSc](https://www.mcs.anl.gov/petsc/)
 - [Gmsh](http://gmsh.info/)
-- [gnuplot](http://www.gnuplot.info/)	(optional)
 - [C++](http://www.cplusplus.com/)
 - [git](https://git-scm.com/)
+- [MFront](http://tfel.sourceforge.net/)      (optional)
+- [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)          (optional)
+- [gnuplot](http://www.gnuplot.info/)	 (optional)
 
 **Now that I have all the dependencies what next**
 
@@ -28,26 +32,24 @@ PSD is built to work with Linux platforms. (Windows comping up soon)
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
-   *Note:* You can also use SSH protocol if your key had been added to the repo in that case use
-   ```bash
+**Note**: You can also use SSH protocol if your key has been added to the repo in that case use
+```bash
 git clone git@gitlab.com:PsdSolver/psd_sources.git
-   ```
+```
 
 - Use automake PSD within the  cloned folder
 ```bash
 autoreconf -i
 ```
+
 - Configure  PSD within the  cloned folder
 ```bash
 ./configure 
 ```
-*Note*:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider chaning directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`
-
-   *Note*:   `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
-
-   ```bash
+**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. Also `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+```bash
 ./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
-   ```
+```
 
 - Make PSD directives
 ```bash
@@ -58,9 +60,20 @@ make
 ```bash
 sudo make install
 ```
-*Note* : You should not use `sudo` if you have used `--prefix` during the `./configure` 
+**Note** : You should not use `sudo` if you have used `--prefix` during the `./configure` 
 
-Now you should have the PSD solvers installed. 
+- Install PSD tutorials
+```bash
+make tutorials
+```
+
+
+
+Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `usr/bin` or ` usr/local/bin` directories if you used `sudo make install` or else it will be in your ` --prefix` location.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
+
+
+
+
 
 **Additional FreeFEM tweak for brittle fracture mechanics**
 
@@ -75,6 +88,42 @@ by the following
 ```bash
 R seuil=hm/splitmax/4.0/1000.0;
 ```
+
+
+
+
+
+### Additional Installation steps for experts and developers
+
+- Check if installation is correct 
+```bash
+make check
+```
+
+- Configure  PSD with MFront support 
+```bash
+./configure --prefix=$HOME/Install/local --with-mgis=$HOME/Install/local/mgis --with-mfront=$HOME/Install/local/mfront/bin/mfront  --with-FreeFEM=$HOME/Install/local/FreeFem/bin  --with-Gmsh=$HOME/Install/local/Gmsh/bin
+```
+
+Here in this example we assume that MFront, MGIS, Gmsh, and FreeFEM are installed in `$HOME/Install/local` directory, if that is not the case for you please improvise or you can always ask for help from Linux geeks around.  
+
+- Update PSD to the latest version. If you  would like to update your old PSD source to a new one. Go to your`PSD-Sources` folder and
+```bash
+git pull origin master && ./reconfigure &&  make &&  make install
+```
+
+- If you would like to install  a developers copy  of PSD
+```bash
+make install-devel
+```
+
+
+
+
+
+
+
+
 
 ## A quick sneak-peek of a typical PSD simulation  ##
 
@@ -118,6 +167,9 @@ PSD_Solve_Seq Main.edp -v 0 -nw
 
 **Step 3: Result visualization**
 Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing. ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.   
+
+
+
 
 
 ## PSD flags  explained  ##
@@ -169,8 +221,6 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-partitioner`              | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
 | `-problem`                  | `[sting]` | Interested problem. Use "linear_elasticity", "damage", "elastodynamics", or "soildynamics". |
 | `-model`                    | `[sting]` | Interested model. Use "hybrid_phase_field" or "Mazar".       |
-
-
 
 
 *To report bugs, issues, feature-requests contact:* 

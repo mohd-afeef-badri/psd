@@ -1,11 +1,15 @@
 <h1 id="changelog">Changelog</h1>
-<p>All notable changes to PSD solver will be documented in this file.</p>
+<p>PSD has been maturing and evolving with time, following subsections present the highlights of some key changes made to each PSD version.</p>
 <h2 id="rolling-release-2.3">Rolling Release (2.3)</h2>
 <h4 id="added">Added</h4>
 <ul>
 <li>More tests for each plugin and physics, now added in their respective folders.</li>
 <li>Support for Mfront and Mgis interface for non-linear material laws</li>
 <li>New plugin <code>mfront</code> can now be loaded in PSD.</li>
+<li><code>-withmaterialtensor</code> now uses Quadrature finite elements to build the material tensor.</li>
+<li>New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.</li>
+<li><code>pseudo_nonlinear</code> implementation of Linear Elasticity now works.</li>
+<li>New <code>Notes</code> section added in the source repo, to help with mathematical and algorithimic resoning.</li>
 </ul>
 <h4 id="changed">Changed</h4>
 <ul>
@@ -14,6 +18,7 @@
 <h4 id="bug">Bug</h4>
 <ul>
 <li>Bug in top-ii-vol meshing due to MPI communication removed.</li>
+<li>Bug in <code>pseudo_nonlinear</code> model for Elastodynamics/soildynamics fixed.</li>
 </ul>
 <h2 id="section"><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2">2.2</a> - 2021-07-28</h2>
 <h3 id="added-1">Added</h3>
@@ -320,7 +325,7 @@
 <td>8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2</td>
 </tr>
 <tr class="even">
-<td><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2">2.1</a></td>
+<td><a href="https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2">2.2</a></td>
 <td>5e0368f990d505d3bf1960122cb99a23e08567b0</td>
 </tr>
 </tbody>

@@ -147,16 +147,20 @@ check-local:
 	@echo "*============================================================*"	
 	@echo ""
 
-documentation-readme: Readme.pdf Readme.html
+documentation-readme: Readme.pdf Readme.html Readme.tex
 	@echo ""
 
 Readme.pdf: Readme.MD
 	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
 	cp Readme.pdf  man/.	
 
+Readme.tex: Readme.MD
+	pandoc Readme.MD -o Readme.tex -V geometry:margin=0.5in  --highlight-style tango --listings
+	mv Readme.tex  etc/.
+	
 Readme.html: Readme.MD
 	pandoc Readme.MD -o Readme.html
-	cp Readme.html man/.			
+	cp Readme.html man/.				
 	
 documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
 	@echo ""
@@ -166,8 +170,8 @@ Changelog.pdf: Changelog.MD
 	cp Changelog.pdf man/.
 	
 Changelog.tex: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.tex -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
-	cp Changelog.pdf man/.	
+	pandoc 	Changelog.MD -o Changelog.tex -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex --listings
+	mv Changelog.tex etc/.	
 
 Changelog.html: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.html

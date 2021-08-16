@@ -279,4 +279,4 @@ check NP=USER_PROCS`.
 | [1.8](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.8) | 2f26292636c7248133e31ae912ee58113de2ef71 |
 | [2.0](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.0) | 1e1a4d7f10df30d106b52eba1c5caf69e8bc0f36 |
 | [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) | 8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2 |
-| [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) | 5e0368f990d505d3bf1960122cb99a23e08567b0 |
+| [2.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) | 5e0368f990d505d3bf1960122cb99a23e08567b0 |

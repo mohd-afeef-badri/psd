@@ -5,6 +5,10 @@
 *.~
 *.swp
 
+## TEX DOCUMENTATION FILES ##
+*Readme.tex
+*Changelog.tex
+
 ## OUTPUT FILES ##
 .output
 .info
