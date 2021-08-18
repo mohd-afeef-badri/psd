@@ -1,54 +1,44 @@
 @Behaviour Elasticity;
-@Author Helfer Thomas;
-@Date 23/11/06;
+@Author Mohd Afeef Badri;
+@Date 17/18/2021;
 @Description{
- A very first test 
- (the most simple one in fact).
+ Linear Elasticity with stifness 
+ matrix calculation
 }
 
-@ModellingHypotheses {".+"};
-@ProvidesSymmetricTangentOperator;
-
+/*!
+ * First we define the two material properties as parameters
+ * i.e, we assume these are constant for the material.
+ *
+ * The two material paramerts (real numbers) are simply the 
+ * Youngs modulus and Poisson ratio of the material
+ */
 // Material properties
 @MaterialProperty stress young;
 young.setGlossaryName("YoungModulus");
 @MaterialProperty real   nu;
 nu.setGlossaryName("PoissonRatio");
 
-@ExternalStateVariable<AxisymmetricalGeneralisedPlaneStress> stress sigzz;
-AxisymmetricalGeneralisedPlaneStress::sigzz.setGlossaryName("AxialStress");
 
-// Lame Coefficients
-@LocalVariable stress lambda,mu;
+/*!
+ * We request Mfront to calculate the SymmetricTangentOperator
+ * which is nothing but the stifness matrix
+ */
+@ProvidesSymmetricTangentOperator;
 
-@InitLocalVariables{
-  lambda = computeLambda(young,nu);
-  mu = computeMu(young,nu);
-}
 
-@PredictionOperator{
-  static_cast<void>(smt); // remove unused variable warning
-  computeAlteredElasticStiffness<hypothesis,real>::exe(Dt,lambda,mu);
-}
-
+/*!
+ * In this block the law is integrated
+ *   1. compute the Lame parameters lambda, mu
+ *   2. compute the stress state
+ *   2. compute the stifness matrix 
+ */
 @Integrator{
+  static_cast<void>(smt); // remove compiler warning
+  const stress lambda = computeLambda(young,nu);
+  const stress mu     = computeMu(young,nu);
   sig = lambda*trace(eto+deto)*StrainStensor::Id()+2*mu*(eto+deto);
   if(computeTangentOperator_){
     Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
   }
-}
-
-@Integrator<PlaneStress,Replace>{
-  // here we compute the tangent operator even if we don't need too
-  static_cast<void>(computeTangentOperator_);
-  computeAlteredElasticStiffness<hypothesis,real>::exe(Dt,lambda,mu);
-  sig = Dt*(eto+deto);
-}
-
-@Integrator<AxisymmetricalGeneralisedPlaneStress,Replace>{
-  // here we compute the tangent operator even if we don't need too
-  static_cast<void>(computeTangentOperator_);
-  computeAlteredElasticStiffness<hypothesis,real>::exe(Dt,lambda,mu);
-  sig = Dt*(eto+deto);
-  sig(2)=this->sigzz+this->dsigzz;
 }
