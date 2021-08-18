@@ -12,6 +12,7 @@
 ## OUTPUT FILES ##
 .output
 .info
+*a.out
 
 ##Exec Files ##
 *PSD_PreProcess
