@@ -33,7 +33,7 @@ Test_1: Test_1.edp
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
-	@echo "Test_2 : mfront testing MFrontParameter routine"
+	@echo "Test_2 : mfront testing mfrontElasticityHandler routine"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp >  Test_2.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp >  Test_2_NP2.log		
 	@echo "  PASSED "	

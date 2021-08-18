@@ -19,7 +19,26 @@
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
   load    "../cpp/mfront"
+
+  load    "Element_QF"                           // Quadrature elements     
   
-  real mu = 11;
+  mesh Th = square(2,2);
+  fespace Qh  ( Th , [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2] );
+  Qh [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33];
+
+  fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
+  Sh [Eps11,Eps22,Eps12];  
   
-  MFrontParameter(mu);
+    
+  plot(Th);
+  cout << "Material tensore FreeFem has " << Qh.ndof << endl;
+  string    PropertyNames   = "YoungModulus PoissonRatio";
+  real[int] PropertyValues  = [ 15e9, 0.3   ];  
+  
+  mfrontElasticityHandler( "Elasticity", 
+                           mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
+                           mfrontPropertyNames       = PropertyNames           ,
+                           mfrontPropertyValues      = PropertyValues          ,
+                           mfrontMaterialTensor      = Mt11[]                  ,
+                           mfrontStrainTensor        = Eps11[]                                     
+                         );

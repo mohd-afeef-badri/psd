@@ -11,7 +11,7 @@ all-local: mfront.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-mfront.so: mfront.cpp
+mfront.so: mfront.cpp mfrontElasticityHandler.hpp
 if HAVEMGIS
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 else !HAVEMGIS	

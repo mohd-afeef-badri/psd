@@ -25,71 +25,22 @@
 #include "AFunction.hpp"
 #include "AFunction_ext.hpp"
 
-#include <iostream>
+#include "MGIS/Behaviour/State.hxx"
 #include "MGIS/Behaviour/Behaviour.hxx"
+#include "MGIS/Behaviour/BehaviourData.hxx"
+#include "MGIS/Behaviour/Integrate.hxx"
 
-using namespace Fem2D;
 using namespace std;
+using namespace Fem2D;
+
+using namespace mgis::behaviour;
 using namespace mgis::behaviour;
 
 
-template<class K>
-class MFrontParameter_Op : public E_F0mps {
-    public:
-        Expression mu					;  
-              
-        static const int n_name_param = 0		;
-        static basicAC_F0::name_and_type name_param[]	;
-        Expression nargs[n_name_param]			;
-        
-        MFrontParameter_Op(const basicAC_F0& args		, 
-        		Expression param1				
-        		) : 
-        		mu     (param1)			
-        		{
-            		args.SetNameParam(n_name_param	, 
-            				  name_param	, 
-            				  nargs
-            				  )		;
-        		}
-        		
-        AnyType operator()(Stack stack) const		;
-};
-
-template<class K>
-basicAC_F0::name_and_type MFrontParameter_Op<K>::name_param[] = { };
-
-template<class K>
-class MFrontParameter : public OneOperator {
-    public:
-        MFrontParameter() : OneOperator(atype<long>()	,         			     
-        			     atype<double>()  
-        			     ) {}
-
-        E_F0* code(const basicAC_F0& args) const {
-            return new MFrontParameter_Op<K>(args, 
-            				  t[0]->CastTo(args[0])           				              				  
-            				  );
-        }
-};
-
-
-template<class K>
-AnyType MFrontParameter_Op<K>::operator()(Stack stack) const {
-
-    const auto muMfront = mgis::real{GetAny<double>((*mu)(stack))};
-    
-    cout
-             << " Print of MFront Parameter "
-             <<  muMfront 
-             <<
-    endl;
-        
-    return 0L;
-}
+#include "mfrontElasticityHandler.hpp"
 
 static void InitFF()
 {
-  Global.Add("MFrontParameter", "(", new MFrontParameter<double>);
+  Global.Add("mfrontElasticityHandler", "(", new mfrontElasticityHandler<double>);
 }
 LOADFUNC(InitFF)   
