@@ -162,8 +162,9 @@ AC_CONFIG_FILES([
  src/plugins/go-fast-plugins/test/Makefile  
  src/plugins/mfront/Makefile
  src/plugins/mfront/cpp/Makefile
- src/plugins/mfront/law/Makefile
+ src/plugins/mfront/law/Makefile 
  src/plugins/mfront/law/elasticity/Makefile
+ src/plugins/mfront/law/elasticity/test/Makefile 
  src/plugins/mfront/test/Makefile  
  src/plugins/paraview-output/Makefile 
  src/plugins/paraview-output/cpp/Makefile

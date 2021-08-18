@@ -1,3 +1,4 @@
+SUBDIRS = test
 LIST_COMPILE= Elasticity.mfront
 	
 all-local:
