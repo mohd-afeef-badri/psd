@@ -53,23 +53,23 @@
    
   int prec = cout.precision(32);   
   assert( abs(Mt11[][0]-MtRef11) <= epsilon  &&
-          abs(Mt11[][1]-MtRef12) <= epsilon  &&
-          abs(Mt11[][2]-MtRef13) <= epsilon  &&
-          abs(Mt11[][3]-MtRef22) <= epsilon  &&
-          abs(Mt11[][4]-MtRef23) <= epsilon  &&
-          abs(Mt11[][5]-MtRef33) <= epsilon                                        
+          abs(Mt11[][3]-MtRef12) <= epsilon  &&
+          abs(Mt11[][6]-MtRef13) <= epsilon  &&
+          abs(Mt11[][9]-MtRef22) <= epsilon  &&
+          abs(Mt11[][12]-MtRef23) <= epsilon  &&
+          abs(Mt11[][15]-MtRef33) <= epsilon                                        
         );
 
   cout << " ================================================== " << endl;
   cout << "      MATERIAL TENSOR CALUCLATED BY MFRONT          " << endl;
   cout << " ================================================== " << endl;
   cout << "                                                    " << endl;       
-  cout << " Mt11[0] " << Mt11[][0] << endl;  
-  cout << " Mt11[1] " << Mt11[][1] << endl; 
-  cout << " Mt11[2] " << Mt11[][2] << endl;
-  cout << " Mt11[3] " << Mt11[][3] << endl;
-  cout << " Mt11[3] " << Mt11[][4] << endl;
-  cout << " Mt11[3] " << Mt11[][5] << endl;
+  cout << " Mt11 " << Mt11[][0] << endl;  
+  cout << " Mt12 " << Mt11[][3] << endl; 
+  cout << " Mt13 " << Mt11[][6] << endl;
+  cout << " Mt22 " << Mt11[][9] << endl;
+  cout << " Mt23 " << Mt11[][12] << endl;
+  cout << " Mt33 " << Mt11[][15] << endl;
   cout << "                                                    " << endl;         
   cout << " ================================================== " << endl;   
                              /**/

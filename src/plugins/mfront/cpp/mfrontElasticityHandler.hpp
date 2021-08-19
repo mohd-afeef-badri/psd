@@ -129,7 +129,7 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
       }
         
      constexpr const auto h = Hypothesis::GENERALISEDPLANESTRAIN;
-     const auto b = load("./../law/elasticity/src/libBehaviour.so", *mfrontBehaviourName , h);
+     const auto b = load("/home/mb258512/Install/local/include/psd/libBehaviour.so", *mfrontBehaviourName , h);
      
      auto d = BehaviourData{b};
      auto v = make_view(d);
@@ -211,26 +211,43 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
                  << endl;                      
            }
            
-           d.K[0] = 1.;
-           integrate(v, b);
+           cout << "I AM HERRE "<< endl;
            
-           int totalGaussPoints =  mfrontMaterialTensor->n / 6;      
-           int indexMt11, indexMt12, indexMt13, indexMt22, indexMt23, indexMt33;
+           int totalGaussPoints =  mfrontMaterialTensor->n / 18;      
+           int indexMtTensor ;
            for (int i = 0; i < totalGaussPoints; i++)
             {    
-             indexMt11  = i*6          ;
-             indexMt12  = indexMt11 + 1;
-             indexMt13  = indexMt11 + 2;
-             indexMt22  = indexMt11 + 3;
-             indexMt23  = indexMt11 + 4;
-             indexMt33  = indexMt11 + 5;
-    
-             mfrontMaterialTensor->operator[](indexMt11)=d.K[0];
-             mfrontMaterialTensor->operator[](indexMt12)=d.K[1];
-             mfrontMaterialTensor->operator[](indexMt13)=d.K[3];
-             mfrontMaterialTensor->operator[](indexMt22)=d.K[5];
-             mfrontMaterialTensor->operator[](indexMt23)=d.K[7];
-             mfrontMaterialTensor->operator[](indexMt33)=d.K[15]/2;
+             indexMtTensor  = i*18;  // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18
+
+             d.K[0] = 1.;
+             integrate(v, b);      
+               
+             mfrontMaterialTensor->operator[](indexMtTensor)    = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)           
+             mfrontMaterialTensor->operator[](indexMtTensor +1) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor +2) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)          
+                                                    
+             mfrontMaterialTensor->operator[](indexMtTensor+3) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+4) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+5) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             
+                           
+             mfrontMaterialTensor->operator[](indexMtTensor+6) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+7) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+8) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+                                       
+             mfrontMaterialTensor->operator[](indexMtTensor+9)  = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+10) = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+11) = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+                          
+             mfrontMaterialTensor->operator[](indexMtTensor+12) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+13) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+14) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)                          
+             
+             mfrontMaterialTensor->operator[](indexMtTensor+15) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+16) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+17) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)
+
+                                      
             }                  
          }
 
@@ -258,8 +275,7 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
              d.s1.gradients[3] = mfrontStrainTensor->operator[](indexExy); //E12
              
              integrate(v, b);
-                          
-                          
+                                               
              mfrontStressTensor->operator[](indexEx)  = d.s1.thermodynamic_forces[0]; // sig_xx 
              mfrontStressTensor->operator[](indexEy)  = d.s1.thermodynamic_forces[1]; // sig_yy               
              mfrontStressTensor->operator[](indexExy) = d.s1.thermodynamic_forces[3]; // sig_xy
@@ -277,9 +293,9 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
                  << endl;                      
            }
            
-           int totalGaussPoints =  mfrontStrainTensor->n / 3;      
-           int indexEx, indexEy, indexExy;
-           int indexMt11, indexMt12, indexMt13, indexMt22, indexMt23, indexMt33;  
+           int totalGaussPoints =  mfrontMaterialTensor->n / 18;      
+           int indexEx, indexEy, indexExy;           
+           int indexMtTensor ;
                     
            for (int i = 0; i < totalGaussPoints; i++)
             {
@@ -301,19 +317,32 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
              mfrontStressTensor->operator[](indexExy) = d.s1.thermodynamic_forces[3]; // sig_xy 
              
              
-             indexMt11  = i*6          ;
-             indexMt12  = indexMt11 + 1;
-             indexMt13  = indexMt11 + 2;
-             indexMt22  = indexMt11 + 3;
-             indexMt23  = indexMt11 + 4;
-             indexMt33  = indexMt11 + 5;
-    
-             mfrontMaterialTensor->operator[](indexMt11)=d.K[0];
-             mfrontMaterialTensor->operator[](indexMt12)=d.K[1];
-             mfrontMaterialTensor->operator[](indexMt13)=d.K[3];
-             mfrontMaterialTensor->operator[](indexMt22)=d.K[5];
-             mfrontMaterialTensor->operator[](indexMt23)=d.K[7];
-             mfrontMaterialTensor->operator[](indexMt33)=d.K[15]/2;             
+             indexMtTensor  = i*18;  // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18    
+               
+             mfrontMaterialTensor->operator[](indexMtTensor)    = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)           
+             mfrontMaterialTensor->operator[](indexMtTensor +1) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor +2) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)          
+                                                    
+             mfrontMaterialTensor->operator[](indexMtTensor+3) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+4) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+5) = d.K[1];  //  Mt_12 Quadrature point 1 (3 Quad points per tria)
+             
+                           
+             mfrontMaterialTensor->operator[](indexMtTensor+6) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+7) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+8) = d.K[3];  //  Mt_13 Quadrature point 1 (3 Quad points per tria)
+                                       
+             mfrontMaterialTensor->operator[](indexMtTensor+9)  = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+10) = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+11) = d.K[5];  //  Mt_22 Quadrature point 1 (3 Quad points per tria)
+                          
+             mfrontMaterialTensor->operator[](indexMtTensor+12) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+13) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+14) = d.K[7];  //  Mt_23 Quadrature point 1 (3 Quad points per tria)                          
+             
+             mfrontMaterialTensor->operator[](indexMtTensor+15) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+16) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)
+             mfrontMaterialTensor->operator[](indexMtTensor+17) = d.K[15]/2;  //  Mt_33 Quadrature point 1 (3 Quad points per tria)            
             }                  
          }
       }
