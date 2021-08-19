@@ -18,6 +18,25 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
-  load    "../cpp/mfront" 
+  load    "../cpp/mfront"
   
-  mfrontElasticityHandler( "Elasticity");
+  string    PropertyNames   = "YoungModulus PoissonRatio";
+  real[int] PropertyValues  = [ 150, 0.3   ];  
+  
+  mfrontElasticityHandler( "Elasticity"                                        , 
+                           mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
+                           mfrontPropertyNames       = PropertyNames           ,
+                           mfrontPropertyValues      = PropertyValues                                             
+                         );
+
+  mfrontElasticityHandler( "Elasticity"                                        , 
+                           mfrontBehaviourHypothesis = "PLANESTRAIN"           ,
+                           mfrontPropertyNames       = PropertyNames           ,
+                           mfrontPropertyValues      = PropertyValues                                             
+                         );
+
+  mfrontElasticityHandler( "Elasticity"                                        , 
+                           mfrontBehaviourHypothesis = "TRIDIMENSIONAL"        ,
+                           mfrontPropertyNames       = PropertyNames           ,
+                           mfrontPropertyValues      = PropertyValues                                             
+                         );                                                
