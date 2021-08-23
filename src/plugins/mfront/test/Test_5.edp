@@ -1,28 +1,28 @@
 /*****************************************************************************
-                                                                              
-         This file is a part of PSD (Parallel Structural Dynamics)            
-                                                                              
-     -------------------------------------------------------------------      
-                                                                              
-     Author(s): Mohd Afeef Badri                                              
-     Email    : mohd-afeef.badri@cea.fr                                       
-     Date     : 2021‑07‑29                                                    
+
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@cea.fr
+     Date     : 2021‑07‑29
      Comment  : This test checks the MFrontParameter routine provided
                 in the mfront plugin of PSD works well
-                                                                                              
-     -------------------------------------------------------------------      
-                                                                              
-     PSD a parallel  finite  element framework  provides tools to  solve      
-     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
-     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
-                                                                              
-*******************************************************************************/                                                                                                                                                                                                                                     
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/
   load    "../cpp/mfront"
   load    "Element_QF"
-  
+
   mesh Th = square(2,2);
-  
+
   // Quadrature space with 6 elements for Material tensor
   fespace Mh  ( Th , [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2] );
   Mh [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33];
@@ -30,46 +30,47 @@
   // Quadrature space with 3 elements for stress and strain tensor
   fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
   Sh [Eps11,Eps22,Eps12];
-  
-  
-  
+
+
+
   string    PropertyNames   = "YoungModulus PoissonRatio";
-  real[int] PropertyValues  = [ 150, 0.3   ];  
-  
-  mfrontElasticityHandler( "Elasticity"                                        , 
+  real[int] PropertyValues  = [ 150, 0.3   ];
+
+  mfrontElasticityHandler( "Elasticity"                                        ,
                            mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
                            mfrontPropertyNames       = PropertyNames           ,
                            mfrontPropertyValues      = PropertyValues          ,
-                           mfrontMaterialTensor      = Mt11[]                  
+                           mfrontMaterialTensor      = Mt11[]
                          );
-  
+
   real epsilon = 1e-9;
   real MtRef11 = 201.92307692307690558664035052061 ,
        MtRef12 = 86.538461538461532995825109537691 ,
        MtRef13 = 0                                 ,
        MtRef22 = 201.92307692307690558664035052061 ,
        MtRef23 = 0                                 ,
-       MtRef33 = 57.692307692307693400834978092462 ;  
-   
-  int prec = cout.precision(32);   
+       MtRef33 = 115.38461538461538680166995618492 ;
+
+  int prec = cout.precision(32);
+
   assert( abs(Mt11[][0]-MtRef11) <= epsilon  &&
           abs(Mt11[][3]-MtRef12) <= epsilon  &&
           abs(Mt11[][6]-MtRef13) <= epsilon  &&
           abs(Mt11[][9]-MtRef22) <= epsilon  &&
           abs(Mt11[][12]-MtRef23) <= epsilon  &&
-          abs(Mt11[][15]-MtRef33) <= epsilon                                        
+          abs(Mt11[][15]-MtRef33) <= epsilon
         );
 
   cout << " ================================================== " << endl;
   cout << "      MATERIAL TENSOR CALUCLATED BY MFRONT          " << endl;
   cout << " ================================================== " << endl;
-  cout << "                                                    " << endl;       
-  cout << " Mt11 " << Mt11[][0] << endl;  
-  cout << " Mt12 " << Mt11[][3] << endl; 
+  cout << "                                                    " << endl;
+  cout << " Mt11 " << Mt11[][0] << endl;
+  cout << " Mt12 " << Mt11[][3] << endl;
   cout << " Mt13 " << Mt11[][6] << endl;
   cout << " Mt22 " << Mt11[][9] << endl;
   cout << " Mt23 " << Mt11[][12] << endl;
   cout << " Mt33 " << Mt11[][15] << endl;
-  cout << "                                                    " << endl;         
-  cout << " ================================================== " << endl;   
+  cout << "                                                    " << endl;
+  cout << " ================================================== " << endl;
                              /**/
