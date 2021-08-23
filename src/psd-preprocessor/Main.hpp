@@ -28,6 +28,10 @@ if(!Sequential)
  writeIt
  "  load    \"PSD-PETSc\"                            // PETSc plugin activated  \n";
 
+if(useMfront)
+ writeIt
+ "  load    \"mfront\"                               // MFront interface active \n";
+
 if(Sequential)if(ParaViewPostProcess)
  writeIt
  "  load    \"PSD-iovtk\"                            // Paraview support files \n";

@@ -95,7 +95,8 @@ if(Prblm=="soildynamics")
 
 if(Prblm=="linear_elasticity")
  {
-
+ 
+  if(!useMfront)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -115,6 +116,31 @@ if(Prblm=="linear_elasticity")
   "  mu     = E/(2.*(1.+nu))            ;                                        \n"
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
   "}                                                                             \n";
+
+  
+  if(useMfront)
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Material parameters -------                      \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"
+  "//  PropertyNames : String of material property names (space seperated)       \n"
+  "//                  that are provided to Mfront.                              \n"
+  "//  PropertyValues : Values of material properties provided to Mfront         \n"
+  "//                                                                            \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
+  "//            as in the Elasticity.mfront file                                \n"
+  "// -------------------------------------------------------------------        \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  macro E()  200.e9  //                                                       \n"
+  "  macro nu() 0.3     //                                                       \n"
+  "                                                                              \n"
+  "  string    PropertyNames   = \"YoungModulus PoissonRatio\";                  \n"
+  "  real[int] PropertyValues  = [ E, nu ];                                      \n"
+  "                                                                              \n";
 
  /*
  if(!fastmethod)

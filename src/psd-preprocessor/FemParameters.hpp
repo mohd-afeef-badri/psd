@@ -43,7 +43,7 @@ if(Prblm=="linear_elasticity"){
  "  Vh  def(du)   ,                                                             \n"
  "      def(u)    ;                                                             \n";
 
- if(!fastmethod){
+ if(!fastmethod && !useMfront){
  if(spc==2)
  writeIt
   "                                                                              \n"
@@ -103,6 +103,42 @@ if(Prblm=="linear_elasticity"){
   "                                               mu , 0  , 0  ,                 \n"
   "                                                    mu , 0  ,                 \n"
   "                                                         mu ];                \n"
+  "                                                                              \n";
+  }
+ 
+ if(useMfront){
+ if(spc==2)
+ writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Material Tensor using Quadrature FE space -------                  \n"
+  "// -------------------------------------------------------------------        \n"
+  "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
+  "//            re space Qh. This array is used  to define components of the    \n"
+  "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
+  "//            In 2D the material tensor looks like                            \n"
+  "//                                                                            \n"
+  "//         [ 2*mu+lambda ,  lambda      , 0 ]    [ Mt11 , Mt12 , Mt13 ]       \n"
+  "//   Mt =  [ lambda      ,  2*mu+lambda , 0 ] =  [ Mt12 , Mt22 , Mt23 ]       \n"
+  "//         [   0         ,     0        , mu]    [ Mt13 , Mt23 , Mt33 ]       \n"
+  "//                                                                            \n"
+  "// mfrontElasticityHandler : is a function in mfront interface that helps     \n"
+  "//                           building the material tensor  Mt  given with     \n"
+  "//                           material prpts.  from  ControlParameters.edp     \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  Qh           [ Mt11 ,  Mt12 , Mt13 ,                                        \n"
+  "                         Mt22 , Mt23 ,                                        \n"
+  "                                Mt33 ];                                       \n"
+  "                                                                              \n"
+  "  mfrontElasticityHandler( \"Elasticity\",                                    \n"
+  "                           mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",\n"
+  "                           mfrontPropertyNames       = PropertyNames           ,  \n"
+  "                           mfrontPropertyValues      = PropertyValues          ,  \n"
+  "                           mfrontMaterialTensor      = Mt11[]                     \n" 
+  "                         );                                                       \n"
+  "                                                                              \n"
+  "                                                                              \n"
   "                                                                              \n";
   }
 
