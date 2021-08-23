@@ -172,7 +172,7 @@ Then to run the problem
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{LinearFormBuilderAndSolver.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. Similarly try out the 3D probelm. **Note:** This flag is exclusive for parallel solver.
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-model pseudo\_nonlinear} flag. Especially, compare  \sh{LinearFormBuilderAndSolver.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. You will see Newton--Raphsons iterations are performed for solving the linear problem. However, the nonlinear iterations loop converges very rapidly (in 1 iteration) due to linear nature of the problem. **Note:** This flag is exclusive for parallel solver.
 
 
 \subsection{Advance exercise 4}

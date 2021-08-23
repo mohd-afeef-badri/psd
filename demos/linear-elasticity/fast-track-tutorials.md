@@ -158,7 +158,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
 
 \subsection{Exercise  3}
 
-One interesting way of solving a linear Elasticity problem is to solve it via a pseudo nonlinear model. There is a preprocess level flag \sh{-model pseudo\_nonlinear}, which introduces pseudo nonlinearity  into the finite element variational formulation of linear elasticity. You are encouraged to use this flag and see how the solver performs. Indeed, now you should see some nonlinear iterations (1 or 2)  are taken for convergence.
+One interesting way of solving a linear Elasticity problem is to solve it via a pseudo nonlinear model. There is a preprocess level flag \sh{-model pseudo\_nonlinear}, which introduces pseudo nonlinearity  into the finite element variational formulation of linear elasticity. You are encouraged to use this flag and see how the solver performs.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
@@ -171,7 +171,7 @@ Then to run the problem we need additional \sh{-wg} flag
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{LinearFormBuilderAndSolver.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. Similarly try out the 3D probelm. **Note:** This flag is exclusive for parallel solver.
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-model pseudo\_nonlinear} flag. Especially, compare  \sh{LinearFormBuilderAndSolver.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. You will see Newton--Raphsons iterations are performed for solving the linear problem. However, the nonlinear iterations loop converges very rapidly (in 1 iteration) due to linear nature of the problem. **Note:** This flag is exclusive for parallel solver.
 
 \subsection{Exercise  4}
 
@@ -190,3 +190,35 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{FemParameters.edp}, \sh{MeshAndFeSpace} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step.
 
+
+\subsection{Exercise  5}
+
+PSD has also been interfaced with MFront material library, this library (MFront) provides users with multiple linear/non-linear mechanical laws (behaviours) and one can profit from this opensource DSL. There is a preprocess level flag \sh{-useMfront}, which in the case of linear-elasticity will introduces the full material tensor into the finite element variational formulation and this material tensor will be built  using MFront library. You are encouraged to use this flag and see how the solver performs.
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -useMfront
+\end{lstlisting}
+
+Then to run the problem we need additional \sh{-wg} flag
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
+\end{lstlisting}
+
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-useMfront} flag. Especially, compare  \sh{FemParameters.edp}, \sh{MeshAndFeSpace} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step.
+
+One can also use the Mfront interface with the pseudo-nonlinear model for solving elasticity. In this case Mfront will be incharge of  building the Material tensor (stiffness matrix) and the stress tensor in previous nonlinear iterate. To realise this case:
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -useMfront -model pseudo_nonlinear
+\end{lstlisting}
+
+Then to run the problem we need additional \sh{-wg} flag
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
+\end{lstlisting}
+
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-useMfront} flag. Especially, compare  \sh{FemParameters.edp}, \sh{LinearFormBuilderAndSolver.edp}, \sh{MeshAndFeSpace} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step.
