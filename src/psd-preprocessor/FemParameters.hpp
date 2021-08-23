@@ -94,6 +94,7 @@ if(Prblm=="linear_elasticity"){
   "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"
   "//============================================================================\n"
   "                                                                              \n"
+<<(timelog ? "  timerbegin(\"Material tensor building\",t0)\n" : ""              )<<
   "  Qh [ Mt11 , Mt12 ,  Mt13 , Mt14 , Mt15 , Mt16 ,                             \n"
   "              Mt22 ,  Mt23 , Mt24 , Mt25 , Mt26 ,                             \n"
   "                      Mt33 , Mt34 , Mt35 , Mt36 ,                             \n"
@@ -107,6 +108,7 @@ if(Prblm=="linear_elasticity"){
   "                                               mu , 0  , 0  ,                 \n"
   "                                                    mu , 0  ,                 \n"
   "                                                         mu ];                \n"
+<<(timelog ? "  timerend(\"Material tensor building\",t0)\n" : ""                )<<
   "                                                                              \n";
   }
 
@@ -135,7 +137,7 @@ if(Prblm=="linear_elasticity"){
   "                         Mt22 , Mt23 ,                                        \n"
   "                                Mt33 ];                                       \n"
   "                                                                              \n"
-<<(timelog ? "  timerbegin(\"Material building via MFront\",t0)\n" : ""          )<<
+<<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
   "                                                                              \n"
   "  mfrontElasticityHandler( \"Elasticity\",                                    \n"
   "                           mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",\n"
@@ -144,7 +146,7 @@ if(Prblm=="linear_elasticity"){
   "                           mfrontMaterialTensor      = Mt11[]                     \n"
   "                         );                                                       \n"
   "                                                                              \n"
-<<(timelog ? "  timerend(\"Material building via MFront\",t0)\n" : ""            )<<
+<<(timelog ? "  timerend(\"Material tensor building via MFront\",t0)\n" : ""     )<<
   "                                                                              \n"
   "                                                                              \n";
 

@@ -109,6 +109,7 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
 <<(timelog ? "  timerend(\"PETSc solving\",t0)\n" : ""                          );
 
  if( Model=="pseudo_nonlinear")
+ {
  writeIt
  "                                                                                \n"
  " //----------------PETSc solving----------------------//                        \n"
@@ -123,7 +124,10 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
 <<(timelog ? "  timerbegin(\"Solution update\",t0)\n" : ""                        )<<
  "  u[] += du[];                                                                  \n"
 <<(timelog ? "  timerend(\"Solution update\",t0)\n" : ""                          )<<
- "                                                                                \n"
+ "                                                                                \n";
+
+ if(useMfront)
+ writeIt
  " //-----Update Stress using Mfront-------------------//                         \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"Stress update via MFront\",t0)\n" : ""               )<<
@@ -137,6 +141,9 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  "                          mfrontStressTensor        = Sig11[]                      \n"
  "                        );                                                         \n"
 <<(timelog ? "  timerend(\"Stress update via MFront\",t0)\n" : ""                 )<<
+ "                                                                                \n";
+
+ writeIt
  "                                                                                \n"
  "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
@@ -179,6 +186,7 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  " }    // Nonlinear NR loop ends                                                 \n"
  "                                                                                \n"
  "                                                                                \n";
+ }
 
 if(debug)
  writeIt

@@ -122,6 +122,15 @@ check-linear-elasticity-Mfront:
 	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_Mfornt.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D linear-elasticity with mfront building material tensor and pseudononlinear model"
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -useMfront -model pseudo_nonlinear -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_Mfornt_pseudo_nonlinear.log && \
+	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_Mfornt_pseudo_nonlinear.log
 
 clean-local:
 	@echo ""
