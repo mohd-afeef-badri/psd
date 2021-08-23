@@ -69,7 +69,7 @@ if(help)
  "                                   | soildynamics.                            \n"
  "                                                                              \n"
  "  -model              [string]     Model by which the problem is solved.      \n"
- "                                   Use hybrid_phase_field | pseudononlinear   \n"
+ "                                   Use hybrid_phase_field | pseudo_nonlinear  \n"
  "                                   | Mazar                                    \n"
  "                                                                              \n"
  "                                                                              \n"
