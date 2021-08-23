@@ -299,9 +299,9 @@ if(spc==2)
  "                                                                               \n"
  "  macro epsilonXMt(u,Mt) [                                                     \n"
  "                                                                               \n"
- "                  epsilon(u)[0]*Mt[0]+epsilon(u)[1]*Mt[1]+epsilon(u)[2]*Mt[2], \n"
- "                  epsilon(u)[0]*Mt[1]+epsilon(u)[1]*Mt[3]+epsilon(u)[2]*Mt[4], \n"
- "                  epsilon(u)[0]*Mt[2]+epsilon(u)[1]*Mt[4]+epsilon(u)[2]*Mt[5]  \n"
+ "               epsilon(u)[0]*Mt#11 + epsilon(u)[1]*Mt#12 + epsilon(u)[2]*Mt#13,\n"
+ "               epsilon(u)[0]*Mt#12 + epsilon(u)[1]*Mt#22 + epsilon(u)[2]*Mt#23,\n"
+ "               epsilon(u)[0]*Mt#13 + epsilon(u)[1]*Mt#23 + epsilon(u)[2]*Mt#33 \n"
  "                                                                               \n"
  "                        ] //                                                   \n"
  "                                                                               \n";

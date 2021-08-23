@@ -29,10 +29,10 @@ if(!top2vol)
  "//==============================================================================\n"
  "// ------- Error message if wrong mesh detected -------                         \n"
  "//==============================================================================\n"
- "                                                                                \n" 
+ "                                                                                \n"
  "  if(ThName.find(\".mesh\") == -1 && ThName.find(\".msh\") == -1)               \n"
- "   cout <<\"INVALID MESH: PSD only accepts '.msh' or '.mesh' formats\"<< endl;  \n";        
-   
+ "   cout <<\"INVALID MESH: PSD only accepts '.msh' or '.mesh' formats\"<< endl;  \n";
+
 if(Sequential){
  writeIt
  "                                                                                \n"
@@ -44,19 +44,19 @@ if(Sequential){
  "                                                                                \n"
  <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                               )
  <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                         )<<
- "                                                                                \n" 
+ "                                                                                \n"
  "  meshN Th;                                                                     \n"
- "                                                                                \n"  
- "  if(ThName.find(\".msh\") > -1)                                                \n" 
- "    {                                                                           \n"   
+ "                                                                                \n"
+ "  if(ThName.find(\".msh\") > -1)                                                \n"
+ "    {                                                                           \n"
  "      load \"gmsh\"                                                             \n"
  "      Th = gmshloadN(ThName);                                                   \n"
  "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n" 
- "    {                                                                           \n"   
+ "  if(ThName.find(\".mesh\") > -1)                                               \n"
+ "    {                                                                           \n"
  "      Th = readmeshN(ThName);                                                   \n"
  "    }                                                                           \n"
- "                                                                                \n" 
+ "                                                                                \n"
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )
  <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                          )<<
  "                                                                                \n"
@@ -75,11 +75,12 @@ if(Sequential){
  "// ------- The finite element space  -------                                    \n"
  "// ---------------------------------------------------------------------------- \n"
  "//  Vh1       : Quadratur finite element space  for material tensor             \n"
- "//              FEQF2 implies 3 dof for triagular cell in the mesh              \n"
+ "//              FEQF2 implies 3 dof for triagular cell in the mesh.             \n"
+ "//              A vectorial FEM space is built with 6 components                \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF2 );                                                    \n";
- 
+ " fespace Qh  ( Th , [FEQF2, FEQF2, FEQF2, FEQF2, FEQF2, FEQF2] );               \n";
+
  if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
   writeIt
  "                                                                                \n"
@@ -90,8 +91,8 @@ if(Sequential){
  "//              FEQF23d implies 4 dof for a tetra cell in the mesh              \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF23d );                                                  \n";  
- 
+ " fespace Qh  ( Th , FEQF23d );                                                  \n";
+
  if(Prblm=="damage" && Model=="hybrid_phase_field")
   writeIt
  "                                                                                \n"
@@ -168,9 +169,10 @@ if(!Sequential){
  "// ---------------------------------------------------------------------------- \n"
  "//  Qh       : Quadratur finite element space  for material tensor              \n"
  "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
+ "//             A vectorial FEM space is built with 6 components                 \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF2 );                                                    \n";
+ " fespace Qh  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2, FEQF2] );               \n";
 
  if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
   writeIt
@@ -182,7 +184,7 @@ if(!Sequential){
  "//              FEQF23d implies 4 dof for a tetra cell in the mesh              \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF23d );                                                  \n";  
+ " fespace Qh  ( Th , FEQF23d );                                                  \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt
@@ -264,13 +266,13 @@ if(!Sequential){
  "                                                                                \n"
  " func int PartThAndBuildCommunication(){                                        \n"
  "                                                                                \n"
- "  if(ThName.find(\".msh\") > -1)                                                \n" 
- "    {                                                                           \n"   
+ "  if(ThName.find(\".msh\") > -1)                                                \n"
+ "    {                                                                           \n"
  "      load \"gmsh\"                                                             \n"
  "      Th = gmshloadN(ThName);                                                   \n"
  "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n" 
- "    {                                                                           \n"   
+ "  if(ThName.find(\".mesh\") > -1)                                               \n"
+ "    {                                                                           \n"
  "      Th = readmeshN(ThName);                                                   \n"
  "    }                                                                           \n"
  "                                                                                \n"
@@ -301,7 +303,7 @@ if(!Sequential){
   "          )                                                                     \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field")
- if(!vectorial) 
+ if(!vectorial)
   writeIt
   "                                                                                \n"
   "  fespace Ph(Th, P0);                                                           \n"
@@ -323,15 +325,15 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n"
   "                                                                                \n"
-  "  if(ThName.find(\".msh\") > -1)                                                \n" 
-  "    {                                                                           \n"   
+  "  if(ThName.find(\".msh\") > -1)                                                \n"
+  "    {                                                                           \n"
   "      Th = gmshloadN(ThName);                                                   \n"
   "    }                                                                           \n"
-  "  if(ThName.find(\".mesh\") > -1)                                               \n" 
-  "    {                                                                           \n"   
+  "  if(ThName.find(\".mesh\") > -1)                                               \n"
+  "    {                                                                           \n"
   "      Th = readmeshN(ThName);                                                   \n"
   "    }                                                                           \n"
-  "                                                                                \n"  
+  "                                                                                \n"
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
@@ -348,7 +350,7 @@ if(!Sequential){
   "          )                                                                     \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field")
- if(vectorial && constrainHPF) 
+ if(vectorial && constrainHPF)
   writeIt
   "                                                                                \n"
   "  fespace Ph(Th, P0);                                                           \n"
@@ -371,15 +373,15 @@ if(!Sequential){
   "          )                                                                     \n"
   "                                                                                \n"
   "                                                                                \n"
-  "  if(ThName.find(\".msh\") > -1)                                                \n" 
-  "    {                                                                           \n"   
+  "  if(ThName.find(\".msh\") > -1)                                                \n"
+  "    {                                                                           \n"
   "      Th = gmshloadN(ThName);                                                   \n"
   "    }                                                                           \n"
-  "  if(ThName.find(\".mesh\") > -1)                                               \n" 
-  "    {                                                                           \n"   
+  "  if(ThName.find(\".mesh\") > -1)                                               \n"
+  "    {                                                                           \n"
   "      Th = readmeshN(ThName);                                                   \n"
   "    }                                                                           \n"
-  "                                                                                \n" 
+  "                                                                                \n"
   <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )<<
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
@@ -396,7 +398,7 @@ if(!Sequential){
   "          )                                                                     \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field")
- if(vectorial && !constrainHPF)  
+ if(vectorial && !constrainHPF)
   writeIt
   "                                                                                \n"
   "  PETScMPIBuild(                                                                \n"
@@ -438,7 +440,7 @@ if(!Sequential){
  "//==============================================================================\n"
  "                                                                                \n"
  "  mpiBarrier(mpiCommWorld);                                                     \n"
- "                                                                                \n"  
+ "                                                                                \n"
  "  topiivolpart(                                                                 \n"
  "                 PcName,                                                        \n"
  "                 outfile=\"./top-ii-vol-meshes/Pc-strip\",                      \n"
@@ -446,21 +448,21 @@ if(!Sequential){
  "                 pointsy=PcNy,                                                  \n"
  "                 pointsz=PcNz,                                                  \n"
  "                 zdepth=Dptz,                                                   \n"
- "                 partx=PartX,                                                   \n"  
- "                 party=PartY,                                                   \n"  
+ "                 partx=PartX,                                                   \n"
+ "                 party=PartY,                                                   \n"
  "                 partz=PartZ                                                    \n"
  "              );                                                                \n"
  "                                                                                \n"
  "  mpiBarrier(mpiCommWorld);                                                     \n"
- "                                                                                \n"   
+ "                                                                                \n"
  "  topiivolmesh(                                                                 \n"
  "                \"./top-ii-vol-meshes/Pc-strip\",                               \n"
  "                outfile=\"./top-ii-vol-meshes/top2volmesh\",                    \n"
  "                pointsz=PcNz,                                                   \n"
  "                zdepth=Dptz,                                                    \n"
- "                partx=PartX,                                                    \n"  
- "                party=PartY,                                                    \n"  
- "                partz=PartZ                                                     \n" 
+ "                partx=PartX,                                                    \n"
+ "                party=PartY,                                                    \n"
+ "                partz=PartZ                                                     \n"
  "              );                                                                \n"
  "                                                                                \n"
  "                                                                                \n"
