@@ -64,11 +64,15 @@ if(Prblm=="linear_elasticity"){
   "                         Mt22 , Mt23 ,                                        \n"
   "                                Mt33 ];                                       \n"
   "                                                                              \n"
+<<(timelog ? "  timerbegin(\"Material building \",t0)\n" : ""                    )<<
+  "                                                                              \n"
   "  [ Mt11 ,  Mt12 , Mt13 ,                                                     \n"
   "            Mt22 , Mt23 ,                                                     \n"
   "                   Mt33 ] =  [ 2*mu+lambda , lambda      , 0                  \n"
   "                                           , 2*mu+lambda , 0                  \n"
   "                                                         , mu ];              \n"
+  "                                                                              \n"
+<<(timelog ? "  timerend(\"Material building via MFront\",t0)\n" : ""            )<<
   "                                                                              \n";
 
  if(spc==3)
@@ -105,9 +109,9 @@ if(Prblm=="linear_elasticity"){
   "                                                         mu ];                \n"
   "                                                                              \n";
   }
- 
+
  if(useMfront){
- if(spc==2)
+ if(spc==2){
  writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -131,15 +135,38 @@ if(Prblm=="linear_elasticity"){
   "                         Mt22 , Mt23 ,                                        \n"
   "                                Mt33 ];                                       \n"
   "                                                                              \n"
+<<(timelog ? "  timerbegin(\"Material building via MFront\",t0)\n" : ""          )<<
+  "                                                                              \n"
   "  mfrontElasticityHandler( \"Elasticity\",                                    \n"
   "                           mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",\n"
   "                           mfrontPropertyNames       = PropertyNames           ,  \n"
   "                           mfrontPropertyValues      = PropertyValues          ,  \n"
-  "                           mfrontMaterialTensor      = Mt11[]                     \n" 
+  "                           mfrontMaterialTensor      = Mt11[]                     \n"
   "                         );                                                       \n"
   "                                                                              \n"
+<<(timelog ? "  timerend(\"Material building via MFront\",t0)\n" : ""            )<<
   "                                                                              \n"
   "                                                                              \n";
+
+  if(Model=="pseudo_nonlinear")
+  writeIt
+   "                                                                              \n"
+   "//============================================================================\n"
+   "// ------- Stress/Strain Tensor using Quadrature FE space -------             \n"
+   "// -------------------------------------------------------------------        \n"
+   "// Eps  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "// Sig  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "//============================================================================\n"
+   "                                                                              \n"
+   "   Sh [Eps11,Eps22,Eps12];                                                    \n"
+   "   Sh [Sig11,Sig22,Sig12];                                                    \n"
+   "                                                                              \n";
+
+  }
   }
 
 }

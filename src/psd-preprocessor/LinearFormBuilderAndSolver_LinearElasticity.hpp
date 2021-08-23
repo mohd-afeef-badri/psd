@@ -111,16 +111,32 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  if( Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
- "//---------------PETSc solving---------------------//                           \n"
+ " //----------------PETSc solving----------------------//                        \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"PETSc solving\",t0)\n" : ""                       )<<
+<<(timelog ? "  timerbegin(\"PETSc solving\",t0)\n" : ""                          )<<
  "  set(A,sparams =\" -ksp_type cg -ksp_rtol 1e-9 \");                            \n"
- "  du[] = A^-1*b;                                                                 \n"
-<<(timelog ? "  timerend(\"PETSc solving\",t0)\n" : ""                          )<<
+ "  du[] = A^-1*b;                                                                \n"
+<<(timelog ? "  timerend(\"PETSc solving\",t0)\n" : ""                            )<<
  "                                                                                \n"
- "//---------------Update Solution---------------------//                         \n"
+ " //---------------Update Solution---------------------//                        \n"
  "                                                                                \n"
+<<(timelog ? "  timerbegin(\"Solution update\",t0)\n" : ""                        )<<
  "  u[] += du[];                                                                  \n"
+<<(timelog ? "  timerend(\"Solution update\",t0)\n" : ""                          )<<
+ "                                                                                \n"
+ " //-----Update Stress using Mfront-------------------//                         \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"Stress update via MFront\",t0)\n" : ""               )<<
+ "  [Eps11,Eps22,Eps12] = epsilon(u);                                             \n"
+ "                                                                                \n"
+ "   mfrontElasticityHandler( \"Elasticity\"                                        ,\n"
+ "                          mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",  \n"
+ "                          mfrontPropertyNames       = PropertyNames           ,    \n"
+ "                          mfrontPropertyValues      = PropertyValues          ,    \n"
+ "                          mfrontStrainTensor        = Eps11[]                 ,    \n"
+ "                          mfrontStressTensor        = Sig11[]                      \n"
+ "                        );                                                         \n"
+<<(timelog ? "  timerend(\"Stress update via MFront\",t0)\n" : ""                 )<<
  "                                                                                \n"
  "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
@@ -149,9 +165,13 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  "    //------------------Screen output norm----------------------//              \n"
  "                                                                                \n"
  "    if(mpirank==0)                                                              \n"
- "      cout.scientific << \"NL iteration number :  [ \"  << k                    \n"
+ "      cout.scientific                                                           \n"
+ "      << \"\\n----------------------------------------\\n\"                     \n"
+ "      << \"NL iteration number :  [ \"  << k                                    \n"
  "      << \" ]\\nL2 error in [u] :  [ \"    << err1Gather                        \n"
- "      << \" ]\"      << endl;                                                   \n"
+ "      << \" ]\"                                                                 \n"
+ "      << \"\\n----------------------------------------\\n\"                     \n"
+ "      << endl;                                                                  \n"
  "                                                                                \n"
  "      break;                                                                    \n"
  "                                                                                \n"

@@ -184,6 +184,21 @@ if(!Sequential){
  "                            FEQF2, FEQF2,                                       \n"
  "                                   FEQF2] );                                    \n";
 
+ 
+ if(Prblm=="linear_elasticity" && useMfront && Model=="pseudo_nonlinear" && spc==2)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
+ "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
+ "//             A vectorial FEM space is built with 3 components                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
+ "                                                                                \n";
+
  if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
   writeIt
  "                                                                                \n"

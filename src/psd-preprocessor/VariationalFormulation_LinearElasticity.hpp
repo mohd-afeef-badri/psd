@@ -124,7 +124,7 @@ if(fastmethod)
  "                   + 2.*mu*( epsilon(u)'*epsilon(v) )                                           \n"
  "                     )                                                                          \n";
 
-if(!fastmethod)
+if(!fastmethod && !useMfront)
  writeIt
  "                                                                                                \n"
  "/*                                                                                              \n"
@@ -149,6 +149,33 @@ if(!fastmethod)
  "                                                                                                \n"
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       epsilonXMt(u,Mt)'*epsilon(v)                                             \n"
+ "                     )                                                                          \n";
+
+if(!fastmethod && useMfront)
+ writeIt
+ "                                                                                                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                 (\\epsilon(du):\\mathbbm(Mt):\\epsilon(v))                                     \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
+ "      intN(Th,qforder=3)(                                                                       \n"
+ "                       epsilonXMt(du,Mt)'*epsilon(v)                                            \n"
+ "                     )                                                                          \n"
+ "                                                                                                \n"
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                 (\\epsilon(u):\\mathbbm(Mt):\\epsilon(v))                                      \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
+ "     - intN(Th,qforder=2)(                                                                      \n"
+ "                       [Sig11, Sig22, Sig12]'*epsilon(v)                                        \n"
  "                     )                                                                          \n";
 
 for(int i=0; i<bodyforceconditions; i++)
