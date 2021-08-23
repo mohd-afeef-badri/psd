@@ -1,21 +1,21 @@
 SUBDIRS = test
 LIST_COMPILE= Elasticity.mfront
-	
-all-local:
+
+all-local: Elasticity.mfront
 if HAVEMFRONT
 	${mfront} --interface=generic  Elasticity.mfront
 	${mfront} --obuild
-endif	
+endif
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
-	
+
 install-exec-local:
-	
-		
+
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -30,5 +30,5 @@ maintainer-clean-local: clean-local
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
-	@echo ""	
-	rm  -rf Makefile Makefile.in	
+	@echo ""
+	rm  -rf Makefile Makefile.in

@@ -97,6 +97,8 @@
 
   -vectorial    [bool]     To generate vectorial space solver for nonlinear.
 
+  -useMfront    [bool]     To activate MFront interface for PSD.
+
   -supercomp    [bool]     To be used when using a cluster/supercomputer.
 
   -energydecomp [bool]     To activate hybrid phase field energy decomposition.
@@ -153,6 +155,7 @@ int main(int argc, char *argv[]){
   bool testflags    = false;
   bool vectorial    = false;
   bool supercomp    = false;
+  bool useMfront    = false;
   bool fastmethod   = true ;
   bool Sequential   = false;
   bool pointprobe   = false;
@@ -208,6 +211,11 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-useGFP"                  ) {                     useGFP       = true;
                                                    IsArgumentValueTrue  useGFP       = true;
                                                    IsArgumentValueFalse useGFP       = false;
+                                                  }
+
+    if( argvdummy == "-useMfront"               ) {                     useMfront    = true;
+                                                   IsArgumentValueTrue  useMfront    = true;
+                                                   IsArgumentValueFalse useMfront    = false;
                                                   }
 
     if( argvdummy == "-pipegnu"                 ) {                     pipegnu      = true;
@@ -378,6 +386,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " useRCM is --------------------------> " << RCM                      << endl;
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
+  cout << " useMfront is -----------------------> " << useMfront                << endl;
   cout << " supercomp is -----------------------> " << supercomp                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;

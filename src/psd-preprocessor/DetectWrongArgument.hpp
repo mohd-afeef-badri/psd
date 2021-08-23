@@ -12,15 +12,16 @@
 **************************************************************************************/
 
     if (argvdummy.find("-") != string::npos )
-      if ( 
+      if (
            argvdummy != "-dirichletpointconditions" &&
            argvdummy != "-dirichletconditions"      &&
-           argvdummy != "-bodyforceconditions"      &&        
+           argvdummy != "-bodyforceconditions"      &&
            argvdummy != "-tractionconditions"       &&
            argvdummy != "-dimension"                &&
            argvdummy != "-lagrange"                 &&
 
            argvdummy != "-useRCM"                   &&
+           argvdummy != "-useMfront"                &&
            argvdummy != "-help"                     &&
            argvdummy != "-debug"                    &&
            argvdummy != "-useGFP"                   &&
@@ -28,19 +29,19 @@
            argvdummy != "-testflags"                &&
            argvdummy != "-timelog"                  &&
            argvdummy != "-vectorial"                &&
-           argvdummy != "--version"                 &&        
-           argvdummy != "-version"                  &&    
+           argvdummy != "--version"                 &&
+           argvdummy != "-version"                  &&
            argvdummy != "-supercomp"                &&
            argvdummy != "-sequential"               &&
            argvdummy != "-dirichletbc"              &&
            argvdummy != "-energydecomp"             &&
-           argvdummy != "-pointprobe"               &&    
+           argvdummy != "-pointprobe"               &&
            argvdummy != "-top2vol-meshing"          &&
            argvdummy != "-getreactionforce"         &&
            argvdummy != "-plotreactionforce"        &&
            argvdummy != "-constrainHPF"             &&
            argvdummy != "-crackdirichletcondition"  &&
-           argvdummy != "-withmaterialtensor"       && 
+           argvdummy != "-withmaterialtensor"       &&
 
            argvdummy != "-model"                    &&
            argvdummy != "-solver"                   &&
@@ -50,9 +51,9 @@
            argvdummy != "-doublecouple"             &&
            argvdummy != "-preconditioner"           &&
            argvdummy != "-nonlinearmethod"          &&
-           argvdummy != "-reactionforce"            &&       
+           argvdummy != "-reactionforce"            &&
            argvdummy != "-subpreconditioner"        &&
-           argvdummy != "-timediscretization"                      
+           argvdummy != "-timediscretization"
          ){
          wrongArgument = true;
          wrongArgumentWarning +=

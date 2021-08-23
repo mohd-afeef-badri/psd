@@ -26,7 +26,7 @@ header-includes: |
 	{~}{{\centeredtilde}}1
 	,
     }
-abstract: This document details a single tutorials of 'linear elasticity' module of PSD in a more verbos manner. 
+abstract: This document details a single tutorials of 'linear elasticity' module of PSD in a more verbos manner.
 ---
 
 \newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
@@ -50,7 +50,7 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u
 \end{lstlisting}
 
-After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} files in your current folder. 
+After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} files in your current folder.
 
 \textbf{What do the arguments mean ?}
 
@@ -64,7 +64,7 @@ After the \sh{PSD\_PreProcess} runs successfully you should see many \sh{.edp} f
 
 At this stage the input properties $E,\nu$ can be mentioned in \sh{ControlParameters.edp}, use \sh{E = 200.e9}, and \sh{nu = 0.3;}. The volumetric body force condition is mentioned in the same file via variable \sh{Fbc0Fy -78480.0}, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in \sh{ControlParameters.edp}, via \sh{ThName = "../Meshes/2D/bar.msh"} (\textit{note that mesh can also be provided in the next step}) .In addition variable \sh{Fbc0On 1} has to be provided in order to indicate the volume (region) for which the body force is acting, here \sh{1} is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in \sh{ControlParameters.edp}. To provide the clamped boundary condition the variables \sh{Dbc0On 2}, \sh{Dbc0Ux 0.}, and \sh{Dbc0Uy 0.} are used, which means for Dirichlet border \sh{2} (\sh{Dbc0On 2}) where \sh{2} is the clamped border label of the mesh Dirichlet constrain is applied and \sh{Dbc0Ux 0.}, \sh{Dbc0Uy 0} i.e., the clamped end condition ($u_x=u_y=0$).
 
-\subsection{Step 2: Solving} 
+\subsection{Step 2: Solving}
 
 As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do so enter the following command:
 
@@ -144,7 +144,7 @@ for splitting each triangle of the mesh \sh{bar.msh} into 4.
 
 \subsection{Advance exercise  2}
 
-There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out 
+There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
@@ -172,4 +172,4 @@ Then to run the problem we need additional \sh{-wg} flag
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{ControlParameters.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. 
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{FemParameters.edp}, \sh{MeshAndFeSpace} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step.

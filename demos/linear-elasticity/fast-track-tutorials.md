@@ -39,14 +39,14 @@ abstract: This document details some tutorials of 'linear elasticity' module of 
 
 \subsection{Parallel 2D linear-elasticity}
 
-The problem of interest is a single Dirichlet condition (clamped end 2D bar) and body force source term (see, figure~\ref{2dbar-le}). Additionally postrocessing is demanded for displacement $u$. 
+The problem of interest is a single Dirichlet condition (clamped end 2D bar) and body force source term (see, figure~\ref{2dbar-le}). Additionally postrocessing is demanded for displacement $u$.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u
 \end{lstlisting}
 
-We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}. 
+We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
@@ -63,14 +63,14 @@ Using ParaView for postprocessing the results that are provided in the \sh{VTUs.
 
 \subsection{Parallel 3D linear-elasticity}
 
-The problem of interest is a single Dirichlet condition (clamped end 3D bar) and body force source term. Additionally postrocessing is demanded for displacement $u$. 
+The problem of interest is a single Dirichlet condition (clamped end 3D bar) and body force source term. Additionally postrocessing is demanded for displacement $u$.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 3 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u
 \end{lstlisting}
 
-We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}. 
+We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0
@@ -94,7 +94,7 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -sequential
 \end{lstlisting}
 
-We solve the problem using the given mesh file \sh{bar.msh}. 
+We solve the problem using the given mesh file \sh{bar.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
@@ -104,7 +104,7 @@ Similarly try out the 3D problem as well.
 
 \subsection{Comparing CPU time}
 
-PSD provides mean to time log your solver via \sh{-timelog} flag. What this will do when you run your solver, on the terminal you will have information printed on what is the amount of time taken by each step of your solver. Warning, this will make your solver slower, as this action involves 'MPI\_Barrier' routines for correctly timing operation. 
+PSD provides mean to time log your solver via \sh{-timelog} flag. What this will do when you run your solver, on the terminal you will have information printed on what is the amount of time taken by each step of your solver. Warning, this will make your solver slower, as this action involves 'MPI\_Barrier' routines for correctly timing operation.
 
 An example work flow of 2D solver with timelogging:
 
@@ -113,7 +113,7 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -timelog
 \end{lstlisting}
 
-We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}. 
+We solve the problem using four MPI processes, with the given mesh file \sh{bar.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
@@ -126,7 +126,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \caption{Time logging output produced for parallel run on 4 processes.\label{time-par-le}}
 \end{figure}
 
-The figure~\ref{time-par-le} shows the time logging output produced for parallel run on 4 processes using \sh{-timelog} flag. Take note of timings produced for different operations of the solver. 
+The figure~\ref{time-par-le} shows the time logging output produced for parallel run on 4 processes using \sh{-timelog} flag. Take note of timings produced for different operations of the solver.
 
 
 \subsection{Exercise  1}
@@ -137,12 +137,12 @@ There is a solver run level flag for mesh refinement \footnote{Mesh refinement i
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -split 2
 \end{lstlisting}
 
-for splitting each triangle of the mesh  \sh{bar.msh} into 4. 
+for splitting each triangle of the mesh  \sh{bar.msh} into 4.
 
 
 \subsection{Exercise  2}
 
-There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out 
+There is a preprocess level flag \sh{-debug}, which as the name suggests should be used for debug proposes by developers. However, this flag will activate OpenGL live visualization of the problems displacement field. You are encouraged to try it out
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
@@ -170,5 +170,5 @@ Then to run the problem we need additional \sh{-wg} flag
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{ControlParameters.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. 
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{FemParameters.edp}, \sh{MeshAndFeSpace} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step.
 
