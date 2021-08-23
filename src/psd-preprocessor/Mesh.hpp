@@ -79,7 +79,9 @@ if(Sequential){
  "//              A vectorial FEM space is built with 6 components                \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , [FEQF2, FEQF2, FEQF2, FEQF2, FEQF2, FEQF2] );               \n";
+ " fespace Qh  ( Th , [FEQF2, FEQF2, FEQF2,                                       \n"
+ "                            FEQF2, FEQF2,                                       \n"
+ "                                   FEQF2] );                                    \n";
 
  if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
   writeIt
@@ -88,10 +90,16 @@ if(Sequential){
  "// ------- The finite element space  -------                                    \n"
  "// ---------------------------------------------------------------------------- \n"
  "//  Qh       : Quadratur finite element space  for material tensor              \n"
- "//              FEQF23d implies 4 dof for a tetra cell in the mesh              \n"
+ "//             FEQF23d implies 4 dof for a tetra cell in the mesh               \n"
+ "//             A vectorial FEM space is built with 21 components                \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF23d );                                                  \n";
+ " fespace Qh ( Th, [ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                             FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                      FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                                        FEQF23d, FEQF23d,       \n"
+ "                                                                 FEQF23d] );    \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field")
   writeIt
@@ -172,7 +180,9 @@ if(!Sequential){
  "//             A vectorial FEM space is built with 6 components                 \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2, FEQF2] );               \n";
+ " fespace Qh  ( Th ,[ FEQF2, FEQF2, FEQF2,                                       \n"
+ "                            FEQF2, FEQF2,                                       \n"
+ "                                   FEQF2] );                                    \n";
 
  if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
   writeIt
@@ -181,10 +191,16 @@ if(!Sequential){
  "// ------- The finite element space  -------                                    \n"
  "// ---------------------------------------------------------------------------- \n"
  "//  Qh       : Quadratur finite element space  for material tensor              \n"
- "//              FEQF23d implies 4 dof for a tetra cell in the mesh              \n"
+ "//             FEQF23d implies 4 dof for a tetra cell in the mesh               \n"
+ "//             A vectorial FEM space is built with 21 components                \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Qh  ( Th , FEQF23d );                                                  \n";
+ " fespace Qh ( Th, [ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                             FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                      FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
+ "                                                        FEQF23d, FEQF23d,       \n"
+ "                                                                 FEQF23d] );    \n";
 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt
