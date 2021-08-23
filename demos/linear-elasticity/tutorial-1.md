@@ -157,7 +157,25 @@ Then to run the problem we need additional \sh{-wg} flag
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
 \end{lstlisting}
 
-\subsection{Advance exercise 3}
+\subsection{Exercise  3}
+
+One interesting way of solving a linear Elasticity problem is to solve it via a pseudo nonlinear model. There is a preprocess level flag \sh{-model pseudo\_nonlinear}, which introduces pseudo nonlinearity  into the finite element variational formulation of linear elasticity. You are encouraged to use this flag and see how the solver performs. Indeed, now you should see some nonlinear iterations (1 or 2)  are taken for convergence.
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -model pseudo_nonlinear
+\end{lstlisting}
+
+Then to run the problem
+
+\begin{lstlisting}[style=BashInputStyle]
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
+\end{lstlisting}
+
+To understand what the flag does, try to find out the difference between the files created by \sh{PSD\_PreProcess} when used with and without  \sh{-withmaterialtensor} flag. Especially, compare  \sh{LinearFormBuilderAndSolver.edp} and \sh{VariationalFormulations.edp} files produced by \sh{PSD\_PreProcess} step. Similarly try out the 3D probelm. **Note:** This flag is exclusive for parallel solver.
+
+
+\subsection{Advance exercise 4}
 
 There is a preprocess level flag \sh{-withmaterialtensor}, which introduces the full material tensor into the finite element variational formulation. You are encouraged to use this flag and see how the solver performs.
 
@@ -166,7 +184,7 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -timelog -withmaterialtensor
 \end{lstlisting}
 
-Then to run the problem we need additional \sh{-wg} flag
+Then to run the problem
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
