@@ -85,7 +85,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0
 
 Using ParaView for postprocessing the results that are provided in the \sh{VTUs...} folder, results such as those shown in figure~\ref{3dbar-le} can be extracted.
 
-\subsection{Sequential problems}
+\subsection{Solving using a sequential solver (non parallel)}
 
 To the same problems above Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve}. So the work flow for the 2D problem would be:
 

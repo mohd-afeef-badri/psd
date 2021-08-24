@@ -19,3 +19,24 @@ tutorial-3: tutorial-3.pdf
 
 tutorial-3.pdf: tutorial-3.md
 	pandoc -s -i tutorial-3.md -o tutorial-3.pdf
+
+tutorial-4: tutorial-4.pdf
+
+tutorial-4.pdf: tutorial-4.md
+	pandoc -s -i tutorial-4.md -o tutorial-4.pdf
+
+
+
+tex: le-tutorial-1.tex le-tutorial-4.tex
+
+le-tutorial-1.tex: tutorial-1.md
+	pandoc tutorial-1.md -o le-tutorial-1.tex --latex-engine=xelatex --listings
+
+le-tutorial-2.tex: tutorial-2.md
+	pandoc tutorial-2.md -o le-tutorial-2.tex --latex-engine=xelatex --listings
+
+le-tutorial-3.tex: tutorial-3.md
+	pandoc tutorial-3.md -o le-tutorial-3.tex --latex-engine=xelatex --listings
+
+le-tutorial-4.tex: tutorial-4.md
+	pandoc tutorial-4.md -o le-tutorial-4.tex --latex-engine=xelatex --listings
