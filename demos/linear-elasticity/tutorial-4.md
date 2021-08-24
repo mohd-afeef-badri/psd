@@ -82,9 +82,3 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 \end{figure}
 
 You are all done with your 2D linear-elasticity simulation.
-
-\subsection{What else should you try to become an advanced user}
-
-On the non clamped Dirichlet condition try removing the constrain on $y$ direction ` Dbc1Uy 0.` simply comment this line. Rerun the problem and compare to the results above.
-
-Try running the 3D problem. Keep in mind to rerun the \psd{PSD\_PreProcess} with \psd{-dimension 3} flag and using the appropriate mesh via \psd{-mesh} flag with \psd{-PSD\_Solve}. It goes without saying you will need to adjust the Dirichlet border labels in \psd{ControlParameters.edp}.

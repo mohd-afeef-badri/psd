@@ -84,6 +84,9 @@ le-tutorial-7.tex: tutorial-7.md
 le-tutorial-8.tex: tutorial-8.md
 	pandoc tutorial-8.md -o le-tutorial-8.tex --latex-engine=xelatex --listings
 
+clean:
+        rm -rf *.tex *~
+
 le-tutorial-9.tex: tutorial-9.md
 	pandoc tutorial-9.md -o le-tutorial-9.tex --latex-engine=xelatex --listings
 
