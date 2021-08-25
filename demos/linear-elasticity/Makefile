@@ -13,6 +13,7 @@ tutorial-9.pdf
 
 
 FILE_LIST_TEX = \
+exercises.tex   \
 tutorial-1.tex  \
 tutorial-2.tex  \
 tutorial-3.tex  \

@@ -1,5 +1,5 @@
 ---
-title: Linear Elasticity Tutorial 2 PSD simulation of bar problem using a sequential solver (non parallel)
+title: Linear Elasticity Tutorial 1 PSD sequential simulation of bar problem bending under own body weight
 geometry: margin=2cm
 author: Mohd Afeef Badri
 header-includes: |
@@ -7,6 +7,9 @@ header-includes: |
     \usepackage{listings}
     \usepackage{textcomp}
     \usepackage{fancyhdr}
+    \usepackage{graphbox}
+    \usepackage{cleveref}
+    \usepackage{subcaption}
     \pagestyle{fancy}
     \lstdefinestyle{BashInputStyle}{
 	language=bash,
@@ -31,9 +34,11 @@ abstract: This tutorial details how to use 'linear elasticity' module of PSD, ho
 
 \newcommand{\psd}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
-Same problem  of Linear elasticity as in tutorial 1 --  2D bar which bends under its own load --, is discuss here. The bar $5\times1$ m$^2$ in area is made up of material with $\rho=8\times 10^3$, $E=200\times 10^9$, and $\nu=0.3$. To avoid text repetition, readers are encouraged to go ahead with this tutorial only after tutorial 1.
+Same problem  of linear elasticity as in tutorial 1 --  2D bar which bends under its own load --, is discuss here. The bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Youngs modulus $E=200\times 10^9$, and Poissons ratio $\nu=0.3$. To avoid text repetition, readers are encouraged to go ahead with this tutorial only after tutorial 1.
 
-As  the problem remains same as tutorial 1, simply add \psd{-sequential} flag to \psd{PSD\_PreProcess} flags from tutorial 1 for sequential solver. The flag \psd{-sequential} signifies the use of sequential PSD solver. So the work flow for the 2D problem would be:
+As we will not use a parallel solver but a sequential one, naturally, this tutorial leads to a slow solver than the previous tutorial 1. So this tutorial is not for speed lovers, but rather for detailing the full capacity of PSD. Also sequential solvers are easier to develop and understand hence this tutorial.
+ 
+As  the problem remains same as tutorial 1, simply add \psd{-sequential} flag to \psd{PSD\_PreProcess} flags from tutorial 1 for  a PSD sequential solver. The flag \psd{-sequential} signifies the use of sequential PSD solver. So the work flow for the 2D problem would be:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
@@ -46,11 +51,13 @@ Similar to tutorial 1, We solve the problem using the given mesh file \psd{bar.m
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-Users are encouraged to try out the 3D problem with sequential solver.
+Users are encouraged to try out the 3D problem with sequential solver. Also comparing the results from a sequential solver to that form a parallel solver can be verified to assure that the both parallel and sequential solvers lead to exactly the same results.
+
+Note that for this simple problem, the bar mesh (\psd{bar.msh}) has been provided in \psd{../Meshes/2D/"} folder, this mesh is a triangular mesh produced with Gmsh. Moreover detailing meshing procedure is not the propose of PSD tutorials. A user has the choice of performing their own meshing step and providing them to PSD in \psd{.msh}\footnote{Please use version 2} or \psd{.mesh} format, we recommend using Salome or Gmsh meshers for creating your own geometry and meshing them. 
 
 \subsection{Comparing CPU time}
 
-Naturally, since we are not using parallel PSD for solving, we lose the advantage of solving fast. To testify this claim checking solver timings can be helpful. PSD provides mean to time log your solver via \psd{-timelog} flag. What this will do when you run your solver, on the terminal you will have information printed on what is the amount of time taken by each step of your solver. Warning, this will make your solver slower, as this action involves 'MPI\_Barrier' routines for correctly timing operation.
+Naturally, since we are not using parallel PSD for solving, we lose the advantage of solving fast. To testify this claim checking solver timings can be helpful. PSD provides means to time log your solver via \psd{-timelog} flag. What this will do when you run your solver, on the terminal you will have information printed on what is the amount of time taken by each step of your solver. Warning, this will make your solver slower, as this action involves 'MPI\_Barrier' routines for correctly timing operation.
 
 An example work flow of 2D solver (parallel) with timelogging:
 
@@ -72,7 +79,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \caption{Time logging output produced for parallel run on 4 processes.\label{time-par-le}}
 \end{figure}
 
-The figure~\ref{time-par-le} shows the time logging output produced for parallel run on 4 processes using \psd{-timelog} flag. Take note of timings produced for different operations of the solver.
+The \cref{time-par-le} shows the time logging output produced for parallel run on 4 processes using \psd{-timelog} flag. Take note of timings produced for different operations of the solver.
 
 Now let us repeat the procedure but this time use sequential solver:
 

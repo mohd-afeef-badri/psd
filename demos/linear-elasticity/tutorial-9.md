@@ -57,12 +57,14 @@ abstract: This document details a tutorial that allows one to use PSD-MFront int
 
 \newcommand{\psd}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
-We reintroduce the problem from tutorial 1, an example of a 2D bar which bends under its own load -- typical case of linear elasticity. The bar $5\times1$ m$^2$ in area is made up of material with $\rho=8\times 10^3$, $E=200\times 10^9$, and $\nu=0.3$.
+This tutorial details one to use PSD-MFront interface for linear elasticity problem. The same problem from tutorial 1 is repeated, however now MFront is used for building certain finite element essentials. It is advised to follow this tutorial after tutorial 1. Note that, linear elasticity merely provides means of getting started with Mfornt, the real potential lies in using nonlinear materials and laws which Mfront provides. So this tutorial should be considered as baptism to the world of PSD-MFront which we believe has a lot of potential to solve some non trivial problems.
+
+We reintroduce the problem from tutorial 1, an example of a 2D bar which bends under its own load -- typical case of linear elasticity.   A bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Youngs modulus $E=200\times 10^9$, and Poissons ratio $\nu=0.3$.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.5\textwidth]{./Images/le-2d-bar.png}
-\caption{The 2D clamped bar problem. \label{2dbar-le-full}}
+\caption{The 2D clamped bar problem. \label{2dbar-le-full-mfront}}
 \end{figure}
 
 \subsection{Step 1: Preprocessing}
@@ -99,17 +101,17 @@ As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do 
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 \end{lstlisting}
 
-Here \psd{-np 4} denote the argument used to enter the number of parallel processes (MPI processes) used while solving. \psd{-mesh ./../Meshes/2D/bar.msh} is used to provide the mesh file to the solver. \psd{-v 0} denotes the verbosity level on screen. \psd{PSD\_Solve} is a wrapper around \psd{FreeFem++} or \psd{FreeFem++-mpi}. Note that if your problem is large use more cores. PSD has been tested upto 13,000 parallel processes and problem sizes with billions of unknowns, surely you will now need that many for the 2D bar problem.
+Here \psd{-np 4} denote the argument used to enter the number of parallel processes (MPI processes) used while solving. \psd{-mesh ./../Meshes/2D/bar.msh} is used to provide the mesh file to the solver. \psd{-v 0} denotes the verbosity level on screen. \psd{PSD\_Solve} is a wrapper around \psd{FreeFem++-mpi}. Note that if your problem is large use more cores. PSD has been tested upto 13,000 parallel processes and problem sizes with billions of unknowns, surely you will now need that many for the 2D bar problem.
 
 \subsection{Step 3: Postprocessing}
 
-PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the \psd{.pvd} file in the \psd{VTUs...} folder. Using ParaView for postprocessing the results that are provided in the \psd{VTUs...} folder, results such as those shown in figure~\ref{bar-le-full} can be extracted.
+PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the \psd{.pvd} file in the \psd{VTUs...} folder. Using ParaView for postprocessing the results that are provided in the \psd{VTUs...} folder, results such as those shown in \cref{bar-le-full-mfront-pv} can be extracted.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[align=t,width=0.4\textwidth]{./Images/le-2d-bar-partioned.png}\hfill
 \includegraphics[align=t,width=0.4\textwidth]{./Images/le-2d-bar-results.png}
-\caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le-full}}
+\caption{The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView. \label{bar-le-full-mfront-pv}}
 \end{figure}
 
 You are all done with your 2D linear-elasticty simulation with Mfront interface.
