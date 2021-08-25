@@ -1,11 +1,28 @@
-documents: fast-track-tutorials tutorial-L-shape-cracking
+FILE_LIST_PDF = \
+fast-track-tutorials.pdf \
+exercises.pdf  \
+tutorial-1.pdf \
+tutorial-2.pdf \
+tutorial-3.pdf \
+tutorial-4.pdf 
 
-fast-track-tutorials: fast-track-tutorials.pdf
 
-fast-track-tutorials.pdf: fast-track-tutorials.md
-	pandoc -s -i fast-track-tutorials.md -o fast-track-tutorials.pdf
+FILE_LIST_TEX = \
+tutorial-1.tex  \
+tutorial-2.tex  \
+tutorial-3.tex  \
+tutorial-4.tex
 
-tutorial-L-shape-cracking: tutorial-L-shape-cracking.pdf
+doc: $(FILE_LIST_PDF)
 
-tutorial-L-shape-cracking.pdf: tutorial-L-shape-cracking.md
-	pandoc -s -i tutorial-L-shape-cracking.md -o tutorial-L-shape-cracking.pdf
+tex: $(FILE_LIST_TEX)
+
+%.pdf : %.md
+	pandoc -s -i $< -o $@
+
+%.tex : %.md
+	pandoc $<  --latex-engine=xelatex --listings -o fm-$@
+
+clean :
+	rm -rf *.tex *~
+

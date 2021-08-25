@@ -29,7 +29,7 @@ header-includes: |
 abstract: This document details some tutorials of 'fracture mechanics' module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's 'fracture mechanics' module. 
 ---
 
-\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
+\newcommand{\psd}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 
 
@@ -43,7 +43,7 @@ A two dimensional test is introduced. The problem of interest is the typical sin
 \caption{Domain of the single notch square cracking problem under tensile loading. \label{bar-sd}}
 \end{figure}
 
-To model this test PSD provides hybrid phase-field modelling  technique. We use ParaView post-processing of displacement $u$ and phase-field $d$ to visualise the cracking process. A PSD simulation is a two step process, with step one being the  \sh{ PSD\_PreProcess }:
+To model this test PSD provides hybrid phase-field modelling  technique. We use ParaView post-processing of displacement $u$ and phase-field $d$ to visualise the cracking process. A PSD simulation is a two step process, with step one being the  \psd{ PSD\_PreProcess }:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
@@ -52,13 +52,13 @@ PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 
 A note on flags. 
 
-- This is a two-dimensional problem, so we use the flag  \sh{-dimension 2}.
-- This problem indeed falls under the category of damage-mechanics, hence the flag \sh{ -problem damage}.
-- We wish to solve this problem by invoking the hybrid phase-field problem, which is signified by the flag  \sh{ -model hybrid\_phase\_field}.
-- Versed in the description above the problem contains two Dirichlet conditions, we signal this via the flag \sh{-dirichletconditions 2}. 
-- Finally for this problem we use the flag  \sh{-postprocess ud}  which enables post-processing of displacement $u$ and damage (phase-field)  $d$ fields.
+- This is a two-dimensional problem, so we use the flag  \psd{-dimension 2}.
+- This problem indeed falls under the category of damage-mechanics, hence the flag \psd{ -problem damage}.
+- We wish to solve this problem by invoking the hybrid phase-field problem, which is signified by the flag  \psd{ -model hybrid\_phase\_field}.
+- Versed in the description above the problem contains two Dirichlet conditions, we signal this via the flag \psd{-dirichletconditions 2}. 
+- Finally for this problem we use the flag  \psd{-postprocess ud}  which enables post-processing of displacement $u$ and damage (phase-field)  $d$ fields.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \sh{tensile-crack.msh}. This is step two of the PSD simulation   \sh{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
@@ -105,7 +105,7 @@ Figures \ref{u-fem} and \ref{d-fem} present the finite element displacement and 
 \caption{Applied traction, non-linear iterations to convergence, and residual being casted onto the terminal shell. \label{term}}
 \end{figure}
 
-While this test runs, you will see on your screen the amount of traction updated, non-linear iterations taken to converge per-quasi-time-step and residue of $u$ and $d$. See figure \ref{term} that shows the screenshot of the terminal while the test was running.  In order to construct your own test case try editing the  \sh{ControlParameters.edp} file   
+While this test runs, you will see on your screen the amount of traction updated, non-linear iterations taken to converge per-quasi-time-step and residue of $u$ and $d$. See figure \ref{term} that shows the screenshot of the terminal while the test was running.  In order to construct your own test case try editing the  \psd{ControlParameters.edp} file   
 
 
 
@@ -117,16 +117,16 @@ While this test runs, you will see on your screen the amount of traction updated
 
 A three-dimensional test synonymous to its two-dimensional counterpart introduced above is used here as an tutorial example.   The problem of interest is now a unit extrusion (along $z$-axis) of the 2D case above. Cracking is initiated and propagated under tensile loading. The unit cube with its  pre existing crack  is clamped at the bottom $u_1=u_2=u_3=0$ (first boundary condition) and is loaded quasi-statically $u_2=u_2 + \Delta u_2$ on its top surface till the crack propagates through its walls. So there are two Dirichlet conditions one on the top border and one on the bottom one.
 
-Just like in the 2D case, to model this test PSD's' hybrid phase-field modelling  technique is used. We will again use ParaView post-processing of displacement $u$ and phase-field $d$ to visualise the cracking process. A PSD simulation is a two step process, with step one being the  \sh{ PSD\_PreProcess }:
+Just like in the 2D case, to model this test PSD's' hybrid phase-field modelling  technique is used. We will again use ParaView post-processing of displacement $u$ and phase-field $d$ to visualise the cracking process. A PSD simulation is a two step process, with step one being the  \psd{ PSD\_PreProcess }:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field  \
 -dirichletconditions 2 -postprocess ud 
 \end{lstlisting}
 
-Notice that the flags used here are almost similar except for the   \sh{ -dimension 3 } flag, which indeed specifies three-dimensional problem.
+Notice that the flags used here are almost similar except for the   \psd{ -dimension 3 } flag, which indeed specifies three-dimensional problem.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \sh{tensile-crack.msh}. This is step two of the PSD simulation   \sh{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
@@ -160,22 +160,22 @@ Figures \ref{u3d-fem} and \ref{d3d-fem} present the finite element displacement 
 
 In solid mechanics often the quantities of interest includes plots such as reaction-force on a surface vs. the applied force. Often times these are experimental outputs and are used for validation. 
 
-PSD provides routines to calculate the reaction force on a surface and also provides means of live plotting (run-time)  of these results. Imagine the test case of tensile cracking of plate (2D) as discussed above. Considering we are now interested in seeing the plot of reaction force at surface vs. the applied tensile displacement, we would need to use two extra flags in the   \sh{ PSD\_PreProcess} step. These flags are \sh{-getreactionforce} and \sh{ -reactionforce  stress\_based } as read below:
+PSD provides routines to calculate the reaction force on a surface and also provides means of live plotting (run-time)  of these results. Imagine the test case of tensile cracking of plate (2D) as discussed above. Considering we are now interested in seeing the plot of reaction force at surface vs. the applied tensile displacement, we would need to use two extra flags in the   \psd{ PSD\_PreProcess} step. These flags are \psd{-getreactionforce} and \psd{ -reactionforce  stress\_based } as read below:
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2 -getreactionforce -reactionforce stress_based
 \end{lstlisting}
 
-The flag  \sh{-getreactionforce} directs PSD to include the routines to get the reaction force and  \sh{ -reactionforce  stress\_based } is the method by which we get reaction force, in this case reaction force is calculated using integral of stress in $y$ direction $F_y=\int_{\partial\Omega_{top}} \sigma_y$. Other method \sh{ -reactionforce variational\_based} also exists within PSD, which is more accurate but slower, this method calculates reaction force based on matrix vector multiplication ${F_x,F_y}=\mathbf{A}{u_1,u_2}$ .
+The flag  \psd{-getreactionforce} directs PSD to include the routines to get the reaction force and  \psd{ -reactionforce  stress\_based } is the method by which we get reaction force, in this case reaction force is calculated using integral of stress in $y$ direction $F_y=\int_{\partial\Omega_{top}} \sigma_y$. Other method \psd{ -reactionforce variational\_based} also exists within PSD, which is more accurate but slower, this method calculates reaction force based on matrix vector multiplication ${F_x,F_y}=\mathbf{A}{u_1,u_2}$ .
 
-Run the problem in the usual way bu using \sh{ PSD\_Solve} and appropriate number of processes and mesh.  While the PSD solver runs it will create a file \sh{ force.data} that contains the reaction force and the applied traction. 
+Run the problem in the usual way bu using \psd{ PSD\_Solve} and appropriate number of processes and mesh.  While the PSD solver runs it will create a file \psd{ force.data} that contains the reaction force and the applied traction. 
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 \end{lstlisting}
 
- You can then go ahead and plot \sh{ force.data} to see how $F_y$ and $F_x$  evolve  with $\Delta u_2$. Within the file the first column is the loading $\Delta u_2$, the second and the third columns are the forces $F_x$ and $F_y$.
+ You can then go ahead and plot \psd{ force.data} to see how $F_y$ and $F_x$  evolve  with $\Delta u_2$. Within the file the first column is the loading $\Delta u_2$, the second and the third columns are the forces $F_x$ and $F_y$.
 
 
 
@@ -186,7 +186,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 \caption{Applied traction vs. force in y direction. \label{fd-plot}}
 \end{figure}
 
-Optionally if you have GnuPlot configured with PSD you can see live ploting of this curve if you use option  \sh{-plotreactionforce} during the  \sh{ PSD\_PreProcess}. 
+Optionally if you have GnuPlot configured with PSD you can see live ploting of this curve if you use option  \psd{-plotreactionforce} during the  \psd{ PSD\_PreProcess}. 
 
 \begin{figure}[h!]
 \centering
@@ -209,23 +209,4 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
 PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
 \end{lstlisting}
 
-\subsection{Exercise 1}
 
-Optionally try changing \sh{-reactionforce stress\_based} to \sh{-reactionforce variational\_based} for changing the method to extract reaction force, note that stress based method is way faster.
-
-\subsection{Exercise 2}
-
-Optionally try using  \sh{-useGFP} flag with \sh{PSD\_PreProcess} optimized solver
-
-\subsection{Exercise 3}
-
-Add \sh{-sequential} flag to \sh{PSD\_PreProcess} for sequential solver, but remember to use \sh{PSD\_Solve\_Seq} instead of \sh{PSD\_Solve}
-
-\subsection{Advanced Exercise 1}
-try the \sh{-vectorial} flag for vectorial finite element method
-
-\subsection{Advanced Exercise 2}
-try the \sh{-energydecomp} flag for using split of tensile energy
-
-\subsection{Advanced Exercise 3}
-try using \sh{-constrainHPF} flag for using the constrain condition in hybrid phase field model

@@ -1,5 +1,5 @@
 ---
-title: L-shape cracking
+title:  Fracture mechanics Tutorials - L-shape cracking
 geometry: margin=2cm
 author: Mohd Afeef Badri
 header-includes: |
@@ -52,7 +52,7 @@ header-includes: |
 abstract: This document details a tutorial of 'fracture mechanics' module of PSD. This tutorial involves cracking of L shaped specimen, where loading is controlled by a point boundary condition.
 ---
 
-\newcommand{\sh}[1]{{\small\sffamily{\color{blue!60}#1}}}
+\newcommand{\psd}[1]{{\small\sffamily{\color{blue!60}#1}}}
 
 \begin{figure}[h!]
 \centering
@@ -94,7 +94,7 @@ PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 \begin{lstlisting}[style=CppStyle]
   real lambda = 121.15e3 ,
        mu     = 80.77e3  ,
-       Gc     = 2.7      ; 
+       Gc     = 2.7      ;
 \end{lstlisting}
 
 to
@@ -112,7 +112,7 @@ to
        maxtr = 7e-3 ,
        tr    = 1e-5 ,
        dtr   = 1e-5 ,
-       lo           ; 
+       lo           ;
 \end{lstlisting}
 
 to
@@ -122,7 +122,7 @@ to
        maxtr = 1    ,
        tr    = 1e-2 ,
        dtr   = 1e-2 ,
-       lo           ; 
+       lo           ;
 \end{lstlisting}
 
 
@@ -131,20 +131,20 @@ to
 \begin{lstlisting}[style=CppStyle]
   real[int,int] PbcCord = [
 //-------------------- [  x  , y  ] --------------------//
-                       [  0. , 0. ]    // point 0                       
+                       [  0. , 0. ]    // point 0
 //------------------------------------------------------//
                       ];
-                                                                            
+
    macro Pbc0Ux  -0. //
    macro Pbc0Uy  -0. //
 \end{lstlisting}
 
-to 
+to
 
 \begin{lstlisting}[style=CppStyle]
   real[int,int] PbcCord = [
 //-------------------- [  x  , y  ] --------------------//
-                       [  470., 250. ]    // point 0                       
+                       [  470., 250. ]    // point 0
 //------------------------------------------------------//
                       ]
 ;
@@ -163,10 +163,10 @@ to
 \begin{lstlisting}[style=CppStyle]
   for(int i=0; i < Th.nv; i++){
      if(abs(Th(i).y-1.)<.000001){
-        forcetotx = forcetotx + F[][i*3]*DP[i*3];           
-        forcetoty = forcetoty + F[][i*3+1]*DP[i*3+1];       
+        forcetotx = forcetotx + F[][i*3]*DP[i*3];
+        forcetoty = forcetoty + F[][i*3+1]*DP[i*3+1];
      }
-  } 
+  }
 \end{lstlisting}
 
 to
@@ -174,8 +174,8 @@ to
 \begin{lstlisting}[style=CppStyle]
   if(mpirank==mpirankPCi[0]){
      forcetotx = forcetotx + F[][PCi[0]*3+0]*DP[PCi[0]*3+0];
-     forcetoty = forcetoty + F[][PCi[0]*3+1]*DP[PCi[0]*3+1]; 
-  } 
+     forcetoty = forcetoty + F[][PCi[0]*3+1]*DP[PCi[0]*3+1];
+  }
 \end{lstlisting}
 
 \item To postprocess correct reaction forces in LinearFormBuilderAndSolver.edp for staggered solver, change
@@ -183,8 +183,8 @@ to
 \begin{lstlisting}[style=CppStyle]
   for(int i=0; i < Th.nv; i++){
      if(abs(Th(i).y-1.)<.000001){
-        forcetotx = forcetotx + F[][i*2]*DP[i*2];           
-        forcetoty = forcetoty + F[][i*2+1]*DP[i*2+1];       
+        forcetotx = forcetotx + F[][i*2]*DP[i*2];
+        forcetoty = forcetoty + F[][i*2+1]*DP[i*2+1];
      }
   }
 \end{lstlisting}
@@ -194,16 +194,16 @@ to
 \begin{lstlisting}[style=CppStyle]
   if(mpirank==mpirankPCi[0]){
      forcetotx = forcetotx + F[][PCi[0]*2+0]*DP[PCi[0]*2+0];
-     forcetoty = forcetoty + F[][PCi[0]*2+1]*DP[PCi[0]*2+1]; 
-  } 
+     forcetoty = forcetoty + F[][PCi[0]*2+1]*DP[PCi[0]*2+1];
+  }
 \end{lstlisting}
 
 \item Finally to include cyclic loading, change
 
 \begin{lstlisting}[style=CppStyle]
   //-----------------updating traction----------------//
-                                                                                
-  tr += dtr; 
+
+  tr += dtr;
 \end{lstlisting}
 
 
@@ -214,10 +214,10 @@ to
 
   if(iterout<50)
      tr += dtr;
-  if(iterout>=51 && iterout<110) 
-     tr -= dtr; 
+  if(iterout>=51 && iterout<110)
+     tr -= dtr;
   if(iterout>=111)
-     tr += dtr; 
+     tr += dtr;
 \end{lstlisting}
 
 \begin{figure}[h!]
@@ -231,7 +231,7 @@ to
 
 \subsection{Solving}
 
-Irrespective of weather vectorial or staggered mode is used solve the problem using \sh{PSD\_Solve}
+Irrespective of weather vectorial or staggered mode is used solve the problem using \psd{PSD\_Solve}
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
@@ -239,7 +239,7 @@ PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
 
 \subsection{Postprocessing}
 
-Use ParaView to post process results. 
+Use ParaView to post process results.
 
 
 \begin{figure}[h!]
@@ -250,7 +250,7 @@ Use ParaView to post process results.
 \caption{Finite element solution showing: Crack initiation,  movement, and  development. \label{L-shape-mesh-crack}}
 \end{figure}
 
-On you screen, the force displacement curve which plots \sh{force.data} should look something like this
+On you screen, the force displacement curve which plots \psd{force.data} should look something like this
 
 \begin{figure}[h!]
 \centering
