@@ -4,10 +4,11 @@ exercises.pdf  \
 tutorial-1.pdf \
 tutorial-2.pdf \
 tutorial-3.pdf \
-tutorial-4.pdf 
+tutorial-4.pdf
 
 
 FILE_LIST_TEX = \
+exercises.tex   \
 tutorial-1.tex  \
 tutorial-2.tex  \
 tutorial-3.tex  \

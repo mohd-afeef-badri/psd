@@ -8,6 +8,7 @@ tutorial-4.pdf \
 tutorial-5.pdf
 
 FILE_LIST_TEX = \
+exercises.tex   \
 tutorial-1.tex  \
 tutorial-2.tex  \
 tutorial-3.tex  \
@@ -22,7 +23,7 @@ tex: $(FILE_LIST_TEX)
 	pandoc -s -i $< -o $@
 
 %.tex : %.md
-	pandoc $<  --latex-engine=xelatex --listings -o le-$@
+	pandoc $<  --latex-engine=xelatex --listings -o sd-$@
 
 clean :
 	rm -rf *.tex *~
