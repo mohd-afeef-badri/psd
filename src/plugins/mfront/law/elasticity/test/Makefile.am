@@ -28,11 +28,15 @@ check-header:
 	
 Test_1: Elasticity-For-A-Quadrature-Point.cxx
 	@echo "Test_1 : mfront unit test for Elasticity (Quadrature point)"
-	@$(CXX) Elasticity-For-A-Quadrature-Point.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	$(CXX) Elasticity-For-A-Quadrature-Point.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 	@./a.out > Test_1.log	
 	@echo "  PASSED "	
 
-			
+Test_2: Elasticity-For-A-Quadrature-Point.cxx
+	@echo "Test_2 : mfront unit test for Elasticity (Quadrature point) in 3D"
+	@$(CXX) Elasticity-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out > Test_2.log	
+	@echo "  PASSED "			
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
