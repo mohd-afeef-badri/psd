@@ -126,22 +126,33 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
 <<(timelog ? "  timerend(\"Solution update\",t0)\n" : ""                          )<<
  "                                                                                \n";
 
- if(useMfront)
+ if(useMfront){
  writeIt
  " //-----Update Stress using Mfront-------------------//                         \n"
  "                                                                                \n"
 <<(timelog ? "  timerbegin(\"Stress update via MFront\",t0)\n" : ""               )<<
- "  [Eps11,Eps22,Eps12] = epsilon(u);                                             \n"
- "                                                                                \n"
- "   mfrontElasticityHandler( \"Elasticity\"                                        ,\n"
- "                          mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",  \n"
- "                          mfrontPropertyNames       = PropertyNames           ,    \n"
- "                          mfrontPropertyValues      = PropertyValues          ,    \n"
- "                          mfrontStrainTensor        = Eps11[]                 ,    \n"
- "                          mfrontStressTensor        = Sig11[]                      \n"
- "                        );                                                         \n"
+ "                                                                                \n";
+
+ if(spc==2)
+ writeIt 
+ "  [Eps11,Eps22,Eps12] = epsilon(u);                                             \n";
+ 
+ if(spc==3)
+ writeIt 
+ "  [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23] = epsilon(u);                          \n";
+
+ writeIt   
+ "                                                                               \n"
+ "   mfrontElasticityHandler( MaterialBehaviour                                , \n"
+ "                          mfrontBehaviourHypothesis = MaterialHypothesis     , \n"
+ "                          mfrontPropertyNames       = PropertyNames          , \n"
+ "                          mfrontPropertyValues      = PropertyValues         , \n"
+ "                          mfrontStrainTensor        = Eps11[]                , \n"
+ "                          mfrontStressTensor        = Sig11[]                  \n"
+ "                        );                                                     \n"
 <<(timelog ? "  timerend(\"Stress update via MFront\",t0)\n" : ""                 )<<
  "                                                                                \n";
+ }
 
  writeIt
  "                                                                                \n"

@@ -138,14 +138,14 @@ if(Prblm=="linear_elasticity"){
   "                                Mt33 ];                                       \n"
   "                                                                              \n"
 <<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
-  "                                                                              \n"
-  "  mfrontElasticityHandler( \"Elasticity\",                                    \n"
-  "                           mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\",\n"
+  "                                                                                  \n"
+  "  mfrontElasticityHandler( MforntMaterialBehaviour                             ,  \n"
+  "                           mfrontBehaviourHypothesis = MaterialHypothesis      ,  \n"
   "                           mfrontPropertyNames       = PropertyNames           ,  \n"
   "                           mfrontPropertyValues      = PropertyValues          ,  \n"
   "                           mfrontMaterialTensor      = Mt11[]                     \n"
   "                         );                                                       \n"
-  "                                                                              \n"
+  "                                                                                  \n"
 <<(timelog ? "  timerend(\"Material tensor building via MFront\",t0)\n" : ""     )<<
   "                                                                              \n"
   "                                                                              \n";
@@ -169,6 +169,69 @@ if(Prblm=="linear_elasticity"){
    "                                                                              \n";
 
   }
+  
+ if(spc==3){
+ writeIt
+  "                                                                              \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Material Tensor using Quadrature FE space -------                  \n"
+  "// -------------------------------------------------------------------        \n"
+  "// Mt[int]  : is an array of finite element variable belonging to quadratu    \n"
+  "//            re space Qh. This array is used  to define components of the    \n"
+  "//            material tensor. 3X3 in 2D and 6X6 in 3D                        \n"
+  "//            In 3D the material tensor looks like                            \n"
+  "//                                                                            \n"
+  "//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         \n"
+  "//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         \n"
+  "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+<<(timelog ? "  timerbegin(\"Material tensor building\",t0)\n" : ""              )<<
+  "  Qh [ Mt11 , Mt12 ,  Mt13 , Mt14 , Mt15 , Mt16 ,                             \n"
+  "              Mt22 ,  Mt23 , Mt24 , Mt25 , Mt26 ,                             \n"
+  "                      Mt33 , Mt34 , Mt35 , Mt36 ,                             \n"
+  "                             Mt44 , Mt45 , Mt46 ,                             \n"
+  "                                    Mt55 , Mt56 ,                             \n"
+  "                                           Mt66 ] ;                           \n"
+  "                                                                              \n"
+<<(timelog ? "  timerend(\"Material tensor building\",t0)\n" : ""                )<<
+  "                                                                              \n"
+<<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
+  "                                                                                  \n"
+  "  mfrontElasticityHandler( MaterialBehaviour                                   ,  \n"
+  "                           mfrontBehaviourHypothesis = MaterialHypothesis      ,  \n"
+  "                           mfrontPropertyNames       = PropertyNames           ,  \n"
+  "                           mfrontPropertyValues      = PropertyValues          ,  \n"
+  "                           mfrontMaterialTensor      = Mt11[]                     \n"
+  "                         );                                                       \n"
+  "                                                                                  \n"
+<<(timelog ? "  timerend(\"Material tensor building via MFront\",t0)\n" : ""     )<<
+  "                                                                              \n"
+  "                                                                              \n";
+
+  if(Model=="pseudo_nonlinear")
+  writeIt
+   "                                                                              \n"
+   "//============================================================================\n"
+   "// ------- Stress/Strain Tensor using Quadrature FE space -------             \n"
+   "// -------------------------------------------------------------------        \n"
+   "// Eps  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "// Sig  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "//============================================================================\n"
+   "                                                                              \n"
+   "   Sh [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23];                                  \n"
+   "   Sh [Sig11,Sig22,Sig33,Sig12,Sig13,Sig23];                                  \n"
+   "                                                                              \n";
+
+  }  
   }
 
 }

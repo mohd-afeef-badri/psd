@@ -737,7 +737,7 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
 
 
 
- if(Prblm=="linear_elasticity" && !fastmethod)
+ if(Prblm=="linear_elasticity" && !fastmethod && !useMfront)
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -775,6 +775,43 @@ if(Prblm=="damage" && Model=="Mazar"  && !Sequential)
  "                                                                               \n";
 
 
+ if(Prblm=="linear_elasticity" && !fastmethod && useMfront)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                 ------- operator definition macros  -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// divergence(i) : divergence operator definition, given a displacement vector \n"
+ "//                 'i' returns scalar value                                    \n"
+ "// epsilon(i)    : symmetric strain tensor operator given  displacement vector \n"
+ "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"
+ "// epsilonXMt(i,Mt) : given  displacement vector 'i' calculates strain X Mt i.e\n"
+ "//                   Strain X material tensor                                  \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ "  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )   //                     \n"
+ "                                                                               \n"
+ "  macro epsilon   (i) [ dx( i )           ,                                    \n"
+ "                        dy(i#1)           ,                                    \n"
+ "                        dz(i#2)           ,                                    \n"
+ "                       (dy( i ) + dx(i#1))/SQ2 ,                               \n"
+ "                       (dz( i ) + dx(i#2))/SQ2 ,                               \n"
+ "                       (dz(i#1) + dy(i#2))/SQ2  ]        //                    \n"
+ "                                                                               \n"
+ "                                                                               \n"
+ "                                                                               \n"
+ "  macro epsilonXMt(u,Mt) [                                                     \n"
+ "                                                                               \n"
+ "  epsilon(u)[0]*Mt#11 + epsilon(u)[1]*Mt#12 + epsilon(u)[2]*Mt#13 + epsilon(u)[3]*Mt#14 + epsilon(u)[4]*Mt#15 + epsilon(u)[5]*Mt#16, \n"
+ "  epsilon(u)[0]*Mt#12 + epsilon(u)[1]*Mt#22 + epsilon(u)[2]*Mt#23 + epsilon(u)[3]*Mt#24 + epsilon(u)[4]*Mt#25 + epsilon(u)[5]*Mt#26, \n"
+ "  epsilon(u)[0]*Mt#13 + epsilon(u)[1]*Mt#23 + epsilon(u)[2]*Mt#33 + epsilon(u)[3]*Mt#34 + epsilon(u)[4]*Mt#35 + epsilon(u)[5]*Mt#36, \n"
+ "  epsilon(u)[0]*Mt#14 + epsilon(u)[1]*Mt#24 + epsilon(u)[2]*Mt#34 + epsilon(u)[3]*Mt#44 + epsilon(u)[4]*Mt#45 + epsilon(u)[5]*Mt#46, \n"
+ "  epsilon(u)[0]*Mt#15 + epsilon(u)[1]*Mt#25 + epsilon(u)[2]*Mt#35 + epsilon(u)[3]*Mt#45 + epsilon(u)[4]*Mt#55 + epsilon(u)[5]*Mt#56, \n"
+ "  epsilon(u)[0]*Mt#16 + epsilon(u)[1]*Mt#26 + epsilon(u)[2]*Mt#36 + epsilon(u)[3]*Mt#46 + epsilon(u)[4]*Mt#56 + epsilon(u)[5]*Mt#66  \n"
+ "                                                                               \n"
+ "                        ] //                                                   \n"
+ "                                                                               \n";
+ 
 if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt
   "                                                                               \n"

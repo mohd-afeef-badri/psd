@@ -118,7 +118,7 @@ if(Prblm=="linear_elasticity")
   "}                                                                             \n";
 
   
-  if(useMfront)
+  if(useMfront && spc==2)
   writeIt
   "                                                                              \n"
   "//============================================================================\n"
@@ -138,10 +138,38 @@ if(Prblm=="linear_elasticity")
   "  macro E()  200.e9  //                                                       \n"
   "  macro nu() 0.3     //                                                       \n"
   "                                                                              \n"
-  "  string    PropertyNames   = \"YoungModulus PoissonRatio\";                  \n"
-  "  real[int] PropertyValues  = [ E, nu ];                                      \n"
+  "  string    MaterialBehaviour   = \"Elasticity\";                             \n" 
+  "  string    MaterialHypothesis  = \"GENERALISEDPLANESTRAIN\";                 \n"
+  "  string    PropertyNames       = \"YoungModulus PoissonRatio\";              \n"
+  "  real[int] PropertyValues      = [ E, nu ];                                  \n"
   "                                                                              \n";
 
+  if(useMfront && spc==3)
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Material parameters -------                      \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"
+  "//  PropertyNames : String of material property names (space seperated)       \n"
+  "//                  that are provided to Mfront.                              \n"
+  "//  PropertyValues : Values of material properties provided to Mfront         \n"
+  "//                                                                            \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
+  "//            as in the Elasticity.mfront file                                \n"
+  "// -------------------------------------------------------------------        \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  macro E()  200.e9  //                                                       \n"
+  "  macro nu() 0.3     //                                                       \n"
+  "                                                                              \n"
+  "  string    MaterialBehaviour   = \"Elasticity\";                             \n" 
+  "  string    MaterialHypothesis  = \"TRIDIMENSIONAL\";                         \n"
+  "  string    PropertyNames       = \"YoungModulus PoissonRatio\";              \n"
+  "  real[int] PropertyValues      = [ E, nu ];                                  \n"
+  "                                                                              \n";
+  
  /*
  if(!fastmethod)
   {

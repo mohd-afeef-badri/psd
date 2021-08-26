@@ -216,6 +216,22 @@ if(!Sequential){
  "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
  "                                                        FEQF23d, FEQF23d,       \n"
  "                                                                 FEQF23d] );    \n";
+ 
+
+ if(Prblm=="linear_elasticity" && useMfront && Model=="pseudo_nonlinear" && spc==3)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
+ "//             FEQF2 implies 4 dof for a tetraheron cell in the mesh            \n"
+ "//             A vectorial FEM space is built with 6 components                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
+ "                                                                                \n";
+  
 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt

@@ -151,7 +151,7 @@ if(!fastmethod && !useMfront)
  "                       epsilonXMt(u,Mt)'*epsilon(v)                                             \n"
  "                     )                                                                          \n";
 
-if(!fastmethod && useMfront)
+if(!fastmethod && useMfront){
  writeIt
  "                                                                                                \n"
  "/*                                                                                              \n"
@@ -165,7 +165,10 @@ if(!fastmethod && useMfront)
  "      intN(Th,qforder=3)(                                                                       \n"
  "                       epsilonXMt(du,Mt)'*epsilon(v)                                            \n"
  "                     )                                                                          \n"
- "                                                                                                \n"
+ "                                                                                                \n";
+ 
+ if(spc==2)
+ writeIt
  "/*                                                                                              \n"
  "$$                                                                                              \n"
  "\\int_{\\Omega}(                                                                                \n"
@@ -177,6 +180,21 @@ if(!fastmethod && useMfront)
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       [Sig11, Sig22, Sig12]'*epsilon(v)                                        \n"
  "                     )                                                                          \n";
+ 
+ if(spc==3)
+ writeIt
+ "/*                                                                                              \n"
+ "$$                                                                                              \n"
+ "\\int_{\\Omega}(                                                                                \n"
+ "                 (\\epsilon(u):\\mathbbm(Mt):\\epsilon(v))                                      \n"
+ "               )                                                                                \n"
+ "$$                                                                                              \n"
+ "*/                                                                                              \n"
+ "                                                                                                \n"
+ "     - intN(Th,qforder=2)(                                                                      \n"
+ "                       [Sig11, Sig22, Sig33, Sig12, Sig13, Sig23]'*epsilon(v)                   \n"
+ "                     )                                                                          \n"; 
+}
 
 for(int i=0; i<bodyforceconditions; i++)
  writeIt

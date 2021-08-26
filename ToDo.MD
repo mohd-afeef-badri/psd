@@ -18,7 +18,7 @@
 -  Hujeux soil law make it work with PSD
 -  Nonlinear damage mechanics with nested matrices 
 
--  To add examples for -probe flag in make check
+-  To add examples for -pointprobe flag in make check
 -  make check examples for time-discretization
 -  Optimize force calculation (matrix-vector type)
 -  Druker-Prager law for soil dynamics
