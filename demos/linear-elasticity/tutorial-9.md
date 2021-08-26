@@ -215,5 +215,5 @@ a(\mathbf{u},\mathbf{v}) = \int_{\Omega}(
                )
 $$
 
-Here, $\mathbf{u}:\mathbf{Mt}$ is nothing but the stress $\sigma(\mathbf{u})$ operator. User is encourage to have a look at the \psd{VariationalFormulation.edp} file that contains the variational formulation (weak form) of the problem described.
+Here, $\varepsilon(\mathbf{u}):\mathbf{Mt}$ is nothing but the stress $\sigma(\mathbf{u})$ operator. User is encourage to have a look at the \psd{VariationalFormulation.edp} file that contains the variational formulation (weak form) of the problem described.
 
