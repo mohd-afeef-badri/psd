@@ -1,4 +1,4 @@
-SUBDIRS = src data test
+SUBDIRS = src data test ext
 EXTRA_DIST=README.MD Changelog.MD
 
 AUTOMAKE_LIST=autom4te.cache \

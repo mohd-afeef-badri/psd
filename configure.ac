@@ -48,6 +48,10 @@ dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
 dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
+AC_ARG_WITH([dependencies],
+	[  --with-dependencies=            Dependencies installation : (e.g. --with-mgis=yes)],
+        [dependencies="$withval"], [dependencies="no"])
+
 AC_ARG_WITH([mgis],
 	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/mgis)],
         [mgis="$withval"], [mgis="no"])
@@ -142,7 +146,17 @@ test "$mfront" == "no" && AC_MSG_WARN([
  flags. 
  ])
 
-
+AC_SUBST([dependencies])
+AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])                                  
+test "$dependencies" == "no" && AC_MSG_WARN([
+ PSD can automatically build for you its dependencies
+ FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
+ In order to do so 
+ 
+ --with-dependencies=yes 
+ 
+ A power user is adviced to build these on their own.
+ ])
 
 
 SECTION_TITLE([    generating the required makefiles   ])
@@ -153,7 +167,8 @@ AC_CONFIG_FILES([
  Makefile
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
- data/meshes/3D/Geo-Files/Makefile 
+ data/meshes/3D/Geo-Files/Makefile
+ ext/Makefile 
  src/Makefile
  src/plugins/Makefile
  src/ff-files/Makefile 
@@ -204,6 +219,8 @@ AC_MSG_RESULT([ C++ compiler       : '$CXX'])
 AC_MSG_RESULT([ C++ compiler flags : '$CXXFLAGS'])
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
+AC_MSG_RESULT([])
+test "$dependencies"   != "no"            &&  AC_MSG_RESULT([ Dependencies  compile   : ENABLED])
 AC_MSG_RESULT([])
 test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront   : YES])
 test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront   : NO])

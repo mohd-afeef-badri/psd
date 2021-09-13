@@ -13,6 +13,8 @@
 .output
 .info
 *a.out
+test-driver
+compile 
 
 ##Exec Files ##
 *PSD_PreProcess
