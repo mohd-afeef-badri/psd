@@ -1,4 +1,4 @@
-#  PSD: a Parallel Structural Dynamics solver #
+#  PSD 2.3: a Parallel Structural Dynamics solver #
 
 ![](./man/markdownimage.png)
 

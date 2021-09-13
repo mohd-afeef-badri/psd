@@ -151,11 +151,11 @@ documentation-readme: Readme.pdf Readme.html Readme.tex
 	@echo ""
 
 Readme.pdf: Readme.MD
-	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
+	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso --pdf-engine=xelatex
 	cp Readme.pdf  man/.	
 
 Readme.tex: Readme.MD
-	pandoc Readme.MD -o Readme.tex -V geometry:margin=0.5in  --highlight-style tango --listings
+	pandoc Readme.MD -o Readme.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
 	mv Readme.tex  etc/.
 	
 Readme.html: Readme.MD
@@ -166,11 +166,11 @@ documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
 	@echo ""
 
 Changelog.pdf: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
+	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --pdf-engine=xelatex
 	cp Changelog.pdf man/.
 	
 Changelog.tex: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.tex -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex --listings
+	pandoc 	Changelog.MD -o Changelog.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
 	mv Changelog.tex etc/.	
 
 Changelog.html: Changelog.MD

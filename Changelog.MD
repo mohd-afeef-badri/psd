@@ -3,7 +3,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 
 
-## Rolling Release (2.3)
+## [2.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.3) - 2021-09-13
 
 #### Added
 
@@ -14,11 +14,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - `-withmaterialtensor` now uses Quadrature finite elements to build the material tensor.
 - New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.
 - `pseudo_nonlinear` implementation of Linear Elasticity now works.
-- New `Notes` section added in the source repo, to help with mathematical and algorithimic resoning.
-
-#### Changed
-
--
+- New `Notes` section added in the source repo, to help with mathematical and algorithimic reasoning.
 
 #### Bug
 
