@@ -1,11 +1,15 @@
 <h1 id="psd-2.3-a-parallel-structural-dynamics-solver">PSD 2.3: a Parallel Structural Dynamics solver</h1>
-<p><img src="./man/markdownimage.png" /></p>
+<div class="figure">
+<img src="./man/markdownimage.png" />
+
+</div>
 <p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math inline"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math inline"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
 <p>Besides the parallel suite, PSD also includes a sequential solver which does not require <a href="https://www.mcs.anl.gov/petsc/">PETSc</a>.</p>
-<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT’s</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh’s</a> <code>.msh</code> format. PSD post processing is done via <code>.pvd</code> ,<code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
+<p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.pvd</code> ,<code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
 <h2 id="installation">Installation</h2>
 <p>PSD is a cross-platform solver built to work with Linux platforms (Windows comping up soon). PSD has successfully been deployed on the following platforms, CentOS 7/8, Ubuntu 16.04/18.04/20.04, Raspberry Pi, Fedora 32, etc. Before installing PSD please ensure that you have the following dependencies installed on your OS.</p>
 <p><strong>Dependencies</strong></p>
+<p>These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.</p>
 <ul>
 <li><a href="https://www.gnu.org/software/automake/">automake</a></li>
 <li><a href="https://freefem.org/">FreeFEM</a></li>
@@ -17,315 +21,415 @@
 <li><a href="https://thelfer.github.io/mgis/web/bindings-cxx.html">MGIS</a> (optional)</li>
 <li><a href="http://www.gnuplot.info/">gnuplot</a> (optional)</li>
 </ul>
+<p>Note that PETSc and FreeFEM need to be compiled with METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.</p>
+<p>Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case To know how this is done, please read ahead.</p>
 <p><strong>Now that I have all the dependencies what next</strong></p>
 <ul>
-<li>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">git</span> clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources</a></code></pre></div>
+<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources</code></pre></div>
 <p><strong>Note</strong>: You can also use SSH protocol if your key has been added to the repo in that case use</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" title="1"><span class="fu">git</span> clone git@gitlab.com:PsdSolver/psd_sources.git</a></code></pre></div>
-<ul>
-<li>Use automake PSD within the cloned folder</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" title="1"><span class="ex">autoreconf</span> -i</a></code></pre></div>
-<ul>
-<li>Configure PSD within the cloned folder</li>
-</ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" title="1"><span class="ex">./configure</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> clone git@gitlab.com:PsdSolver/psd_sources.git</code></pre></div></li>
+<li><p>Use automake PSD within the cloned folder</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">autoreconf</span> -i</code></pre></div></li>
+<li><p>Configure PSD within the cloned folder</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./configure</span></code></pre></div>
 <p><strong>Note</strong>: <code>./configure</code> will install PSD in <code>/usr/local/bin</code> and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. Remember to add <code>Your/Own/Path</code> to your <code>$PATH</code> variable, you can do so by <code>export PATH=$PATH:Your/Own/Path</code>. Also <code>./configure</code> will try to look for installation of <a href="https://freefem.org/">FreeFEM</a> and <a href="http://gmsh.info/">Gmsh</a> in <code>usr/bin/</code> or <code>usr/local/bin/</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> and <code>--with-Gmsh=</code>. For example, if <a href="https://freefem.org/">FreeFEM</a> is installed at <code>home/FreeFem/bin</code> and <a href="http://gmsh.info/">Gmsh</a> in <code>home/Gmsh/bin</code> then one should use</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" title="1"><span class="ex">./configure</span> --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</a></code></pre></div>
-<ul>
-<li>Make PSD directives</li>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./configure</span> --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin</code></pre></div></li>
+<li><p>Make PSD directives</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span></code></pre></div></li>
+<li><p>Install PSD</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sudo</span> make install</code></pre></div>
+<p><strong>Note</strong> : You should not use <code>sudo</code> if you have used <code>--prefix</code> during the <code>./configure</code></p></li>
+<li><p>Install PSD tutorials</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span> tutorials</code></pre></div></li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" title="1"><span class="fu">make</span></a></code></pre></div>
-<ul>
-<li>Install PSD</li>
-</ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" title="1"><span class="fu">sudo</span> make install</a></code></pre></div>
-<p><strong>Note</strong> : You should not use <code>sudo</code> if you have used <code>--prefix</code> during the <code>./configure</code></p>
-<ul>
-<li>Install PSD tutorials</li>
-</ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" title="1"><span class="fu">make</span> tutorials</a></code></pre></div>
 <p>Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at <code>usr/bin</code> or <code>usr/local/bin</code> directories if you used <code>sudo make install</code> or else it will be in your <code>--prefix</code> location. The PSD tutorials are installed in <code>$HOME/PSD-tutorials</code>.</p>
 <p><strong>Additional FreeFEM tweak for brittle fracture mechanics</strong></p>
 <p>Note that this procedure is only recommended if you are interested in using PSD for brittle fracture problems. In your FreeFEM source files (installation) go to <code>src/femlib/fem.cpp</code> , in this file replace the lines of code</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" title="1"><span class="ex">R</span> seuil=hm/splitmax/4.0<span class="kw">;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">R</span> seuil=hm/splitmax/4.0<span class="kw">;</span></code></pre></div>
 <p>by the following</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" title="1"><span class="ex">R</span> seuil=hm/splitmax/4.0/1000.0<span class="kw">;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">R</span> seuil=hm/splitmax/4.0/1000.0<span class="kw">;</span></code></pre></div>
 <h3 id="additional-installation-steps-for-experts-and-developers">Additional Installation steps for experts and developers</h3>
 <ul>
-<li>Check if installation is correct</li>
+<li><p>Check if installation is correct</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span> check</code></pre></div></li>
+<li><p>Configure PSD with MFront support</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./configure</span> --prefix=<span class="va">$HOME</span>/Install/local --with-mgis=<span class="va">$HOME</span>/Install/local/mgis --with-mfront=<span class="va">$HOME</span>/Install/local/mfront/bin/mfront  --with-FreeFEM=<span class="va">$HOME</span>/Install/local/FreeFem/bin  --with-Gmsh=<span class="va">$HOME</span>/Install/local/Gmsh/bin</code></pre></div></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" title="1"><span class="fu">make</span> check</a></code></pre></div>
-<ul>
-<li>Configure PSD with MFront support</li>
-</ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" title="1"><span class="ex">./configure</span> --prefix=<span class="va">$HOME</span>/Install/local --with-mgis=<span class="va">$HOME</span>/Install/local/mgis --with-mfront=<span class="va">$HOME</span>/Install/local/mfront/bin/mfront  --with-FreeFEM=<span class="va">$HOME</span>/Install/local/FreeFem/bin  --with-Gmsh=<span class="va">$HOME</span>/Install/local/Gmsh/bin</a></code></pre></div>
 <p>Here in this example we assume that MFront, MGIS, Gmsh, and FreeFEM are installed in <code>$HOME/Install/local</code> directory, if that is not the case for you please improvise or you can always ask for help from Linux geeks around.</p>
 <ul>
-<li>Update PSD to the latest version. If you would like to update your old PSD source to a new one. Go to your<code>PSD-Sources</code> folder and</li>
+<li><p>Update PSD to the latest version. If you would like to update your old PSD source to a new one. Go to your<code>PSD-Sources</code> folder and</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> pull origin master <span class="kw">&amp;&amp;</span> <span class="ex">./reconfigure</span> <span class="kw">&amp;&amp;</span>  <span class="fu">make</span> <span class="kw">&amp;&amp;</span>  <span class="fu">make</span> install</code></pre></div></li>
+<li><p>If you would like to install a developers copy of PSD</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span> install-devel</code></pre></div></li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" title="1"><span class="fu">git</span> pull origin master <span class="kw">&amp;&amp;</span> <span class="ex">./reconfigure</span> <span class="kw">&amp;&amp;</span>  <span class="fu">make</span> <span class="kw">&amp;&amp;</span>  <span class="fu">make</span> install</a></code></pre></div>
-<ul>
-<li>If you would like to install a developers copy of PSD</li>
-</ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" title="1"><span class="fu">make</span> install-devel</a></code></pre></div>
 <h2 id="a-quick-sneak-peek-of-a-typical-psd-simulation">A quick sneak-peek of a typical PSD simulation</h2>
 <p>PSD is a TUI (terminal user interface) based finite element solver. Parallel or sequential PSD simulations can run on Linux platforms. Command line options (flags) which user enters are used to control the PSD solver. In order to make your choice of physics, model, mesh, etc., command line options need to be typed right into the bash.</p>
 <p>A typical PSD simulation is performed in three steps.</p>
 <p><strong>Step 1: Setting up the solver</strong></p>
 <p>Its time to set up the PSD solver. Open the <code>terminal</code> window at the location of the solver, i.e., <code>$HOME/PSD/Solver.</code> Then run the following command in the <code>terminal</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb15-1" title="1"><span class="ex">PSD_PreProcess</span> [Options-PSD]</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">PSD_PreProcess</span> [Options-PSD]</code></pre></div>
 <p>Via the command line options you will embed the physics within the solver. This step generates a bunch of <code>.edp</code> files which are native to <a href="https://freefem.org/">FreeFEM</a> and additionally prints out instructions on what to do next. You then need to open and edit couple of these files via your favourite text editor, which could be <code>vim</code>, <code>gedit</code> ,<code>Notepad++</code>, etc. To facilitate the edit process for your will have to go through the instructions printed on the terminal.</p>
 <p>For example to generate a sequential 2D elasticity solver for a problem with body force and one Dirichlet border use</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" title="1"><span class="ex">PSD_PreProcess</span> -dimension 2 -bodyforceconditions 1 -dirichletconditions 1</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">PSD_PreProcess</span> -dimension 2 -bodyforceconditions 1 -dirichletconditions 1</code></pre></div>
 <p><strong>Step 2: Launching the solver</strong></p>
 <p>Now you are all set to run your simulation. To do so you will need to do the run the following in the <code>terminal</code>:</p>
 <p>if you complied a parallel PSD version</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" title="1"><span class="ex">PSD_Solve</span> -np <span class="va">$N</span> Main.edp -v 0 -nw</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">PSD_Solve</span> -np <span class="va">$N</span> Main.edp -v 0 -nw</code></pre></div>
 <p>if you complied a sequential PSD version</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" title="1"><span class="ex">PSD_Solve_Seq</span> Main.edp -v 0 -nw</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">PSD_Solve_Seq</span> Main.edp -v 0 -nw</code></pre></div>
 <ul>
 <li><p>In the parallel command <strong>$N</strong> is an <code>int</code> value, i.e., number of processes that you want to use for performing the simulation in parallel.</p></li>
 <li><p>Additional flag <code>-wg</code> may be required while launching the solver, this is in case debug mode is on.</p></li>
 </ul>
-<p><strong>Step 3: Result visualization</strong> Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView’s pvd, vtu, and pvtu files are used for postprocessing. ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.</p>
+<p><strong>Step 3: Result visualization</strong> Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing. ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.</p>
 <h2 id="psd-flags-explained">PSD flags explained</h2>
 <p>These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation). It is advised to print these and have them around when performing a PSD simulation.</p>
 <table>
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 9%" />
-<col style="width: 62%" />
+<col width="28%" />
+<col width="10%" />
+<col width="61%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Flag</th>
 <th>Type</th>
-<th style="text-align: left;">Comment</th>
+<th align="left">Comment</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Boolean flags</strong></td>
 <td></td>
-<td style="text-align: left;">These flags accept values <em>1|0|yes|no|on|off|true|false</em> and are used to activate or deactivate any functionality of PSD.</td>
+<td align="left">These flags accept values <em>1|0|yes|no|on|off|true|false</em> and are used to <br />activate or deactivate any functionality of PSD.</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td><code>-help</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate helping message on the terminal. Gives description and list of available flags.</td>
+<td align="left">To activate helping messages. Gives description and list of available flags.</td>
 </tr>
 <tr class="even">
 <td><code>-debug</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate live plot while PSD runs. Development flag.</td>
+<td align="left">To activate live plot while PSD runs. Development flag.</td>
 </tr>
 <tr class="odd">
 <td><code>-useGFP</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate use of GoFastPlugins. A suite of C++ plugins.</td>
+<td align="left">To activate use of GoFastPlugins. A suite of C++ plugins.</td>
 </tr>
 <tr class="even">
 <td><code>-useRCM</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate mesh level renumbering: Reverse Cuthill Mckee.</td>
+<td align="left">Activate mesh level renumbering: Reverse Cuthill Mckee.</td>
 </tr>
 <tr class="odd">
 <td><code>-pipegnu</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Use to activate real time pipe plotting using <a href="http://www.gnuplot.info/">gnuplot</a>.</td>
+<td align="left">Use to activate real time pipe plotting using <a href="http://www.gnuplot.info/">gnuplot</a>.</td>
 </tr>
 <tr class="even">
 <td><code>-timelog</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate time logging the different phases of the solver.</td>
+<td align="left">To activate time logging the different phases of the solver.</td>
 </tr>
 <tr class="odd">
 <td><code>-supercomp</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Use when using a super computer without Xterm support</td>
+<td align="left">Use when using a super computer without Xterm support</td>
 </tr>
 <tr class="even">
 <td><code>-useMfront</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate Mfornt interface for PSD.</td>
+<td align="left">Activate Mfornt interface for PSD.</td>
 </tr>
 <tr class="odd">
 <td><code>-bodyforce</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate volumetric source term (body force).</td>
+<td align="left">To activate volumetric source term (body force).</td>
 </tr>
 <tr class="even">
 <td><code>-vectorial</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To use vectorial finite element method.</td>
+<td align="left">To use vectorial finite element method.</td>
 </tr>
 <tr class="odd">
 <td><code>-pointprobe</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To postprocess point fields.</td>
+<td align="left">To postprocess point fields.</td>
 </tr>
 <tr class="even">
 <td><code>-sequential</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To solve via a sequential solver.</td>
+<td align="left">To solve via a sequential solver.</td>
 </tr>
 <tr class="odd">
 <td><code>-energydecomp</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate energy decomposition, only for phase-field.</td>
+<td align="left">To activate energy decomposition, only for phase-field.</td>
 </tr>
 <tr class="even">
 <td><code>-doublecouple</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate double couple source for soildynamics.</td>
+<td align="left">To activate double couple source for soildynamics.</td>
 </tr>
 <tr class="odd">
 <td><code>-constrainHPF</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To use constrain condition in hybrid phase-field model.</td>
+<td align="left">To use constrain condition in hybrid phase-field model.</td>
 </tr>
 <tr class="even">
 <td><code>-top2vol-meshing</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate top-ii-vol point source meshing for soil-dynamics.</td>
+<td align="left">Activate top-ii-vol point source meshing for soil-dynamics.</td>
 </tr>
 <tr class="odd">
 <td><code>-getreactionforce</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate routine for extraction reactions at surface.</td>
+<td align="left">Activate routine for extraction reactions at surface.</td>
 </tr>
 <tr class="even">
 <td><code>-plotreactionforce</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate realtime pipe plotting using GnuPlot.</td>
+<td align="left">Activate realtime pipe plotting using GnuPlot.</td>
 </tr>
 <tr class="odd">
 <td><code>-withmaterialtensor</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">Activate material tensor for building stiffness matrix.</td>
+<td align="left">Activate material tensor for building stiffness matrix.</td>
 </tr>
 <tr class="even">
 <td><code>-crackdirichletcondition</code></td>
 <td><code>[bool]</code></td>
-<td style="text-align: left;">To activate pre-cracked surface Dirichlet.</td>
+<td align="left">To activate pre-cracked surface Dirichlet.</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td><strong>Integer flags</strong></td>
 <td></td>
-<td style="text-align: left;">These flags accept a integer value followed by the flag itself. These integer values are used in PSD simulations for various definitions.</td>
+<td align="left">These flags accept a integer value followed by the flag itself. <br />These integer values are used in PSD simulations for various definitions.</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td><code>-dirichletpointconditions</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Number of Dirichlet points. <br /></td>
+<td align="left">Number of Dirichlet points.</td>
 </tr>
 <tr class="odd">
 <td><code>-dirichletconditions</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Number of Dirichlet boundaries.</td>
+<td align="left">Number of Dirichlet boundaries.</td>
 </tr>
 <tr class="even">
 <td><code>-bodyforceconditions</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Number of regions acted upon by bodyforce.</td>
+<td align="left">Number of regions acted upon by bodyforce.</td>
 </tr>
 <tr class="odd">
 <td><code>-tractionconditions</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Number of Neumann/traction boundaries.</td>
+<td align="left">Number of Neumann/traction boundaries.</td>
 </tr>
 <tr class="even">
 <td><code>-parmetis_worker</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Number of parallel workers used by ParMetis for partitioning.</td>
+<td align="left">Number of parallel workers used by ParMetis for partitioning.</td>
 </tr>
 <tr class="odd">
 <td><code>-lagrange</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Lagrange order used for FE spaces. 1 for P1 or 2 for P2.</td>
+<td align="left">Lagrange order used for FE spaces. 1 for P1 or 2 for P2.</td>
 </tr>
 <tr class="even">
 <td><code>-dimension</code></td>
 <td><code>[int]</code></td>
-<td style="text-align: left;">Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.</td>
+<td align="left">Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td><strong>String flags</strong></td>
 <td></td>
-<td style="text-align: left;">These flags accept a string value followed by the flag itself. These string values are used in PSD simulations for various definitions.</td>
+<td align="left">These flags accept a string value followed by the flag itself. <br />These string values are used in PSD simulations for various definitions.</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
-<td style="text-align: left;"></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td><code>-mesh</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Provide mesh to be solved by <code>PSD_Solve</code>.</td>
+<td align="left">Provide mesh to be solved by <code>PSD_Solve</code>.</td>
 </tr>
 <tr class="odd">
 <td><code>-timediscretization</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Time discretization type. Use “generalized_alpha” or “newmark_beta” or “hht_alpha” or “central_difference”</td>
+<td align="left">Time discretization type. Use &quot;generalized_alpha&quot; or &quot;newmark_beta&quot; or &quot;hht_alpha&quot; or &quot;central_difference&quot;</td>
 </tr>
 <tr class="even">
 <td><code>-nonlinearmethod</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Nonlinear method type. Use “Picard” or “Newton_Raphsons”.</td>
+<td align="left">Nonlinear method type. Use &quot;Picard&quot; or &quot;Newton_Raphsons&quot;.</td>
 </tr>
 <tr class="odd">
 <td><code>-reactionforce</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Reaction force calculation method “stress_based” or “variational_based”.</td>
+<td align="left">Reaction force calculation method &quot;stress_based&quot; or &quot;variational_based&quot;.</td>
 </tr>
 <tr class="even">
 <td><code>-doublecouple</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Soil dynamics double couple. Use “force_based” or “displacement_based”.</td>
+<td align="left">Soil dynamics double couple. Use &quot;force_based&quot; or &quot;displacement_based&quot;.</td>
 </tr>
 <tr class="odd">
 <td><code>-postprocess</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">To communicate what to postprocess “u”, “v”, “a”, “uv” , “ud”, “ua”, “d”, “ud”, or “uav”.</td>
+<td align="left">To communicate what to postprocess &quot;u&quot;, &quot;v&quot;, &quot;a&quot;, &quot;uv&quot; , &quot;ud&quot;, &quot;ua&quot;, &quot;d&quot;, &quot;ud&quot;, or &quot;uav&quot;.</td>
 </tr>
 <tr class="even">
 <td><code>-partitioner</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Mesh partitioner could be “<a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">metis</a>” “<a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview">parmetis</a>” or “<a href="http://www.labri.fr/perso/pelegrin/scotch/">scotch</a>”.</td>
+<td align="left">Mesh partitioner could be &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">metis</a>&quot; &quot;<a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview">parmetis</a>&quot; or &quot;<a href="http://www.labri.fr/perso/pelegrin/scotch/">scotch</a>&quot;.</td>
 </tr>
 <tr class="odd">
 <td><code>-problem</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Interested problem. Use “linear_elasticity”, “damage”, “elastodynamics”, or “soildynamics”.</td>
+<td align="left">Interested problem. Use &quot;linear_elasticity&quot;, &quot;damage&quot;, &quot;elastodynamics&quot;, or &quot;soildynamics&quot;.</td>
 </tr>
 <tr class="even">
 <td><code>-model</code></td>
 <td><code>[sting]</code></td>
-<td style="text-align: left;">Interested model. Use “hybrid_phase_field” or “Mazar”.</td>
+<td align="left">Interested model. Use &quot;hybrid_phase_field&quot; or &quot;Mazar&quot;.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-flags">Configuration flags</h2>
+<p>These are a set of commandline flags/options that control your PSD configuration via the automake ligo.</p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="42%" />
+<col width="42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Flag</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Examples</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--prefix</code></td>
+<td>Enter the directory where you wish to install PSD.<br />Note that you will need to have read and write <br />permission for this directory.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--prefix=/usr</code><br /><code>--prefix=/usr/local</code><br /><code>--prefix=/home/install</code></td>
+</tr>
+<tr class="even">
+<td><code>--with-FreeFEM</code></td>
+<td>Enter the directory where FreeFem binary has been installed. <br />Tip, in your terminal <code>which FreeFem++</code> can help you <br />find this directory.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-FreeFEM=/usr/bin</code><br /><code>--with-FreeFEM=/home/install/bin</code> <br /><code>--with-FreeFEM=/usr/local/bin</code></td>
+</tr>
+<tr class="odd">
+<td><code>--with-Gmsh</code></td>
+<td>Enter the directory where Gmsh binary has been installed. <br />Tip, in your terminal <code>which gmsh</code> can help you find this<br />directory.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-Gmsh=/usr/bin</code><br /><code>--with-Gmsh=/home/install/bin</code> <br /><code>--with-Gmsh=/usr/local/bin</code></td>
+</tr>
+<tr class="even">
+<td><code>--with-mgis</code></td>
+<td>Enter the directory where Mgis has been installed. <br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-mgis=/usr</code><br /><code>--with-mgis=/home/install</code> <br /><code>--with-mgis=/usr/local</code></td>
+</tr>
+<tr class="odd">
+<td><code>--with-mfront</code></td>
+<td>Enter the directory where Mfront binary has been installed. <br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-mfront=/usr/bin</code><br /><code>--with-mfront=/home/install/bin</code> <br /><code>--with-mfront=/usr/local/bin</code></td>
+</tr>
+<tr class="even">
+<td><code>--with-dependencies</code></td>
+<td>Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compil PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-dependencies=yes</code><br /><code>--with-dependencies=no</code> <br /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="make-options-for-psd">make options for PSD</h2>
+<p>Once <code>./configure</code> runs successfully your Makefiles will be generated thanks to automake. Different options are available with <code>make</code> command some are native to Make (still listed here, sorry to my linux co-geeks)</p>
+<p>​</p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="51%" />
+<col width="32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Command</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>make</code></td>
+<td>Command responsible to compile PSD for you. This is necessary.</td>
+<td><code>make</code></td>
+</tr>
+<tr class="even">
+<td><code>-j4</code></td>
+<td>Activates parallel make, i.e., faster compilation on 4 cores.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>make -j4</code></td>
+</tr>
+<tr class="odd">
+<td><code>install</code></td>
+<td>Command that installs PSD for you, this command should follow the <code>make</code> command.</td>
+<td><code>make install</code><br /><code>make install -j4</code></td>
+</tr>
+<tr class="even">
+<td><code>check</code></td>
+<td>Command that should follow <code>make install</code> helps to check the PSD installation.<br /><br /><em>This command is an optional but recommended</em></td>
+<td><code>make check</code></td>
+</tr>
+<tr class="odd">
+<td><code>clean</code></td>
+<td>Command that cleans PSD's compilation directory.<br /><br /><em>This command is an optional</em></td>
+<td><code>make clean</code></td>
+</tr>
+<tr class="even">
+<td><code>maintainer-clean</code></td>
+<td>Command that cleans PSD's compilation directory throughly.<br /><br /><em>This command is an optional</em></td>
+<td><code>make maintainer-clean</code></td>
+</tr>
+<tr class="odd">
+<td><code>tutorials</code></td>
+<td>Command that builds PSD tutorials in <code>$HOME</code> directory. This should <br />follow/be-used only after <code>make install</code>.<br /><br /><em>This command is an optional</em></td>
+<td><code>make tutorials</code></td>
+</tr>
+<tr class="even">
+<td><code>install-devl</code></td>
+<td>Command that installs developers version of PSD for you, this command should follow <br />the <code>make</code> command.<br /><br /><em>This command is an optional</em></td>
+<td><code>make install-devel</code></td>
+</tr>
+<tr class="odd">
+<td><code>documentation</code></td>
+<td>Command that builds documentation, in html, and pdf formats. This command should follow <br />the <code>make</code> command. Note that this needs pandoc installed in your system.<br /><br /><em>This command is an optional</em></td>
+<td><code>make documentation</code></td>
 </tr>
 </tbody>
 </table>
