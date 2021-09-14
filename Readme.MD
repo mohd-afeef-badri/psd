@@ -14,7 +14,11 @@ PSD works for two and three dimensional problems only. Unstructured meshes (tria
 
 PSD is a cross-platform solver built to work with Linux platforms (Windows comping up soon). PSD has successfully been deployed on the following platforms,  CentOS 7/8,  Ubuntu 16.04/18.04/20.04,  Raspberry Pi,  Fedora 32, etc. Before installing PSD please ensure that you have the following dependencies installed on your OS.
 
+
+
 **Dependencies**
+
+These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
 
 - [automake](https://www.gnu.org/software/automake/)
 - [FreeFEM](https://freefem.org/)
@@ -25,6 +29,12 @@ PSD is a cross-platform solver built to work with Linux platforms (Windows compi
 - [MFront](http://tfel.sourceforge.net/)      (optional)
 - [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)          (optional)
 - [gnuplot](http://www.gnuplot.info/)	 (optional)
+
+Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
+
+Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case To know how this is done, please read ahead.
+
+
 
 **Now that I have all the dependencies what next**
 
@@ -178,9 +188,9 @@ These are a set of commandline flags/options that control your simulation. You c
 
 | Flag                        | Type      | Comment                                                      |
 | --------------------------- | --------- | :----------------------------------------------------------- |
-| **Boolean flags**           |           | These flags accept values   *1\|0\|yes\|no\|on\|off\|true\|false*   and are used to activate or deactivate any functionality of PSD. |
+| **Boolean flags**           |           | These flags accept values   *1\|0\|yes\|no\|on\|off\|true\|false*   and are used to <br />activate or deactivate any functionality of PSD. |
 |                             |           |                                                              |
-| `-help`                     | `[bool]`  | To activate helping message on the terminal. Gives description and list of available flags. |
+| `-help`                     | `[bool]`  | To activate helping messages. Gives description and list of available flags. |
 | `-debug`                    | `[bool]`  | To activate live plot while PSD runs.  Development flag.     |
 | `-useGFP`                   | `[bool]`  | To activate use of GoFastPlugins. A suite of C++ plugins.    |
 | `-useRCM`                   | `[bool]`  | Activate mesh level renumbering: Reverse Cuthill Mckee.      |
@@ -201,9 +211,9 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-withmaterialtensor`       | `[bool]`  | Activate material tensor for building stiffness matrix.      |
 | `-crackdirichletcondition`  | `[bool]`  | To activate pre-cracked surface Dirichlet.                   |
 |                             |           |                                                              |
-| **Integer flags**           |           | These flags accept a integer value followed by the flag itself. These integer values are used in PSD simulations for various definitions. |
+| **Integer flags**           |           | These flags accept a integer value followed by the flag itself. <br />These integer values are used in PSD simulations for various definitions. |
 |                             |           |                                                              |
-| `-dirichletpointconditions` | `[int]`   | Number of Dirichlet points. <br />                           |
+| `-dirichletpointconditions` | `[int]`   | Number of Dirichlet points.                                  |
 | `-dirichletconditions`      | `[int]`   | Number of Dirichlet boundaries.                              |
 | `-bodyforceconditions`      | `[int]`   | Number of regions acted upon by bodyforce.                   |
 | `-tractionconditions`       | `[int]`   | Number of Neumann/traction boundaries.                       |
@@ -211,7 +221,7 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-lagrange`                 | `[int]`   | Lagrange order used for FE spaces. 1 for P1 or 2 for P2.     |
 | `-dimension`                | `[int]`   | Accepts values 2 or 3. Use 3 for 3D. and 2 for 2D problem.   |
 |                             |           |                                                              |
-| **String flags**            |           | These flags accept a string value followed by the flag itself. These string values are used in PSD simulations for various definitions. |
+| **String flags**            |           | These flags accept a string value followed by the flag itself. <br />These string values are used in PSD simulations for various definitions. |
 |                             |           |                                                              |
 | `-mesh`                     | `[sting]` | Provide mesh to be solved by `PSD_Solve`.                    |
 | `-timediscretization`       | `[sting]` | Time discretization type. Use "generalized_alpha" or "newmark_beta" or "hht_alpha" or "central_difference" |
@@ -222,6 +232,42 @@ These are a set of commandline flags/options that control your simulation. You c
 | `-partitioner`              | `[sting]` | Mesh partitioner could be "[metis](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)" "[parmetis](http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview)" or "[scotch](http://www.labri.fr/perso/pelegrin/scotch/)". |
 | `-problem`                  | `[sting]` | Interested problem. Use "linear_elasticity", "damage", "elastodynamics", or "soildynamics". |
 | `-model`                    | `[sting]` | Interested model. Use "hybrid_phase_field" or "Mazar".       |
+
+
+
+## Configuration flags 
+
+These are a set of commandline flags/options that control your PSD configuration via the automake ligo.
+
+| **Flag**              | **Description**                                              | **Examples**                                                 |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `--prefix`            | Enter the directory where you wish to install PSD.<br />Note that  you  will  need to  have read and write <br />permission for this directory.<br /><br />*This flag is an optional flag* | `--prefix=/usr`<br />`--prefix=/usr/local`<br />`--prefix=/home/install` |
+| `--with-FreeFEM`      | Enter the directory where FreeFem binary has been installed. <br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag* | `--with-FreeFEM=/usr/bin`<br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin` |
+| `--with-Gmsh`         | Enter the directory  where  Gmsh  binary has been installed. <br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin`<br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
+| `--with-mgis`         | Enter the directory  where  Mgis  has been installed. <br /><br />*This flag is an optional flag* | `--with-mgis=/usr`<br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
+| `--with-mfront`       | Enter the directory  where  Mfront binary  has been installed. <br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin`<br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
+| `--with-dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compil PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes`<br />`--with-dependencies=no` <br /> |
+
+
+
+## make options for PSD
+
+Once `./configure` runs successfully your Makefiles will be generated thanks to automake. Different options are available with `make` command some are native to Make (still listed here, sorry to my linux co-geeks)
+
+​    
+
+| **Command**        | **Description**                                              | **Example**                            |
+| ------------------ | ------------------------------------------------------------ | -------------------------------------- |
+| `make`             | Command responsible to compile PSD for you. This is necessary. | `make`                                 |
+| `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag* | `make -j4`                             |
+| `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install`<br />`make install -j4` |
+| `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                           |
+| `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                           |
+| `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                |
+| `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional* | `make tutorials`                       |
+| `install-devl`     | Command that installs developers version of PSD for you, this command should follow <br />the `make` command.<br /><br />*This command is an optional* | `make install-devel`                   |
+| `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow <br />the `make` command. Note that this needs pandoc installed in your system.<br /><br />*This command is an optional* | `make documentation`                   |
+
 
 
 *To report bugs, issues, feature-requests contact:*

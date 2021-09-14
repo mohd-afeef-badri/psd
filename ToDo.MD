@@ -3,9 +3,8 @@
 
 
 **Ongoing**
-- Mfront integration of PSD
+- Mfront integration of PSD (non-linear)
 
-- update developer install with plugins
 - PSD configures PETSc and FreeFEM
 - Include Medfile support
 
@@ -31,6 +30,8 @@
 
 
 **Done**
+
+- Mfront integration of PSD  linear-elasticity
 
 - Use max system procs for tests
 - Activate top-ii-vol version 1.3 for PSD
