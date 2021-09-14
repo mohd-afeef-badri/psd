@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.3], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.4], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -49,7 +49,7 @@ dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
 AC_ARG_WITH([dependencies],
-	[  --with-dependencies=            Dependencies installation : (e.g. --with-mgis=yes)],
+	[  --with-dependencies=            Dependencies installation : (e.g. --with-dependencies=yes)],
         [dependencies="$withval"], [dependencies="no"])
 
 AC_ARG_WITH([mgis],
@@ -75,9 +75,216 @@ AC_ARG_WITH(Gmsh,
 	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
 	   GMSH="${withval}/gmsh")	   
 
-SECTION_TITLE([    checking for a C++  compilers       ])
+AC_SUBST([dependencies])
+AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])                                  
+test "$dependencies" == "no" && AC_MSG_WARN([
+ PSD can automatically build for you its dependencies
+ FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
+ In order to do so 
+ 
+ --with-dependencies=yes 
+ 
+ A power user is adviced to build these on their own.
+ ])
+ 
+AU_ALIAS([ACX_MPI], [AX_MPI])
+AC_DEFUN([AX_MPI], [
+AC_PREREQ(2.50)
+
+AC_LANG_CASE([C], [
+	AC_REQUIRE([AC_PROG_CC])
+	AC_ARG_VAR(MPICC,[MPI C compiler command])
+	AC_CHECK_PROGS(MPICC, mpicc hcc mpxlc_r mpxlc mpcc cmpicc, $CC)
+	ax_mpi_save_CC="$CC"
+	CC="$MPICC"
+	AC_SUBST(MPICC)
+],
+[C++], [
+	AC_REQUIRE([AC_PROG_CXX])
+	AC_ARG_VAR(MPICXX,[MPI C++ compiler command])
+	AC_CHECK_PROGS(MPICXX, mpic++ mpicxx mpiCC hcp mpxlC_r mpxlC mpCC cmpic++, $CXX)
+	ax_mpi_save_CXX="$CXX"
+	CXX="$MPICXX"
+	AC_SUBST(MPICXX)
+],
+[Fortran 77], [
+	AC_REQUIRE([AC_PROG_F77])
+	AC_ARG_VAR(MPIF77,[MPI Fortran 77 compiler command])
+	AC_CHECK_PROGS(MPIF77, mpif77 hf77 mpxlf_r mpxlf mpf77 cmpifc, $F77)
+	ax_mpi_save_F77="$F77"
+	F77="$MPIF77"
+	AC_SUBST(MPIF77)
+],
+[Fortran], [
+	AC_REQUIRE([AC_PROG_FC])
+	AC_ARG_VAR(MPIFC,[MPI Fortran compiler command])
+	AC_CHECK_PROGS(MPIFC, mpif90 mpxlf95_r mpxlf90_r mpxlf95 mpxlf90 mpf90 cmpif90c, $FC)
+	ax_mpi_save_FC="$FC"
+	FC="$MPIFC"
+	AC_SUBST(MPIFC)
+])
+
+
+
+if test x = x"$MPILIBS"; then
+	AC_LANG_CASE([C], [AC_CHECK_FUNC(MPI_Init, [MPILIBS=" "])],
+		[C++], [AC_CHECK_FUNC(MPI_Init, [MPILIBS=" "])],
+		[Fortran 77], [AC_MSG_CHECKING([for MPI_Init])
+			AC_LINK_IFELSE([AC_LANG_PROGRAM([],[      call MPI_Init])],[MPILIBS=" "
+				AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)])],
+		[Fortran], [AC_MSG_CHECKING([for MPI_Init])
+			AC_LINK_IFELSE([AC_LANG_PROGRAM([],[      call MPI_Init])],[MPILIBS=" "
+				AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)])])
+fi
+AC_LANG_CASE([Fortran 77], [
+	if test x = x"$MPILIBS"; then
+		AC_CHECK_LIB(fmpi, MPI_Init, [MPILIBS="-lfmpi"])
+	fi
+	if test x = x"$MPILIBS"; then
+		AC_CHECK_LIB(fmpich, MPI_Init, [MPILIBS="-lfmpich"])
+	fi
+],
+[Fortran], [
+	if test x = x"$MPILIBS"; then
+		AC_CHECK_LIB(fmpi, MPI_Init, [MPILIBS="-lfmpi"])
+	fi
+	if test x = x"$MPILIBS"; then
+		AC_CHECK_LIB(mpichf90, MPI_Init, [MPILIBS="-lmpichf90"])
+	fi
+])
+if test x = x"$MPILIBS"; then
+	AC_CHECK_LIB(mpi, MPI_Init, [MPILIBS="-lmpi"])
+fi
+if test x = x"$MPILIBS"; then
+	AC_CHECK_LIB(mpich, MPI_Init, [MPILIBS="-lmpich"])
+fi
+
+dnl We have to use AC_TRY_COMPILE and not AC_CHECK_HEADER because the
+dnl latter uses $CPP, not $CC (which may be mpicc).
+AC_LANG_CASE([C], [if test x != x"$MPILIBS"; then
+	AC_MSG_CHECKING([for mpi.h])
+	AC_TRY_COMPILE([#include <mpi.h>],[],[AC_MSG_RESULT(yes)], [MPILIBS=""
+		AC_MSG_RESULT(no)])
+fi],
+[C++], [if test x != x"$MPILIBS"; then
+	AC_MSG_CHECKING([for mpi.h])
+	AC_TRY_COMPILE([#include <mpi.h>],[],[AC_MSG_RESULT(yes)], [MPILIBS=""
+		AC_MSG_RESULT(no)])
+fi],
+[Fortran 77], [if test x != x"$MPILIBS"; then
+	AC_MSG_CHECKING([for mpif.h])
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[      include 'mpif.h'])],[AC_MSG_RESULT(yes)], [MPILIBS=""
+		AC_MSG_RESULT(no)])
+fi],
+[Fortran], [if test x != x"$MPILIBS"; then
+	AC_MSG_CHECKING([for mpif.h])
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[      include 'mpif.h'])],[AC_MSG_RESULT(yes)], [MPILIBS=""
+		AC_MSG_RESULT(no)])
+fi])
+
+AC_LANG_CASE([C], [CC="$ax_mpi_save_CC"],
+	[C++], [CXX="$ax_mpi_save_CXX"],
+	[Fortran 77], [F77="$ax_mpi_save_F77"],
+	[Fortran], [FC="$ax_mpi_save_FC"])
+
+AC_SUBST(MPILIBS)
+
+# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
+if test x = x"$MPILIBS"; then
+        $2
+        :
+else
+        ifelse([$1],,[AC_DEFINE(HAVE_MPI,1,[Define if you have the MPI library.])],[$1])
+        :
+fi
+])
+
+SECTION_TITLE([ checking for a C++/MPIC++ compilers ])
 AC_PROG_CXX
 AC_LANG(C++)
+AX_MPI
+
+SECTION_TITLE([ checking for a C/MPIC compilers ])
+AC_PROG_CC
+AC_LANG(C)
+AX_MPI
+
+SECTION_TITLE([ checking for a Fortran/MPIFC compilers ])
+AC_PROG_FC
+AC_LANG(Fortran)
+AX_MPI
+
+SECTION_TITLE([ checking for a Fortran-77/MPIF77 compilers ])
+AC_PROG_F77
+AC_LANG(Fortran 77)
+AX_MPI
+
+AC_ARG_WITH(MPICXX,
+	[  --with-MPICXX=          path of the MPI C++ compiler to be used 
+	                  (e.g. --with-MPICXX=your/MPIC++/Install/path/bin/mpic++)],
+	   MPICXX="${withval}")
+
+AC_ARG_WITH(MPICC,
+	[  --with-MPICC=          path of the MPI C compiler to be used 
+	                  (e.g. --with-MPICC=your/MPIC++/Install/path/bin/mpicc)],
+	   MPICC="${withval}")	   
+
+AC_ARG_WITH(MPIFC,
+	[  --with-MPIFC=          path of the MPI Fortran compiler to be used 
+	                  (e.g. --with-MPIFC=your/MPIFC/Install/path/bin/mpicf90)],
+	   MPIFC="${withval}")
+
+AC_ARG_WITH(MPIF77,
+	[  --with-MPIF77=          path of the MPI C++ compiler to be used 
+	                  (e.g. --with-MPIF77=your/MPIF77/Install/path/bin/mpif77)],
+	   MPIF77="${withval}")
+	   	   
+test "$MPICXX" == "$CXX" && AC_MSG_ERROR([
+
+  Required  MPI C++ compilers were not  found. If you are
+  sure that MPI C++ compiler is  present on you operating
+  system you might use the ./configure flag:
+  
+    '--with-MPICXX=your/MPIC++/Install/path/bin/mpic++' 
+     
+  to provide the location of MPI C++ compiler. 
+                                   ])
+
+test "$MPICC" == "$CC" && AC_MSG_ERROR([
+
+  Required  MPI C compilers were not  found. If you are
+  sure that MPI C compiler is  present on you operating
+  system you might use the ./configure flag:
+  
+    '--with-MPICC=your/MPIC/Install/path/bin/mpicc' 
+     
+  to provide the location of MPI C compiler. 
+                                   ])
+
+test "$MPIFC" == "$FC" && AC_MSG_ERROR([
+
+  Required  MPI Fortran compilers were not  found. If you are
+  sure that MPI Fortran compiler is  present on you operating
+  system you might use the ./configure flag:
+  
+    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif90' 
+     
+  to provide the location of MPI Fortran compiler. 
+                                   ])
+
+test "$MPIF77" == "$F77" && AC_MSG_ERROR([
+
+  Required  MPI Fortran 77 compilers were not  found. If you are
+  sure that MPI Fortran 77 compiler is  present on you operating
+  system you might use the ./configure flag:
+  
+    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif77' 
+     
+  to provide the location of MPI Fortran 77 compiler. 
+                                   ])
+                                 
+
+
 
 SECTION_TITLE([      checking for a Gmsh mesher        ])
 AX_GMSH
@@ -146,17 +353,7 @@ test "$mfront" == "no" && AC_MSG_WARN([
  flags. 
  ])
 
-AC_SUBST([dependencies])
-AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])                                  
-test "$dependencies" == "no" && AC_MSG_WARN([
- PSD can automatically build for you its dependencies
- FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
- In order to do so 
- 
- --with-dependencies=yes 
- 
- A power user is adviced to build these on their own.
- ])
+
 
 
 SECTION_TITLE([    generating the required makefiles   ])
@@ -216,7 +413,17 @@ AC_MSG_RESULT([ PSD install  path  : '$prefix'])
 AC_MSG_RESULT([ PSD tutoirlas path : '$HOME/PSD-tutorials'])
 AC_MSG_RESULT([])
 AC_MSG_RESULT([ C++ compiler       : '$CXX'])
-AC_MSG_RESULT([ C++ compiler flags : '$CXXFLAGS'])
+AC_MSG_RESULT([ C compiler         : '$CC'])
+AC_MSG_RESULT([ FC compiler        : '$FC'])
+AC_MSG_RESULT([ F77 compiler       : '$F77'])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ C/C++ compiler flags   : '$CXXFLAGS'])
+AC_MSG_RESULT([ F77/FC compiler flags  : '$FCFLAGS'])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ MPIC++ compiler    : '$MPICXX'])
+AC_MSG_RESULT([ MPIC   compiler    : '$MPICC'])
+AC_MSG_RESULT([ MPIF77 compiler    : '$MPIF77'])
+AC_MSG_RESULT([ MPIFC   compiler   : '$MPIFC'])
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 AC_MSG_RESULT([])

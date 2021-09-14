@@ -8,7 +8,7 @@ define mfrontenv
 export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
   
-all-local: petsc-build FreeFEM-build mgis-build mfront-build
+all-local: petsc-build FreeFEM-build mfront-build mgis-build
 	@echo ""
 
 mfront-build:
@@ -20,7 +20,7 @@ if BUILDDEPENDENCIES
 	@echo ""
 	tar -xf Mfront-sources-$(MFRONT_VERSION).tar.xz
 	cd Mfront-sources-$(MFRONT_VERSION) && mkdir -p build && cd build && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) && \
+	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
 else !BUILDDEPENDENCIES	
@@ -37,7 +37,7 @@ if BUILDDEPENDENCIES
 	source ${prefix}/mfront-env.sh
 	tar -xf Mgis-sources-$(MGIS_VERSION).tar.xz
 	cd Mgis-sources-$(MGIS_VERSION) && mkdir -p build && cd build && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS=$(CXXFLAGS) && \
+	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install	
 else !BUILDDEPENDENCIES	
 	@echo ""
@@ -54,23 +54,25 @@ if BUILDDEPENDENCIES
 	export PETSCPKG=$(CURDIR)
 	tar -xf Petsc-sources-$(PETSC_VERSION).tar.xz
 	cd petsc-$(PETSC_VERSION) && ./configure \
---with-scalar-type=real \
---prefix=${prefix}/ff-petsc/r \
---with-cc=mpicc COPTFLAGS=$(CCFLAGS) \
---with-cxx=mpicxx CXXOPTFLAGS=$(CXXFLAGS) --with-cxx-dialect=C++11 \
--with-mpiexec=mpirun \
---with-fc=mpif90 FOPTFLAGS=$(FCFLAGS) \
---with-cudac=0 --with-ssl=0 --with-x=0 \
---with-debugging	=no \
---with-fortran-bindings=no \
---download-mumps=$(CURDIR)/mumps-sources.tar.gz \
---download-metis=$(CURDIR)/metis-sources.tar.gz \
---download-parmetis=$(CURDIR)/parmetis-sources.tar.gz  \
---download-slepc=$(CURDIR)/slepc-sources.tar.gz \
---download-hpddm=$(CURDIR)/hpddm-sources.tar.gz \
---download-scalapack=$(CURDIR)/scalapack-sources.tar.gz &&  \
-	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=arch-linux-c-debug all &&  \
-	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=arch-linux-c-debug install
+	--with-scalar-type=real \
+	--prefix=${prefix}/ff-petsc/r \
+	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
+	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
+	--with-mpiexec=mpirun \
+	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
+	--with-cudac=0 --with-ssl=0 --with-x=0 \
+	--with-debugging=no \
+	--with-fortran-bindings=no \
+	--download-mumps=$(CURDIR)/mumps-sources.tar.gz \
+	--download-metis=$(CURDIR)/metis-sources.tar.gz \
+	--download-parmetis=$(CURDIR)/parmetis-sources.tar.gz  \
+	--download-slepc=$(CURDIR)/slepc-sources.tar.gz \
+	--download-hpddm=$(CURDIR)/hpddm-sources.tar.gz \
+	--download-scalapack=$(CURDIR)/scalapack-sources.tar.gz \
+	PETSC_ARCH=fr
+	cd petsc-$(PETSC_VERSION) &&  \
+	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr all &&  \
+	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr install
 else !BUILDDEPENDENCIES	
 	@echo ""
 endif
@@ -86,15 +88,14 @@ if BUILDDEPENDENCIES
 	tar -xf FreeFem-sources-$(FREEFEM_VERSION).tar.xz
 	cd FreeFem-sources-$(FREEFEM_VERSION) && autoreconf -i && \
 	./configure \
---prefix=${prefix} \
-CXX="mpicxx -O3 -mtune=native"  \
-FC="gfortran -O3 -mtune=native" \
-CC="gcc -O3 -mtune=native" \
-F77="gfortran -O3 -mtune=native" \
-MPICXX="mpicxx -O3 -mtune=native" \
-MPIRUN=mpirun \
---enable-optim \
---with-hdf5=no &&  \
+	--prefix=${prefix} \
+	CXX=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)'  \
+	FC=$(FC) FCOPTFLAGS='$(FCFLAGS)' \
+	CC=$(MPICC) CCOPTFLAGS='$(CXXFLAGS)' \
+	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
+	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
+	MPIRUN=mpirun \
+	--with-hdf5=no &&  \
 	make && make install
 else !BUILDDEPENDENCIES	
 	@echo ""
