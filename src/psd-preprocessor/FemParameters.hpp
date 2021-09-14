@@ -139,7 +139,7 @@ if(Prblm=="linear_elasticity"){
   "                                                                              \n"
 <<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
   "                                                                                  \n"
-  "  mfrontElasticityHandler( MforntMaterialBehaviour                             ,  \n"
+  "  mfrontElasticityHandler( MaterialBehaviour                                   ,  \n"
   "                           mfrontBehaviourHypothesis = MaterialHypothesis      ,  \n"
   "                           mfrontPropertyNames       = PropertyNames           ,  \n"
   "                           mfrontPropertyValues      = PropertyValues          ,  \n"

@@ -128,7 +128,7 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
       }
 
       constexpr const auto h = Hypothesis::GENERALISEDPLANESTRAIN;
-      const auto b = load("/home/mb258512/Install/local/include/psd/libBehaviour.so", *mfrontBehaviourName , h);
+      const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
 
       auto d = BehaviourData{b};
       auto v = make_view(d);
@@ -373,7 +373,7 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
       }
       
       constexpr const auto h = Hypothesis::TRIDIMENSIONAL;
-      const auto b = load("/home/mb258512/Install/local/include/psd/libBehaviour.so", *mfrontBehaviourName , h);
+      const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
 
       auto d = BehaviourData{b};
       auto v = make_view(d);

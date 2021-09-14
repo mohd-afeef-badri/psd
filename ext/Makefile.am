@@ -95,6 +95,7 @@ if BUILDDEPENDENCIES
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
 	MPIRUN=mpirun \
+	--disable-superlu \
 	--with-hdf5=no &&  \
 	make && make install
 else !BUILDDEPENDENCIES	

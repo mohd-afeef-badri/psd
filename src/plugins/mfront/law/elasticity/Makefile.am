@@ -14,7 +14,15 @@ endif
 	@echo " Compilation list $(LIST_COMPILE)"
 
 install-exec-local:
-
+if HAVEMFRONT
+	@cp src/libBehaviour.so ${prefix}/lib/.
+endif
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Installation done in :"; pwd
+	@echo "*============================================================*"
+	@echo ""
+	@echo " Compilation list $(LIST_COMPILE)"
 
 clean-local:
 	@echo ""
