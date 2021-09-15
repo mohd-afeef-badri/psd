@@ -9,7 +9,7 @@ all-local: gofastplugins.so
 	@echo " Compilation list $(LIST_COMPILE)"
 
 gofastplugins.so: gofastplugins.cpp
-	$(FFCXX) -auto -mpi gofastplugins.cpp '-lflapack' '-lfblas'
+	$(FFCXX) -auto gofastplugins.cpp
 #	$(FFCXX) -auto -mpi gofastplugins.cpp -Wl,-rpath,/home/mb258512/Install/local/ff-petsc/r/lib '-L/home/mb258512/Install/local/ff-petsc/r/lib' '-lflapack' '-lfblas'
 	@echo ""	
 

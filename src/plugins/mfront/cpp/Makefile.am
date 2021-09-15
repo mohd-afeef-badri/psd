@@ -15,6 +15,7 @@ mfront.so: mfront.cpp mfrontElasticityHandler.hpp
 if HAVEMGIS
 	find -name mfrontElasticityHandler.hpp -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \; && \
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	find -name mfrontElasticityHandler.hpp -exec sed -i "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS	
 	@echo ""
 endif

@@ -3,8 +3,8 @@ LIST_COMPILE= Elasticity.mfront
 
 all-local: Elasticity.mfront
 if HAVEMFRONT
-	${mfront} --interface=generic  Elasticity.mfront
-	${mfront} --obuild
+	${mfront}/bin/mfront --interface=generic  Elasticity.mfront
+	${mfront}/bin/mfront --obuild
 endif
 	@echo ""
 	@echo "*============================================================*"

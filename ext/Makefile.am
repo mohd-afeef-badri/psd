@@ -97,7 +97,7 @@ if BUILDDEPENDENCIES
 	MPIRUN=mpirun \
 	--disable-superlu \
 	--with-hdf5=no &&  \
-	make && make install
+	make -j4 && make install
 else !BUILDDEPENDENCIES	
 	@echo ""
 endif

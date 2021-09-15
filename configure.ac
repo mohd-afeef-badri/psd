@@ -53,13 +53,13 @@ AC_ARG_WITH([dependencies],
         [dependencies="$withval"], [dependencies="no"])
 
 AC_ARG_WITH([mgis],
-	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/mgis)],
+	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/install/local)],
         [mgis="$withval"], [mgis="no"])
 
 
 
 AC_ARG_WITH([mfront],
-	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/mgis/bin/mfront)],
+	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/install/local)],
         [mfront="$withval"], [mfront="no"])
 
 
@@ -424,6 +424,8 @@ AC_MSG_RESULT([ MPIC++ compiler    : '$MPICXX'])
 AC_MSG_RESULT([ MPIC   compiler    : '$MPICC'])
 AC_MSG_RESULT([ MPIF77 compiler    : '$MPIF77'])
 AC_MSG_RESULT([ MPIFC   compiler   : '$MPIFC'])
+AC_MSG_RESULT([])
+AC_MSG_RESULT([ FreeFEM compiler   : '$FF'])
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 AC_MSG_RESULT([])
