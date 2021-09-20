@@ -45,7 +45,7 @@ First step in a PSD simulation is PSD preprocessing, at this step you tell PSD w
 In the terminal \psd{cd} to the folder \psd{/home/PSD-tutorials/linear-elasticity}. Launch \psd{PSD\_PreProcess} from the terminal, to do so run the following command.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess  -problem linear-elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u
+PSD_PreProcess  -problem linear_elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u
 \end{lstlisting}
 
 

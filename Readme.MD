@@ -18,13 +18,14 @@ PSD is a cross-platform solver built to work with Linux platforms (Windows compi
 
 **Dependencies**
 
-These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
+ These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
 
 - [automake](https://www.gnu.org/software/automake/)
 - [FreeFEM](https://freefem.org/)
 - [PETSc](https://www.mcs.anl.gov/petsc/)
 - [Gmsh](http://gmsh.info/)
 - [C++](http://www.cplusplus.com/)
+- [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)
 - [git](https://git-scm.com/)
 - [MFront](http://tfel.sourceforge.net/)      (optional)
 - [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)          (optional)
@@ -32,7 +33,7 @@ These can either be preinstalled by user. In that case following list needs to b
 
 Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
 
-Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case To know how this is done, please read ahead.
+Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case, to know how this is done, please read ahead.
 
 
 
