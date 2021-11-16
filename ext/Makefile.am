@@ -18,7 +18,7 @@ if BUILDDEPENDENCIES
 	@echo " PSD is compiling mfront for you be patient:   "
 	@echo "*============================================================*"
 	@echo ""
-	tar -xf Mfront-sources-$(MFRONT_VERSION).tar.xz
+	tar -xf Mfront-sources.tar.xz
 	cd Mfront-sources-$(MFRONT_VERSION) &&  rm -rf build && mkdir -p build && cd build && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install
@@ -35,7 +35,7 @@ if BUILDDEPENDENCIES
 	@echo "*============================================================*"
 	@echo ""
 	source ${prefix}/mfront-env.sh
-	tar -xf Mgis-sources-$(MGIS_VERSION).tar.xz
+	tar -xf Mgis-sources.tar.xz
 	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install	
@@ -121,7 +121,8 @@ maintainer-clean-local: clean-local
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -rf Makefile Makefile.in
+	rm  -rf Makefile Makefile.in petsc-$(PETSC_VERSION) FreeFem-sources-$(FREEFEM_VERSION)
+	rm  -rf Mfront-sources-$(MFRONT_VERSION) Mgis-sources-$(MGIS_VERSION)	
 
 install-exec-local:
 	@echo ""
