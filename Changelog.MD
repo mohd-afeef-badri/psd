@@ -2,10 +2,14 @@
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
 ## Rolling release (2.4)
+- New automake variable `--with-dependencies=yes` for installing all dependencies
+- Dependencies can now be installed by PSD. 
 
 ### Added
 
 ### Changed
+- Moved to FreeFEM 4.10
+- Moved to PETSc 3.16.1
 
 ### Removed
 

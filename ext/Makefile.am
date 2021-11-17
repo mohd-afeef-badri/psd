@@ -3,13 +3,27 @@ MFRONT_VERSION=3.4.0
 MGIS_VERSION=1.2
 PETSC_VERSION=3.16.1
 FREEFEM_VERSION=4.10
+GMSH_VERSION=4.8.4
 
 define mfrontenv
 export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
   
-all-local: petsc-build FreeFEM-build mfront-build mgis-build
+all-local: petsc-build FreeFEM-build mfront-build mgis-build gmsh-build
 	@echo ""
+
+gmsh-build:
+if BUILDDEPENDENCIES
+	@echo ""
+	@echo "*============================================================*"
+	@echo " PSD is installing gmsh for you be patient:   "
+	@echo "*============================================================*"
+	@echo ""
+	tar -xf gmsh-sources.tar.xz
+	cd gmsh-$(GMSH_VERSION) && cp -rf ./bin/* ${prefix}/bin/. && cp -rf ./share/doc/*  ${prefix}/share/doc/.  && cp -rf ./share/man  ${prefix}/share/man
+else !BUILDDEPENDENCIES
+	@echo ""
+endif
 
 mfront-build:
 if BUILDDEPENDENCIES
@@ -23,7 +37,7 @@ if BUILDDEPENDENCIES
 	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
-else !BUILDDEPENDENCIES	
+else !BUILDDEPENDENCIES
 	@echo ""
 endif
 
@@ -39,7 +53,7 @@ if BUILDDEPENDENCIES
 	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j4 && make install	
-else !BUILDDEPENDENCIES	
+else !BUILDDEPENDENCIES
 	@echo ""
 endif
 
@@ -58,7 +72,7 @@ if BUILDDEPENDENCIES
 	--prefix=${prefix}/ff-petsc/r \
 	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
-	--with-mpiexec=$(MPIRUN) \
+	--with-mpiexec=mpirun \
 	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
 	--with-cudac=0 --with-ssl=0 --with-x=0 \
 	--with-debugging=no \
@@ -73,7 +87,7 @@ if BUILDDEPENDENCIES
 	cd petsc-$(PETSC_VERSION) &&  \
 	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr all &&  \
 	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr install
-else !BUILDDEPENDENCIES	
+else !BUILDDEPENDENCIES
 	@echo ""
 endif
 
@@ -94,15 +108,19 @@ if BUILDDEPENDENCIES
 	CC=$(MPICC) CCOPTFLAGS='$(CXXFLAGS)' \
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
-	MPIRUN=$(MPIRUN) \
+	MPIRUN=mpirun \
 	--disable-superlu \
 	--with-hdf5=no &&  \
 	make -j4 && make install
-else !BUILDDEPENDENCIES	
+else !BUILDDEPENDENCIES
 	@echo ""
 endif
 	
 check-local:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Nothing to check here:"
+	@echo "*============================================================*"
 	@echo ""
 	
 clean-local:

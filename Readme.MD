@@ -20,47 +20,62 @@ PSD is a cross-platform solver built to work with Linux platforms (Windows compi
 
  These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
 
-- [automake](https://www.gnu.org/software/automake/)
-- [FreeFEM](https://freefem.org/)
-- [PETSc](https://www.mcs.anl.gov/petsc/)
-- [Gmsh](http://gmsh.info/)
-- [C++](http://www.cplusplus.com/)
-- [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)
+- [automake](https://www.gnu.org/software/automake/) > v2.50
+
+- [FreeFEM](https://freefem.org/) v4.10
+
+- [PETSc](https://www.mcs.anl.gov/petsc/) v3.16.1
+
+- [Gmsh](http://gmsh.info/) v4.8.4
+
+- [C++](http://www.cplusplus.com/) > v7
+
+- [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/) > v2.8
+
 - [git](https://git-scm.com/)
-- [MFront](http://tfel.sourceforge.net/)      (optional)
-- [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)          (optional)
+
+- [MFront](http://tfel.sourceforge.net/)  v3.4.0    (optional)
+
+- [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)  v1.2        (optional)
+
 - [gnuplot](http://www.gnuplot.info/)	 (optional)
 
-Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
+  
 
-Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case, to know how this is done, please read ahead.
+Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*
+
+Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case, to know how this is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
-**Now that I have all the dependencies what next**
+#### Installation Procedure 1: I install my own dependencies ####
 
 - Go ahead and grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
-**Note**: You can also use SSH protocol if your key has been added to the repo in that case use
-```bash
-git clone git@gitlab.com:PsdSolver/psd_sources.git
-```
+
 
 - Use automake PSD within the  cloned folder
 ```bash
 autoreconf -i
 ```
 
+
+
 - Configure  PSD within the  cloned folder
 ```bash
 ./configure
 ```
-**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. Also `./configure` will try to look for installation of [FreeFEM](https://freefem.org/) and [Gmsh](http://gmsh.info/) in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` and `--with-Gmsh=`. For example, if [FreeFEM](https://freefem.org/) is installed at `home/FreeFem/bin` and [Gmsh](http://gmsh.info/) in `home/Gmsh/bin` then one should use
+**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. Also `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
 ```bash
-./configure --with-FreeFEM=home/FreeFem/bin  --with-Gmsh=home/Gmsh/bin
+./configure --prefix=$HOME/Install/local \
+  --with-mgis=$HOME/Install/local/mgis   \
+  --with-mfront=$HOME/Install/local/mfront/bin/mfront  \
+  --with-FreeFEM=$HOME/Install/local/FreeFem/bin       \
+  --with-Gmsh=$HOME/Install/local/Gmsh/bin        
 ```
+
 
 - Make PSD directives
 ```bash
@@ -78,11 +93,7 @@ sudo make install
 make tutorials
 ```
 
-
-
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `usr/bin` or ` usr/local/bin` directories if you used `sudo make install` or else it will be in your ` --prefix` location.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
-
-
 
 
 
@@ -102,35 +113,83 @@ R seuil=hm/splitmax/4.0/1000.0;
 
 
 
+#### Installation Procedure 2: PSD installs all the dependencies ####
+
+- Go ahead and grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
+```bash
+git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
+```
 
 
-### Additional Installation steps for experts and developers
 
-- Check if installation is correct
+- We will install PSD and all its dependencies in folder `/home/PSDinstall` . Let us start by making it a temporary environmental variable.
+```bash
+export PREFIXPSD=/home/PSDinstall
+```
+
+
+
+- Use automake PSD within the  cloned folder and configure PSD
+```bash
+autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
+```
+**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. 
+
+
+
+- Make all depndencies
+```bash
+cd ext && make && cd ..
+```
+
+
+
+- The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
+```bash
+export PATH=/home/PSDInstall/bin:$PATH 
+export LD_LIBRARY_PATH=/home/PSDInstall/lib:$LD_LIBRARY_PATH
+```
+then do 
+```bash
+source ~/.bashrc
+```
+**Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
+
+
+
+- Reconfigure PSD with the installed dependencies
+```bash
+./configure --prefix=$PREFIXPSD \
+  --with-mgis=$PREFIXPSD        \
+  --with-mfront=$PREFIXPSD      \
+  --with-FreeFEM=$PREFIXPSD/bin \
+  --with-Gmsh=$PREFIXPSD/bin
+```
+
+
+
+- Compile and install PSD
+```bash
+make && make install
+```
+
+
+
+- Perform a check to see if everything works 
 ```bash
 make check
 ```
 
-- Configure  PSD with MFront support
-```bash
-./configure --prefix=$HOME/Install/local --with-mgis=$HOME/Install/local/mgis --with-mfront=$HOME/Install/local/mfront/bin/mfront  --with-FreeFEM=$HOME/Install/local/FreeFem/bin  --with-Gmsh=$HOME/Install/local/Gmsh/bin
-```
 
-Here in this example we assume that MFront, MGIS, Gmsh, and FreeFEM are installed in `$HOME/Install/local` directory, if that is not the case for you please improvise or you can always ask for help from Linux geeks around.
 
-- Update PSD to the latest version. If you  would like to update your old PSD source to a new one. Go to your`PSD-Sources` folder and
+- Install PSD tutorials
 ```bash
-git pull origin master && ./reconfigure &&  make &&  make install
-```
-
-- If you would like to install  a developers copy  of PSD
-```bash
-make install-devel
+make tutorials
 ```
 
 
 
-
+Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `home/PSDInstall`.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
 
 
@@ -242,12 +301,12 @@ These are a set of commandline flags/options that control your PSD configuration
 
 | **Flag**              | **Description**                                              | **Examples**                                                 |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `--prefix`            | Enter the directory where you wish to install PSD.<br />Note that  you  will  need to  have read and write <br />permission for this directory.<br /><br />*This flag is an optional flag* | `--prefix=/usr`<br />`--prefix=/usr/local`<br />`--prefix=/home/install` |
-| `--with-FreeFEM`      | Enter the directory where FreeFem binary has been installed. <br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag* | `--with-FreeFEM=/usr/bin`<br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin` |
-| `--with-Gmsh`         | Enter the directory  where  Gmsh  binary has been installed. <br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin`<br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
-| `--with-mgis`         | Enter the directory  where  Mgis  has been installed. <br /><br />*This flag is an optional flag* | `--with-mgis=/usr`<br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
-| `--with-mfront`       | Enter the directory  where  Mfront binary  has been installed. <br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin`<br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
-| `--with-dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compil PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes`<br />`--with-dependencies=no` <br /> |
+| `--prefix`            | Enter the directory where you wish to install PSD.<br />Note that  you  will  need to  have read and write <br />permission for this directory.<br /><br />*This flag is an optional flag* | `--prefix=/usr` <br /> `--prefix=/usr/local` <br /> `--prefix=/home/install` |
+| `--with-FreeFEM`      | Enter the directory where FreeFem binary has been installed. <br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag* | `--with-FreeFEM=/usr/bin` <br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin` |
+| `--with-Gmsh`         | Enter the directory  where  Gmsh  binary has been installed. <br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin` <br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
+| `--with-mgis`         | Enter the directory  where  Mgis  has been installed. <br /><br />*This flag is an optional flag* | `--with-mgis=/usr` <br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
+| `--with-mfront`       | Enter the directory  where  Mfront binary  has been installed. <br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin` <br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
+| `--with-dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compil PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes` <br />`--with-dependencies=no` <br /> |
 
 
 
@@ -261,7 +320,7 @@ Once `./configure` runs successfully your Makefiles will be generated thanks to 
 | ------------------ | ------------------------------------------------------------ | -------------------------------------- |
 | `make`             | Command responsible to compile PSD for you. This is necessary. | `make`                                 |
 | `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag* | `make -j4`                             |
-| `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install`<br />`make install -j4` |
+| `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install` <br /> `make install -j4` |
 | `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                           |
 | `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                           |
 | `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                |
