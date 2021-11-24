@@ -83,8 +83,8 @@ Makefile.in
 *.nfs*
 
 ## MFRONT FILES ##
-/src/plugins/mfront/law/elasticity/src/*
-/src/plugins/mfront/law/elasticity/include/*
+/src/plugins/mfront/law/src/*
+/src/plugins/mfront/law/include/*
       
 
 ## DOCUMENTATION FILES ##
