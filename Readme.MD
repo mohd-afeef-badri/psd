@@ -1,4 +1,4 @@
-#  PSD 2.3: a Parallel Structural Dynamics solver #
+#  PSD 2.4: a Parallel Structural Dynamics solver #
 
 ![](./man/markdownimage.png)
 
@@ -12,39 +12,37 @@ PSD works for two and three dimensional problems only. Unstructured meshes (tria
 
 ## Installation ##
 
-PSD is a cross-platform solver built to work with Linux platforms (Windows comping up soon). PSD has successfully been deployed on the following platforms,  CentOS 7/8,  Ubuntu 16.04/18.04/20.04,  Raspberry Pi,  Fedora 32, etc. Before installing PSD please ensure that you have the following dependencies installed on your OS.
+PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD has successfully been deployed on the following platforms:
 
+- CentOS 7 / 8
+- Ubuntu 16.04 / 18.04 / 20.04
+-  Raspberry Pi
+-   Fedora 30 / 32
+-  MacOS X Puma:10.1.5 	
 
+Before installing PSD please ensure that you have the following dependencies installed on your OS.
 
 **Dependencies**
 
- These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
+ PSD has some essential prerequistes without which PSD will not function. These dependencis can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
 
-- [automake](https://www.gnu.org/software/automake/) > v2.50
+| Package                                                      | Version                                                      | Essential |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
+| [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.10**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.16.1**                                           | YES       |
+| [Gmsh](http://gmsh.info/)                                    | Version **4.8**                                              | YES       |
+| [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
+| MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
+| [git](https://git-scm.com/)                                  | -                                                            | YES       |
+| [MFront](http://tfel.sourceforge.net/)                       | Version **3.4.0**                                            | OPTIONAL  |
+| [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | Version **1.2**                                              | OPTIONAL  |
+| [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |
+|                                                              |                                                              |           |
 
-- [FreeFEM](https://freefem.org/) v4.10
+Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
 
-- [PETSc](https://www.mcs.anl.gov/petsc/) v3.16.1
-
-- [Gmsh](http://gmsh.info/) v4.8.4
-
-- [C++](http://www.cplusplus.com/) > v7
-
-- [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/) > v2.8
-
-- [git](https://git-scm.com/)
-
-- [MFront](http://tfel.sourceforge.net/)  v3.4.0    (optional)
-
-- [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html)  v1.2        (optional)
-
-- [gnuplot](http://www.gnuplot.info/)	 (optional)
-
-  
-
-Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*
-
-Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case, to know how this is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
+Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS  for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
@@ -61,13 +59,12 @@ git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 autoreconf -i
 ```
 
-
-
 - Configure  PSD within the  cloned folder
 ```bash
 ./configure
 ```
 **Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. Also `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
+
 ```bash
 ./configure --prefix=$HOME/Install/local \
   --with-mgis=$HOME/Install/local/mgis   \
@@ -120,14 +117,10 @@ R seuil=hm/splitmax/4.0/1000.0;
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
 
-
-
 - We will install PSD and all its dependencies in folder `/home/PSDinstall` . Let us start by making it a temporary environmental variable.
 ```bash
 export PREFIXPSD=/home/PSDinstall
 ```
-
-
 
 - Use automake PSD within the  cloned folder and configure PSD
 ```bash
@@ -135,14 +128,10 @@ autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 ```
 **Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. 
 
-
-
 - Make all depndencies
 ```bash
 cd ext && make && cd ..
 ```
-
-
 
 - The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
 ```bash
@@ -155,8 +144,6 @@ source ~/.bashrc
 ```
 **Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
 
-
-
 - Reconfigure PSD with the installed dependencies
 ```bash
 ./configure --prefix=$PREFIXPSD \
@@ -166,21 +153,15 @@ source ~/.bashrc
   --with-Gmsh=$PREFIXPSD/bin
 ```
 
-
-
 - Compile and install PSD
 ```bash
 make && make install
 ```
 
-
-
 - Perform a check to see if everything works 
 ```bash
 make check
 ```
-
-
 
 - Install PSD tutorials
 ```bash
