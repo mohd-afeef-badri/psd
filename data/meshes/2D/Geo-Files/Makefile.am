@@ -1,5 +1,5 @@
-LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo soil-dc.geo  L-shaped-crack.geo  city.geo
-MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh  quasistatic.msh  soil.msh soil-dc.msh  L-shaped-crack.msh  city.msh 
+LIST_COMPILE= bar.geo Notched-Plate.geo sparsity.geo tensile-crack.geo  bar-dynamic.geo  quasistatic.geo  soil.geo soil-dc.geo  L-shaped-crack.geo  city.geo  quater_cylinder.geo
+MESH_FILES  = bar.msh Notched-Plate.msh sparsity.msh tensile-crack.msh  bar-dynamic.msh  quasistatic.msh  soil.msh soil-dc.msh  L-shaped-crack.msh  city.msh  quater_cylinder.msh 
 	
 all-local: $(MESH_FILES) 
 	@echo ""
@@ -9,6 +9,10 @@ all-local: $(MESH_FILES)
 	@echo ""	
 	@echo " Mesh geo list: $(LIST_COMPILE)"
 
+quater_cylinder.msh: quater_cylinder.geo
+	$(GMSH) -2 quater_cylinder.geo -o quater_cylinder.msh -format msh2 -v 0
+	@echo ""
+	
 bar.msh: bar.geo
 	$(GMSH) -2 bar.geo -o bar.msh -format msh2 -v 0
 	@echo ""	
@@ -70,6 +74,7 @@ tutorials:
 	@ls | egrep "^Notched-Plate.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^L-shaped-crack.msh" | xargs -I {} cp {} ../Meshes/.			
 	@ls | egrep "^city.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^quater_cylinder.msh" | xargs -I {} cp {} ../Meshes/.
 	
 install-devel-local:
 	@mkdir -p ../Meshes
@@ -82,7 +87,8 @@ install-devel-local:
 	@ls | egrep "^sparsity.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^Notched-Plate.msh" | xargs -I {} cp {} ../Meshes/.
 	@ls | egrep "^L-shaped-crack.msh" | xargs -I {} cp {} ../Meshes/.
-	@ls | egrep "^city.msh" | xargs -I {} cp {} ../Meshes/.					
+	@ls | egrep "^city.msh" | xargs -I {} cp {} ../Meshes/.
+	@ls | egrep "^quater_cylinder.msh" | xargs -I {} cp {} ../Meshes/.					
 	
 clean-local:
 	@echo ""
