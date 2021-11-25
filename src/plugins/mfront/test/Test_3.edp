@@ -27,17 +27,17 @@
 
   BehaviourHypothesis = "GENERALISEDPLANESTRAIN"    ;
   cout << " ================================================== " << endl;
-  cout << "   mfrontElasticityHandler using PSD  Hypothesis    " << endl;
+  cout << "   PsdMfrontHandler using PSD  Hypothesis           " << endl;
   cout << "          "<<BehaviourHypothesis<<"                 " << endl;  
   cout << " ================================================== " << endl;
 
 
 
     
-  mfrontElasticityHandler( "Elasticity"                                        , 
+  PsdMfrontHandler( "Elasticity"                                               , 
                            mfrontBehaviourHypothesis = BehaviourHypothesis     ,
                            mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                               
+                           mfrontPropertyValues      = PropertyValues
                          );
 
 
@@ -47,15 +47,15 @@
 
   BehaviourHypothesis = "PLANESTRAIN"    ;
   cout << " ================================================== " << endl;
-  cout << "   mfrontElasticityHandler using PSD  Hypothesis    " << endl;
+  cout << "   PsdMfrontHandler using PSD  Hypothesis           " << endl;
   cout << "          "<<BehaviourHypothesis<<"                 " << endl;  
   cout << " ================================================== " << endl;                           
 
 
-  mfrontElasticityHandler( "Elasticity"                                        , 
+  PsdMfrontHandler( "Elasticity"                                               , 
                            mfrontBehaviourHypothesis = BehaviourHypothesis     ,
                            mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                               
+                           mfrontPropertyValues      = PropertyValues 
                          );   
                          
   cout << "                                                    " << endl;         
@@ -64,15 +64,15 @@
 
   BehaviourHypothesis = "TRIDIMENSIONAL"    ;
   cout << " ================================================== " << endl;
-  cout << "   mfrontElasticityHandler using PSD  Hypothesis    " << endl;
+  cout << "   PsdMfrontHandler using PSD  Hypothesis           " << endl;
   cout << "          "<<BehaviourHypothesis<<"                 " << endl;  
   cout << " ================================================== " << endl;                           
 
 
-  mfrontElasticityHandler( "Elasticity"                                        , 
+  PsdMfrontHandler( "Elasticity"                                               , 
                            mfrontBehaviourHypothesis = "TRIDIMENSIONAL"        ,
                            mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                               
+                           mfrontPropertyValues      = PropertyValues  
                          );   
                          
   cout << "                                                    " << endl;         

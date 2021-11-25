@@ -33,7 +33,7 @@
   string    PropertyNames   = "YoungModulus PoissonRatio";
   real[int] PropertyValues  = [ 150, 0.3   ];
 
-  mfrontElasticityHandler( "Elasticity"                                        ,
+  PsdMfrontHandler( "Elasticity"                                               ,
                            mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
                            mfrontPropertyNames       = PropertyNames           ,
                            mfrontPropertyValues      = PropertyValues          ,

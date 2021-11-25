@@ -32,7 +32,7 @@ header-includes: |
 	numbers=left,
 	numberstyle=\tiny,
 	numbersep=3pt,
-	morekeywords={real, macro, for, int, mpirank, abs, string, FEQF2, fespace, mfrontElasticityHandler},
+	morekeywords={real, macro, for, int, mpirank, abs, string, FEQF2, fespace, PsdMfrontHandler},
 	morecomment=[l]{//},
 	morecomment=[s]{/*}{*/},
 	keywordstyle=\color{magenta}\ttfamily,

@@ -143,7 +143,7 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
 
  writeIt   
  "                                                                               \n"
- "   mfrontElasticityHandler( MaterialBehaviour                                , \n"
+ "   PsdMfrontHandler( MaterialBehaviour                                       , \n"
  "                          mfrontBehaviourHypothesis = MaterialHypothesis     , \n"
  "                          mfrontPropertyNames       = PropertyNames          , \n"
  "                          mfrontPropertyValues      = PropertyValues         , \n"

@@ -418,7 +418,7 @@ if(!Sequential){
 
 
 if(versionpsd){
-  cout << "  PSD Version 2.1 " << endl;
+  cout << "  PSD Version 2.4 " << endl;
   cout << "    Copyright (C) CEA 2019 - 2021 "<< endl;
   cout << "                                                                   " << endl;
   cout << "    This is free software; see the source for copying conditions.  " << endl;

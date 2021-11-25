@@ -20,4 +20,4 @@
 *******************************************************************************/                                                                                                                                                                                                                                     
   load    "../cpp/mfront" 
   
-  mfrontElasticityHandler( "Elasticity");
+  PsdMfrontHandler( "Elasticity");

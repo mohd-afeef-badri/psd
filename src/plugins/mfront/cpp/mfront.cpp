@@ -37,10 +37,10 @@ using namespace mgis::behaviour;
 using namespace mgis::behaviour;
 
 
-#include "mfrontElasticityHandler.hpp"
+#include "PsdMfrontHandler.hpp"
 
 static void InitFF()
 {
-  Global.Add("mfrontElasticityHandler", "(", new mfrontElasticityHandler<double>);
+  Global.Add("PsdMfrontHandler", "(", new PsdMfrontHandler<double>);
 }
 LOADFUNC(InitFF)   

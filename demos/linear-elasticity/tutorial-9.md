@@ -35,7 +35,7 @@ header-includes: |
 	numbers=left,
 	numberstyle=\tiny,
 	numbersep=3pt,
-	morekeywords={real, macro, for, int, mpirank, abs, string, FEQF2, fespace, mfrontElasticityHandler},
+	morekeywords={real, macro, for, int, mpirank, abs, string, FEQF2, fespace, PsdMfrontHandler},
 	morecomment=[l]{//},
 	morecomment=[s]{/*}{*/},
 	keywordstyle=\color{magenta}\ttfamily,
@@ -91,7 +91,7 @@ After the \psd{PSD\_PreProcess} runs successfully you should see many \psd{.edp}
 \item \psd{-useMfront} activates MFront interface for PSD.
 \end{itemize}
 
-At this stage the input properties $E,\nu$ can be mentioned in \psd{ControlParameters.edp}, use \psd{E = 200.e9}, and \psd{nu = 0.3}. In contrast to tutorial 1, notice that these values of \psd{E} and \psd{nu} are fed to a vector \psd{PropertyValues = [E, nu];}  verbosed by \psd{PropertyNames   = "YoungModulus PoissonRatio";}. We also signify that we will be solving linear elasticity via \psd{MforntMaterialBehaviour   = "Elasticity";} and also \psd{MaterialHypothesis = "GENERALISEDPLANESTRAIN";} which signifies the hypothesis to be used for the Linear elasticity \footnote{The \psd{MaterialHypothesis} accepts \psd{"GENERALISEDPLANESTRAIN"},  \psd{"PLANESTRAIN"}, \psd{"PLANESTRESS"},  and  \psd{"TRIDIMENSIONAL"} as arguments.}. \psd{PropertyValues}, \psd{PropertyNames}, and \psd{MaterialHypothesis}  will eventually be provided to MFront in \psd{FemParameters.edp} file via \psd{mfrontElasticityHandler(...)} function \footnote{User is encouraged to have a look at \psd{FemParameters.edp} file.}.   The volumetric body force condition is mentioned in the same file via variable \psd{Fbc0Fy -78480.0}, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in \psd{ControlParameters.edp}, via \psd{ThName = "../Meshes/2D/bar.msh"} (\textit{note that mesh can also be provided in the next step}) .In addition variable \psd{Fbc0On 1} has to be provided in order to indicate the volume (region) for which the body force is acting, here \psd{1} is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in \psd{ControlParameters.edp}. To provide the clamped boundary condition the variables \psd{Dbc0On 2}, \psd{Dbc0Ux 0.}, and \psd{Dbc0Uy 0.} are used, which means for Dirichlet border \psd{2} (\psd{Dbc0On 2}) where \psd{2} is the clamped border label of the mesh Dirichlet constrain is applied and \psd{Dbc0Ux 0.}, \psd{Dbc0Uy 0} i.e., the clamped end condition ($u_x=u_y=0$).
+At this stage the input properties $E,\nu$ can be mentioned in \psd{ControlParameters.edp}, use \psd{E = 200.e9}, and \psd{nu = 0.3}. In contrast to tutorial 1, notice that these values of \psd{E} and \psd{nu} are fed to a vector \psd{PropertyValues = [E, nu];}  verbosed by \psd{PropertyNames   = "YoungModulus PoissonRatio";}. We also signify that we will be solving linear elasticity via \psd{MforntMaterialBehaviour   = "Elasticity";} and also \psd{MaterialHypothesis = "GENERALISEDPLANESTRAIN";} which signifies the hypothesis to be used for the Linear elasticity \footnote{The \psd{MaterialHypothesis} accepts \psd{"GENERALISEDPLANESTRAIN"},  \psd{"PLANESTRAIN"}, \psd{"PLANESTRESS"},  and  \psd{"TRIDIMENSIONAL"} as arguments.}. \psd{PropertyValues}, \psd{PropertyNames}, and \psd{MaterialHypothesis}  will eventually be provided to MFront in \psd{FemParameters.edp} file via \psd{PsdMfrontHandler(...)} function \footnote{User is encouraged to have a look at \psd{FemParameters.edp} file.}.   The volumetric body force condition is mentioned in the same file via variable \psd{Fbc0Fy -78480.0}, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in \psd{ControlParameters.edp}, via \psd{ThName = "../Meshes/2D/bar.msh"} (\textit{note that mesh can also be provided in the next step}) .In addition variable \psd{Fbc0On 1} has to be provided in order to indicate the volume (region) for which the body force is acting, here \psd{1} is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in \psd{ControlParameters.edp}. To provide the clamped boundary condition the variables \psd{Dbc0On 2}, \psd{Dbc0Ux 0.}, and \psd{Dbc0Uy 0.} are used, which means for Dirichlet border \psd{2} (\psd{Dbc0On 2}) where \psd{2} is the clamped border label of the mesh Dirichlet constrain is applied and \psd{Dbc0Ux 0.}, \psd{Dbc0Uy 0} i.e., the clamped end condition ($u_x=u_y=0$).
 
 \subsection{Step 2: Solving}
 
@@ -126,7 +126,7 @@ To put it briefly, what MFront does for linear elasticity problem here is build 
 \item We need to provide Mfornt the stiffness matrix at each quadrature point so that it can fill it up.
 \end{itemize}
 
-The two raised points are handled using \psd{mfrontElasticityHandler(...)} in \psd{FemParameters.edp} file.
+The two raised points are handled using \psd{PsdMfrontHandler(...)} in \psd{FemParameters.edp} file.
 
 Firstly, the arguments \psd{E = 200.e9},  \psd{nu = 0.3}, \psd{MforntMaterialBehaviour   = "Elasticity";}, \psd{PropertyValues = [E, nu];}, \psd{PropertyNames   = "YoungModulus PoissonRatio";}, \psd{PropertyValues = [E, nu];} and   \psd{MaterialHypothesis = "GENERALISEDPLANESTRAIN";} form \psd{ControlParameters.edp} takes care of the first point (the nature of the problem and the material involved). The latter three arguments well define that we have a 2D problem, with given values of properties ($E, \nu$). The snippet from \psd{ControlParameters.edp} (produced after using \psd{-useMfront} argument for \psd{PSD\_PreProcess}) file shows these variables which define the nature of the problem and characteristics of material involved
 
@@ -172,7 +172,7 @@ Secondly, the to get the stiffness matrix from Mfornt we use a quadrature finite
                                   FEQF2] );
 \end{lstlisting}
 
-Finally in file \psd{FemParameters.edp} the \psd{mfrontElasticityHandler()} is called to build the material tensor \psd{Mt} provided with the previously built material properties and nature of problem. Please see the snippet below
+Finally in file \psd{FemParameters.edp} the \psd{PsdMfrontHandler()} is called to build the material tensor \psd{Mt} provided with the previously built material properties and nature of problem. Please see the snippet below
 
 \begin{lstlisting}[style=CppStyle]
 //============================================================================
@@ -187,9 +187,9 @@ Finally in file \psd{FemParameters.edp} the \psd{mfrontElasticityHandler()} is c
 //   Mt =  [ lambda      ,  2*mu+lambda , 0 ] =  [ Mt12 , Mt22 , Mt23 ]
 //         [   0         ,     0        , mu]    [ Mt13 , Mt23 , Mt33 ]
 //
-// mfrontElasticityHandler : is a function in mfront interface that helps
-//                           building the material tensor  Mt  given with
-//                           material prpts.  from  ControlParameters.edp
+// PsdMfrontHandler : is a function in mfront interface that helps
+//                    building the material tensor  Mt  given with
+//                    material prpts.  from  ControlParameters.edp
 //============================================================================
 
   Qh [ Mt11 ,  Mt12 , Mt13 ,
@@ -197,11 +197,11 @@ Finally in file \psd{FemParameters.edp} the \psd{mfrontElasticityHandler()} is c
                      Mt33 ];
 
 
-  mfrontElasticityHandler( MforntMaterialBehaviour                             ,
-                           mfrontBehaviourHypothesis = MaterialHypothesis      ,
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues          ,
-                           mfrontMaterialTensor      = Mt11[]
+  PsdMfrontHandler( MaterialBehaviour                                   ,
+                    mfrontBehaviourHypothesis = MaterialHypothesis      ,
+                    mfrontPropertyNames       = PropertyNames           ,
+                    mfrontPropertyValues      = PropertyValues          ,
+                    mfrontMaterialTensor      = Mt11[]
                          );
 \end{lstlisting}
 

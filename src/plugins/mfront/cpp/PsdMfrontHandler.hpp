@@ -18,7 +18,7 @@
 *******************************************************************************/
 
 template<class K>
-class mfrontElasticityHandler_Op : public E_F0mps {
+class PsdMfrontHandler_Op : public E_F0mps {
   public:
     Expression behaviourName                          ;
 
@@ -26,7 +26,7 @@ class mfrontElasticityHandler_Op : public E_F0mps {
     static basicAC_F0::name_and_type name_param[]     ;
     Expression nargs[n_name_param]                    ;
 
-    mfrontElasticityHandler_Op(const basicAC_F0& args ,
+    PsdMfrontHandler_Op(const basicAC_F0& args ,
         Expression param1
         ) :
       behaviourName     (param1)
@@ -40,7 +40,7 @@ class mfrontElasticityHandler_Op : public E_F0mps {
 };
 
 template<class K>
-basicAC_F0::name_and_type mfrontElasticityHandler_Op<K>::name_param[] =
+basicAC_F0::name_and_type PsdMfrontHandler_Op<K>::name_param[] =
 {
   {"mfrontBehaviourHypothesis" , &typeid(std::string*)},
   {"mfrontPropertyNames"       , &typeid(std::string*)},
@@ -51,21 +51,21 @@ basicAC_F0::name_and_type mfrontElasticityHandler_Op<K>::name_param[] =
 };
 
 template<class K>
-class mfrontElasticityHandler : public OneOperator {
+class PsdMfrontHandler : public OneOperator {
   public:
-    mfrontElasticityHandler() : OneOperator(atype<long>()    ,
+    PsdMfrontHandler() : OneOperator(atype<long>()    ,
         atype<string*>()
         ) {}
 
     E_F0* code(const basicAC_F0& args) const {
-      return new mfrontElasticityHandler_Op<K>(args,
+      return new PsdMfrontHandler_Op<K>(args,
           t[0]->CastTo(args[0])
           );
     }
 };
 
 template<class K>
-AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
+AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
   //const auto muMfront = mgis::real{GetAny<double>((*mu)(stack))};
 
@@ -104,10 +104,10 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
       "===================================================================\n"
       " WRONG hypothesis was provided by user. Please consider \n"
       " filling in the \033[1;34m mfrontBehaviourHypothesis \033[0m argument \n"
-      " in mfrontElasticityHandler(...) function. Example   \n"
-      "   \033[1;34m mfrontElasticityHandler( mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\", .... )\033[0m\n"
-      "   \033[1;34m mfrontElasticityHandler( mfrontBehaviourHypothesis = \"PLANESTRAIN\", .... )\033[0m\n"
-      "   \033[1;34m mfrontElasticityHandler( mfrontBehaviourHypothesis = \"TRIDIMENSIONAL\", .... )\033[0m\n"
+      " in PsdMfrontHandler(...) function. Example   \n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\", .... )\033[0m\n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"PLANESTRAIN\", .... )\033[0m\n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"TRIDIMENSIONAL\", .... )\033[0m\n"
       "===================================================================\n" << endl;
 
     exit(1);
@@ -143,8 +143,8 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
           "===================================================================\n"
           " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
           " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
-          " correctly in the in mfrontElasticityHandler(...) function. For example,\n"
-          "   \033[1;34m mfrontElasticityHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
+          " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+          "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
           " \n\n"
           " Mfront law expects : \n"
           << endl;
@@ -175,8 +175,8 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
             "===================================================================\n"
             " mfrontPropertyNames are wrong. Please consider \n"
             " filling in  \033[1;34mmfrontPropertyNames\033[0m argument\n"
-            " correctly in the in mfrontElasticityHandler(...) function. For example,\n"
-            "   \033[1;34m mfrontElasticityHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", .... )\033[0m\n"
+            " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", .... )\033[0m\n"
             " \n                                                                \n"
             " Mfront law expects :                                              \n" << endl;
 
@@ -388,8 +388,8 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
           "===================================================================\n"
           " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
           " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
-          " correctly in the in mfrontElasticityHandler(...) function. For example,\n"
-          "   \033[1;34m mfrontElasticityHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
+          " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+          "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
           " \n\n"
           " Mfront law expects : \n"
           << endl;
@@ -420,8 +420,8 @@ AnyType mfrontElasticityHandler_Op<K>::operator()(Stack stack) const {
             "===================================================================\n"
             " mfrontPropertyNames are wrong. Please consider \n"
             " filling in  \033[1;34mmfrontPropertyNames\033[0m argument\n"
-            " correctly in the in mfrontElasticityHandler(...) function. For example,\n"
-            "   \033[1;34m mfrontElasticityHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", .... )\033[0m\n"
+            " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", .... )\033[0m\n"
             " \n                                                                \n"
             " Mfront law expects :                                              \n" << endl;
 

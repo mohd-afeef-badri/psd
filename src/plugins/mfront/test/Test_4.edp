@@ -23,20 +23,20 @@
   string    PropertyNames   = "YoungModulus PoissonRatio";
   real[int] PropertyValues  = [ 150, 0.3   ];  
   
-  mfrontElasticityHandler( "Elasticity"                                        , 
-                           mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                             
+  PsdMfrontHandler( "Elasticity"                                         , 
+                     mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
+                     mfrontPropertyNames       = PropertyNames           ,
+                     mfrontPropertyValues      = PropertyValues
+                   );
+
+  PsdMfrontHandler( "Elasticity"                                        , 
+                           mfrontBehaviourHypothesis = "PLANESTRAIN"    ,
+                           mfrontPropertyNames       = PropertyNames    ,
+                           mfrontPropertyValues      = PropertyValues 
                          );
 
-  mfrontElasticityHandler( "Elasticity"                                        , 
-                           mfrontBehaviourHypothesis = "PLANESTRAIN"           ,
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                             
-                         );
-
-  mfrontElasticityHandler( "Elasticity"                                        , 
-                           mfrontBehaviourHypothesis = "TRIDIMENSIONAL"        ,
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues                                             
+  PsdMfrontHandler( "Elasticity"                                        , 
+                           mfrontBehaviourHypothesis = "TRIDIMENSIONAL" ,
+                           mfrontPropertyNames       = PropertyNames    ,
+                           mfrontPropertyValues      = PropertyValues 
                          );                                                

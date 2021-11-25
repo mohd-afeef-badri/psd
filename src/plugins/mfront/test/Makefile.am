@@ -38,13 +38,13 @@ Test_1: Test_1.edp
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
-	@echo "Test_2 : mfront testing mfrontElasticityHandler routine"
+	@echo "Test_2 : mfront testing PsdMfrontHandler routine"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 >  Test_2.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 >  Test_2_NP2.log		
 	@echo "  PASSED "	
 
 Test_3: Test_3.edp
-	@echo "Test_3 : mfront testing mfrontElasticityHandler routine with different types of approximations (GENERALISEDPLANESTRAIN, PLANESTRAIN, TRIDIMENSIONAL, etc)."
+	@echo "Test_3 : mfront testing PsdMfrontHandler routine with different types of approximations (GENERALISEDPLANESTRAIN, PLANESTRAIN, TRIDIMENSIONAL, etc)."
 	@./../../../psd-solve/PSD_Solve -np 1 Test_3.edp -v 1 >  Test_3.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_3.edp -v 1 >  Test_3_NP2.log		
 	@echo "  PASSED "
