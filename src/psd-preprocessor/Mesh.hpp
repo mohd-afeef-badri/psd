@@ -167,9 +167,9 @@ if(!Sequential){
  "//  Vh        : Mixed finite element space  for displacement                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Vh     ( Th , Pk );                                                    \n";
-
- if(Prblm=="linear_elasticity" && !fastmethod && spc==2)
+ " fespace Vh     ( Th , Pk );                                                    \n"; 
+ 
+ if( (Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod && spc==2)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -199,7 +199,32 @@ if(!Sequential){
  " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
  "                                                                                \n";
 
- if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
+ if(Prblm=="elasto_plastic" && spc==2)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
+ "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
+ "//             A vectorial FEM space is built with 3 components                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Ih       : Quadratur finite element space  for internal state variables     \n"
+ "//             FEQF2 implies 3 dof for a triangular cell in the mesh A vec-     \n"
+ "//             torial FEM space is built  with  5 components.  To elaborate     \n"
+ "//             First 4 are elastic stains [Exx, Eyy, Ezz, Exy] + 1 plasticity   \n" 
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Ih  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2 ]);                      \n"
+ "                                                                                \n";
+ 
+ if((Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod && spc==3)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -230,8 +255,33 @@ if(!Sequential){
  "//==============================================================================\n"
  "                                                                                \n"
  " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
- "                                                                                \n";
-  
+ "                                                                                \n"; 
+
+ if(Prblm=="elasto_plastic" && spc==3)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
+ "//             FEQF2 implies 4 dof for a tetraheron cell in the mesh            \n"
+ "//             A vectorial FEM space is built with 6 components                 \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
+ "                                                                                \n"
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Ih       : Quadratur finite element space  for internal state variables     \n"
+ "//             FEQF2 implies 3 dof for a triangular cell in the mesh A vec-     \n"
+ "//             torial FEM space is built  with  5 components.  To elaborate     \n"
+ "//             First 4 are elastic stains [Exx, Eyy, Ezz, Exy] + 1 plasticity   \n" 
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Ih  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2 ]);                      \n"
+ "                                                                                \n";   
 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
   writeIt

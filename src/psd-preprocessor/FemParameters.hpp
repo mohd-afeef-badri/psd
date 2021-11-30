@@ -16,7 +16,7 @@ cout << " building FemParameters.edp";
 
 writeHeader;
 
-if(Prblm=="linear_elasticity"){
+if(Prblm=="linear_elasticity" || Prblm=="elasto_plasticity"){
 
  if(Model!="pseudo_nonlinear")
  writeIt
@@ -29,7 +29,7 @@ if(Prblm=="linear_elasticity"){
  "                                                                              \n"
  "  Vh  def(u)    ;                                                             \n";
 
- if(Model=="pseudo_nonlinear")
+ if(Model=="pseudo_nonlinear" || Model=="von_mises")
   writeIt
  "                                                                              \n"
  "//============================================================================\n"
@@ -168,6 +168,34 @@ if(Prblm=="linear_elasticity"){
    "   Sh [Sig11,Sig22,Sig12];                                                    \n"
    "                                                                              \n";
 
+  if(Model=="von_mises")
+  writeIt
+   "                                                                              \n"
+   "//============================================================================\n"
+   "// ------- Stress/Strain Tensor using Quadrature FE space -------             \n"
+   "// -------------------------------------------------------------------        \n"
+   "// Eps  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "// Sig  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Sh. This array  is  used  to define components of the        \n"
+   "//         symmetric Strain tensor. 3X3 in 2D hence 3 components.             \n"
+   "//============================================================================\n"
+   "                                                                              \n"
+   "   Sh [Eps11,Eps22,Eps12];                                                    \n"
+   "   Sh [Sig11,Sig22,Sig12];                                                    \n"
+   "                                                                              \n"
+   "//============================================================================\n"
+   "// ------- Internal state variable  vector using Quadrature FE space -------  \n"
+   "// -------------------------------------------------------------------        \n"
+   "// Isv  : is array of finite element variable belonging to quadrature         \n"
+   "//         space Ih. This array  is  used  to define components of the        \n"
+   "//         elastic Strain tensor (first four components). And a plastic       \n"
+   "//         state componenent the last 5th component.                          \n"
+   "//============================================================================\n"
+   "                                                                              \n"
+   "   Ih [Isv1,Isv2,Isv3,Isv4,Isv5];                                             \n"
+   "                                                                              \n";  
   }
   
  if(spc==3){

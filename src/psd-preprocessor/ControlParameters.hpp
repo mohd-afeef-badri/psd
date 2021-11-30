@@ -63,6 +63,11 @@ if(Prblm=="damage" && Model=="Mazar")
  "                                                                              \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/quasistatic.msh\";                   \n";
 
+if(Prblm=="elasto_plastic")
+ writeIt
+ "                                                                              \n"
+ "  string ThName = \"../Meshes/"<<spc<<"D/quater_cylinder.msh\";               \n";
+ 
 if(Prblm=="soildynamics")
  {
 
@@ -217,7 +222,55 @@ if(Prblm=="linear_elasticity")
  }
 
 
-
+if(Prblm=="elasto_plastic")
+ {
+ 
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Material parameters -------                      \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  E, nu : Modulus of Elasticity and Poisson ratio of the material           \n"
+  "//  sig0  : Yield strength of the material                                    \n"
+  "//  Et    : Tangent modulus of the material                                   \n"
+  "//  H     : Hardening modulus of the material                                 \n"
+  "//  PropertyNames : String of material property names (space seperated)       \n"
+  "//                  that are provided to Mfront.                              \n"
+  "//  PropertyValues : Values of material properties provided to Mfront         \n"
+  "//                                                                            \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
+  "//            as in the Elasticity.mfront file                                \n"
+  "// -------------------------------------------------------------------        \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  real E    = 70.e3       ,                                                   \n"                                                       
+  "       nu   = 0.3         ,                                                   \n"
+  "       sig0 = 250.        ,                                                   \n"
+  "       Et   = E/100.      ,                                                   \n"
+  "       H    = E*Et/(E-Et) ;                                                   \n"
+  "                                                                              \n"
+  "                                                                              \n"    
+  "  real Re   = 1.3         ,  // external radius geometry                      \n"
+  "       Ri   = 1.0         ;  // internal radius geometry                      \n" 
+  "                                                                              \n"
+  "                                                                              \n"  
+  "  real Qlim = 2./sqrt(3.)*log(Re/Ri)*sig0; //  Limiting pressure              \n"
+  "                                                                              \n"
+  "                                                                              \n"  
+  "  string    MaterialBehaviour   = \"IsotropicLinearHardeningPlasticity\";     \n";
+  
+  if(spc==2)writeIt  
+  "  string    MaterialHypothesis  = \"GENERALISEDPLANESTRAIN\";                 \n";
+  
+  if(spc==3)writeIt 
+  "  string    MaterialHypothesis  = \"TRIDIMENSIONAL\";                         \n";
+  
+  writeIt     
+  "  string    PropertyNames       = \"YoungModulus PoissonRatio HardeningSlope YieldStrength\";\n"
+  "  real[int] PropertyValues      = [ E, nu , H, sig0 ];                        \n"
+  "                                                                              \n";
+ }
 
 if(Prblm=="damage")
  {
