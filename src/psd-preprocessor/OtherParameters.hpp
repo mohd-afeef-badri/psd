@@ -54,6 +54,21 @@ if(!Sequential){
    
 }
 
+
+if(Prblm=="elasto_plastic"){
+writeIt
+"                                                                                \n"
+"//==============================================================================\n"
+"// ------- Variables for Newton-Raphsons loop ---                               \n"
+"//==============================================================================\n"
+"                                                                                \n"
+" int niter;                                                                     \n"
+" real nRes, nRes0;                                                              \n"
+"                                                                                \n";
+
+}
+
+
 if(Prblm=="damage" && Model=="hybrid_phase_field"){
 
  if(ParaViewPostProcess){

@@ -13,6 +13,11 @@ if(Prblm=="linear_elasticity")
 #include "LinearFormBuilderAndSolver_LinearElasticity.hpp"
 }
 
+if(Prblm=="elasto_plastic")
+{
+#include "LinearFormBuilderAndSolver_ElastoPlastic.hpp"
+}
+
 if(Prblm=="damage")
 {
 #include "LinearFormBuilderAndSolver_DamageMechanics.hpp"

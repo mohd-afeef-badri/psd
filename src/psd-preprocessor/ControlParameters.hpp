@@ -269,7 +269,24 @@ if(Prblm=="elasto_plastic")
   writeIt     
   "  string    PropertyNames       = \"YoungModulus PoissonRatio HardeningSlope YieldStrength\";\n"
   "  real[int] PropertyValues      = [ E, nu , H, sig0 ];                        \n"
-  "                                                                              \n";
+  "                                                                              \n"
+  "                                                                              \n"
+  "//============================================================================\n"
+  "//                   ------- Algorithmic parameters -------                   \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  NrEpsCon : Newton-Raphsons Convergence epsilon                            \n"
+  "//  NrMaxItr : Newton-Raphsons maximum iterations                             \n"
+  "//  TlMaxItr : Number of time steps for quasi-time discretization             \n"  
+  "//                                                                            \n"
+  "// -------------------------------------------------------------------        \n"
+  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
+  "//            as in the Elasticity.mfront file                                \n"
+  "// -------------------------------------------------------------------        \n"
+  "//============================================================================\n"
+  "                                                                              \n"
+  "  macro EpsNrCon  ()   1.e-8       //                                         \n" 
+  "  macro NrMaxItr  ()   200         //                                         \n"
+  "  macro TlMaxItr  ()   20          //                                         \n";       
  }
 
 if(Prblm=="damage")
@@ -910,23 +927,28 @@ if(tractionconditions>=1)
  "//============================================================================\n"
  "                                                                              \n";
 
- if(spc==2)if(Prblm!="elastodynamics")
+  if(Prblm!="elastodynamics" && Prblm!="elasto_plastic")
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On 4   //                                               \n"
    "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
+
+  if(Prblm=="elasto_plastic"){
+  writeIt
+  "  real tl;       // Traction load to be updated in time loop                \n"; 
+  for(int i=0; i<tractionconditions; i++)
+   writeIt
+   "  macro  Tbc"<<i<<"On  4           //                                      \n"
+   "  macro  Tbc"<<i<<"Tx  Qlim*tl*N.x //                                      \n"  
+   "  macro  Tbc"<<i<<"Ty  Qlim*tl*N.y //                                      \n";
+  } 
 
   if(Prblm=="elastodynamics")
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On  4   //                                              \n"
    "  macro  Tbc"<<i<<"Ty  tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //                \n";
-
- if(spc==3)if(Prblm!="elastodynamics")
-  for(int i=0; i<tractionconditions; i++)
-   writeIt
-   "  macro  Tbc"<<i<<"On 4   //                                               \n"
-   "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
+   
  }
 
 

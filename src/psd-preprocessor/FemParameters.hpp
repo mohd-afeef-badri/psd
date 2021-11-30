@@ -16,9 +16,9 @@ cout << " building FemParameters.edp";
 
 writeHeader;
 
-if(Prblm=="linear_elasticity" || Prblm=="elasto_plasticity"){
+if(Prblm=="linear_elasticity" || Prblm=="elasto_plastic"){
 
- if(Model!="pseudo_nonlinear")
+ if(Prblm!="elasto_plastic" && Model!="pseudo_nonlinear")
  writeIt
  "                                                                              \n"
  "//============================================================================\n"
@@ -601,7 +601,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   }
 }
 
-if(Prblm=="linear_elasticity"){
+if(Prblm=="linear_elasticity" || Prblm=="elasto_plastic"){
 
  if(Sequential)
   writeIt

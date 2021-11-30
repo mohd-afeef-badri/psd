@@ -8,6 +8,7 @@ LinearFormBuilderAndSolver_DamageMechanics.hpp \
 LinearFormBuilderAndSolver_ElastoDynamics.hpp \
 LinearFormBuilderAndSolver.hpp \
 LinearFormBuilderAndSolver_LinearElasticity.hpp \
+LinearFormBuilderAndSolver_ElastoPlastic.hpp \
 LinearFormBuilderAndSolver_SoilDynamics.hpp \
 Macros.hpp \
 Main.hpp \
@@ -17,6 +18,7 @@ PostProcessor.hpp \
 PSD_PreProcess.cpp \
 VariationalFormulation_DamageMechanics.hpp \
 VariationalFormulation_ElastoDynamics.hpp \
+VariationalFormulation_ElastoPlastic.hpp \
 VariationalFormulation.hpp \
 VariationalFormulation_LinearElasticity.hpp \
 VariationalFormulation_SoilDynamics.hpp \

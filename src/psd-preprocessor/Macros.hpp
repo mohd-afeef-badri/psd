@@ -47,7 +47,7 @@ if(spc==2)
  "  macro partitioner "<<Partitioner<<" //                                       \n"
  "  macro dimension 2 //                                                         \n";
 
- if(Prblm=="elastodynamics")
+ if(Prblm=="elastodynamics" || Prblm=="elasto_plastic" )
  writeIt
  "  macro Ux du  //                                                              \n"
  "  macro Uy du1 //                                                              \n";
@@ -335,6 +335,39 @@ if(spc==2)
  "                                                                               \n"
  "                        ] //                                                   \n"
  "                                                                               \n";
+
+
+ if(Prblm=="elasto_plastic" && !fastmethod && useMfront)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                 ------- operator definition macros  -------                 \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// divergence(i) : divergence operator definition, given a displacement vector \n"
+ "//                 'i' returns scalar value                                    \n"
+ "// epsilon(i)    : symmetric strain tensor operator given  displacement vector \n"
+ "//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        \n"
+ "// epsilonXMt(i,Mt) : given  displacement vector 'i' calculates strain X Mt i.e\n"
+ "//                   Strain X material tensor                                  \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ "  macro divergence(i) (dx(i) + dy(i#1)) //                                     \n"
+ "                                                                               \n"
+ "  macro epsilon(i) [ dx(i)               ,                                     \n"
+ "                     dy(i#1)             ,                                     \n"
+ "                     (dy(i)+dx(i#1))/SQ2  ] //                                 \n"
+ "                                                                               \n"
+ "                                                                               \n"
+ "  macro epsilonXMt(u,Mt) [                                                     \n"
+ "                                                                               \n"
+ "               epsilon(u)[0]*Mt#11 + epsilon(u)[1]*Mt#12 + epsilon(u)[2]*Mt#13,\n"
+ "               epsilon(u)[0]*Mt#12 + epsilon(u)[1]*Mt#22 + epsilon(u)[2]*Mt#23,\n"
+ "               epsilon(u)[0]*Mt#13 + epsilon(u)[1]*Mt#23 + epsilon(u)[2]*Mt#33 \n"
+ "                                                                               \n"
+ "                        ] //                                                   \n"
+ "                                                                               \n";
+ 
+ 
  if(Prblm=="damage" && Model=="hybrid_phase_field" && !energydecomp)
  writeIt
  "                                                                              \n"

@@ -48,7 +48,7 @@ if(pipegnu)if(!supercomp)
  writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
  
-if(Prblm=="linear_elasticity" && !fastmethod) 
+if( (Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod) 
  writeIt
  "  load    \"Element_QF\"                           // Quadrature elements     \n";
  

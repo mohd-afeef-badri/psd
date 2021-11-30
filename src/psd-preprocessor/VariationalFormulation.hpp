@@ -2,7 +2,7 @@
 *                                                                                     *
 * Author : Mohd Afeef BADRI                                                           *
 * Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 20/04/2020                                                                 *
+* Date   : 30/11/2021                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support file is responsible for generating VariationalFormulations.edp*
@@ -22,6 +22,11 @@ writeHeader;
 if(Prblm=="linear_elasticity")
 {
 #include "VariationalFormulation_LinearElasticity.hpp"
+}
+
+if(Prblm=="elasto_plastic")
+{
+#include "VariationalFormulation_ElastoPlastic.hpp"
 }
 
 if(Prblm=="damage")
