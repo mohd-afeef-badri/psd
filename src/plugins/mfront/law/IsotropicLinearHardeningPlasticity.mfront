@@ -1,8 +1,7 @@
 @DSL DefaultDSL;
 @Behaviour IsotropicLinearHardeningPlasticity;
-@Author Thomas Helfer;
-@Date   14/10/2016;
-
+@Author Mohd Afeef Badri;
+@Date   10/11/2021;
 @Description{
   An implicit implementation of a simple
   isotropic plasticity behaviour with
@@ -14,6 +13,15 @@
   "\]"
 }
 
+/*!
+ * First we define the four material properties as parameters
+ * i.e, we assume these are constant for the material.
+ *
+ * The four material paramerts (real numbers) are simply the 
+ * Youngs modulus, Poisson ratio, Hardening slope and 
+ * Yield Stress of the material
+ */
+// Material properties
 @MaterialProperty stress young;
 young.setGlossaryName("YoungModulus");
 @MaterialProperty real nu;
@@ -23,6 +31,15 @@ H.setEntryName("HardeningSlope");
 @MaterialProperty stress s0;
 s0.setGlossaryName("YieldStress");
 
+
+/*!
+ * We define the two internal state variables as
+ *
+ * The two internal state variables (defined for each mesh 
+ * element ) are simply the  Elastic Strain and Equivalent
+ * plastic strain
+ */
+// Internal state Variables
 @StateVariable StrainStensor eel;
 eel.setGlossaryName("ElasticStrain");
 @StateVariable strain p;
@@ -62,12 +79,12 @@ p.setGlossaryName("EquivalentPlasticStrain");
     dp   = (seq_e-s0-H*p)*cste;
     eel -= dp*n;
     if(computeTangentOperator_){
-      if(smt==CONSISTENTTANGENTOPERATOR){
+      /*if(smt==CONSISTENTTANGENTOPERATOR){ TODO: //NOT WORKING IN PSD */
 	Dt = (lambda*Stensor4::IxI()+2*mu*Stensor4::Id()
 	      -4*mu*mu*(dp*iseq_e*(Stensor4::M()-(n^n))+cste*(n^n)));
-      } else {
+      /*} else {                     TODO: NOT WORKING IN PSD
 	Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
-      }
+      }*/
     }
   } else {
     if(computeTangentOperator_){
