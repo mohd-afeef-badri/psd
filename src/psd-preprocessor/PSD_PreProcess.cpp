@@ -68,9 +68,9 @@
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
 
-  -problem         [string] Interested problem. Use linear_elasticity|damage|elastodynamics.
+  -problem         [string] Interested problem. Use linear_elasticity|damage|elastodynamics|elasto_plastic.
 
-  -model           [string] Interested model. Use hybrid_phase_field|Mazar|pseudo_nonlinear.
+  -model           [string] Interested model. Use hybrid_phase_field|Mazar|pseudo_nonlinear|von_mises.
 
   -mesh            [string] Mesh to be used, use a .mesh or .msh mesh.
 

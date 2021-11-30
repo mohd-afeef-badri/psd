@@ -237,14 +237,14 @@
      }
 
 
-  if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear"  &&  Model != "Hujeux"
+  if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear"  &&  Model != "Hujeux" &&  Model != "von_mises" 
      ){
       cout <<
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"
-          "The flag \033[1;31m-model\033[0m only accepts \033[1;34mhybrid_phase_field|Mazar|pseudo_nonlinear|Hujeux\033[0m\n"
+          "The flag \033[1;31m-model\033[0m only accepts \033[1;34mhybrid_phase_field|Mazar|pseudo_nonlinear|Hujeux|von_mises\033[0m\n"
           "\033[1;31m-model "<< Model << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
@@ -264,14 +264,14 @@
       errorArgument = true;
      }
 
-  if ( Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics"
+  if ( Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics" && Prblm != "elasto_plastic"
      ){
       cout <<
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"
-          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear_elasticity|damage|elastodynamics|soildynamics\033[0m\n"
+          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear_elasticity|damage|elastodynamics|soildynamics|elasto_plastic\033[0m\n"
           "\033[1;31m-problem "<< Prblm << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
