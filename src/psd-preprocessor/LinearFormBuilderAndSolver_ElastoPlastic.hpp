@@ -7,19 +7,22 @@
  "                                                                                \n"
  "                                                                                \n"
  "//==============================================================================\n"
- "//  ------- Algorithm below is explained -------                                \n"
+ "//  ------------------------------------------------------------                \n" 
+ "//  ------- Algorithm below is explained here -------                           \n"
  "//  ------------------------------------------------------------                \n"
  "//    Loop 1 : TlMaxItr;            # Time Loop                                 \n"
  "//      update_load();                                                          \n"
  "//      assemble_linear_system();   # Assemble A,b                              \n"
  "//      calculate_residual();       # L_2(b)                                    \n"
- "//      Loop 1 : NrMaxItr;          # Newton_raphsons Loop                      \n"
- "//        solve_linear_system();    # output du                                 \n" 
+ "//      Loop 1 : NrMaxItr;          # Newton-Raphsons Loop                      \n"
+ "//        solve_linear_system();    # du = A^-1*b                               \n" 
  "//        update_displacements();   # u += du                                   \n"
  "//        update_stains();                                                      \n"
  "//        mfront_update();                                                      \n"
  "//        assemble_linear_system();                                             \n"
  "//        calculate_residual();                                                 \n"
+ "//        check_convergence();                                                  \n"
+ "//        exit_if_converged();                                                  \n"  
  "//  ------------------------------------------------------------                \n"    
  "//==============================================================================\n"
  "                                                                                \n"
@@ -77,11 +80,11 @@
 
  if(spc==2)
  writeIt 
- "    [Eps11,Eps22,Eps12] = epsilon(u);                                             \n";
+ "    [Eps11,Eps22,Eps12] = epsilon(u);                                           \n";
  
  if(spc==3)
  writeIt 
- "    [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23] = epsilon(u);                          \n";
+ "    [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23] = epsilon(u);                         \n";
 
  writeIt   
  "                                                                               \n"
@@ -119,11 +122,12 @@
  "    nRes = res1Gather;                                                         \n" 
 <<(timelog ? "  timerend (\"residual checking\",t0)\n" : ""                      )<<
  "                                                                               \n" 
- "    if(niter==NrMaxItr){                                                       \n" 
- "      if(mpirank==0) cout << \"ERROR NONLINEAR ITERATIONS MAXED OUT\"<<endl; } \n"
+ "    if(niter==NrMaxItr)                                                        \n" 
+ "      if(mpirank==0)                                                           \n"
+ "         cout << \"Error Newton-Raphsons iterations maxed out\" << endl;       \n"
  "                                                                               \n" 
  "  }                                                                            \n"
- "    //------------------Screen output norm----------------------//             \n"
+ "  //------------------Screen output ----------------------//                   \n"
  "                                                                               \n"
  "  if(mpirank==0)                                                               \n"
  "    cout.scientific                                                            \n"
@@ -134,6 +138,32 @@
  "    << \"\\n----------------------------------------\\n\"                      \n"
  "    << endl;                                                                   \n"
  "                                                                               \n";
+
+ if(ParaViewPostProcess){
+ writeIt
+ "                                                                                \n"
+ "  //-----------------ParaView plotting--------------//                          \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                      );
+
+ writeIt
+ "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
+ "                 Th                 ,                                           \n";
+
+ if(PostProcess=="u")
+ writeIt
+ "              PlotVec(u)        ,                                               \n"
+ "              dataname=\"U\"       ,                                            \n";
+
+ writeIt
+ "                 order=vtuorder     ,                                           \n"
+ "                 append=i ? true : false                                        \n"
+ "              );                                                                \n";
+
+ writeIt
+ (timelog ? "  timerend(\"ParaView plotting\",t0)\n" : ""                          );
+
+ }
  
  if(debug)
  writeIt
@@ -145,12 +175,7 @@
  "                                                                               \n"; 
 
  writeIt
- "}                                                                              \n";        
- 
-
-
-
-
+ "}                                                                              \n";
 
 if(!ParaViewPostProcess)
  writeIt

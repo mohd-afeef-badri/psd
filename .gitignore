@@ -33,6 +33,9 @@ compile
 *.pvd
 *.pvtu
 
+## PANDOC FILES ##
+*.ini 
+
 ## PARALLEL/SEQUENTIAL VERSION FILES ##
 Main.edp
 Macros.edp

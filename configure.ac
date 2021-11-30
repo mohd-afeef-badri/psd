@@ -395,10 +395,11 @@ AC_CONFIG_FILES([
  src/psd-preprocessor/Makefile
  src/psd-solve/Makefile   
  test/Makefile
- test/elastodynamics/Makefile    
+ test/elastodynamics/Makefile
+ test/elasto-plastic/Makefile    
  test/fracture-mechanics/Makefile
  test/linear-elasticity/Makefile
- test/soildynamics/Makefile      
+ test/soildynamics/Makefile
 ])
 AC_OUTPUT
 
