@@ -51,7 +51,7 @@ if(!Sequential){
   "                                                                              \n"
   " int[int][int] restrictionIntersectionZ(0);  // Local-to-neighbors renumbering\n"
   " real[int] DZ;                               // Partition of unity            \n";
-   
+
 }
 
 
@@ -65,6 +65,25 @@ writeIt
 " int niter;                                                                     \n"
 " real nRes, nRes0;                                                              \n"
 "                                                                                \n";
+
+ if(ParaViewPostProcess){
+  writeIt
+  "                                                                              \n"
+  "//============================================================================\n"
+  "// ------- Paraview plotting parameters -------                               \n"
+  "//============================================================================\n"
+  "                                                                              \n";
+
+ if(PostProcess=="u")
+ writeIt
+ "              int[int] vtuorder=[1];                                           \n";
+
+ writeIt
+ "                                                                              \n"
+ "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");           \n"
+ "  if(mpirank==0)system(\"mkdir -p VTUs\");                                    \n";
+
+  }
 
 }
 
@@ -80,14 +99,14 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
   "                                                                              \n"
   "  int iterout  = 0 ,               // Loop Counter                            \n"
   "      iterout1 = 0 ;               // Loop Counter                            \n";
-  
+
  if(PostProcess=="u" || PostProcess=="d")
  writeIt
  "              int[int] vtuorder=[1];                                           \n";
 
  if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- "              int[int] vtuorder=[1,1];                                         \n";  
+ "              int[int] vtuorder=[1,1];                                         \n";
   }
 
  if(ParaViewPostProcess && !Sequential)
@@ -109,7 +128,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field"){
    "//===========================================================================\n"
    "// ------- Gnuplot pipeing parameters ------                                 \n"
    "//===========================================================================\n"
-   "                                                                             \n"   
+   "                                                                             \n"
    "  pstream pgnuplot(\"gnuplot -p\");                                          \n"
    <<(Sequential ? "" : "  if(mpirank==0)\n"                                     )<<
    "  pgnuplot                                                                   \n"
@@ -194,7 +213,7 @@ if(Prblm=="elastodynamics"){
   "  c[9] =   etak*2*mu*(gamma*(1.-alpf)/beta -1)                                ;\n"
   "  c[10]=   etak*2*mu*dt*(1.-alpf)*((1.-2*beta)/2./beta -(1.-gamma))           ;\n"
   "                                                                               \n";
-  
+
   if(tractionconditions>=1)
   writeIt
   "                                                                               \n"
@@ -203,8 +222,8 @@ if(Prblm=="elastodynamics"){
   "//=============================================================================\n"
   "                                                                               \n"
   "  real tt ;                                                                    \n"
-  "                                                                               \n";  
-  
+  "                                                                               \n";
+
  if(ParaViewPostProcess){
   writeIt
   "                                                                               \n"
@@ -223,7 +242,7 @@ if(Prblm=="elastodynamics"){
   writeIt
   "  int[int] vtuorder = [1,1]              ;  // Solution export order           \n";
 
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
   writeIt
   "  int[int] vtuorder = [1,1,1]            ;  // Solution export order           \n";
@@ -231,7 +250,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  if(!Sequential)
   writeIt
   "                                                                               \n"
-  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n"  
+  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n"
   "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");            \n";
   }
 
@@ -350,7 +369,7 @@ if(Prblm=="soildynamics"){
   writeIt
   "  int[int] vtuorder = [1,1]              ;  // Solution export order           \n";
 
-if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau" 
+if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
    || PostProcess=="vua" || PostProcess=="auv" || PostProcess=="ava" )
   writeIt
   "  int[int] vtuorder = [1,1,1]            ;  // Solution export order           \n";
@@ -360,7 +379,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   "                                                                                \n"
   "  if(mpirank==0)system(\"mkdir -p VTUs\");                                      \n";
   }
-  
+
  if(pipegnu){
   writeIt
   "                                                                               \n"
@@ -403,8 +422,8 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   "//           degree of freedom of the  Northern  double couple point.          \n"
   "//           Same is true for Srank, Erank, Wrank.                             \n"
   "// --------------------------------------------------------------------------- \n"
-  "//  values of  iNorth,....,iWest and Nrank,...,Wrank are set to -1 as          \n" 
-  "//  this will sereve as error indicator should anything go wrong.              \n"         
+  "//  values of  iNorth,....,iWest and Nrank,...,Wrank are set to -1 as          \n"
+  "//  this will sereve as error indicator should anything go wrong.              \n"
   "//=============================================================================\n"
   "                                                                               \n"
   "  int iNorth=-1, iSouth=-1, iEast=-1, iWest=-1;                                \n"
@@ -421,8 +440,8 @@ if(dirichletpointconditions>=1)
   "// PCi        : point index in finite element space.                           \n"
   "// mpirankPCi : MPI rank that hold point PCi                                   \n"
   "// --------------------------------------------------------------------------- \n"
-  "//  values of  PCi and mpirankPCi are set to -1 as this will sereve as error   \n" 
-  "//  indicator should anything go wrong.                                        \n"         
+  "//  values of  PCi and mpirankPCi are set to -1 as this will sereve as error   \n"
+  "//  indicator should anything go wrong.                                        \n"
   "//=============================================================================\n"
   "                                                                               \n"
   "  int[int]    PCi(PbcCord.n); PCi=-1;                                          \n"
@@ -437,8 +456,8 @@ if(pointprobe && !Sequential)
   "// iProbe     : point index of the probe in finite element space.              \n"
   "// Prank      : MPI rank that hold point iProbe                                \n"
   "// --------------------------------------------------------------------------- \n"
-  "//  values of  iProbe and Prank are set to -1 as this will sereve as error     \n" 
-  "//  indicator should anything go wrong.                                        \n" 
+  "//  values of  iProbe and Prank are set to -1 as this will sereve as error     \n"
+  "//  indicator should anything go wrong.                                        \n"
   "//============================================================================ \n"
   "                                                                               \n"
   "  int[int] iProbe(ProbePointCord.n), Prank(ProbePointCord.n);                  \n"
@@ -453,15 +472,15 @@ if(pointprobe && Sequential)
   "// --------------------------------------------------------------------------- \n"
   "// iProbe     : point index of the probe in finite element space.              \n"
   "// --------------------------------------------------------------------------- \n"
-  "//  values of  iProbe  are set to -1 as this will sereve as error              \n" 
-  "//  indicator should anything go wrong.                                        \n" 
+  "//  values of  iProbe  are set to -1 as this will sereve as error              \n"
+  "//  indicator should anything go wrong.                                        \n"
   "//============================================================================ \n"
   "                                                                               \n"
   "  int[int] iProbe(ProbePointCord.n);                                           \n"
   "  iProbe=-1;                                                                   \n"
-  "                                                                               \n";  
-  
-  
+  "                                                                               \n";
+
+
 if(reactionforce)if(Prblm=="damage" && Model=="Mazar"){
  writeIt
  "                                                                                \n"
@@ -475,7 +494,7 @@ if(reactionforce)if(Prblm=="damage" && Model=="Mazar"){
   "//=============================================================================\n"
   "// ------- Gnuplot pipeing parameters ------                                   \n"
   "//=============================================================================\n"
-  "                                                                               \n"  
+  "                                                                               \n"
   "  pstream pgnuplot(\"gnuplot -p\");                                            \n"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
   "  pgnuplot                                                                     \n"

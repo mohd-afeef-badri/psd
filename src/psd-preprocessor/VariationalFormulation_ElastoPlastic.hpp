@@ -65,7 +65,7 @@ for(int i=0; i<bodyforceconditions; i++)
  "$$                                                                                              \n"
  "*/                                                                                              \n"
  "                                                                                                \n"
- "     + intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
+ "     - intN(Th,Fbc"<<i<<"On,qforder=3)(BodyforceBc"<<i<<")                                      \n";
 
 for(int i=0; i<tractionconditions; i++)
  writeIt
@@ -76,7 +76,7 @@ for(int i=0; i<tractionconditions; i++)
  "$$                                                                                              \n"
  "*/                                                                                              \n"
  "                                                                                                \n"
- "     + intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
+ "     - intN1(Th,Tbc"<<i<<"On,qforder=3)(NeumannBc"<<i<<")                                       \n";
 
 for(int i=0; i<dirichletconditions; i++)
  writeIt
