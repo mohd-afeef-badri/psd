@@ -93,6 +93,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
       << " \n" << endl;
   }
 
+
+
   if( mfrontBehaviourHypothesis != NULL &&
       ( *mfrontBehaviourHypothesis != "GENERALISEDPLANESTRAIN" &&
         *mfrontBehaviourHypothesis != "PLANESTRAIN"            &&
@@ -112,7 +114,9 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
     exit(1);
   }
-  /**/
+
+
+
   if( mfrontBehaviourHypothesis!=NULL)
   {
     if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN")
@@ -353,13 +357,13 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
       }
 
     }
-    
-    
+
+
     // --------------------------------------------------------------- //
     // ---------------------- 3D PROBLEM ----------------------------- //
     // --------------------------------------------------------------- //
-    
-        
+
+
     if(*mfrontBehaviourHypothesis=="TRIDIMENSIONAL")
     {
       if(verbosity)
@@ -371,7 +375,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           " \033[1;36m                :: Creating BehaviourDataView \033[0m "                            << "\n"
           << " \n" << endl;
       }
-      
+
       constexpr const auto h = Hypothesis::TRIDIMENSIONAL;
       const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
 
@@ -463,10 +467,10 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
             d.K[0] = 1.;
             integrate(v, b);
-            
-            
+
+
             //------------ row 1 - 6 components -------------------//
-  
+
             mfrontMaterialTensor->operator[](indexMtTensor +0 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +1 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +2 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -475,8 +479,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +4 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +5 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +6 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            mfrontMaterialTensor->operator[](indexMtTensor +7 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)                
-                               
+            mfrontMaterialTensor->operator[](indexMtTensor +7 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
+
             mfrontMaterialTensor->operator[](indexMtTensor +8 ) = d.K[2];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +9) = d.K[2];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +10) = d.K[2];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -495,8 +499,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +20) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +21) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +22) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            mfrontMaterialTensor->operator[](indexMtTensor +23) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)  
-                                                   
+            mfrontMaterialTensor->operator[](indexMtTensor +23) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
+
 
             //------------ row 2 - 5 components -------------------//
 
@@ -510,16 +514,16 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +29) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +30) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +31) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +32) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +33) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +34) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +35) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +36) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +37) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +38) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            mfrontMaterialTensor->operator[](indexMtTensor +39) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)                                   
+            mfrontMaterialTensor->operator[](indexMtTensor +39) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
 
             mfrontMaterialTensor->operator[](indexMtTensor +40) = d.K[11];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +41) = d.K[11];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -533,24 +537,24 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +45) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +46) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +47) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +48) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +49) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +50) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +51) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +52) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +53) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +54) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +55) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +56) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +57) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +58) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +59) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             //------------ row 4 - 3 components -------------------//
-                                   
+
             mfrontMaterialTensor->operator[](indexMtTensor +60) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +61) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +62) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -560,32 +564,32 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +65) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +66) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +67) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +68) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +69) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +70) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +71) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-                        
 
-            //------------ row 5 - 2 components -------------------// 
-            
+
+            //------------ row 5 - 2 components -------------------//
+
             mfrontMaterialTensor->operator[](indexMtTensor +72) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +73) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +74) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +75) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +76) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +77) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +78) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +79) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
 
-            //------------ row 6 - 1 component -------------------// 
+            //------------ row 6 - 1 component -------------------//
 
             mfrontMaterialTensor->operator[](indexMtTensor +80) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +81) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +82) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +83) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-                                                                                                                      
+
           }
         }
 
@@ -610,8 +614,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             d.s1.gradients[2] = mfrontStrainTensor->operator[](indexEx+8);  //E33
             d.s1.gradients[3] = mfrontStrainTensor->operator[](indexEx+12); //E12
             d.s1.gradients[4] = mfrontStrainTensor->operator[](indexEx+16); //E13
-            d.s1.gradients[5] = mfrontStrainTensor->operator[](indexEx+20); //E23                        
-            
+            d.s1.gradients[5] = mfrontStrainTensor->operator[](indexEx+20); //E23
+
 
             integrate(v, b);
 
@@ -628,23 +632,23 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontStressTensor->operator[](indexEx+8)  = d.s1.thermodynamic_forces[2];  // sig_zz
             mfrontStressTensor->operator[](indexEx+9)  = d.s1.thermodynamic_forces[2];  // sig_zz
             mfrontStressTensor->operator[](indexEx+10)  = d.s1.thermodynamic_forces[2]; // sig_zz
-            mfrontStressTensor->operator[](indexEx+11)  = d.s1.thermodynamic_forces[2]; // sig_zz            
-            
+            mfrontStressTensor->operator[](indexEx+11)  = d.s1.thermodynamic_forces[2]; // sig_zz
+
             mfrontStressTensor->operator[](indexEx+12)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+13)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+14)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+15)  = d.s1.thermodynamic_forces[3]; // sig_xy
-            
+
             mfrontStressTensor->operator[](indexEx+16)  = d.s1.thermodynamic_forces[4]; // sig_xz
             mfrontStressTensor->operator[](indexEx+17)  = d.s1.thermodynamic_forces[4]; // sig_xz
             mfrontStressTensor->operator[](indexEx+18)  = d.s1.thermodynamic_forces[4]; // sig_xz
-            mfrontStressTensor->operator[](indexEx+19)  = d.s1.thermodynamic_forces[4]; // sig_xz            
+            mfrontStressTensor->operator[](indexEx+19)  = d.s1.thermodynamic_forces[4]; // sig_xz
 
             mfrontStressTensor->operator[](indexEx+20)  = d.s1.thermodynamic_forces[5]; // sig_yz
             mfrontStressTensor->operator[](indexEx+21)  = d.s1.thermodynamic_forces[5]; // sig_yz
             mfrontStressTensor->operator[](indexEx+22)  = d.s1.thermodynamic_forces[5]; // sig_yz
-            mfrontStressTensor->operator[](indexEx+23)  = d.s1.thermodynamic_forces[5]; // sig_yz             
-            
+            mfrontStressTensor->operator[](indexEx+23)  = d.s1.thermodynamic_forces[5]; // sig_yz
+
           }
         }
 
@@ -672,7 +676,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             d.s1.gradients[2] = mfrontStrainTensor->operator[](indexEx+8);  //E33
             d.s1.gradients[3] = mfrontStrainTensor->operator[](indexEx+12); //E12
             d.s1.gradients[4] = mfrontStrainTensor->operator[](indexEx+16); //E13
-            d.s1.gradients[5] = mfrontStrainTensor->operator[](indexEx+20); //E23 
+            d.s1.gradients[5] = mfrontStrainTensor->operator[](indexEx+20); //E23
 
             d.K[0] = 1.;
             integrate(v, b);
@@ -690,32 +694,32 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontStressTensor->operator[](indexEx+8)  = d.s1.thermodynamic_forces[2];  // sig_zz
             mfrontStressTensor->operator[](indexEx+9)  = d.s1.thermodynamic_forces[2];  // sig_zz
             mfrontStressTensor->operator[](indexEx+10)  = d.s1.thermodynamic_forces[2]; // sig_zz
-            mfrontStressTensor->operator[](indexEx+11)  = d.s1.thermodynamic_forces[2]; // sig_zz            
-            
+            mfrontStressTensor->operator[](indexEx+11)  = d.s1.thermodynamic_forces[2]; // sig_zz
+
             mfrontStressTensor->operator[](indexEx+12)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+13)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+14)  = d.s1.thermodynamic_forces[3]; // sig_xy
             mfrontStressTensor->operator[](indexEx+15)  = d.s1.thermodynamic_forces[3]; // sig_xy
-            
+
             mfrontStressTensor->operator[](indexEx+16)  = d.s1.thermodynamic_forces[4]; // sig_xz
             mfrontStressTensor->operator[](indexEx+17)  = d.s1.thermodynamic_forces[4]; // sig_xz
             mfrontStressTensor->operator[](indexEx+18)  = d.s1.thermodynamic_forces[4]; // sig_xz
-            mfrontStressTensor->operator[](indexEx+19)  = d.s1.thermodynamic_forces[4]; // sig_xz            
+            mfrontStressTensor->operator[](indexEx+19)  = d.s1.thermodynamic_forces[4]; // sig_xz
 
             mfrontStressTensor->operator[](indexEx+20)  = d.s1.thermodynamic_forces[5]; // sig_yz
             mfrontStressTensor->operator[](indexEx+21)  = d.s1.thermodynamic_forces[5]; // sig_yz
             mfrontStressTensor->operator[](indexEx+22)  = d.s1.thermodynamic_forces[5]; // sig_yz
-            mfrontStressTensor->operator[](indexEx+23)  = d.s1.thermodynamic_forces[5]; // sig_yz 
+            mfrontStressTensor->operator[](indexEx+23)  = d.s1.thermodynamic_forces[5]; // sig_yz
 
             indexMtTensor  = i*84;  // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18
 
                 //------------ row 1 - 6 components -------------------//
-  
+
             mfrontMaterialTensor->operator[](indexMtTensor +0 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +1 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +2 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +3 ) = d.K[0];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +4 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +5 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +6 ) = d.K[1];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -739,8 +743,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +20) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +21) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +22) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            mfrontMaterialTensor->operator[](indexMtTensor +23) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)  
-                                                   
+            mfrontMaterialTensor->operator[](indexMtTensor +23) = d.K[5];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
+
 
             //------------ row 2 - 5 components -------------------//
 
@@ -754,16 +758,16 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +29) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +30) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +31) = d.K[8];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +32) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +33) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +34) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +35) = d.K[9];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +36) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +37) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +38) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            mfrontMaterialTensor->operator[](indexMtTensor +39) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)                                   
+            mfrontMaterialTensor->operator[](indexMtTensor +39) = d.K[10];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
 
             mfrontMaterialTensor->operator[](indexMtTensor +40) = d.K[11];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +41) = d.K[11];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -777,24 +781,24 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +45) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +46) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +47) = d.K[14];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +48) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +49) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +50) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +51) = d.K[15];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +52) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +53) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +54) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +55) = d.K[16];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +56) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +57) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +58) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +59) = d.K[17];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             //------------ row 4 - 3 components -------------------//
-                                   
+
             mfrontMaterialTensor->operator[](indexMtTensor +60) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +61) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +62) = d.K[21];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
@@ -804,26 +808,26 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             mfrontMaterialTensor->operator[](indexMtTensor +65) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +66) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +67) = d.K[22];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +68) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +69) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +70) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +71) = d.K[23];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-                        
 
-            //------------ row 5 - 2 components -------------------// 
-            
+
+            //------------ row 5 - 2 components -------------------//
+
             mfrontMaterialTensor->operator[](indexMtTensor +72) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +73) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +74) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +75) = d.K[28];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
-            
+
             mfrontMaterialTensor->operator[](indexMtTensor +76) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +77) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +78) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +79) = d.K[29];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
 
-            //------------ row 6 - 1 component -------------------// 
+            //------------ row 6 - 1 component -------------------//
 
             mfrontMaterialTensor->operator[](indexMtTensor +80) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
             mfrontMaterialTensor->operator[](indexMtTensor +81) = d.K[35];  //  Mt_11 Quadrature point 1 (3 Quad points per tria)
