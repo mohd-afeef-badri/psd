@@ -21,27 +21,27 @@ writeHeader;
 
 if(Prblm=="linear_elasticity")
 {
-#include "VariationalFormulation_LinearElasticity.hpp"
+#include "./VariationalFormulation/LinearElasticity.hpp"
 }
 
 if(Prblm=="elasto_plastic")
 {
-#include "VariationalFormulation_ElastoPlastic.hpp"
+#include "./VariationalFormulation/ElastoPlastic.hpp"
 }
 
 if(Prblm=="damage")
 {
-#include "VariationalFormulation_DamageMechanics.hpp"
+#include "./VariationalFormulation/DamageMechanics.hpp"
 }
 
 if(Prblm=="elastodynamics")
 {
-#include "VariationalFormulation_ElastoDynamics.hpp"
+#include "./VariationalFormulation/ElastoDynamics.hpp"
 }
 
 if(Prblm=="soildynamics")
 {
-#include "VariationalFormulation_SoilDynamics.hpp"
+#include "./VariationalFormulation/SoilDynamics.hpp"
 }
 
 } //-- [ostream terminator]  VariationalFormulations.edp closed --//

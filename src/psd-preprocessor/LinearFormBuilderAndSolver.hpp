@@ -10,27 +10,27 @@ writeHeader;
 
 if(Prblm=="linear_elasticity")
 {
-#include "LinearFormBuilderAndSolver_LinearElasticity.hpp"
+#include "./LinearFormBuilderAndSolver/LinearElasticity.hpp"
 }
 
 if(Prblm=="elasto_plastic")
 {
-#include "LinearFormBuilderAndSolver_ElastoPlastic.hpp"
+#include "./LinearFormBuilderAndSolver/ElastoPlastic.hpp"
 }
 
 if(Prblm=="damage")
 {
-#include "LinearFormBuilderAndSolver_DamageMechanics.hpp"
+#include "./LinearFormBuilderAndSolver/DamageMechanics.hpp"
 }
 
 if(Prblm=="elastodynamics")
 {
-#include "LinearFormBuilderAndSolver_ElastoDynamics.hpp"
+#include "./LinearFormBuilderAndSolver/ElastoDynamics.hpp"
 }
 
 if(Prblm=="soildynamics")
 {
-#include "LinearFormBuilderAndSolver_SoilDynamics.hpp"
+#include "./LinearFormBuilderAndSolver/SoilDynamics.hpp"
 }
 
 } //-- [ostream terminator]  LinearFormBuilderAndSolver.edp closed --//
