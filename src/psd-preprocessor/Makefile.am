@@ -1,7 +1,24 @@
 LIST_COMPILE = PSD_PreProcess.cpp
 
-PSD_PREPROCESSOR_HPP_LIST = ControlParameters.hpp \
+PSD_PREPROCESSOR_HPP_LIST = Main.hpp \
+ControlParameters.hpp \
+./ControlParameters/DamageMechanics.hpp \
+./ControlParameters/ElastoDynamics.hpp \
+./ControlParameters/ElastoPlastic.hpp \
+./ControlParameters/LinearElasticity.hpp \
+./ControlParameters/SoilDynamics.hpp \
 FemParameters.hpp \
+./FemParameters/DamageMechanics.hpp \
+./FemParameters/ElastoDynamics.hpp \
+./FemParameters/ElastoPlastic.hpp \
+./FemParameters/LinearElasticity.hpp \
+./FemParameters/SoilDynamics.hpp \
+OtherParameters.hpp \
+./OtherParameters/DamageMechanics.hpp \
+./OtherParameters/ElastoDynamics.hpp \
+./OtherParameters/ElastoPlastic.hpp \
+./OtherParameters/LinearElasticity.hpp \
+./OtherParameters/SoilDynamics.hpp \
 HeaderMacro.hpp \
 Help.hpp \
 LinearFormBuilderAndSolver.hpp \
@@ -10,10 +27,13 @@ LinearFormBuilderAndSolver.hpp \
 ./LinearFormBuilderAndSolver/LinearElasticity.hpp \
 ./LinearFormBuilderAndSolver/ElastoPlastic.hpp \
 ./LinearFormBuilderAndSolver/SoilDynamics.hpp \
+MeshAndFeSpace.hpp \
+./MeshAndFeSpace/DamageMechanics.hpp \
+./MeshAndFeSpace/ElastoDynamics.hpp \
+./MeshAndFeSpace/LinearElasticity.hpp \
+./MeshAndFeSpace/ElastoPlastic.hpp \
+./MeshAndFeSpace/SoilDynamics.hpp \
 Macros.hpp \
-Main.hpp \
-Mesh.hpp \
-OtherParameters.hpp \
 PostProcessor.hpp \
 PSD_PreProcess.cpp \
 VariationalFormulation.hpp \

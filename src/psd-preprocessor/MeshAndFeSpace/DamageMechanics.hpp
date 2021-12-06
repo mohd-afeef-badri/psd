@@ -10,14 +10,8 @@
 *                                                                                     *
 **************************************************************************************/
 
-cout << " building MeshAndFeSpace.edp";
-
-{ofstream  write("MeshAndFeSpace.edp");
-
 writeHeader;
 
-
-if(!top2vol)
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -68,40 +62,7 @@ if(Sequential){
  "                                                                                \n"
  " fespace Vh   ( Th , Pk );                                                      \n";
 
- if(Prblm=="linear_elasticity" && !fastmethod && spc==2)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Vh1       : Quadratur finite element space  for material tensor             \n"
- "//              FEQF2 implies 3 dof for triagular cell in the mesh.             \n"
- "//              A vectorial FEM space is built with 6 components                \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Qh  ( Th , [FEQF2, FEQF2, FEQF2,                                       \n"
- "                            FEQF2, FEQF2,                                       \n"
- "                                   FEQF2] );                                    \n";
-
- if(Prblm=="linear_elasticity" && !fastmethod && spc==3)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Qh       : Quadratur finite element space  for material tensor              \n"
- "//             FEQF23d implies 4 dof for a tetra cell in the mesh               \n"
- "//             A vectorial FEM space is built with 21 components                \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Qh ( Th, [ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                             FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                      FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                                        FEQF23d, FEQF23d,       \n"
- "                                                                 FEQF23d] );    \n";
-
- if(Prblm=="damage" && Model=="hybrid_phase_field")
+ if(Model=="hybrid_phase_field")
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -112,7 +73,7 @@ if(Sequential){
  "                                                                                \n"
  " fespace Vh1  ( Th , Zk );                                                      \n";
 
- if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
+ if(Model=="hybrid_phase_field" && energydecomp)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -125,7 +86,7 @@ if(Sequential){
  " fespace Wh0  ( Th , P0 );            // Energy decomposition FE space          \n"
  " fespace Sh0  ( Th , Sk );            // Strain vector FE space                 \n";
 
- if(Prblm=="damage" && Model=="Mazar")
+ if(Model=="Mazar")
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -136,7 +97,7 @@ if(Sequential){
  "                                                                                \n"
  " fespace Wh0    ( Th , P0 );                                                    \n";
 
- if(Prblm=="damage" && Model=="Mazar" && useGFP)
+ if(Model=="Mazar" && useGFP)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -169,121 +130,9 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Vh     ( Th , Pk );                                                    \n"; 
  
- if( (Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod && spc==2)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Qh       : Quadratur finite element space  for material tensor              \n"
- "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
- "//             A vectorial FEM space is built with 6 components                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Qh  ( Th ,[ FEQF2, FEQF2, FEQF2,                                       \n"
- "                            FEQF2, FEQF2,                                       \n"
- "                                   FEQF2] );                                    \n";
-
- 
- if(Prblm=="linear_elasticity" && useMfront && Model=="pseudo_nonlinear" && spc==2)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
- "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
- "//             A vectorial FEM space is built with 3 components                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
- "                                                                                \n";
-
- if(Prblm=="elasto_plastic" && spc==2)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
- "//             FEQF2 implies 3 dof for a triangular cell in the mesh            \n"
- "//             A vectorial FEM space is built with 3 components                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Ih       : Quadratur finite element space  for internal state variables     \n"
- "//             FEQF2 implies 3 dof for a triangular cell in the mesh A vec-     \n"
- "//             torial FEM space is built  with  5 components.  To elaborate     \n"
- "//             First 4 are elastic stains [Exx, Eyy, Ezz, Exy] + 1 plasticity   \n" 
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Ih  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2 ]);                      \n"
- "                                                                                \n";
- 
- if((Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod && spc==3)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Qh       : Quadratur finite element space  for material tensor              \n"
- "//             FEQF23d implies 4 dof for a tetra cell in the mesh               \n"
- "//             A vectorial FEM space is built with 21 components                \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Qh ( Th, [ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                             FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                      FEQF23d, FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
- "                                                        FEQF23d, FEQF23d,       \n"
- "                                                                 FEQF23d] );    \n";
  
 
- if(Prblm=="linear_elasticity" && useMfront && Model=="pseudo_nonlinear" && spc==3)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
- "//             FEQF2 implies 4 dof for a tetraheron cell in the mesh            \n"
- "//             A vectorial FEM space is built with 6 components                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
- "                                                                                \n"; 
-
- if(Prblm=="elasto_plastic" && spc==3)
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Sh       : Quadratur finite element space  for Stress/Strain tensor         \n"
- "//             FEQF2 implies 4 dof for a tetraheron cell in the mesh            \n"
- "//             A vectorial FEM space is built with 6 components                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
- "                                                                                \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Ih       : Quadratur finite element space  for internal state variables     \n"
- "//             FEQF2 implies 3 dof for a triangular cell in the mesh A vec-     \n"
- "//             torial FEM space is built  with  5 components.  To elaborate     \n"
- "//             First 4 are elastic stains [Exx, Eyy, Ezz, Exy] + 1 plasticity   \n" 
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Ih  ( Th ,[ FEQF2, FEQF2, FEQF2, FEQF2, FEQF2 ]);                      \n"
- "                                                                                \n";   
-
- if(Prblm=="damage" && Model=="hybrid_phase_field" && !vectorial)
+ if(Model=="hybrid_phase_field" && !vectorial)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -294,7 +143,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Vh1    ( Th , Zk );                                                    \n";
 
- if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
+ if(Model=="hybrid_phase_field" && energydecomp)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -307,20 +156,8 @@ if(!Sequential){
  " fespace Wh0    ( Th , P0 );                                                    \n"
  " fespace Sh0    ( Th , Sk );                                                    \n";
 
- if(Prblm=="soildynamics" && Model=="Hujeux")
-  writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element spaces -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Q3vh      : Quadrature 3  vector finite element space                       \n"
- "//  Q25vh     : Quadrature 25 vector finite element space                       \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Q3vh   ( Th , Sk );                                                    \n"
- " fespace Q25vh  ( Th , Ik );                                                    \n";
 
- if(Prblm=="damage" && Model=="hybrid_phase_field" && vectorial)
+ if(Model=="hybrid_phase_field" && vectorial)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -331,7 +168,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Vh1  ( Th , P1 );                                                      \n";
 
- if(Prblm=="damage" && Model=="Mazar")
+ if(Model=="Mazar")
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -342,7 +179,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Wh0    ( Th , P0 );                                                    \n";
 
- if(Prblm=="damage" && Model=="Mazar" && useGFP)
+ if(Model=="Mazar" && useGFP)
   writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -353,8 +190,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace VhStr  ( Th , Sk );                                                    \n";
 
- if(!top2vol)
- {
+
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -375,7 +211,7 @@ if(!Sequential){
  "                                                                                \n"
  <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                     );
 
- if(Prblm!="damage")
+ if(Model=="Mazar")
   writeIt
   "                                                                                \n"
   "  PETScMPIBuild(                                                                \n"
@@ -387,19 +223,7 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="Mazar")
-  writeIt
-  "                                                                                \n"
-  "  PETScMPIBuild(                                                                \n"
-  "           Th                , // Local  mesh                                   \n"
-  "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
-  "           restrictionIntersectionP    , // Restriction matrix                  \n"
-  "           DP                , // Partition of unity                            \n"
-  "           Pk                , // Vectorial FE space                            \n"
-  "           mpiCommWorld              // MPI world                               \n"
-  "          )                                                                     \n";
-
- if(Prblm=="damage" && Model=="hybrid_phase_field")
+ if(Model=="hybrid_phase_field")
  if(!vectorial)
   writeIt
   "                                                                                \n"
@@ -446,7 +270,7 @@ if(!Sequential){
   "           init2                // Scalar initilization                         \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid_phase_field")
+ if(Model=="hybrid_phase_field")
  if(vectorial && constrainHPF)
   writeIt
   "                                                                                \n"
@@ -494,7 +318,7 @@ if(!Sequential){
   "           init2                // Scalar initilization                         \n"
   "          )                                                                     \n";
 
- if(Prblm=="damage" && Model=="hybrid_phase_field")
+ if(Model=="hybrid_phase_field")
  if(vectorial && !constrainHPF)
   writeIt
   "                                                                                \n"
@@ -521,58 +345,5 @@ if(!Sequential){
  <<(timelog ? "  timerend(\"Mesh Partitioning\",t0)\n" : " "                   )<<
  "                                                                                \n"
  "                                                                                \n";
- }
- if(top2vol)
- {
- writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ---- creating a folder for top-ii-vol related files ----                     \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  if(mpirank==0)system(\"mkdir -p top-ii-vol-meshes\");                         \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ---- top-ii-vol point cloud partitioning + meshing ----                      \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  mpiBarrier(mpiCommWorld);                                                     \n"
- "                                                                                \n"
- "  topiivolpart(                                                                 \n"
- "                 PcName,                                                        \n"
- "                 outfile=\"./top-ii-vol-meshes/Pc-strip\",                      \n"
- "                 pointsx=PcNx,                                                  \n"
- "                 pointsy=PcNy,                                                  \n"
- "                 pointsz=PcNz,                                                  \n"
- "                 zdepth=Dptz,                                                   \n"
- "                 partx=PartX,                                                   \n"
- "                 party=PartY,                                                   \n"
- "                 partz=PartZ                                                    \n"
- "              );                                                                \n"
- "                                                                                \n"
- "  mpiBarrier(mpiCommWorld);                                                     \n"
- "                                                                                \n"
- "  topiivolmesh(                                                                 \n"
- "                \"./top-ii-vol-meshes/Pc-strip\",                               \n"
- "                outfile=\"./top-ii-vol-meshes/top2volmesh\",                    \n"
- "                pointsz=PcNz,                                                   \n"
- "                zdepth=Dptz,                                                    \n"
- "                partx=PartX,                                                    \n"
- "                party=PartY,                                                    \n"
- "                partz=PartZ                                                     \n"
- "              );                                                                \n"
- "                                                                                \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ---- Partitioned mesh reading and ghost reconstruction ----                  \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  Th=readmesh3(\"./top-ii-vol-meshes/top2volmesh_\"+mpirank+\".mesh\");         \n"
- "  reconstructDmesh(Th);                                                         \n"
- "                                                                                \n";
- }
+
 }
-
-} //-- [ostream terminator]  meshpartitioning.edp closed --//
-
-cout << " ........................... Done \n";

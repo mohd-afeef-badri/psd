@@ -5,41 +5,41 @@
 * Date   : 20/04/2020                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
-* Comment: This support  file is  responsible for generating  ControlParameters.edp   *
+* Comment: This support  file is  responsible for generating  MeshAndFeSpace.edp   *
 *          which contain main solver control parameters of PSD.                       *
 *                                                                                     *
 **************************************************************************************/
 
-cout << " building ControlParameters.edp";
+cout << " building MeshAndFeSpace.edp";
 
-{ofstream  write("ControlParameters.edp");
+{ofstream  write("MeshAndFeSpace.edp");
 
 if(Prblm=="linear_elasticity")
 {
-#include "./ControlParameters/LinearElasticity.hpp"
+#include "./MeshAndFeSpace/LinearElasticity.hpp"
 }
 
 if(Prblm=="elasto_plastic")
 {
-#include "./ControlParameters/ElastoPlastic.hpp"
+#include "./MeshAndFeSpace/ElastoPlastic.hpp"
 }
 
 if(Prblm=="damage")
 {
-#include "./ControlParameters/DamageMechanics.hpp"
+#include "./MeshAndFeSpace/DamageMechanics.hpp"
 }
 
 if(Prblm=="elastodynamics")
 {
-#include "./ControlParameters/ElastoDynamics.hpp"
+#include "./MeshAndFeSpace/ElastoDynamics.hpp"
 }
 
 if(Prblm=="soildynamics")
 {
-#include "./ControlParameters/SoilDynamics.hpp"
+#include "./MeshAndFeSpace/SoilDynamics.hpp"
 }
 
-} //-- [ostream terminator]  ControlParameters.edp closed --//
+} //-- [ostream terminator]  MeshAndFeSpace.edp closed --//
 
 cout << " ............... Done \n";
 
