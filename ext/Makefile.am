@@ -140,7 +140,7 @@ maintainer-clean-local: clean-local
 	@echo "*============================================================*"
 	@echo ""	
 	rm  -rf Makefile Makefile.in petsc-$(PETSC_VERSION) FreeFem-sources-$(FREEFEM_VERSION)
-	rm  -rf Mfront-sources-$(MFRONT_VERSION) Mgis-sources-$(MGIS_VERSION)	
+	rm  -rf Mfront-sources-$(MFRONT_VERSION) Mgis-sources-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)	
 
 install-exec-local:
 	@echo ""
