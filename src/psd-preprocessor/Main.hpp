@@ -101,7 +101,6 @@ if(!Sequential)
  }
 
 
-if(ParaViewPostProcess)
  writeIt
  "  include \"PostProcessor.edp\"                    // Post Processing        \n";
 

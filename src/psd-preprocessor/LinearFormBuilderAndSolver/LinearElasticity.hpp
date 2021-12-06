@@ -17,7 +17,6 @@ if(!Sequential){
 <<(timelog ? "  timerend  (\"matrix Assembly\",t0)\n" : ""                      )<<
  "                                                                                \n";
 
-
 if(Model=="pseudo_nonlinear")
  writeIt
  "                                                                                \n"
@@ -210,9 +209,32 @@ if(debug)
 if(!ParaViewPostProcess)
  writeIt
  "                                                                                \n"
-<<(timelog ? "timerend(\"solver\",t1)\n" : ""                                   )<<
+ <<(timelog ? "timerend(\"solver\",t1)\n" : ""                                   )<<
  "                                                                                \n";
 
+ if(ParaViewPostProcess)
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// -------Plotting with paraview-------//                                       \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "  if(mpirank==0)                                                                \n"
+ "     system(\"mkdir -p VTUs/\");                                                \n"
+ "  mpiBarrier(mpiCommWorld);                                                     \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"Paraview Plotting\",t0)\n" : ""                      )<<
+ "  int[int] vtuorder=[1];                     // Solution export order           \n"
+ "  savevtk( \"VTUs/Solution.vtu\"  ,                                             \n"
+ "            Th                  ,                                               \n"
+ "            PlotVec(u)          ,                                               \n"
+ "            order=vtuorder      ,                                               \n"
+ "            dataname=\"U\"                                                      \n"
+ "         );                                                                     \n"
+<<(timelog  ? " timerend(\"Paraview Plotting\",t0)\n" : " "                       )
+<<(timelog ? "  timerend(\"Solver\",t1)\n" : " "                                  )<<
+ "                                                                                \n";
+ 
 }  //-- [if loop terminator] !Sequential ended --//
 
 if(Sequential){
@@ -253,6 +275,27 @@ if(!ParaViewPostProcess)
  writeIt
  "                                                                                \n"
 <<(timelog ? "timerend(\"solver\",t1)\n" : ""                                      )<<
+ "                                                                                \n";
+ 
+ if(ParaViewPostProcess) 
+ writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// -------Plotting with paraview-------                                         \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ "     system(\"mkdir -p VTUs/\");                                                \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"Paraview Plotting\",t0)\n" : " "                     )<<
+ "  int[int] vtuorder=[1];                             // Solution export order   \n"
+ "  savevtk( \"VTUs/Solution-Seq.vtu\"   ,                                        \n"
+ "            Th                       ,                                          \n"
+ "            PlotVec(u)               ,                                          \n"
+ "            order=vtuorder           ,                                          \n"
+ "            dataname=\"U\"                                                      \n"
+ "         );                                                                     \n"
+<<(timelog ? "  timerend  (\"Paraview Plotting\",t0)\n" : " "                     )
+<<(timelog ? "  timerend  (\"Solver\",t1)\n" : " "                                )<<
  "                                                                                \n";
 
 }  //-- [if loop terminator] Sequential liniear elasticity ended --//
