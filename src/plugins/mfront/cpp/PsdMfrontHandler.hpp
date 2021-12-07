@@ -86,39 +86,38 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   KN<K>* mfrontStateVariable                = nargs[8] ? GetAny<KN<K>*>((*nargs[8])(stack))       : NULL;
 
 
-  if( mfrontBehaviourName!=NULL && verbosity)
-  {
+  if(mfrontBehaviourName!=NULL && verbosity)
     cout << " \n"
-      " \033[1;36m Message MFront mfrontBehaviourName       :: \033[0m " << *mfrontBehaviourName
-      << " \n" << endl;
-  }
+         << " \033[1;36m Message MFront mfrontBehaviourName       :: \033[0m " << *mfrontBehaviourName
+         << " \n"
+         << endl;
 
-  if( mfrontBehaviourHypothesis!=NULL && verbosity)
-  {
+  if(mfrontBehaviourHypothesis!=NULL && verbosity)
     cout << " \n"
-      " \033[1;36m Message MFront mfrontBehaviourHypothesis :: \033[0m " << *mfrontBehaviourHypothesis  << "\n"
-      << " \n" << endl;
-  }
-
+         << " \033[1;36m Message MFront mfrontBehaviourHypothesis :: \033[0m " << *mfrontBehaviourHypothesis
+         << " \n"
+         << endl;
 
 
   if( mfrontBehaviourHypothesis != NULL &&
       ( *mfrontBehaviourHypothesis != "GENERALISEDPLANESTRAIN" &&
         *mfrontBehaviourHypothesis != "PLANESTRAIN"            &&
-        *mfrontBehaviourHypothesis != "TRIDIMENSIONAL"           )
+        *mfrontBehaviourHypothesis != "TRIDIMENSIONAL"
+      )
     )
   {
     cout
     <<"===================================================================\n"
-      " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+      " \033[1;31m ** ERROR DETECTED  **                           \033[0m\n"
       "===================================================================\n"
-      " WRONG hypothesis was provided by user. Please consider \n"
+      " WRONG hypothesis was provided by user. Please consider               \n"
       " filling in the \033[1;34m mfrontBehaviourHypothesis \033[0m argument \n"
-      " in PsdMfrontHandler(...) function. Example   \n"
-      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\", .... )\033[0m\n"
-      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"PLANESTRAIN\", .... )\033[0m\n"
-      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"TRIDIMENSIONAL\", .... )\033[0m\n"
-      "===================================================================\n" << endl;
+      " in PsdMfrontHandler(...) function. Example                           \n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"GENERALISEDPLANESTRAIN\", .... ) \033[0m\n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"PLANESTRAIN\", .... )            \033[0m\n"
+      "   \033[1;34m PsdMfrontHandler( mfrontBehaviourHypothesis = \"TRIDIMENSIONAL\", .... )         \033[0m\n"
+      "===================================================================\n"
+    << endl;
 
     exit(1);
   }
@@ -131,11 +130,10 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   // Set hypothesis for MGIS
   //-----------------------------------------------
   if(verbosity)
-    {
       cout << " \n"
-        " \033[1;36m Message MFront :: Creating Hypothesis :: \033[0m " << *mfrontBehaviourHypothesis  << "\n"
-        << " \n" << endl;
-    }
+           << " \033[1;36m Message MFront :: Creating Hypothesis :: \033[0m " << *mfrontBehaviourHypothesis
+           << " \n"
+           << endl;
 
   mgis::behaviour::Hypothesis h;
 
@@ -151,13 +149,13 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   //------------------------------------------------
   // Create behaviour/data/view for MGIS
   //-----------------------------------------------
-  if(verbosity){
+  if(verbosity)
       cout << " \n"
-        " \033[1;36m Message MFront :: Loading  Behaviour  :: \033[0m " << *mfrontBehaviourName        << "\n"
-        " \033[1;36m                :: Creating BehaviourData \033[0m "                                << "\n"
-        " \033[1;36m                :: Creating BehaviourDataView \033[0m "                            << "\n"
-        << " \n" << endl;
-  }
+           << " \033[1;36m Message MFront :: Loading  Behaviour  ::     \033[0m " << *mfrontBehaviourName   << "\n"
+           << " \033[1;36m                :: Creating BehaviourData     \033[0m "                           << "\n"
+           << " \033[1;36m                :: Creating BehaviourDataView \033[0m "                           << "\n"
+           << " \n"
+           << endl;
 
   const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
   auto d = BehaviourData{b};
@@ -173,7 +171,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
     if( mfrontPropertyNames  == NULL || mfrontPropertyValues == NULL || mfrontPropertyValues->n < b.mps.size() ){
        cout <<
        "===================================================================\n"
-       " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+       " \033[1;31m ** ERROR DETECTED  **                           \033[0m\n"
        "===================================================================\n"
        " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
        " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
@@ -473,7 +471,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
         {
           if (verbosity)
             cout << " \033[1;36m Message MFront :: Calculating Material Tensor      \033[0m \n"
-                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"                        
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
                  << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
                  << endl;
 
@@ -523,7 +521,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
         {
           if(verbosity)
             cout << " \033[1;36m Message MFront :: Calculating Stress Tensor        \033[0m \n"
-                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"            
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
                  << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
                  << endl;
 
