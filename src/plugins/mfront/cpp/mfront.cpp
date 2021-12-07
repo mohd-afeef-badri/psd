@@ -35,6 +35,7 @@ using namespace Fem2D;
 using namespace mgis::behaviour;
 
 
+#include "typedefinitions.hxx"
 #include "PsdMfrontPrintBehaviourStats.hpp"
 #include "PsdMfrontHandler.hpp"
 
