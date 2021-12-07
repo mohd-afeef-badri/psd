@@ -32,15 +32,16 @@
 
 using namespace std;
 using namespace Fem2D;
-
-using namespace mgis::behaviour;
 using namespace mgis::behaviour;
 
 
+#include "PsdMfrontPrintBehaviourStats.hpp"
 #include "PsdMfrontHandler.hpp"
+
 
 static void InitFF()
 {
   Global.Add("PsdMfrontHandler", "(", new PsdMfrontHandler<double>);
+  Global.Add("PsdMfrontPrintBehaviourStats", "(", new PsdMfrontStats<double>);  
 }
 LOADFUNC(InitFF)   

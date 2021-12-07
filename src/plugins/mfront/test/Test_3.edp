@@ -21,9 +21,12 @@
   load    "../cpp/mfront"
 
   string    BehaviourHypothesis = "GENERALISEDPLANESTRAIN"    ;
+  
   string    PropertyNames       = "YoungModulus PoissonRatio" ;
-  real[int] PropertyValues      = [ 150, 0.3   ];  
-
+  real[int] PropertyValues      = [ 150, 0.3   ];
+  
+  string    ExternalStateVariableNames       = "Temperature" ;    
+  real[int] ExternalStateVariableValues      = [ 293.15   ]  ;
 
   BehaviourHypothesis = "GENERALISEDPLANESTRAIN"    ;
   cout << " ================================================== " << endl;
@@ -34,10 +37,12 @@
 
 
     
-  PsdMfrontHandler( "Elasticity"                                               , 
-                           mfrontBehaviourHypothesis = BehaviourHypothesis     ,
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues
+  PsdMfrontHandler( "Elasticity"                                                    , 
+                     mfrontBehaviourHypothesis         = BehaviourHypothesis         ,
+                     mfrontPropertyNames               = PropertyNames               ,
+                     mfrontPropertyValues              = PropertyValues              ,
+                     mfrontExternalStateVariableNames  = ExternalStateVariableNames  ,
+                     mfrontExternalStateVariableValues = ExternalStateVariableValues
                          );
 
 

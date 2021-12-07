@@ -22,7 +22,7 @@ class PsdMfrontHandler_Op : public E_F0mps {
   public:
     Expression behaviourName                          ;
 
-    static const int n_name_param = 7                 ;
+    static const int n_name_param = 9                 ;
     static basicAC_F0::name_and_type name_param[]     ;
     Expression nargs[n_name_param]                    ;
 
@@ -42,13 +42,15 @@ class PsdMfrontHandler_Op : public E_F0mps {
 template<class K>
 basicAC_F0::name_and_type PsdMfrontHandler_Op<K>::name_param[] =
 {
-  {"mfrontBehaviourHypothesis" , &typeid(std::string*)},
-  {"mfrontPropertyNames"       , &typeid(std::string*)},
-  {"mfrontPropertyValues"      , &typeid(KN<K>*)      },
-  {"mfrontMaterialTensor"      , &typeid(KN<K>*)      },
-  {"mfrontStrainTensor"        , &typeid(KN<K>*)      },
-  {"mfrontStressTensor"        , &typeid(KN<K>*)      },
-  {"mfrontStateVariable"       , &typeid(KN<K>*)      }
+  {"mfrontBehaviourHypothesis"         , &typeid(std::string*)},
+  {"mfrontPropertyNames"               , &typeid(std::string*)},
+  {"mfrontPropertyValues"              , &typeid(KN<K>*)      },  
+  {"mfrontExternalStateVariableNames"  , &typeid(std::string*)},
+  {"mfrontExternalStateVariableValues" , &typeid(KN<K>*)      },    
+  {"mfrontMaterialTensor"              , &typeid(KN<K>*)      },
+  {"mfrontStrainTensor"                , &typeid(KN<K>*)      },
+  {"mfrontStressTensor"                , &typeid(KN<K>*)      },
+  {"mfrontStateVariable"               , &typeid(KN<K>*)      }
 
 };
 
@@ -73,13 +75,15 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
   const string* mfrontBehaviourName = GetAny<string*>((*behaviourName)(stack));
 
-  string* mfrontBehaviourHypothesis  = nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
-  string* mfrontPropertyNames        = nargs[1] ? GetAny<std::string*>((*nargs[1])(stack)) : NULL;
-  KN<K>* mfrontPropertyValues        = nargs[2] ? GetAny<KN<K>*>((*nargs[2])(stack))       : NULL;
-  KN<K>* mfrontMaterialTensor        = nargs[3] ? GetAny<KN<K>*>((*nargs[3])(stack))       : NULL;
-  KN<K>* mfrontStrainTensor          = nargs[4] ? GetAny<KN<K>*>((*nargs[4])(stack))       : NULL;
-  KN<K>* mfrontStressTensor          = nargs[5] ? GetAny<KN<K>*>((*nargs[5])(stack))       : NULL;
-  KN<K>* mfrontStateVariable         = nargs[6] ? GetAny<KN<K>*>((*nargs[6])(stack))       : NULL;
+  string* mfrontBehaviourHypothesis         = nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
+  string* mfrontPropertyNames               = nargs[1] ? GetAny<std::string*>((*nargs[1])(stack)) : NULL;
+  KN<K>*  mfrontPropertyValues              = nargs[2] ? GetAny<KN<K>*>((*nargs[2])(stack))       : NULL;
+  string* mfrontExternalStateVariableNames  = nargs[3] ? GetAny<std::string*>((*nargs[3])(stack)) : NULL;
+  KN<K>* mfrontExternalStateVariableValues  = nargs[4] ? GetAny<KN<K>*>((*nargs[4])(stack))       : NULL;  
+  KN<K>* mfrontMaterialTensor               = nargs[5] ? GetAny<KN<K>*>((*nargs[5])(stack))       : NULL;
+  KN<K>* mfrontStrainTensor                 = nargs[6] ? GetAny<KN<K>*>((*nargs[6])(stack))       : NULL;
+  KN<K>* mfrontStressTensor                 = nargs[7] ? GetAny<KN<K>*>((*nargs[7])(stack))       : NULL;
+  KN<K>* mfrontStateVariable                = nargs[8] ? GetAny<KN<K>*>((*nargs[8])(stack))       : NULL;
 
 
   if( mfrontBehaviourName!=NULL && verbosity)
@@ -87,8 +91,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
     cout << " \n"
       " \033[1;36m Message MFront mfrontBehaviourName       :: \033[0m " << *mfrontBehaviourName
       << " \n" << endl;
-  }
-
+  }  
+  
   if( mfrontBehaviourHypothesis!=NULL && verbosity)
   {
     cout << " \n"
@@ -104,7 +108,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
         *mfrontBehaviourHypothesis != "TRIDIMENSIONAL"           )
     )
   {
-    cout <<"===================================================================\n"
+    cout 
+    <<"===================================================================\n"
       " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
       "===================================================================\n"
       " WRONG hypothesis was provided by user. Please consider \n"
@@ -119,54 +124,73 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   }
 
 
-
   if( mfrontBehaviourHypothesis!=NULL)
-  {
-    if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN")
+{
+  
+  //------------------------------------------------
+  // Set hypothesis for MGIS
+  //-----------------------------------------------
+  if(verbosity)
     {
-      if(verbosity)
-      {
-        cout << " \n"
-          " \033[1;36m Message MFront :: Creating Hypothesis :: \033[0m " << *mfrontBehaviourHypothesis  << "\n"
-          " \033[1;36m                :: Loading  Behaviour  :: \033[0m " << *mfrontBehaviourName        << "\n"
-          " \033[1;36m                :: Creating BehaviourData \033[0m "                                << "\n"
-          " \033[1;36m                :: Creating BehaviourDataView \033[0m "                            << "\n"
-          << " \n" << endl;
-      }
+      cout << " \n"
+        " \033[1;36m Message MFront :: Creating Hypothesis :: \033[0m " << *mfrontBehaviourHypothesis  << "\n"
+        << " \n" << endl;
+    }
+      
+  mgis::behaviour::Hypothesis h;
 
-      constexpr const auto h = Hypothesis::GENERALISEDPLANESTRAIN;
-      const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
+  if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN")
+     h = Hypothesis::GENERALISEDPLANESTRAIN;
 
-      auto d = BehaviourData{b};
-      auto v = make_view(d);
+  if(*mfrontBehaviourHypothesis=="PLANESTRAIN")
+    h = Hypothesis::PLANESTRAIN;
 
-      if( b.mps.size() > 0
-          && ( mfrontPropertyNames  == NULL || mfrontPropertyValues == NULL || mfrontPropertyValues->n < b.mps.size() )
-        )
-      {
-        cout <<
-          "===================================================================\n"
-          " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
-          "===================================================================\n"
-          " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
-          " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
-          " correctly in the in PsdMfrontHandler(...) function. For example,\n"
-          "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
-          " \n\n"
-          " Mfront law expects : \n"
-          << endl;
+  if(*mfrontBehaviourHypothesis=="TRIDIMENSIONAL")
+     h = Hypothesis::TRIDIMENSIONAL;
 
-        for (int i=0; i<b.mps.size(); i++)
-          std::cout << "  Material property :   " <<  b.mps[i].name
-            << " of type " <<  b.mps[i].type <<
-            std::endl;
+  //------------------------------------------------
+  // Create behaviour/data/view for MGIS
+  //-----------------------------------------------
+  if(verbosity){
+      cout << " \n"
+        " \033[1;36m Message MFront :: Loading  Behaviour  :: \033[0m " << *mfrontBehaviourName        << "\n"
+        " \033[1;36m                :: Creating BehaviourData \033[0m "                                << "\n"
+        " \033[1;36m                :: Creating BehaviourDataView \033[0m "                            << "\n"
+        << " \n" << endl;
+  }
+  
+  const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
+  auto d = BehaviourData{b};
+  auto v = make_view(d);
 
-        cout <<"===================================================================\n" << endl;
+  //------------------------------------------------
+  // Assigning Properties for MGIS
+  //-----------------------------------------------
 
-        exit(1);
-      }
-      else
-      {
+  if( b.mps.size() > 0){
+  
+    
+    if( mfrontPropertyNames  == NULL || mfrontPropertyValues == NULL || mfrontPropertyValues->n < b.mps.size() ){
+       cout <<
+       "===================================================================\n"
+       " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+       "===================================================================\n"
+       " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
+       " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
+       " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+       "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
+       " \n\n"
+       " Mfront law expects : \n"
+       << endl;
+
+       for( int i=0; i<b.mps.size(); i++)
+         cout << "  Material property :   "<<  b.mps[i].name << " of type " <<  b.mps[i].type << endl;
+         
+       cout <<"===================================================================\n" << endl;
+
+       exit(1);
+    } 
+    else {
         istringstream iss( *mfrontPropertyNames);
         string s; int j =0;
         while ( getline( iss, s, ' ' ) )
@@ -174,6 +198,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           setMaterialProperty(d.s1,s.c_str(),mfrontPropertyValues->operator[](j));
           j++;
         }
+
         if(j != b.mps.size())
         {
           cout <<
@@ -193,21 +218,102 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           cout << "===================================================================\n" << endl;
 
           exit(1);
-        }
-        else
-        {
-          if (verbosity)
+        }          
+    
+    }
+    
+    if( verbosity ){
+       cout << " \033[1;36m Message MFront :: Following Material Properties Detected :: \033[0m " << endl;
+       for (int i=0; i<b.mps.size(); i++)
           {
-            cout << " \033[1;36m Message MFront :: Following Material Properties Detected :: \033[0m " << endl;
-            for (int i=0; i<b.mps.size(); i++)
-            {
-              double* ygs = getMaterialProperty(d.s1, b.mps[i].name);
-              cout <<" \033[1;36m    " <<  b.mps[i].name << "  =  \033[0m" <<  *ygs << endl;
-            }
-            cout  << " \n" << endl;
-          }
+            double* ygs = getMaterialProperty(d.s1, b.mps[i].name);
+            cout <<" \033[1;36m    " <<  b.mps[i].name << "  =  \033[0m" <<  *ygs << endl;
+           }
+        cout  << " \n" << endl;
+    }     
+    
+  } 
+
+  //------------------------------------------------
+  // Assigning Exterbal state variables for MGIS
+  //-----------------------------------------------
+
+  if( b.esvs.size() > 0 && mfrontExternalStateVariableValues != NULL){
+  
+    
+    if( mfrontExternalStateVariableNames  == NULL || mfrontExternalStateVariableValues == NULL ||  
+        mfrontExternalStateVariableValues->n < b.esvs.size() || mfrontExternalStateVariableValues->n > b.esvs.size() ){
+       cout <<
+       "===================================================================\n"
+       " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+       "===================================================================\n"
+       " mfrontExternalStateVariableNames and/or  mfrontExternalStateVariableValues wrong. Please consider \n"
+       " filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m   and   \033[1;34mmfrontExternalStateVariableValues\033[0m  arguments\n"
+       " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+       "   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableValues = [273.1], .... )\033[0m\n"
+       " \n\n"
+       " Mfront law expects : \n"
+       << endl;
+
+       for( int i=0; i<b.esvs.size(); i++)
+         cout << "  External state variable :   "<<  b.esvs[i].name << " of type " <<  MaterialPropertyKind(b.esvs[i].type) << endl;
+         
+       cout <<"===================================================================\n" << endl;
+
+       exit(1);
+    } 
+    else {
+        istringstream iss( *mfrontExternalStateVariableNames);
+        string s; int j =0;
+        while ( getline( iss, s, ' ' ) )
+        {
+          setExternalStateVariable(d.s1,s.c_str(),mfrontExternalStateVariableValues->operator[](j));
+          j++;
         }
 
+        if(j != b.esvs.size())
+        {
+          cout <<
+            "===================================================================\n"
+            " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+            "===================================================================\n"
+            " mfrontExternalStateVariableNames are wrong. Please consider \n"
+            " filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
+            " correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            "   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", .... )\033[0m\n"
+            " \n                                                                \n"
+            " Mfront law expects :                                              \n" << endl;
+
+          for (int i=0; i<b.esvs.size(); i++)
+            cout << "  External state names :   " <<  b.esvs[i].name << endl;
+
+          cout << "===================================================================\n" << endl;
+
+          exit(1);
+        }          
+    
+    }
+    
+    if( verbosity ){
+       cout << " \033[1;36m Message MFront :: Following External state variables Detected :: \033[0m " << endl;
+       for (int i=0; i<b.esvs.size(); i++)
+          {
+            double* ygs = getExternalStateVariable(d.s1, b.esvs[i].name);
+            cout <<" \033[1;36m    " <<  b.esvs[i].name << "  =  \033[0m" <<  *ygs << endl;
+           }
+        cout  << " \n" << endl;
+    }     
+    
+  } 
+
+
+  // --------------------------------------------------------------- //
+  // ---------------------- 2D PROBLEM ----------------------------- //
+  // --------------------------------------------------------------- //
+          
+    if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN")
+    {
+    
         if ( mfrontMaterialTensor != NULL && mfrontStrainTensor == NULL )
         {
           if (verbosity)
@@ -478,10 +584,6 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             }
           }
         }
-
-
-      }
-
     }
 
 
@@ -492,89 +594,6 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
     if(*mfrontBehaviourHypothesis=="TRIDIMENSIONAL")
     {
-      if(verbosity)
-      {
-        cout << " \n"
-          " \033[1;36m Message MFront :: Creating Hypothesis :: \033[0m " << *mfrontBehaviourHypothesis  << "\n"
-          " \033[1;36m                :: Loading  Behaviour  :: \033[0m " << *mfrontBehaviourName        << "\n"
-          " \033[1;36m                :: Creating BehaviourData \033[0m "                                << "\n"
-          " \033[1;36m                :: Creating BehaviourDataView \033[0m "                            << "\n"
-          << " \n" << endl;
-      }
-
-      constexpr const auto h = Hypothesis::TRIDIMENSIONAL;
-      const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
-
-      auto d = BehaviourData{b};
-      auto v = make_view(d);
-
-      if( b.mps.size() > 0
-          && ( mfrontPropertyNames  == NULL || mfrontPropertyValues == NULL || mfrontPropertyValues->n < b.mps.size() )
-        )
-      {
-        cout <<
-          "===================================================================\n"
-          " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
-          "===================================================================\n"
-          " mfrontPropertyNames and/or  mfrontPropertyValues wrong. Please consider \n"
-          " filling in  \033[1;34mmfrontPropertyNames\033[0m   and   \033[1;34mmfrontPropertyValues\033[0m  arguments\n"
-          " correctly in the in PsdMfrontHandler(...) function. For example,\n"
-          "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", mfrontPropertyValues = [1e9, 0.3], .... )\033[0m\n"
-          " \n\n"
-          " Mfront law expects : \n"
-          << endl;
-
-        for (int i=0; i<b.mps.size(); i++)
-          std::cout << "  Material property :   " <<  b.mps[i].name
-            << " of type " <<  b.mps[i].type <<
-            std::endl;
-
-        cout <<"===================================================================\n" << endl;
-
-        exit(1);
-      }
-      else
-      {
-        istringstream iss( *mfrontPropertyNames);
-        string s; int j =0;
-        while ( getline( iss, s, ' ' ) )
-        {
-          setMaterialProperty(d.s1,s.c_str(),mfrontPropertyValues->operator[](j));
-          j++;
-        }
-        if(j != b.mps.size())
-        {
-          cout <<
-            "===================================================================\n"
-            " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
-            "===================================================================\n"
-            " mfrontPropertyNames are wrong. Please consider \n"
-            " filling in  \033[1;34mmfrontPropertyNames\033[0m argument\n"
-            " correctly in the in PsdMfrontHandler(...) function. For example,\n"
-            "   \033[1;34m PsdMfrontHandler( ..., mfrontPropertyNames = \"YoungModulus PoissonRatio\", .... )\033[0m\n"
-            " \n                                                                \n"
-            " Mfront law expects :                                              \n" << endl;
-
-          for (int i=0; i<b.mps.size(); i++)
-            cout << "  Material property names :   " <<  b.mps[i].name << endl;
-
-          cout << "===================================================================\n" << endl;
-
-          exit(1);
-        }
-        else
-        {
-          if (verbosity)
-          {
-            cout << " \033[1;36m Message MFront :: Following Material Properties Detected :: \033[0m " << endl;
-            for (int i=0; i<b.mps.size(); i++)
-            {
-              double* ygs = getMaterialProperty(d.s1, b.mps[i].name);
-              cout <<" \033[1;36m    " <<  b.mps[i].name << "  =  \033[0m" <<  *ygs << endl;
-            }
-            cout  << " \n" << endl;
-          }
-        }
 
         if ( mfrontMaterialTensor != NULL && mfrontStrainTensor == NULL   && mfrontStateVariable == NULL  )
         {
@@ -1376,10 +1395,9 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
            }
 
           }
-        }
       }
 
     }
-  }
+}
   return 0L;
 }

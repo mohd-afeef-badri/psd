@@ -11,11 +11,13 @@ all-local: mfront.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-mfront.so: mfront.cpp PsdMfrontHandler.hpp
+mfront.so: mfront.cpp PsdMfrontHandler.hpp PsdMfrontPrintBehaviourStats.hpp
 if HAVEMGIS
-	find -name PsdMfrontHandler.hpp -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \; && \
+	find -name PsdMfrontHandler.hpp -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \;
+	find -name PsdMfrontPrintBehaviourStats.hpp -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \;
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 	find -name PsdMfrontHandler.hpp -exec sed -i "s#${prefix}/lib#/usr/lib#g" {} \;
+	find -name PsdMfrontPrintBehaviourStats.hpp -exec sed -i "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS	
 	@echo ""
 endif

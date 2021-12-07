@@ -9,3 +9,4 @@
 | Test_5 | This test checks the PsdMfrontHandler how it provides stiffness matrix in vectorial FEM space |
 | Test_6 | This test checks the PsdMfrontHandler how it provides stress tensor in vectorial FEM space |
 | Test_7 | This test checks the PsdMfrontHandler how it provides stress tensor and stiffness matrix in vectorial FEM spaces |
+| Test_8 | This test checks the PsdMfrontPrintBehaviourStats how it provides information about MFront law  |

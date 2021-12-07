@@ -4,7 +4,8 @@ Test_3 \
 Test_4 \
 Test_5 \
 Test_6 \
-Test_7
+Test_7 \
+Test_8
 
 all-local: 
 	@echo ""
@@ -72,7 +73,13 @@ Test_7: Test_7.edp
 	@./../../../psd-solve/PSD_Solve -np 1 Test_7.edp -v 1 >  Test_7.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_7.edp -v 1 >  Test_7_NP2.log		
 	@echo "  PASSED "				
-			
+
+Test_8: Test_8.edp
+	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats()"
+	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 >  Test_8.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 >  Test_8_NP2.log		
+	@echo "  PASSED "
+				
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

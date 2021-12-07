@@ -2,10 +2,17 @@
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
 ## Rolling release (2.4)
-- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGISq)
-- Dependencies can now be installed by PSD. 
 
 ### Added
+
+- New `PsdMfrontPrintBehaviourStats()` to probe the mfront file and know the input/output.
+- New variables added for `PsdMfrontHandler()` function `mfrontStrainTensor, mfrontStateVariable, `.
+- New variables added for `PsdMfrontHandler()` function `mfrontExternalStateVariableNames, mfrontExternalStateVariableValues, `.
+- More unit tests for mfront plugin.
+- New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
+- New elasto-plastic tutorial.
+- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGISq)
+- Dependencies can now be installed by PSD. 
 
 ### Changed
 - Moved to FreeFEM 4.10
