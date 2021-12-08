@@ -182,14 +182,14 @@ int main(const int argc, const char* const* argv) {
   m.s1.gradients[3] = 1.;  //E12
 */  
   
-for (size_type idx = 0 , index; idx != m.n; ++idx  ) {
+   for (size_type idx = 0 , index; idx != m.n; ++idx) 
+   {
       index = idx * m.s1.gradients_stride;
       m.s1.gradients[ index ]      = 1.;
       m.s1.gradients[ index + 1]   = 1.;
       m.s1.gradients[ index + 2]   = 0.;
-      m.s1.gradients[ index + 3]   = 1.;
-                  
-    }
+      m.s1.gradients[ index + 3]   = 1.;                
+   }
 
   std::cout << "       ....                        "<< std::endl;
   std::cout << "       Done   "<< std::endl;

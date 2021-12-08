@@ -157,7 +157,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
            << " \n"
            << endl;
 
-  const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
+  const auto b = load(MFRONT_SHARED_LIBRARY_LOCATION, *mfrontBehaviourName , h);
   auto d = BehaviourData{b};
   auto v = make_view(d);
 

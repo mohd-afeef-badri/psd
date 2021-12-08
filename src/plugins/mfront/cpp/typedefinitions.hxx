@@ -1,5 +1,8 @@
 //
 
+#define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.so"
+
+
 /*
     2D strain  Tensor Logic
     

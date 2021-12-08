@@ -42,7 +42,7 @@ Test_2: Elasticity-For-A-Quadrature-Point-3D.cxx
 Test_3: Elasticity-For-A-Quadrature-Point_Threaded.cxx
 	@echo "Test_3 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
 	@$(CXX) Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
-	@./a.out	
+	@./a.out > Test_3.log	
 	@echo "  PASSED "
 					
 clean-local:

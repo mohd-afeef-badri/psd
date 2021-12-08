@@ -122,7 +122,7 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
    if(*mfrontBehaviourHypothesis=="TRIDIMENSIONAL")
      h = Hypothesis::TRIDIMENSIONAL;
 
-   const auto b = load("/usr/lib/libBehaviour.so", *mfrontBehaviourName , h);
+   const auto b = load(MFRONT_SHARED_LIBRARY_LOCATION, *mfrontBehaviourName , h);
 
 
    if( b.mps.size() > 0){
