@@ -32,11 +32,19 @@ Test_1: Elasticity-For-A-Quadrature-Point.cxx
 	@./a.out > Test_1.log	
 	@echo "  PASSED "	
 
-Test_2: Elasticity-For-A-Quadrature-Point.cxx
+Test_2: Elasticity-For-A-Quadrature-Point-3D.cxx
 	@echo "Test_2 : mfront unit test for Elasticity (Quadrature point) in 3D"
 	@$(CXX) Elasticity-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 	@./a.out > Test_2.log	
-	@echo "  PASSED "			
+	@echo "  PASSED "
+	
+
+Test_3: Elasticity-For-A-Quadrature-Point_Threaded.cxx
+	@echo "Test_3 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
+	@$(CXX) Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out	
+	@echo "  PASSED "
+					
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
