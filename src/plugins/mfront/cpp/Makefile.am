@@ -11,7 +11,7 @@ all-local: mfront.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-mfront.so: mfront.cpp PsdMfrontHandler.hpp PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
+mfront.so: mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
 if HAVEMGIS
 	find -name typedefinitions.hxx -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \;
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib

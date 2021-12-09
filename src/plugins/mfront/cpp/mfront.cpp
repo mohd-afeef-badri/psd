@@ -17,7 +17,7 @@
 
 *******************************************************************************/
 
-
+#include <cmath>
 #include <iostream>
 #include <math.h>
 #include "ff++.hpp"
@@ -28,21 +28,25 @@
 #include "MGIS/Behaviour/State.hxx"
 #include "MGIS/Behaviour/Behaviour.hxx"
 #include "MGIS/Behaviour/BehaviourData.hxx"
+#include "MGIS/Behaviour/MaterialDataManager.hxx"
 #include "MGIS/Behaviour/Integrate.hxx"
 
 using namespace std;
 using namespace Fem2D;
+using namespace mgis;
 using namespace mgis::behaviour;
 
 
 #include "typedefinitions.hxx"
 #include "PsdMfrontPrintBehaviourStats.hpp"
 #include "PsdMfrontHandler.hpp"
+#include "PsdMfrontHandlerDm.hpp"
 
 
 static void InitFF()
 {
   Global.Add("PsdMfrontHandler", "(", new PsdMfrontHandler<double>);
+  Global.Add("PsdMfrontHandlerDm", "(", new PsdMfrontHandlerDm<double>);
   Global.Add("PsdMfrontPrintBehaviourStats", "(", new PsdMfrontStats<double>);  
 }
-LOADFUNC(InitFF)   
+LOADFUNC(InitFF)
