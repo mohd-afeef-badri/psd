@@ -1,0 +1,21 @@
+// USE 16 Procs //
+
+if(mpisize!=16){
+cout << "LOGO IS CREATED WITH 16 PROCS" << endl;
+exit(1);
+}
+load "msh3"
+load "iovtk"
+macro dimension()3S// EOM
+include "macro_ddm.idp"
+load "PETSc"
+meshS ThS = readmeshS("PSD.mesh");
+fespace Uh(ThS, P1);
+Mat H;
+createMat(ThS, H, P1);
+
+if(mpirank < 10)
+savevtk("out_"+mpisize+"_0000_0"+mpirank+".vtu",ThS);
+else
+savevtk("out_"+mpisize+"_0000_"+mpirank+".vtu",ThS);
+
