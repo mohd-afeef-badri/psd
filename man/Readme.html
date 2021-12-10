@@ -1,29 +1,195 @@
-<h1 id="psd-2.3-a-parallel-structural-dynamics-solver">PSD 2.3: a Parallel Structural Dynamics solver</h1>
-<div class="figure">
-<img src="./man/markdownimage.png" />
+<!doctype html>
+<html >
+<head>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--[if lt IE 9]>
+                <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
 
-</div>
-<p>PSD is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math inline"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math inline"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
+    <!-- <link rel="stylesheet" type="text/css" href="template.css" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/template.css" />
+
+    <link href="https://vjs.zencdn.net/5.4.4/video-js.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <!-- <script type='text/javascript' src='menu/js/jquery.cookie.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.hoverIntent.minified.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.dcjqaccordion.2.7.min.js'></script> -->
+
+    <!-- <link href="menu/css/skins/blue.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/graphite.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/grey.css" rel="stylesheet" type="text/css" /> -->
+  
+    <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        
+  
+    <!-- <script src="script.js"></script> -->
+  
+    <!-- <script src="jquery.sticky-kit.js "></script> -->
+    <script type='text/javascript' src='https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/js/jquery.cookie.js'></script>
+    <script type='text/javascript' src='https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/js/jquery.hoverIntent.minified.js'></script>
+    <script type='text/javascript' src='https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/js/jquery.dcjqaccordion.2.7.min.js'></script>
+
+    <link href="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/css/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/css/skins/graphite.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/menu/css/skins/grey.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.rawgit.com/ryangrose/easy-pandoc-templates/948e28e5/css/elegant_bootstrap.css" rel="stylesheet" type="text/css" />
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+    <script src="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/script.js"></script>
+  
+    <script src="https://cdn.rawgit.com/diversen/pandoc-bootstrap-adaptive-template/959c3622/jquery.sticky-kit.js"></script>
+    <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+
+    
+    <div class="container">
+    <div class="row">
+            <div id="TOC" class="span3">
+        <div class="well toc">
+
+        <ul>
+        <li><a href="#psd-version-2.4">PSD version 2.4</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#a-quick-sneak-peek-of-a-typical-psd-simulation">A quick sneak-peek of a typical PSD simulation</a></li>
+        <li><a href="#psd-flags-explained">PSD flags explained</a></li>
+        <li><a href="#configuration-flags">Configuration flags</a></li>
+        <li><a href="#make-options-for-psd">make options for PSD</a></li>
+        </ul>
+
+        </div>
+      </div>
+            <div class="span9">
+            <h2 id="psd-version-2.4">PSD version 2.4</h2>
+<hr />
+<p><img src="./logo.png" style="zoom:50%;" /></p>
+<p>PSD, acronym for Parallel Solid/Structural/Seismic Dynamics, is a finite elements-based solid mechanics solver with capabilities of performing High Performance Computing (HPC) simulations with billions of unknowns. The kernel of PSD is wrapped around <a href="https://freefem.org/">FreeFEM</a> for finite element discretization, and <a href="https://www.mcs.anl.gov/petsc/">PETSc</a> for linear algebra/Preconditioning. PSD solver contains straightforward supports for <em>static</em> or <em>dynamic</em> simulations with <em>linear</em> and <em>nonlinear</em> solid mechanics problems. Besides these <a href="https://link.springer.com/article/10.1007/s00466-014-1109-y"><em>hybrid-phase field fracture mechanics</em></a> models have also been incorporated within PSD. For dynamics the <a href="https://hal.archives-ouvertes.fr/hal-00345290/document"><em>genralized-<span class="math inline"><em>α</em></span> model</em></a> for time discretization is used, this models enable straightforward use of Newmark-<span class="math inline"><em>β</em></span>, central difference, or HHT as time discretization. PSD uses sate-of-the art domain-decomposition paradigm via <a href="https://www.sciencedirect.com/science/article/pii/S0022407317309597"><em>vectorial finite elements</em></a> for parallel computing and all solvers are proven to scale quasi-optimally. PSD has proven scalabilty uptill 24,000 cores with largest problem solved containing over 5 Billion unknowns.</p>
 <p>Besides the parallel suite, PSD also includes a sequential solver which does not require <a href="https://www.mcs.anl.gov/petsc/">PETSc</a>.</p>
 <p>PSD works for two and three dimensional problems only. Unstructured meshes (triangular for 2D and tetrahedral for 3D) are supported in <a href="https://www.ljll.math.upmc.fr/frey/software.html">MEDIT's</a> <code>.mesh</code> format or <a href="http://gmsh.info/">Gmsh's</a> <code>.msh</code> format. PSD post processing is done via <code>.pvd</code> ,<code>.vtk</code> and <code>.vtu</code> files of the <a href="https://www.paraview.org/">ParaView</a> platform.</p>
 <h2 id="installation">Installation</h2>
-<p>PSD is a cross-platform solver built to work with Linux platforms (Windows comping up soon). PSD has successfully been deployed on the following platforms, CentOS 7/8, Ubuntu 16.04/18.04/20.04, Raspberry Pi, Fedora 32, etc. Before installing PSD please ensure that you have the following dependencies installed on your OS.</p>
-<p><strong>Dependencies</strong></p>
-<p>These can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.</p>
+<p>PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD has successfully been deployed on the following platforms:</p>
 <ul>
-<li><p><a href="https://www.gnu.org/software/automake/">automake</a> &gt; v2.50</p></li>
-<li><p><a href="https://freefem.org/">FreeFEM</a> v4.10</p></li>
-<li><p><a href="https://www.mcs.anl.gov/petsc/">PETSc</a> v3.16.1</p></li>
-<li><p><a href="http://gmsh.info/">Gmsh</a> v4.8.4</p></li>
-<li><p><a href="http://www.cplusplus.com/">C++</a> &gt; v7</p></li>
-<li><p><a href="https://www.mpich.org/">Mpich</a> or <a href="https://www.open-mpi.org/">Open MPI</a> &gt; v2.8</p></li>
-<li><p><a href="https://git-scm.com/">git</a></p></li>
-<li><p><a href="http://tfel.sourceforge.net/">MFront</a> v3.4.0 (optional)</p></li>
-<li><p><a href="https://thelfer.github.io/mgis/web/bindings-cxx.html">MGIS</a> v1.2 (optional)</p></li>
-<li><p><a href="http://www.gnuplot.info/">gnuplot</a> (optional)</p></li>
+<li>CentOS 7 / 8</li>
+<li>Ubuntu 16.04 / 18.04 / 20.04</li>
+<li>Raspberry Pi</li>
+<li>Fedora 30 / 32</li>
+<li>MacOS X Puma:10.1.5</li>
 </ul>
-<p>Note that PETSc and FreeFEM need to be compiled with METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. To follow this type of installation read the section <em>Installation Procedure 1: I install my own dependencies</em></p>
-<p>Optionally, since PSD version 2.4 PSD can attempt to build all these dependencies for you. In this case, to know how this is done, please skip to section <em>Installation Procedure 2: PSD installs all dependencies</em>.</p>
+<p>Before installing PSD please ensure that you have the following dependencies installed on your OS.</p>
+<p><strong>Dependencies</strong></p>
+<p>PSD has some essential prerequistes without which PSD will not function. These dependencis can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Version</th>
+<th>Essential</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://www.gnu.org/software/automake/">automake</a></td>
+<td>Version <strong>2.8</strong> or higher</td>
+<td>YES</td>
+</tr>
+<tr class="even">
+<td><a href="https://freefem.org/">FreeFEM</a></td>
+<td>Version <strong>4.10</strong></td>
+<td>YES</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.mcs.anl.gov/petsc/">PETSc</a></td>
+<td>Version <strong>3.16.1</strong></td>
+<td>YES</td>
+</tr>
+<tr class="even">
+<td><a href="http://gmsh.info/">Gmsh</a></td>
+<td>Version <strong>4.8</strong></td>
+<td>YES</td>
+</tr>
+<tr class="odd">
+<td><a href="http://www.cplusplus.com/">C++</a>, C</td>
+<td>Version <strong>7</strong> or Higher</td>
+<td>YES</td>
+</tr>
+<tr class="even">
+<td>MPI</td>
+<td>Version <strong>2.0</strong> or Higher (choose either <a href="https://www.mpich.org/">Mpich</a> or <a href="https://www.open-mpi.org/">Open MPI</a>)</td>
+<td>YES</td>
+</tr>
+<tr class="odd">
+<td><a href="https://git-scm.com/">git</a></td>
+<td>-</td>
+<td>YES</td>
+</tr>
+<tr class="even">
+<td><a href="http://tfel.sourceforge.net/">MFront</a></td>
+<td>Version <strong>3.4.0</strong></td>
+<td>OPTIONAL</td>
+</tr>
+<tr class="odd">
+<td><a href="https://thelfer.github.io/mgis/web/bindings-cxx.html">MGIS</a></td>
+<td>Version <strong>1.2</strong></td>
+<td>OPTIONAL</td>
+</tr>
+<tr class="even">
+<td><a href="http://www.gnuplot.info/">gnuplot</a></td>
+<td>Version <strong>4.0</strong> or Higher</td>
+<td>OPTIONAL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Note that PETSc and FreeFEM need to be compiled with METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.</p>
+<p>Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies. To follow this type of installation read the section <em>Installation Procedure 1: I install my own dependencies</em>Alternatively, PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section <em>Installation Procedure 2: PSD installs all dependencies</em>.</p>
 <h4 id="installation-procedure-1-i-install-my-own-dependencies">Installation Procedure 1: I install my own dependencies</h4>
 <ul>
 <li><p>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
@@ -102,7 +268,8 @@
 <li><p>In the parallel command <strong>$N</strong> is an <code>int</code> value, i.e., number of processes that you want to use for performing the simulation in parallel.</p></li>
 <li><p>Additional flag <code>-wg</code> may be required while launching the solver, this is in case debug mode is on.</p></li>
 </ul>
-<p><strong>Step 3: Result visualization</strong> Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing. ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.</p>
+<p><strong>Step 3: Result visualization</strong> Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing (see figure below). ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.</p>
+<p><img src="./domaindecomp.png" alt="markdownimage" style="zoom:30%;" /></p>
 <h2 id="psd-flags-explained">PSD flags explained</h2>
 <p>These are a set of commandline flags/options that control your simulation. You can think of it as a way to talk to the solver. Here is a table that lists out some of the options that are available (for full list see documentation). It is advised to print these and have them around when performing a PSD simulation.</p>
 <table>
@@ -458,3 +625,10 @@
 <li><strong>mohd-afeef.badri@cea.fr</strong></li>
 <li><strong>mohd-afeef.badri@hotmail.com</strong></li>
 </ul>
+            </div>
+    </div>
+  </div>
+  <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>
+
+</body>
+</html>

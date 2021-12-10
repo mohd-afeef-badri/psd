@@ -12,7 +12,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
 - New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGISq)
-- Dependencies can now be installed by PSD. 
+- Dependencies can now be installed by PSD.
 
 ### Changed
 - Moved to FreeFEM 4.10
@@ -34,7 +34,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - `-withmaterialtensor` now uses Quadrature finite elements to build the material tensor.
 - New variational formulation for handling Linear mechanics problems, Quadrature point wise material tensor is built.
 - `pseudo_nonlinear` implementation of Linear Elasticity now works.
-- New `Notes` section added in the source repo, to help with mathematical and algorithimic reasoning.
+- New `Notes` section added in the source repo, to help with mathematical and algorithmic reasoning.
 
 ### Bug
 

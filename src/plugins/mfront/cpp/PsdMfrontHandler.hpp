@@ -456,6 +456,9 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           int totalCells =  mfrontMaterialTensor->n / 84;
           int indexMtTensor ;
+          cout << "THREADS MAX "<< omp_get_max_threads() <<endl;
+          omp_set_num_threads(omp_get_max_threads());
+          
           for (int i = 0; i < totalCells; i++)
           {
             indexMtTensor  = i*84;  // 21 - components of sym. material tensor and 4 quadrature points per element 4*6= 84
@@ -537,7 +540,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             integrate(v, b);
             MacroGetSress3D(indexEx);
 
-
+#pragma omp parallel for
            for(int jj = 0; jj < totalIsv; jj++){
              mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
              mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];

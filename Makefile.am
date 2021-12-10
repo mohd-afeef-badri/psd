@@ -61,7 +61,8 @@ tutorials:
 	@mkdir -p $${HOME}/PSD-tutorials/elastodynamics
 	@mkdir -p $${HOME}/PSD-tutorials/soildynamics
 	@mkdir -p $${HOME}/PSD-tutorials/fracture-mechanics
-	@mkdir -p $${HOME}/PSD-tutorials/linear-elasticity				
+	@mkdir -p $${HOME}/PSD-tutorials/linear-elasticity
+	@mkdir -p $${HOME}/PSD-tutorials/elasto-plastic					
 	@mkdir -p $${HOME}/PSD-tutorials/Doc
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/2D
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/3D		
@@ -81,6 +82,7 @@ tutorials:
 	@cp  ./demos/soildynamics/*.pdf        $${HOME}/PSD-tutorials/soildynamics/.
 	@cp  ./demos/linear-elasticity/*.pdf   $${HOME}/PSD-tutorials/linear-elasticity/.
 	@cp  ./demos/fracture-mechanics/*.pdf  $${HOME}/PSD-tutorials/fracture-mechanics/.
+	@cp  ./demos/elasto-plastic/*.pdf      $${HOME}/PSD-tutorials/elasto-plastic/.	
 	@echo "  tutorials installed at :    " $${HOME}/PSD-tutorials/;	
 	@echo "  			  "
 	@echo "*============================================================*"
@@ -151,23 +153,23 @@ documentation-readme: Readme.pdf Readme.html Readme.tex
 	@echo ""
 
 Readme.pdf: Readme.MD
-	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
-	cp Readme.pdf  man/.	
+	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style breezedark --latex-engine=xelatex
+	mv Readme.pdf  man/.	
 
 Readme.tex: Readme.MD
 	pandoc Readme.MD -o Readme.tex -r markdown-auto_identifiers --latex-engine=xelatex --listings
 	mv Readme.tex  etc/.
 	
 Readme.html: Readme.MD
-	pandoc Readme.MD -o Readme.html
-	cp Readme.html man/.				
+	pandoc Readme.MD -o Readme.html --template=easy_template.html --toc
+	mv Readme.html man/.				
 	
 documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
 	@echo ""
 
 Changelog.pdf: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
-	cp Changelog.pdf man/.
+	mv Changelog.pdf man/.
 	
 Changelog.tex: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.tex -r markdown-auto_identifiers --latex-engine=xelatex --listings
@@ -175,7 +177,7 @@ Changelog.tex: Changelog.MD
 
 Changelog.html: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.html
-	cp Changelog.html  man/.			
+	mv Changelog.html  man/.			
 	
 documentation: documentation-readme documentation-Changelog
 	@echo ""
