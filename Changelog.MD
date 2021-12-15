@@ -5,13 +5,14 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- PSD installation support for MacOS.
 - New `PsdMfrontPrintBehaviourStats()` to probe the mfront file and know the input/output.
 - New variables added for `PsdMfrontHandler()` function `mfrontStrainTensor, mfrontStateVariable, `.
 - New variables added for `PsdMfrontHandler()` function `mfrontExternalStateVariableNames, mfrontExternalStateVariableValues, `.
 - More unit tests for mfront plugin.
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
-- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGISq)
+- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGIS)
 - Dependencies can now be installed by PSD.
 
 ### Changed
