@@ -2,8 +2,9 @@ LIST_COMPILE= mfront.cpp
 
 LOCAL_VERSION = no
 REMOTE_VERSION = ${mgis}
+DEP1 = mfront.$(SO_SUFFIX)
 	
-all-local: mfront.so
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -11,7 +12,7 @@ all-local: mfront.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-mfront.so: mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
+$(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
 if HAVEMGIS
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
@@ -24,7 +25,7 @@ install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
 if HAVEMGIS	
-	@cp mfront.so ${prefix}/include/psd/mfront.so	
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 endif
 		
 clean-local:
@@ -33,7 +34,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
 maintainer-clean-local: clean-local

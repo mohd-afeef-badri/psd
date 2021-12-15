@@ -1,6 +1,8 @@
 LIST_COMPILE= gofastplugins.cpp
+
+DEP1 = gofastplugins.$(SO_SUFFIX)
 	
-all-local: gofastplugins.so
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,7 +10,7 @@ all-local: gofastplugins.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-gofastplugins.so: gofastplugins.cpp
+$(DEP1): gofastplugins.cpp
 	$(FFCXX) -auto gofastplugins.cpp
 #	$(FFCXX) -auto -mpi gofastplugins.cpp -Wl,-rpath,/home/mb258512/Install/local/ff-petsc/r/lib '-L/home/mb258512/Install/local/ff-petsc/r/lib' '-lflapack' '-lfblas'
 	@echo ""	
@@ -16,7 +18,7 @@ gofastplugins.so: gofastplugins.cpp
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp gofastplugins.so ${prefix}/include/psd/gofastplugins.so	
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 		
 clean-local:
 	@echo ""
@@ -24,7 +26,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
 maintainer-clean-local: clean-local

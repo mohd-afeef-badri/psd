@@ -1,6 +1,8 @@
 LIST_COMPILE= PSD-PETSc.cpp
+
+DEP1 = PSD-PETSc.$(SO_SUFFIX)
 	
-all-local: PSD-PETSc.so
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,14 +10,14 @@ all-local: PSD-PETSc.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-PSD-PETSc.so: PSD-PETSc.cpp common_hpddm.hpp ./../../paraview-output/cpp/PSD-iovtk.cpp
+$(DEP1): PSD-PETSc.cpp common_hpddm.hpp ./../../paraview-output/cpp/PSD-iovtk.cpp
 	$(FFCXX) -auto -mpi PSD-PETSc.cpp
 	@echo ""	
 
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp PSD-PETSc.so ${prefix}/include/psd/PSD-PETSc.so
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 	
 clean-local:
 	@echo ""
@@ -23,7 +25,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
 maintainer-clean-local: clean-local

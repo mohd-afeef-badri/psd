@@ -1,6 +1,8 @@
-LIST_COMPILE= MatrixPlotter.cpp
+LIST_COMPILE = MatrixPlotter.cpp
+
+DEP1 = MatrixPlotter.$(SO_SUFFIX)
 	
-all-local: MatrixPlotter.so
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,14 +10,14 @@ all-local: MatrixPlotter.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-MatrixPlotter.so: MatrixPlotter.cpp
+$(DEP1): MatrixPlotter.cpp
 	$(FFCXX) -auto MatrixPlotter.cpp
 	@echo ""
 		
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp MatrixPlotter.so ${prefix}/include/psd/MatrixPlotter.so
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 	
 clean-local:
 	@echo ""
@@ -23,7 +25,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
 maintainer-clean-local: clean-local

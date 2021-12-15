@@ -1,6 +1,8 @@
 LIST_COMPILE= PSD-iovtk.cpp
+
+DEP1 = PSD-iovtk.$(SO_SUFFIX)
 	
-all-local: PSD-iovtk.so
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -15,7 +17,7 @@ PSD-iovtk.so: PSD-iovtk.cpp ./../../petsc/cpp/common_hpddm.hpp
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp PSD-iovtk.so ${prefix}/include/psd/PSD-iovtk.so
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 	
 clean-local:
 	@echo ""
@@ -23,7 +25,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
 maintainer-clean-local: clean-local

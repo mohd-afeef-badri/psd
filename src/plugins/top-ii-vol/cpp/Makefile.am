@@ -1,6 +1,8 @@
 LIST_COMPILE=top-ii-vol.cpp
-	
-all-local: top-ii-vol.so
+
+DEP1 = top-ii-vol.$(SO_SUFFIX)
+
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -8,14 +10,14 @@ all-local: top-ii-vol.so
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-top-ii-vol.so: top-ii-vol.cpp
+$(DEP1): top-ii-vol.cpp
 	$(FFCXX) -auto -mpi top-ii-vol.cpp
 	@echo ""	
 
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-	@cp top-ii-vol.so ${prefix}/include/psd/top-ii-vol.so
+	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 
 clean-local:
 	@echo ""
@@ -23,7 +25,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 maintainer-clean-local: clean-local
 	@echo ""
