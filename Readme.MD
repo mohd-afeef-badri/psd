@@ -19,7 +19,7 @@ PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD 
 - CentOS 7 / 8
 - Ubuntu 16.04 / 18.04 / 20.04
 -  Raspberry Pi
--   Fedora 30 / 32
+-   Fedora 30 / 32 / 34
 -  MacOS X Puma:10.1.5 	
 
 Before installing PSD please ensure that you have the following dependencies installed on your OS.
@@ -42,21 +42,21 @@ Before installing PSD please ensure that you have the following dependencies ins
 | [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |
 |                                                              |                                                              |           |
 
-Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
+Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
 
-Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS  for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
+Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
 #### Installation Procedure 1: I install my own dependencies ####
 
-- Go ahead and grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
+- Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
 
 
-- Use automake PSD within the  cloned folder
+- Use automake within the  cloned PSD folder (`psd_sources`) 
 ```bash
 autoreconf -i
 ```
@@ -65,7 +65,10 @@ autoreconf -i
 ```bash
 ./configure
 ```
-**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. Also `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in `usr/bin/` or `usr/local/bin/` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
+**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. 
+
+**Note**: `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in your `PATH` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
+
 ```bash
 ./configure --prefix=$HOME/Install/local \
   --with-mgis=$HOME/Install/local/mgis   \
@@ -84,7 +87,7 @@ make
 ```bash
 sudo make install
 ```
-**Note** : You should not use `sudo` if you have used `--prefix` during the `./configure`
+**Note** : You should not use `sudo` if you have used `--prefix` during the `./configure` phase.
 
 - Install PSD tutorials
 ```bash
@@ -113,7 +116,7 @@ R seuil=hm/splitmax/4.0/1000.0;
 
 #### Installation Procedure 2: PSD installs all the dependencies ####
 
-- Go ahead and grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
+- Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
