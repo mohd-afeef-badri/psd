@@ -70,23 +70,23 @@ AC_ARG_WITH(FreeFEM,
 	   FF="${withval}/FreeFem++"
 	   FFCXX="${withval}/ff-c++"
 	   FFMPI="${withval}/ff-mpirun")
-	   
+
 AC_ARG_WITH(Gmsh,
 	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
-	   GMSH="${withval}/gmsh")	   
+	   GMSH="${withval}/gmsh")
 
 AC_SUBST([dependencies])
-AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])                                  
+AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])
 test "$dependencies" == "no" && AC_MSG_WARN([
  PSD can automatically build for you its dependencies
  FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
- In order to do so 
- 
- --with-dependencies=yes 
- 
+ In order to do so
+
+ --with-dependencies=yes
+
  A power user is adviced to build these on their own.
  ])
- 
+
 AU_ALIAS([ACX_MPI], [AX_MPI])
 AC_DEFUN([AX_MPI], [
 AC_PREREQ(2.50)
@@ -220,34 +220,34 @@ AC_LANG(Fortran 77)
 AX_MPI
 
 AC_ARG_WITH(MPICXX,
-	[  --with-MPICXX=          path of the MPI C++ compiler to be used 
+	[  --with-MPICXX=          path of the MPI C++ compiler to be used
 	                  (e.g. --with-MPICXX=your/MPIC++/Install/path/bin/mpic++)],
 	   MPICXX="${withval}")
 
 AC_ARG_WITH(MPICC,
-	[  --with-MPICC=          path of the MPI C compiler to be used 
+	[  --with-MPICC=          path of the MPI C compiler to be used
 	                  (e.g. --with-MPICC=your/MPIC++/Install/path/bin/mpicc)],
-	   MPICC="${withval}")	   
+	   MPICC="${withval}")
 
 AC_ARG_WITH(MPIFC,
-	[  --with-MPIFC=          path of the MPI Fortran compiler to be used 
+	[  --with-MPIFC=          path of the MPI Fortran compiler to be used
 	                  (e.g. --with-MPIFC=your/MPIFC/Install/path/bin/mpicf90)],
 	   MPIFC="${withval}")
 
 AC_ARG_WITH(MPIF77,
-	[  --with-MPIF77=          path of the MPI C++ compiler to be used 
+	[  --with-MPIF77=          path of the MPI C++ compiler to be used
 	                  (e.g. --with-MPIF77=your/MPIF77/Install/path/bin/mpif77)],
 	   MPIF77="${withval}")
-	   	   
+
 test "$MPICXX" == "$CXX" && AC_MSG_ERROR([
 
   Required  MPI C++ compilers were not  found. If you are
   sure that MPI C++ compiler is  present on you operating
   system you might use the ./configure flag:
-  
-    '--with-MPICXX=your/MPIC++/Install/path/bin/mpic++' 
-     
-  to provide the location of MPI C++ compiler. 
+
+    '--with-MPICXX=your/MPIC++/Install/path/bin/mpic++'
+
+  to provide the location of MPI C++ compiler.
                                    ])
 
 test "$MPICC" == "$CC" && AC_MSG_ERROR([
@@ -255,10 +255,10 @@ test "$MPICC" == "$CC" && AC_MSG_ERROR([
   Required  MPI C compilers were not  found. If you are
   sure that MPI C compiler is  present on you operating
   system you might use the ./configure flag:
-  
-    '--with-MPICC=your/MPIC/Install/path/bin/mpicc' 
-     
-  to provide the location of MPI C compiler. 
+
+    '--with-MPICC=your/MPIC/Install/path/bin/mpicc'
+
+  to provide the location of MPI C compiler.
                                    ])
 
 test "$MPIFC" == "$FC" && AC_MSG_ERROR([
@@ -266,10 +266,10 @@ test "$MPIFC" == "$FC" && AC_MSG_ERROR([
   Required  MPI Fortran compilers were not  found. If you are
   sure that MPI Fortran compiler is  present on you operating
   system you might use the ./configure flag:
-  
-    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif90' 
-     
-  to provide the location of MPI Fortran compiler. 
+
+    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif90'
+
+  to provide the location of MPI Fortran compiler.
                                    ])
 
 test "$MPIF77" == "$F77" && AC_MSG_ERROR([
@@ -277,12 +277,12 @@ test "$MPIF77" == "$F77" && AC_MSG_ERROR([
   Required  MPI Fortran 77 compilers were not  found. If you are
   sure that MPI Fortran 77 compiler is  present on you operating
   system you might use the ./configure flag:
-  
-    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif77' 
-     
-  to provide the location of MPI Fortran 77 compiler. 
+
+    '--with-MPIFC=your/MPIFC/Install/path/bin/mpif77'
+
+  to provide the location of MPI Fortran 77 compiler.
                                    ])
-                                 
+
 
 
 
@@ -290,10 +290,10 @@ SECTION_TITLE([      checking for a Gmsh mesher        ])
 AX_GMSH
 test "$GMSH" == "no" && AC_MSG_ERROR([
   Required  program  'gmsh'  not   found.
-  If 'gmsh' is not  present  in  /usr/bin 
+  If 'gmsh' is not  present  in  /usr/bin
   or in /usr/local/bin consider using the
-   '--with-Gmsh=your/Gmsh/path/bin'  flag  
-   with ./configure command. 
+   '--with-Gmsh=your/Gmsh/path/bin'  flag
+   with ./configure command.
                                    ])
 
 
@@ -301,58 +301,82 @@ SECTION_TITLE([      checking for a FF++ compilers     ])
 AX_FF
 test "$FF" == "no" && AC_MSG_ERROR([
   Required  program  'FreeFem++'  not  found.
-  If 'FreeFem++' is not  present in  /usr/bin 
+  If 'FreeFem++' is not  present in  /usr/bin
   or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
-  with ./configure command. 
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag
+  with ./configure command.
                                    ])
 
 AX_FFCXX
 test "$FFCXX" == "no" && AC_MSG_ERROR([
   Required  program   'ff-++'   not    found.
-  If  'ff-++'  is  not  present  in  /usr/bin 
+  If  'ff-++'  is  not  present  in  /usr/bin
   or  in  /usr/local/bin consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
-  with ./configure command. 
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag
+  with ./configure command.
                                    ])
 
 AX_FFMPI
 test "$FFMPI" == "no" && AC_MSG_ERROR([
   Required  program  'ff-mpirun'  not  found.
-  If 'ff-mpirun' is not present  in  /usr/bin 
+  If 'ff-mpirun' is not present  in  /usr/bin
   or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag  
-  with ./configure command. 
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag
+  with ./configure command.
                                   ])
 
 SECTION_TITLE([      checking for a MFront support     ])
 
 AC_SUBST([mgis])
-AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])                                  
+AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])
 test "$mgis" == "no" && AC_MSG_WARN([
- Mfront will not be configured with PSD, 
+ Mfront will not be configured with PSD,
  you did not provide --with-mgis flag so
- 
- MGIS SUPPORT = OFF 
- 
+
+ MGIS SUPPORT = OFF
+
  To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront 
+ provide both  --with-mgis   and  --with-mfront
  flags.
  ])
- 
+
 AC_SUBST([mfront])
-AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no]) 
+AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no])
 test "$mfront" == "no" && AC_MSG_WARN([
  Mfront will not be configured with PSD,
  You did not provide --with-front flag so
- 
- MFRONT SUPPORT = OFF 
+
+ MFRONT SUPPORT = OFF
 
  To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront 
- flags. 
+ provide both  --with-mgis   and  --with-mfront
+ flags.
  ])
 
+dnl ---------------------------------------------------------------
+dnl Associate appropriate suffix of  shared object.
+dnl ---------------------------------------------------------------
+SECTION_TITLE([      checking for appropriate suffix of  shared object    ])
+os_uname=`uname`
+case $os_uname in
+     Darwin)
+	so_suffix="dylib";;
+     Linux)
+	so_suffix="so";;
+     *)
+	so_suffix="NA";;
+esac
+AC_SUBST(SO_SUFFIX,$so_suffix)
+AC_MSG_RESULT([])
+test "$SO_SUFFIX" == "dylib" && AC_MSG_RESULT([ OS identified: MacOs])
+test "$SO_SUFFIX" == "so"    && AC_MSG_RESULT([ OS identified: Linux])
+test "$SO_SUFFIX" == "NA"    && AC_MSG_ERROR([
+  For the moment PSD is only built on Linux or MacOS
+  please contact  mohd-afeef.badri@cea.fr  for  help
+  regarding to building PSD on your OS.
+                                   ])
+AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
+dnl ---------------------------------------------------------------
 
 
 
@@ -365,38 +389,38 @@ AC_CONFIG_FILES([
  data/Makefile
  data/meshes/2D/Geo-Files/Makefile
  data/meshes/3D/Geo-Files/Makefile
- ext/Makefile 
+ ext/Makefile
  src/Makefile
  src/plugins/Makefile
- src/ff-files/Makefile 
+ src/ff-files/Makefile
  src/plugins/go-fast-plugins/Makefile
  src/plugins/go-fast-plugins/cpp/Makefile
- src/plugins/go-fast-plugins/test/Makefile  
+ src/plugins/go-fast-plugins/test/Makefile
  src/plugins/mfront/Makefile
  src/plugins/mfront/cpp/Makefile
  src/plugins/mfront/law/Makefile
- src/plugins/mfront/law/test/Makefile 
- src/plugins/mfront/test/Makefile  
- src/plugins/paraview-output/Makefile 
+ src/plugins/mfront/law/test/Makefile
+ src/plugins/mfront/test/Makefile
+ src/plugins/paraview-output/Makefile
  src/plugins/paraview-output/cpp/Makefile
- src/plugins/paraview-output/test/Makefile 
+ src/plugins/paraview-output/test/Makefile
  src/plugins/petsc/Makefile
  src/plugins/petsc/cpp/Makefile
- src/plugins/soil-laws/Makefile 
- src/plugins/soil-laws/cpp/Makefile 
+ src/plugins/soil-laws/Makefile
+ src/plugins/soil-laws/cpp/Makefile
  src/plugins/soil-laws/hujeux-law-lib/Makefile
- src/plugins/soil-laws/test/Makefile  
- src/plugins/sparsity-visualizer/Makefile 
+ src/plugins/soil-laws/test/Makefile
+ src/plugins/sparsity-visualizer/Makefile
  src/plugins/sparsity-visualizer/cpp/Makefile
- src/plugins/sparsity-visualizer/test/Makefile 
+ src/plugins/sparsity-visualizer/test/Makefile
  src/plugins/top-ii-vol/Makefile
  src/plugins/top-ii-vol/cpp/Makefile
- src/plugins/top-ii-vol/test/Makefile       
+ src/plugins/top-ii-vol/test/Makefile
  src/psd-preprocessor/Makefile
- src/psd-solve/Makefile   
+ src/psd-solve/Makefile
  test/Makefile
  test/elastodynamics/Makefile
- test/elasto-plastic/Makefile    
+ test/elasto-plastic/Makefile
  test/fracture-mechanics/Makefile
  test/linear-elasticity/Makefile
  test/soildynamics/Makefile
