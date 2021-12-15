@@ -13,9 +13,9 @@ all-local: mfront.so
 
 mfront.so: mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
 if HAVEMGIS
-	find -name typedefinitions.hxx -exec sed -i "s#/usr/lib#${prefix}/lib#g" {} \;
+	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
-	find -name typedefinitions.hxx -exec sed -i "s#${prefix}/lib#/usr/lib#g" {} \;
+	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS	
 	@echo ""
 endif

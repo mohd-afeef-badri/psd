@@ -28,10 +28,10 @@ check-Elastodynamics:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -problem elastodynamics -sequential -dirichletconditions 1 -tractionconditions 1 -testflags > PSD_PreProcess-2D_elastodynamics.log && \
-	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_elastodynamics.log
 	@echo ""
 	@echo "*============================================================*"
@@ -39,10 +39,10 @@ check-Elastodynamics:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem elastodynamics -sequential -dirichletconditions 1 -tractionconditions 1 -testflags > PSD_PreProcess-3D_elastodynamics.log && \
-	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_elastodynamics.log
 	@echo ""
 	@echo "*============================================================*"
@@ -50,10 +50,10 @@ check-Elastodynamics:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags > PSD_PreProcess-2D_elastodynamics_Parallel.log && \
-	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_elastodynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -61,10 +61,10 @@ check-Elastodynamics:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 -testflags > PSD_PreProcess-3D_elastodynamics_Parallel.log && \
-	find -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_elastodynamics_Parallel.log
 					
 clean-local:

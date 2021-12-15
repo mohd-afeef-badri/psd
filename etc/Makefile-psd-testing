@@ -14,27 +14,27 @@ check:
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 3  -bodyforce -glut /u2/MB258512/Install/ff++-install/bin/ffglut
 	${ff-mpirun} -np 4  Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++} SolverGenerator.edp    -v 0  -dimension 2 -nonlinear -sequential -glut /u2/MB258512/Install/ff++-install/bin/ffglut 
-	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \;
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \;
 	${ff++} Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 3 -nonlinear -sequential -glut /u2/MB258512/Install/ff++-install/bin/ffglut 
-	find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \;
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \;
 	${ff++} Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 2 -nonlinear   -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \;
 	${ff-mpirun} -np 4  Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 3 -nonlinear   -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dtr;/dtr;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \;
 	${ff-mpirun} -np 4  Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++} SolverGenerator.edp    -v 0  -dimension 2 -dynamic -sequential -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \;
 	${ff++} Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 3 -dynamic -sequential -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \;
 	${ff++} Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 2 -dynamic   -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \;
 	${ff-mpirun} -np 4  Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 	${ff++}  SolverGenerator.edp    -v 0  -dimension 3 -dynamic   -glut /u2/MB258512/Install/ff++-install/bin/ffglut
-	-find  -name LinearFormBuilderAndSolver.edp -exec sed -i "s/dt;/dt;break;/g" {} \;
+	-find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \;
 	${ff-mpirun} -np 4  Main.edp -v 0 -ksp_type cg -glut /u2/MB258512/Install/ff++-install/bin/ffglut  -ns -nw
 

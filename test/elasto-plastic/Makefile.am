@@ -28,9 +28,9 @@ check-elasto-plastic-Mfront:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -tractionconditions 1 -problem elasto_plastic -dirichletconditions 2 -model von_mises -useMfront -testflags  > PSD_PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 0 -ns -nw > PSD_PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log
 
 clean-local:

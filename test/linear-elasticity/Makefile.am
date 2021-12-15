@@ -28,7 +28,7 @@ check-linear-elasticity-Sequential:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity.log
 	@echo ""
 	@echo "*============================================================*"
@@ -36,7 +36,7 @@ check-linear-elasticity-Sequential:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity.log
 	@echo ""
 	@echo "*============================================================*"
@@ -44,7 +44,7 @@ check-linear-elasticity-Sequential:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_withmaterialtensor.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
@@ -52,7 +52,7 @@ check-linear-elasticity-Sequential:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_withmaterialtensor.log && \
-	find  -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find  -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_withmaterialtensor.log
 
 
@@ -63,8 +63,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -72,8 +72,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -81,8 +81,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -model pseudo_nonlinear -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_pseudo_nonlinear.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_pseudo_nonlinear.log
 	@echo ""
 	@echo "*============================================================*"
@@ -90,8 +90,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -model pseudo_nonlinear -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_pseudo_nonlinear.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel_pseudo_nonlinear.log
 	@echo ""
 	@echo "*============================================================*"
@@ -99,8 +99,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_withmaterialtensor.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_withmaterialtensor.log
 	@echo ""
 	@echo "*============================================================*"
@@ -108,8 +108,8 @@ check-linear-elasticity-Parallel:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor -testflags > PSD_PreProcess-3D_linear-elasticity_Parallel_withmaterialtensor.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_Parallel_withmaterialtensor.log
 
 check-linear-elasticity-Mfront:
@@ -119,8 +119,8 @@ check-linear-elasticity-Mfront:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -useMfront -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_Mfornt.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_Mfornt.log
 	@echo ""
 	@echo "*============================================================*"
@@ -128,8 +128,8 @@ check-linear-elasticity-Mfront:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -bodyforceconditions 1 -problem linear_elasticity -dirichletconditions 1 -useMfront -model pseudo_nonlinear -testflags > PSD_PreProcess-2D_linear-elasticity_Parallel_Mfornt_pseudo_nonlinear.log && \
-	find -name ControlParameters.edp -exec sed -i "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
-	find -name Main.edp -exec sed -i "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_linear-elasticity_Parallel_Mfornt_pseudo_nonlinear.log
 
 clean-local:
