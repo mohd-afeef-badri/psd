@@ -91,8 +91,8 @@ Using ParaView for postprocessing the results that are provided in the \psd{VTUs
 In the 2D problem above seismic sources was supplied on the border, in the current one the source is more realistic and comes from a double couple (point Dirichlet condition). The double couple boundary condition is a way to impose moments caused by faults that create earthquakes, here in this problem double couple is imposed using displacement based.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem soildynamics -model linear -timediscretization newmark-beta \
--useGFP -doublecouple displacement-based -postprocess uav
+PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark_beta \
+-useGFP -doublecouple displacement_based -postprocess uav
 \end{lstlisting}
 
 Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{soil-dc.msh}.
@@ -119,8 +119,8 @@ Similarly try out the 3D problem. However take note that a the mesh \psd{./../Me
 Single Dirichlet at the bottom and using GFP.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
--useGFP -top2vol-meshing -timediscretization newmark-beta -postprocess uav
+PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
+-useGFP -top2vol-meshing -postprocess uav
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
@@ -133,8 +133,8 @@ PSD_Solve -np 4 Main.edp -v 0 -ns -nw
 Single Dirichlet via double couple and using GFP. Double couple is displacement based.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
--useGFP -top2vol-meshing -doublecouple displacement-based -postprocess uav
+PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
+-useGFP -top2vol-meshing -doublecouple displacement_based -postprocess uav
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]

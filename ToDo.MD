@@ -3,9 +3,8 @@
 
 
 **Ongoing**
+- Raw string support for hpp files
 - Mfront integration of PSD (non-linear)
-
-- PSD configures PETSc and FreeFEM
 - Include Medfile support
 
 
@@ -30,6 +29,10 @@
 
 
 **Done**
+
+- Mfront integration of PSD (non-linear)
+
+- PSD configures PETSc and FreeFEM
 
 - Mfront integration of PSD  linear-elasticity
 

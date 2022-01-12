@@ -34,7 +34,7 @@ abstract: This document details some tutorials of soildynamics module of PSD. Th
 Single Dirichlet via double couple and using GFP. Double couple is displacement based. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
+PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
 -useGFP -top2vol-meshing -doublecouple displacement_based -postprocess uav
 \end{lstlisting}
 
