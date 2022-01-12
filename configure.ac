@@ -288,7 +288,7 @@ test "$MPIF77" == "$F77" && AC_MSG_ERROR([
 
 SECTION_TITLE([      checking for a Gmsh mesher        ])
 AX_GMSH
-test "$GMSH" == "no" && AC_MSG_ERROR([
+test "$dependencies" == "no" -a "$GMSH" == "no"  && AC_MSG_ERROR([
   Required  program  'gmsh'  not   found.
   If 'gmsh' is not  present  in  /usr/bin
   or in /usr/local/bin consider using the
@@ -299,7 +299,7 @@ test "$GMSH" == "no" && AC_MSG_ERROR([
 
 SECTION_TITLE([      checking for a FF++ compilers     ])
 AX_FF
-test "$FF" == "no" && AC_MSG_ERROR([
+test "$dependencies" == "no" -a  "$FF" == "no" && AC_MSG_ERROR([
   Required  program  'FreeFem++'  not  found.
   If 'FreeFem++' is not  present in  /usr/bin
   or in  /usr/local/bin  consider  using  the
@@ -308,7 +308,7 @@ test "$FF" == "no" && AC_MSG_ERROR([
                                    ])
 
 AX_FFCXX
-test "$FFCXX" == "no" && AC_MSG_ERROR([
+test "$dependencies" == "no" -a  "$FFCXX" == "no" && AC_MSG_ERROR([
   Required  program   'ff-++'   not    found.
   If  'ff-++'  is  not  present  in  /usr/bin
   or  in  /usr/local/bin consider  using  the
@@ -317,7 +317,7 @@ test "$FFCXX" == "no" && AC_MSG_ERROR([
                                    ])
 
 AX_FFMPI
-test "$FFMPI" == "no" && AC_MSG_ERROR([
+test "$dependencies" == "no" -a  "$FFMPI" == "no" && AC_MSG_ERROR([
   Required  program  'ff-mpirun'  not  found.
   If 'ff-mpirun' is not present  in  /usr/bin
   or in  /usr/local/bin  consider  using  the
@@ -359,6 +359,8 @@ dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for appropriate suffix of  shared object    ])
 os_uname=`uname`
 case $os_uname in
+     CYGWIN*|MINGW*|MSYS_NT*)
+	so_suffix="dll";;
      Darwin)
 	so_suffix="dylib";;
      Linux)
@@ -369,6 +371,7 @@ esac
 AC_SUBST(SO_SUFFIX,$so_suffix)
 AC_MSG_RESULT([])
 test "$SO_SUFFIX" == "dylib" && AC_MSG_RESULT([ OS identified: MacOs])
+test "$SO_SUFFIX" == "dll"   && AC_MSG_RESULT([ OS identified: Windows])
 test "$SO_SUFFIX" == "so"    && AC_MSG_RESULT([ OS identified: Linux])
 test "$SO_SUFFIX" == "NA"    && AC_MSG_ERROR([
   For the moment PSD is only built on Linux or MacOS
@@ -447,7 +450,7 @@ AC_MSG_RESULT([])
 AC_MSG_RESULT([ MPIC++ compiler    : '$MPICXX'])
 AC_MSG_RESULT([ MPIC   compiler    : '$MPICC'])
 AC_MSG_RESULT([ MPIF77 compiler    : '$MPIF77'])
-AC_MSG_RESULT([ MPIFC   compiler   : '$MPIFC'])
+AC_MSG_RESULT([ MPIFC  compiler    : '$MPIFC'])
 AC_MSG_RESULT([])
 AC_MSG_RESULT([ FreeFEM compiler   : '$FF'])
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
