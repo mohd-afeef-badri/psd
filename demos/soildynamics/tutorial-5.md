@@ -35,7 +35,7 @@ Single Dirichlet via double couple and using GFP. Double couple is displacement 
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
--useGFP -top2vol-meshing -doublecouple displacement-based -postprocess uav
+-useGFP -top2vol-meshing -doublecouple displacement_based -postprocess uav
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]

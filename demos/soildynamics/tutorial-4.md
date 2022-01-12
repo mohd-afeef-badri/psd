@@ -35,7 +35,7 @@ Single Dirichlet at the bottom and using GFP.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
--useGFP -top2vol-meshing -timediscretization newmark-beta -postprocess uav
+-useGFP -top2vol-meshing -postprocess uav
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
