@@ -20,6 +20,7 @@
            argvdummy != "-dimension"                &&
            argvdummy != "-lagrange"                 &&
 
+           argvdummy != "-h"                        &&
            argvdummy != "-useRCM"                   &&
            argvdummy != "-useMfront"                &&
            argvdummy != "-help"                     &&

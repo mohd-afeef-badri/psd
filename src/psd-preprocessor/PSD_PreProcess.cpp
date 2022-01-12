@@ -293,6 +293,8 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-debug"                   ) debug      = true;
     if( argvdummy == "-help"                    ) help       = true;
     if( argvdummy == "-version"                 ) versionpsd = true;
+    if( argvdummy == "--version"                ) versionpsd = true;    
+    if( argvdummy == "-h"                       ) help       = true;    
 
 
     if( argvdummy == "-model"                   ) Model                    = argv[i+1];
