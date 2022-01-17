@@ -1,0 +1,101 @@
+@DSL Implicit;
+@Behaviour Iwan;
+@Author Vinicius Alves  Thomas Helfer Reine Fares;
+@Description {
+  Iwan model for cyclic behaviour of soils.
+  Here we implement the first algorithm
+  proposed by Simo and Hughes
+  
+  Simo, Juan C and Hughes, Thomas J. R
+  Computational inelasticity
+  1998, Springer
+  isbn: 0-387-97520-9 978-0-387-97520-7
+}
+
+@Brick StandardElasticity;
+
+@Epsilon 1.e-16;
+@Theta 1.;
+@IterMax 200;
+
+// Number of hardening surfaces
+@IntegerConstant Ns = 16;
+@ElasticMaterialProperties{499500000.0, 0.3875};
+// @Parameter GammaRef = 2.e-4;
+// @Parameter E = 0.78;
+
+// Auxiliary state variable
+@AuxiliaryStateVariable strain p[Ns];
+p.setGlossaryName("EquivalentPlasticStrain");
+@AuxiliaryStateVariable Stensor X[Ns];
+X.setEntryName("BackStress");
+
+// Size of kinematical surfaces
+@Parameter stress C[Ns] = {487999163.7 ,266660151.9 ,104358118.1 ,42654236.43,
+                           24469230.05 ,13126765.9 ,5302068.069 ,2471597.277,
+                           1737764.439 ,1225071.67 ,854586.2351 ,595568.4145,
+                           412021.5035 ,284310.1538 ,195107.3304 ,133478.0564};
+@Parameter stress Y[Ns] = {1.70E+02 ,3.84E+02 ,3.12E+03 ,6.27E+03,
+                           8.54E+03 ,1.03E+04 ,1.22E+04 ,1.53E+04,
+                           1.73E+04 ,1.83E+04 ,1.93E+04 ,2.02E+04,
+                           2.11E+04 ,2.19E+04 ,2.27E+04 ,2.34E+04};
+
+@LocalVariable strain dp[Ns];
+
+// Plastic flow tensor
+@LocalVariable Stensor n[Ns];
+// status of each plastic system
+@LocalVariable bool status[Ns];
+
+@Predictor {
+  const auto sigel = computeElasticPrediction();
+  for (unsigned short i = 0; i != Ns; ++i) {
+    status[i] = sigmaeq(sigel - X[i]) > Y[i];
+  }
+  deel = (trace(deto) / 3) * StrainStensor::Id();
+}
+
+@Integrator {
+  const real eps = 1e-12;
+  for (unsigned short i = 0; i != Ns; ++i) {
+    if (!status[i]) {
+      continue;
+    };
+    const auto seq = sigmaeq(sig - X[i]);
+    const auto iseq = 1 / max(seq, eps * young);
+    dp[i] = 2 * (seq - Y[i]) / (3 * theta * C[i]);
+    n[i] = 3 * deviator(sig - X[i]) * (iseq / 2);
+    feel += dp[i] * n[i];
+    dfeel_ddeel += 2 * mu * theta *
+                   (theta * dp[i] * iseq * (Stensor4::M() - (n[i] ^ n[i])) +
+                    2 / (3 * theta * C[i]) * (n[i] ^ n[i]));
+  }
+}
+
+@AdditionalConvergenceChecks {
+  if (converged) {
+    // checking status consistency
+    for (unsigned short i = 0; i != Ns; ++i) {
+      if (status[i]) {
+        if (dp[i] < epsilon) {
+          // desactivating this system
+          converged = status[i] = false;
+        }
+      } else {
+        if (sigmaeq(sig - X[i]) > Y[i] + young * epsilon) {
+          converged = false;
+          status[i] = true;
+        }
+      }
+    }
+  }
+}
+
+@UpdateAuxiliaryStateVariables {
+  for (unsigned short i = 0; i != Ns; ++i) {
+    if (status[i]) {
+      p[i] += dp[i];
+      X[i] += C[i] * dp[i] * n[i];
+    }
+  }
+}
