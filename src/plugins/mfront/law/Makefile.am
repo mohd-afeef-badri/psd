@@ -1,8 +1,9 @@
 SUBDIRS = test
 LIST_COMPILE= Elasticity.mfront \
-Nonlinear-IsotropicLinearHardeningPlasticity.mfront
+Nonlinear-IsotropicLinearHardeningPlasticity.mfront \
+Iwan.mfront
 
-all-local: Linear-Elasticity Nonlinear-IsotropicLinearHardeningPlasticity
+all-local: Linear-Elasticity Nonlinear-IsotropicLinearHardeningPlasticity Iwan
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -23,7 +24,14 @@ if HAVEMFRONT
 	${mfront}/bin/mfront --obuild
 endif
 	@echo "Compiled Isotropic Linear-Hardening Plasticity law support for mfront"
-		
+
+Iwan: Iwan.mfront
+if HAVEMFRONT
+	${mfront}/bin/mfront --interface=generic  Iwan.mfront
+	${mfront}/bin/mfront --obuild
+endif
+	@echo "Compiled Iwan law support for mfront"
+			
 install-exec-local:
 if HAVEMFRONT
 	@cp src/libBehaviour.so ${prefix}/lib/.
