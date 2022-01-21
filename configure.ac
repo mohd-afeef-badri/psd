@@ -2,7 +2,7 @@ AC_INIT([PSD], [2.4], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
-AC_PREFIX_PROGRAM (program)
+dnl AC_PREFIX_PROGRAM (gcc)
 
 
 dnl Small macro to print out a nice, pretty section title.
@@ -78,6 +78,7 @@ AC_ARG_WITH(Gmsh,
 AC_SUBST([dependencies])
 AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])
 test "$dependencies" == "no" && AC_MSG_WARN([
+
  PSD can automatically build for you its dependencies
  FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
  In order to do so
@@ -407,6 +408,7 @@ AC_CONFIG_FILES([
  src/plugins/paraview-output/Makefile
  src/plugins/paraview-output/cpp/Makefile
  src/plugins/paraview-output/test/Makefile
+ src/plugins/pdmt/Makefile
  src/plugins/petsc/Makefile
  src/plugins/petsc/cpp/Makefile
  src/plugins/soil-laws/Makefile
