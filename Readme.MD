@@ -116,6 +116,11 @@ R seuil=hm/splitmax/4.0/1000.0;
 
 #### Installation Procedure 2: PSD installs all the dependencies ####
 
+**Note**: please make sure that you are on devel branch
+```bash
+git checkout devel
+```
+
 - Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
@@ -131,7 +136,7 @@ export PREFIXPSD=/home/PSDinstall
 autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 ```
 **Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. 
-
+**Note**:   for CentOS7 you might have to load mpi with `module load mpi/openmpi-x86_64`
 - Make all depndencies
 ```bash
 cd ext && make && cd ..
