@@ -409,6 +409,8 @@ AC_CONFIG_FILES([
  src/plugins/paraview-output/cpp/Makefile
  src/plugins/paraview-output/test/Makefile
  src/plugins/pdmt/Makefile
+ src/plugins/pdmt/cpp/Makefile
+ src/plugins/pdmt/test/Makefile
  src/plugins/petsc/Makefile
  src/plugins/petsc/cpp/Makefile
  src/plugins/soil-laws/Makefile
