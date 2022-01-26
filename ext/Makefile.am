@@ -111,7 +111,7 @@ if BUILDDEPENDENCIES
 	MPIRUN=mpirun \
 	--disable-superlu \
 	--with-hdf5=no &&  \
-	make -j4 && make install
+	make -j4 && make $(INSTALL_MACOS)
 else !BUILDDEPENDENCIES
 	@echo ""
 endif

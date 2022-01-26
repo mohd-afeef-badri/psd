@@ -382,6 +382,29 @@ test "$SO_SUFFIX" == "NA"    && AC_MSG_ERROR([
 AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
 dnl ---------------------------------------------------------------
 
+dnl ---------------------------------------------------------------
+dnl Associate appropriate make install for macOS or not (FreeFem++)
+dnl ---------------------------------------------------------------
+SECTION_TITLE([      checking for appropriate suffix of  shared object    ])
+os_uname=`uname`
+case $os_uname in
+     CYGWIN*|MINGW*|MSYS_NT*)
+    install_macos_or_not ="install";;
+     Darwin)
+    install_macos_or_not ="MacOsX";;
+     Linux)
+    install_macos_or_not ="install";;
+     *)
+    install_macos_or_not ="na";;
+esac
+AC_SUBST(INSTALL_MACOS,$install_macos_or_not)
+AC_MSG_RESULT([])
+test "$INSTALL_MACOS" == "MacOsX" && AC_MSG_RESULT([ OS identified: MacOs])
+test "$INSTALL_MACOS" == "install"   && AC_MSG_RESULT([ OS identified: Windows])
+test "$INSTALL_MACOS" == "install"    && AC_MSG_RESULT([ OS identified: Linux])
+
+AC_MSG_RESULT([ Install in Makefile for FreeFem-build   : '$INSTALL_MACOS'])
+dnl ---------------------------------------------------------------
 
 
 SECTION_TITLE([    generating the required makefiles   ])
