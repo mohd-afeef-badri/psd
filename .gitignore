@@ -2,6 +2,7 @@
 *.log
 
 ## SYSTEM BACKUP FILES ##
+*~
 *.~
 *.swp
 
@@ -95,3 +96,8 @@ Readme.html
 Readme.pdf
 Changelog.pdf
 Changelog.html
+
+## MacOS FILES TO IGNORE ##
+*.DS_Store
+*.dylib
+*-e
