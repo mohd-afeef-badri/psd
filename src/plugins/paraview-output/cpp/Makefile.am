@@ -10,7 +10,7 @@ all-local: $(DEP1)
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-PSD-iovtk.so: PSD-iovtk.cpp ./../../petsc/cpp/common_hpddm.hpp
+PSD-iovtk.$(SO_SUFFIX): PSD-iovtk.cpp ./../../petsc/cpp/common_hpddm.hpp
 	$(FFCXX) -auto PSD-iovtk.cpp
 	@echo ""	
 
