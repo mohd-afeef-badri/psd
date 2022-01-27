@@ -1,9 +1,12 @@
 SUBDIRS = test
-LIST_COMPILE= Elasticity.mfront \
+
+LIST_COMPILE = Elasticity.mfront \
 Nonlinear-IsotropicLinearHardeningPlasticity.mfront \
 Iwan.mfront
 
-all-local: Linear-Elasticity Nonlinear-IsotropicLinearHardeningPlasticity Iwan
+DEP1 = src/libBehaviour.$(SO_SUFFIX)
+
+all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Compilation done in :"; pwd
@@ -11,30 +14,35 @@ all-local: Linear-Elasticity Nonlinear-IsotropicLinearHardeningPlasticity Iwan
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-Linear-Elasticity: Elasticity.mfront
+$(DEP1): Elasticity.mfront IsotropicLinearHardeningPlasticity.mfront Iwan.mfront
 if HAVEMFRONT
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiling Elastic law support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
 	${mfront}/bin/mfront --interface=generic  Elasticity.mfront
 	${mfront}/bin/mfront --obuild
-endif
-	@echo "Compiled Elastic law support for mfront"
-
-Nonlinear-IsotropicLinearHardeningPlasticity: IsotropicLinearHardeningPlasticity.mfront
-if HAVEMFRONT
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiling Isotropic Linear-Hardening Plasticity law support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
 	${mfront}/bin/mfront --interface=generic  IsotropicLinearHardeningPlasticity.mfront
 	${mfront}/bin/mfront --obuild
-endif
-	@echo "Compiled Isotropic Linear-Hardening Plasticity law support for mfront"
-
-Iwan: Iwan.mfront
-if HAVEMFRONT
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled Iwan law support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
 	${mfront}/bin/mfront --interface=generic  Iwan.mfront
 	${mfront}/bin/mfront --obuild
 endif
-	@echo "Compiled Iwan law support for mfront"
-			
+	@echo ""
+
 install-exec-local:
 if HAVEMFRONT
-	@cp src/libBehaviour.so ${prefix}/lib/.
+	@cp src/libBehaviour.$(SO_SUFFIX) ${prefix}/lib/.
 endif
 	@echo ""
 	@echo "*============================================================*"
@@ -49,7 +57,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o
+	rm  -rf *~  *.so *.o $(DEP1) ./src ./include
 
 
 maintainer-clean-local: clean-local

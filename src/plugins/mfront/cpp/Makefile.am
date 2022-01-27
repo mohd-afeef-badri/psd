@@ -2,6 +2,7 @@ LIST_COMPILE= mfront.cpp
 
 LOCAL_VERSION = no
 REMOTE_VERSION = ${mgis}
+
 DEP1 = mfront.$(SO_SUFFIX)
 	
 all-local: $(DEP1)
@@ -12,7 +13,7 @@ all-local: $(DEP1)
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-$(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp typedefinitions.hxx
+$(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp
 if HAVEMGIS
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
 	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
