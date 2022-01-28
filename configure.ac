@@ -354,58 +354,47 @@ test "$mfront" == "no" && AC_MSG_WARN([
  flags.
  ])
 
+
+
+
 dnl ---------------------------------------------------------------
-dnl Associate appropriate suffix of  shared object.
+dnl Associate appropriate suffix for diffrent os
 dnl ---------------------------------------------------------------
-SECTION_TITLE([      checking for appropriate suffix of  shared object    ])
+SECTION_TITLE([      checking for operating system type    ])
+
 os_uname=`uname`
 case $os_uname in
      CYGWIN*|MINGW*|MSYS_NT*)
-	so_suffix="dll";;
+	os_type="windows";;
      Darwin)
-	so_suffix="dylib";;
+	os_type="mac";;
      Linux)
-	so_suffix="so";;
+	os_type="linux";;
      *)
-	so_suffix="NA";;
+	os_type="unknown";;
 esac
-AC_SUBST(SO_SUFFIX,$so_suffix)
+
 AC_MSG_RESULT([])
-test "$SO_SUFFIX" == "dylib" && AC_MSG_RESULT([ OS identified: MacOs])
-test "$SO_SUFFIX" == "dll"   && AC_MSG_RESULT([ OS identified: Windows])
-test "$SO_SUFFIX" == "so"    && AC_MSG_RESULT([ OS identified: Linux])
-test "$SO_SUFFIX" == "NA"    && AC_MSG_ERROR([
+test "$os_type" == "windows" && AC_MSG_RESULT([ OS identified: Windows])
+test "$os_type" == "mac"     && AC_MSG_RESULT([ OS identified: MacOs])
+test "$os_type" == "linux"   && AC_MSG_RESULT([ OS identified: Linux])
+
+test "$os_type" == "unknown" && AC_MSG_ERROR([
   For the moment PSD is only built on Linux or MacOS
   please contact  mohd-afeef.badri@cea.fr  for  help
   regarding to building PSD on your OS.
                                    ])
+
+AM_CONDITIONAL([WINDOWS], [test "$os_type" == "windows"])
+AM_CONDITIONAL([MAC],     [test "$os_type" == "mac"])
+AM_CONDITIONAL([LINUX],   [test "$os_type" == "linux"])
+
+test "$os_type" == "windows" && AC_SUBST(SO_SUFFIX,"dll"  )
+test "$os_type" == "mac"     && AC_SUBST(SO_SUFFIX,"dylib")
+test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
+
 AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
 dnl ---------------------------------------------------------------
-
-dnl ---------------------------------------------------------------
-dnl Associate appropriate make install for macOS or not (FreeFem++)
-dnl ---------------------------------------------------------------
-SECTION_TITLE([      checking for appropriate suffix of  shared object    ])
-os_uname=`uname`
-case $os_uname in
-     CYGWIN*|MINGW*|MSYS_NT*)
-    install_macos_or_not ="install";;
-     Darwin)
-    install_macos_or_not ="MacOsX";;
-     Linux)
-    install_macos_or_not ="install";;
-     *)
-    install_macos_or_not ="na";;
-esac
-AC_SUBST(INSTALL_MACOS,$install_macos_or_not)
-AC_MSG_RESULT([])
-test "$INSTALL_MACOS" == "MacOsX" && AC_MSG_RESULT([ OS identified: MacOs])
-test "$INSTALL_MACOS" == "install"   && AC_MSG_RESULT([ OS identified: Windows])
-test "$INSTALL_MACOS" == "install"    && AC_MSG_RESULT([ OS identified: Linux])
-
-AC_MSG_RESULT([ Install in Makefile for FreeFem-build   : '$INSTALL_MACOS'])
-dnl ---------------------------------------------------------------
-
 
 SECTION_TITLE([    generating the required makefiles   ])
 

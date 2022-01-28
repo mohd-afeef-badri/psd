@@ -5,14 +5,38 @@ PETSC_VERSION=3.16.1
 FREEFEM_VERSION=4.10
 GMSH_VERSION=4.8.4
 
+if MAC
+MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
+else !MAC
+MAKEANDINSTALL = make -j4 && make install
+endif
+
 define mfrontenv
 export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
-  
+
 all-local: petsc-build FreeFEM-build mfront-build mgis-build gmsh-build
 	@echo ""
 
 gmsh-build:
+if MAC
+	@echo ""
+	@echo "*============================================================*"
+	@echo " IMPORTANT NOTE:   "
+	@echo "*============================================================*"
+	@echo ""
+	@echo "  PSD Cannot install Gmsh for MacOS please install this"
+	@echo "  yourself by downlding the precompiled 'dmg' from"
+	@echo ""
+	@echo "     https://gmsh.info/"
+	@echo ""
+	@echo "  Note in the ./configure step you will have to provide"
+	@echo ""
+	@echo "  --with-Gmsh=/your/gmsh/install/bin"
+	@echo ""
+	@echo "  with /your/gmsh/install/bin being the path where you install"
+	@echo "  the dmg install"
+endif
 if BUILDDEPENDENCIES
 	@echo ""
 	@echo "*============================================================*"
@@ -52,7 +76,7 @@ if BUILDDEPENDENCIES
 	tar -xf Mgis-sources.tar.xz
 	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
-	make -j4 && make install	
+	make -j4 && make install
 else !BUILDDEPENDENCIES
 	@echo ""
 endif
@@ -111,36 +135,36 @@ if BUILDDEPENDENCIES
 	MPIRUN=mpirun \
 	--disable-superlu \
 	--with-hdf5=no &&  \
-	make -j4 && make $(INSTALL_MACOS)
+	$(MAKEANDINSTALL)
 else !BUILDDEPENDENCIES
 	@echo ""
 endif
-	
+
 check-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Nothing to check here:"
 	@echo "*============================================================*"
 	@echo ""
-	
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -f *~ *.mesh *.pvd *.vtu *.info *.pdf *.xyz *.dat *.gnu *.output
-	rm  -f *~ *.log	
-	
+	rm  -f *~ *.log
+
 
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -rf Makefile Makefile.in petsc-$(PETSC_VERSION) FreeFem-sources-$(FREEFEM_VERSION)
-	rm  -rf Mfront-sources-$(MFRONT_VERSION) Mgis-sources-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)	
+	rm  -rf Mfront-sources-$(MFRONT_VERSION) Mgis-sources-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)
 
 install-exec-local:
 	@echo ""
