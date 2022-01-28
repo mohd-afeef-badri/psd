@@ -52,7 +52,7 @@ check-linear-elasticity-Sequential:
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 -bodyforceconditions 1 -sequential -problem linear_elasticity -dirichletconditions 1 -withmaterialtensor  -testflags > PSD_PreProcess-3D_linear-elasticity_withmaterialtensor.log && \
-	find  -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_linear-elasticity_withmaterialtensor.log
 
 
