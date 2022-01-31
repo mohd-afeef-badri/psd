@@ -5,6 +5,8 @@ PETSC_VERSION=3.16.1
 FREEFEM_VERSION=4.10
 GMSH_VERSION=4.8.4
 
+ENVFILE=envvar.tmp
+
 if MAC
 MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
 else !MAC
@@ -58,8 +60,8 @@ if BUILDDEPENDENCIES
 	@echo ""
 	tar -xf Mfront-sources.tar.xz
 	cd Mfront-sources-$(MFRONT_VERSION) &&  rm -rf build && mkdir -p build && cd build && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
-	make -j4 && make install
+	cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_C_COMPILER=$(CC) -DCMAKE_C_FLAGS='$(CXXFLAGS)' -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
+	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
 else !BUILDDEPENDENCIES
 	@echo ""
@@ -72,11 +74,13 @@ if BUILDDEPENDENCIES
 	@echo " PSD is compiling Mgis for you be patient:   "
 	@echo "*============================================================*"
 	@echo ""
-	source ${prefix}/mfront-env.sh
+#	source ${prefix}/mfront-env.sh
 	tar -xf Mgis-sources.tar.xz
-	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
-	make -j4 && make install
+	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build
+	@echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)   && echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE)
+	@eval `cat $(ENVFILE)` && \
+	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix}  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_C_FLAGS='$(CXXFLAGS)'  -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
+	make -j8 && make install
 else !BUILDDEPENDENCIES
 	@echo ""
 endif
