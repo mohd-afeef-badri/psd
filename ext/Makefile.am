@@ -76,9 +76,9 @@ if BUILDDEPENDENCIES
 	@echo ""
 #	source ${prefix}/mfront-env.sh
 	tar -xf Mgis-sources.tar.xz
-	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build
-	@echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)   && echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE)
-	@eval `cat $(ENVFILE)` && \
+	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
+	echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)   && echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE) && \
+	eval `cat $(ENVFILE)` && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-c-bindings=ON -DCMAKE_INSTALL_PREFIX=${prefix}  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_C_FLAGS='$(CXXFLAGS)'  -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_CXX_FLAGS='$(CXXFLAGS)' && \
 	make -j8 && make install
 else !BUILDDEPENDENCIES

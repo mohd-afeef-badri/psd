@@ -10,6 +10,9 @@
 *Readme.tex
 *Changelog.tex
 
+## TEMP FILES ##
+*.tmp 
+
 ## OUTPUT FILES ##
 .output
 .info
