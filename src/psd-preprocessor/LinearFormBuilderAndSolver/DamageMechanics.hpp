@@ -42,8 +42,8 @@ if(dirichletpointconditions>=1 && !Sequential)
 <<(timelog ? "  timerbegin(\"point Dirichlet preprocessing\",t0)\n" : ""          )<<
  "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n"
  <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
- 
- 
+
+
 if(Sequential)if(NonLinearMethod=="Picard"){
  writeIt
  "                                                                                \n"
@@ -59,24 +59,24 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  " // if (tr >= 5e-3)                                                             \n"
  " //   dtr = 1e-6;                                                               \n"
  "                                                                                \n";
- 
+
  if(constrainHPF  && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   up[]=uold[];                                                                 \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n"; 
- 
+ "                                                                                \n";
+
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   phip[]=phiold[];                                                             \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";  
- 
- 
+ "                                                                                \n";
+
+
  writeIt
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
@@ -143,7 +143,7 @@ if(energydecomp && constrainHPF && vectorial)
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -154,7 +154,7 @@ if(energydecomp && constrainHPF && !vectorial)
  <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
@@ -195,36 +195,36 @@ if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
- "                                                                                \n" 
+ "                                                                                \n"
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
- "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
- 
+ "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";
+
  if(reactionforcemethod=="stress_based" && spc==2 )
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
- "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n"
  "                                                                                \n"
  "  forcetoty = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dy(u1)      \n"
- "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n"
  "                                                                                \n";
 
  if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
- "                                            + mu*(dx(u1)+dy(u))                 \n" 
- "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
- "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u)      \n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n"
  "                                            + mu*(dx(u1)+dy(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"
  "                                                                                \n"
- "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u)      \n" 
+ "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u1)     \n"
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u2)     \n"
  "                                            + mu*(dx(u2)+dz(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
- "                                                                                \n"; 
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n";
 
  if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
@@ -235,11 +235,11 @@ if(reactionforce){
  "  for(int i=0; i < Th.nv; i++){                                                 \n"
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
- "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n" 
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
+ "  }                                                                             \n"
  "                                                                                \n";
- 
+
  if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
@@ -250,10 +250,10 @@ if(reactionforce){
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
  "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
- "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"   
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
- "                                                                                \n";   
+ "  }                                                                             \n"
+ "                                                                                \n";
 
  if(spc==2)
  writeIt
@@ -266,22 +266,22 @@ if(reactionforce){
  "                                                                                \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << tr << \"  \" << forcetotx*1e-3 << \"  \" << forcetoty*1e-3 <<           \n"
- "              \"  \" << forcetotz*1e-3 <<                             endl;     \n"; 
- 
+ "              \"  \" << forcetotz*1e-3 <<                             endl;     \n";
+
  if(plotreaction && spc==2)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n"
  "  flush(pgnuplot);                                                              \n";
- 
+
  if(plotreaction && spc==3)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
- "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
- "  flush(pgnuplot);                                                              \n"; 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n"
+ "  flush(pgnuplot);                                                              \n";
 
  writeIt
  (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
@@ -298,23 +298,23 @@ if(ParaViewPostProcess){
  "  if(int(iterout%10)==0){                                                       \n"
  "    savevtk(     \"VTUs/Solution_\"+iterout1+\".vtu\"  ,                        \n"
  "                 Th                 ,                                           \n";
- 
+
  if(PostProcess=="u")
  writeIt
  "                 PlotVec(u)         ,                                           \n";
 
  if(PostProcess=="d")
  writeIt
- "                 phi                ,                                           \n"; 
- 
+ "                 phi                ,                                           \n";
+
  if(PostProcess=="ud" || PostProcess=="du")
  writeIt
  "                 PlotVec(u)         ,                                           \n"
- "                 phi                ,                                           \n"; 
- 
+ "                 phi                ,                                           \n";
+
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
  if(PostProcess=="u")
  writeIt
  "                 dataname = \"U\"                                               \n";
@@ -322,18 +322,18 @@ if(ParaViewPostProcess){
  if(PostProcess=="d")
  writeIt
  "                 dataname = \"d\"                                               \n";
- 
+
  if(PostProcess=="ud" || PostProcess=="du")
  writeIt
  "                 dataname = \"U d\"                                             \n";
-  
+
  writeIt
  "          );                                                                    \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
  <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
-}  
+}
 
 if(debug)
  writeIt
@@ -373,25 +373,25 @@ if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  " // if (TractionTotal >= 5e-3){                                                 \n"
  " //   tr = 1e-6; dtr = 1e-6;}                                                   \n";
- 
-  
+
+
  if(constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   up[]=uold[];                                                              \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "                                                                                \n";
- 
+
 
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   phip[]=phiold[];                                                             \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";   
- 
+ "                                                                                \n";
+
  writeIt
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
@@ -471,7 +471,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -484,7 +484,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
@@ -522,36 +522,36 @@ if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
- "                                                                                \n" 
+ "                                                                                \n"
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
- "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";   
- 
+ "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";
+
  if(reactionforcemethod=="stress_based" && spc==2 )
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dx(u)       \n"
- "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n"
  "                                                                                \n"
  "  forcetoty = intN1(Th,qforder=2,RFOn)(  lambda*divergence(u)+2.*mu*dy(u1)      \n"
- "                                     + mu*(dx(u1)+dy(u))                 );     \n" 
+ "                                     + mu*(dx(u1)+dy(u))                 );     \n"
  "                                                                                \n";
 
  if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n" 
- "                                            + mu*(dx(u1)+dy(u))                 \n" 
- "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
- "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u)      \n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dx(u)      \n"
  "                                            + mu*(dx(u1)+dy(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"
  "                                                                                \n"
- "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u)      \n" 
+ "  forcetoty = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dy(u)      \n"
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)( ( lambda*divergence(u)+2.*mu*dz(u)      \n"
  "                                            + mu*(dx(u2)+dz(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
- "                                                                                \n"; 
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n";
 
  if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
@@ -562,11 +562,11 @@ if(reactionforce){
  "  for(int i=0; i < Th.nv; i++){                                                 \n"
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
- "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n" 
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
+ "  }                                                                             \n"
  "                                                                                \n";
- 
+
  if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
@@ -577,10 +577,10 @@ if(reactionforce){
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"];                             \n"
  "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1];                           \n"
- "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"   
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2];                           \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
- "                                                                                \n";   
+ "  }                                                                             \n"
+ "                                                                                \n";
 
  if(spc==2)
  writeIt
@@ -595,22 +595,22 @@ if(reactionforce){
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << TractionTotal << \"  \" << forcetotx*1e-3 <<                            \n"
  "                         \"  \" << forcetoty*1e-3 <<                            \n"
- "                         \"  \" << forcetotz*1e-3 <<                  endl;     \n"; 
- 
+ "                         \"  \" << forcetotz*1e-3 <<                  endl;     \n";
+
  if(plotreaction && spc==2)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n"
  "  flush(pgnuplot);                                                              \n";
- 
+
  if(plotreaction && spc==3)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
- "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
- "  flush(pgnuplot);                                                              \n"; 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n"
+ "  flush(pgnuplot);                                                              \n";
 
  writeIt
  (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
@@ -634,16 +634,16 @@ if(ParaViewPostProcess){
 
  if(PostProcess=="d")
  writeIt
- "                 phi                ,                                           \n"; 
- 
+ "                 phi                ,                                           \n";
+
  if(PostProcess=="ud" || PostProcess=="du")
  writeIt
  "                 PlotVec(u)         ,                                           \n"
- "                 phi                ,                                           \n"; 
- 
+ "                 phi                ,                                           \n";
+
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
  if(PostProcess=="u")
  writeIt
  "                 dataname = \"U\"                                               \n";
@@ -651,18 +651,18 @@ if(ParaViewPostProcess){
  if(PostProcess=="d")
  writeIt
  "                 dataname = \"d\"                                               \n";
- 
+
  if(PostProcess=="ud" || PostProcess=="du")
  writeIt
- "                 dataname = \"U d\"                                             \n"; 
- 
+ "                 dataname = \"U d\"                                             \n";
+
  writeIt
  "          );                                                                    \n"
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
  <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""                );
-} 
+}
 
 if(debug)
  writeIt
@@ -696,23 +696,23 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "//  if (tr >= 5e-3)                                                             \n"
  "//    dtr = 1e-6;                                                               \n";
- 
+
  if(constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   up[]=uold[];                                                              \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "                                                                                \n";
- 
+
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   phip[]=phiold[];                                                             \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";   
- 
+ "                                                                                \n";
+
  if(!vectorial)
  writeIt
  "                                                                                \n"
@@ -722,14 +722,14 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "  b = elast(0,Vh);                                                              \n"
  <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
  "                                                                                \n";
- 
+
  writeIt
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
  "  for(int iter=0; iter<100; iter++){                                            \n";
 
  if(vectorial)
- writeIt 
+ writeIt
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
@@ -737,7 +737,7 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "    b = elast(0,Vh);                                                            \n"
  <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
  "                                                                                \n";
- 
+
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
@@ -753,17 +753,17 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"point Dirichlet assembly\",t0)\n" : ""             );
- 
- for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
- "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n"; 
 
- writeIt 
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt
+ "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n";
+
+ writeIt
  (timelog ? "    timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
  }
- 
+
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
  <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
@@ -826,7 +826,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -839,7 +839,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
@@ -895,8 +895,8 @@ if(energydecomp)
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               )<<
  "                                                                                \n";
- 
- 
+
+
 if(energydecomp && constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
@@ -907,7 +907,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -920,7 +920,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
@@ -964,43 +964,43 @@ if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
- "                                                                                \n" 
+ "                                                                                \n"
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
  "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
- "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
- "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
- 
+ "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n"
+ "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";
+
  if(reactionforcemethod=="stress_based" && spc==2)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))              ) );\n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n"
+ "                                            + mu*(dx(u1)+dy(u))              ) );\n"
  "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))             ) );\n"  
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n"
+ "                                            + mu*(dx(u1)+dy(u))             ) );\n"
  "                                                                                \n"
- "                                                                                \n"; 
+ "                                                                                \n";
 
  if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))                 \n" 
- "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
- "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n"
  "                                            + mu*(dx(u1)+dy(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"
  "                                                                                \n"
- "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u) \n" 
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n"
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u) \n"
  "                                            + mu*(dx(u2)+dz(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
- "                                                                                \n";  
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n";
 
  if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
@@ -1011,11 +1011,11 @@ if(reactionforce){
  "  for(int i=0; i < Th.nv; i++){                                                 \n"
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
- "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n" 
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
  "     }                                                                          \n"
- "  }                                                                             \n"  
+ "  }                                                                             \n"
  "                                                                                \n";
- 
+
  if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
@@ -1026,52 +1026,52 @@ if(reactionforce){
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
  "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
- "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"   
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
- "                                                                                \n";   
+ "  }                                                                             \n"
+ "                                                                                \n";
 
  if(spc==2)
  writeIt
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "                                                                                \n"  
- "  if(mpirank==0){                                                               \n" 
+ "                                                                                \n"
+ "  if(mpirank==0){                                                               \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << tr << \"  \" << forcetotGathx*1e-3 <<                                   \n"
- "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n"; 
+ "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n";
 
  if(spc==3)
  writeIt
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n" 
- "                                                                                \n" 
- "  if(mpirank==0){                                                               \n" 
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n"
+ "  if(mpirank==0){                                                               \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << tr << \"  \" << forcetotGathx*1e-3  <<                                  \n"
- "                         \"  \" << forcetotGathy*1e-3  <<                       \n" 
- "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n"; 
- 
+ "                         \"  \" << forcetotGathy*1e-3  <<                       \n"
+ "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n";
+
  if(plotreaction && spc==2)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n"
  "  flush(pgnuplot);                                                              \n";
- 
+
  if(plotreaction && spc==3)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
- "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
- "  flush(pgnuplot);                                                              \n"; 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n"
+ "  flush(pgnuplot);                                                              \n";
 
  writeIt
- "  }                                                                             \n" 
+ "  }                                                                             \n"
  <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
 }
 
@@ -1107,19 +1107,19 @@ if(PostProcess=="ud" || PostProcess=="du")
 
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
 if(PostProcess=="u")
  writeIt
  "                 dataname=\"U\"  ,                                             \n";
- 
+
 if(PostProcess=="d")
  writeIt
- "                 dataname=\"d\"  ,                                             \n"; 
+ "                 dataname=\"d\"  ,                                             \n";
 
 if(PostProcess=="ud" || PostProcess=="du")
- writeIt   
+ writeIt
  "                 dataname=\"U  d\"  ,                                           \n";
- 
+
  writeIt
  "                 append=true                                                    \n"
  "              );                                                                \n";
@@ -1166,17 +1166,17 @@ if(PostProcess=="ud" || PostProcess=="du")
 
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
 if(PostProcess=="u")
  writeIt
  "                 dataname=\"U\"  ,                                             \n";
- 
+
 if(PostProcess=="d")
  writeIt
- "                 dataname=\"d\"  ,                                             \n"; 
+ "                 dataname=\"d\"  ,                                             \n";
 
 if(PostProcess=="ud" || PostProcess=="du")
- writeIt   
+ writeIt
  "                 dataname=\"U  d\"  ,                                           \n";
 
 
@@ -1241,23 +1241,23 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "  //if (TractionTotal >= 5e-3){                                                 \n"
  "  //  tr = 1e-6; dtr = 1e-6;}                                                   \n"
  "                                                                                \n";
- 
+
  if(constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   up[]=uold[];                                                              \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "                                                                                \n";
- 
+
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<< 
+ <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
  "   phip[]=phiold[];                                                             \n"
  <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";   
- 
+ "                                                                                \n";
+
  writeIt
  "                                                                                \n"
  "  //-----------------------Nonlinear loop------------------------//             \n"
@@ -1276,8 +1276,8 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
  <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
  "                                                                                \n";
- 
- 
+
+
  if(dirichletpointconditions>=1){
  writeIt
  "                                                                                \n"
@@ -1285,16 +1285,16 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
  "                                                                                \n";
- 
+
  for(int i=0; i<dirichletpointconditions; i++)
- writeIt 
- "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n"; 
+ writeIt
+ "  ApplyPointBc"<<i<<"(ALoc,b);                                                  \n";
 
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
  }
- 
+
  writeIt
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
@@ -1371,7 +1371,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -1384,7 +1384,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 /******************************  Old Method **********************************************
@@ -1459,7 +1459,7 @@ if(energydecomp)
  <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""                )<<
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
  <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
- 
+
 if(energydecomp && constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
@@ -1470,7 +1470,7 @@ if(energydecomp && constrainHPF && vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"    
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
  <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 if(energydecomp && constrainHPF && !vectorial)
@@ -1483,8 +1483,8 @@ if(energydecomp && constrainHPF && !vectorial)
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
- "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"    
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : ""); 
+ "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
+ <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
 
 
  writeIt
@@ -1536,43 +1536,43 @@ if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
- "                                                                                \n" 
+ "                                                                                \n"
  <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
  "                                                                                \n"
  "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
- "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n" 
- "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";   
- 
+ "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n"
+ "  real forcetotz   = 0., forcetotGathz  = 0. ;                                  \n";
+
  if(reactionforcemethod=="stress_based" && spc==2)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))              ) );\n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n"
+ "                                            + mu*(dx(u1)+dy(u))              ) );\n"
  "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))             ) );\n"  
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u1)\n"
+ "                                            + mu*(dx(u1)+dy(u))             ) );\n"
  "                                                                                \n"
- "                                                                                \n"; 
+ "                                                                                \n";
 
  if(reactionforcemethod=="stress_based" && spc==3)
  writeIt
  "                                                                                \n"
- "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n" 
- "                                            + mu*(dx(u1)+dy(u))                 \n" 
- "                                            + mu*(dx(u2)+dz(u))            ) ); \n"   
- "                                                                                \n"
- "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n" 
+ "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n"
  "                                            + mu*(dx(u1)+dy(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"    
+ "                                            + mu*(dx(u2)+dz(u))            ) ); \n"
  "                                                                                \n"
- "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u) \n" 
+ "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u1)\n"
+ "                                            + mu*(dx(u1)+dy(u))                 \n"
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
+ "                                                                                \n"
+ "  forcetotz = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dz(u2)\n"
  "                                            + mu*(dx(u2)+dz(u))                 \n"
- "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"        
+ "                                            + mu*(dy(u2)+dz(u1))           ) ); \n"
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"  
- "                                                                                \n";  
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n";
 
  if(reactionforcemethod=="variational_based" && spc==2)
  writeIt
@@ -1583,11 +1583,11 @@ if(reactionforce){
  "  for(int i=0; i < Th.nv; i++){                                                 \n"
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
- "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n" 
+ "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
  "     }                                                                          \n"
- "  }                                                                             \n"  
+ "  }                                                                             \n"
  "                                                                                \n";
- 
+
  if(reactionforcemethod=="variational_based" && spc==3)
  writeIt
  "                                                                                \n"
@@ -1598,52 +1598,52 @@ if(reactionforce){
  "     if(abs(Th(i).y-1.)<.000001){                                               \n"
  "        forcetotx = forcetotx + F[][i*"<<Fdofs<<"]*DP[i*"<<Fdofs<<"];           \n"
  "        forcetoty = forcetoty + F[][i*"<<Fdofs<<"+1]*DP[i*"<<Fdofs<<"+1];       \n"
- "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"   
+ "        forcetotz = forcetotz + F[][i*"<<Fdofs<<"+2]*DP[i*"<<Fdofs<<"+2];       \n"
  "     }                                                                          \n"
- "  }                                                                             \n"   
- "                                                                                \n";   
+ "  }                                                                             \n"
+ "                                                                                \n";
 
  if(spc==2)
  writeIt
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "                                                                                \n"  
- "  if(mpirank==0){                                                               \n" 
+ "                                                                                \n"
+ "  if(mpirank==0){                                                               \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << TractionTotal << \"  \" << forcetotGathx*1e-3 <<                        \n"
- "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n"; 
+ "                         \"  \" << forcetotGathy*1e-3 << endl;                  \n";
 
  if(spc==3)
  writeIt
  "                                                                                \n"
  "  mpiAllReduce(forcetotx,forcetotGathx,mpiCommWorld,mpiSUM);                    \n"
  "  mpiAllReduce(forcetoty,forcetotGathy,mpiCommWorld,mpiSUM);                    \n"
- "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n" 
- "                                                                                \n" 
- "  if(mpirank==0){                                                               \n" 
+ "  mpiAllReduce(forcetotz,forcetotGathz,mpiCommWorld,mpiSUM);                    \n"
+ "                                                                                \n"
+ "  if(mpirank==0){                                                               \n"
  "  ofstream ff(\"force.data\",append);                                           \n"
  "  ff << TractionTotal << \"  \" << forcetotGathx*1e-3  <<                       \n"
- "                         \"  \" << forcetotGathy*1e-3  <<                       \n" 
- "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n"; 
- 
+ "                         \"  \" << forcetotGathy*1e-3  <<                       \n"
+ "                         \"  \" << forcetotGathz*1e-3  <<              endl;    \n";
+
  if(plotreaction && spc==2)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n" 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\"\\n\";     \n"
  "  flush(pgnuplot);                                                              \n";
- 
+
  if(plotreaction && spc==3)
  writeIt
- "                                                                                \n" 
+ "                                                                                \n"
  "  pgnuplot<<\"plot \\\"force.data\\\"u 1:2 w p pt 6 ps 2 t \\\"Fx\\\",  \"      \n"
- "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n" 
- "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n" 
- "  flush(pgnuplot);                                                              \n"; 
+ "          <<\"     \\\"force.data\\\"u 1:3 w p pt 5 ps 2 t \\\"Fy\\\",  \"      \n"
+ "          <<\"     \\\"force.data\\\"u 1:4 w p pt 4 ps 2 t \\\"Fz\\\"\\n\";     \n"
+ "  flush(pgnuplot);                                                              \n";
 
  writeIt
- "  }                                                                             \n" 
+ "  }                                                                             \n"
  <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
 }
 
@@ -1680,17 +1680,17 @@ if(PostProcess=="ud" || PostProcess=="du")
 
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
 if(PostProcess=="u")
  writeIt
  "                 dataname=\"U\"  ,                                             \n";
- 
+
 if(PostProcess=="d")
  writeIt
- "                 dataname=\"d\"  ,                                             \n"; 
+ "                 dataname=\"d\"  ,                                             \n";
 
 if(PostProcess=="ud" || PostProcess=="du")
- writeIt   
+ writeIt
  "                 dataname=\"U  d\"  ,                                           \n";
  writeIt
  "                 append=true                                                    \n"
@@ -1735,17 +1735,17 @@ if(PostProcess=="ud" || PostProcess=="du")
 
  writeIt
  "                 order=vtuorder     ,                                           \n";
- 
+
 if(PostProcess=="u")
  writeIt
  "                 dataname=\"U\"  ,                                             \n";
- 
+
 if(PostProcess=="d")
  writeIt
- "                 dataname=\"d\"  ,                                             \n"; 
+ "                 dataname=\"d\"  ,                                             \n";
 
 if(PostProcess=="ud" || PostProcess=="du")
- writeIt   
+ writeIt
  "                 dataname=\"U  d\"  ,                                          \n";
 
 
@@ -1892,7 +1892,7 @@ if(spc==3)
  writeIt
  "     GFPMazarsDamageUpdate(strain[],intVar[],damage[],kappa0,kappac);           \n";
 }
-else{ 
+else{
  writeIt
  "                                                                                \n"
  "     e11 = epsilon(u)[0] ;                                                      \n"
