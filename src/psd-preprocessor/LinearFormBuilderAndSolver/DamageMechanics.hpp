@@ -43,6 +43,15 @@ if(dirichletpointconditions>=1 && !Sequential)
  "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n"
  <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
 
+if(dirichletpointconditions>=1 && Sequential)
+ writeIt
+ "                                                                                \n"
+ "//---------Preprocessing for point bounday conditions----------//               \n"
+ "                                                                                \n"
+<<(timelog ? "  timerbegin(\"point Dirichlet preprocessing\",t0)\n" : ""          )<<
+ "  GetPointIndiciesMpiRank(PbcCord, PCi);                                        \n"
+ <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+
 
 if(Sequential)if(NonLinearMethod=="Picard"){
  writeIt
@@ -93,6 +102,23 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""               )<<
  "    A = elast(Vh,Vh,solver=CG,sym=1);                                           \n"
  <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""               )<<
+ 
+ if(dirichletpointconditions>=1){
+ writeIt
+ "                                                                                \n"
+ "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
+ "                                                                                \n"
+ <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
+ "                                                                                \n";
+
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt
+ "  ApplyPointBc"<<i<<"(A,b);                                                     \n";
+
+ writeIt
+ "                                                                                \n"
+ <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
+ }
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
@@ -408,6 +434,21 @@ if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""                )<<
  "    A = elast(Vh,Vh,solver=CG,sym=1);                                           \n"
  <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""                )<<
+     
+ if(dirichletpointconditions>=1){
+ writeIt
+ "                                                                                \n"
+ "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
+ "                                                                                \n"
+ <<(timelog ? "    timerbegin(\"point Dirichlet assembly\",t0)\n" : ""             );
+
+ for(int i=0; i<dirichletpointconditions; i++)
+ writeIt
+ "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n";
+
+ writeIt
+ (timelog ? "    timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ }
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"

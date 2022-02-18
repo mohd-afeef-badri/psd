@@ -876,13 +876,13 @@ if(dirichletpointconditions>=1)
  "// GetPointIndiciesMpiRank : macro to get the finite element space index (PCi) \n"
  "//                         of vector of points PC and the MPIrank (mpirankPCi) \n"
  "//                         that holds the distributed chuck of mesh containing \n"
- "//                         points PC.                                          \n"
+ "//                         points PC (if parallel calculation).                \n"
  "// ApplyPointBc(I) : will define the full point boundary condition on point I  \n"
  "//=============================================================================\n";
 
  if(spc==2){
 
- if(!pointprobe)
+ if(!pointprobe && !Sequential)
   writeIt
   "                                                                              \n"
   "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                          \n"
@@ -894,8 +894,21 @@ if(dirichletpointconditions>=1)
   "     }                                                                        \n"
   "   }                                                                          \n"
   "  //                                                                          \n";
+ 
+ if(!pointprobe && Sequential)
+  writeIt
+ "                                                                              \n"
+ "  macro GetPointIndiciesMpiRank(PC, PCi)                                      \n"
+ "   for (int i = 0; i < Th.nv; i++){                                           \n"
+ "     for(int j = 0; j < PC.n; j++){                                           \n"
+ "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
+ "         PCi[j]=i;                                                            \n"
+ "       }                                                                      \n"
+ "     }                                                                        \n"
+ "   }                                                                          \n"
+ "  //
 
- if(pointprobe)
+ if(pointprobe && !Sequential)
   writeIt
   "                                                                              \n"
   "  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi, PnP, iProbe, Prank)      \n"
@@ -912,8 +925,27 @@ if(dirichletpointconditions>=1)
   "     }                                                                        \n"
   "   }                                                                          \n"
   "  //                                                                          \n";
+     
+ if(pointprobe && Sequential)
+  writeIt
+ "                                                                              \n"
+ "  macro GetPointIndiciesMpiRank(PC, PCi, PnP, iProbe)                         \n"
+ "   for (int i = 0; i < Th.nv; i++){                                           \n"
+ "     for(int j = 0; j < PC.n; j++){                                           \n"
+ "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
+ "         PCi[j]=i;                                                            \n"
+ "       }                                                                      \n"
+ "     }                                                                        \n"
+ "     for(int j=0; j < iProbe.n; j++){                                         \n"
+ "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 ){          \n"
+ "           iProbe[j]=i*2;                                                     \n"
+ "       }                                                                      \n"
+ "     }                                                                        \n"
+ "   }                                                                          \n"
+ "  //                                                                          \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
+ if(!Sequential)
  writeIt
  "                                                                               \n"
  "  IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                                \n"
@@ -947,6 +979,39 @@ if(dirichletpointconditions>=1)
  "      EndMacro                                                                 \n"
  "    ENDIFMACRO ENDIFMACRO                                                      \n"
  "                                                                               \n";
+ 
+ if(Sequential)
+ writeIt
+ "                                                                               \n"
+ "  IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                                \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"
+ "      EndMacro                                                                 \n"
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"
+ "                                                                               \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(!Pbc"<<i<<"Uy)                               \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<",PCi["<<i<<"]*"<<Fdofs<<")=tgv;            \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"]= Pbc"<<i<<"Ux*tgv;                       \n"
+ "      EndMacro                                                                 \n"
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"
+ "                                                                               \n"
+ "    IFMACRO(!Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                               \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1 , PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;      \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1]= Pbc"<<i<<"Uy*tgv;                     \n"
+ "      EndMacro                                                                 \n"
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"
+ "                                                                               \n"
+ "    IFMACRO(Pbc"<<i<<"Ux) IFMACRO(Pbc"<<i<<"Uy)                                \n"
+ "      NewMacro  ApplyPointBc"<<i<<"(A,b)                                       \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"  ,PCi["<<i<<"]*"<<Fdofs<<"  )=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"  ] = Pbc"<<i<<"Ux*tgv;                    \n"
+ "          A(PCi["<<i<<"]*"<<Fdofs<<"+1,PCi["<<i<<"]*"<<Fdofs<<"+1)=tgv;        \n"
+ "          b[PCi["<<i<<"]*"<<Fdofs<<"+1] = Pbc"<<i<<"Uy*tgv;                    \n"
+ "      EndMacro                                                                 \n"
+ "    ENDIFMACRO ENDIFMACRO                                                      \n"
+ "                                                                               \n";
+ ;
  }
 
 
@@ -1063,6 +1128,9 @@ if(dirichletpointconditions>=1)
   }
 
 } //-- [if loop terminator] pointbc ended --//
+     
+
+
 
 
 if(timelog){
