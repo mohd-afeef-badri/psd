@@ -83,7 +83,7 @@ if(Model=="hybrid_phase_field"){
   writeIt
   "                                                                              \n"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                      )<<
-  "  system(\"rm force.data\");                                                  \n"
+  "  system(\"rm -rf  force.data\");                                             \n"
   "                                                                              \n";
 
   if(plotreaction)
@@ -161,7 +161,7 @@ if(reactionforce)if(Model=="Mazar"){
  writeIt
  "                                                                                \n"
  <<(Sequential ? "" : "  if(mpirank==0)\n"                                        )<<
- "  system(\"rm output.data\");                                                   \n"
+ "  system(\"rm -rf output.data\");                                               \n"
  "                                                                                \n";
 
  if(plotreaction)

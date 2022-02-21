@@ -872,11 +872,20 @@ if(dirichletpointconditions>=1)
  "//=============================================================================\n"
  "//                 ------- Point boundary condition macros -------             \n"
  "// --------------------------------------------------------------------------- \n"
- "// PointCoordinates : macro to define point x,y,z coordinates                  \n"
+ "// PointCoordinates : macro to define point x,y,z coordinates                  \n";
+
+ if(!Sequential)writeIt
  "// GetPointIndiciesMpiRank : macro to get the finite element space index (PCi) \n"
  "//                         of vector of points PC and the MPIrank (mpirankPCi) \n"
  "//                         that holds the distributed chuck of mesh containing \n"
- "//                         points PC (if parallel calculation).                \n"
+ "//                         points PC (if parallel calculation).                \n";
+
+ if(Sequential)writeIt
+ "// GetPointIndiciesRank   : macro to get the finite element space index (PCi)  \n"
+ "//                         of vector of points PC that holds the  distributed  \n"
+ "//                         chuck of mesh containing points PC.                 \n";
+
+ writeIt
  "// ApplyPointBc(I) : will define the full point boundary condition on point I  \n"
  "//=============================================================================\n";
 
@@ -898,7 +907,7 @@ if(dirichletpointconditions>=1)
  if(!pointprobe && Sequential)
   writeIt
  "                                                                              \n"
- "  macro GetPointIndiciesMpiRank(PC, PCi)                                      \n"
+ "  macro GetPointIndicies(PC, PCi)                                             \n"
  "   for (int i = 0; i < Th.nv; i++){                                           \n"
  "     for(int j = 0; j < PC.n; j++){                                           \n"
  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
@@ -906,7 +915,7 @@ if(dirichletpointconditions>=1)
  "       }                                                                      \n"
  "     }                                                                        \n"
  "   }                                                                          \n"
- "  //
+ "  //                                                                          \n";
 
  if(pointprobe && !Sequential)
   writeIt
@@ -929,7 +938,7 @@ if(dirichletpointconditions>=1)
  if(pointprobe && Sequential)
   writeIt
  "                                                                              \n"
- "  macro GetPointIndiciesMpiRank(PC, PCi, PnP, iProbe)                         \n"
+ "  macro GetPointIndicies(PC, PCi, PnP, iProbe)                                \n"
  "   for (int i = 0; i < Th.nv; i++){                                           \n"
  "     for(int j = 0; j < PC.n; j++){                                           \n"
  "       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1)){                              \n"
@@ -944,7 +953,7 @@ if(dirichletpointconditions>=1)
  "   }                                                                          \n"
  "  //                                                                          \n";
 
- for(int i=0; i<dirichletpointconditions; i++)
+ for(int i=0; i<dirichletpointconditions; i++){
  if(!Sequential)
  writeIt
  "                                                                               \n"
@@ -1012,6 +1021,7 @@ if(dirichletpointconditions>=1)
  "    ENDIFMACRO ENDIFMACRO                                                      \n"
  "                                                                               \n";
  ;
+ }
  }
 
 
