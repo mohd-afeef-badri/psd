@@ -173,7 +173,7 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
 
        for (int i=0; i < componentsMps; i++){
            if(i < componentsMps-1)
-             cout << "" <<  b.mps[i].name <<" , ";
+             cout << "" <<  b.mps[i].name <<" ";
            else
              cout << "" <<  b.mps[i].name <<"\";\033[0m";
        }
@@ -251,7 +251,7 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
 
        for (int i=0; i < componentsEsvs; i++){
            if(i < componentsEsvs-1)
-             cout << "" <<  b.esvs[i].name <<" , ";
+             cout << "" <<  b.esvs[i].name <<" ";
            else
              cout << "" <<  b.esvs[i].name <<"\";\033[0m";
        }
