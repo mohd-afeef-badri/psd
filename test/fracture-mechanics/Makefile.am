@@ -2,7 +2,7 @@
 all-local: 
 	@echo ""
 
-check-local: check-header check-fracture-mechanics
+check-local: check-fracture-mechanics check-point-bc
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking Fracture Mechanics : SUCCESS                      "
@@ -21,7 +21,7 @@ check-header:
 
 NP = 4
 
-check-fracture-mechanics:
+check-fracture-mechanics: check-header
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Sequential 2D phase-field fracture"
@@ -507,6 +507,34 @@ check-fracture-mechanics:
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_fracture-mechanics_GFP_Parallel_energydecomp.log	
 
+check-point-bc: check-header
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential 2D phase-field fracture point-bc"
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_PointBC.log && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;if(abs(uold[].max-7.618458e+01) > 1e-5)exit(111111);break;/g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
+	./PSD_Solve_Seq Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PSD_PreProcess-2D_fracture-mechanics_PointBC.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture point-bc"
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags > PSD_PreProcess-2D_fracture-mechanics_PointBC_Parallel.log && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
+	./PSD_Solve -np 4  Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PSD_PreProcess-2D_fracture-mechanics_PointBC_Parallel.log
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Parallel 2D phase-field fracture point-bc vectorial"
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags -vectorial > PSD_PreProcess-2D_fracture-mechanics_PointBC_Parallel_vectorial.log && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
+	./PSD_Solve -np 4  Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PSD_PreProcess-2D_fracture-mechanics_PointBC_Parallel_vectorial.log
 					
 clean-local:
 	@echo ""
