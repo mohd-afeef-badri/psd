@@ -16,6 +16,7 @@
 
 ## TEMP FILES ##
 *.tmp 
+repo-activity.txt
 
 ## OUTPUT FILES ##
 .output
