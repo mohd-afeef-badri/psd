@@ -18,7 +18,7 @@
 @Theta 1.;
 @IterMax 200;
 
-// Maximum Number of hardening surfaces Ns = 20
+// Maximum Number of hardening surfaces Ns = 16
 
 
 
@@ -36,9 +36,9 @@ nu.setGlossaryName("PoissonRatio");
 
 @MaterialProperty real Ns ;
 Ns.setEntryName("NumberofSpring") ;
-@MaterialProperty stress C[20];
+@MaterialProperty stress C[16];
 C.setEntryName("YielsurfacestressCi") ;
-@MaterialProperty stress Y[20];
+@MaterialProperty stress Y[16];
 Y.setEntryName("YielsurfacestrainYi") ;
 
 // Exemple
@@ -57,19 +57,19 @@ Y.setEntryName("YielsurfacestrainYi") ;
 // ----------------------- END ---------------------------------------------------------------------------
 
 // Auxiliary state variable
-@AuxiliaryStateVariable strain p[20];
+@AuxiliaryStateVariable strain p[16];
 p.setGlossaryName("EquivalentPlasticStrain");
-@AuxiliaryStateVariable Stensor X[20];
+@AuxiliaryStateVariable Stensor X[16];
 X.setEntryName("BackStress");
 
 
 
-@LocalVariable strain dp[20];
+@LocalVariable strain dp[16];
 
 // Plastic flow tensor
-@LocalVariable Stensor n[20];
+@LocalVariable Stensor n[16];
 // status of each plastic system
-@LocalVariable bool status[20];
+@LocalVariable bool status[16];
 @LocalVariable stress lambda;
 @LocalVariable stress mu;
 
