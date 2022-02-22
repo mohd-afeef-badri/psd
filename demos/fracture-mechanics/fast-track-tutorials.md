@@ -167,7 +167,7 @@ PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2 -getreactionforce -reactionforce stress_based
 \end{lstlisting}
 
-The flag  \psd{-getreactionforce} directs PSD to include the routines to get the reaction force and  \psd{ -reactionforce  stress\_based } is the method by which we get reaction force, in this case reaction force is calculated using integral of stress in $y$ direction $F_y=\int_{\partial\Omega_{top}} \sigma_y$. Other method \psd{ -reactionforce variational\_based} also exists within PSD, which is more accurate but slower, this method calculates reaction force based on matrix vector multiplication ${F_x,F_y}=\mathbf{A}{u_1,u_2}$ .
+The flag  \psd{-getreactionforce} directs PSD to include the routines to get the reaction force and  \psd{ -reactionforce  stress\_based } is the method by which we get reaction force, in this case reaction force is calculated using integral of stress in $y$ direction $F_y=\int_{\partial\Omega_{top}} \sigma_y$. Other method \psd{ -reactionforce variational\_based} also exists within PSD, which is more accurate but slower, this method calculates reaction force based on matrix vector multiplication $\{F_x,F_y\}=\mathbf{A}\{u_1,u_2\}$ .
 
 Run the problem in the usual way bu using \psd{ PSD\_Solve} and appropriate number of processes and mesh.  While the PSD solver runs it will create a file \psd{ force.data} that contains the reaction force and the applied traction. 
 
