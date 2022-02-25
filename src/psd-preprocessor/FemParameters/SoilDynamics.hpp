@@ -106,17 +106,17 @@ if(Model=="pseudo_nonlinear" || Model=="Hujeux" ){
   if(!top2vol)
   writeIt
   "                                                                              \n"
-  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  startProcedure(\"matrix sparsity assembly\",t0)                             \n"
   "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
-  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "  endProcedure(\"matrix sparsity assembly\",t0)                               \n"
   "                                                                              \n";
 
   if(top2vol)
   writeIt
   "                                                                              \n"
-  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  startProcedure(\"matrix sparsity assembly\",t0)                             \n"
   "  Mat A; createMat(Th, A, Pk);                                                \n"
-  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "  endProcedure(\"matrix sparsity assembly\",t0)                               \n"
   "                                                                              \n";
 
  }

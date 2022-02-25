@@ -50,7 +50,7 @@ writeHeader;
   "                         Mt22 , Mt23 ,                                        \n"
   "                                Mt33 ];                                       \n"
   "                                                                              \n"
-<<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
+  "  startProcedure(\"Material tensor building via MFront\",t0)                  \n"
   "                                                                                  \n"
   "  PsdMfrontHandler( MaterialBehaviour                                   ,         \n"
   "                           mfrontBehaviourHypothesis = MaterialHypothesis      ,  \n"
@@ -59,7 +59,7 @@ writeHeader;
   "                           mfrontMaterialTensor      = Mt11[]                     \n"
   "                         );                                                       \n"
   "                                                                                  \n"
-<<(timelog ? "  timerend(\"Material tensor building via MFront\",t0)\n" : ""     )<<
+  "  endProcedure(\"Material tensor building via MFront\",t0)                    \n"
   "                                                                              \n"
   "                                                                              \n";
 
@@ -112,7 +112,7 @@ writeHeader;
   "//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         \n"
   "//============================================================================\n"
   "                                                                              \n"
-<<(timelog ? "  timerbegin(\"Material tensor building\",t0)\n" : ""              )<<
+  "  startProcedure(\"Material tensor building\",t0)                             \n"
   "  Qh [ Mt11 , Mt12 ,  Mt13 , Mt14 , Mt15 , Mt16 ,                             \n"
   "              Mt22 ,  Mt23 , Mt24 , Mt25 , Mt26 ,                             \n"
   "                      Mt33 , Mt34 , Mt35 , Mt36 ,                             \n"
@@ -120,9 +120,9 @@ writeHeader;
   "                                    Mt55 , Mt56 ,                             \n"
   "                                           Mt66 ] ;                           \n"
   "                                                                              \n"
-<<(timelog ? "  timerend(\"Material tensor building\",t0)\n" : ""                )<<
+  "  endProcedure(\"Material tensor building\",t0)                               \n"
   "                                                                              \n"
-<<(timelog ? "  timerbegin(\"Material tensor building via MFront\",t0)\n" : ""   )<<
+  "  startProcedure(\"Material tensor building via MFront\",t0)                  \n"
   "                                                                                  \n"
   "  PsdMfrontHandler( MaterialBehaviour                                   ,         \n"
   "                           mfrontBehaviourHypothesis = MaterialHypothesis      ,  \n"
@@ -131,7 +131,7 @@ writeHeader;
   "                           mfrontMaterialTensor      = Mt11[]                     \n"
   "                         );                                                       \n"
   "                                                                                  \n"
-<<(timelog ? "  timerend(\"Material tensor building via MFront\",t0)\n" : ""     )<<
+  "  endProcedure(\"Material tensor building via MFront\",t0)                    \n"
   "                                                                              \n"
   "                                                                              \n";
   }  
@@ -157,7 +157,7 @@ writeHeader;
   "  matrix       ALoc    ;                                                      \n"
   "  real[int]    b(Vh.ndof);                                                    \n"
   "                                                                              \n"
-  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  startProcedure(\"matrix sparsity assembly\",t0)                             \n"
   "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
-  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "  endProcedure(\"matrix sparsity assembly\",t0)                               \n"
   "                                                                              \n";

@@ -38,15 +38,15 @@
  "                                                                                \n"
  "  //--------------Assembly for linear system---------//                         \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"linear-system Assembly\",t0)\n" : ""                 )<<
+ "  startProcedure(\"linear-system Assembly\",t0);                                \n"
  "  ALoc = elast(Vh,Vh,solver=CG,sym=1);                                          \n"
  "  A = ALoc ;                                                                    \n"
  "  b = elast(0,Vh);                                                              \n"
-<<(timelog ? "  timerend  (\"linear-system assembly\",t0)\n" : ""                 )<<
+ "  endProcedure  (\"linear-system assembly\",t0)                                 \n"
  "                                                                                \n"
  "  //------residual  calculation---------//                                      \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"residual checking\",t0)\n" : ""                      )<<
+ "  startProcedure(\"residual checking\",t0)                                      \n"
  "  real resGather,  resLoc ;                                                     \n"
  "                                                                                \n"
  "  b = b .* DP                                   ;                               \n"
@@ -55,7 +55,7 @@
  "  mpiAllReduce(resLoc,resGather,mpiCommWorld,mpiSUM);                           \n"
  "  resGather = sqrt(resGather) ;                                                 \n"
  "                                                                                \n"
-<<(timelog ? "  timerend (\"residual checking\",t0)\n" : ""                       )<<
+ "  endProcedure (\"residual checking\",t0)                                       \n"
  "                                                                                \n"
  "  nRes0 = resGather;                                                            \n"
  "  nRes = nRes0;                                                                 \n"
@@ -68,20 +68,20 @@
  "                                                                                \n"
  "    //---------------Linear-system solving-----------//                         \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Linear-system solving\",t0)\n" : ""                  )<<
+ "  startProcedure(\"Linear-system solving\",t0)                                  \n"
  "    set(A,sparams =\" -ksp_type cg -ksp_rtol 1e-9 \");                          \n"
  "    du[] = A^-1*b;                                                              \n"
-<<(timelog ? "  timerend(\"Linear-system solving\",t0)\n" : ""                     )<<
+ "  endProcedure(\"Linear-system solving\",t0)                                    \n"
  "                                                                                \n"
  "    //---------------Update Solution---------------------//                     \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Solution update\",t0)\n" : ""                        )<<
- "    u[] += du[];                                                                  \n"
-<<(timelog ? "  timerend(\"Solution update\",t0)\n" : ""                          )<<
+ "  startProcedure(\"Solution update\",t0)                                        \n"
+ "    u[] += du[];                                                                \n"
+ "  endProcedure(\"Solution update\",t0)                                          \n"
  "                                                                                \n"
  "    //-----Update Stress using Mfront-------------------//                      \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Stress update via MFront\",t0)\n" : ""               )<<
+ "  startProcedure(\"Stress update via MFront\",t0)                               \n"
  "                                                                                \n";
 
  if(spc==2)
@@ -103,20 +103,20 @@
  "                          mfrontStressTensor        = Sig11[]           //   , \n"
  "//                        mfrontStateVariable       = Isv1[]                   \n"
  "                        );                                                     \n"
-<<(timelog ? "  timerend(\"Stress update via MFront\",t0)\n" : ""                 )<<
+ "  endProcedure(\"Stress update via MFront\",t0)                                \n"
  "                                                                               \n"
  "                                                                               \n"
  "    //--------------Assembly for linear system---------//                      \n"
  "                                                                               \n"
-<<(timelog ? "  timerbegin(\"linear-system Assembly\",t0)\n" : ""                )<<
+ "  startProcedure(\"linear-system Assembly\",t0)                                \n"
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                       \n"
  "    A = ALoc ;                                                                 \n"
  "    b = elast(0,Vh);                                                           \n"
-<<(timelog ? "  timerend  (\"linear-system assembly\",t0)\n" : ""                )<<
+ "  endProcedure  (\"linear-system assembly\",t0)                                \n"
  "                                                                               \n"
  "    //------residual  calculation---------//                                   \n"
  "                                                                               \n"
-<<(timelog ? "  timerbegin(\"residual checking\",t0)\n" : ""                     )<<
+ "  startProcedure(\"residual checking\",t0)                                     \n"
  "    real res1Gather,  res1Loc ;                                                \n"
  "                                                                               \n"
  "    b = b .* DP                                   ;                            \n"
@@ -126,7 +126,7 @@
  "    res1Gather = sqrt(res1Gather) ;                                            \n"
  "                                                                               \n"
  "    nRes = res1Gather;                                                         \n"
-<<(timelog ? "  timerend (\"residual checking\",t0)\n" : ""                      )<<
+ "  endProcedure (\"residual checking\",t0)                                      \n"
  "                                                                               \n"
  "    if(niter==NrMaxItr)                                                        \n"
  "      if(mpirank==0)                                                           \n"
@@ -146,7 +146,7 @@
  "                                                                                \n"
  "  //-----------------ParaView plotting--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                      );
+ "  startProcedure(\"ParaView plotting\",t0)                                      \n";
 
  writeIt
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
@@ -163,7 +163,7 @@
  "              );                                                                \n";
 
  writeIt
- (timelog ? "  timerend(\"ParaView plotting\",t0)\n" : ""                          );
+ "  endProcedure(\"ParaView plotting\",t0)                                        \n";
 
  }
 

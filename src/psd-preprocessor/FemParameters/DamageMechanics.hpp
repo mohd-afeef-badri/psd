@@ -241,7 +241,7 @@ if(Model=="hybrid_phase_field"){
    writeIt
    "//===========================================================================\n"
    "                                                                             \n"
-   <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""           )<<
+   "  startProcedure(\"matrix sparsity assembly\",t0)                            \n"
    "  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ;                        \n";
 
    if(vectorial && constrainHPF)
@@ -253,7 +253,7 @@ if(Model=="hybrid_phase_field"){
     writeIt
     "                                                                            \n"
     "  Mat A1( Vh1.ndof,  restrictionIntersectionZ, DZ);                         \n"
-    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
+    "  endProcedure(\"matrix sparsity assembly\",t0)                             \n"
     "                                                                            \n"
     "  matrix     ALoc, ALoc1                 ;                                  \n"
     "  real[int]  b(Vh.ndof), b1(Vh1.ndof)    ;                                  \n";
@@ -261,7 +261,7 @@ if(Model=="hybrid_phase_field"){
    if(vectorial)
     writeIt
     "                                                                            \n"
-    <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "           )<<
+    "  endProcedure(\"matrix sparsity assembly\",t0)                             \n"
     "  matrix     ALoc           ;                                               \n"
     "  real[int]  b(Vh.ndof)     ;                                               \n";
 
@@ -327,9 +327,9 @@ if(Model=="Mazar"){
   "// -------  Fem matrices and vectors -------                                  \n"
   "//============================================================================\n"
   "                                                                              \n"
-  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  startProcedure(\"matrix sparsity assembly\",t0)                             \n"
   "  Mat  A( Vh.ndof,  restrictionIntersectionP, DP)   ;                         \n"
-  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "  endProcedure(\"matrix sparsity assembly\",t0)                               \n"
   "                                                                              \n"
   "  matrix     ALoc           ;        // Local vectorial matrix for bilinear   \n"
   "  real[int]  b(Vh.ndof)     ;        // Local vectorial real vector for linear\n"

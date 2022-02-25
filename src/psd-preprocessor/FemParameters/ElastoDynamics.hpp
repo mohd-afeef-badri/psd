@@ -88,8 +88,8 @@ if(Model=="pseudo_nonlinear")
 
   writeIt
   "                                                                              \n"
-  <<(timelog ? "  timerbegin(\"matrix sparsity assembly\",t0)\n" : ""         )<<
+  "  startProcedure(\"matrix sparsity assembly\",t0)                             \n"
   "  Mat  A(Vh.ndof, restrictionIntersectionP, DP, symmetric=1)  ;               \n"
-  <<(timelog ? "  timerend(\"matrix sparsity assembly\",t0)\n" : " "          )<<
+  "  endProcedure(\"matrix sparsity assembly\",t0)                               \n"
   "                                                                              \n";
  }
