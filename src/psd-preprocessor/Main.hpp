@@ -19,7 +19,7 @@ writeHeader;
 writeIt
 "                                                                               \n"
 "//=============================================================================\n"
-"// ------ Module files load and include ------                                 \n"
+"// ------ load libraries ------                                                \n"
 "//=============================================================================\n"
 "                                                                               \n"
 "                                                                               \n";
@@ -62,6 +62,9 @@ if(!Sequential&& Prblm=="soildynamics" && top2vol)
  "  load    \"msh3\"                                 // to get cube function   \n" 
  "  load    \"top-ii-vol\"                           // top-ii-vol meshing     \n";
 
+writeIt
+"                                                                               \n"
+"func int compute(){                                                            \n";
 
 if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)
  writeIt
@@ -70,7 +73,7 @@ if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)
 if(Sequential)
  writeIt
  "  include \"getARGV.idp\"                          // Commandline arguments  \n"
- "  include \"ControlParameters.edp\"                // Parameters & propeties \n"
+ "  include \"ControlParameters.edp\"                // Parameters & properties\n"
  "  include \"Macros.edp\"                           // User-defined macros    \n"
  "  include \"OtherParameters.edp\"                  // Other Parameters       \n"
  "  include \"MeshAndFeSpace.edp\"                   // Mesh and FE space      \n"
@@ -82,7 +85,7 @@ if(!Sequential)
  {
  writeIt
  "  include \"getARGV.idp\"                          // Commandline arguments  \n"
- "  include \"ControlParameters.edp\"                // Parameters & propeties \n"
+ "  include \"ControlParameters.edp\"                // Parameters & properties\n"
  "  include \"OtherParameters.edp\"                  // Other Parameters       \n"
  "  include \"Macros.edp\"                           // User-defined macros    \n";
 
@@ -101,8 +104,30 @@ if(!Sequential)
  }
 
 
- writeIt
- "  include \"PostProcessor.edp\"                    // Post Processing        \n";
+writeIt
+"  include \"PostProcessor.edp\"                    // Post Processing        \n"
+"}                                                                            \n";
+
+
+if(timelog)
+writeIt
+"                                                                             \n"
+<<(Sequential ? "real tc = clock(); \n" : "real tc = mpiWtime(); \n"          )<<
+"compute();                                                                   \n"
+"                                                                             \n"
+"                                                                             \n"
+"                                                                             \n"
+<<(Sequential ? "" : "mpiBarrier(mpiCommWorld);\n"                            )
+<<(Sequential ? "tc = clock()-tc; \n" : "tc = mpiWtime()-tc; if(mpirank==0)\n")<<
+"cout.scientific << \"----------------------------------------------\\n\"     \n"
+"                << \"  PSD total run time [ \" << tc <<\" ] s      \\n\"     \n"
+"                << \"----------------------------------------------\\n\";    \n"
+"                                                                             \n";
+
+if(!timelog)
+writeIt
+"                                                                             \n"
+"compute();                                                                   \n";
 
 } //-- [ostream terminator]  main.edp closed --//
 

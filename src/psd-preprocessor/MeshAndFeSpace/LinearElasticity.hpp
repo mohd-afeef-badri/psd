@@ -52,7 +52,6 @@ codeSnippet R""""(
 //  Th        : Finite element mesh
 //==============================================================================
 
-  startProcedure("Solver",t1)
   startProcedure("Mesh Loading",t0)
 
   meshN Th;
@@ -243,7 +242,6 @@ codeSnippet R""""(
 
  }
 
-  startProcedure("Solver",t1);
   startProcedure("Mesh Partitioning",t0);
   PartThAndBuildCommunication();
   endProcedure("Mesh Partitioning",t0);
