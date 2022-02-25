@@ -99,8 +99,6 @@
 
   -useMfront    [bool]     To activate MFront interface for PSD.
 
-  -supercomp    [bool]     To be used when using a cluster/supercomputer.
-
   -energydecomp [bool]     To activate hybrid phase field energy decomposition.
 
   -sequential   [bool]     To generate a sequential PSD solver.
@@ -159,7 +157,6 @@ int main(int argc, char *argv[]){
   bool pipegnu      = false;
   bool testflags    = false;
   bool vectorial    = false;
-  bool supercomp    = false;
   bool useMfront    = false;
   bool fastmethod   = true ;
   bool Sequential   = false;
@@ -237,11 +234,6 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-vectorial"               ) {                    vectorial     = true;
     if( argvdummy == "-vectorial"               ) IsArgumentValueTrue  vectorial     = true;
     if( argvdummy == "-vectorial"               ) IsArgumentValueFalse vectorial     = false;
-                                                  }
-
-    if( argvdummy == "-supercomp"               ) {                     supercomp    = true;
-                                                   IsArgumentValueTrue  supercomp    = true;
-                                                   IsArgumentValueFalse supercomp    = false;
                                                   }
 
     if( argvdummy == "-sequential"              ) {                     Sequential   = true;
@@ -401,7 +393,6 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " timelog is -------------------------> " << timelog                  << endl;
   cout << " vectorial is -----------------------> " << vectorial                << endl;
   cout << " useMfront is -----------------------> " << useMfront                << endl;
-  cout << " supercomp is -----------------------> " << supercomp                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
   

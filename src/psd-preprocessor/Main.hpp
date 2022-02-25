@@ -44,7 +44,7 @@ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
  writeIt
  "  load    \"gofastplugins\"                       // GoFastPlugins Library  \n";
 
-if(pipegnu)if(!supercomp)
+if(pipegnu)
  writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
  

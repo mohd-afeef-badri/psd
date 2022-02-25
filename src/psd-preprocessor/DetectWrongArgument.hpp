@@ -32,7 +32,6 @@
            argvdummy != "-vectorial"                &&
            argvdummy != "--version"                 &&
            argvdummy != "-version"                  &&
-           argvdummy != "-supercomp"                &&
            argvdummy != "-sequential"               &&
            argvdummy != "-dirichletbc"              &&
            argvdummy != "-energydecomp"             &&

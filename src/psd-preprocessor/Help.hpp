@@ -109,9 +109,6 @@ if(help)
    -vectorial         [bool]     To generate vectorial space solver for
                                  nonlinear damage. Default false.
 
-   -supercomp         [bool]     To be used when using a cluster/supercomputer
-                                 Default false.
-
    -energydecomp      [bool]     To activate hybrid phase field energy
                                  splitting/decomposition. Default false.
 
