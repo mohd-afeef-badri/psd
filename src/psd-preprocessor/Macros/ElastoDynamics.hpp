@@ -793,5 +793,15 @@ if(!useGFP)
   "      uold[][i] = du[][i]    ;                                             \n"
   "    }                                                                      \n"
   "  }//                                                                      \n"
+  "                                                                           \n"
   "                                                                           \n";
+   
+if(!useGFP)
+  writeIt  
+  "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
+  "     updateVariables(du,uold,vold,aold,beta,gamma,dt) //                   \n";
 
+if(useGFP)
+  writeIt  
+  "  macro updateField(du,uold,vold,aold,beta,gamma,dt)                       \n"
+  "     GFPUpdateDynamic(du#[],uold#[],vold#[],aold#[],beta,gamma,dt) //      \n";

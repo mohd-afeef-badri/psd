@@ -26,7 +26,7 @@
            argvdummy != "-help"                     &&
            argvdummy != "-debug"                    &&
            argvdummy != "-useGFP"                   &&
-           argvdummy != "-pipegnu"                  &&
+           argvdummy != "-activeplot"               &&
            argvdummy != "-testflags"                &&
            argvdummy != "-timelog"                  &&
            argvdummy != "-vectorial"                &&
@@ -41,6 +41,7 @@
            argvdummy != "-getreactionforce"         &&
            argvdummy != "-plotreactionforce"        &&
            argvdummy != "-constrainHPF"             &&
+           argvdummy != "-getenergies"              &&           
            argvdummy != "-crackdirichletcondition"  &&
            argvdummy != "-withmaterialtensor"       &&
 

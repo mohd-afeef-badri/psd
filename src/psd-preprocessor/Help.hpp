@@ -96,7 +96,7 @@ if(help)
    -useRCM            [bool]     To activate mesh level renumbering via
                                  Reverse Cuthill Mckee. Default false.
 
-   -pipegnu           [bool]     To activate realtime pipe plotting using
+   -activeplot        [bool]     To activate realtime pipe plotting using
                                  GnuPlot. Default false.
 
    -useMfront         [bool]     To activate MFront interface for PSD, as a
@@ -109,7 +109,7 @@ if(help)
    -vectorial         [bool]     To generate vectorial space solver for
                                  nonlinear damage. Default false.
 
-   -supercomp         [bool]     To be used when using a cluster/supercompute
+   -supercomp         [bool]     To be used when using a cluster/supercomputer
                                  Default false.
 
    -energydecomp      [bool]     To activate hybrid phase field energy
@@ -123,6 +123,9 @@ if(help)
 
    -top2vol-meshing   [bool]     Activate top-ii-vol point source meshing for
                                  soil-dynamics. Default false.
+
+   -getenergies       [bool]     Activate routine for extraction of energies in
+                                 elastodynamics and soildynamics.
 
    -constrainHPF      [bool]     Activate constrain condition for damage for
                                  the hybrid phase-field model.

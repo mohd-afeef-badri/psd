@@ -103,12 +103,16 @@
 
   -energydecomp [bool]     To activate hybrid phase field energy decomposition.
 
-  -sequential   [bool]     To generate a sequential ff++ solver.
+  -sequential   [bool]     To generate a sequential PSD solver.
 
   -pointprobe   [bool]     To insert point probes for post processing.
 
-  -constrainHPF       [bool] To use constrain condition in hybrid phase-field model.
+  -activeplot   [bool]     To activate realtime pipe plotting using GnuPlot.
 
+  -constrainHPF [bool]     To use constrain condition in hybrid phase-field model.
+
+  -getenergies  [bool]     To acctivate routine for extraction of energies K.E, E.E.
+ 
   -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
 
   -getreactionforce   [bool] To activate routine for extraction reactions at surface.
@@ -166,6 +170,7 @@ int main(int argc, char *argv[]){
   bool plotreaction = false;
   bool constrainHPF = false;
   bool precracked   = false;
+  bool getenergies  = false;  
   bool reactionforce= false;
 
   bool   errorArgument         = false  ;
@@ -219,7 +224,7 @@ int main(int argc, char *argv[]){
                                                    IsArgumentValueFalse useMfront    = false;
                                                   }
 
-    if( argvdummy == "-pipegnu"                 ) {                     pipegnu      = true;
+    if( argvdummy == "-activeplot"              ) {                     pipegnu      = true;
                                                    IsArgumentValueTrue  pipegnu      = true;
                                                    IsArgumentValueFalse pipegnu      = false;
                                                   }
@@ -234,7 +239,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-vectorial"               ) IsArgumentValueFalse vectorial     = false;
                                                   }
 
-    if( argvdummy == "-supercomp"               ) {                    supercomp     = true;
+    if( argvdummy == "-supercomp"               ) {                     supercomp    = true;
                                                    IsArgumentValueTrue  supercomp    = true;
                                                    IsArgumentValueFalse supercomp    = false;
                                                   }
@@ -264,6 +269,11 @@ int main(int argc, char *argv[]){
                                                    IsArgumentValueFalse top2vol      = false;
                                                   }
 
+    if( argvdummy == "-getenergies"             ) {                     getenergies = true;
+                                                   IsArgumentValueTrue  getenergies = true;
+                                                   IsArgumentValueFalse getenergies = false;
+                                                  }
+                                                  
     if( argvdummy == "-getreactionforce"        ) {                     reactionforce = true;
                                                    IsArgumentValueTrue  reactionforce = true;
                                                    IsArgumentValueFalse reactionforce = false;
@@ -294,8 +304,8 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-debug"                   ) debug      = true;
     if( argvdummy == "-help"                    ) help       = true;
     if( argvdummy == "-version"                 ) versionpsd = true;
-    if( argvdummy == "--version"                ) versionpsd = true;    
-    if( argvdummy == "-h"                       ) help       = true;    
+    if( argvdummy == "--version"                ) versionpsd = true;
+    if( argvdummy == "-h"                       ) help       = true;
 
 
     if( argvdummy == "-model"                   ) Model                    = argv[i+1];
@@ -394,8 +404,11 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " supercomp is -----------------------> " << supercomp                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
+  
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;
+  cout << " activeplot is ----------------------> " << pipegnu                  << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
+  cout << " getenergies is ---------------------> " << getenergies              << endl;
   cout << " energydecomp is --------------------> " << energydecomp             << endl;
   cout << " constrainedHPF is ------------------> " << constrainHPF             << endl;
   cout << " getreactionforce is ----------------> " << reactionforce            << endl;

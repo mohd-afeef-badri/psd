@@ -214,14 +214,14 @@ if(debug)
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
- "// -------Plotting with paraview-------//                                       \n"
+ "// -------Postprocess with paraview-------//                                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
  "  if(mpirank==0)                                                                \n"
  "     system(\"mkdir -p VTUs/\");                                                \n"
  "  mpiBarrier(mpiCommWorld);                                                     \n"
  "                                                                                \n"
- "  startProcedure(\"Paraview Plotting\",t0);                                     \n"
+ "  startProcedure(\"Paraview Postprocess\",t0);                                  \n"
  "  int[int] vtuorder=[1];                     // Solution export order           \n"
  "  savevtk( \"VTUs/Solution.vtu\"  ,                                             \n"
  "            Th                  ,                                               \n"
@@ -229,7 +229,7 @@ if(debug)
  "            order=vtuorder      ,                                               \n"
  "            dataname=\"U\"                                                      \n"
  "         );                                                                     \n"
- "  endProcedure(\"Paraview Plotting\",t0);                                       \n"
+ "  endProcedure(\"Paraview Postprocess\",t0);                                    \n"
  "                                                                                \n";
 
 }  //-- [if loop terminator] !Sequential ended --//
@@ -272,12 +272,12 @@ if(debug)
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
- "// -------Plotting with paraview-------                                         \n"
+ "// -------Postprocess with paraview-------                                      \n"
  "//==============================================================================\n"
  "                                                                                \n"
  "     system(\"mkdir -p VTUs/\");                                                \n"
  "                                                                                \n"
- "  startProcedure(\"Paraview Plotting\",t0);                                     \n"
+ "  startProcedure(\"Paraview Postprocess\",t0);                                  \n"
  "  int[int] vtuorder=[1];                             // Solution export order   \n"
  "  savevtk( \"VTUs/Solution-Seq.vtu\"   ,                                        \n"
  "            Th                       ,                                          \n"
@@ -285,7 +285,7 @@ if(debug)
  "            order=vtuorder           ,                                          \n"
  "            dataname=\"U\"                                                      \n"
  "         );                                                                     \n"
- "  endProcedure  (\"Paraview Plotting\",t0);                                     \n"
+ "  endProcedure  (\"Paraview Postprocess\",t0);                                  \n"
  "                                                                                \n";
 
 }  //-- [if loop terminator] Sequential liniear elasticity ended --//

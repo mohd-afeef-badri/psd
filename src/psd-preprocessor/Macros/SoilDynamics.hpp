@@ -865,6 +865,20 @@ if(dirichletpointconditions>=1)
   "    }                                                                      \n"
   "  }//                                                                      \n"
   "                                                                           \n";
+ 
+  if(!useGFP)
+  writeIt
+  "                                                                           \n"   
+  "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
+  "     updateVariables(du,uold,vold,aold,beta,gamma,dt) //                   \n";
+
+  if(useGFP)
+  writeIt
+  "                                                                           \n"    
+  "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
+  "     GFPUpdateDynamic(du#[],uold#[],vold#[],aold#[],beta,gamma,dt) //      \n";
+  
+    
 
   writeIt
   "                                                                           \n"

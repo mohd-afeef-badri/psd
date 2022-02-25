@@ -9,12 +9,10 @@ if(Sequential){
  "//  ------- Assembly for stiffness matrix A -------                             \n"
  "//==============================================================================\n"
  "                                                                                \n"
- "  //-----------------Assembly for A-----------------//                          \n"
- "                                                                                \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                        )<<
+ "  startProcedure(\"matrix assembly\",t0)                                        \n"
  "  A = soildynamics(Vh,Vh,solver=CG,sym=1);                                      \n"
  "  set(A,solver=CG,sym=1);                                                       \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                        )<<
+ "  endProcedure  (\"matrix assembly\",t0)                                        \n"
  "                                                                                \n"
  "//==============================================================================\n"
  "//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -31,15 +29,15 @@ if(Sequential){
  "                                                                                \n"
  "  //-----------------Assembly for b-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                           )<<
+ "  startProcedure(\"RHS assembly\",t0)                                           \n"
  "  b = soildynamics(0,Vh);                                                       \n"
-<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                           )<<
+ "  endProcedure  (\"RHS assembly\",t0)                                           \n"
  "                                                                                \n"
  "  //-----------------Solving du=A^-1*b--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""                              )<<
+ "  startProcedure(\"solving U\",t0)                                              \n"
  "  du[] = A^-1*b;                                                                \n"
-<<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                              )<<
+ "  endProcedure  (\"solving U\",t0)                                              \n"
  "                                                                                \n";
 
 if(debug)
@@ -54,10 +52,9 @@ if(debug)
  "                                                                                \n"
  "  //-----------------updating variables------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""                     )
-<<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "")
-<<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""          )
-<<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""                     );
+ "  startProcedure(\"updating variables\",t0)                                     \n"
+ "  updateFields(du,uold,vold,aold,beta,gamma,dt);                                \n"
+ "  endProcedure  (\"updating variables\",t0)                                     \n";
 
 
 if(ParaViewPostProcess){
@@ -65,7 +62,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "  //-----------------Paraview plotting-------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                       )<<
+ "  startProcedure(\"ParaView plotting\",t0)                                      \n"
  "  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";                          \n"
  "  savevtk  (  namevtu               ,                                           \n"
  "              Th                    ,                                           \n";
@@ -113,7 +110,45 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "  //-----------updating iteration count-----------//                            \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
-<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""                       );
+ "  endProcedure  (\"ParaView plotting\",t0)                                      \n";
+}
+
+if(getenergies){
+ writeIt
+ "                                                                                \n"
+ "  //---------------Energy calculations-------------//                           \n"
+ "                                                                                \n"
+ "  startProcedure(\"Energy calculations\",t0)                                    \n"
+ "  E[0] =intN(Th,qforder=2)( 0.5*(vold*vold+vold1*vold1));                       \n"
+ "  E[1] =intN(Th,qforder=2)( 0.5*(lambda*divergence(uold)*divergence(uold)       \n"
+ "                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );       \n"
+ "                                                                                \n"
+ "                                                                                \n"
+ "  //----------Appending energies to a file----------//                          \n"
+ "                                                                                \n"
+ "     ofstream ff(\"energies.data\",append);                                     \n"
+ "     ff<< t << \"  \" << E[0] << \"  \"<< E[1] <<endl;                          \n";
+
+if(pipegnu)
+ writeIt
+ "                                                                                \n"
+ "     //---------------Gnuplot pipeping-------------//                           \n"
+ "                                                                                \n"
+ "     pgnuplot <<\"plot\"                                                        \n"
+ "     <<\"\\\"energies.data\\\"\"                                                \n"
+ "     <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 t \\\"K.E\\\",\"                       \n"
+ "     <<\"\\\"energies.data\\\"\"                                                \n"
+ "     <<\"u ($1):($3) w lp lw 2  pt 7 ps 2 t \\\"E.E\\\",\"                      \n"
+ "     <<\"\\\"energies.data\\\"\"                                                \n"
+ "     <<\"u ($1):($3+$2) w lp lw 2 pt 7 ps 2 t \\\"T.E\\\" \"                    \n"
+ "     <<\"\\n\";                                                                 \n"
+ "     flush(pgnuplot);                                                           \n";
+
+
+ writeIt
+ "                                                                                \n"
+ "                                                                                \n"
+ "   endProcedure(\"Energy calculations\",t0)                                     \n";
 }
 
  writeIt
@@ -131,8 +166,6 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
 
 if(!Sequential){
 
-
-
  writeIt
  "                                                                                \n"
  "//==============================================================================\n"
@@ -141,9 +174,9 @@ if(!Sequential){
  "                                                                                \n"
  "  //-----------------Local Assembly-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                     )<<
+ "  startProcedure(\"matrix assembly\",t0)                                        \n"
  "  ALoc = soildynamics(Vh,Vh,solver=CG,sym=1);                                   \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                     )<<
+ "  endProcedure  (\"matrix assembly\",t0)                                        \n"
  "                                                                                \n";
 
 if(doublecouple=="displacement_based" || doublecouple=="force_based"){
@@ -156,7 +189,7 @@ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
  "//  ------- Applying double couple point boundary condition -------             \n"
  "//==============================================================================\n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"Applying double couple A\",t0)\n"  : ""             )<<
+ "  startProcedure(\"Applying double couple A\",t0)                               \n"
  "                                                                                \n"
  "  GetDoubelCoupleIndicies(                                                      \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
@@ -172,7 +205,7 @@ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
  "//  ----- Applying double couple point boundary condition and point probe-----  \n"
  "//==============================================================================\n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"Applying double couple A & point probe\",t0)\n" : "")<<
+ "  startProcedure(\"Applying double couple A & point probe\",t0)                 \n"
  "                                                                                \n"
  "  GetDoubelCoupleIndicies(                                                      \n"
  "           DcNorthPointCord,DcSouthPointCord,DcEastPointCord, DcWestPointCord,  \n"
@@ -194,7 +227,7 @@ if(doublecouple=="displacement_based")
 
  writeIt
  "                                                                                \n"
-<<(timelog ? "  timerend  (\"Applying double couple A\",t0)\n" : ""            )<<
+ "  endProcedure  (\"Applying double couple A\",t0)                               \n"
  "                                                                                \n";
 }
 
@@ -202,12 +235,12 @@ if(doublecouple=="displacement_based")
 if(doublecouple=="unused" && pointprobe && dirichletpointconditions<1){
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"Finding point probe indicies\",t0)\n" : ""          )<<
+ "  startProcedure(\"Finding point probe indicies\",t0)                           \n"
  "  GetPointProbeIndicies(                                                        \n"
  "           ProbePointCord,   iProbe, Prank                                      \n"
  "   );                                                                           \n"
  "                                                                                \n"
- <<(timelog ? "  timerend  (\"Finding point probe indicies\",t0)\n" : ""          )<<
+ "  endProcedure  (\"Finding point probe indicies\",t0)                           \n"
  "                                                                                \n";
 }
 
@@ -259,10 +292,10 @@ if(pointprobe && spc==2)
  "//  ------- PETSc Assembly for stiffness matrix A -------                       \n"
  "//==============================================================================\n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"PETSc assembly\",t0)\n"  : ""                     )<<
+ "  startProcedure(\"PETSc assembly\",t0)                                         \n"
  "  A=ALoc;  //changeOperator(A, ALoc);                                           \n"
  "  set(A,sparams =\"  -ksp_type cg   \");                                        \n"
-<<(timelog ? "  timerend(\"PETSc assembly\",t0)\n"    : ""                     )<<
+ "  endProcedure(\"PETSc assembly\",t0)                                           \n"
  "                                                                                \n"
  "//==============================================================================\n"
  "//  ------- Dynamic loop for linear assembly and solving -------                \n"
@@ -309,31 +342,31 @@ if(Model=="Hujeux")
  "                                                                                \n"
  "  //-----------------Assembly for b-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                        )<<
+ "  startProcedure(\"RHS assembly\",t0)                                           \n"
  "  b = soildynamics(0,Vh);                                                       \n"
-<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                        )<<
+ "  endProcedure  (\"RHS assembly\",t0)                                           \n"
  "                                                                                \n";
 
 if(doublecouple=="displacement_based" || doublecouple=="force_based" )
  writeIt
  "                                                                                 \n"
-<<(timelog ? "  timerbegin(\"Applying double couple b\",t0)\n"  : ""             )<<
+ "  startProcedure(\"Applying double couple b\",t0)                                \n"
  "   ApplyDoubleCoupleToRHS(                                                       \n"
  "           b,                                                                    \n"
  "           DcNorthCondition,DcSouthCondition,DcEastCondition,DcWestCondition,    \n"
  "           iNorth,iSouth,iEast,iWest,                                            \n"
  "           Nrank,Srank,Erank,Wrank                                               \n"
  "   );                                                                            \n"
-<<(timelog ? "  timerend  (\"Applying double couple b\",t0)\n" : ""             )<<
+ "  endProcedure  (\"Applying double couple b\",t0)                                \n"
  "                                                                                 \n";
 
  writeIt
  "                                                                                \n"
  "  //-----------------Solving du=A^-1*b--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""                           )<<
+ "  startProcedure(\"solving U\",t0)                                              \n"
  "  du[] = A^-1*b;                                                                \n"
-<<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                           )<<
+ "  endProcedure  (\"solving U\",t0)                                              \n"
  "                                                                                \n";
 
 
@@ -346,7 +379,7 @@ if(Model=="pseudo_nonlinear")
  "                                                                                \n"
  "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                   )<<
+ "  startProcedure(\"NL error checking\",t0)                                      \n"
  "  real err1Gather,  err1Loc ;                                                   \n"
  "                                                                                \n"
  "  b = b .* DP                                   ;                               \n"
@@ -355,7 +388,7 @@ if(Model=="pseudo_nonlinear")
  "  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
  "  err1Gather = sqrt(err1Gather) ;                                               \n"
  "                                                                                \n"
-<<(timelog ? "  timerend (\"NL error checking\",t0)\n" : ""                    )<<
+ "  endProcedure (\"NL error checking\",t0)                                       \n"
  "                                                                                \n"
  "  //--------------- Convergence conditional---------------------//              \n"
  "                                                                                \n"
@@ -392,7 +425,7 @@ if(Model=="Hujeux")
  "                                                                                \n"
  "  //------Newton-Raphsons error calculation---------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                   )<<
+ "  startProcedure(\"NL error checking\",t0)                                      \n"
  "  real err1Gather,  err1Loc ;                                                   \n"
  "                                                                                \n"
  "  b = b .* DP                                   ;                               \n"
@@ -401,7 +434,7 @@ if(Model=="Hujeux")
  "  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
  "  err1Gather = sqrt(err1Gather) ;                                               \n"
  "                                                                                \n"
-<<(timelog ? "  timerend (\"NL error checking\",t0)\n" : ""                    )<<
+ "  endProcedure (\"NL error checking\",t0)                                       \n"
  "                                                                                \n"
  "  //--------------- convergence conditional---------------------//              \n"
  "                                                                                \n"
@@ -444,10 +477,9 @@ if(debug && top2vol)
  "                                                                                \n"
  "  //-----------------updating variables------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""                   )
-<<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
-<<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )
-<<(timelog ? "  timerend(\"updating variables\",t0)\n" : ""                     );
+ "  startProcedure(\"updating variables\",t0)                                     \n"
+ "  updateFields(du,uold,vold,aold,beta,gamma,dt);                                \n"
+ "  endProcedure(\"updating variables\",t0)                                       \n";
 
 
 if(pointprobe && spc==3)
@@ -496,7 +528,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "  //-----------------ParaView plotting--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                      );
+ "  startProcedure(\"ParaView postprocess\",t0)                                   \n";
 
  writeIt
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
@@ -540,19 +572,17 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  writeIt
  "                 order=vtuorder     ,                                           \n"
  "                 append=true                                                    \n"
- "              );                                                                \n";
-
- writeIt
- (timelog ? "  timerend(\"ParaView plotting\",t0)\n" : ""                      );
+ "              );                                                                \n"
+ "  endProcedure(\"ParaView postprocess\",t0)                                     \n";
 
 }
 
-if(pipegnu){
+if(getenergies){
  writeIt
  "                                                                                \n"
  "  //---------------Energy calculations-------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : ""                 )<<
+ "  startProcedure(\"Energy calculations\",t0)                                    \n"
  "  E[0] =intN(Th,qforder=2)( 0.5*DPspc*(vold*vold+vold1*vold1));                 \n"
  "  E[1] =intN(Th,qforder=2)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
  "                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );       \n"
@@ -566,7 +596,7 @@ if(pipegnu){
  "     ofstream ff(\"energies.data\",append);                                     \n"
  "     ff<< t << \"  \" << EG[0] << \"  \"<< EG[1] <<endl;                        \n";
 
-if(!supercomp)
+if(pipegnu)
  writeIt
  "                                                                                \n"
  "     //---------------Gnuplot pipeping-------------//                           \n"
@@ -585,8 +615,8 @@ if(!supercomp)
  writeIt
  "                                                                                \n"
  "   }                                                                            \n"
-<<(timelog ? "   timerend(\"Energy calculations\",t0)\n" : ""                   );
-}  //-- [if loop terminator]  pipegnu ended --//
+ "   endProcedure(\"Energy calculations\",t0)                                     \n";
+}
 
 
  writeIt

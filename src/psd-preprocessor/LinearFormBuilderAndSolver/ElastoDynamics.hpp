@@ -31,22 +31,22 @@ if(tractionconditions>=1){
  "                                                                                \n"
  "  //-----------------Assembly for A-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                         )<<
+ "  startProcedure(\"matrix assembly\",t0);                                       \n"
  "  A = elastodynamics(Vh,Vh,solver=CG,sym=1);                                    \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                         )<<
+ "  endProcedure  (\"matrix assembly\",t0);                                       \n"
  "                                                                                \n"
  "  //-----------------Assembly for b-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                            )<<
+ "  startProcedure(\"RHS assembly\",t0);                                          \n"
  "  b = elastodynamics(0,Vh);                                                     \n"
-<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                            )<<
+ "  endProcedure  (\"RHS assembly\",t0);                                          \n"
  "                                                                                \n"
  "  //-----------------Solving du=A^-1*b--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""                               )<<
+ "  startProcedure(\"solving U\",t0);                                             \n"
  "  set(A,solver=CG,sym=1);                                                       \n"
  "  du[] = A^-1*b;                                                                \n"
-<<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                               )<<
+ "  endProcedure  (\"solving U\",t0);                                             \n"
  "                                                                                \n";
 
 if(debug)if(spc==2)
@@ -70,17 +70,16 @@ if(debug)if(spc==3)
  "                                                                                \n"
  "  //-----------------updating variables------------//                           \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""                     )
- <<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "" )
- <<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""           )
- <<(timelog ? "  timerend  (\"updating variables\",t0)\n" : ""                      );
+ "  startProcedure(\"updating variables\",t0);                                    \n"
+ "  updateFields(du,uold,vold,aold,beta,gamma,dt);                                \n"
+ "  endProcedure  (\"updating variables\",t0);                                    \n";
 
 if(ParaViewPostProcess){
  writeIt
  "                                                                                \n"
  "  //-----------------Paraview plotting-------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                       )<<
+ "  startProcedure(\"ParaView plotting\",t0);                                     \n"
  "  string   namevtu=\"VTUs/Solution\"+iterout+\".vtu\";                          \n"
  "  savevtk  (  namevtu               ,                                           \n"
  "              Th                    ,                                           \n";
@@ -128,15 +127,15 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "  //-----------updating iteration count-----------//                            \n"
  "                                                                                \n"
  "  iterout++;                                                                    \n"
-<<(timelog ? "  timerend  (\"ParaView plotting\",t0)\n" : ""                       );
+ "  endProcedure  (\"ParaView plotting\",t0);                                     \n";
 }
 
-if(pipegnu){
+if(getenergies){
  writeIt
  "                                                                                \n"
  "  //---------------Energy calculations-------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : ""                     )<<
+ "  startProcedure(\"Energy calculations\",t0);                                   \n"
  "  Ek =intN(Th,qforder=2)(0.5*(vold*vold+vold1*vold1));                          \n"
  "  El =intN(Th,qforder=2)(0.5*(lambda*divergence(uold)*divergence(uold)          \n"
  "                         + 2. * mu * epsilon(uold)'*epsilon(uold)) );           \n"
@@ -150,7 +149,7 @@ if(pipegnu){
  "  ofstream ff(\"energies.data\",append);                                        \n"
  "  ff<< t << \"  \" << Ek << \"  \"<< El << \"  \" << Ec <<endl;                 \n";
 
-if(!supercomp)
+if(pipegnu)
  writeIt
  "                                                                                \n"
  "  //-----------------Gnuplot pipeping-------------//                            \n"
@@ -170,7 +169,7 @@ if(!supercomp)
 
  writeIt
  "                                                                                \n"
-<<(timelog ? "  timerend(\"Energy calculations\",t0)\n" : ""                       );
+ "   endProcedure(\"Energy calculations\",t0);                                    \n";
 
 }  //-- [if loop terminator]  pipegnu ended --//
 
@@ -220,13 +219,13 @@ if(tractionconditions>=1){
  "                                                                                \n"
  "  //-----------------Assembly for A-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"matrix assembly\",t0)\n" : ""                      )<<
+ "  startProcedure(\"matrix assembly\",t0);                                       \n"
  "  ALoc = elastodynamics(Vh,Vh,solver=CG,sym=1);                                 \n"
-<<(timelog ? "  timerend  (\"matrix assembly\",t0)\n" : ""                      )<<
+ "  endProcedure  (\"matrix assembly\",t0);                                       \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"PETSc assembly\",t0)\n"  : ""                      )<<
+ "  startProcedure(\"PETSc assembly\",t0);                                        \n"
  "  A=ALoc;            //changeOperator(A, ALoc);                                 \n"
-<<(timelog ? "  timerend(\"PETSc assembly\",t0)\n"    : ""                      )<<
+ "  endProcedure(\"PETSc assembly\",t0);                                          \n"
  "                                                                                \n";
 
 if(Model=="pseudo_nonlinear")
@@ -244,16 +243,16 @@ if(Model=="pseudo_nonlinear")
  "                                                                                \n"
  "  //-----------------Assembly for b-----------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"RHS assembly\",t0)\n" : ""                           )<<
+ "  startProcedure(\"RHS assembly\",t0);                                          \n"
  "  b = elastodynamics(0,Vh);                                                     \n"
-<<(timelog ? "  timerend  (\"RHS assembly\",t0)\n" : ""                           )<<
+ "  endProcedure  (\"RHS assembly\",t0);                                          \n"
  "                                                                                \n"
  "  //-----------------Solving du=A^-1*b--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"solving U\",t0)\n" : ""                              )<<
+ "  startProcedure(\"solving U\",t0);                                             \n"
  "  set(A,sparams =\"  -ksp_type cg  \");                                         \n"
  "  du[] = A^-1*b;                                                                \n"
-<<(timelog ? "  timerend  (\"solving U\",t0)\n" : ""                              )<<
+ "  endProcedure  (\"solving U\",t0);                                             \n"
  "                                                                                \n";
 
 if(Model=="pseudo_nonlinear")
@@ -265,7 +264,7 @@ if(Model=="pseudo_nonlinear")
  "                                                                                \n"
  "  //------pseudo-nonlinear Error calculation---------//                         \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"NL error checking\",t0)\n" : ""                      )<<
+ "  startProcedure(\"NL error checking\",t0);                                     \n"
  "  real err1Gather,  err1Loc ;                                                   \n"
  "                                                                                \n"
  "  b = b .* DP                                   ;                               \n"
@@ -274,7 +273,7 @@ if(Model=="pseudo_nonlinear")
  "  mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                         \n"
  "  err1Gather = sqrt(err1Gather) ;                                               \n"
  "                                                                                \n"
-<<(timelog ? "  timerend (\"NL error checking\",t0)\n" : ""                       )<<
+ "  endProcedure (\"NL error checking\",t0);                                      \n"
  "                                                                                \n"
  "  //--------------- Convergence conditional---------------------//              \n"
  "                                                                                \n"
@@ -318,17 +317,16 @@ if(debug)if(spc==3)
  "                                                                                \n"
  "  //-----------------updating variables------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"updating variables\",t0)\n" : ""                     )
-<<(useGFP  ? "  GFPUpdateDynamic(du[],uold[],vold[],aold[],beta,gamma,dt);\n" : "")
-<<(!useGFP ? "  updateVariables(du,uold,vold,aold,beta,gamma,dt)\n" : ""          )
-<<(timelog ? "  timerend(\"updating variables\",t0)\n" : ""                       );
+ "  startProcedure(\"updating variables\",t0);                                    \n"
+ "  updateFields(du,uold,vold,aold,beta,gamma,dt);                                \n"
+ "  endProcedure(\"updating variables\",t0);                                      \n";
 
 if(ParaViewPostProcess){
  writeIt
  "                                                                                \n"
  "  //-----------------ParaView plotting--------------//                          \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"ParaView plotting\",t0)\n" : ""                    );
+ "  startProcedure(\"ParaView postprocess\",t0);                                  \n";
 
  writeIt
  "    savevtk(  \"VTUs/Solution.vtu\"   ,                                         \n"
@@ -367,24 +365,24 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "              PlotVec(uold)        ,                                            \n"
  "              PlotVec(vold)        ,                                            \n"
  "              PlotVec(aold)        ,                                            \n"
- "              dataname=\"U  V  A\" ,                                            \n";
+ "              dataname=\"U V A\"   ,                                            \n";
 
  writeIt
  "                 order=vtuorder     ,                                           \n"
  "                 append=true                                                    \n"
  "              );                                                                \n"
-<<(timelog ? "  timerend(\"ParaView plotting\",t0)\n" : ""                         );
+ "  endProcedure(\"ParaView postprocess\",t0);                                    \n";
 
 }
 
 
 
-if(pipegnu){
+if(getenergies){
  writeIt
  "                                                                                \n"
  "  //---------------Energy calculations-------------//                           \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"Energy calculations\",t0)\n" : ""                  )<<
+ "  startProcedure(\"Energy calculations\",t0);                                   \n"
  "  E[0] =intN(Th,qforder=2)( 0.5*DPspc*(vold*vold+vold1*vold1));                 \n"
  "  E[1] =intN(Th,qforder=2)( 0.5*DPspc*(lambda*divergence(uold)*divergence(uold) \n"
  "                            + 2. * mu * epsilon(uold)'*epsilon(uold))  );       \n"
@@ -403,7 +401,7 @@ if(pipegnu){
  "     ofstream ff(\"energies.data\",append);                                     \n"
  "     ff<< t << \"  \" << EG[0] << \"  \"<< EG[1] << \"  \" << EG[2] <<endl;     \n";
 
-if(!supercomp)
+if(pipegnu)
  writeIt
  "                                                                                \n"
  "     //---------------Gnuplot pipeping-------------//                           \n"
@@ -424,10 +422,8 @@ if(!supercomp)
  writeIt
  "                                                                                \n"
  "   }                                                                            \n"
-<<(timelog ? "   timerend(\"Energy calculations\",t0)\n" : ""                   );
-}  //-- [if loop terminator]  pipegnu ended --//
-
-
+ "   endProcedure(\"Energy calculations\",t0);                                    \n";
+}
 
 
  writeIt
@@ -436,7 +432,6 @@ if(!supercomp)
  "                                                                                \n"
  "  t += dt;                                                                      \n"
  "}                                                                               \n"
- "                                                                                \n"
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
