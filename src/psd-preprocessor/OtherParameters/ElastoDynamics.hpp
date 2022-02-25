@@ -148,7 +148,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");            \n";
   }
 
- if(pipegnu){
+ if(getenergies){
   writeIt
   "                                                                               \n"
   "//=============================================================================\n"
@@ -159,7 +159,7 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
   "  // To store damping energy                                                   \n"
   "                                                                               \n"
   <<(Sequential ? "" : "  if(mpirank==0)\n"                                       )<<
-  "  system(\"rm energies.data\");                                                \n";
+  "  system(\"rm -rf energies.data\");                                            \n";
 
  if(plotreaction)
   writeIt

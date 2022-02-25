@@ -776,10 +776,18 @@ if(dirichletpointconditions>=1)
 } //-- [if loop terminator] timelog ended --//
 
 
+
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "//                 ------- update fields macros -------                        \n"
+ "// --------------------------------------------------------------------------- \n"
+ "// These macros are used to perform the update of u, v, a FE variables         \n"
+ "//=============================================================================\n";
+ 
 if(!useGFP)
   writeIt
   "                                                                           \n"
-  "//------------------------------update macros----------------------------//\n"
   "                                                                           \n"
   "  macro updateVariables(du,uold,vold,aold,beta,gamma,dt){                  \n"
   "                                                                           \n"
@@ -803,5 +811,5 @@ if(!useGFP)
 
 if(useGFP)
   writeIt  
-  "  macro updateField(du,uold,vold,aold,beta,gamma,dt)                       \n"
+  "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
   "     GFPUpdateDynamic(du#[],uold#[],vold#[],aold#[],beta,gamma,dt) //      \n";
