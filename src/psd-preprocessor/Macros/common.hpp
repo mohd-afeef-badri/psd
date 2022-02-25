@@ -5,8 +5,8 @@
 * Date   : 25/02/2020                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
-* Comment: This support  file is responsible for generating startProcedure and        *
-*          endProcedure macros that are evaluated at compile-time in.                *
+* Comment: This support  file is responsible for generating perfromRCMreordering,     *
+*          startProcedure and endProcedure macros that are needed by PSD.             *
 *                                                                                     *
 **************************************************************************************/
 
@@ -57,9 +57,7 @@ codeSnippet R""""(
 
 )"""";
 }
-
-if(Sequential)
-{
+else{
 codeSnippet R""""(
 
 //==============================================================================
@@ -94,13 +92,58 @@ codeSnippet R""""(
 // ------- startProcedure (string , real) is a DUMMY macro -------
 //==============================================================================
 
-  macro startProcedure(str1,t0){}//
+  macro startProcedure(str1,t0)//
 
 //==============================================================================
 // ------- endProcedure (string , real) is a DUMMY macro  -------
 //==============================================================================
 
-  macro endProcedure(str1,t0){}//
+  macro endProcedure(str1,t0)//
+
+)"""";
+
+}
+
+
+codeSnippet R""""(
+
+//=============================================================================
+//            ------ Reverse Cuthill-Mackee macros  -------
+// -------------------------------------------------------------------
+//    Note this macros will perform mesh element renumberining based
+//    on reverse Cuthill-Mackee algorithm. This is On by default  in
+//    PSD. User can turn this off by using --useRCM  off | 0 |false.
+//    For such a case this macro will serve as a dummy macro.
+// -------------------------------------------------------------------
+//=============================================================================
+
+)"""";
+
+if(RCM){
+
+codeSnippet R""""(
+
+//==============================================================================
+// ------- perfromRCMreordering (meshObject)-------
+//==============================================================================
+
+  macro perfromRCMreordering(meshObject)
+              meshObject = trunc(meshObject, 1, renum = 1);
+  //
+
+)"""";
+
+}
+
+if(!RCM){
+
+codeSnippet R""""(
+
+//==============================================================================
+// ------- perfromRCMreordering (meshObject)  is a DUMMY macro  -------
+//==============================================================================
+
+  macro perfromRCMreordering(meshObject)//
 
 )"""";
 

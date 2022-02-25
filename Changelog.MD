@@ -6,10 +6,9 @@ PSD has been maturing and evolving with time, following subsections present the 
 ### Added
 
 - Support for Dirichlet Point conditions in sequential for fracture mechanics. New tests for checking ponint BC.
-
 - New Iwan law for PSD-MFront coupling.
-
 - PSD installation support for MacOS.
+- New macro `perfromRCMreordering(meshObject)` to perform mesh level Reverse Cuthill-Mackee algo.
 - New `PsdMfrontPrintBehaviourStats()` to probe the mfront file and know the input/output.
 - New variables added for `PsdMfrontHandler()` function `mfrontStrainTensor, mfrontStateVariable, `.
 - New variables added for `PsdMfrontHandler()` function `mfrontExternalStateVariableNames, mfrontExternalStateVariableValues, `.

@@ -163,6 +163,7 @@ if(spc==2)
   "// grad      : Two-dimensional gradient                                        \n"
   "// readmeshN : Two-dimensional mesh reading .mesh format                       \n"
   "// gmshloadN : Two-dimensional mesh reading .msh format                        \n"
+  "// vtkloadN  : Two-dimensional mesh reading .vtk format                        \n"
   "//=============================================================================\n"
  "                                                                                \n"
  "  macro meshN()mesh                   //                                        \n"
@@ -170,6 +171,7 @@ if(spc==2)
  "  macro intN1()int1d                  //                                        \n"
  "  macro readmeshN()readmesh           //                                        \n"
  "  macro gmshloadN()gmshload           //                                        \n"
+ "  macro vtkloadN()vtkload             //                                        \n"
  "  macro grad(i) [dx(i),dy(i)]         //                                        \n"
  "                                                                                \n";
 
@@ -431,6 +433,7 @@ if(!vectorial){
   "// grad      : Three-dimensional gradient                                      \n"
   "// readmeshN : Three-dimensional mesh reading .mesh format                     \n"
   "// gmshloadN : Three-dimensional mesh reading .msh format                      \n"
+  "// vtkloadN  : Three-dimensional mesh reading .vtk format                      \n"
   "//=============================================================================\n"
   "                                                                              \n"
   "  load \"msh3\"                          //                                   \n"
@@ -439,6 +442,7 @@ if(!vectorial){
   "  macro intN1()int2d                     //                                   \n"
   "  macro readmeshN()readmesh3             //                                   \n"
   "  macro gmshloadN()gmshload3             //                                   \n"
+  "  macro vtkloadN()vtkload3               //                                   \n"
   "  macro grad(i)[dx(i),dy(i),dz(i)]       //                                   \n"
   "                                                                              \n";
 
