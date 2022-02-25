@@ -184,9 +184,3 @@
  "  << \"\\n#---------------------------------------------------------------\\n\" \n"
  "  <<endl;                                                                       \n"
  "                                                                                \n";
-
-if(!ParaViewPostProcess)
- writeIt
- "                                                                              \n"
-<<(timelog ? "timerend(\"solver\",t1)\n" : ""                                   )<<
- "                                                                              \n";

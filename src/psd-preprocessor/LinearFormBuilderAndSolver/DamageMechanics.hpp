@@ -379,7 +379,6 @@ if(debug)
  "  tr += dtr;                                                                    \n"
  "}                                                                               \n"
  "                                                                                \n"
- <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                  )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 }  //-- [if loop terminator] Sequential ended --//
@@ -723,7 +722,6 @@ if(debug)
  "                                                                                \n"
  "}                                                                               \n"
  "                                                                                \n"
- <<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                 )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 }  //-- [if loop terminator] Sequential ended --//
@@ -1190,7 +1188,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
- "    phi=u"<<spc<<";              														                            \n";
+ "    phi=u"<<spc<<";              				                  \n";
 
 
  writeIt
@@ -1262,9 +1260,6 @@ if(debug)if(vectorial)
  "  tr += dtr;                                                                    \n"
  "}                                                                               \n"
  "                                                                                \n"
- <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
- (timelog ? "cout << \" all operations ended, they \";\n" : ""                    )<<
- (timelog ? "timerend  (\"solver\",t1)\n" : " "                                )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
@@ -1825,9 +1820,6 @@ if(debug)if(vectorial)
  "                                                                                \n"
  "}                                                                               \n"
  "                                                                                \n"
- <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
- (timelog ? "cout << \" all operations ended, they \";\n" : ""                    )<<
- (timelog ? "timerend  (\"solver\",t1)\n" : " "                                   )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
@@ -2004,9 +1996,6 @@ if(plotreaction)
  writeIt
  "}                                                                               \n"
  "                                                                                \n"
- <<(timelog ? "if(mpirank==0)\n" : " "                                            )<<
- (timelog ? "cout << \" all operations ended, they \";\n" : " "                   )<<
- (timelog ? "timerend  (\"solver\",t1)\n" : " "                                   )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 }

@@ -124,9 +124,6 @@ if(   PostProcess=="uva" || PostProcess=="uav" || PostProcess=="vau"
  "                                                                                \n"
  "}                                                                               \n"
  "                                                                                \n"
-<<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
-<<(timelog ? "timerend  (\"solver\",t1)\n" : " "                                  )<<
- "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 
 }  //-- [if loop terminator] Sequential Dynamic ended --//
@@ -596,18 +593,8 @@ if(!supercomp)
  "                                                                                \n"
  "  //-----------------updating time----------------//                            \n"
  "                                                                                \n"
- "  t += dt;                                                                      \n";
-
-
- writeIt
+ "  t += dt;                                                                      \n"
  "}                                                                               \n"
- "                                                                                \n";
-
-
- writeIt
- (timelog ? "if(mpirank==0)\n" : " "                                               )
-<<(timelog ? "cout << \" all operations ended, they \";\n" : ""                     )
-<<(timelog ? "timerend  (\"solver\",t1)\n" : ""                                 )<<
  "                                                                                \n"
  "//-------------------------------THE END------------------------------//        \n";
 

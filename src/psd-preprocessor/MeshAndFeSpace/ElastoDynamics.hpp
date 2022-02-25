@@ -36,8 +36,8 @@ if(Sequential){
  "//  Th        : Finite element mesh                                             \n"
  "//==============================================================================\n"
  "                                                                                \n"
- <<(timelog  ? "  timerbegin(\"Solver\",t1)\n" : ""                               )
- <<(timelog  ? "  timerbegin(\"Mesh Loading\",t0)\n" : ""                         )<<
+ "  startProcedure(\"Solver\",t1)                                                 \n"
+ "  startProcedure(\"Mesh Loading\",t0)                                           \n"
  "                                                                                \n"
  "  meshN Th;                                                                     \n"
  "                                                                                \n"
@@ -51,8 +51,8 @@ if(Sequential){
  "      Th = readmeshN(ThName);                                                   \n"
  "    }                                                                           \n"
  "                                                                                \n"
- <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                    )
- <<(timelog ? "  timerend  (\"Mesh Loading\",t0)\n" : ""                          )<<
+ "  perfromRCMreordering(Th);                                                     \n"
+ "  endProcedure  (\"Mesh Loading\",t0)                                           \n"
  "                                                                                \n"
  "//==============================================================================\n"
  "// ------- The finite element space  -------                                    \n"
@@ -100,7 +100,7 @@ if(!Sequential){
  "      Th = readmeshN(ThName);                                                   \n"
  "    }                                                                           \n"
  "                                                                                \n"
- <<(RCM ? "  Th=trunc(Th, 1, renum=1);\n" : ""                                     );
+ "  perfromRCMreordering(Th);                                                     \n";
 
   writeIt
   "                                                                                \n"
@@ -119,11 +119,9 @@ if(!Sequential){
  "                                                                                \n"
  " }                                                                              \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"Solver\",t1)\n" : ""                             )
- <<(timelog ? "  if(mpirank==0)cout<<\"\"<<endl;\n" : ""                          )
- <<(timelog ? "  timerbegin(\"Mesh Partitioning\",t0)\n" : ""                  )<<
+ "  startProcedure(\"Mesh Partitioning\",t0)                                      \n"
  "  PartThAndBuildCommunication();                                                \n"
- <<(timelog ? "  timerend(\"Mesh Partitioning\",t0)\n" : " "                   )<<
+ "  endProcedure(\"Mesh Partitioning\",t0)                                        \n"
  "                                                                                \n"
  "                                                                                \n";
 }
