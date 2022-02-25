@@ -34,6 +34,12 @@ MeshAndFeSpace.hpp \
 ./MeshAndFeSpace/ElastoPlastic.hpp \
 ./MeshAndFeSpace/SoilDynamics.hpp \
 Macros.hpp \
+./Macros/common.hpp \
+./Macros/DamageMechanics.hpp \
+./Macros/ElastoDynamics.hpp \
+./Macros/LinearElasticity.hpp \
+./Macros/ElastoPlastic.hpp \
+./Macros/SoilDynamics.hpp \
 PostProcessor.hpp \
 PSD_PreProcess.cpp \
 VariationalFormulation.hpp \
