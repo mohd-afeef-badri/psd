@@ -22,6 +22,7 @@ check-header:
 NP = 4
 
 check-elasto-plastic-Mfront:
+if HAVEMGIS
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D elasto-plasticity with mfront "
@@ -32,6 +33,9 @@ check-elasto-plastic-Mfront:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 0 -ns -nw > PSD_PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log
+else !HAVEMGIS	
+	@echo ""
+endif
 
 clean-local:
 	@echo ""
