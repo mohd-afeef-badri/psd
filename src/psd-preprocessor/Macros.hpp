@@ -39,7 +39,8 @@ if(Prblm=="soildynamics")
 {
 #include "./Macros/SoilDynamics.hpp"
 }
-/**/
+
+#include "./Macros/common.hpp"
 } //-- [ostream terminator]  Macros.edp closed --//
 
 cout << " ............... Done \n";

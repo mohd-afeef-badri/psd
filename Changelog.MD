@@ -5,6 +5,10 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- Support for Dirichlet Point conditions in sequential for fracture mechanics. New tests for checking ponint BC.
+
+- New Iwan law for PSD-MFront coupling.
+
 - PSD installation support for MacOS.
 - New `PsdMfrontPrintBehaviourStats()` to probe the mfront file and know the input/output.
 - New variables added for `PsdMfrontHandler()` function `mfrontStrainTensor, mfrontStateVariable, `.
@@ -16,6 +20,9 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Dependencies can now be installed by PSD.
 
 ### Changed
+
+- `startProcedure()` and `endProcedure()` macros replace `timerBegin()` and `timerEnd()` macros.
+
 - Moved to FreeFEM 4.10
 - Moved to PETSc 3.16.1
 - Mfront material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
