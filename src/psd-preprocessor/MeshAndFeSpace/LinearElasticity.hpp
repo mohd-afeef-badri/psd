@@ -12,20 +12,35 @@
 
 writeHeader;
 
- writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element mesh name from commandline-------                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  ThName = getARGV( \"-mesh\" , ThName );                                       \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- Error message if wrong mesh detected -------                         \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  if(ThName.find(\".mesh\") == -1 && ThName.find(\".msh\") == -1)               \n"
- "   cout <<\"INVALID MESH: PSD only accepts '.msh' or '.mesh' formats\"<< endl;  \n";
+codeSnippet R""""(
+
+//==============================================================================
+// ------- The finite element mesh name from commandline-------
+//==============================================================================
+
+  ThName = getARGV( "-mesh" , ThName );
+
+//==============================================================================
+// ------- Error message if wrong mesh detected -------
+//==============================================================================
+
+  if( ThName.find(".mesh") == -1 &&
+      ThName.find(".msh")  == -1 &&
+      ThName.find(".vtk")  == -1
+    ){
+      cout << "  ****************** ERROR ********************* \n"
+           << "                                                 \n"
+           << "  PSD only accepts the following mesh formats    \n"
+           << "     1) .msh   Gmsh's  .msh  format version 2    \n"
+           << "     2) .mesh  INRIA's medit format              \n"
+           << "     3) .vtk   VTK's unstructured mesh format    \n"
+           << "                                                 \n"
+           << "  ****************** ERROR ********************* \n";
+      exit(11111);
+  }
+
+)"""";
+
 
 if(Sequential){
  writeIt
@@ -114,8 +129,8 @@ if(!Sequential){
  "//  Vh        : Mixed finite element space  for displacement                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Vh     ( Th , Pk );                                                    \n"; 
- 
+ " fespace Vh     ( Th , Pk );                                                    \n";
+
  if(!fastmethod && spc==2)
   writeIt
  "                                                                                \n"
@@ -130,7 +145,7 @@ if(!Sequential){
  " fespace Qh  ( Th ,[ FEQF2, FEQF2, FEQF2,                                       \n"
  "                            FEQF2, FEQF2,                                       \n"
  "                                   FEQF2] );                                    \n";
- 
+
  if(useMfront && Model=="pseudo_nonlinear" && spc==2)
   writeIt
  "                                                                                \n"
@@ -144,7 +159,7 @@ if(!Sequential){
  "                                                                                \n"
  " fespace Sh  ( Th ,[ FEQF2, FEQF2, FEQF2]);                                     \n"
  "                                                                                \n";
- 
+
  if(!fastmethod && spc==3)
   writeIt
  "                                                                                \n"
@@ -162,7 +177,7 @@ if(!Sequential){
  "                                               FEQF23d, FEQF23d, FEQF23d,       \n"
  "                                                        FEQF23d, FEQF23d,       \n"
  "                                                                 FEQF23d] );    \n";
- 
+
  if(useMfront && Model=="pseudo_nonlinear" && spc==3)
   writeIt
  "                                                                                \n"
@@ -175,7 +190,7 @@ if(!Sequential){
  "//==============================================================================\n"
  "                                                                                \n"
  " fespace Sh  ( Th ,[ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d ]);   \n"
- "                                                                                \n"; 
+ "                                                                                \n";
 
  writeIt
  "                                                                                \n"

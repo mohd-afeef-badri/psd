@@ -128,6 +128,7 @@
 #include "HeaderMacro.hpp"
 
 #define writeIt  write<<
+#define codeSnippet  write<<
 
 #define IsArgumentValueTrue   if(argvalue=="yes"||argvalue=="on"||argvalue=="true"||argvalue=="1")
 #define IsArgumentValueFalse  if(argvalue=="no"||argvalue=="off"||argvalue=="false"||argvalue=="0")
