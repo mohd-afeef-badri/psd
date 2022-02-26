@@ -290,7 +290,7 @@ if(tractionconditions>=1)
    "  macro  Tbc"<<i<<"On 4   //                                               \n"
    "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
 
-   
+
  }
 
 

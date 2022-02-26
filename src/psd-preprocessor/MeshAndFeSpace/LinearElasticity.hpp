@@ -54,18 +54,7 @@ codeSnippet R""""(
 
   startProcedure("Mesh Loading",t0)
 
-  meshN Th;
-
-  if(ThName.find(".msh") > -1){
-    load "gmsh";   Th = gmshloadN(ThName);
-  }
-  if(ThName.find(".mesh") > -1){
-    Th = readmeshN(ThName);
-  }
-  if(ThName.find(".vtk") > -1){
-    load "iovtk";  Th = vtkloadN(ThName);
-  }
-
+  loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
   endProcedure  ("Mesh Loading",t0)

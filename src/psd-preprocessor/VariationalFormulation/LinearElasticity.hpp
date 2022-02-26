@@ -166,7 +166,7 @@ if(!fastmethod && useMfront){
  "                       epsilonXMt(du,Mt)'*epsilon(v)                                            \n"
  "                     )                                                                          \n"
  "                                                                                                \n";
- 
+
  if(spc==2)
  writeIt
  "/*                                                                                              \n"
@@ -180,7 +180,7 @@ if(!fastmethod && useMfront){
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       [Sig11, Sig22, Sig12]'*epsilon(v)                                        \n"
  "                     )                                                                          \n";
- 
+
  if(spc==3)
  writeIt
  "/*                                                                                              \n"
@@ -193,7 +193,7 @@ if(!fastmethod && useMfront){
  "                                                                                                \n"
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       [Sig11, Sig22, Sig33, Sig12, Sig13, Sig23]'*epsilon(v)                   \n"
- "                     )                                                                          \n"; 
+ "                     )                                                                          \n";
 }
 
 for(int i=0; i<bodyforceconditions; i++)

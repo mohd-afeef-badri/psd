@@ -59,7 +59,7 @@ if(spc==2)
   "  macro Pk     [ P"<<lag<<" ,                                                  \n"
   "                 P"<<lag<<" ] //                                               \n"
   "                                                                               \n";
-  
+
   writeIt
   "  macro def(i) [ i   ,                                                         \n"
   "                 i#1 ] //                                                      \n"
@@ -150,30 +150,6 @@ if(spc==2)
  "                                                                               \n"
  "                        ] //                                                   \n"
  "                                                                               \n";
-
- if(Sequential)
- writeIt
-  "                                                                               \n"
-  "//=============================================================================\n"
-  "//      ------- remapping Macros -------                                       \n"
-  "// --------------------------------------------------------------------------- \n"
-  "// meshN     : Two-dimensional problem mesh                                    \n"
-  "// intN      : Two-dimensional integral                                        \n"
-  "// intN1     : One-dimensional integral                                        \n"
-  "// grad      : Two-dimensional gradient                                        \n"
-  "// readmeshN : Two-dimensional mesh reading .mesh format                       \n"
-  "// gmshloadN : Two-dimensional mesh reading .msh format                        \n"
-  "// vtkloadN  : Two-dimensional mesh reading .vtk format                        \n"
-  "//=============================================================================\n"
- "                                                                                \n"
- "  macro meshN()mesh                   //                                        \n"
- "  macro intN()int2d                   //                                        \n"
- "  macro intN1()int1d                  //                                        \n"
- "  macro readmeshN()readmesh           //                                        \n"
- "  macro gmshloadN()gmshload           //                                        \n"
- "  macro vtkloadN()vtkload             //                                        \n"
- "  macro grad(i) [dx(i),dy(i)]         //                                        \n"
- "                                                                                \n";
 
 
  if(tractionconditions>=1)
@@ -310,7 +286,7 @@ if(!vectorial){
   "             P"<<lag<<" ,                                                     \n"
   "             P"<<lag<<" ] //                                                  \n"
   "                                                                              \n";
-  
+
   writeIt
   "  macro def(i)  [i   ,                                                        \n"
   "                 i#1 ,                                                        \n"
@@ -323,7 +299,7 @@ if(!vectorial){
   "                  i ,                                                         \n"
   "                  i ] //                                                      \n"
   "                                                                              \n";
-  
+
 } //-- [if loop terminator] !vectorial ended --//
 
 
@@ -420,31 +396,6 @@ if(!vectorial){
  "                                                                               \n"
  "                        ] //                                                   \n"
  "                                                                               \n";
-
- if(Sequential)
-  writeIt
-  "                                                                               \n"
-  "//=============================================================================\n"
-  "//      ------- remapping Macros -------                                       \n"
-  "// --------------------------------------------------------------------------- \n"
-  "// meshN     : Three-dimensional problem mesh                                  \n"
-  "// intN      : Three-dimensional integral                                      \n"
-  "// intN1     : Two-dimensional integral                                        \n"
-  "// grad      : Three-dimensional gradient                                      \n"
-  "// readmeshN : Three-dimensional mesh reading .mesh format                     \n"
-  "// gmshloadN : Three-dimensional mesh reading .msh format                      \n"
-  "// vtkloadN  : Three-dimensional mesh reading .vtk format                      \n"
-  "//=============================================================================\n"
-  "                                                                              \n"
-  "  load \"msh3\"                          //                                   \n"
-  "  macro meshN()mesh3                     //                                   \n"
-  "  macro intN()int3d                      //                                   \n"
-  "  macro intN1()int2d                     //                                   \n"
-  "  macro readmeshN()readmesh3             //                                   \n"
-  "  macro gmshloadN()gmshload3             //                                   \n"
-  "  macro vtkloadN()vtkload3               //                                   \n"
-  "  macro grad(i)[dx(i),dy(i),dz(i)]       //                                   \n"
-  "                                                                              \n";
 
  if(tractionconditions>=1){
  writeIt

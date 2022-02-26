@@ -14,6 +14,7 @@ FemParameters.hpp \
 ./FemParameters/LinearElasticity.hpp \
 ./FemParameters/SoilDynamics.hpp \
 OtherParameters.hpp \
+./OtherParameters/common.hpp \
 ./OtherParameters/DamageMechanics.hpp \
 ./OtherParameters/ElastoDynamics.hpp \
 ./OtherParameters/ElastoPlastic.hpp \
@@ -51,7 +52,7 @@ VariationalFormulation.hpp \
 DetectWrongArgument.hpp \
 ErrorWrongArgument.hpp
 
-AM_CPPFLAGS=-std=c++11 
+AM_CPPFLAGS=-std=c++11
 bin_PROGRAMS = PSD_PreProcess
 PSD_PreProcess_SOURCES = PSD_PreProcess.cpp
 

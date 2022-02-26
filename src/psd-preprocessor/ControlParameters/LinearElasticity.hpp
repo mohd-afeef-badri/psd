@@ -22,7 +22,7 @@ writeHeader;
  "//=============================================================================\n"
  "                                                                               \n"
  "  string ThName = \"../Meshes/"<<spc<<"D/bar.msh\";                            \n";
- 
+
   if(!useMfront)
   writeIt
   "                                                                              \n"
@@ -44,7 +44,7 @@ writeHeader;
   "  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        \n"
   "}                                                                             \n";
 
-  
+
   if(useMfront && spc==2)
   writeIt
   "                                                                              \n"
@@ -65,7 +65,7 @@ writeHeader;
   "  macro E()  200.e9  //                                                       \n"
   "  macro nu() 0.3     //                                                       \n"
   "                                                                              \n"
-  "  string    MaterialBehaviour   = \"Elasticity\";                             \n" 
+  "  string    MaterialBehaviour   = \"Elasticity\";                             \n"
   "  string    MaterialHypothesis  = \"GENERALISEDPLANESTRAIN\";                 \n"
   "  string    PropertyNames       = \"YoungModulus PoissonRatio\";              \n"
   "  real[int] PropertyValues      = [ E, nu ];                                  \n"
@@ -91,12 +91,12 @@ writeHeader;
   "  macro E()  200.e9  //                                                       \n"
   "  macro nu() 0.3     //                                                       \n"
   "                                                                              \n"
-  "  string    MaterialBehaviour   = \"Elasticity\";                             \n" 
+  "  string    MaterialBehaviour   = \"Elasticity\";                             \n"
   "  string    MaterialHypothesis  = \"TRIDIMENSIONAL\";                         \n"
   "  string    PropertyNames       = \"YoungModulus PoissonRatio\";              \n"
   "  real[int] PropertyValues      = [ E, nu ];                                  \n"
   "                                                                              \n";
-  
+
  /*
  if(!fastmethod)
   {
@@ -263,7 +263,7 @@ if(tractionconditions>=1)
    writeIt
    "  macro  Tbc"<<i<<"On 4   //                                               \n"
    "  macro  Tbc"<<i<<"Tx 10. //                                               \n";
-   
+
  }
 
 

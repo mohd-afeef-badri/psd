@@ -5,6 +5,10 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- Additional tests for Elastodynamics, Damage Mechanics.
+
+- New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
+- New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.
 - Support for Dirichlet Point conditions in sequential for fracture mechanics. New tests for checking ponint BC.
 - New Iwan law for PSD-MFront coupling.
 - PSD installation support for MacOS.
@@ -28,7 +32,12 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Removed
 
+- Removed the `-supercomp` argument, no longer needed.
+- Removed the `-pipegnu` flag.
+
 ### Bug
+
+- Bug in `-plotreactionforce` when used with stress-based method has been removed.
 
 ## [2.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.3) - 2021-09-13
 

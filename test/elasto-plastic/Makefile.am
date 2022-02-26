@@ -28,11 +28,11 @@ if HAVEMGIS
 	@echo " Parallel 2D elasto-plasticity with mfront "
 	@echo "*============================================================*"
 	@echo ""
-	./PSD_PreProcess -dimension 2 -tractionconditions 1 -problem elasto_plastic -dirichletconditions 2 -model von_mises -useMfront -testflags  > PSD_PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log && \
+	./PSD_PreProcess -dimension 2 -tractionconditions 1 -problem elasto_plastic -dirichletconditions 2 -model von_mises -useMfront -testflags  > PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 0 -ns -nw > PSD_PreProcess-2D_elasto-plasticity_Parallel_Mfornt.log
+	./PSD_Solve -np $(NP)  Main.edp -v 0 -ns -nw > Solve-2D_elasto-plasticity_Parallel_Mfornt.log
 else !HAVEMGIS	
 	@echo ""
 endif

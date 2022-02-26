@@ -162,9 +162,9 @@ writeHeader;
    "   Sh [Eps11,Eps22,Eps12];                                                    \n"
    "   Sh [Sig11,Sig22,Sig12];                                                    \n"
    "                                                                              \n";
-  
+
   }
-  
+
  if(spc==3){
  writeIt
   "                                                                              \n"

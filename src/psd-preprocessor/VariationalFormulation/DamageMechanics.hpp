@@ -27,7 +27,7 @@ if(!vectorial){
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
  "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
  "                        )                                                                       \n";
- 
+
 
  if(constrainHPF)
  writeIt
@@ -49,7 +49,7 @@ if(!vectorial){
  "         ((1 - phip)*(1 - phip) + 1e-6)*                                                        \n"
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
  "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"
- "                        )                                                                       \n"; 
+ "                        )                                                                       \n";
 
 for(int i=0; i<bodyforceconditions; i++)
  writeIt
@@ -190,7 +190,7 @@ if(!vectorial){
 for(int i=0; i<bodyforceconditions; i++)
  writeIt
  "                                                                                                \n"
- "                           //--- Linear(b_u) ---//                                              \n" 
+ "                           //--- Linear(b_u) ---//                                              \n"
  "    //--------------------------------------------------------------------------                \n"
  "    //  $+int_{\\Omega}(f.v)$                                                                   \n"
  "    //--------------------------------------------------------------------------                \n"
@@ -308,8 +308,8 @@ if(Model=="hybrid_phase_field" && vectorial){
  "//==============================================================================                \n"
  "                                                                                                \n";
 
- if(!constrainHPF) 
- writeIt 
+ if(!constrainHPF)
+ writeIt
  "varf elast(def(u),def(v)) =                                                                     \n"
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
@@ -318,10 +318,10 @@ if(Model=="hybrid_phase_field" && vectorial){
  "      intN(Th,qforder=3)(                                                                       \n"
  "         ((1 - uold"<<spc<<")*(1 - uold"<<spc<<") + 1e-6)*                                      \n"
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
- "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"; 
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n";
 
- if(constrainHPF) 
- writeIt 
+ if(constrainHPF)
+ writeIt
  "varf elast(def2(u),def2(v)) =                                                                   \n"
  "                                                                                                \n"
  "    //--------------------------------------------------------------------------                \n"
@@ -330,9 +330,9 @@ if(Model=="hybrid_phase_field" && vectorial){
  "      intN(Th,qforder=3)(                                                                       \n"
  "         ((1 - up"<<spc<<")*(1 - up"<<spc<<") + 1e-6)*                                          \n"
  "         (lambda*divergence(u)*divergence(v)                                                    \n"
- "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n"; 
- 
- writeIt 
+ "         + 2.*mu*( epsilon(u)'*epsilon(v) ))                                                    \n";
+
+ writeIt
  "                                                                                                \n"
  "                    +                                                                           \n"
  "                                                                                                \n"
@@ -427,7 +427,7 @@ if(Model=="Mazar"){
  "     - intN(Th,qforder=3)(                                                                      \n"
  "                     (1-damage) * stress(u,lambdafield,mufield)' * epsilon(v)                   \n"
  "                         )                                                                      \n";
- 
+
  for(int i=0; i<bodyforceconditions; i++)
  writeIt
  "                                                                                                \n"
@@ -483,16 +483,16 @@ if(reactionforce && vectorial)
  "//==============================================================================                \n"
  "                                                                                                \n";
 
- if(!constrainHPF)  
+ if(!constrainHPF)
  writeIt
  "varf varfForce(def(u),def(v)) =                                                                 \n"
  "                                                                                                \n";
 
- if(constrainHPF)  
+ if(constrainHPF)
  writeIt
  "varf varfForce(def2(u),def2(v)) =                                                               \n"
  "                                                                                                \n";
-  
+
  writeIt
  "    //--------------------------------------------------------------------------                \n"
  "    // $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$                               \n"

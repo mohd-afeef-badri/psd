@@ -39,18 +39,18 @@ if(dirichletpointconditions>=1 && !Sequential)
  "                                                                                \n"
  "//---------Preprocessing for point bounday conditions----------//               \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"point Dirichlet preprocessing\",t0)\n" : ""          )<<
+ "  startProcedure(\"point Dirichlet preprocessing\",t0);                         \n"
  "  GetPointIndiciesMpiRank(PbcCord, PCi, mpirankPCi);                            \n"
- <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ "  endProcedure(\"point Dirichlet preprocessing\",t0);                           \n";
 
 if(dirichletpointconditions>=1 && Sequential)
  writeIt
  "                                                                                \n"
  "//---------Preprocessing for point bounday conditions----------//               \n"
  "                                                                                \n"
-<<(timelog ? "  timerbegin(\"point Dirichlet preprocessing\",t0)\n" : ""          )<<
+ "  startProcedure(\"point Dirichlet preprocessing\",t0);                         \n"
  "  GetPointIndicies(PbcCord, PCi);                                               \n"
- <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ "  endProcedure(\"point Dirichlet preprocessing\",t0);                           \n";
 
 
 if(Sequential)if(NonLinearMethod=="Picard"){
@@ -72,26 +72,26 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  if(constrainHPF  && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
  "   up[]=uold[];                                                                 \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
  "   phip[]=phiold[];                                                             \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
 
  writeIt
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                    )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "  b = elast(0,Vh);                                                              \n"
- <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                    )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n"
  "  //-----------------------Nonlinear loop------------------------//             \n"
  "                                                                                \n"
@@ -99,9 +99,9 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""               )<<
+ "  startProcedure(\"matrix assembly for U\",t0);                                 \n"
  "    A = elast(Vh,Vh,solver=CG,sym=1);                                           \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""               )<<
+ "  endProcedure  (\"matrix assembly for U\",t0);                                 \n"
  "                                                                                \n";
 
  if(dirichletpointconditions>=1){
@@ -109,7 +109,7 @@ if(Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""              )<<
+ "  startProcedure(\"point Dirichlet assembly\",t0);                              \n"
  "                                                                                \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
@@ -118,26 +118,26 @@ if(Sequential)if(NonLinearMethod=="Picard"){
 
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ "  endProcedure(\"point Dirichlet assembly\",t0);                                \n";
  }
 
  writeIt
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n"         : ""                   )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "    set(A,solver=CG,sym=1);                                                     \n"
  "    u[] = A^-1*b;                                                               \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n"         : ""                   );
+ "    endProcedure(\"solving U\",t0);                                             \n";
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n"         : ""        )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus)                 \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""        );
+ "    endProcedure  (\"energy decomposition\",t0);                                \n";
 
 
 
@@ -145,22 +145,22 @@ if(energydecomp)
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""             )<<
+ "    startProcedure(\"matrix assembly for PHI\",t0);                             \n"
  "    A1 = phase(Vh1,Vh1,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    timerend  (\"matrix assembly for PHI\",t0)\n" : ""             )<<
+ "    endProcedure  (\"matrix assembly for PHI\",t0);                             \n"
  "                                                                                \n"
  "    //--------------------Assembly for linear----------------------//           \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""                )<<
+ "    startProcedure(\"RHS assembly for PHI\",t0);                                \n"
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                   )<<
+ "    endProcedure  (\"RHS assembly for U\",t0);                                  \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                            )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "    set(A1,solver=CG,sym=1);                                                    \n"
  "    phi[] = A1^-1*b1;                                                           \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                            )<<
+ "    endProcedure  (\"solving U\",t0);                                           \n"
  "                                                                                \n";
 
 
@@ -169,40 +169,40 @@ if(energydecomp && constrainHPF && vectorial)
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                    )<<
+ "    startProcedure(\"NL error checking\",t0);                                   \n"
  "    uold[]    = uold[]-u[]                         ;                            \n"
  "    phiold[]  = phiold[]-phi[]                     ;                            \n"
  "    real err1 = sqrt( intN(Th,qforder=2) ( uold^2   )  )     ;                  \n"
  "    real err2 = sqrt( intN(Th,qforder=2) ( phiold^2 )  )     ;                  \n"
- <<(timelog ? "    timerend  (\"NL error checking\",t0)\n" : ""                    )<<
+ "    endProcedure  (\"NL error checking\",t0);                                   \n"
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                      )<<
+ "    startProcedure(\"solution update\",t0);                                     \n"
  "    phiold[] = phi[]  ;                                                         \n"
  "    uold[]   = u[]    ;                                                         \n"
- <<(timelog ? "    timerend  (\"solution update\",t0)\n" : ""                      )<<
+ "    endProcedure  (\"solution update\",t0);                                     \n"
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -225,7 +225,7 @@ if(reactionforce){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
+ "  startProcedure(\"force calculation\",t0);                                     \n"
  "                                                                                \n"
  "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";
 
@@ -313,7 +313,7 @@ if(reactionforce){
  "  flush(pgnuplot);                                                              \n";
 
  writeIt
- (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
+ "  endProcedure(\"force calculation\",t0)\n";
 }
 
 if(ParaViewPostProcess){
@@ -323,7 +323,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "    savevtk(     \"VTUs/Solution_\"+iterout1+\".vtu\"  ,                        \n"
  "                 Th                 ,                                           \n";
@@ -361,7 +361,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
+ "  endProcedure(\"ParaView post-processing\",t0);                                \n";
 }
 
 if(debug)
@@ -406,18 +406,18 @@ if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  if(constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "   up[]=uold[];                                                              \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
+ "   up[]=uold[];                                                                 \n"
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
 
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
  "   phip[]=phiold[];                                                             \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
  writeIt
@@ -427,15 +427,15 @@ if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                     )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "    b = elast(0,Vh);                                                            \n"
- <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                     )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""                )<<
+ "  startProcedure(\"matrix assembly for U\",t0);                                 \n"
  "    A = elast(Vh,Vh,solver=CG,sym=1);                                           \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""                )<<
+ "  endProcedure  (\"matrix assembly for U\",t0);                                 \n"
  "                                                                                \n";
 
  if(dirichletpointconditions>=1){
@@ -443,30 +443,30 @@ if(Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"point Dirichlet assembly\",t0)\n" : ""             );
+ "    startProcedure(\"point Dirichlet assembly\",t0);                            \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
  "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n";
 
  writeIt
- (timelog ? "    timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ "    endProcedure(\"point Dirichlet assembly\",t0);                             \n";
  }
 
  writeIt
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n"         : ""                    )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "    set(A,solver=CG,sym=1);                                                     \n"
  "    du[] = A^-1*b;                                                              \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n"         : ""                    )<<
+ "    endProcedure  (\"solving U\",t0);                                           \n"
  "                                                                                \n"
  "    //--------------Update of displacement u---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Updating U\",t0)\n"         : ""                   )<<
+ "    startProcedure(\"Updating U\",t0);                                          \n"
  "    u[] += du[];                                                                \n"
- <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                   )<<
+ "    endProcedure  (\"Updating U\",t0);                                          \n"
  "                                                                                \n";
 
 if(energydecomp)
@@ -474,37 +474,37 @@ if(energydecomp)
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n"         : ""         )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus)                 \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n"         : ""           );
+ "    endProcedure  (\"energy decomposition\",t0);                                \n";
 
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""              )<<
+ "    startProcedure(\"matrix assembly for PHI\",t0)\n"
  "    A1 = phase(Vh1,Vh1,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    timerend  (\"matrix assembly for PHI\",t0)\n" : ""              )<<
+ "    endProcedure  (\"matrix assembly for PHI\",t0)\n"
  "                                                                                \n"
  "    //--------------------Assembly for linear----------------------//           \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""                 )<<
+ "    startProcedure(\"RHS assembly for PHI\",t0)\n"
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                   )<<
+ "    endProcedure  (\"RHS assembly for PHI\",t0)\n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                            )<<
+ "    startProcedure(\"solving U\",t0)\n"
  "    set(A1,solver=CG,sym=1);                                                    \n"
  "    dphi[] = A1^-1*b1;                                                          \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                            )<<
+ "    endProcedure  (\"solving U\",t0)\n"
  "                                                                                \n"
  "    //--------------Update of phase-field phi-------------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Updating U\",t0)\n"         : ""                   )<<
+ "    startProcedure(\"Updating U\",t0)\n"
  "    phi[] += dphi[];                                                            \n"
- <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                   )<<
+ "    endProcedure  (\"Updating U\",t0)\n"
  "                                                                                \n";
 
 if(energydecomp && constrainHPF && vectorial)
@@ -512,35 +512,35 @@ if(energydecomp && constrainHPF && vectorial)
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0)\n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0)\n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0)\n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0)\n";
 
 
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                   )<<
+ "    startProcedure(\"NL error checking\",t0)\n"
  "    real err1 = sqrt( intN(Th,qforder=2) ( du^2   )  )     ;                    \n"
  "    real err2 = sqrt( intN(Th,qforder=2) ( dphi^2 )  )     ;                    \n"
- <<(timelog ? "    timerend  (\"NL error checking\",t0)\n" : ""                   )<<
+ "    endProcedure  (\"NL error checking\",t0)\n"
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -569,7 +569,7 @@ if(reactionforce){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
+ "  startProcedure(\"force calculation\",t0)\n"
  "                                                                                \n"
  "  real forcetotx  = 0. , forcetoty  = 0.;                                       \n";
 
@@ -659,7 +659,7 @@ if(reactionforce){
  "  flush(pgnuplot);                                                              \n";
 
  writeIt
- (timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                         );
+ "  endProcedure(\"force calculation\",t0);                                       \n";
 }
 
 if(ParaViewPostProcess){
@@ -669,7 +669,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "    savevtk(     \"VTUs/Solution_\"+iterout1+\".vtu\" ,                         \n"
  "                 Th                 ,                                           \n";
@@ -707,7 +707,7 @@ if(ParaViewPostProcess){
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "    }                                                                           \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""                );
+ "  endProcedure(\"ParaView post-processing\",t0);                                \n";
 }
 
 if(debug)
@@ -745,17 +745,17 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  if(constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "   up[]=uold[];                                                              \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
+ "   up[]=uold[];                                                                 \n"
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
  if(constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                  \n"
  "   phip[]=phiold[];                                                             \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
+ "  endProcedure(\"copying solution befor NL iterations\",t0);                    \n"
  "                                                                                \n";
 
  if(!vectorial)
@@ -763,9 +763,9 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "  b = elast(0,Vh);                                                              \n"
- <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n";
 
  writeIt
@@ -778,18 +778,18 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "  //--------------------Assembly for linear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "    b = elast(0,Vh);                                                            \n"
- <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n";
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ "  startProcedure(\"matrix assembly for U\",t0);                                 \n"
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ "  endProcedure  (\"matrix assembly for U\",t0);                                 \n"
  "                                                                                \n";
 
  if(dirichletpointconditions>=1){
@@ -797,30 +797,30 @@ if(!Sequential)if(NonLinearMethod=="Picard"){
  "                                                                                \n"
  "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"point Dirichlet assembly\",t0)\n" : ""             );
+ "    startProcedure(\"point Dirichlet assembly\",t0);                            \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
  writeIt
- "    ApplyPointBc"<<i<<"(ALoc,b);                                               \n";
+ "    ApplyPointBc"<<i<<"(ALoc,b);                                                \n";
 
  writeIt
- (timelog ? "    timerend(\"point Dirichlet assembly\",t0)\n" : ""                );
+ "    endProcedure(\"point Dirichlet assembly\",t0);                              \n";
  }
 
  writeIt
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ "    startProcedure(\"PETSc assembly for U\",t0);                                \n"
  "     A = ALoc;   //changeOperator(A, ALoc);                                     \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ "    endProcedure  (\"PETSc assembly for U\",t0);                                \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : " "                       )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "    u[] = A^-1*b;                                                               \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : " "                         );
+ "    endProcedure  (\"solving U\",t0);                                           \n";
 
 if(!vectorial){
 if(energydecomp)
@@ -828,37 +828,37 @@ if(energydecomp)
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
+ "    endProcedure  (\"energy decomposition\",t0);                                \n";
 
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""          )<<
+ "    startProcedure(\"matrix assembly for PHI\",t0);                             \n"
  "    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);                                     \n"
- <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""              )<<
+ "    endProcedure  (\"matrix assembly PHI\",t0);                                 \n"
  "                                                                                \n"
  "    //----------------Assembly for linear------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ "    startProcedure(\"RHS assembly for PHI\",t0);                                \n"
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""             )<<
+ "    endProcedure  (\"RHS assembly for PHI\",t0);                                \n"
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ "    startProcedure(\"PETSc assembly for PHI\",t0);                              \n"
  "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""           )<<
+ "    endProcedure  (\"PETSc assembly for PHI\",t0);                              \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                      )<<
+ "    startProcedure(\"solving PHI\",t0);                                         \n"
  "    phi[] = A1^-1*b1;                                                           \n"
- <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                      )<<
+ "    endProcedure  (\"solving PHI\",t0);                                         \n"
  "                                                                                \n";
 
 if(energydecomp && constrainHPF && vectorial)
@@ -866,32 +866,32 @@ if(energydecomp && constrainHPF && vectorial)
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )<<
+ "    startProcedure(\"NL error checking\",t0);                                   \n"
  "    uold[]   = uold[]-u[]                ;                                      \n"
  "    phiold[] = phiold[]-phi[]        ;                                          \n"
  "    real err1Gather,err2Gather;                                                 \n"
@@ -899,14 +899,14 @@ if(energydecomp && constrainHPF && !vectorial)
  "    real err2Loc=sqrt( intN(Th,qforder=2) ( DZspc*(phiold)^2 )  );              \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                       \n"
  "    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);                       \n"
- <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
+ "    endProcedure (\"NL error checking\",t0);                                    \n"
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
+ "    startProcedure(\"solution update\",t0);                                     \n"
  "    phiold[]=phi[];                                                             \n"
  "    uold[]=u[];                                                                 \n"
- <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     )<<
+ "    endProcedure (\"solution update\",t0);                                      \n"
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -918,27 +918,27 @@ if(vectorial){
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )<<
+ "    startProcedure(\"NL error checking\",t0);                                   \n"
  "    uold[]   = uold[]-u[]                                          ;            \n"
  "    real err1Gather                                                ;            \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;            \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;            \n"
- <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
+ "    endProcedure (\"NL error checking\",t0);                                    \n"
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
+ "    startProcedure(\"solution update\",t0);                                     \n"
  "    uold[] = u[];                                                               \n"
- <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                     );
+ "    endProcedure (\"solution update\",t0);                                      \n";
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""               )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               )<<
+ "    endProcedure  (\"energy decomposition\",t0);                                \n"
  "                                                                                \n";
 
 
@@ -947,26 +947,26 @@ if(energydecomp && constrainHPF && vectorial)
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 
  writeIt
@@ -1010,7 +1010,7 @@ if(reactionforce){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
+ "  startProcedure(\"force calculation\",t0);                                     \n"
  "                                                                                \n"
  "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
  "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n"
@@ -1020,7 +1020,7 @@ if(reactionforce){
  writeIt
  "                                                                                \n"
  "  forcetotx = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dx(u) \n"
- "                                            + mu*(dx(u1)+dy(u))              ) );\n"
+ "                                            + mu*(dx(u1)+dy(u))             ) );\n"
  "                                                                                \n"
  "  forcetoty = intN1(Th,qforder=2,RFOn)(DPspc*( lambda*divergence(u)+2.*mu*dy(u) \n"
  "                                            + mu*(dx(u1)+dy(u))             ) );\n"
@@ -1117,7 +1117,7 @@ if(reactionforce){
 
  writeIt
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
+ "  endProcedure(\"force calculation\",t0);                                       \n";
 }
 
 if(ParaViewPostProcess)if(!vectorial){
@@ -1127,7 +1127,7 @@ if(ParaViewPostProcess)if(!vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""             )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "  if(int(iterout%10)==0){                                                       \n";
 
 
@@ -1174,7 +1174,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ "  endProcedure  (\"ParaView post-processing\",t0);                              \n";
 }
 
 if(ParaViewPostProcess)if(vectorial){
@@ -1184,7 +1184,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""           )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
@@ -1235,7 +1235,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""             );
+ "  endProcedure  (\"ParaView post-processing\",t0);                              \n";
 }
 
 if(debug)if(!vectorial)
@@ -1286,19 +1286,19 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
 
  if(constrainHPF && vectorial)
  writeIt
- "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "   up[]=uold[];                                                              \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";
+ "                                                                               \n"
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                 \n"
+ "   up[]=uold[];                                                                \n"
+ "  endProcedure  (\"copying solution befor NL iterations\",t0);                 \n"
+ "                                                                               \n";
 
  if(constrainHPF && !vectorial)
  writeIt
- "                                                                                \n"
- <<(timelog ? "  timerbegin(\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "   phip[]=phiold[];                                                             \n"
- <<(timelog ? "  timerend  (\"copying solution befor NL iterations\",t0)\n" : ""  )<<
- "                                                                                \n";
+ "                                                                               \n"
+ "  startProcedure(\"copying solution befor NL iterations\",t0);                 \n"
+ "   phip[]=phiold[];                                                            \n"
+ "  endProcedure  (\"copying solution befor NL iterations\",t0);                 \n"
+ "                                                                               \n";
 
  writeIt
  "                                                                                \n"
@@ -1308,15 +1308,15 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  "    //--------------------Assembly for linear----------------------//           \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "    b = elast(0,Vh);                                                            \n"
- <<(timelog ? "  timerend  (\"RHS assembly for U\",t0)\n" : ""                 )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""            )<<
+ "  startProcedure(\"matrix assembly for U\",t0);                                 \n"
  "    ALoc = elast(Vh,Vh,solver=CG,sym=1);                                        \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""            )<<
+ "  endProcedure  (\"matrix assembly for U\",t0);                                 \n"
  "                                                                                \n";
 
 
@@ -1325,7 +1325,7 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
  "                                                                                \n"
  "//---------Additional assembly for A & b (point bounday condition)----------//  \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"point Dirichlet assembly\",t0)\n" : ""            )<<
+ " startProcedure(\"point Dirichlet assembly\",t0);                               \n"
  "                                                                                \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
@@ -1334,28 +1334,28 @@ if(!Sequential)if(NonLinearMethod=="Newton_Raphson"){
 
  writeIt
  "                                                                                \n"
- <<(timelog ? "  timerend(\"point Dirichlet assembly\",t0)\n" : ""              );
+ " endProcedure(\"point Dirichlet assembly\",t0);                                 \n";
  }
 
  writeIt
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""             )<<
+ "    startProcedure(\"PETSc assembly for U\",t0);                                \n"
  "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
  "    set(A,sparams =\"  -ksp_type cg  \");                                       \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""             )<<
+ "    endProcedure  (\"PETSc assembly for U\",t0);                                \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : " "                       )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "    du[] = A^-1*b;                                                              \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : " "                       )<<
+ "    endProcedure  (\"solving U\",t0);                                           \n"
  "                                                                                \n"
  "    //--------------Update of displacement u---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Updating U\",t0)\n"         : ""                  )<<
+ "    startProcedure(\"Updating U\",t0);                                          \n"
  "    u[] += du[];                                                                \n"
- <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                  )<<
+ "    endProcedure  (\"Updating U\",t0);                                          \n"
  "                                                                                \n";
 
 if(!vectorial){
@@ -1364,43 +1364,43 @@ if(energydecomp)
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""             )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
+ "    endProcedure  (\"energy decomposition\",t0);                                \n";
 
 
  writeIt
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for PHI\",t0)\n" : ""             )<<
+ "    startProcedure(\"matrix assembly for PHI\",t0);                             \n"
  "    ALoc1 = phase(Vh1,Vh1,solver=CG,sym=1);                                     \n"
- <<(timelog ? "    timerend  (\"matrix assembly PHI\",t0)\n" : ""                 )<<
+ "    endProcedure  (\"matrix assembly PHI\",t0);                                 \n"
  "                                                                                \n"
  "    //----------------Assembly for linear------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for PHI\",t0)\n" : ""                )<<
+ "    startProcedure(\"RHS assembly for PHI\",t0);                                \n"
  "    b1 = phase(0,Vh1);                                                          \n"
- <<(timelog ? "    timerend  (\"RHS assembly for PHI\",t0)\n" : ""                )<<
+ "    endProcedure  (\"RHS assembly for PHI\",t0);                                \n"
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for PHI\",t0)\n" : ""              )<<
+ "    startProcedure(\"PETSc assembly for PHI\",t0);                              \n"
  "    A1=ALoc1;//changeOperator(A1, ALoc1);                                       \n"
  "    set(A1,sparams =\"  -ksp_type cg  \");                                      \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for PHI\",t0)\n" : ""              )<<
+ "    endProcedure  (\"PETSc assembly for PHI\",t0);                              \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving PHI\",t0)\n" : ""                         )<<
+ "    startProcedure(\"solving PHI\",t0);                                         \n"
  "    dphi[] = A1^-1*b1;                                                          \n"
- <<(timelog ? "    timerend  (\"solving PHI\",t0)\n" : ""                         )<<
+ "    endProcedure  (\"solving PHI\",t0);                                         \n"
  "                                                                                \n"
  "    //--------------Update of phase-field phi-------------------//              \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Updating U\",t0)\n"         : ""                  )<<
+ "    startProcedure(\"Updating U\",t0);                                          \n"
  "    phi[] += dphi[];                                                            \n"
- <<(timelog ? "    timerend  (\"Updating U\",t0)\n"         : ""                  )<<
+ "    endProcedure  (\"Updating U\",t0);                                          \n"
  "                                                                                \n";
 
 if(energydecomp && constrainHPF && vectorial)
@@ -1408,39 +1408,39 @@ if(energydecomp && constrainHPF && vectorial)
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 /******************************  Old Method **********************************************
 
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- (timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                  )
+ "    startProcedure(\"NL error checking\",t0)                                    \n"
  "    real err1Gather,err2Gather;                                                 \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(du)^2   )  );                \n"
  "    real err2Loc=sqrt( intN(Th,qforder=2) ( DZspc*(dphi)^2 )  );                \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM);                       \n"
  "    mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM);                       \n"
- (timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                            )
+ "    endProcedure (\"NL error checking\",t0)                                     \n"
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -1451,7 +1451,7 @@ if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                )<<
+ "    startProcedure(\"NL error checking\",t0);                                   \n"
  "    real err1Gather,err2Gather, err1Loc, err2Loc;                               \n"
  "                                                                                \n"
  "        b = b .* DP                                   ;                         \n"
@@ -1466,7 +1466,7 @@ if(energydecomp && constrainHPF && !vectorial)
  "        mpiAllReduce(err2Loc,err2Gather,mpiCommWorld,mpiSUM)  ;                 \n"
  "        err1Gather = sqrt(err2Gather)                                 ;         \n"
  "                                                                                \n"
- <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                    )<<
+ "    endProcedure (\"NL error checking\",t0);                                    \n"
  "                                                                                \n"
  "    //--------------- Convergence conditional---------------------//            \n"
  "                                                                                \n"
@@ -1480,53 +1480,53 @@ if(vectorial){
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"NL error checking\",t0)\n" : ""                   )<<
+ "    startProcedure(\"NL error checking\",t0);                                   \n"
  "    uold[]   = uold[]-u[]                                          ;            \n"
  "    real err1Gather                                                ;            \n"
  "    real err1Loc=sqrt( intN(Th,qforder=2) ( DPspc*(uold)^2 )  )    ;            \n"
  "    mpiAllReduce(err1Loc,err1Gather,mpiCommWorld,mpiSUM)           ;            \n"
- <<(timelog ? "    timerend (\"NL error checking\",t0)\n" : ""                   )<<
+ "    endProcedure (\"NL error checking\",t0);                                    \n"
  "                                                                                \n"
  "    //--------------------Solution update-------------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                    )<<
+ "    startProcedure(\"solution update\",t0);                                     \n"
  "    uold[] = u[];                                                               \n"
- <<(timelog ? "    timerend (\"solution update\",t0)\n" : ""                      );
+ "    endProcedure (\"solution update\",t0);                                      \n";
 
 if(energydecomp)
  writeIt
  "                                                                                \n"
  "    //---------------Energy decomposition phase-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"energy decomposition\",t0)\n" : ""                )<<
+ "    startProcedure(\"energy decomposition\",t0);                                \n"
  "    DecomposeElasticEnergy(PsiPlus,PsiMinus,HistPlus,HistMinus);                \n"
- <<(timelog ? "    timerend  (\"energy decomposition\",t0)\n" : ""               );
+ "    endProcedure  (\"energy decomposition\",t0);                                \n";
 
 if(energydecomp && constrainHPF && vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])up[][i*"<<Fdofs<<"+"<<spc<<"]=0.;       \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 if(energydecomp && constrainHPF && !vectorial)
  writeIt
  "                                                                                \n"
  "    //---------------Hybrid phase field constrain-------------------//          \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"Hybrid phase field constrain\",t0)\n"         : "")<<
+ "    startProcedure(\"Hybrid phase field constrain\",t0);                        \n"
  "    PsiPlusP1=PsiPlus; PsiMinusP1=PsiMinus;                                     \n"
  "    exchange(A1,PsiPlusP1[],scaled=true);                                       \n"
  "    exchange(A1,PsiMinusP1[],scaled=true);                                      \n"
  "    for(int i=0; i < PsiPlusP1[].n; i++ )                                       \n"
  "      if(PsiPlusP1[][i]<PsiMinusP1[][i])phip[][i]=0.;                           \n"
- <<(timelog ? "    timerend  (\"Hybrid phase field constrain\",t0)\n"         : "");
+ "    endProcedure  (\"Hybrid phase field constrain\",t0);                        \n";
 
 
  writeIt
@@ -1579,7 +1579,7 @@ if(reactionforce){
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
+ "  startProcedure(\"force calculation\",t0);                                     \n"
  "                                                                                \n"
  "  real forcetotx   = 0., forcetotGathx  = 0. ;                                  \n"
  "  real forcetoty   = 0., forcetotGathy  = 0. ;                                  \n"
@@ -1686,7 +1686,7 @@ if(reactionforce){
 
  writeIt
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
+ "  endProcedure  (\"force calculation\",t0);                                     \n";
 }
 
 
@@ -1697,7 +1697,7 @@ if(ParaViewPostProcess)if(!vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "  if(int(iterout%10)==0){                                                       \n";
 
 
@@ -1740,7 +1740,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
+ "  endProcedure  (\"ParaView post-processing\",t0);                              \n";
 }
 
 if(ParaViewPostProcess)if(vectorial){
@@ -1750,7 +1750,7 @@ if(ParaViewPostProcess)if(vectorial){
  "                                                                                \n"
  "  iterout++;                                                                    \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"ParaView post-processing\",t0)\n" : ""              )<<
+ "  startProcedure(\"ParaView post-processing\",t0);                              \n"
  "                                                                                \n"
  "  if(int(iterout%10)==0){                                                       \n"
  "                                                                                \n"
@@ -1798,7 +1798,7 @@ if(PostProcess=="ud" || PostProcess=="du")
  "                                                                                \n"
  "    iterout1++;                                                                 \n"
  "  }                                                                             \n"
- <<(timelog ? "  timerend  (\"ParaView post-processing\",t0)\n" : ""              );
+ "  endProcedure  (\"ParaView post-processing\",t0);                              \n";
 }
 
 if(debug)if(!vectorial)
@@ -1858,14 +1858,14 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "    //--------------------Assembly for linear---------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"RHS assembly for U\",t0)\n" : ""                  )<<
+ "  startProcedure(\"RHS assembly for U\",t0);                                    \n"
  "     b = varIncr(0,Vh);                                                         \n"
- <<(timelog ? "    timerend  (\"RHS assembly for U\",t0)\n" : ""                  )<<
+ "  endProcedure  (\"RHS assembly for U\",t0);                                    \n"
  "                                                                                \n"
  "    //------------------Error calculation------------------------//             \n"
  "                                                                                \n"
  "     if(i>0){                                                                   \n"
- <<(timelog ? "       timerbegin(\"NL error checking\",t0)\n" : ""                )<<
+ "       startProcedure(\"NL error checking\",t0);                                \n"
  "        b = b .* DP                                         ;                   \n"
  "        real errLoc, err                                 ;                      \n"
  "        errLoc = b.l2                                  ;                        \n"
@@ -1875,33 +1875,33 @@ if(Model=="Mazar"){
  "                                                                                \n"
  "        if(mpirank == 0)                                                        \n"
  "        cout << \"    iteration =\" << i << \", NR error =\" << err << endl ;   \n"
- <<(timelog ? "       timerend (\"NL error checking\",t0)\n" : ""                 )<<
+ "       endProcedure (\"NL error checking\",t0);                                 \n"
  "       if(err <= tol) break;                                                    \n"
  "     }                                                                          \n"
 
  "                                                                                \n"
  "    //----------------Assembly for bilinear----------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"matrix assembly for U\",t0)\n" : ""               )<<
+ "  startProcedure(\"matrix assembly for U\",t0);                                 \n"
  "     ALoc = varIncr(Vh,Vh);                                                     \n"
- <<(timelog ? "    timerend  (\"matrix assembly for U\",t0)\n" : ""               )<<
+ "  endProcedure  (\"matrix assembly for U\",t0);                                 \n"
  "                                                                                \n"
  "    //-----------PETSc assembly for bilinear---------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"PETSc assembly for U\",t0)\n" : ""                )<<
+ "    startProcedure(\"PETSc assembly for U\",t0);                                \n"
  "    A=ALoc;//changeOperator(A, ALoc);                                           \n"
- "     set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");                     \n"
- <<(timelog ? "    timerend  (\"PETSc assembly for U\",t0)\n" : ""                )<<
+ "    set(A,sparams =\"  -ksp_type cg   -ksp_rtol 1e-15 \");                      \n"
+ "    endProcedure  (\"PETSc assembly for U\",t0);                                \n"
  "                                                                                \n"
  "    //-------------Linear system solving phase-------------------//             \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solving U\",t0)\n" : ""                           )<<
+ "    startProcedure(\"solving U\",t0);                                           \n"
  "     du[] = A^-1*b;                                                             \n"
- <<(timelog ? "    timerend  (\"solving U\",t0)\n" : ""                           )<<
+ "    endProcedure  (\"solving U\",t0);                                           \n"
  "                                                                                \n"
  "    //-------------Intermediate solution update-------------------//            \n"
  "                                                                                \n"
- <<(timelog ? "    timerbegin(\"solution update\",t0)\n" : ""                     )<<
+ "    startProcedure(\"solution update\",t0);                                     \n"
  "     u[]   += du[]  ;                                                           \n"
  "                                                                                \n"
  "    //----------Damage field calulation using Mazrs model---------//            \n";
@@ -1952,7 +1952,7 @@ else{
 
  writeIt
  "                                                                                \n"
- <<(timelog ? "    timerend  (\"solution update\",t0)\n" : " "                   )<<
+ "    endProcedure  (\"solution update\",t0);                                     \n"
  "                                                                                \n"
  "  }                                                                             \n"
  "                                                                                \n"
@@ -1961,34 +1961,33 @@ else{
  "  duimp = Duimp ;                                                               \n";
 
 
-if(pipegnu){
+if(reactionforce){
  writeIt
  "                                                                                \n"
  "  //-------------------Force calculation-----------------------//               \n"
  "                                                                                \n"
- <<(timelog ? "  timerbegin(\"force calculation\",t0)\n" : ""                     )<<
+ "  startProcedure(\"force calculation\",t0);                                     \n"
  "   real ForceXloc , ForceXGather ;                                              \n"
  "   ForceXloc = intN1(Th,4,qforder=2)                                            \n"
  "                          (DPspc*(1-damage)*stress(u,lambdafield,mufield)[0]);  \n"
  "   mpiAllReduce(ForceXloc,ForceXGather,mpiCommWorld,mpiSUM);                    \n"
  "                                                                                \n"
  "   if(mpirank==0){                                                              \n"
- "     ofstream outputFile(\"output.data\", append);                              \n"
+ "     ofstream outputFile(\"force.data\", append);                               \n"
  "     outputFile << n*Duimp << \" \" << ForceXGather << endl;                    \n";
 
 if(plotreaction)
  writeIt
  "     pgnuplot                                                                   \n"
  "      <<\"plot\"                                                                \n"
- "      <<\"\\\"output.data\\\"\"                                                 \n"
+ "      <<\"\\\"force.data\\\"\"                                                  \n"
  "      <<\"u ($1):($2) w lp lw 2 pt 7 ps 2 notitle\"                             \n"
  "      <<\"\\n\";                                                                \n"
  "     flush(pgnuplot);                                                           \n";
 
-
  writeIt
  "   }                                                                            \n"
- <<(timelog ? "  timerend  (\"force calculation\",t0)\n" : ""                      );
+ "  endProcedure(\"force calculation\",t0);                                       \n";
 
 }  //-- [if loop terminator]  pipegnu ended --//
 

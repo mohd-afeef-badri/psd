@@ -67,7 +67,7 @@ if(doublecouple=="unused"){
  "          +(  cp*(N.x*N.y*0 + N.y*N.y*v1in)                                                    \n"
  "             +cs*(- N.x*N.y*0+ (1.-N.y*N.y)*v1in ))*v1                                         \n"
  "          )                                                                                    \n"
- "  ) */                                                                                         \n"; 
+ "  ) */                                                                                         \n";
 
  if(spc==3)
  writeIt
@@ -94,7 +94,7 @@ if(doublecouple=="unused"){
  "          +(  cp*( N.x*N.z*0 + N.y*N.z*v1in + N.z*N.z*0)                                        \n"
  "             +cs*(-N.x*N.z*0 - N.z*N.y*v1in + (1.-N.z*N.z)*0))*v2                               \n"
  "          )                                                                                     \n"
- "  )*/                                                                                           \n"; 
+ "  )*/                                                                                           \n";
 }
 
 if(Model=="pseudo_nonlinear")

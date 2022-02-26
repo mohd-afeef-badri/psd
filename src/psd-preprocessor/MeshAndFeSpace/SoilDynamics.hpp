@@ -14,55 +14,60 @@ writeHeader;
 
 
 if(!top2vol)
- writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element mesh name from commandline-------                 \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  ThName = getARGV( \"-mesh\" , ThName );                                       \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- Error message if wrong mesh detected -------                         \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  if(ThName.find(\".mesh\") == -1 && ThName.find(\".msh\") == -1)               \n"
- "   cout <<\"INVALID MESH: PSD only accepts '.msh' or '.mesh' formats\"<< endl;  \n";
+codeSnippet R""""(
+
+//==============================================================================
+// ------- The finite element mesh name from commandline-------
+//==============================================================================
+
+  ThName = getARGV( "-mesh" , ThName );
+
+//==============================================================================
+// ------- Error message if wrong mesh detected -------
+//==============================================================================
+
+  if( ThName.find(".mesh") == -1 &&
+      ThName.find(".msh")  == -1 &&
+      ThName.find(".vtk")  == -1
+    ){
+      cout << "  ****************** ERROR ********************* \n"
+           << "                                                 \n"
+           << "  PSD only accepts the following mesh formats    \n"
+           << "     1) .msh   Gmsh's  .msh  format version 2    \n"
+           << "     2) .mesh  INRIA's medit format              \n"
+           << "     3) .vtk   VTK's unstructured mesh format    \n"
+           << "                                                 \n"
+           << "  ****************** ERROR ********************* \n";
+      exit(11111);
+  }
+
+)"""";
 
 if(Sequential){
- writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element mesh -------                                      \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Th        : Finite element mesh                                             \n"
- "//==============================================================================\n"
- "                                                                                \n"
- "  startProcedure(\"Solver\",t1)                                                 \n"
- "  startProcedure(\"Mesh Loading\",t0)                                           \n"
- "                                                                                \n"
- "  meshN Th;                                                                     \n"
- "                                                                                \n"
- "  if(ThName.find(\".msh\") > -1)                                                \n"
- "    {                                                                           \n"
- "      load \"gmsh\"                                                             \n"
- "      Th = gmshloadN(ThName);                                                   \n"
- "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n"
- "    {                                                                           \n"
- "      Th = readmeshN(ThName);                                                   \n"
- "    }                                                                           \n"
- "                                                                                \n"
- "  perfromRCMreordering(Th);                                                     \n"
- "  endProcedure  (\"Mesh Loading\",t0)                                           \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element space  -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Vh        : Mixed finite element space  for displacement                    \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Vh   ( Th , Pk );                                                      \n";
+codeSnippet R""""(
+
+//==============================================================================
+// ------- The finite element mesh -------
+// ----------------------------------------------------------------------------
+//  Th        : Finite element mesh
+//==============================================================================
+
+  startProcedure("Mesh Loading",t0)
+
+  loadfemesh(Th,ThName);
+  perfromRCMreordering(Th);
+
+  endProcedure  ("Mesh Loading",t0)
+
+//==============================================================================
+// ------- The finite element space  -------
+// ----------------------------------------------------------------------------
+//  Vh        : Mixed finite element space  for displacement
+//==============================================================================
+
+ fespace Vh   ( Th , Pk );
+
+)"""";
 }
 
 if(!Sequential){
@@ -83,8 +88,8 @@ if(!Sequential){
  "//  Vh        : Mixed finite element space  for displacement                    \n"
  "//==============================================================================\n"
  "                                                                                \n"
- " fespace Vh     ( Th , Pk );                                                    \n"; 
- 
+ " fespace Vh     ( Th , Pk );                                                    \n";
+
 
  if(Model=="Hujeux")
   writeIt
@@ -145,8 +150,8 @@ if(!Sequential){
  "                                                                                \n"
  "                                                                                \n";
  }
- 
- 
+
+
  if(top2vol)
  {
  writeIt

@@ -89,9 +89,9 @@ writeHeader;
    "//============================================================================\n"
    "                                                                              \n"
    "   Ih [Isv1,Isv2,Isv3,Isv4,Isv5];                                             \n"
-   "                                                                              \n";  
+   "                                                                              \n";
   }
-  
+
  if(spc==3){
  writeIt
   "                                                                              \n"
@@ -134,7 +134,7 @@ writeHeader;
   "  endProcedure(\"Material tensor building via MFront\",t0)                    \n"
   "                                                                              \n"
   "                                                                              \n";
-  }  
+  }
 
 
  if(Sequential)

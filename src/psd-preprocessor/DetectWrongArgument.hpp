@@ -40,7 +40,7 @@
            argvdummy != "-getreactionforce"         &&
            argvdummy != "-plotreactionforce"        &&
            argvdummy != "-constrainHPF"             &&
-           argvdummy != "-getenergies"              &&           
+           argvdummy != "-getenergies"              &&
            argvdummy != "-crackdirichletcondition"  &&
            argvdummy != "-withmaterialtensor"       &&
 

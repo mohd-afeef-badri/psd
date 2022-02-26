@@ -237,7 +237,7 @@
      }
 
 
-  if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear"  &&  Model != "Hujeux" &&  Model != "von_mises" 
+  if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear"  &&  Model != "Hujeux" &&  Model != "von_mises"
      ){
       cout <<
           "===================================================================\n"

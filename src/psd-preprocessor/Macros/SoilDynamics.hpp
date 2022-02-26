@@ -124,7 +124,7 @@ if(spc==2)
 
  if(!vectorial)
   {
-  
+
   writeIt
   "  macro Pk     [ P"<<lag<<" ,                                                  \n"
   "                 P"<<lag<<" ] //                                               \n"
@@ -140,7 +140,7 @@ if(spc==2)
   "  macro init(i) [ i ,                                                          \n"
   "                  i ] //                                                       \n"
   "                                                                               \n";
-  
+
   }   //-- [if loop terminator] !vectorial ended --//
 
  if(fastmethod)
@@ -159,28 +159,6 @@ if(spc==2)
  "  macro epsilon(i) [ dx(i)               ,                                     \n"
  "                     dy(i#1)             ,                                     \n"
  "                     (dy(i)+dx(i#1))/SQ2 ] //                                  \n";
-
- if(Sequential)
- writeIt
-  "                                                                               \n"
-  "//=============================================================================\n"
-  "//      ------- remapping Macros -------                                       \n"
-  "// --------------------------------------------------------------------------- \n"
-  "// meshN     : Two-dimensional problem mesh                                    \n"
-  "// intN      : Two-dimensional integral                                        \n"
-  "// intN1     : One-dimensional integral                                        \n"
-  "// grad      : Two-dimensional gradient                                        \n"
-  "// readmeshN : Two-dimensional mesh reading .mesh format                       \n"
-  "// gmshloadN : Two-dimensional mesh reading .msh format                        \n"
-  "//=============================================================================\n"
- "                                                                                \n"
- "  macro meshN()mesh                   //                                        \n"
- "  macro intN()int2d                   //                                        \n"
- "  macro intN1()int1d                  //                                        \n"
- "  macro readmeshN()readmesh           //                                        \n"
- "  macro gmshloadN()gmshload           //                                        \n"
- "  macro grad(i) [dx(i),dy(i)]         //                                        \n"
- "                                                                                \n";
 
  if(tractionconditions>=1)
  {
@@ -342,30 +320,6 @@ if(!Sequential)
  "                       (dz( i ) + dx(i#2))/SQ2,                                \n"
  "                       (dy( i ) + dx(i#1))/SQ2 ]        //                     \n"
  "                                                                               \n";
-
-
- if(Sequential)
-  writeIt
-  "                                                                               \n"
-  "//=============================================================================\n"
-  "//      ------- remapping Macros -------                                       \n"
-  "// --------------------------------------------------------------------------- \n"
-  "// meshN     : Three-dimensional problem mesh                                  \n"
-  "// intN      : Three-dimensional integral                                      \n"
-  "// intN1     : Two-dimensional integral                                        \n"
-  "// grad      : Three-dimensional gradient                                      \n"
-  "// readmeshN : Three-dimensional mesh reading .mesh format                     \n"
-  "// gmshloadN : Three-dimensional mesh reading .msh format                      \n"
-  "//=============================================================================\n"
-  "                                                                              \n"
-  "  load \"msh3\"                          //                                   \n"
-  "  macro meshN()mesh3                     //                                   \n"
-  "  macro intN()int3d                      //                                   \n"
-  "  macro intN1()int2d                     //                                   \n"
-  "  macro readmeshN()readmesh3             //                                   \n"
-  "  macro gmshloadN()gmshload3             //                                   \n"
-  "  macro grad(i)[dx(i),dy(i),dz(i)]       //                                   \n"
-  "                                                                              \n";
 
  if(tractionconditions>=1){
  writeIt
@@ -803,49 +757,6 @@ if(dirichletpointconditions>=1)
 
 } //-- [if loop terminator] pointbc ended --//
 
-
- if(timelog){
-  writeIt
-  "                                                                           \n"
-  "//-----------------------------------Timing macros-----------------------//\n"
-  "                                                                           \n";
-
- if(!Sequential)
-  writeIt
-  "                                                                           \n"
-  "  macro timerbegin(str1,t0){                                               \n"
-  "    mpiBarrier(mpiCommWorld);                                              \n"
-  "    t0 = mpiWtime();                                                       \n"
-  "    if(mpirank==0)                                                         \n"
-  "    cout << \"-->\"+str1+\" began....\\n\";                                \n"
-  "  }//                                                                      \n"
-  "                                                                           \n"
-  "  macro timerend(str1,t0){                                                 \n"
-  "    mpiBarrier(mpiCommWorld);                                              \n"
-  "    if(mpirank==0)                                                         \n"
-  "    cout.scientific << \"finished in [ \"<< mpiWtime()-t0                  \n"
-  "      << \" ] seconds\\n\\n\";                                             \n"
-  "  }//                                                                      \n"
-  "                                                                           \n"
-  "                                                                           \n";
-
- if(Sequential)
-  writeIt
-  "                                                                           \n"
-  "  macro timerbegin(str1,t0){                                               \n"
-  "    t0 = clock();                                                          \n"
-  "    cout << \"-->\"+str1+\" began....\\n\";                                \n"
-  "  }//                                                                      \n"
-  "                                                                           \n"
-  "  macro timerend(str1,t0){                                                 \n"
-  "    cout.scientific << \"finished in [ \"<< clock()-t0                     \n"
-  "      << \" ] seconds\\n\\n\";                                             \n"
-  "  }//                                                                      \n"
-  "                                                                           \n"
-  "                                                                           \n";
-
-} //-- [if loop terminator] timelog ended --//
-
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -853,7 +764,7 @@ if(dirichletpointconditions>=1)
  "// --------------------------------------------------------------------------- \n"
  "// These macros are used to perform the update of u, v, a FE variables         \n"
  "//=============================================================================\n";
- 
+
 
  if(!useGFP)
   writeIt
@@ -872,20 +783,20 @@ if(dirichletpointconditions>=1)
   "    }                                                                      \n"
   "  }//                                                                      \n"
   "                                                                           \n";
- 
+
   if(!useGFP)
   writeIt
-  "                                                                           \n"   
+  "                                                                           \n"
   "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
   "     updateVariables(du,uold,vold,aold,beta,gamma,dt) //                   \n";
 
   if(useGFP)
   writeIt
-  "                                                                           \n"    
+  "                                                                           \n"
   "  macro updateFields(du,uold,vold,aold,beta,gamma,dt)                      \n"
   "     GFPUpdateDynamic(du#[],uold#[],vold#[],aold#[],beta,gamma,dt) //      \n";
-  
-    
+
+
 
   writeIt
   "                                                                           \n"
@@ -1216,5 +1127,3 @@ if(doublecouple=="force_based")
   "  //                                                                           \n"
   "                                                                               \n";
 }  // if(doublecouple=="displacement_based" || doublecouple=="force_based") ENDED
-
-

@@ -11,7 +11,7 @@
  "                                                                                                \n"
  "varf elast(def(du),def(v)) =                                                                    \n"
  "                                                                                                \n";
- 
+
  writeIt
  "                                                                                                \n"
  "/*                                                                                              \n"
@@ -26,7 +26,7 @@
  "                       epsilonXMt(du,Mt)'*epsilon(v)                                            \n"
  "                     )                                                                          \n"
  "                                                                                                \n";
- 
+
  if(spc==2)
  writeIt
  "/*                                                                                              \n"
@@ -40,7 +40,7 @@
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       [Sig11, Sig22, Sig12]'*epsilon(v)                                        \n"
  "                     )                                                                          \n";
- 
+
  if(spc==3)
  writeIt
  "/*                                                                                              \n"
@@ -53,7 +53,7 @@
  "                                                                                                \n"
  "     - intN(Th,qforder=2)(                                                                      \n"
  "                       [Sig11, Sig22, Sig33, Sig12, Sig13, Sig23]'*epsilon(v)                   \n"
- "                     )                                                                          \n"; 
+ "                     )                                                                          \n";
 
 
 for(int i=0; i<bodyforceconditions; i++)

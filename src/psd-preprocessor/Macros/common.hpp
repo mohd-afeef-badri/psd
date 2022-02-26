@@ -5,14 +5,63 @@
 * Date   : 25/02/2020                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
-* Comment: This support  file is responsible for generating perfromRCMreordering,     *
-*          startProcedure and endProcedure macros that are needed by PSD.             *
+* Comment: This support  file is responsible for generating the following macros      *
+*            1) perfromRCMreordering - perform mesh level reverse Cuthill-Mackee      *
+*            2) startProcedure       - macro to be  placed  before  starting any      *
+*                                      procedure in PSD. Acts  as a  placeholder      *
+*                                      if no timelogging (-timelog) is requested.     *
+*                                      If timelogging this macro also prints the      *
+*                                      time and a string message on scree.            *
+*            3) endProcedure         - Idem to startProcedure,  but  used at the      *
+*                                      end of a PSD procedure.                        *
+*            4) remapping-macros     - many macros are proposed  to  uniform  the     *
+*                                      names of functions in 2D and 3D.               *
 *                                                                                     *
 **************************************************************************************/
 
 
-codeSnippet R""""(
 
+if(Sequential){
+
+codeSnippet R""""(
+//=============================================================================
+//      ------- remapping Macros -------
+// ---------------------------------------------------------------------------
+// meshN     : Two-dimensional problem mesh
+// intN      : Two-dimensional integral
+// intN1     : One-dimensional integral
+// grad      : Two-dimensional gradient
+// readmeshN : Two-dimensional mesh reading .mesh format
+// gmshloadN : Two-dimensional mesh reading .msh format
+// vtkloadN  : Two-dimensional mesh reading .vtk format
+//=============================================================================
+)"""";
+
+if(spc==3)
+codeSnippet R""""(
+  load "msh3"                         //
+  macro meshN()mesh3                  //
+  macro intN()int3d                   //
+  macro intN1()int2d                  //
+  macro readmeshN()readmesh3          //
+  macro gmshloadN()gmshload3          //
+  macro vtkloadN()vtkload3            //
+  macro grad(i)[dx(i),dy(i),dz(i)]    //
+)"""";
+
+if(spc==2)
+codeSnippet R""""(
+  macro meshN()mesh                   //
+  macro intN()int2d                   //
+  macro intN1()int1d                  //
+  macro readmeshN()readmesh           //
+  macro gmshloadN()gmshload           //
+  macro vtkloadN()vtkload             //
+  macro grad(i) [dx(i),dy(i)]         //
+)"""";
+}
+
+codeSnippet R""""(
 //=============================================================================
 //            ------ Start and End procedure macros  -------
 // -------------------------------------------------------------------
@@ -22,7 +71,6 @@ codeSnippet R""""(
 //    for this macro, or else this macro will serve as a dummy macro.
 // -------------------------------------------------------------------
 //=============================================================================
-
 )"""";
 
 
@@ -148,3 +196,30 @@ codeSnippet R""""(
 )"""";
 
 }
+
+codeSnippet R""""(
+
+//=============================================================================
+//            ------ load finite element mesh macro  -------
+// -------------------------------------------------------------------
+//    This macros will take in as an input the mesh name (string)
+//    according to which it will load the finite element mesh.
+// -------------------------------------------------------------------
+//=============================================================================
+
+macro loadfemesh(meshObject,meshName)
+  meshN meshObject;
+
+  if(meshName.find(".msh") > -1){
+    load "gmsh";   meshObject = gmshloadN(meshName);
+  }
+  if(meshName.find(".mesh") > -1){
+    meshObject = readmeshN(meshName);
+  }
+  if(meshName.find(".vtk") > -1){
+    load "iovtk";  meshObject = vtkloadN(meshName);
+  }
+//
+
+)"""";
+

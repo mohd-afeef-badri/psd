@@ -245,7 +245,7 @@ if(tractionconditions>=1)
    writeIt
    "  macro  Tbc"<<i<<"On  4   //                                              \n"
    "  macro  Tbc"<<i<<"Ty  tt/0.8*(tt <= 0.8)+ 0.*(tt > 0.8) //                \n";
-   
+
  }
 
 

@@ -110,7 +110,7 @@
   -constrainHPF [bool]     To use constrain condition in hybrid phase-field model.
 
   -getenergies  [bool]     To acctivate routine for extraction of energies K.E, E.E.
- 
+
   -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
 
   -getreactionforce   [bool] To activate routine for extraction reactions at surface.
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]){
   bool plotreaction = false;
   bool constrainHPF = false;
   bool precracked   = false;
-  bool getenergies  = false;  
+  bool getenergies  = false;
   bool reactionforce= false;
 
   bool   errorArgument         = false  ;
@@ -265,7 +265,7 @@ int main(int argc, char *argv[]){
                                                    IsArgumentValueTrue  getenergies = true;
                                                    IsArgumentValueFalse getenergies = false;
                                                   }
-                                                  
+
     if( argvdummy == "-getreactionforce"        ) {                     reactionforce = true;
                                                    IsArgumentValueTrue  reactionforce = true;
                                                    IsArgumentValueFalse reactionforce = false;
@@ -395,7 +395,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " useMfront is -----------------------> " << useMfront                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
-  
+
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;
   cout << " activeplot is ----------------------> " << pipegnu                  << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;

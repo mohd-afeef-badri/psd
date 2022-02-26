@@ -39,6 +39,8 @@ if(Prblm=="soildynamics")
 #include "./OtherParameters/SoilDynamics.hpp"
 }
 
+#include "./OtherParameters/common.hpp"
+
 } //-- [ostream terminator]  OtherParameters.edp closed --//
 
 cout << " ............... Done \n";

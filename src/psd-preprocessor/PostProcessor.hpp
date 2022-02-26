@@ -16,7 +16,7 @@ if(!Sequential)
  "  if(mpirank==0)                                                                \n";
  writeIt
  "     system(\"mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`\");                      \n";
-} //-- [ostream terminator]  PostProcessor.edp closed --// 
+} //-- [ostream terminator]  PostProcessor.edp closed --//
 
 
 if(!Sequential)

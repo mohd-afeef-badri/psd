@@ -43,29 +43,29 @@ writeHeader;
   "// -------------------------------------------------------------------        \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  real E    = 70.e3       ,                                                   \n"                                                       
+  "  real E    = 70.e3       ,                                                   \n"
   "       nu   = 0.3         ,                                                   \n"
   "       sig0 = 250.        ,                                                   \n"
   "       Et   = E/100.      ,                                                   \n"
   "       H    = E*Et/(E-Et) ;                                                   \n"
   "                                                                              \n"
-  "                                                                              \n"    
-  "  real Re   = 1.3         ,  // external radius geometry                      \n"
-  "       Ri   = 1.0         ;  // internal radius geometry                      \n" 
   "                                                                              \n"
-  "                                                                              \n"  
+  "  real Re   = 1.3         ,  // external radius geometry                      \n"
+  "       Ri   = 1.0         ;  // internal radius geometry                      \n"
+  "                                                                              \n"
+  "                                                                              \n"
   "  real Qlim = 2./sqrt(3.)*log(Re/Ri)*sig0; //  Limiting pressure              \n"
   "                                                                              \n"
-  "                                                                              \n"  
+  "                                                                              \n"
   "  string    MaterialBehaviour   = \"IsotropicLinearHardeningPlasticity\";     \n";
-  
-  if(spc==2)writeIt  
+
+  if(spc==2)writeIt
   "  string    MaterialHypothesis  = \"GENERALISEDPLANESTRAIN\";                 \n";
-  
-  if(spc==3)writeIt 
+
+  if(spc==3)writeIt
   "  string    MaterialHypothesis  = \"TRIDIMENSIONAL\";                         \n";
-  
-  writeIt     
+
+  writeIt
   "  string    PropertyNames       = \"YoungModulus PoissonRatio HardeningSlope YieldStrength\";\n"
   "  real[int] PropertyValues      = [ E, nu , H, sig0 ];                        \n"
   "                                                                              \n"
@@ -75,7 +75,7 @@ writeHeader;
   "// -------------------------------------------------------------------        \n"
   "//  NrEpsCon : Newton-Raphsons Convergence epsilon                            \n"
   "//  NrMaxItr : Newton-Raphsons maximum iterations                             \n"
-  "//  TlMaxItr : Number of time steps for quasi-time discretization             \n"  
+  "//  TlMaxItr : Number of time steps for quasi-time discretization             \n"
   "//                                                                            \n"
   "// -------------------------------------------------------------------        \n"
   "//  NOTE:     Please note that PropertyNames should be the same as            \n"
@@ -83,9 +83,9 @@ writeHeader;
   "// -------------------------------------------------------------------        \n"
   "//============================================================================\n"
   "                                                                              \n"
-  "  macro EpsNrCon  ()   1.e-8       //                                         \n" 
+  "  macro EpsNrCon  ()   1.e-8       //                                         \n"
   "  macro NrMaxItr  ()   200         //                                         \n"
-  "  macro TlMaxItr  ()   20          //                                         \n";       
+  "  macro TlMaxItr  ()   20          //                                         \n";
 
 if(dirichletconditions>=1)
  {
@@ -203,15 +203,15 @@ if(tractionconditions>=1)
  "//       particular  direction (let it free)                                  \n"
  "//============================================================================\n"
  "                                                                              \n";
- 
+
   writeIt
-  "  real tl;       // Traction load to be updated in time loop                \n"; 
+  "  real tl;       // Traction load to be updated in time loop                \n";
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On  4           //                                      \n"
-   "  macro  Tbc"<<i<<"Tx  Qlim*tl*N.x //                                      \n"  
+   "  macro  Tbc"<<i<<"Tx  Qlim*tl*N.x //                                      \n"
    "  macro  Tbc"<<i<<"Ty  Qlim*tl*N.y //                                      \n";
-   
+
  }
 
 

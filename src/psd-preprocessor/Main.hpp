@@ -47,11 +47,11 @@ if(Prblm=="damage" && Model=="hybrid_phase_field" && energydecomp)
 if(pipegnu)
  writeIt
  "  load    \"pipe\"                                 // Piping activated       \n";
- 
-if( (Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod) 
+
+if( (Prblm=="linear_elasticity" || Prblm=="elasto_plastic") && !fastmethod)
  writeIt
  "  load    \"Element_QF\"                           // Quadrature elements     \n";
- 
+
 if(Prblm=="soildynamics" && Model=="Hujeux")
  writeIt
  "  load    \"Element_QF\"                           // Quadrature elements     \n"
@@ -59,7 +59,7 @@ if(Prblm=="soildynamics" && Model=="Hujeux")
 
 if(!Sequential&& Prblm=="soildynamics" && top2vol)
  writeIt
- "  load    \"msh3\"                                 // to get cube function   \n" 
+ "  load    \"msh3\"                                 // to get cube function   \n"
  "  load    \"top-ii-vol\"                           // top-ii-vol meshing     \n";
 
 writeIt
@@ -90,10 +90,10 @@ if(!Sequential)
  "  include \"Macros.edp\"                           // User-defined macros    \n";
 
  if(!top2vol)
-  writeIt 
+  writeIt
   "  include \"DDmacro.edp\"                          // Domain decomp macros  \n";
  if(top2vol)
-  writeIt 
+  writeIt
   "  include \"macro_ddm.idp\"                        // Domain decomp macros  \n";
 
  writeIt
