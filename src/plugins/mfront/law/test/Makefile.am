@@ -1,10 +1,14 @@
-LIST_COMPILE= Elasticity-For-A-Quadrature-Point.cxx
+LIST_CODE = Elasticity-For-A-Quadrature-Point.cxx
 
-all-local: 
+LIST_TESTS = Test_1 \
+	     Test_2 \
+	     Test_3
+
+all-local:
 	@echo ""
 
 if HAVEMGIS	
-check-local: check-header Test_1
+check-local: check-header $(LIST_TESTS)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking mfront Elastic law : SUCCESS                      "
@@ -39,12 +43,19 @@ Test_2: Elasticity-For-A-Quadrature-Point-3D.cxx
 	@echo "  PASSED "
 	
 
-Test_3: Elasticity-For-A-Quadrature-Point_Threaded.cxx
+Test_3: Iwan-For-A-Quadrature-Point-3D.cxx
+	@echo "Test_3 : Iwan-For-A-Quadrature-Point-3D (Quadrature point) in 3D"
+	@$(CXX) Iwan-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out > Test_3.log
+	@echo "  PASSED "
+
+Test_4: Elasticity-For-A-Quadrature-Point_Threaded.cxx
 	@echo "Test_3 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
 	@$(CXX) Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 	@./a.out > Test_3.log	
 	@echo "  PASSED "
-					
+
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
