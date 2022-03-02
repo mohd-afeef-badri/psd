@@ -22,7 +22,7 @@ class PsdMfrontHandler_Op : public E_F0mps {
   public:
     Expression behaviourName                          ;
 
-    static const int n_name_param = 9                 ;
+    static const int n_name_param = 10                 ;
     static basicAC_F0::name_and_type name_param[]     ;
     Expression nargs[n_name_param]                    ;
 
@@ -50,8 +50,8 @@ basicAC_F0::name_and_type PsdMfrontHandler_Op<K>::name_param[] =
   {"mfrontMaterialTensor"              , &typeid(KN<K>*)      },
   {"mfrontStrainTensor"                , &typeid(KN<K>*)      },
   {"mfrontStressTensor"                , &typeid(KN<K>*)      },
-  {"mfrontStateVariable"               , &typeid(KN<K>*)      }
-
+  {"mfrontStateVariable"               , &typeid(KN<K>*)      },
+  {"mfrontPreviousStrainTensor"        , &typeid(KN<K>*)      }  
 };
 
 template<class K>
@@ -84,7 +84,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   KN<K>* mfrontStrainTensor                 = nargs[6] ? GetAny<KN<K>*>((*nargs[6])(stack))       : NULL;
   KN<K>* mfrontStressTensor                 = nargs[7] ? GetAny<KN<K>*>((*nargs[7])(stack))       : NULL;
   KN<K>* mfrontStateVariable                = nargs[8] ? GetAny<KN<K>*>((*nargs[8])(stack))       : NULL;
-
+  KN<K>* mfrontPreviousStrainTensor         = nargs[9] ? GetAny<KN<K>*>((*nargs[9])(stack))       : NULL;
 
   if(mfrontBehaviourName!=NULL && verbosity)
     cout << " \n"
@@ -362,7 +362,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontStrainTensor->n / 9;
-          int totalIsv = mfrontStateVariable->n / ( 3*totalCells );
+          int totalIsv = b.isvs.size();
           int indexIsv = totalIsv * 3;
           int indexEx;
 
@@ -413,7 +413,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 18;
-          int totalIsv = mfrontStateVariable->n / ( 3*totalCells );
+          int totalIsv = b.isvs.size();
           int indexIsv = totalIsv * 3;
           int indexEx       ;
           int indexMtTensor ;
@@ -446,7 +446,6 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
     if(*mfrontBehaviourHypothesis=="TRIDIMENSIONAL")
     {
-
         if ( mfrontMaterialTensor != NULL && mfrontStrainTensor == NULL   && mfrontStateVariable == NULL  )
         {
           if (verbosity)
@@ -479,7 +478,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 84;
-          int totalIsv = mfrontStateVariable->n / ( 3*totalCells );
+          int totalIsv = b.isvs.size();
           int indexIsv = totalIsv * 3;
           int indexMtTensor ;
           for (int i = 0; i < totalCells; i++)
@@ -520,7 +519,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           }
         }
 
-        if ( mfrontMaterialTensor == NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL   )
+        if ( mfrontMaterialTensor == NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL  && mfrontPreviousStrainTensor ==  NULL    )
         {
           if(verbosity)
             cout << " \033[1;36m Message MFront :: Calculating Stress Tensor        \033[0m \n"
@@ -529,22 +528,63 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontStrainTensor->n / 24;
-          int totalIsv = mfrontStateVariable->n / ( 3*totalCells );
-          int indexIsv = totalIsv * 3;
+          int totalIsv = b.isvs.size();
+          int indexIsv = totalIsv * 4;
           int indexEx;
-
+          
           for (int i = 0; i < totalCells; i++)
           {
-            indexEx  = i*24         ;
+          
+                     
+            indexEx  = i*24         ;  
  	    MacroSetGradient3D(indexEx);
-            integrate(v, b);
+            integrate(v, b); 
             MacroGetSress3D(indexEx);
 
-#pragma omp parallel for
-           for(int jj = 0; jj < totalIsv; jj++){
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj+2))     = d.s1.internal_state_variables[jj];
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
+           }
+
+          }
+        }
+
+        if ( mfrontMaterialTensor == NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL  && mfrontPreviousStrainTensor !=  NULL )
+        {
+          if(verbosity)
+            cout << " \033[1;36m Message MFront :: Calculating Stress Tensor        \033[0m \n"
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
+                 << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
+                 << endl;
+
+          int totalCells =  mfrontStrainTensor->n / 24;
+          int totalIsv = b.isvs.size();
+          int indexIsv = totalIsv * 4;
+          int indexEx;
+          
+          for (int i = 0; i < totalCells; i++)
+          {
+          
+                     
+            indexEx  = i*24         ;
+ 	  
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(4*jj)) ;
+           }
+           	  
+ 	    MacroSetGradient3D(indexEx);
+ 	    MacroGetInitialSress3D(indexEx);
+ 	    MacroSetInitialGradient3D(indexEx);
+            integrate(v, b); 
+            MacroGetSress3D(indexEx);
+
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
            }
 
           }
@@ -574,7 +614,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           }
         }
 
-        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL    )
+        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL   && mfrontPreviousStrainTensor ==  NULL        )
         {
          if(verbosity)
             cout << " \033[1;36m Message MFront :: Calculating Material Tensor      \033[0m \n"
@@ -584,8 +624,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 84;
-          int totalIsv = mfrontStateVariable->n / ( 3*totalCells );
-          int indexIsv = totalIsv * 3;
+          int totalIsv = b.isvs.size();
+          int indexIsv = totalIsv * 4;
           int indexEx       ;
           int indexMtTensor ;
 
@@ -600,15 +640,59 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             indexMtTensor  = i*84;
 	    MacroGetStifness3D(indexMtTensor);
 
-           for(int jj = 0; jj < totalIsv; jj++){
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];
-             mfrontStateVariable->operator[](i*indexIsv+(3*jj+2))     = d.s1.internal_state_variables[jj];
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
            }
 
           }
         }
 
+        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL   && mfrontPreviousStrainTensor !=  NULL        )
+        {
+         if(verbosity)
+            cout << " \033[1;36m Message MFront :: Calculating Material Tensor      \033[0m \n"
+                 << " \033[1;36m                :: Calculating Stress Tensor        \033[0m \n"
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
+                 << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
+                 << endl;
+
+          int totalCells =  mfrontMaterialTensor->n / 84;
+          int totalIsv = b.isvs.size();
+          int indexIsv = totalIsv * 4;
+          int indexEx       ;
+          int indexMtTensor ;
+
+          for (int i = 0; i < totalCells; i++)
+          {
+
+            indexEx  = i*24         ;
+ 	  
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(4*jj)) ;
+           }
+           	  
+ 	    MacroSetGradient3D(indexEx);
+ 	    MacroGetInitialSress3D(indexEx);
+ 	    MacroSetInitialGradient3D(indexEx);
+            d.K[0] = 1.; 	    
+            integrate(v, b); 
+            MacroGetSress3D(indexEx);
+            indexMtTensor  = i*84;
+	    MacroGetStifness3D(indexMtTensor);
+
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
+           }
+
+          }
+        }
+        
     }
 }
   return 0L;

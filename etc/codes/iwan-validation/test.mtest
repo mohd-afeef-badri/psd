@@ -8,5 +8,5 @@
 
 @ExternalStateVariable 'Temperature' 293.15;
 
-@ImposedStrain<data> 'EXZ' 'gxz.csv' using 1:'$2/sqrt(2)' ;
+@ImposedStrain<data> 'EXY' 'gxz.csv' using 1:'$2/sqrt(2.)' ;
 @Times<data> 'gxz.csv' using 1 ;

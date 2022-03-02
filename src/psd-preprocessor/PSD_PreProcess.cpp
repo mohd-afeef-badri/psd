@@ -174,6 +174,7 @@ int main(int argc, char *argv[]){
   bool   wrongArgument         = false  ;
   string wrongArgumentWarning  = ""     ;
 
+  string Validation              = "NULL";
   string Model                   = "hybrid_phase_field";
   string Solver                  = "cg";
   string PostProcess             = "null";
@@ -309,6 +310,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-preconditioner"          ) Preconditioner           = argv[i+1];
     if( argvdummy == "-nonlinearmethod"         ) NonLinearMethod          = argv[i+1];
     if( argvdummy == "-reactionforce"           ) reactionforcemethod      = argv[i+1];
+    if( argvdummy == "-validation"              ) Validation               = argv[i+1];    
     if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
 
@@ -436,6 +438,10 @@ if(versionpsd){
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 
+}
+if(Validation == "Iwan"){
+ #include "Validation/Iwan.hpp" 
+ exit(0);
 }
 if(!versionpsd){
  #include "Help.hpp"

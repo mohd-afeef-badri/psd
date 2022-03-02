@@ -48,6 +48,7 @@
            argvdummy != "-solver"                   &&
            argvdummy != "-problem"                  &&
            argvdummy != "-partitioner"              &&
+           argvdummy != "-validation"               &&           
            argvdummy != "-postprocess"              &&
            argvdummy != "-doublecouple"             &&
            argvdummy != "-preconditioner"           &&

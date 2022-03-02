@@ -2,3 +2,4 @@
 out.data
 !Main.edp
 *.res
+!Makefile

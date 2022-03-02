@@ -18,6 +18,11 @@
 	d.s1.gradients[2] = 0.                                 ;  \
 	d.s1.gradients[3] = mfrontStrainTensor->operator[](x+6);
 
+#define MacroSetInitialGradient2D(x)  \
+	d.s0.gradients[0] = mfrontPreviousStrainTensor->operator[](x)  ;  \
+	d.s0.gradients[1] = mfrontPreviousStrainTensor->operator[](x+3);  \
+	d.s0.gradients[2] = 0.                                 ;  \
+	d.s0.gradients[3] = mfrontPreviousStrainTensor->operator[](x+6);
 
 /*
 
@@ -50,7 +55,18 @@
 	mfrontStressTensor->operator[](x+7)  = d.s1.thermodynamic_forces[3];  \
 	mfrontStressTensor->operator[](x+8)  = d.s1.thermodynamic_forces[3];
 
-
+#define MacroGetInitialSress2D(x) \
+	mfrontStressTensor->operator[](x)    = d.s0.thermodynamic_forces[0];  \
+	mfrontStressTensor->operator[](x+1)  = d.s0.thermodynamic_forces[0];  \
+	mfrontStressTensor->operator[](x+2)  = d.s0.thermodynamic_forces[0];  \
+                                                                              \
+	mfrontStressTensor->operator[](x+3)  = d.s0.thermodynamic_forces[1];  \
+	mfrontStressTensor->operator[](x+4)  = d.s0.thermodynamic_forces[1];  \
+	mfrontStressTensor->operator[](x+5)  = d.s0.thermodynamic_forces[1];  \
+                                                                              \
+	mfrontStressTensor->operator[](x+6)  = d.s0.thermodynamic_forces[3];  \
+	mfrontStressTensor->operator[](x+7)  = d.s0.thermodynamic_forces[3];  \
+	mfrontStressTensor->operator[](x+8)  = d.s0.thermodynamic_forces[3];
 
 /*  
     2D material Tensor Logic
@@ -340,7 +356,16 @@
             d.s1.gradients[3] = mfrontStrainTensor->operator[](indexEx+12); \
             d.s1.gradients[4] = mfrontStrainTensor->operator[](indexEx+16); \
             d.s1.gradients[5] = mfrontStrainTensor->operator[](indexEx+20);
-            
+
+
+#define MacroSetInitialGradient3D(x)  \
+            d.s0.gradients[0] = mfrontPreviousStrainTensor->operator[](indexEx)  ;  \
+            d.s0.gradients[1] = mfrontPreviousStrainTensor->operator[](indexEx+4);  \
+            d.s0.gradients[2] = mfrontPreviousStrainTensor->operator[](indexEx+8);  \
+            d.s0.gradients[3] = mfrontPreviousStrainTensor->operator[](indexEx+12); \
+            d.s0.gradients[4] = mfrontPreviousStrainTensor->operator[](indexEx+16); \
+            d.s0.gradients[5] = mfrontPreviousStrainTensor->operator[](indexEx+20);
+                        
 /*
     3D stress  Tensor Logic
 
@@ -407,4 +432,35 @@
             mfrontStressTensor->operator[](indexEx+21)  = d.s1.thermodynamic_forces[5];\
             mfrontStressTensor->operator[](indexEx+22)  = d.s1.thermodynamic_forces[5];\
             mfrontStressTensor->operator[](indexEx+23)  = d.s1.thermodynamic_forces[5];
+
+#define MacroGetInitialSress3D(x) \
+            mfrontStressTensor->operator[](indexEx)    = d.s0.thermodynamic_forces[0]; \
+            mfrontStressTensor->operator[](indexEx+1)  = d.s0.thermodynamic_forces[0]; \
+            mfrontStressTensor->operator[](indexEx+2)  = d.s0.thermodynamic_forces[0]; \
+            mfrontStressTensor->operator[](indexEx+3)  = d.s0.thermodynamic_forces[0]; \
+                                                                                       \
+            mfrontStressTensor->operator[](indexEx+4)  = d.s0.thermodynamic_forces[1]; \
+            mfrontStressTensor->operator[](indexEx+5)  = d.s0.thermodynamic_forces[1]; \
+            mfrontStressTensor->operator[](indexEx+6)  = d.s0.thermodynamic_forces[1]; \
+            mfrontStressTensor->operator[](indexEx+7)  = d.s0.thermodynamic_forces[1]; \
+                                                                                       \
+            mfrontStressTensor->operator[](indexEx+8)  = d.s0.thermodynamic_forces[2]; \
+            mfrontStressTensor->operator[](indexEx+9)  = d.s0.thermodynamic_forces[2]; \
+            mfrontStressTensor->operator[](indexEx+10)  = d.s0.thermodynamic_forces[2];\
+            mfrontStressTensor->operator[](indexEx+11)  = d.s0.thermodynamic_forces[2];\
+                                                                                       \
+            mfrontStressTensor->operator[](indexEx+12)  = d.s0.thermodynamic_forces[3];\
+            mfrontStressTensor->operator[](indexEx+13)  = d.s0.thermodynamic_forces[3];\
+            mfrontStressTensor->operator[](indexEx+14)  = d.s0.thermodynamic_forces[3];\
+            mfrontStressTensor->operator[](indexEx+15)  = d.s0.thermodynamic_forces[3];\
+                                                                                       \
+            mfrontStressTensor->operator[](indexEx+16)  = d.s0.thermodynamic_forces[4];\
+            mfrontStressTensor->operator[](indexEx+17)  = d.s0.thermodynamic_forces[4];\
+            mfrontStressTensor->operator[](indexEx+18)  = d.s0.thermodynamic_forces[4];\
+            mfrontStressTensor->operator[](indexEx+19)  = d.s0.thermodynamic_forces[4];\
+                                                                                       \
+            mfrontStressTensor->operator[](indexEx+20)  = d.s0.thermodynamic_forces[5];\
+            mfrontStressTensor->operator[](indexEx+21)  = d.s0.thermodynamic_forces[5];\
+            mfrontStressTensor->operator[](indexEx+22)  = d.s0.thermodynamic_forces[5];\
+            mfrontStressTensor->operator[](indexEx+23)  = d.s0.thermodynamic_forces[5];            
                                                       
