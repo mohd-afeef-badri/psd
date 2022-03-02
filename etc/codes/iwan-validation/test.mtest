@@ -1,0 +1,12 @@
+@Author Reine Fares;
+@Date Mars 2022;
+@Description{ Teste de cisaillement modele de Iwan };
+
+@MaximumNumberOfSubSteps 1;
+@ModellingHypothesis 'Tridimensional';
+@Behaviour<generic> 'src/libBehaviour.so' 'Iwan';
+
+@ExternalStateVariable 'Temperature' 293.15;
+
+@ImposedStrain<data> 'EXZ' 'gxz.csv' using 1:'$2/sqrt(2)' ;
+@Times<data> 'gxz.csv' using 1 ;
