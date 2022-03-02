@@ -57,6 +57,7 @@ BoundaryAndSourceConditions.edp
 ControlParameters.edp
 FemParameters.edp
 OtherParameters.edp
+PSD-validation-iwan.edp
 simulation-log.csv
 
 ## SHARED OBJECT FILES ##

@@ -1,5 +1,5 @@
 !in.data
 out.data
-!Main.edp
+*.edp
 *.res
 !Makefile

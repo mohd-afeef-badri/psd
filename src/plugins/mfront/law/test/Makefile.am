@@ -1,8 +1,7 @@
 LIST_CODE = Elasticity-For-A-Quadrature-Point.cxx
 
 LIST_TESTS = Test_1 \
-	     Test_2 \
-	     Test_3
+	     Test_2
 
 all-local:
 	@echo ""
@@ -50,9 +49,9 @@ Test_3: Iwan-For-A-Quadrature-Point-3D.cxx
 	@echo "  PASSED "
 
 Test_4: Elasticity-For-A-Quadrature-Point_Threaded.cxx
-	@echo "Test_3 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
+	@echo "Test_4 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
 	@$(CXX) Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
-	@./a.out > Test_3.log	
+	@./a.out > Test_4.log	
 	@echo "  PASSED "
 
 
