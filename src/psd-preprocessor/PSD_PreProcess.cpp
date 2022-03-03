@@ -64,6 +64,8 @@
 
   -reactionforce   [string] Reaction force calculation method stress_based|variational_based.
 
+  -validation      [string] To produce code for a validation test case.
+
   -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
@@ -318,6 +320,9 @@ int main(int argc, char *argv[]){
 
  #include "ErrorWrongArgument.hpp"
 
+ if(wrongArgument)
+   cout << wrongArgumentWarning << endl;
+   
   int labelBodyForce=1;
   int labelDirichlet=2;
   int labelDirichletTraction=2;
@@ -412,20 +417,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
 
   cout << "                                                                   " << endl;
-
-/*
-if(Sequential){
-	system("sed -i 's/^ffmpi=FreeFem++-mpi$/ffmpi=FreeFem++/g' PSD_Solve;");
-	system("sed -i 's/^j=1;$/j=1;mpi_run_option=;a[0]=;/g' PSD_Solve;");
-}
-
-if(!Sequential){
-	system("sed -i 's/^ffmpi=FreeFem++$/ffmpi=FreeFem++-mpi/g' PSD_Solve;");
-	system("sed -i 's#^j=1;mpi_run_option=;a\\[0\\]=;$#j=1;#g' PSD_Solve;");
-}
-*/
-
-
+   
 if(versionpsd){
   cout << "  PSD Version 2.4 " << endl;
   cout << "    Copyright (C) CEA 2019 - 2022 "<< endl;
@@ -437,16 +429,35 @@ if(versionpsd){
   cout << "    Report bugs/issues ::    mohd-afeef.badri@cea.fr               " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
-
+  exit(0);
 }
-if(Validation == "Iwan"){
- #include "Validation/Iwan.hpp" 
+
+if(help)
+{
+ #include "Help.hpp"
  exit(0);
 }
-if(!versionpsd){
- #include "Help.hpp"
 
-if(!help){
+if(Validation == "Iwan"){
+ #include "Validation/Iwan.hpp"
+ 
+ cout << "                                                                   " << endl;
+ cout << " PSD solver is now ready to run the  validation case               " << endl;
+ cout << "                                                                   " << endl;
+ cout << " For a simulation with N number of processes run your solver with  " << endl;
+ cout << "                                                                   " << endl;
+ cout << "     PSD_Solve -np N PSD-validation**.edp                          " << endl;
+ cout << "                                                                   " << endl;
+ cout << " For a sequential simulation run your solver with                  " << endl;
+ cout << "                                                                   " << endl;
+ cout << "     PSD_Solve_Seq PSD-validation**.edp                            " << endl;
+ cout << "                                                                   " << endl;
+ cout << "===================================================================" << endl;
+
+ exit(0);
+}
+
+
  #include "Main.hpp"
  #include "MeshAndFeSpace.hpp"
  #include "Macros.hpp"
@@ -476,9 +487,5 @@ if(!help){
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 
-  if(wrongArgument)
-   cout << wrongArgumentWarning << endl;
-}
-}
 return 0;
 }

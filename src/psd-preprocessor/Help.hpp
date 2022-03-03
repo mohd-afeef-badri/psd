@@ -2,8 +2,6 @@
 // ------ Help message on the screen ------
 //=================================================================================
 
-if(help)
- {
  cout << R""""(
 
  ==============================================================================
@@ -63,6 +61,9 @@ if(help)
 
    -postprocess        [string]     Indicate postprocessing quantity. Use one
                                     u | v | a | ua | uv | va | phi | uphi | uv
+
+   -validation         [string]     To produce code for a validation test case.
+                                    Use Iwan.
 
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
@@ -199,6 +200,3 @@ if(help)
                              Default ilu. Use ilu | icc | lu | gamg .
 
  )"""";
-
-} //-- [if loop terminator] help ended --//
-

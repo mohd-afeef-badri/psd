@@ -236,6 +236,19 @@
       errorArgument = true;
      }
 
+  if ( Validation != "Iwan" && Validation != "NULL" ){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-validation\033[0m only accepts \033[1;34miwan\033[0m\n"
+          "\033[1;31m-validation "<< Validation << "\033[0m is not an acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+
 
   if ( Model != "hybrid_phase_field" && Model != "Mazar" && Model != "pseudo_nonlinear"  &&  Model != "Hujeux" &&  Model != "von_mises"
      ){

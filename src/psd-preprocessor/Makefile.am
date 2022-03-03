@@ -49,6 +49,7 @@ VariationalFormulation.hpp \
 ./VariationalFormulation/ElastoPlastic.hpp \
 ./VariationalFormulation/LinearElasticity.hpp \
 ./VariationalFormulation/SoilDynamics.hpp \
+./Validation/Iwan.hpp \
 DetectWrongArgument.hpp \
 ErrorWrongArgument.hpp
 

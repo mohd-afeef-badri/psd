@@ -45,9 +45,6 @@ codeSnippet R""""(
 load "mfront"
 load "Element_QF"
 load "msh3"
-  
-
-bool gnuplot = true;
 
 mesh3 Th = cube(1, 1, 1);
 
@@ -90,7 +87,7 @@ string PropertyNames = MaterialProperty + YielsurfacestressCiNames1 + Yielsurfac
  
 real[int] PropertyValues =[
 
-	0*614930000.0, 0.371, 16,
+	614930000.0, 0.371, 16,
 	1438707420.0, 31390142724.0, 38213126183.0, 12058438512.0, 6415920460.0, 4779863112.0,
 	6160771598.0, 9332518493.0, 1518307923.0, 900683489.3, 620762077.8, 181090675.9,
 	134905475.6, 75387120.03, 39561849.73, 39229506.65,
@@ -135,10 +132,14 @@ for (int i = 0; i < steps; i++)
 	if(mpirank==0)                         
     outStress << timeT << "  " << GammaExy << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << endl;
 }
-  
-if(gnuplot)
-   system("echo \"plot 'out.data' u 1:3 w l lw 4 t 'PSD', '' u 1:4 w l lw 2 t 'CAST3M'\" | gnuplot -p");
 
 )"""";
 
-cout << " ............................ Done \n";  
+if(pipegnu)
+{
+write<< 
+   "system(\"echo \\\"plot 'out.data' u 1:3 w l lw 4 t 'PSD', '' u 1:4 w l lw 2 t 'CAST3M'\\\" | gnuplot -p\");"
+<< endl;
+}
+
+cout << " ............................ Done  \n";  
