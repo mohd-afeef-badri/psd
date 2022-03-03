@@ -7,6 +7,44 @@
 @Behaviour<generic> 'src/libBehaviour.so' 'Iwan';
 
 @ExternalStateVariable 'Temperature' 293.15;
+@MaterialProperty<constant> 'YoungModulus' 614930000.0;
+@MaterialProperty<constant> 'PoissonRatio' 0.371;
+@MaterialProperty<constant> 'NumberofSpring' 16;
+@MaterialProperty<constant> 'YielsurfacestressCi[0]' 1438707420.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[1]' 31390142724.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[2]' 38213126183.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[3]' 12058438512.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[4]' 6415920460.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[5]' 4779863112.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[6]' 6160771598.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[7]' 9332518493.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[8]' 1518307923.0;
+@MaterialProperty<constant> 'YielsurfacestressCi[9]' 900683489.3;
+@MaterialProperty<constant> 'YielsurfacestressCi[10]' 620762077.8;
+@MaterialProperty<constant> 'YielsurfacestressCi[11]' 181090675.9;
+@MaterialProperty<constant> 'YielsurfacestressCi[12]' 134905475.6;
+@MaterialProperty<constant> 'YielsurfacestressCi[13]' 75387120.03;
+@MaterialProperty<constant> 'YielsurfacestressCi[14]' 39561849.73;
+@MaterialProperty<constant> 'YielsurfacestressCi[15]' 39229506.65;
+@MaterialProperty<constant> 'YielsurfacestrainYi[0]' 340005.5091;
+@MaterialProperty<constant> 'YielsurfacestrainYi[1]' 420308.5133;
+@MaterialProperty<constant> 'YielsurfacestrainYi[2]' 524405.5834;
+@MaterialProperty<constant> 'YielsurfacestrainYi[3]' 653604.7237;
+@MaterialProperty<constant> 'YielsurfacestrainYi[4]' 1647053.671;
+@MaterialProperty<constant> 'YielsurfacestrainYi[5]' 2520327.797;
+@MaterialProperty<constant> 'YielsurfacestrainYi[6]' 4384366.063;
+@MaterialProperty<constant> 'YielsurfacestrainYi[7]' 5203073.539;
+@MaterialProperty<constant> 'YielsurfacestrainYi[8]' 8131982.302;
+@MaterialProperty<constant> 'YielsurfacestrainYi[9]' 11264333.18;
+@MaterialProperty<constant> 'YielsurfacestrainYi[10]' 13251691.55;
+@MaterialProperty<constant> 'YielsurfacestrainYi[11]' 16720370.49;
+@MaterialProperty<constant> 'YielsurfacestrainYi[12]' 19253276.75;
+@MaterialProperty<constant> 'YielsurfacestrainYi[13]' 20620902.16;
+@MaterialProperty<constant> 'YielsurfacestrainYi[14]' 22768742.08;
+@MaterialProperty<constant> 'YielsurfacestrainYi[15]' 21428992.9;
 
-@ImposedStrain<data> 'EXY' 'gxz.csv' using 1:'$2/sqrt(2.)' ;
-@Times<data> 'gxz.csv' using 1 ;
+
+
+@ImposedStrain<data> 'EXY' 'in.data' using 1:'$3/sqrt(2.)' ;
+@Times<data> 'in.data' using 1 ;
+ 
