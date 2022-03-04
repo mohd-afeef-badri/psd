@@ -148,7 +148,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
   //------------------------------------------------
   // Create behaviour/data/view for MGIS
-  //-----------------------------------------------
+  //------------------------------------------------
   if(verbosity)
       cout << " \n"
            << " \033[1;36m Message MFront :: Loading  Behaviour  ::     \033[0m " << *mfrontBehaviourName   << "\n"
@@ -161,6 +161,29 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   auto d = BehaviourData{b};
   auto v = make_view(d);
 
+
+    //----------------------------------------------
+    // Get information about total internal state variables
+    //----------------------------------------------
+  int componentsIsvs = 0;
+  if(b.isvs.size() > 0){
+
+       if (*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN"){
+          for (int i=0; i < b.isvs.size(); i++){
+             if(b.isvs[i].type == 0) componentsIsvs += 1;
+             if(b.isvs[i].type == 1) componentsIsvs += 1;
+             if(b.isvs[i].type == 2) componentsIsvs += 4;
+          }
+       }
+
+       if (*mfrontBehaviourHypothesis=="TRIDIMENSIONAL"){
+          for (int i=0; i < b.isvs.size(); i++){
+             if(b.isvs[i].type == 0) componentsIsvs += 1;
+             if(b.isvs[i].type == 1) componentsIsvs += 1;
+             if(b.isvs[i].type == 2) componentsIsvs += 6;
+          }
+       }
+  }
   //------------------------------------------------
   // Assigning Properties for MGIS
   //-----------------------------------------------
@@ -362,7 +385,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontStrainTensor->n / 9;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 3;
           int indexEx;
 
@@ -413,7 +436,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 18;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 3;
           int indexEx       ;
           int indexMtTensor ;
@@ -478,7 +501,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 84;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 3;
           int indexMtTensor ;
           for (int i = 0; i < totalCells; i++)
@@ -528,7 +551,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontStrainTensor->n / 24;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 4;
           int indexEx;
           
@@ -560,7 +583,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontStrainTensor->n / 24;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 4;
           int indexEx;
           
@@ -624,7 +647,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 84;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 4;
           int indexEx       ;
           int indexMtTensor ;
@@ -660,7 +683,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
                  << endl;
 
           int totalCells =  mfrontMaterialTensor->n / 84;
-          int totalIsv = b.isvs.size();
+          int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 4;
           int indexEx       ;
           int indexMtTensor ;
