@@ -13,6 +13,10 @@
 
 - Optimize interpolation via building of interpolation matrix
 
+-  Finish the documentation of Iwan 
+-  Build a tutorial on Iwan 
+-  Optimize the law of Iwan with the status
+-  Add more validation test 
 -  Hujeux soil law make it work with PSD
 -  Nonlinear damage mechanics with nested matrices 
 

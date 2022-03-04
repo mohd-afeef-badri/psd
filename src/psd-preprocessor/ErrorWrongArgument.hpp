@@ -242,7 +242,7 @@
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"
-          "The flag \033[1;31m-validation\033[0m only accepts \033[1;34miwan\033[0m\n"
+          "The flag \033[1;31m-validation\033[0m only accepts \033[1;34mIwan\033[0m\n"
           "\033[1;31m-validation "<< Validation << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";

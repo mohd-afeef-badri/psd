@@ -102,18 +102,18 @@ real[int] PropertyValues =[
 int steps = 2001;
 real timeT, GammaExy;
 real[int] SigxyRef(steps);
-real dummy;
+real SigxyMtest;
 
 ifstream inEpsilon("in.data");
 ofstream outStress("out.data");
   
 if (mpirank == 0)
-	outStress << "#Time" << "  " << "E_xy" << "  " << "Sig_xy" << "  " << "Sig_xy_ref" << endl;
+	outStress << "#Time" << "  " << "E_xy" << "  " << "Sig_xy" << "  " << "Sig_xy_ref" <<  "  " << "Sig_xy_mtest" <<endl;
 
 for (int i = 0; i < steps; i++)
 {
 
-	inEpsilon >> timeT >> dummy >> GammaExy >> SigxyRef(i);
+	inEpsilon >> timeT >> GammaExy >> SigxyRef(i) >> SigxyMtest ;
 	GammaExy = 1. / sqrt(2.) *GammaExy;
         [Eps11, Eps22, Eps33, Eps12, Eps13, Eps23] =[0, 0, 0, GammaExy, 0, 0];
 
@@ -130,7 +130,7 @@ for (int i = 0; i < steps; i++)
 	              
 	int prec = outStress.precision(16);                       
 	if(mpirank==0)                         
-    outStress << timeT << "  " << GammaExy << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << endl;
+    outStress << timeT << "  " << GammaExy << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << "  " << SigxyMtest / sqrt(2.) << endl;
 }
 
 )"""";
