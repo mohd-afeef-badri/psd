@@ -5,6 +5,8 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- SALOME `.med` file support. For conversion on disk is done upon reading a `.med`
+
 - Additional tests for Elastodynamics, Damage Mechanics.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.

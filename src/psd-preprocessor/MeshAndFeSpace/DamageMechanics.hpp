@@ -24,20 +24,7 @@ codeSnippet R""""(
 // ------- Error message if wrong mesh detected -------
 //==============================================================================
 
-  if( ThName.find(".mesh") == -1 &&
-      ThName.find(".msh")  == -1 &&
-      ThName.find(".vtk")  == -1
-    ){
-      cout << "  ****************** ERROR ********************* \n"
-           << "                                                 \n"
-           << "  PSD only accepts the following mesh formats    \n"
-           << "     1) .msh   Gmsh's  .msh  format version 2    \n"
-           << "     2) .mesh  INRIA's medit format              \n"
-           << "     3) .vtk   VTK's unstructured mesh format    \n"
-           << "                                                 \n"
-           << "  ****************** ERROR ********************* \n";
-      exit(11111);
-  }
+  checkmesh(ThName);
 
 )"""";
 

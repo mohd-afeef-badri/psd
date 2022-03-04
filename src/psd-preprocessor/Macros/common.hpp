@@ -210,6 +210,10 @@ codeSnippet R""""(
 macro loadfemesh(meshObject,meshName)
   meshN meshObject;
 
+  if(meshName.find(".med") > -1){
+    system("gmsh -1 "+ThName+" -o "+ThName+".msh -format msh2 ");
+    load "gmsh";   meshObject = gmshloadN(meshName);
+  }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
   }
@@ -219,6 +223,35 @@ macro loadfemesh(meshObject,meshName)
   if(meshName.find(".vtk") > -1){
     load "iovtk";  meshObject = vtkloadN(meshName);
   }
+//
+
+//=============================================================================
+//            ------ check mesh macro  -------
+// -------------------------------------------------------------------
+//    This macros will take in as an input the mesh name (string)
+//    and check if this mesh format (extension) is compatible.
+// -------------------------------------------------------------------
+//=============================================================================
+
+macro checkmesh(meshName)
+{
+  if( meshName.find(".mesh") == -1 &&
+      meshName.find(".med")  == -1 &&
+      meshName.find(".msh")  == -1 &&
+      meshName.find(".vtk")  == -1
+    ){
+      cout << "  ****************** ERROR ********************* \n"
+           << "                                                 \n"
+           << "  PSD only accepts the following mesh formats    \n"
+           << "     1) .msh   Gmsh's  .msh  format version 2    \n"
+           << "     2) .mesh  INRIA's medit format              \n"
+           << "     3) .vtk   VTK's unstructured mesh format    \n"
+           << "     4) .med   SALOME's .med format              \n"
+           << "                                                 \n"
+           << "  ****************** ERROR ********************* \n";
+      exit(11111);
+  }
+}
 //
 
 )"""";
