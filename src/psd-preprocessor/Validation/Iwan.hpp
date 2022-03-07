@@ -109,7 +109,7 @@ ifstream inEpsilon("in.data");
 ofstream outStress("out.data");
   
 if (mpirank == 0)
-	outStress << "#Time" << "  " << "G_xy" << "  " << "Sig_xy" << "  " << "Sig_xy_ref" <<  "  " << "Sig_xy_mtest" <<endl;
+	outStress << "#Time" << "  " << "G_xy" << "  " << "Sig_xy"  <<  "  " << "Sig_xy_mtest" <<endl;
 
 for (int i = 0; i < steps; i++)
 {
@@ -131,7 +131,7 @@ for (int i = 0; i < steps; i++)
 	              
 	int prec = outStress.precision(16);                       
 	if(mpirank==0)                         
-    outStress << timeT << "  " << GammaExy *  sqrt(2.) << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << "  " << SigxyMtest / sqrt(2.) << endl;
+    outStress << timeT << "  " << GammaExy *  sqrt(2.) << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyMtest << endl;
 }
 
 )"""";
@@ -139,7 +139,7 @@ for (int i = 0; i < steps; i++)
 if(pipegnu)
 {
 write<< 
-   "system(\"echo \\\"plot 'out.data' u 1:3 w l lw 4 t 'PSD', '' u 1:4 w l lw 2 t 'CAST3M'\\\" | gnuplot -p\");"
+   "system(\"echo \\\"plot 'out.data' u 1:3 w l lw 4 t 'PSD', '' u 1:4 w l lw 2 t 'MTEST'\\\" | gnuplot -p\");"
 << endl;
 }
 
