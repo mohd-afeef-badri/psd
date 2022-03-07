@@ -88,9 +88,10 @@ string PropertyNames = MaterialProperty + YielsurfacestressCiNames1 + Yielsurfac
 real[int] PropertyValues =[
 
 	614930000.0, 0.371, 16,
-	1438707420.0, 31390142724.0, 38213126183.0, 12058438512.0, 6415920460.0, 4779863112.0,
-	6160771598.0, 9332518493.0, 1518307923.0, 900683489.3, 620762077.8, 181090675.9,
-	134905475.6, 75387120.03, 39561849.73, 39229506.65,
+	422442500.2 , 29108930828.0 , 22717782323.0 , 18545244902.0 , 6196408158.0 , 
+	3943563406.0 , 2137231653.0 , 2142487666.0 , 909817671.5 , 432948424.3 , 
+	256315552.3 , 67747318.24 , 51552950.89 , 20695768.73 , 4435263.381 , 12587863.55,
+	
 	340005.5091, 420308.5133, 524405.5834, 653604.7237, 1647053.671, 2520327.797,
 	4384366.063, 5203073.539, 8131982.302, 11264333.18, 13251691.55, 16720370.49,
 	19253276.75, 20620902.16, 22768742.08, 21428992.9
@@ -108,7 +109,7 @@ ifstream inEpsilon("in.data");
 ofstream outStress("out.data");
   
 if (mpirank == 0)
-	outStress << "#Time" << "  " << "E_xy" << "  " << "Sig_xy" << "  " << "Sig_xy_ref" <<  "  " << "Sig_xy_mtest" <<endl;
+	outStress << "#Time" << "  " << "G_xy" << "  " << "Sig_xy" << "  " << "Sig_xy_ref" <<  "  " << "Sig_xy_mtest" <<endl;
 
 for (int i = 0; i < steps; i++)
 {
@@ -130,7 +131,7 @@ for (int i = 0; i < steps; i++)
 	              
 	int prec = outStress.precision(16);                       
 	if(mpirank==0)                         
-    outStress << timeT << "  " << GammaExy << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << "  " << SigxyMtest / sqrt(2.) << endl;
+    outStress << timeT << "  " << GammaExy *  sqrt(2.) << "  " << Sig11[][12] / sqrt(2.) << "  " << SigxyRef(i) << "  " << SigxyMtest / sqrt(2.) << endl;
 }
 
 )"""";

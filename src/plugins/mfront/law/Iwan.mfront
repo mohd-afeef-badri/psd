@@ -20,7 +20,7 @@
 @Epsilon 1.e-16;                 // tolerance of local stress integration algorithm
 @Theta 1.;                       // time integration scheme
 @IterMax 200;                    // for local local stress integration algorithm
-@Algorithm NewtonRaphson;        //_NumericalJacobian;_LevenbergMarquardt
+//@Algorithm NewtonRaphson;        //_NumericalJacobian;_LevenbergMarquardt
 
 
 @Brick StandardElasticity;
@@ -50,9 +50,9 @@ Y.setEntryName("YielsurfacestrainYi") ;
 // ----------------------- START---------------------------------------------------------------------------
 // @ElasticMaterialProperties{614930000.0, 3.71000000E-01};
 // @IntegerConstant Ns = 16;
-// @Parameter stress C[Ns] = {1438707420, 31390142724, 38213126183, 12058438512, 6415920460, 4779863112, 
-// 6160771598, 9332518493, 1518307923, 900683489.3, 620762077.8, 181090675.9, 
-// 134905475.6, 75387120.03, 39561849.73, 39229506.65, 0., 0., 0.,0. };
+// @Parameter stress C[Ns] = {422442500.2 , 29108930828.0 , 22717782323.0 , 18545244902.0 , 6196408158.0 , 
+// 3943563406.0 , 2137231653.0 , 2142487666.0 , 909817671.5 , 432948424.3 , 256315552.3 , 67747318.24 , 
+// 51552950.89 , 20695768.73 , 4435263.381 , 12587863.55, 0., 0., 0.,0. };
 // @AuxiliaryStateVariable stress Y[100] ;
 // Y.setGlossaryName("Stessname2") ;
 //constant, obtained from laboratory tests, that characterizes the nth yield surface
