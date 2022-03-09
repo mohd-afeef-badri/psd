@@ -74,18 +74,18 @@ Isv0[] = 0;
 
 string MaterialProperty = "YoungModulus PoissonRatio NumberofSpring";
 
-string BackSCoeffCiNames1 = " BackSCoeff_Ci[0] BackSCoeff_Ci[1] BackSCoeff_Ci[2] BackSCoeff_Ci[3] BackSCoeff_Ci[4] BackSCoeff_Ci[5] BackSCoeff_Ci[6] BackSCoeff_Ci[7] BackSCoeff_Ci[8] BackSCoeff_Ci[9]";
-string BackSCoeffCiNames2 = " BackSCoeff_Ci[10] BackSCoeff_Ci[11] BackSCoeff_Ci[12] BackSCoeff_Ci[13] BackSCoeff_Ci[14] BackSCoeff_Ci[15] BackSCoeff_Ci[16] BackSCoeff_Ci[17] BackSCoeff_Ci[18] BackSCoeff_Ci[19]";
-string BackSCoeffCiNames3 = " BackSCoeff_Ci[20] BackSCoeff_Ci[21] BackSCoeff_Ci[22] BackSCoeff_Ci[23] BackSCoeff_Ci[24] BackSCoeff_Ci[25] BackSCoeff_Ci[26] BackSCoeff_Ci[27] BackSCoeff_Ci[28] BackSCoeff_Ci[29]";
-string BackSCoeffCiNames4 = " BackSCoeff_Ci[30] BackSCoeff_Ci[31] BackSCoeff_Ci[32] BackSCoeff_Ci[33]";
+string backSCoeffCiNames1 = " BackSCoeffCi[0] BackSCoeffCi[1] BackSCoeffCi[2] BackSCoeffCi[3] BackSCoeffCi[4] BackSCoeffCi[5] BackSCoeffCi[6] BackSCoeffCi[7] BackSCoeffCi[8] BackSCoeffCi[9]";
+string backSCoeffCiNames2 = " BackSCoeffCi[10] BackSCoeffCi[11] BackSCoeffCi[12] BackSCoeffCi[13] BackSCoeffCi[14] BackSCoeffCi[15] BackSCoeffCi[16] BackSCoeffCi[17] BackSCoeffCi[18] BackSCoeffCi[19]";
+string backSCoeffCiNames3 = " BackSCoeffCi[20] BackSCoeffCi[21] BackSCoeffCi[22] BackSCoeffCi[23] BackSCoeffCi[24] BackSCoeffCi[25] BackSCoeffCi[26] BackSCoeffCi[27] BackSCoeffCi[28] BackSCoeffCi[29]";
+string backSCoeffCiNames4 = " BackSCoeffCi[30] BackSCoeffCi[31] BackSCoeffCi[32] BackSCoeffCi[33]";
 
 
-string VMSYiNames1 = " VMS_Yi[0] VMS_Yi[1] VMS_Yi[2] VMS_Yi[3] VMS_Yi[4] VMS_Yi[5] VMS_Yi[6] VMS_Yi[7] VMS_Yi[8] VMS_Yi[9]";
-string VMSYiNames2 = " VMS_Yi[10] VMS_Yi[11] VMS_Yi[12] VMS_Yi[13] VMS_Yi[14] VMS_Yi[15] VMS_Yi[16] VMS_Yi[17] VMS_Yi[18] VMS_Yi[19]";
-string VMSYiNames3 = " VMS_Yi[20] VMS_Yi[21] VMS_Yi[22] VMS_Yi[23] VMS_Yi[24] VMS_Yi[25] VMS_Yi[26] VMS_Yi[27] VMS_Yi[28] VMS_Yi[29]";
-string VMSYiNames4 = " VMS_Yi[30] VMS_Yi[31] VMS_Yi[32] VMS_Yi[33]";  
+string VMSYiNames1 = " VMSYi[0] VMSYi[1] VMSYi[2] VMSYi[3] VMSYi[4] VMSYi[5] VMSYi[6] VMSYi[7] VMSYi[8] VMSYi[9]";
+string VMSYiNames2 = " VMSYi[10] VMSYi[11] VMSYi[12] VMSYi[13] VMSYi[14] VMSYi[15] VMSYi[16] VMSYi[17] VMSYi[18] VMSYi[19]";
+string VMSYiNames3 = " VMSYi[20] VMSYi[21] VMSYi[22] VMSYi[23] VMSYi[24] VMSYi[25] VMSYi[26] VMSYi[27] VMSYi[28] VMSYi[29]";
+string VMSYiNames4 = " VMSYi[30] VMSYi[31] VMSYi[32] VMSYi[33]";  
 
-string PropertyNames = MaterialProperty + BackSCoeffCiNames1 + BackSCoeffCiNames2 + BackSCoeffCiNames3 + BackSCoeffCiNames4 + VMSYiNames1 + VMSYiNames2 + VMSYiNames3 + VMSYiNames4;
+string PropertyNames = MaterialProperty + backSCoeffCiNames1 + backSCoeffCiNames2 + backSCoeffCiNames3 + backSCoeffCiNames4 + VMSYiNames1 + VMSYiNames2 + VMSYiNames3 + VMSYiNames4;
 
 
  
