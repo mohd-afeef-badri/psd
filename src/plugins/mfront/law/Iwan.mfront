@@ -39,12 +39,12 @@ Ns.setEntryName("NumberofSpring") ;
 
 
 
-@MaterialProperty stress C[16];
-C.setEntryName("YielsurfacestressCi") ;
+@MaterialProperty stress C[34];
+C.setEntryName("YielsurfacestrainCi") ;
 
 
-@MaterialProperty stress Y[16];
-Y.setEntryName("YielsurfacestrainYi") ;
+@MaterialProperty stress Y[34];
+Y.setEntryName("YielsurfacestressYi") ;
 
 // Exemple
 // ----------------------- START---------------------------------------------------------------------------
@@ -62,24 +62,24 @@ Y.setEntryName("YielsurfacestrainYi") ;
 // ----------------------- END ---------------------------------------------------------------------------
 
 // An auxiliary state variable is a persistent variable but not an integration variable.
-@AuxiliaryStateVariable strain p[16];
+@AuxiliaryStateVariable strain p[34];
 p.setGlossaryName("EquivalentPlasticStrain");
 
 
 // state variable besides eel (that is added because we used @Brick StandardElasticity;):
 // A "standard" state variable is a persistent state variable and an integration variable
-@StateVariable Stensor X[16];
+@StateVariable Stensor X[34];
 X.setEntryName("BackStress");
 
 
-@LocalVariable strain dp[16];
+@LocalVariable strain dp[34];
 
 // Plastic flow tensor
-@LocalVariable Stensor n[16];
+@LocalVariable Stensor n[34];
 
 
 // status of each plastic system
-@LocalVariable bool status[16];
+@LocalVariable bool status[34];
 
 
 @LocalVariable stress lambda;
