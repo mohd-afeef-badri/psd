@@ -40,11 +40,11 @@ Ns.setEntryName("NumberofSpring") ;
 
 
 @MaterialProperty stress C[34];
-C.setEntryName("BackSCoeff_Ci") ;
+C.setEntryName("BackSCoeffCi") ;
 
 
 @MaterialProperty stress Y[34];
-Y.setEntryName("VMS_Yi") ;
+Y.setEntryName("VMSYi") ;
 
 // Exemple
 // ----------------------- START---------------------------------------------------------------------------

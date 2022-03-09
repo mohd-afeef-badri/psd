@@ -74,18 +74,18 @@ Isv0[] = 0;
 
 string MaterialProperty = "YoungModulus PoissonRatio NumberofSpring";
 
-string BackSCoeff_CiNames1 = " BackSCoeff_Ci[0] BackSCoeff_Ci[1] BackSCoeff_Ci[2] BackSCoeff_Ci[3] BackSCoeff_Ci[4] BackSCoeff_Ci[5] BackSCoeff_Ci[6] BackSCoeff_Ci[7] BackSCoeff_Ci[8] BackSCoeff_Ci[9]";
-string BackSCoeff_CiNames2 = " BackSCoeff_Ci[10] BackSCoeff_Ci[11] BackSCoeff_Ci[12] BackSCoeff_Ci[13] BackSCoeff_Ci[14] BackSCoeff_Ci[15] BackSCoeff_Ci[16] BackSCoeff_Ci[17] BackSCoeff_Ci[18] BackSCoeff_Ci[19]";
-string BackSCoeff_CiNames3 = " BackSCoeff_Ci[20] BackSCoeff_Ci[21] BackSCoeff_Ci[22] BackSCoeff_Ci[23] BackSCoeff_Ci[24] BackSCoeff_Ci[25] BackSCoeff_Ci[26] BackSCoeff_Ci[27] BackSCoeff_Ci[28] BackSCoeff_Ci[29]";
-string BackSCoeff_CiNames4 = " BackSCoeff_Ci[30] BackSCoeff_Ci[31] BackSCoeff_Ci[32] BackSCoeff_Ci[33]";
+string BackSCoeffCiNames1 = " BackSCoeff_Ci[0] BackSCoeff_Ci[1] BackSCoeff_Ci[2] BackSCoeff_Ci[3] BackSCoeff_Ci[4] BackSCoeff_Ci[5] BackSCoeff_Ci[6] BackSCoeff_Ci[7] BackSCoeff_Ci[8] BackSCoeff_Ci[9]";
+string BackSCoeffCiNames2 = " BackSCoeff_Ci[10] BackSCoeff_Ci[11] BackSCoeff_Ci[12] BackSCoeff_Ci[13] BackSCoeff_Ci[14] BackSCoeff_Ci[15] BackSCoeff_Ci[16] BackSCoeff_Ci[17] BackSCoeff_Ci[18] BackSCoeff_Ci[19]";
+string BackSCoeffCiNames3 = " BackSCoeff_Ci[20] BackSCoeff_Ci[21] BackSCoeff_Ci[22] BackSCoeff_Ci[23] BackSCoeff_Ci[24] BackSCoeff_Ci[25] BackSCoeff_Ci[26] BackSCoeff_Ci[27] BackSCoeff_Ci[28] BackSCoeff_Ci[29]";
+string BackSCoeffCiNames4 = " BackSCoeff_Ci[30] BackSCoeff_Ci[31] BackSCoeff_Ci[32] BackSCoeff_Ci[33]";
 
 
-string VMS_YiNames1 = " VMS_Yi[0] VMS_Yi[1] VMS_Yi[2] VMS_Yi[3] VMS_Yi[4] VMS_Yi[5] VMS_Yi[6] VMS_Yi[7] VMS_Yi[8] VMS_Yi[9]";
-string VMS_YiNames2 = " VMS_Yi[10] VMS_Yi[11] VMS_Yi[12] VMS_Yi[13] VMS_Yi[14] VMS_Yi[15] VMS_Yi[16] VMS_Yi[17] VMS_Yi[18] VMS_Yi[19]";
-string VMS_YiNames3 = " VMS_Yi[20] VMS_Yi[21] VMS_Yi[22] VMS_Yi[23] VMS_Yi[24] VMS_Yi[25] VMS_Yi[26] VMS_Yi[27] VMS_Yi[28] VMS_Yi[29]";
-string VMS_YiNames4 = " VMS_Yi[30] VMS_Yi[31] VMS_Yi[32] VMS_Yi[33]";  
+string VMSYiNames1 = " VMS_Yi[0] VMS_Yi[1] VMS_Yi[2] VMS_Yi[3] VMS_Yi[4] VMS_Yi[5] VMS_Yi[6] VMS_Yi[7] VMS_Yi[8] VMS_Yi[9]";
+string VMSYiNames2 = " VMS_Yi[10] VMS_Yi[11] VMS_Yi[12] VMS_Yi[13] VMS_Yi[14] VMS_Yi[15] VMS_Yi[16] VMS_Yi[17] VMS_Yi[18] VMS_Yi[19]";
+string VMSYiNames3 = " VMS_Yi[20] VMS_Yi[21] VMS_Yi[22] VMS_Yi[23] VMS_Yi[24] VMS_Yi[25] VMS_Yi[26] VMS_Yi[27] VMS_Yi[28] VMS_Yi[29]";
+string VMSYiNames4 = " VMS_Yi[30] VMS_Yi[31] VMS_Yi[32] VMS_Yi[33]";  
 
-string PropertyNames = MaterialProperty + BackSCoeff_CiNames1 + BackSCoeff_CiNames2 + BackSCoeff_CiNames3 + BackSCoeff_CiNames4 + VMS_YiNames1 + VMS_YiNames2 + VMS_YiNames3 + VMS_YiNames4;
+string PropertyNames = MaterialProperty + BackSCoeffCiNames1 + BackSCoeffCiNames2 + BackSCoeffCiNames3 + BackSCoeffCiNames4 + VMSYiNames1 + VMSYiNames2 + VMSYiNames3 + VMSYiNames4;
 
 
  
