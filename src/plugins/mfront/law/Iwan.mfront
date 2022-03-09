@@ -40,11 +40,11 @@ Ns.setEntryName("NumberofSpring") ;
 
 
 @MaterialProperty stress C[34];
-C.setEntryName("YielsurfacestrainCi") ;
+C.setEntryName("BackSCoeff_Ci") ;
 
 
 @MaterialProperty stress Y[34];
-Y.setEntryName("YielsurfacestressYi") ;
+Y.setEntryName("VMS_Yi") ;
 
 // Exemple
 // ----------------------- START---------------------------------------------------------------------------
@@ -55,7 +55,7 @@ Y.setEntryName("YielsurfacestressYi") ;
 // 51552950.89 , 20695768.73 , 4435263.381 , 12587863.55, 0., 0., 0.,0. };
 // @AuxiliaryStateVariable stress Y[100] ;
 // Y.setGlossaryName("Stessname2") ;
-//constant, obtained from laboratory tests, that characterizes the nth yield surface
+//constant, obtained from laboratory tests, that characterizes the nth Yield surface
 // @Parameter stress Y[Ns] = {340005.5091, 420308.5133, 524405.5834, 653604.7237, 1647053.671, 2520327.797, 
 // 4384366.063, 5203073.539, 8131982.302, 11264333.18, 13251691.55, 16720370.49, 
 // 19253276.75, 20620902.16, 22768742.08, 21428992.9, 0., 0., 0.,0. };

@@ -74,19 +74,18 @@ Isv0[] = 0;
 
 string MaterialProperty = "YoungModulus PoissonRatio NumberofSpring";
 
-string YielsurfacestrainCiNames1 = " YielsurfacestrainCi[0] YielsurfacestrainCi[1] YielsurfacestrainCi[2] YielsurfacestrainCi[3] YielsurfacestrainCi[4] YielsurfacestrainCi[5] YielsurfacestrainCi[6] YielsurfacestrainCi[7] YielsurfacestrainCi[8] YielsurfacestrainCi[9]";
-string YielsurfacestrainCiNames2 = " YielsurfacestrainCi[10] YielsurfacestrainCi[11] YielsurfacestrainCi[12] YielsurfacestrainCi[13] YielsurfacestrainCi[14] YielsurfacestrainCi[15] YielsurfacestrainCi[16] YielsurfacestrainCi[17] YielsurfacestrainCi[18] YielsurfacestrainCi[19]";
-string YielsurfacestrainCiNames3 = " YielsurfacestrainCi[20] YielsurfacestrainCi[21] YielsurfacestrainCi[22] YielsurfacestrainCi[23] YielsurfacestrainCi[24] YielsurfacestrainCi[25] YielsurfacestrainCi[26] YielsurfacestrainCi[27] YielsurfacestrainCi[28] YielsurfacestrainCi[29]";
-string YielsurfacestrainCiNames4 = " YielsurfacestrainCi[30] YielsurfacestrainCi[31] YielsurfacestrainCi[32] YielsurfacestrainCi[33]";
+string BackSCoeff_CiNames1 = " BackSCoeff_Ci[0] BackSCoeff_Ci[1] BackSCoeff_Ci[2] BackSCoeff_Ci[3] BackSCoeff_Ci[4] BackSCoeff_Ci[5] BackSCoeff_Ci[6] BackSCoeff_Ci[7] BackSCoeff_Ci[8] BackSCoeff_Ci[9]";
+string BackSCoeff_CiNames2 = " BackSCoeff_Ci[10] BackSCoeff_Ci[11] BackSCoeff_Ci[12] BackSCoeff_Ci[13] BackSCoeff_Ci[14] BackSCoeff_Ci[15] BackSCoeff_Ci[16] BackSCoeff_Ci[17] BackSCoeff_Ci[18] BackSCoeff_Ci[19]";
+string BackSCoeff_CiNames3 = " BackSCoeff_Ci[20] BackSCoeff_Ci[21] BackSCoeff_Ci[22] BackSCoeff_Ci[23] BackSCoeff_Ci[24] BackSCoeff_Ci[25] BackSCoeff_Ci[26] BackSCoeff_Ci[27] BackSCoeff_Ci[28] BackSCoeff_Ci[29]";
+string BackSCoeff_CiNames4 = " BackSCoeff_Ci[30] BackSCoeff_Ci[31] BackSCoeff_Ci[32] BackSCoeff_Ci[33]";
 
 
-string YielsurfacestressYiNames1 = " YielsurfacestressYi[0] YielsurfacestressYi[1] YielsurfacestressYi[2] YielsurfacestressYi[3] YielsurfacestressYi[4] YielsurfacestressYi[5] YielsurfacestressYi[6] YielsurfacestressYi[7] YielsurfacestressYi[8] YielsurfacestressYi[9]";
-string YielsurfacestressYiNames2 = " YielsurfacestressYi[10] YielsurfacestressYi[11] YielsurfacestressYi[12] YielsurfacestressYi[13] YielsurfacestressYi[14] YielsurfacestressYi[15] YielsurfacestressYi[16] YielsurfacestressYi[17] YielsurfacestressYi[18] YielsurfacestressYi[19]";
-string YielsurfacestressYiNames3 = " YielsurfacestressYi[20] YielsurfacestressYi[21] YielsurfacestressYi[22] YielsurfacestressYi[23] YielsurfacestressYi[24] YielsurfacestressYi[25] YielsurfacestressYi[26] YielsurfacestressYi[27] YielsurfacestressYi[28] YielsurfacestressYi[29]";
-string YielsurfacestressYiNames4 = " YielsurfacestressYi[30] YielsurfacestressYi[31] YielsurfacestressYi[32] YielsurfacestressYi[33]";  
+string VMS_YiNames1 = " VMS_Yi[0] VMS_Yi[1] VMS_Yi[2] VMS_Yi[3] VMS_Yi[4] VMS_Yi[5] VMS_Yi[6] VMS_Yi[7] VMS_Yi[8] VMS_Yi[9]";
+string VMS_YiNames2 = " VMS_Yi[10] VMS_Yi[11] VMS_Yi[12] VMS_Yi[13] VMS_Yi[14] VMS_Yi[15] VMS_Yi[16] VMS_Yi[17] VMS_Yi[18] VMS_Yi[19]";
+string VMS_YiNames3 = " VMS_Yi[20] VMS_Yi[21] VMS_Yi[22] VMS_Yi[23] VMS_Yi[24] VMS_Yi[25] VMS_Yi[26] VMS_Yi[27] VMS_Yi[28] VMS_Yi[29]";
+string VMS_YiNames4 = " VMS_Yi[30] VMS_Yi[31] VMS_Yi[32] VMS_Yi[33]";  
 
-string PropertyNames = MaterialProperty + YielsurfacestrainCiNames1 + YielsurfacestrainCiNames2 + YielsurfacestrainCiNames3 + YielsurfacestrainCiNames 4
-YielsurfacestressYiNames1 + YielsurfacestressYiNames2 + YielsurfacestressYiNames3 + YielsurfacestressYiNames4;
+string PropertyNames = MaterialProperty + BackSCoeff_CiNames1 + BackSCoeff_CiNames2 + BackSCoeff_CiNames3 + BackSCoeff_CiNames4 + VMS_YiNames1 + VMS_YiNames2 + VMS_YiNames3 + VMS_YiNames4;
 
 
  
