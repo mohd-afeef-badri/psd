@@ -137,6 +137,7 @@ if BUILDDEPENDENCIES
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
 	MPIRUN=mpirun \
+	--without-petsc_complex \
 	--disable-superlu \
 	--with-hdf5=no &&  \
 	$(MAKEANDINSTALL)
