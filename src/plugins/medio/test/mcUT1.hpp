@@ -19,20 +19,7 @@
 
 *******************************************************************************/
 
-#include <iostream>
-
-#include "MEDLoader.hxx"
-#include "MEDLoaderBase.hxx"
-#include "MEDCouplingUMesh.hxx"
-#include "MEDCouplingFieldDouble.hxx"
-#include "MEDCouplingFieldFloat.hxx"
-#include "MEDCouplingMemArray.hxx"
-
-using namespace std;
-using namespace MEDCoupling;
-
-
-int testWritingPolyMesh()
+int UnitTest1()
 {
 
 // Nodes  of  the  2D mesh
@@ -122,11 +109,4 @@ mcIdType cellConnectivity[48]={
 
   return 1;
 }
-
-int main(){
-
-int err = testWritingPolyMesh();
-return 1;
-}
-
 

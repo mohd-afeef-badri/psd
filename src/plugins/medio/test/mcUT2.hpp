@@ -8,7 +8,7 @@
      Email    : mohd-afeef.badri@cea.com
      Date     : 05/04/2022
      Comment  : The program test medcoupling for writing polygon with
-                few boundary lines and groups and famalies
+                few boundary lines
 
      -------------------------------------------------------------------
 
@@ -20,22 +20,7 @@
 
 *******************************************************************************/
 
-#include <iostream>
-
-#include "MEDLoader.hxx"
-#include "MEDLoaderBase.hxx"
-#include "MEDCouplingUMesh.hxx"
-#include "MEDCouplingFieldDouble.hxx"
-#include "MEDCouplingFieldFloat.hxx"
-#include "MEDCouplingMemArray.hxx"
-
-#include "MEDFileData.hxx"
-
-using namespace std;
-using namespace MEDCoupling;
-
-
-int testWritingPolyMesh()
+int UnitTest2()
 {
 
 // Nodes  of  the  2D mesh
@@ -143,61 +128,19 @@ mcIdType cellConnectivity[56]={
   medMesh1d->setCoords(myCoords);
   myCoords->decrRef();
 
+//---------------------------------------------------------------------------------
+// creating one assembly mesh
+//---------------------------------------------------------------------------------
+  std::vector<const MEDCouplingUMesh *> finalMesh;
+  finalMesh.push_back(medMesh2d);
+  finalMesh.push_back(medMesh1d);
+
 
 //---------------------------------------------------------------------------------
-// Create high level API med mesh (MedFile)
+// wirte mesh in med
 //---------------------------------------------------------------------------------
-  MCAuto<MEDFileUMesh> finalMesh = MEDFileUMesh::New();
-  finalMesh->setMeshAtLevel(0 ,medMesh2d);
-  finalMesh->setMeshAtLevel(-1,medMesh1d);
-
-//---------------------------------------------------------------------------------
-// Create famialies associated
-//---------------------------------------------------------------------------------
-
-  MCAuto<DataArrayIdType> fam2d = DataArrayIdType::New();
-  MCAuto<DataArrayIdType> fam1d = DataArrayIdType::New();
-
-  fam2d->alloc(9,1);
-  fam1d->alloc(4,1);
-
-  mcIdType elemsFams[13] = {-1,-2,-2,-2,-2,-2,-3,-3,-3,3,3,3,3};
-
-  std::copy(elemsFams  ,elemsFams+9 ,fam2d->getPointer());
-  std::copy(elemsFams+9,elemsFams+13,fam1d->getPointer());
-
-  finalMesh->setFamilyFieldArr(-1,fam1d);
-  finalMesh->setFamilyFieldArr(0,fam2d);
-
-  std::map<std::string,mcIdType> theFamilies;
-  theFamilies["cell_zone_1"]=-1;
-  theFamilies["cell_zone_2"]=-2;
-  theFamilies["cell_zone_3"]=-3;
-  theFamilies["border_zone_1"]=3;
-
-//---------------------------------------------------------------------------------
-// Create groups associated
-//---------------------------------------------------------------------------------
-
-  std::map<std::string, std::vector<std::string> > theGroups;
-  theGroups["zone_1"].push_back("cell_zone_1");
-  theGroups["zone_2"].push_back("cell_zone_2");
-  theGroups["zone_3"].push_back("cell_zone_3");
-  theGroups["boundary"].push_back("border_zone_1");
-
-  finalMesh->setFamilyInfo(theFamilies);
-  finalMesh->setGroupInfo(theGroups);
-
-//---------------------------------------------------------------------------------
-// wirte mesh
-//---------------------------------------------------------------------------------
-  finalMesh->write("mcUT3.med",2);
+  WriteUMeshes("mcUT2.med",finalMesh,true); // med
 
   return 1;
 }
 
-int main(){
-
-int err = testWritingPolyMesh();
-return 1;
-}
