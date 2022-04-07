@@ -48,22 +48,11 @@ dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
 dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
+
+
 AC_ARG_WITH([dependencies],
 	[  --with-dependencies=            Dependencies installation : (e.g. --with-dependencies=yes)],
         [dependencies="$withval"], [dependencies="no"])
-
-AC_ARG_WITH([mgis],
-	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/install/local)],
-        [mgis="$withval"], [mgis="no"])
-
-
-
-AC_ARG_WITH([mfront],
-	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/install/local)],
-        [mfront="$withval"], [mfront="no"])
-
-
-
 
 AC_ARG_WITH(FreeFEM,
 	[  --with-FreeFEM=         FreeFEM  installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
@@ -74,6 +63,19 @@ AC_ARG_WITH(FreeFEM,
 AC_ARG_WITH(Gmsh,
 	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
 	   GMSH="${withval}/gmsh")
+
+AC_ARG_WITH([mfront],
+	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/install/local)],
+        [mfront="$withval"], [mfront="no"])
+
+AC_ARG_WITH([mgis],
+	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/install/local)],
+        [mgis="$withval"], [mgis="no"])
+
+AC_ARG_WITH([salome],
+	[  --with-salome=            salome installation path : (e.g. --with-salome=/opt/install/local)],
+        [salome="$withval"], [salome="no"])
+
 
 AC_SUBST([dependencies])
 AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])
@@ -124,8 +126,6 @@ AC_LANG_CASE([C], [
 	FC="$MPIFC"
 	AC_SUBST(MPIFC)
 ])
-
-
 
 if test x = x"$MPILIBS"; then
 	AC_LANG_CASE([C], [AC_CHECK_FUNC(MPI_Init, [MPILIBS=" "])],
@@ -354,7 +354,19 @@ test "$mfront" == "no" && AC_MSG_WARN([
  flags.
  ])
 
+SECTION_TITLE([      checking for a salome support     ])
 
+AC_SUBST([salome])
+AM_CONDITIONAL([HAVESALOME], [test $salome != no])
+test "$salome" == "no" && AC_MSG_WARN([
+ PSD will not be configured with salome,
+ you did not provide --with-salome flag so
+
+ SALOME SUPPORT = OFF
+
+ To have salome support in PSD, please correctly
+ provide both  --with-salome flag.
+ ])
 
 
 dnl ---------------------------------------------------------------
@@ -412,6 +424,9 @@ AC_CONFIG_FILES([
  src/plugins/go-fast-plugins/Makefile
  src/plugins/go-fast-plugins/cpp/Makefile
  src/plugins/go-fast-plugins/test/Makefile
+ src/plugins/medio/Makefile
+ src/plugins/medio/cpp/Makefile
+ src/plugins/medio/test/Makefile
  src/plugins/mfront/Makefile
  src/plugins/mfront/cpp/Makefile
  src/plugins/mfront/law/Makefile
@@ -478,6 +493,8 @@ test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront   : YES])
 test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront   : NO])
 test "$GMSH"   == "no"                    &&  AC_MSG_RESULT([ Gmsh     : NO])
 test "$GMSH"   != "no"                    &&  AC_MSG_RESULT([ Gmsh     : YES])
+test "$salome" != "no"                    &&  AC_MSG_RESULT([ salome   : YES])
+test "$salome" == "no"                    &&  AC_MSG_RESULT([ salome   : NO])
 test "$FF"     != "no"                    &&  AC_MSG_RESULT([ PSD Seq  : YES])
 test "$FFMPI" == "no"                     &&  AC_MSG_RESULT([ PSD Par  : NO])
 test "$FFMPI" != "no"                     &&  AC_MSG_RESULT([ PSD Par  : YES])
