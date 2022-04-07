@@ -1,0 +1,46 @@
+/*****************************************************************************
+
+     This file is a part of PSD (Parallel Structural/Seismic/Solid dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@cea.com
+     Date     : 06/04/2022
+     Comment  : The is unit test program built for testing medio
+
+     -------------------------------------------------------------------
+
+     PSD is distributed  in  the  hope that it  will be useful, HOWEVER
+     WITHOUT ANY WARRANTY; or without  even  implied warranty of FITNESS
+     FOR A PARTICULAR PURPOSE.
+
+     -------------------------------------------------------------------
+
+*******************************************************************************/
+
+
+load    "./../cpp/medio";         // load med io lib
+load    "iovtk"                   // load vtk io lib
+load    "msh3"
+
+
+// test for 2D mesh //
+mesh Th = square (1,1);
+savemedmesh(Th, "test2D.med");
+savevtk("test2D.vtu",Th);
+
+// test for 3D mesh //
+mesh3 Th3 = cube (1,1,1);
+savemedmesh(Th3, "test3D.med");
+savevtk("test3D.vtu",Th3);
+
+// test for 3D surface mesh //
+meshS ThS=square3(1,1,[x,y,z]);
+savemedmesh(ThS, "test3DS.med");
+savevtk("test3DS.vtu",ThS);
+
+// test for 3D curve mesh //
+meshL ThL=Sline(10,[2.*x,y,z]);
+savemedmesh(ThL, "test3DL.med");
+savevtk("test3DL.vtu",ThS);
