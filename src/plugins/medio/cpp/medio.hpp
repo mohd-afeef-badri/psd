@@ -29,7 +29,8 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
 
   const Mesh3 &Th = *pTh;
 
-  double medNodeCoords[Th.nv * 3];
+//  double medNodeCoords[Th.nv * 3];
+  double* medNodeCoords = new double[Th.nv * 3];
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
@@ -41,7 +42,8 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
 
   //  get cells  //
   int TotalCells = Th.nt;
-  mcIdType medCellConn[Th.nt*4 + Th.nbe*3];
+//  mcIdType medCellConn[Th.nt*4 + Th.nbe*3];
+  mcIdType *medCellConn = new mcIdType[Th.nt*4 + Th.nbe*3];
 
   int count = 0;
   for (int i = 0; i < Th.nt; i++) {
@@ -94,13 +96,18 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
   std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
   medMesh3d -> setCoords(myCoords);
   medMesh2d -> setCoords(myCoords);
-  myCoords -> decrRef();
 
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh3d);
   finalMesh.push_back(medMesh2d);
 
   WriteUMeshes(*inputfile,finalMesh,true);
+
+  medMes3d  -> decrRef();
+  medMes2d  -> decrRef();
+  myCoords  -> decrRef();
+  delete[]     medNodeCoords;
+  delete[]     medCellConn;
 
   return 0;
 }
@@ -116,7 +123,8 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
 
   const Mesh &Th = *pTh;
 
-  double medNodeCoords[Th.nv * 2];
+//  double medNodeCoords[Th.nv * 2];
+  double* medNodeCoords = new double[Th.nv * 2];
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 2]     = double(Th(i).x);
      medNodeCoords[i * 2 + 1] = double(Th(i).y);
@@ -127,7 +135,8 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
 
   //  get cells  //
   int TotalCells = Th.nt;
-  mcIdType medCellConn[Th.nt*3 +Th.neb*2];
+//  mcIdType medCellConn[Th.nt*3 +Th.neb*2];
+  mcIdType *medCellConn = new mcIdType[Th.nt*3 +Th.neb*2];
 
   int count = 0;
   for (int i = 0; i < Th.nt; i++) {
@@ -176,13 +185,18 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
   std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
-  myCoords -> decrRef();
 
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh2d);
   finalMesh.push_back(medMesh1d);
 
   WriteUMeshes(*inputfile,finalMesh,true);
+
+  medMes1d  -> decrRef();
+  medMes2d  -> decrRef();
+  myCoords  -> decrRef();
+  delete[]     medNodeCoords;
+  delete[]     medCellConn;
 
   return 0;
 }
@@ -200,7 +214,8 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
 
   const MeshS &Th = *pTh;
 
-  double medNodeCoords[Th.nv * 3];
+//  double medNodeCoords[Th.nv * 3];
+  double* medNodeCoords = new double[Th.nv * 3];
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
@@ -212,7 +227,8 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
 
   //  get cells  //
   int TotalCells = Th.nt;
-  mcIdType medCellConn[Th.nt*3 +Th.nbe*2];
+//  mcIdType medCellConn[Th.nt*3 +Th.nbe*2];
+  mcIdType *medCellConn = new mcIdType[Th.nt*3 +Th.nbe*2];
 
   int count = 0;
   for (int i = 0; i < Th.nt; i++) {
@@ -262,13 +278,18 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
-  myCoords -> decrRef();
 
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh2d);
   finalMesh.push_back(medMesh1d);
 
   WriteUMeshes(*inputfile,finalMesh,true);
+
+  medMes1d  -> decrRef();
+  medMes2d  -> decrRef();
+  myCoords  -> decrRef();
+  delete[]     medNodeCoords;
+  delete[]     medCellConn;
 
   return 0;
 }
@@ -284,7 +305,8 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
 
   const MeshL &Th = *pTh;
 
-  double medNodeCoords[Th.nv * 3];
+//  double medNodeCoords[Th.nv * 3];
+  double* medNodeCoords = new double[Th.nv * 3];
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
@@ -296,7 +318,8 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
 
   //  get cells  //
   int TotalCells = Th.nt;
-  mcIdType medCellConn[Th.nt*3];
+//  mcIdType medCellConn[Th.nt*3];
+  mcIdType *medCellConn = new mcIdType[Th.nt*3];
 
   int count = 0;
   for (int i = 0; i < Th.nt; i++) {
@@ -325,12 +348,16 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   myCoords -> setInfoOnComponent(2, "z");  
   std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
   medMesh1d -> setCoords(myCoords);
-  myCoords -> decrRef();
 
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh1d);
 
   WriteUMeshes(*inputfile,finalMesh,true);
+
+  medMes1d  -> decrRef();
+  myCoords  -> decrRef();
+  delete[]     medNodeCoords;
+  delete[]     medCellConn;
 
   return 0;
 }
