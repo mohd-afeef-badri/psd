@@ -37,11 +37,7 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
      medNodeCoords[i * 3 + 2] = double(Th(i).z);     
   }
 
-  int  nNodes      = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))/3;
-  int  nNodesArray = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))  ;
-
   //  get cells  //
-  int TotalCells = Th.nt;
 //  mcIdType medCellConn[Th.nt*4 + Th.nbe*3];
   mcIdType *medCellConn = new mcIdType[Th.nt*4 + Th.nbe*3];
 
@@ -89,11 +85,11 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
   medMesh2d -> finishInsertingCells();
 
   DataArrayDouble * myCoords = DataArrayDouble::New();
-  myCoords -> alloc(nNodes, 3);
+  myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
   myCoords -> setInfoOnComponent(2, "z");  
-  std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
+  std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh3d -> setCoords(myCoords);
   medMesh2d -> setCoords(myCoords);
 
@@ -128,13 +124,10 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 2]     = double(Th(i).x);
      medNodeCoords[i * 2 + 1] = double(Th(i).y);
+     cout << medNodeCoords[i * 2] << endl;
   }
 
-  int  nNodes      = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))/2;
-  int  nNodesArray = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))  ;
-
   //  get cells  //
-  int TotalCells = Th.nt;
 //  mcIdType medCellConn[Th.nt*3 +Th.neb*2];
   mcIdType *medCellConn = new mcIdType[Th.nt*3 +Th.neb*2];
 
@@ -179,10 +172,10 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
   medMesh1d -> finishInsertingCells();
 
   DataArrayDouble * myCoords = DataArrayDouble::New();
-  myCoords -> alloc(nNodes, 2);
+  myCoords -> alloc(Th.nv, 2);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
-  std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
+  std::copy(medNodeCoords, medNodeCoords + Th.nv*2, myCoords -> getPointer());
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
 
@@ -222,11 +215,7 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
      medNodeCoords[i * 3 + 2] = double(Th(i).z);     
   }
 
-  int  nNodes      = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))/3;
-  int  nNodesArray = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))  ;
-
   //  get cells  //
-  int TotalCells = Th.nt;
 //  mcIdType medCellConn[Th.nt*3 +Th.nbe*2];
   mcIdType *medCellConn = new mcIdType[Th.nt*3 +Th.nbe*2];
 
@@ -271,11 +260,11 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   medMesh1d -> finishInsertingCells();
 
   DataArrayDouble * myCoords = DataArrayDouble::New();
-  myCoords -> alloc(nNodes, 3);
+  myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
   myCoords -> setInfoOnComponent(2, "z");  
-  std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
+  std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
 
@@ -313,11 +302,7 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
      medNodeCoords[i * 3 + 2] = double(Th(i).z);     
   }
 
-  int  nNodes      = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))/3;
-  int  nNodesArray = (sizeof(medNodeCoords)/sizeof(medNodeCoords[0]))  ;
-
   //  get cells  //
-  int TotalCells = Th.nt;
 //  mcIdType medCellConn[Th.nt*3];
   mcIdType *medCellConn = new mcIdType[Th.nt*3];
 
@@ -342,11 +327,11 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   medMesh1d -> finishInsertingCells();
 
   DataArrayDouble * myCoords = DataArrayDouble::New();
-  myCoords -> alloc(nNodes, 3);
+  myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
   myCoords -> setInfoOnComponent(2, "z");  
-  std::copy(medNodeCoords, medNodeCoords + nNodesArray, myCoords -> getPointer());
+  std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh1d -> setCoords(myCoords);
 
   std::vector<const MEDCouplingUMesh *> finalMesh;
