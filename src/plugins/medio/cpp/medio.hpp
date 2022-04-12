@@ -34,7 +34,7 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
-     medNodeCoords[i * 3 + 2] = double(Th(i).z);     
+     medNodeCoords[i * 3 + 2] = double(Th(i).z);
   }
 
   //  get cells  //
@@ -88,7 +88,7 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
   myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
-  myCoords -> setInfoOnComponent(2, "z");  
+  myCoords -> setInfoOnComponent(2, "z");
   std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh3d -> setCoords(myCoords);
   medMesh2d -> setCoords(myCoords);
@@ -124,7 +124,6 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 2]     = double(Th(i).x);
      medNodeCoords[i * 2 + 1] = double(Th(i).y);
-     cout << medNodeCoords[i * 2] << endl;
   }
 
   //  get cells  //
@@ -212,7 +211,7 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
-     medNodeCoords[i * 3 + 2] = double(Th(i).z);     
+     medNodeCoords[i * 3 + 2] = double(Th(i).z);
   }
 
   //  get cells  //
@@ -263,7 +262,7 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
-  myCoords -> setInfoOnComponent(2, "z");  
+  myCoords -> setInfoOnComponent(2, "z");
   std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
@@ -299,7 +298,7 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nv; i++) {
      medNodeCoords[i * 3]     = double(Th(i).x);
      medNodeCoords[i * 3 + 1] = double(Th(i).y);
-     medNodeCoords[i * 3 + 2] = double(Th(i).z);     
+     medNodeCoords[i * 3 + 2] = double(Th(i).z);
   }
 
   //  get cells  //
@@ -330,7 +329,7 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   myCoords -> alloc(Th.nv, 3);
   myCoords -> setInfoOnComponent(0, "x");
   myCoords -> setInfoOnComponent(1, "y");
-  myCoords -> setInfoOnComponent(2, "z");  
+  myCoords -> setInfoOnComponent(2, "z");
   std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh1d -> setCoords(myCoords);
 
@@ -345,4 +344,226 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   delete[]     medCellConn;
 
   return 0;
+}
+
+
+
+Mesh *loadmed(std::string &inputfile, std::string &meshname){
+
+#ifdef DEBUG
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh \n"
+          "--------------------------------------\n";
+#endif
+
+  MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);
+  MEDCouplingUMesh *mesh1d=ReadUMeshFromFile(inputfile,meshname,-1);
+
+  int nv, nt = 0, nbe = 0, ret;
+  Mesh::Vertex *vff;
+
+  nv = mesh->getNumberOfNodes();
+  vff = new Mesh::Vertex[nv];
+
+  double *nodesRead ;
+  nodesRead = mesh->getCoords()->getPointer();
+
+  for (int i=0; i < nv; i++){
+    vff[i].x = nodesRead[i*2  ];
+    vff[i].y = nodesRead[i*2+1];
+    vff[i].lab = 1;
+  }
+
+  nt = mesh->getNumberOfCells();
+  Mesh::Triangle *tff = new Mesh::Triangle[nt];
+  Mesh::Triangle *ttff = tff;
+
+  mcIdType *NodalConnectivity ;
+  NodalConnectivity = mesh->getNodalConnectivity()->getPointer();
+  for (int i=0; i < mesh->getNumberOfCells(); i++)
+    (ttff++)->set(vff, NodalConnectivity[i*4 + 1], NodalConnectivity[i*4 + 2], NodalConnectivity[i*4 + 3], NodalConnectivity[i*4 + 0]);
+
+  nbe = mesh1d->getNumberOfCells();
+  Mesh::BorderElement *bff = new Mesh::BorderElement[nbe];
+  Mesh::BorderElement *bbff = bff;
+
+  mcIdType *NodalConnectivity1d ;
+  NodalConnectivity1d = mesh1d->getNodalConnectivity()->getPointer();
+  for (int i=0; i < mesh1d->getNumberOfCells(); i++)
+    (bbff++)->set(vff, NodalConnectivity1d[i*3 + 1], NodalConnectivity1d[i*3 + 2], NodalConnectivity1d[i*3 + 0]);
+
+
+  Mesh *pTh = new Mesh(nv, nt, nbe, vff, tff, bff);
+  return pTh;
+}
+
+
+
+Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
+
+#ifdef DEBUG
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh \n"
+          "--------------------------------------\n";
+#endif
+
+  MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);
+  MEDCouplingUMesh *mesh2d=ReadUMeshFromFile(inputfile,meshname,-1);
+
+  int nv, nt = 0, nbe = 0, ret;
+  Vertex3 *vff;
+
+  nv = mesh->getNumberOfNodes();
+  vff = new Vertex3[nv];
+
+  double *nodesRead ;
+  nodesRead = mesh->getCoords()->getPointer();
+
+  for (int i=0; i < nv; i++){
+    vff[i].x = nodesRead[i*3  ];
+    vff[i].y = nodesRead[i*3+1];
+    vff[i].z = nodesRead[i*3+2];
+    vff[i].lab = 1;
+  }
+
+  nt = mesh->getNumberOfCells();
+  Tet *tff = new Tet[nt];
+  Tet *ttff = tff;
+
+  mcIdType *NodalConnectivity ;
+  NodalConnectivity = mesh->getNodalConnectivity()->getPointer();
+
+  int indexTet[4];
+  for (int i=0; i < mesh->getNumberOfCells(); i++){
+    indexTet[0]= NodalConnectivity[i*5 + 1];
+    indexTet[1]= NodalConnectivity[i*5 + 2];
+    indexTet[2]= NodalConnectivity[i*5 + 3];
+    indexTet[3]= NodalConnectivity[i*5 + 4];
+    (ttff++)->set(vff, indexTet, NodalConnectivity[i*5 + 0]);
+  }
+
+  nbe = mesh2d->getNumberOfCells();
+  Triangle3 *bff = new Triangle3[nbe];
+  Triangle3 *bbff = bff;
+
+  mcIdType *NodalConnectivity1d ;
+  NodalConnectivity1d = mesh2d->getNodalConnectivity()->getPointer();
+
+  int indexTria[3];
+  for (int i=0; i < mesh2d->getNumberOfCells(); i++){
+    indexTria[0]= NodalConnectivity1d[i*4 + 1];
+    indexTria[1]= NodalConnectivity1d[i*4 + 2];
+    indexTria[2]= NodalConnectivity1d[i*4 + 3];
+    (bbff++)->set(vff, indexTria, NodalConnectivity1d[i*4 + 0]);
+
+  }
+
+
+  Mesh3 *pTh3 = new Mesh3(nv, nt, nbe, vff, tff, bff);
+  return pTh3;
+}
+
+
+class medloader_Op : public E_F0mps
+{
+public:
+    Expression filename			                ;
+
+    static const int n_name_param = 1		        ;
+    static basicAC_F0::name_and_type name_param[]	;
+    Expression nargs[n_name_param]			;
+
+    medloader_Op(const basicAC_F0& args		,
+                      Expression param1
+                     ) :
+        filename     (param1)
+    {
+        args.SetNameParam(n_name_param	,
+                          name_param	,
+                          nargs
+                         )		;
+    }
+
+    AnyType operator()(Stack stack) const		;
+};
+
+
+basicAC_F0::name_and_type medloader_Op::name_param[] =
+{
+    {"meshname", &typeid(std::string*)}
+};
+
+class medloader : public OneOperator
+{
+public:
+  medloader() : OneOperator(atype< pmesh >( ), atype< string * >( )) {}
+
+  E_F0 *code(const basicAC_F0 &args) const {
+    return new medloader_Op(args, t[0]->CastTo(args[0]));
+  }
+};
+
+AnyType medloader_Op::operator()(Stack stack) const
+{
+  string* inputfile  = GetAny<string*>((*filename)(stack))	;
+  string* meshname   = nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
+
+  Mesh *Th = loadmed(*inputfile, *meshname);
+  Add2StackOfPtr2FreeRC(stack, Th);
+  return Th;
+}
+
+
+
+
+class medloader3_Op : public E_F0mps
+{
+public:
+    Expression filename			                ;
+
+    static const int n_name_param = 1		        ;
+    static basicAC_F0::name_and_type name_param[]	;
+    Expression nargs[n_name_param]			;
+
+ public:
+    medloader3_Op(const basicAC_F0& args		,
+                      Expression param1
+                     ) :
+        filename     (param1)
+    {
+        args.SetNameParam(n_name_param	,
+                          name_param	,
+                          nargs
+                         )		;
+    }
+
+    AnyType operator()(Stack stack) const		;
+};
+
+
+basicAC_F0::name_and_type medloader3_Op::name_param[] =
+{
+    {"meshname", &typeid(std::string*)}
+};
+
+class medloader3 : public OneOperator
+{
+public:
+  medloader3() : OneOperator(atype< pmesh3 >( ), atype< string * >( )) {}
+
+  E_F0 *code(const basicAC_F0 &args) const {
+    return new medloader3_Op(args, t[0]->CastTo(args[0]));
+  }
+};
+
+AnyType medloader3_Op::operator()(Stack stack) const
+{
+  string* inputfile  = GetAny<string*>((*filename)(stack))	;
+  string* meshname   = nargs[0] ? GetAny<std::string*>((*nargs[0])(stack)) : NULL;
+
+  Mesh3 *Th3 = loadmed3(*inputfile, *meshname);
+  Add2StackOfPtr2FreeRC(stack, Th3);
+  return Th3;
 }

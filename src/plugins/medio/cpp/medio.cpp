@@ -31,9 +31,13 @@ using namespace Fem2D;
 
 static void InitFF()
 {
+
+
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmesh3, std::string* >(savemedmesh));
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmesh,  std::string* >(savemedmesh));
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshS, std::string* >(savemedmesh));
-  Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshL, std::string* >(savemedmesh));  
+  Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshL, std::string* >(savemedmesh));
+  Global.Add("loadmedmesh", "(", new medloader);
+  Global.Add("loadmedmesh3", "(", new medloader3);  
 }
 LOADFUNC(InitFF)
