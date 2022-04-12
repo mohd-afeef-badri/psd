@@ -30,6 +30,7 @@ codeSnippet R""""(
 
 
 if(Sequential){
+
 codeSnippet R""""(
 
 //==============================================================================
@@ -40,6 +41,7 @@ codeSnippet R""""(
 
   startProcedure("Mesh Loading",t0)
 
+  meshN Th;
   loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
@@ -54,67 +56,57 @@ codeSnippet R""""(
  fespace Vh   ( Th , Pk );
 
 )"""";
+
 }
 
 
 if(!Sequential){
- writeIt
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element mesh -------                                      \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Th        : Finite element mesh                                             \n"
- "//  DummyMesh : Dummy mesh i.e, square for 2D and cube for 3D                   \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " meshN   Th = DummyMesh;                                                        \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ------- The finite element spaces -------                                    \n"
- "// ---------------------------------------------------------------------------- \n"
- "//  Vh        : Mixed finite element space  for displacement                    \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " fespace Vh     ( Th , Pk );                                                    \n"
- "                                                                                \n"
- "//==============================================================================\n"
- "// ---- Function for building the restriction matrix and partiton of unity ----  \n"
- "//==============================================================================\n"
- "                                                                                \n"
- " func int PartThAndBuildCommunication(){                                        \n"
- "                                                                                \n"
- "  if(ThName.find(\".msh\") > -1)                                                \n"
- "    {                                                                           \n"
- "      load \"gmsh\"                                                             \n"
- "      Th = gmshloadN(ThName);                                                   \n"
- "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n"
- "    {                                                                           \n"
- "      Th = readmeshN(ThName);                                                   \n"
- "    }                                                                           \n"
- "                                                                                \n"
- "  perfromRCMreordering(Th);                                                     \n";
 
-  writeIt
-  "                                                                                \n"
-  "  PETScMPIBuild(                                                                \n"
-  "           Th                , // Local  mesh                                   \n"
-  "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
-  "           restrictionIntersectionP    , // Restriction matrix                  \n"
-  "           DP                , // Partition of unity                            \n"
-  "           Pk                , // Vectorial FE space                            \n"
-  "           mpiCommWorld              // MPI world                               \n"
-  "          )                                                                     \n";
+codeSnippet R""""(
 
- writeIt
- "                                                                                \n"
- "  return 0;                                                                     \n"
- "                                                                                \n"
- " }                                                                              \n"
- "                                                                                \n"
- "  startProcedure(\"Mesh Partitioning\",t0)                                      \n"
- "  PartThAndBuildCommunication();                                                \n"
- "  endProcedure(\"Mesh Partitioning\",t0)                                        \n"
- "                                                                                \n"
- "                                                                                \n";
+ //==============================================================================
+ // ------- The finite element mesh -------
+ // ----------------------------------------------------------------------------
+ //  Th        : Finite element mesh
+ //  DummyMesh : Dummy mesh i.e, square for 2D and cube for 3D
+ //==============================================================================
+
+  meshN   Th = DummyMesh;
+
+ //==============================================================================
+ // ------- The finite element spaces -------
+ // ----------------------------------------------------------------------------
+ //  Vh        : Mixed finite element space  for displacement
+ //==============================================================================
+
+  fespace Vh     ( Th , Pk );
+
+ //==============================================================================
+ // ---- Function for building the restriction matrix and partiton of unity ----
+ //==============================================================================
+
+  func int PartThAndBuildCommunication(){
+
+   loadfemesh(Th,ThName);
+   perfromRCMreordering(Th);
+
+   PETScMPIBuild(
+            Th                       , // Local  mesh
+            getARGV("-split",1)      , // Split factor
+            restrictionIntersectionP , // Restriction matrix
+            DP                       , // Partition of unity
+            Pk                       , // Vectorial FE space
+            mpiCommWorld              // MPI world
+           );
+
+   return 0;
+
+  }
+
+   startProcedure("Mesh Partitioning",t0);
+   PartThAndBuildCommunication();
+   endProcedure("Mesh Partitioning",t0);
+
+)"""";
+
 }

@@ -40,6 +40,7 @@ codeSnippet R""""(
 
   startProcedure("Mesh Loading",t0)
 
+  meshN Th;
   loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
@@ -195,16 +196,7 @@ if(!Sequential){
  "                                                                                \n"
  " func int PartThAndBuildCommunication(){                                        \n"
  "                                                                                \n"
- "  if(ThName.find(\".msh\") > -1)                                                \n"
- "    {                                                                           \n"
- "      load \"gmsh\"                                                             \n"
- "      Th = gmshloadN(ThName);                                                   \n"
- "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n"
- "    {                                                                           \n"
- "      Th = readmeshN(ThName);                                                   \n"
- "    }                                                                           \n"
- "                                                                                \n"
+ "  loadfemesh(Th,ThName);                                                        \n"
  "  perfromRCMreordering(Th);                                                     \n";
 
  if(Model=="Mazar")
@@ -242,15 +234,7 @@ if(!Sequential){
   "           mpiCommWorld              // MPI world                               \n"
   "          )                                                                     \n"
   "                                                                                \n"
-  "  if(ThName.find(\".msh\") > -1)                                                \n"
-  "    {                                                                           \n"
-  "      Th = gmshloadN(ThName);                                                   \n"
-  "    }                                                                           \n"
-  "  if(ThName.find(\".mesh\") > -1)                                               \n"
-  "    {                                                                           \n"
-  "      Th = readmeshN(ThName);                                                   \n"
-  "    }                                                                           \n"
-  "                                                                                \n"
+  "  loadfemesh(Th,ThName);                                                        \n"
   "  perfromRCMreordering(Th);                                                     \n"
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"
@@ -290,15 +274,7 @@ if(!Sequential){
   "          )                                                                     \n"
   "                                                                                \n"
   "                                                                                \n"
-  "  if(ThName.find(\".msh\") > -1)                                                \n"
-  "    {                                                                           \n"
-  "      Th = gmshloadN(ThName);                                                   \n"
-  "    }                                                                           \n"
-  "  if(ThName.find(\".mesh\") > -1)                                               \n"
-  "    {                                                                           \n"
-  "      Th = readmeshN(ThName);                                                   \n"
-  "    }                                                                           \n"
-  "                                                                                \n"
+  "  loadfemesh(Th,ThName);                                                        \n"
   "  perfromRCMreordering(Th);                                                     \n"
   "                                                                                \n"
   "  PETScMPIBuildEdgeWithPartitioning(                                            \n"

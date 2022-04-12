@@ -76,8 +76,8 @@ codeSnippet R""""(
 
 if(timelog){
 
-if(!Sequential)
-{
+if(!Sequential){
+
 codeSnippet R""""(
 
 //==============================================================================
@@ -104,8 +104,9 @@ codeSnippet R""""(
   }//
 
 )"""";
-}
-else{
+
+}else{
+
 codeSnippet R""""(
 
 //==============================================================================
@@ -128,6 +129,7 @@ codeSnippet R""""(
   }//
 
 )"""";
+
 }
 
 }
@@ -197,6 +199,8 @@ codeSnippet R""""(
 
 }
 
+if(!Sequential){
+
 codeSnippet R""""(
 
 //=============================================================================
@@ -208,11 +212,12 @@ codeSnippet R""""(
 //=============================================================================
 
 macro loadfemesh(meshObject,meshName)
-  meshN meshObject;
 
   if(meshName.find(".med") > -1){
-    system("gmsh -1 "+ThName+" -o "+ThName+".msh -format msh2 ");
-    load "gmsh";   meshObject = gmshloadN(meshName);
+    if(mpirank==0)
+      system("gmsh -1 "+meshName+" -o "+meshName+".msh -format msh2 ");
+    mpiBarrier(mpiCommWorld);
+    load "gmsh";   meshObject = gmshloadN(""+meshName+".msh");
   }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
@@ -224,6 +229,43 @@ macro loadfemesh(meshObject,meshName)
     load "iovtk";  meshObject = vtkloadN(meshName);
   }
 //
+
+)"""";
+
+}else{
+
+codeSnippet R""""(
+
+//=============================================================================
+//            ------ load finite element mesh macro  -------
+// -------------------------------------------------------------------
+//    This macros will take in as an input the mesh name (string)
+//    according to which it will load the finite element mesh.
+// -------------------------------------------------------------------
+//=============================================================================
+
+macro loadfemesh(meshObject,meshName)
+
+  if(meshName.find(".med") > -1){
+    system("gmsh -1 "+meshName+" -o "+meshName+".msh -format msh2 ");
+    load "gmsh";   meshObject = gmshloadN(""+meshName+".msh");
+  }
+  if(meshName.find(".msh") > -1){
+    load "gmsh";   meshObject = gmshloadN(meshName);
+  }
+  if(meshName.find(".mesh") > -1){
+    meshObject = readmeshN(meshName);
+  }
+  if(meshName.find(".vtk") > -1){
+    load "iovtk";  meshObject = vtkloadN(meshName);
+  }
+//
+
+)"""";
+
+}
+
+codeSnippet R""""(
 
 //=============================================================================
 //            ------ check mesh macro  -------

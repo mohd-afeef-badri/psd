@@ -38,9 +38,10 @@ codeSnippet R""""(
 // ----------------------------------------------------------------------------
 //  Th        : Finite element mesh
 //==============================================================================
-
+  
   startProcedure("Mesh Loading",t0)
 
+  meshN Th;
   loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
@@ -193,16 +194,7 @@ codeSnippet R""""(
 
  func int PartThAndBuildCommunication(){
 
-  if(ThName.find(".msh") > -1){
-    load "gmsh";   Th = gmshloadN(ThName);
-  }
-  if(ThName.find(".mesh") > -1){
-    Th = readmeshN(ThName);
-  }
-  if(ThName.find(".vtk") > -1){
-    load "iovtk";  Th = vtkloadN(ThName);
-  }
-
+  loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
   PETScMPIBuild(

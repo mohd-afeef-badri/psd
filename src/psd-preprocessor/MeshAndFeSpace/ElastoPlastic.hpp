@@ -39,6 +39,7 @@ codeSnippet R""""(
 
   startProcedure("Mesh Loading",t0)
 
+  meshN Th;
   loadfemesh(Th,ThName);
   perfromRCMreordering(Th);
 
@@ -167,30 +168,17 @@ if(!Sequential){
  "                                                                                \n"
  " func int PartThAndBuildCommunication(){                                        \n"
  "                                                                                \n"
- "  if(ThName.find(\".msh\") > -1)                                                \n"
- "    {                                                                           \n"
- "      load \"gmsh\"                                                             \n"
- "      Th = gmshloadN(ThName);                                                   \n"
- "    }                                                                           \n"
- "  if(ThName.find(\".mesh\") > -1)                                               \n"
- "    {                                                                           \n"
- "      Th = readmeshN(ThName);                                                   \n"
- "    }                                                                           \n"
+ "    loadfemesh(Th,ThName);                                                      \n"
+ "    perfromRCMreordering(Th);                                                   \n"
  "                                                                                \n"
- "  perfromRCMreordering(Th);                                                     \n";
-
-  writeIt
-  "                                                                                \n"
-  "  PETScMPIBuild(                                                                \n"
-  "           Th                , // Local  mesh                                   \n"
-  "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
-  "           restrictionIntersectionP    , // Restriction matrix                  \n"
-  "           DP                , // Partition of unity                            \n"
-  "           Pk                , // Vectorial FE space                            \n"
-  "           mpiCommWorld              // MPI world                               \n"
-  "          )                                                                     \n";
-
- writeIt
+ "    PETScMPIBuild(                                                              \n"
+ "           Th                , // Local  mesh                                   \n"
+ "           getARGV( \"-split\" , 1 )    , // Split factor                       \n"
+ "           restrictionIntersectionP    , // Restriction matrix                  \n"
+ "           DP                , // Partition of unity                            \n"
+ "           Pk                , // Vectorial FE space                            \n"
+ "           mpiCommWorld              // MPI world                               \n"
+ "          )                                                                     \n"
  "                                                                                \n"
  "  return 0;                                                                     \n"
  "                                                                                \n"
