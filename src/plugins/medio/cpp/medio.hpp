@@ -103,9 +103,9 @@ int savemedmesh(const Fem2D::Mesh3* const &pTh, std::string* const &inputfile) {
 
   WriteUMeshes(*inputfile,finalMesh,true);
 
-  medMes3d  -> decrRef();
-  medMes2d  -> decrRef();
-  myCoords  -> decrRef();
+  medMesh3d  -> decrRef();
+  medMesh2d  -> decrRef();
+  myCoords   -> decrRef();
   delete[]     medNodeCoords;
   delete[]     medCellConn;
 
@@ -192,9 +192,9 @@ int savemedmesh(const Fem2D::Mesh* const &pTh, std::string* const &inputfile) {
 
   WriteUMeshes(*inputfile,finalMesh,true);
 
-  medMes1d  -> decrRef();
-  medMes2d  -> decrRef();
-  myCoords  -> decrRef();
+  medMesh1d  -> decrRef();
+  medMesh2d  -> decrRef();
+  myCoords   -> decrRef();
   delete[]     medNodeCoords;
   delete[]     medCellConn;
 
@@ -285,9 +285,9 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
 
   WriteUMeshes(*inputfile,finalMesh,true);
 
-  medMes1d  -> decrRef();
-  medMes2d  -> decrRef();
-  myCoords  -> decrRef();
+  medMesh1d  -> decrRef();
+  medMesh2d  -> decrRef();
+  myCoords   -> decrRef();
   delete[]     medNodeCoords;
   delete[]     medCellConn;
 
@@ -354,8 +354,8 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
 
   WriteUMeshes(*inputfile,finalMesh,true);
 
-  medMes1d  -> decrRef();
-  myCoords  -> decrRef();
+  medMesh1d  -> decrRef();
+  myCoords   -> decrRef();
   delete[]     medNodeCoords;
   delete[]     medCellConn;
 
