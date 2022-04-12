@@ -37,13 +37,16 @@ using namespace MEDCoupling;
 #include "mcUT2.hpp"
 #include "mcUT3.hpp"
 #include "mcUT4.hpp"
+#include "mcUT5.hpp"
 
 int main(){
 
 int err = UnitTest1();
     err = UnitTest2();
     err = UnitTest3();
-    err = UnitTest4();        
+    err = UnitTest4();
+
+    err = UnitTest5();    
 return 1;
 }
 

@@ -35,6 +35,8 @@ compile
 
 ## MESH FILES ##
 *.msh
+*.medh
+*.med
 
 ## PARAVIEW FILES ##
 *.vtk
