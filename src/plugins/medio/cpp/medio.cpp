@@ -24,6 +24,8 @@
 #include "MEDFileData.hxx"
 using namespace MEDCoupling;
 
+#include "medioSaveMedMesh.hpp"
+#include "medioLoadMedMesh.hpp"
 #include "medio.hpp"
 
 using namespace std;

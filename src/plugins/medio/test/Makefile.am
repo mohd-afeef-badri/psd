@@ -1,4 +1,5 @@
-LIST_COMPILE= Test_1
+LIST_COMPILE= Test_1 \
+Test_2
 
 
 LOCAL_VERSION = no
@@ -38,10 +39,15 @@ check-header:
 	@echo ""
 
 Test_1: Test_1.edp
-	@echo "Test_1 : medio load test"
+	@echo "Test_1 : medio save test"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_1.edp -v 1 >  Test_1.log
 	@echo "  PASSED "
 
+Test_2: Test_2.edp
+	@echo "Test_2 : medio load test"
+	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 >  Test_2.log
+	@echo "  PASSED "
+	
 MedCoupling_Test: MedCoupling_Test.cpp
 	@echo "MedCoupling unit tests"
 	export LD_LIBRARY_PATH=$(MEDFILE_ROOT_DIR)/lib:$(HDF5_ROOT_DIR)/lib:$(MEDCOUPLING_ROOT_DIR)/lib

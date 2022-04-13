@@ -1,0 +1,36 @@
+/*****************************************************************************
+
+     This file is a part of PSD (Parallel Structural/Seismic/Solid dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@cea.com
+     Date     : 12/04/2022
+     Comment  : The is unit test program built for testing medio
+
+     -------------------------------------------------------------------
+
+     PSD is distributed  in  the  hope that it  will be useful, HOWEVER
+     WITHOUT ANY WARRANTY; or without  even  implied warranty of FITNESS
+     FOR A PARTICULAR PURPOSE.
+
+     -------------------------------------------------------------------
+
+*******************************************************************************/
+
+
+load    "./../cpp/medio";         // load med io lib
+load    "msh3"
+
+// test for 2D mesh //
+mesh Th = square (31,1);
+savemedmesh(Th, "test2DLoad.med");
+
+Th=loadmedmesh("test2DLoad.med", meshname = "TriangularMesh");
+//plot (Th,wait=1);
+
+mesh3 Th3 = cube(3,4,5);
+savemedmesh(Th3, "test3DLoad.med");
+Th3=loadmedmesh3("test3DLoad.med", meshname = "TetrahedralMesh");
+//plot (Th3,wait=1);
