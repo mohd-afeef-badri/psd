@@ -40,6 +40,8 @@ static void InitFF()
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshS, std::string* >(savemedmesh));
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshL, std::string* >(savemedmesh));
   Global.Add("loadmedmesh", "(", new medloader);
-  Global.Add("loadmedmesh3", "(", new medloader3);  
+  Global.Add("loadmedmesh3", "(", new medloader3);
+  Global.Add("loadmedmeshS", "(", new medloaderS);
+  Global.Add("loadmedmeshL", "(", new medloaderL);
 }
 LOADFUNC(InitFF)

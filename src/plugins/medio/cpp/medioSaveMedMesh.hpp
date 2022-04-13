@@ -339,7 +339,7 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   const MeshL &Th = *pTh;
 
   double* medNodeCoords = new double[Th.nv * 3];    // to store mesh nodes
-  mcIdType *medCellConn = new mcIdType[Th.nt*3];    // to store mesh elements
+  mcIdType *medCellConn = new mcIdType[Th.nt*2];    // to store mesh elements
                                                     // elements = Tria + Edges
 
   //  get nodes  //
@@ -362,7 +362,7 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   // set 2d mesh characteristics //
   medMesh1d -> setMeshDimension(1);
   medMesh1d -> allocateCells(Th.nt);
-  medMesh1d -> setName("TriangularMesh");
+  medMesh1d -> setName("CurveMesh");
 
   // set edges //
   count = 0;

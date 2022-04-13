@@ -106,7 +106,7 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
 
 
 //------------------------------------------------------------------------------
-// loadmed: a function to load med file for a 3D mesh for a FreeFEM mesh object
+// loadmed3: a function to load med file for a 3D mesh for a FreeFEM mesh object
 //          This  functions  expects  two  inputs i) 3D mesh name be saved, and
 //          ii) the name of the mesh in med mesh. And returns the mesh object.
 //------------------------------------------------------------------------------
@@ -197,4 +197,200 @@ Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
   delete[] NodalConnectivity2d;
 
   return pTh3;
+}
+
+
+//------------------------------------------------------------------------------
+// loadmed3S: a function to load med file for a 3DS mesh for a FreeFEM mesh object
+//          This  functions  expects  two  inputs i) 3DS mesh name be saved, and
+//          ii) the name of the mesh in med mesh. And returns the mesh object.
+//------------------------------------------------------------------------------
+
+MeshS *loadmedS(std::string &inputfile, std::string &meshname){
+
+#ifdef DEBUG
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh \n"
+          "--------------------------------------\n";
+#endif
+
+  MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 3dS mesh (triangles)
+  MEDCouplingUMesh *mesh1d=ReadUMeshFromFile(inputfile,meshname,-1);    // 1d mesh  (edges)
+
+  // mesh info variables //
+  int nv     ,       // # verticies
+      nt  = 0,       // # triangles
+      nbe = 0;       // # boundary edges
+
+
+  // get mesh info //
+  nv  = mesh->getNumberOfNodes();
+  nt  = mesh->getNumberOfCells();
+  nbe = mesh1d->getNumberOfCells();
+
+  // create nodes //
+  Vertex3 *vff;
+  vff = new Vertex3[nv];
+
+  // get nodes //
+  double *nodesRead ;
+  nodesRead = mesh->getCoords()->getPointer();
+
+  // set nodes //
+  for (int i=0; i < nv; i++){
+    vff[i].x = nodesRead[i*3  ];
+    vff[i].y = nodesRead[i*3+1];
+    vff[i].z = nodesRead[i*3+2];
+    vff[i].lab = 1;
+  }
+
+
+  // create triangles //
+  TriangleS *tff = new TriangleS[nt];
+  TriangleS *ttff = tff;
+
+  // get triangles //
+  mcIdType *NodalConnectivity ;
+  NodalConnectivity = mesh->getNodalConnectivity()->getPointer();
+
+  // set triangles //
+  int indexTet[3];
+  for (int i=0; i < mesh->getNumberOfCells(); i++){
+    indexTet[0]= NodalConnectivity[i*4 + 1];
+    indexTet[1]= NodalConnectivity[i*4 + 2];
+    indexTet[2]= NodalConnectivity[i*4 + 3];
+    (ttff++)->set(vff, indexTet, NodalConnectivity[i*4 + 0]);
+  }
+
+
+  // create edges //
+  BoundaryEdgeS *bff = new BoundaryEdgeS[nbe];
+  BoundaryEdgeS *bbff = bff;
+
+  // get edges //
+  mcIdType *NodalConnectivity1d ;
+  NodalConnectivity1d = mesh1d->getNodalConnectivity()->getPointer();
+
+  // set edges //
+  int indexSeg[2];
+  for (int i=0; i < mesh1d->getNumberOfCells(); i++){
+    indexSeg[0]= NodalConnectivity1d[i*3 + 1];
+    indexSeg[1]= NodalConnectivity1d[i*3 + 2];
+    (bbff++)->set(vff, indexSeg, NodalConnectivity1d[i*3 + 0]);
+  }
+
+
+  // create mesh //
+  MeshS *pThS = new MeshS(nv, nt, nbe, vff, tff, bff);
+
+  // free memory //
+  delete[] nodesRead;
+  delete[] NodalConnectivity;
+  delete[] NodalConnectivity1d;
+
+  return pThS;
+}
+
+
+//------------------------------------------------------------------------------
+// loadmedL: a function to load med file for a 3DL mesh for a FreeFEM mesh object
+//          This  functions  expects  two  inputs i) 3DL mesh name be saved, and
+//          ii) the name of the mesh in med mesh. And returns the mesh object.
+//------------------------------------------------------------------------------
+
+MeshL *loadmedL(std::string &inputfile, std::string &meshname){
+
+#ifdef DEBUG
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh \n"
+          "--------------------------------------\n";
+#endif
+
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh \n"
+          "--------------------------------------\n";
+
+int ii;
+  MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 3dL mesh (edges 3D)
+//  MEDCouplingUMesh *mesh0d=ReadUMeshFromFile(inputfile,meshname,1);    // 0d mesh (point 3D)
+
+  cout << "\n"
+          "--------------------------------------\n"
+          " loading med mesh 1 \n"
+          "--------------------------------------\n";
+
+  // mesh info variables //
+  int nv     ,       // # verticies
+      nt  = 0,       // # triangles
+      nbe = 0;       // # boundary edges
+
+  // get mesh info //
+  nv  = mesh->getNumberOfNodes();
+  nt  = mesh->getNumberOfCells();
+  //nbe = mesh0d->getNumberOfCells();
+
+  // create nodes //
+  Vertex3 *vff;
+  vff = new Vertex3[nv];
+
+  // get nodes //
+  double *nodesRead ;
+  nodesRead = mesh->getCoords()->getPointer();
+
+  // set nodes //
+  for (int i=0; i < nv; i++){
+    vff[i].x = nodesRead[i*3  ];
+    vff[i].y = nodesRead[i*3+1];
+    vff[i].z = nodesRead[i*3+2];
+    vff[i].lab = 1;
+  }
+
+
+
+  // create edges //
+  EdgeL *tff  = new EdgeL[nt];
+  EdgeL *ttff = tff;
+
+  // get edges //
+  mcIdType *NodalConnectivity ;
+  NodalConnectivity = mesh->getNodalConnectivity()->getPointer();
+
+  // set edges //
+  int indexTet[2];
+  for (int i=0; i < mesh->getNumberOfCells(); i++){
+    indexTet[0]= NodalConnectivity[i*3 + 1];
+    indexTet[1]= NodalConnectivity[i*3 + 2];
+    (ttff++)->set(vff, indexTet, NodalConnectivity[i*3 + 0]);
+  }
+
+
+  // create points //
+  nbe=0;               // TODO : THIS IS NOT WORKING WHEN MORE THAN 0 INVESTIGATE
+  BoundaryPointL *bff = new BoundaryPointL[nbe];
+  BoundaryPointL *bbff = bff;
+
+/*
+  // get points //
+  mcIdType *NodalConnectivity0d ;
+  NodalConnectivity0d = mesh0d->getNodalConnectivity()->getPointer();
+
+  // set points //
+  int indexVert[1];
+  for (int i=0; i < mesh0d->getNumberOfCells(); i++){
+    indexVert[0]= NodalConnectivity0d[i*2 + 1];
+    cout << " NodalConnectivity0d[i*2 + 1] " << NodalConnectivity0d[i*2 + 1] << endl;
+    (bbff++)->set(vff, indexVert, NodalConnectivity0d[i*2 + 0]);
+  }
+*/
+  // create mesh //
+  MeshL *pThL = new MeshL(nv, nt, nbe, vff, tff, bff);
+
+  // free memory //
+  delete[] nodesRead;
+  delete[] NodalConnectivity;
+
+  return pThL;
 }

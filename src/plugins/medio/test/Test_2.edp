@@ -23,14 +23,31 @@
 load    "./../cpp/medio";         // load med io lib
 load    "msh3"
 
+
 // test for 2D mesh //
 mesh Th = square (31,1);
 savemedmesh(Th, "test2DLoad.med");
-
 Th=loadmedmesh("test2DLoad.med", meshname = "TriangularMesh");
-//plot (Th,wait=1);
+plot (Th,wait=1);
 
+
+// test for 3D mesh //
 mesh3 Th3 = cube(3,4,5);
 savemedmesh(Th3, "test3DLoad.med");
 Th3=loadmedmesh3("test3DLoad.med", meshname = "TetrahedralMesh");
-//plot (Th3,wait=1);
+plot (Th3,wait=1);
+
+
+// test for 3DS mesh //
+meshS ThS=square3(1,1,[x,y,z]);
+savemedmesh(ThS, "test3DSLoad.med");
+ThS=loadmedmeshS("test3DSLoad.med", meshname = "TriangularMesh");
+plot (ThS,wait=1);
+
+
+// test for 3DL mesh //
+border E(t=0, 10.*pi){x=(1.)*t*cos(t); y=-(1.)*t*sin(t); z=t;}
+meshL ThL=buildmeshL(E(1000));
+savemedmesh(ThL, "test3DLLoad.med");
+ThL=loadmedmeshL("test3DLLoad.med", meshname = "CurveMesh");
+plot (ThL,wait=1);
