@@ -41,6 +41,8 @@ savemedmesh(ThS, "test3DS.med");
 savevtk("test3DS.vtu",ThS);
 
 // test for 3D curve mesh //
-meshL ThL=Sline(10,[2.*x,y,z]);
+//helice conique from FreeFEM examples/3dCurve
+border E(t=0, 10.*pi){x=(1.)*t*cos(t); y=-(1.)*t*sin(t); z=t;}
+meshL ThL=buildmeshL(E(1000));
 savemedmesh(ThL, "test3DL.med");
-savevtk("test3DL.vtu",ThS);
+savevtk("test3DL.vtu",ThL);
