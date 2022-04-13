@@ -1,21 +1,28 @@
 /*****************************************************************************
 
-         This file is a part of PDMT (Parallel Dual Meshing Tool)
+     This file is a part of PSD (Parallel Structural/Seismic/Solid dynamics)
 
      -------------------------------------------------------------------
 
      Author(s): Mohd Afeef Badri
      Email    : mohd-afeef.badri@cea.com
-     Date     : 05/04/2022
-     Comment  : The program test medcoupling for writing polygon
+     Date     : 13/04/2022
+     Comment  : The program test medcoupling for writing a  med  mesh
+                with only  one  single tetrahedral cell. This test is
+                eventually used as building blocks for the PSD plugin
+                medio.
 
      -------------------------------------------------------------------
 
-     PDMT a parallel  dual meshing tool uses   finite  element framework
-     to convert a triangular / tetrahedral mesh into a  polyhedral  mesh.
-     PDMT is distributed  in  the  hope that it  will be useful, HOWEVER
-     WITHOUT ANY WARRANTY; or without  even  implied warranty of FITNESS
+     medio is PSD plugin intended to enable usage of med files within PSD.
+     medio is distributed   in  the  hope that it  will be useful, HOWEVER
+     WITHOUT ANY WARRANTY;  or  without  even  implied warranty of FITNESS
      FOR A PARTICULAR PURPOSE.
+
+     -------------------------------------------------------------------
+
+     Acknowledgements: Thanks to C. Bourcier for his advices and help
+     with medCoupling.
 
 *******************************************************************************/
 
@@ -61,7 +68,7 @@ mcIdType cellConnectivity[48]={
   myCoords->alloc(nNodes,3);                  // tottal number of points
   myCoords->setInfoOnComponent(0,"x [m]");    // info attribute on x
   myCoords->setInfoOnComponent(1,"y [m]");    // info attribute on y
-  myCoords->setInfoOnComponent(2,"z [m]");    // info attribute on z  
+  myCoords->setInfoOnComponent(2,"z [m]");    // info attribute on z
   std::copy(meshNodes, meshNodes+nNodesArray, myCoords->getPointer());
   medMesh3d->setCoords(myCoords);
   myCoords->decrRef();

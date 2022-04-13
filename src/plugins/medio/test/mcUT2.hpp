@@ -1,22 +1,28 @@
 /*****************************************************************************
 
-         This file is a part of PDMT (Parallel Dual Meshing Tool)
+     This file is a part of PSD (Parallel Structural/Seismic/Solid dynamics)
 
      -------------------------------------------------------------------
 
      Author(s): Mohd Afeef Badri
      Email    : mohd-afeef.badri@cea.com
      Date     : 05/04/2022
-     Comment  : The program test medcoupling for writing polygon with
-                few boundary lines
+     Comment  : The program test medcoupling for writing polygon mesh
+                with polygon and few  boundary  lines elements.  This
+                test  is  eventually used as building blocks for  the
+                PSD plugin medio.
 
      -------------------------------------------------------------------
 
-     PDMT a parallel  dual meshing tool uses   finite  element framework
-     to convert a triangular / tetrahedral mesh into a  polyhedral  mesh.
-     PDMT is distributed  in  the  hope that it  will be useful, HOWEVER
-     WITHOUT ANY WARRANTY; or without  even  implied warranty of FITNESS
+     medio is PSD plugin intended to enable usage of med files within PSD.
+     medio is distributed   in  the  hope that it  will be useful, HOWEVER
+     WITHOUT ANY WARRANTY;  or  without  even  implied warranty of FITNESS
      FOR A PARTICULAR PURPOSE.
+
+     -------------------------------------------------------------------
+
+     Acknowledgements: Thanks to C. Bourcier for his advices and help
+     with medCoupling.
 
 *******************************************************************************/
 
