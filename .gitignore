@@ -38,6 +38,9 @@ compile
 *.medh
 *.med
 
+## MESH info files ## 
+*_INFO.txt
+
 ## PARAVIEW FILES ##
 *.vtk
 *.vtu
