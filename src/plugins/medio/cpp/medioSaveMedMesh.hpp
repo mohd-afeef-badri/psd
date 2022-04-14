@@ -494,7 +494,14 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   double* medNodeCoords = new double[Th.nv * 3];              // to store mesh nodes
   mcIdType *medCellConn = new mcIdType[Th.nt*3 +Th.nbe*2];    // to store mesh elements
                                                               // elements = Tria + edges
+  mcIdType* elems2dFams = new mcIdType[Th.nt];                // to store families  Tria
+  mcIdType* elems1dFams = new mcIdType[Th.nbe];               // to store families  Edges
 
+  std::set < int > UniqueLabelsPoint;                         // Store unique labels points    (NOT USED)
+  std::set < int > UniqueLabelsTria;                          // Store unique labels triangles
+  std::set < int > UniqueLabelsEdge;                          // Store unique labels edges
+  std::set < int > UniqueLabelsPoly;                          // Store unique labels polygons  (NOT USED)
+  std::set < int > UniqueLabelsTetra;                         // Store unique labels tetrahedra(NOT USED)
 
   // get nodes //
   for (int i = 0; i < Th.nv; i++) {
@@ -509,12 +516,16 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
     medCellConn[count] = Th(Th[i][0]) ; count++;
     medCellConn[count] = Th(Th[i][1]) ; count++;
     medCellConn[count] = Th(Th[i][2]) ; count++;
+    elems2dFams[i]     = Th[i].lab;
+    UniqueLabelsTria.insert(Th[i].lab);
   }
 
   //  get edges  //
   for (int i = 0; i < Th.nbe; i++) {
     medCellConn[count] = Th(Th.be(i)[0]) ; count++;
     medCellConn[count] = Th(Th.be(i)[1]) ; count++;
+    elems1dFams[i]     = Th.be(i).lab;
+    UniqueLabelsEdge.insert(Th.be(i).lab);
   }
 
   // create medcoupling unstructured meshes //
@@ -556,6 +567,65 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
   medMesh2d -> setCoords(myCoords);
   medMesh1d -> setCoords(myCoords);
 
+
+  // set up  MEDFileUMesh for families and groups //
+  MCAuto<MEDFileUMesh> finalMeshWithLabel = MEDFileUMesh::New();
+  finalMeshWithLabel->setMeshAtLevel(0 ,medMesh2d);
+  finalMeshWithLabel->setMeshAtLevel(-1,medMesh1d);
+
+  // get families and groups //
+  MCAuto < DataArrayIdType > fam2d = DataArrayIdType::New();
+  MCAuto < DataArrayIdType > fam1d = DataArrayIdType::New();
+
+  fam2d -> alloc(Th.nt, 1);
+  fam1d -> alloc(Th.nbe, 1);
+
+  std::copy(elems2dFams, elems2dFams + Th.nt,  fam2d -> getPointer());
+  std::copy(elems1dFams, elems1dFams + Th.nbe, fam1d -> getPointer());
+
+  finalMeshWithLabel -> setFamilyFieldArr(-1, fam1d);
+  finalMeshWithLabel -> setFamilyFieldArr(0, fam2d);
+
+  std::map < std::string, std::vector < std::string >> theGroups;
+  std::map < std::string, mcIdType > theFamilies;
+
+  for (std::set < int > ::iterator it = UniqueLabelsTria.begin(); it != UniqueLabelsTria.end(); ++it) {
+    int avoideZero = 0;
+    if(* it == 0) avoideZero = 3000;
+    int tag = * it + avoideZero;
+    theFamilies["tria_family_" + to_string( tag ) + ""] = tag;
+    theGroups["tria_group_" + to_string( tag ) + ""].push_back("tria_family_" + to_string( tag ) + "");
+  }
+
+  for (std::set < int > ::iterator it = UniqueLabelsEdge.begin(); it != UniqueLabelsEdge.end(); ++it) {
+    int avoideZero = 0;
+    if(* it == 0) avoideZero = 2000;
+    int tag = * it + avoideZero;
+    theFamilies["edge_family_" + to_string( tag ) + ""] = * it;
+    theGroups["edge_group_" + to_string( * it) + ""].push_back("edge_family_" + to_string( tag ) + "");
+  }
+
+  finalMeshWithLabel -> setFamilyInfo(theFamilies);
+  finalMeshWithLabel -> setGroupInfo(theGroups);
+
+  // write mesh //
+  finalMeshWithLabel -> write( * inputfile, 2);
+
+  // write mesh information file //
+  medMeshInfo( inputfile          , // std::string* const &filename,
+               Th.nv              , // int Nnodes
+               0                  , // int Npoly
+               0                  , // int Ntet
+               Th.nt              , // int Ntri
+               Th.nbe             , // int Nseg
+               UniqueLabelsPoint  , // std::set < int > Lnodes
+               UniqueLabelsPoly   , // std::set < int > Lpoly
+               UniqueLabelsTetra  , // std::set < int > Ltet
+               UniqueLabelsTria   , // std::set < int > Ltri
+               UniqueLabelsEdge     // std::set < int > Lseg
+               );
+
+/*
   // combine meshes 3ds + 1d //
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh2d);
@@ -563,7 +633,7 @@ int savemedmesh(const Fem2D::MeshS* const &pTh, std::string* const &inputfile) {
 
   // write mesh //
   WriteUMeshes(*inputfile,finalMesh,true);
-
+*/
   // free memory //
   medMesh1d  -> decrRef();
   medMesh2d  -> decrRef();
@@ -594,6 +664,13 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   double* medNodeCoords = new double[Th.nv * 3];    // to store mesh nodes
   mcIdType *medCellConn = new mcIdType[Th.nt*2];    // to store mesh elements
                                                     // elements = Tria + Edges
+  mcIdType* elems1dFams = new mcIdType[Th.nt];                // to store families  Edges
+
+  std::set < int > UniqueLabelsPoint;                         // Store unique labels points    (NOT USED)
+  std::set < int > UniqueLabelsTria;                          // Store unique labels triangles
+  std::set < int > UniqueLabelsEdge;                          // Store unique labels edges
+  std::set < int > UniqueLabelsPoly;                          // Store unique labels polygons  (NOT USED)
+  std::set < int > UniqueLabelsTetra;                         // Store unique labels tetrahedra(NOT USED)
 
   //  get nodes  //
   for (int i = 0; i < Th.nv; i++) {
@@ -607,6 +684,8 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   for (int i = 0; i < Th.nt; i++) {
     medCellConn[count] = Th(Th[i][0]) ; count++;
     medCellConn[count] = Th(Th[i][1]) ; count++;
+    elems1dFams[i]     = Th[i].lab;
+    UniqueLabelsTria.insert(Th[i].lab);
   }
 
   // create medcoupling unstructured meshes //
@@ -634,11 +713,57 @@ int savemedmesh(const Fem2D::MeshL* const &pTh, std::string* const &inputfile) {
   std::copy(medNodeCoords, medNodeCoords + Th.nv*3, myCoords -> getPointer());
   medMesh1d -> setCoords(myCoords);
 
+  // set up  MEDFileUMesh for families and groups //
+  MCAuto<MEDFileUMesh> finalMeshWithLabel = MEDFileUMesh::New();
+  finalMeshWithLabel->setMeshAtLevel(0 ,medMesh1d);
+
+  // get families and groups //
+  MCAuto < DataArrayIdType > fam1d = DataArrayIdType::New();
+
+  fam1d -> alloc(Th.nt, 1);
+
+  std::copy(elems1dFams, elems1dFams + Th.nt,  fam1d -> getPointer());
+
+  finalMeshWithLabel -> setFamilyFieldArr(0, fam1d);
+
+  std::map < std::string, std::vector < std::string >> theGroups;
+  std::map < std::string, mcIdType > theFamilies;
+
+  for (std::set < int > ::iterator it = UniqueLabelsEdge.begin(); it != UniqueLabelsEdge.end(); ++it) {
+    int avoideZero = 0;
+    if(* it == 0) avoideZero = 2000;
+    int tag = * it + avoideZero;
+    theFamilies["edge_family_" + to_string( tag ) + ""] = * it;
+    theGroups["edge_group_" + to_string( * it) + ""].push_back("edge_family_" + to_string( tag ) + "");
+  }
+
+  finalMeshWithLabel -> setFamilyInfo(theFamilies);
+  finalMeshWithLabel -> setGroupInfo(theGroups);
+
+  // write mesh //
+  finalMeshWithLabel -> write( * inputfile, 2);
+
+  // write mesh information file //
+  medMeshInfo( inputfile          , // std::string* const &filename,
+               Th.nv              , // int Nnodes
+               0                  , // int Npoly
+               0                  , // int Ntet
+               0                  , // int Ntri
+               Th.nt              , // int Nseg
+               UniqueLabelsPoint  , // std::set < int > Lnodes
+               UniqueLabelsPoly   , // std::set < int > Lpoly
+               UniqueLabelsTetra  , // std::set < int > Ltet
+               UniqueLabelsTria   , // std::set < int > Ltri
+               UniqueLabelsEdge     // std::set < int > Lseg
+               );
+
+
+/*
   // write mesh //
   std::vector<const MEDCouplingUMesh *> finalMesh;
   finalMesh.push_back(medMesh1d);
   WriteUMeshes(*inputfile,finalMesh,true);
-
+*/
   // free memory //
   medMesh1d  -> decrRef();
   myCoords   -> decrRef();
