@@ -37,6 +37,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
+| [salome](https://www.salome-platform.org/)                   | Version **9** or Higher                                      | OPTIONAL  |
 | [MFront](http://tfel.sourceforge.net/)                       | Version **3.4.0**                                            | OPTIONAL  |
 | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | Version **1.2**                                              | OPTIONAL  |
 | [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |

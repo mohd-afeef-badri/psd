@@ -26,7 +26,7 @@ load    "msh3"
 
 
 // test for 2D mesh //
-mesh Th = square (1,1);
+mesh Th = square (12,12);
 savemedmesh(Th, "test2D.med");
 savevtk("test2D.vtu",Th);
 

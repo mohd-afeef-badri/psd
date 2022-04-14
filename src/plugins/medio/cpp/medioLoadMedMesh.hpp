@@ -35,6 +35,7 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
 
   MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 2d mesh (triangles)
   MEDCouplingUMesh *mesh1d=ReadUMeshFromFile(inputfile,meshname,-1);    // 1d mesh (edges)
+  MCAuto < MEDFileUMesh > medmesh = MEDFileUMesh::New(inputfile);       // mesh for fields
 
   // mesh info variables //
   int nv     ,       // # verticies
@@ -46,6 +47,10 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
   nt  = mesh->getNumberOfCells();
   nbe = mesh1d->getNumberOfCells();
 
+
+  // reading mesh Ids labels //
+  const DataArrayIdType * famIds    = medmesh->getFamilyFieldAtLevel(0);
+  const DataArrayIdType * famIds1d  = medmesh->getFamilyFieldAtLevel(-1);
 
 
   // create nodes //
@@ -75,7 +80,7 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
 
   // set triangles //
   for (int i=0; i < mesh->getNumberOfCells(); i++)
-    (ttff++)->set(vff, NodalConnectivity[i*4 + 1], NodalConnectivity[i*4 + 2], NodalConnectivity[i*4 + 3], NodalConnectivity[i*4 + 0]);
+    (ttff++)->set(vff, NodalConnectivity[i*4 + 1], NodalConnectivity[i*4 + 2], NodalConnectivity[i*4 + 3], famIds->getIJ(i,0));
 
 
 
@@ -90,7 +95,7 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
 
   // set edges //
   for (int i=0; i < mesh1d->getNumberOfCells(); i++)
-    (bbff++)->set(vff, NodalConnectivity1d[i*3 + 1], NodalConnectivity1d[i*3 + 2], NodalConnectivity1d[i*3 + 0]);
+    (bbff++)->set(vff, NodalConnectivity1d[i*3 + 1], NodalConnectivity1d[i*3 + 2], famIds1d->getIJ(i,0));
 
 
   // create mesh //
@@ -122,6 +127,7 @@ Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
 
   MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 3d mesh (tetrahedral)
   MEDCouplingUMesh *mesh2d=ReadUMeshFromFile(inputfile,meshname,-1);    // 2d mesh (triangles)
+  MCAuto < MEDFileUMesh > medmesh = MEDFileUMesh::New(inputfile);       // mesh for fields
 
   // mesh info variables //
   int nv     ,       // # verticies
@@ -133,6 +139,11 @@ Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
   nv  = mesh->getNumberOfNodes();
   nt  = mesh->getNumberOfCells();
   nbe = mesh2d->getNumberOfCells();
+
+
+  // reading mesh Ids labels //
+  const DataArrayIdType * famIds    = medmesh->getFamilyFieldAtLevel(0);
+  const DataArrayIdType * famIds2d  = medmesh->getFamilyFieldAtLevel(-1);
 
   // create nodes //
   Vertex3 *vff;
@@ -166,7 +177,7 @@ Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
     indexTet[1]= NodalConnectivity[i*5 + 2];
     indexTet[2]= NodalConnectivity[i*5 + 3];
     indexTet[3]= NodalConnectivity[i*5 + 4];
-    (ttff++)->set(vff, indexTet, NodalConnectivity[i*5 + 0]);
+    (ttff++)->set(vff, indexTet, famIds->getIJ(i,0));
   }
 
 
@@ -184,7 +195,7 @@ Mesh3 *loadmed3(std::string &inputfile, std::string &meshname){
     indexTria[0]= NodalConnectivity2d[i*4 + 1];
     indexTria[1]= NodalConnectivity2d[i*4 + 2];
     indexTria[2]= NodalConnectivity2d[i*4 + 3];
-    (bbff++)->set(vff, indexTria, NodalConnectivity2d[i*4 + 0]);
+    (bbff++)->set(vff, indexTria, famIds2d->getIJ(i,0));
   }
 
 
@@ -217,12 +228,19 @@ MeshS *loadmedS(std::string &inputfile, std::string &meshname){
 
   MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 3dS mesh (triangles)
   MEDCouplingUMesh *mesh1d=ReadUMeshFromFile(inputfile,meshname,-1);    // 1d mesh  (edges)
+  MCAuto < MEDFileUMesh > medmesh = MEDFileUMesh::New(inputfile);       // mesh for fields
+
 
   // mesh info variables //
   int nv     ,       // # verticies
       nt  = 0,       // # triangles
       nbe = 0;       // # boundary edges
 
+
+
+  // reading mesh Ids labels //
+  const DataArrayIdType * famIds    = medmesh->getFamilyFieldAtLevel(0);
+  const DataArrayIdType * famIds1d  = medmesh->getFamilyFieldAtLevel(-1);
 
   // get mesh info //
   nv  = mesh->getNumberOfNodes();
@@ -260,7 +278,7 @@ MeshS *loadmedS(std::string &inputfile, std::string &meshname){
     indexTet[0]= NodalConnectivity[i*4 + 1];
     indexTet[1]= NodalConnectivity[i*4 + 2];
     indexTet[2]= NodalConnectivity[i*4 + 3];
-    (ttff++)->set(vff, indexTet, NodalConnectivity[i*4 + 0]);
+    (ttff++)->set(vff, indexTet, famIds->getIJ(i,0));
   }
 
 
@@ -277,7 +295,7 @@ MeshS *loadmedS(std::string &inputfile, std::string &meshname){
   for (int i=0; i < mesh1d->getNumberOfCells(); i++){
     indexSeg[0]= NodalConnectivity1d[i*3 + 1];
     indexSeg[1]= NodalConnectivity1d[i*3 + 2];
-    (bbff++)->set(vff, indexSeg, NodalConnectivity1d[i*3 + 0]);
+    (bbff++)->set(vff, indexSeg, famIds1d->getIJ(i,0));
   }
 
 
@@ -308,19 +326,11 @@ MeshL *loadmedL(std::string &inputfile, std::string &meshname){
           "--------------------------------------\n";
 #endif
 
-  cout << "\n"
-          "--------------------------------------\n"
-          " loading med mesh \n"
-          "--------------------------------------\n";
 
 int ii;
   MEDCouplingUMesh *mesh=ReadUMeshFromFile(inputfile,meshname,0);       // 3dL mesh (edges 3D)
 //  MEDCouplingUMesh *mesh0d=ReadUMeshFromFile(inputfile,meshname,1);    // 0d mesh (point 3D)
-
-  cout << "\n"
-          "--------------------------------------\n"
-          " loading med mesh 1 \n"
-          "--------------------------------------\n";
+  MCAuto < MEDFileUMesh > medmesh = MEDFileUMesh::New(inputfile);       // mesh for fields
 
   // mesh info variables //
   int nv     ,       // # verticies
@@ -331,6 +341,10 @@ int ii;
   nv  = mesh->getNumberOfNodes();
   nt  = mesh->getNumberOfCells();
   //nbe = mesh0d->getNumberOfCells();
+
+  // reading mesh Ids labels //
+  const DataArrayIdType * famIds    = medmesh->getFamilyFieldAtLevel(0);
+//  const DataArrayIdType * famIds1d  = medmesh->getFamilyFieldAtLevel(-1);
 
   // create nodes //
   Vertex3 *vff;
@@ -363,7 +377,7 @@ int ii;
   for (int i=0; i < mesh->getNumberOfCells(); i++){
     indexTet[0]= NodalConnectivity[i*3 + 1];
     indexTet[1]= NodalConnectivity[i*3 + 2];
-    (ttff++)->set(vff, indexTet, NodalConnectivity[i*3 + 0]);
+    (ttff++)->set(vff, indexTet, famIds->getIJ(i,0));
   }
 
 

@@ -6,12 +6,15 @@ PSD has been maturing and evolving with time, following subsections present the 
 ### Added
 
 - SALOME `.med` file support. For conversion on disk is done upon reading a `.med`
-
+  - New `load "medio"` enables loading of medio library for PSD
+  - Function `savemedmesh()` used for saving med file (see unit test `Test_1.edp`)
+  - Function `loadmedmesh()` used for saving med file (see unit test `Test_2.edp`)
 - Additional tests for Elastodynamics, Damage Mechanics.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.
 - New flag `-validation` to produce valdiation test case code, for now only accepts `iwan`.
-- Support for Dirichlet Point conditions in sequential for fracture mechanics. New tests for checking ponint BC.
+- Support for Dirichlet Point conditions in sequential for fracture mechanics. 
+  - New tests for checking ponint BC.
 - New Iwan law for PSD-MFront coupling.
 - PSD installation support for MacOS.
 - New macro `perfromRCMreordering(meshObject)` to perform mesh level Reverse Cuthill-Mackee algo.
