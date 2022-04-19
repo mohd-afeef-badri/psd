@@ -3,7 +3,7 @@
 import sys
 import salome
 
-
+salome.salome_init()
 ###
 ### SHAPER component
 ###
@@ -46,12 +46,12 @@ Sketch_1.setCoincident(SketchLine_3.endPoint(), SketchLine_4.startPoint())
 SketchProjection_3 = Sketch_1.addProjection(model.selection("EDGE", "PartSet/OY"), False)
 SketchLine_5 = SketchProjection_3.createdFeature()
 Sketch_1.setCoincident(SketchLine_4.endPoint(), SketchLine_5.result())
+Sketch_1.setHorizontal(SketchLine_4.result())
 
 ### Create SketchLine
 SketchLine_6 = Sketch_1.addLine(0, 1, 0, 0)
 Sketch_1.setCoincident(SketchLine_4.endPoint(), SketchLine_6.startPoint())
 Sketch_1.setCoincident(SketchLine_1.startPoint(), SketchLine_6.endPoint())
-Sketch_1.setHorizontal(SketchLine_4.result())
 Sketch_1.setLength(SketchLine_1.result(), 5)
 Sketch_1.setLength(SketchLine_3.result(), 1)
 model.do()
@@ -92,8 +92,7 @@ model.end()
 
 model.publishToShaperStudy()
 import SHAPERSTUDY
-Face_1_1, surface-left, surface-top, surface-right, surface-bottom, volume, = SHAPERSTUDY.shape(model.featureStringId(Face_1))
-
+Face_1_1, surface_left, surface_top, surface_right, surface_bottom, volume, = SHAPERSTUDY.shape(model.featureStringId(Face_1))
 ###
 ### SMESH component
 ###
@@ -105,36 +104,46 @@ smesh = smeshBuilder.New()
 #smesh.SetEnablePublish( False ) # Set to False to avoid publish in study if not needed or in some particular situations:
                                  # multiples meshes built in parallel, complex and numerous mesh edition (performance)
 
-Mesh_1 = smesh.Mesh(Face_1_1)
+Mesh_1 = smesh.Mesh(Face_1_1,'Mesh_1')
 NETGEN_1D_2D = Mesh_1.Triangle(algo=smeshBuilder.NETGEN_1D2D)
-NETGEN_2D_Simple_Parameters_1 = NETGEN_1D_2D.Parameters(smeshBuilder.SIMPLE)
-NETGEN_2D_Simple_Parameters_1.SetLocalLength( 0.1 )
-NETGEN_2D_Simple_Parameters_1.LengthFromEdges()
-NETGEN_2D_Simple_Parameters_1.SetAllowQuadrangles( 0 )
-surface_left = Mesh_1.GroupOnGeom(surface-left,'surface-left',SMESH.EDGE)
-surface_top = Mesh_1.GroupOnGeom(surface-top,'surface-top',SMESH.EDGE)
-surface_right = Mesh_1.GroupOnGeom(surface-right,'surface-right',SMESH.EDGE)
-surface_bottom = Mesh_1.GroupOnGeom(surface-bottom,'surface-bottom',SMESH.EDGE)
+NETGEN_2D_Parameters_1 = NETGEN_1D_2D.Parameters()
+NETGEN_2D_Parameters_1.SetMaxSize( 1./31 )
+NETGEN_2D_Parameters_1.SetMinSize( 1./31 )
+NETGEN_2D_Parameters_1.SetSecondOrder( 0 )
+NETGEN_2D_Parameters_1.SetOptimize( 1 )
+NETGEN_2D_Parameters_1.SetFineness( 2 )
+NETGEN_2D_Parameters_1.SetChordalError( -1 )
+NETGEN_2D_Parameters_1.SetChordalErrorEnabled( 0 )
+NETGEN_2D_Parameters_1.SetUseSurfaceCurvature( 1 )
+NETGEN_2D_Parameters_1.SetFuseEdges( 1 )
+NETGEN_2D_Parameters_1.SetWorstElemMeasure( 0 )
+NETGEN_2D_Parameters_1.SetUseDelauney( 34 )
+NETGEN_2D_Parameters_1.SetQuadAllowed( 0 )
+NETGEN_2D_Parameters_1.SetCheckChartBoundary( 128 )
+surface_left = Mesh_1.GroupOnGeom(surface_left,'surface-left',SMESH.EDGE)
+surface_top = Mesh_1.GroupOnGeom(surface_top,'surface-top',SMESH.EDGE)
+surface_right = Mesh_1.GroupOnGeom(surface_right,'surface-right',SMESH.EDGE)
+surface_bottom = Mesh_1.GroupOnGeom(surface_bottom,'surface-bottom',SMESH.EDGE)
 volume_1 = Mesh_1.GroupOnGeom(volume,'volume',SMESH.FACE)
 isDone = Mesh_1.Compute()
 [ surface_left, surface_top, surface_right, surface_bottom, volume_1 ] = Mesh_1.GetGroups()
 smesh.SetName(Mesh_1, 'Mesh_1')
 try:
-  Mesh_1.ExportMED( r'./bar.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
+  Mesh_1.ExportMED( r'/home/mb258512/Work/repo/psd_sources/data/meshes/2D/Geo-Files/bar.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
   pass
 except:
   print('ExportPartToMED() failed. Invalid file name?')
 
 
 ## Set names of Mesh objects
-smesh.SetName(volume_1, 'volume')
 smesh.SetName(NETGEN_1D_2D.GetAlgorithm(), 'NETGEN 1D-2D')
+smesh.SetName(volume_1, 'volume')
 smesh.SetName(Mesh_1.GetMesh(), 'Mesh_1')
-smesh.SetName(surface_bottom, 'surface-bottom')
-smesh.SetName(NETGEN_2D_Simple_Parameters_1, 'NETGEN 2D Simple Parameters_1')
-smesh.SetName(surface_right, 'surface-right')
-smesh.SetName(surface_top, 'surface-top')
 smesh.SetName(surface_left, 'surface-left')
+smesh.SetName(surface_top, 'surface-top')
+smesh.SetName(surface_right, 'surface-right')
+smesh.SetName(surface_bottom, 'surface-bottom')
+smesh.SetName(NETGEN_2D_Parameters_1, 'NETGEN 2D Parameters_1')
 
 
 if salome.sg.hasDesktop():

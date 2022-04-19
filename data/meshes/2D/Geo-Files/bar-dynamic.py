@@ -3,7 +3,8 @@
 import sys
 import salome
 
-
+salome.salome_init()
+sys.path.insert(0, r'/home/mb258512/Work/repo/psd_sources/data/meshes/2D/Geo-Files')
 ###
 ### SHAPER component
 ###
@@ -92,7 +93,7 @@ model.end()
 
 model.publishToShaperStudy()
 import SHAPERSTUDY
-Face_1_1, surface-left, surface-top, surface-right, surface-bottom, volume, = SHAPERSTUDY.shape(model.featureStringId(Face_1))
+Face_1_1, surface_left, surface_top, surface_right, surface_bottom, volume, = SHAPERSTUDY.shape(model.featureStringId(Face_1))
 
 ###
 ### SMESH component
@@ -111,10 +112,10 @@ NETGEN_2D_Simple_Parameters_1 = NETGEN_1D_2D.Parameters(smeshBuilder.SIMPLE)
 NETGEN_2D_Simple_Parameters_1.SetLocalLength( 0.05 )
 NETGEN_2D_Simple_Parameters_1.LengthFromEdges()
 NETGEN_2D_Simple_Parameters_1.SetAllowQuadrangles( 0 )
-surface_left = Mesh_1.GroupOnGeom(surface-left,'surface-left',SMESH.EDGE)
-surface_top = Mesh_1.GroupOnGeom(surface-top,'surface-top',SMESH.EDGE)
-surface_right = Mesh_1.GroupOnGeom(surface-right,'surface-right',SMESH.EDGE)
-surface_bottom = Mesh_1.GroupOnGeom(surface-bottom,'surface-bottom',SMESH.EDGE)
+surface_left = Mesh_1.GroupOnGeom(surface_left,'surface-left',SMESH.EDGE)
+surface_top = Mesh_1.GroupOnGeom(surface_top,'surface-top',SMESH.EDGE)
+surface_right = Mesh_1.GroupOnGeom(surface_right,'surface-right',SMESH.EDGE)
+surface_bottom = Mesh_1.GroupOnGeom(surface_bottom,'surface-bottom',SMESH.EDGE)
 volume_1 = Mesh_1.GroupOnGeom(volume,'volume',SMESH.FACE)
 isDone = Mesh_1.Compute()
 [ surface_left, surface_top, surface_right, surface_bottom, volume_1 ] = Mesh_1.GetGroups()
