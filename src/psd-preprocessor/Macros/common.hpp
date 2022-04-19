@@ -16,6 +16,11 @@
 *                                      end of a PSD procedure.                        *
 *            4) remapping-macros     - many macros are proposed  to  uniform  the     *
 *                                      names of functions in 2D and 3D.               *
+*            5) loadfemesh           - load different the finite  element meshes      *
+*                                      based on filename detect the meshloader.       *
+*            6) checkemesh           - output error message if unsupported mesh       *
+*                                      extension is detected.                         *
+*                                                                                     *
 *                                                                                     *
 **************************************************************************************/
 
@@ -214,10 +219,7 @@ codeSnippet R""""(
 macro loadfemesh(meshObject,meshName)
 
   if(meshName.find(".med") > -1){
-    if(mpirank==0)
-      system("gmsh -1 "+meshName+" -o "+meshName+".msh -format msh2 ");
-    mpiBarrier(mpiCommWorld);
-    load "gmsh";   meshObject = gmshloadN(""+meshName+".msh");
+    load "medio"; meshObject=loadmedmesh(meshName, meshname = "Mesh_1");
   }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
@@ -247,8 +249,7 @@ codeSnippet R""""(
 macro loadfemesh(meshObject,meshName)
 
   if(meshName.find(".med") > -1){
-    system("gmsh -1 "+meshName+" -o "+meshName+".msh -format msh2 ");
-    load "gmsh";   meshObject = gmshloadN(""+meshName+".msh");
+    load "medio"; meshObject=loadmedmesh(meshName, meshname = "Mesh_1");
   }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
