@@ -1,6 +1,9 @@
-!in.data
-!in-mtest.data
+!data/input.data
+!data/test.res
+*.data
 out.data
 *.edp
 *.res
+include/*
+src/*
 !Makefile

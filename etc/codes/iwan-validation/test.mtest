@@ -85,6 +85,5 @@
 
 
 
-@ImposedStrain<data> 'EXY' 'in-mtest.data' using 1:'$2/sqrt(2.) * 50. ' ;
-@Times<data> 'in-mtest.data' using 1 ;
- 
+@ImposedStrain<data> 'EXY' './data/input.data' using 1:'$2/sqrt(2.)' ;
+@Times<data> './data/input.data' using 1 ;
