@@ -1,7 +1,7 @@
 SHELL := /usr/bin/zsh
 
 preprocess-plain-stress:	
-	/home/mb258512/PSDInstall/bin/PSD_PreProcess -problem linear_elasticity -dimension 2 \
+	PSD_PreProcess -problem linear_elasticity -dimension 2 \
 	-dirichletconditions 1 -postprocess u -bodyforceconditions 1 && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#,lambda;#,lambda, E, nu, L = 25., H = 1.;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#real E  = 200.e9  ,#     E  = 1.e5    ;#g" {} \; && \
@@ -13,12 +13,12 @@ preprocess-plain-stress:
 
 
 solve-plain-stress:	
-	/home/mb258512/PSDInstall/bin/PSD_Solve -np 1 Main.edp -mesh bar.mesh -v 0
+	PSD_Solve -np 1 Main.edp -mesh bar.mesh -v 0
 
 
 
 preprocess-plain-strain:	
-	/home/mb258512/PSDInstall/bin/PSD_PreProcess -problem linear_elasticity -dimension 2 \
+	PSD_PreProcess -problem linear_elasticity -dimension 2 \
 	-dirichletconditions 1 -postprocess u -bodyforceconditions 1 && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#,lambda;#,lambda, E, nu, L = 25., H = 1.;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#real E  = 200.e9  ,#     E  = 1.e5    ;#g" {} \; && \
@@ -29,7 +29,7 @@ preprocess-plain-strain:
 
 
 solve-plain-strain:	
-	/home/mb258512/PSDInstall/bin/PSD_Solve -np 1 Main.edp -mesh bar.mesh -v 0
+	PSD_Solve -np 1 Main.edp -mesh bar.mesh -v 0
 
 
 gnuplot:
