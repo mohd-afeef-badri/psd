@@ -37,6 +37,13 @@ if HAVEMFRONT
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  Iwan.mfront
 	${mfront}/bin/mfront --obuild
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled Hujeux law support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  HujeuxECP1985.mfront
+	${mfront}/bin/mfront --obuild
 endif
 	@echo ""
 
