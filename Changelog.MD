@@ -24,6 +24,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - More unit tests for mfront plugin.
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
+- Ablity to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
 - New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGIS)
 - Dependencies can now be installed by PSD.
 
