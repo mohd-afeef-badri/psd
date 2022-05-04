@@ -1,1 +1,3 @@
 lab/*
+!include/dummy.cxx
+!include/dummy.hxx

@@ -1,0 +1,76 @@
+//------------------------------------------------------------------------//
+@DSL DefaultDSL;
+@Behaviour HelloWorld;
+@Author Mohd Afeef Badri;
+@Date 04-05-2022;
+@Description{
+ "Hello World: A dummy MFRONT behaviour for testing MFRONT-PSD interface"
+}
+//------------------------------------------------------------------------//
+
+
+//------------------------------------------------------------------------//
+// Testing Parameter
+//  - parameters are local these will not be shared with PSD
+//  - values will be set here in mfront file
+//  - these need a default value or else there will be error
+//------------------------------------------------------------------------//
+
+@Parameter par1 = 0.2;                       // par1 is a varialbe
+par1.setEntryName("Parmtr1");                // par1 is named "Parmtr1"
+
+
+@Parameter par2{100}, par3{0.001};           // list of 2 variables
+                                             // they will haves names "par2" and "par3"
+
+@Parameter par4(0), par5(0);                 // again a list of 2 variables
+par5.setEntryName("parmt5");                 // they will haves names "par4" and "parmt5"
+
+
+//@Parameter par6;                          // error if we just define parameter
+@Parameter par6;                            // par6 is a varialbe with name "par6"
+par6.setDefaultValue(1.e-9);                // this is another way of seeting value of paramter
+
+
+@Parameter youngMod = 150e9;                // youngMod is a Parameter
+youngMod.setEntryName("NonGlossaryName");   // youngMod is named "NonGlossaryName"
+//youngMod.setGlossaryName("YoungModulus"); // youngMod can be named YoungModulus
+
+//------------------------------------------------------------------------//
+// Testing MaterialProperty
+//   - MaterialProperty is a global and will be shared with PSD
+//   - No need of value here
+//------------------------------------------------------------------------//
+
+
+@MaterialProperty real matProp1;            // matProp1 is a of type [real]
+matProp1.setEntryName("materialProperty1"); // matProp1 is named "materialProperty1"
+//matProp1.setGlossaryName("YoungModulus"); // youngMod can be named YoungModulus
+
+//@MaterialProperty integer matProp2;             // matProp1 is a of type [int]
+//matProp2.setEntryName("materialProperty2"); // matProp1 is named "materialProperty2"
+
+
+//------------------------------------------------------------------------//
+// Testing Include and Source
+//  - tring out dummy include
+//------------------------------------------------------------------------//
+
+@Includes {
+#include "dummy.hxx"
+}
+
+@Sources {
+#include "dummy.cxx"
+}
+
+
+//------------------------------------------------------------------------//
+// Testing Integrator
+//  - tring out dummy include
+//------------------------------------------------------------------------//
+@Integrator {
+  static_cast<void>(computeTangentOperator_);       // avoide warning
+  static_cast<void>(smt);                           //  avoide warning
+  dummyPrint();                                     // dummyPrint function comes from dummy.cxx
+}

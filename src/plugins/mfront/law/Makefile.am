@@ -18,6 +18,13 @@ $(DEP1): Elasticity.mfront IsotropicLinearHardeningPlasticity.mfront Iwan.mfront
 if HAVEMFRONT
 	@echo ""
 	@echo "----------------------------------------"
+	@echo "Compiled HelloWorld support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  HelloWorld.mfront
+	${mfront}/bin/mfront --obuild
+	@echo ""
+	@echo "----------------------------------------"
 	@echo "Compiling Elastic law support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
