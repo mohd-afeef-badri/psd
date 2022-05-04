@@ -14,7 +14,7 @@ all-local: $(DEP1)
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-$(DEP1): Elasticity.mfront IsotropicLinearHardeningPlasticity.mfront Iwan.mfront
+$(DEP1): Elasticity.mfront IsotropicLinearHardeningPlasticity.mfront Iwan.mfront HelloWorld.mfront
 if HAVEMFRONT
 	@echo ""
 	@echo "----------------------------------------"
@@ -71,7 +71,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf *~  *.so *.o $(DEP1) ./src ./include
+	rm  -rf *~  *.so *.o $(DEP1) ./src ./include/MFront ./include/TFEL
 
 
 maintainer-clean-local: clean-local
