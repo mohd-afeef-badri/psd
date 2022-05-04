@@ -1,0 +1,24 @@
+load "gmsh" load"msh3" 
+mesh3 Th=gmshload3("mesh.msh");
+
+real xmin=0,xmax=10;
+real ymin=0,ymax=10;
+real zmin=0,zmax=10;
+real eps=1e-6;
+
+func int fBis(){
+	if (y<ymin+eps) return 111;
+   else if (x>xmax-eps) return 222;
+   else if (y>ymax-eps) return 333;      	
+   else if (x<xmin+eps) return 444;
+   else if (z<zmin+eps) return 555;
+   else if (z>zmax-eps) return 666;      	   
+   else  return 777;
+}
+Th=change(Th,flabel=fBis());
+
+load "iovtk"
+savevtk("mesh.vtu",Th);
+savemesh(Th,"mesh.mesh");
+//savegmsh(Th,"n30-id1-relab");
+

@@ -1,0 +1,20 @@
+load "gmsh" 
+mesh Th=gmshload("mesh.o.msh");
+
+real xmin=0,xmax=25;
+real ymin=0,ymax=1;
+real eps=1e-6;
+
+func int sortLabel(){
+	if (y<ymin+eps) return 111;
+   else if (y>ymax-eps) return 333;      		
+   else if (x>xmax-eps) return 222;
+   else if (x<xmin+eps) return 444;
+   else  return 555;
+}
+Th=change(Th,flabel=sortLabel());
+
+load "iovtk"
+savevtk("mesh.vtu",Th);
+savemesh(Th,"mesh.mesh");
+
