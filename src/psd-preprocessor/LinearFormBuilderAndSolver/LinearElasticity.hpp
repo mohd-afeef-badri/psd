@@ -201,7 +201,7 @@ if(dirichletpointconditions<1 && pointprobe && Model!="pseudo_nonlinear"){
  "                                                                                \n";
  }
 
-if(debug)
+ if(debug)
  writeIt
  "                                                                                \n"
  "//-------------Debug glut plotting------------------//                          \n"
@@ -231,6 +231,66 @@ if(debug)
  "         );                                                                     \n"
  "  endProcedure(\"Paraview Postprocess\",t0);                                    \n"
  "                                                                                \n";
+
+
+if(reactionforce){
+
+codeSnippet R""""(
+
+//==============================================================================
+// -------Reaction force calculation-------//
+//==============================================================================
+
+startProcedure("force calculation",t0);
+)"""";
+
+if(spc == 2){
+
+if(reactionforcemethod=="variational_based"){
+codeSnippet R""""(
+
+  Vh def(F);    // F is internal force vector
+  
+  A   =   varfForce(Vh,Vh,solver=CG,sym=1);
+  F[] = A*u[];
+
+  real forcetotx  = 0. , forcetoty  = 0.;
+  
+  for(int i=0; i < Th.nv; i++){                                                 
+     if(abs(Th(i).x)<.000001){
+        forcetotx = forcetotx + F[][i*2];                             
+        forcetoty = forcetoty + F[][i*2+1];                           
+     }                                                                          
+  }
+
+  cout << "Vertical reaction Ry              :: "       <<  forcetoty  << endl;
+  cout << "Horizontal reaction Rx            :: "       <<  forcetotx  << endl;   
+)"""";}
+
+
+if(reactionforcemethod=="stress_based"){
+codeSnippet R""""(
+  Vh def(Sigx);   //  stress vector in x and y direction
+
+  def(Sigx) = [ lambda*(dx(u) + dy(u1) ) + 2*mu*dx(u)  ,  // Sigx  = Sigma_xx
+                mu*(dy(u) + dx(u1))                    ]; // Sigx1 = Sigma_xy
+
+  real forcetotx = intN1(Th,Dbc0On)( - Sigx   );
+  real forcetoty = intN1(Th,Dbc0On)( - Sigx1  );
+
+  cout << "Vertical reaction Ry              :: "       <<  forcetoty  << endl;
+  cout << "Horizontal reaction Rx            :: "       <<  forcetotx  << endl;   
+)"""";}
+}
+
+
+codeSnippet R""""(
+
+endProcedure("force calculation",t0);
+
+)"""";
+
+}
 
 }  //-- [if loop terminator] !Sequential ended --//
 

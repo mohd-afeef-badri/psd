@@ -234,3 +234,24 @@ for(int i=0; i<dirichletconditions; i++)
  ";                                                                                                \n"
   "                                                                                                \n";
 
+
+if(reactionforce && reactionforcemethod=="variational_based"){
+
+codeSnippet R""""(
+
+//==============================================================================
+// -------Variation formulation for calculating force -------
+//==============================================================================
+
+varf varfForce(def(u),def(v)) =
+
+//--------------------------------------------------------------------------
+// $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$
+//--------------------------------------------------------------------------
+  intN(Th,qforder=3)(
+         (lambda*divergence(u)*divergence(v)
+         + 2.*mu*( epsilon(u)'*epsilon(v) )))
+;
+)"""";
+
+}
