@@ -96,7 +96,10 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
        << "\033[0m\n" 
        << "\n List of acceptable Behaviours"
        << "\n    - \"Elasticity\"                           # linear-elasticty problems"
+       << "\n    - \"HelloWorld\"                           # dummy law for testing MFRONT-PSD"
+       << "\n    - \"HujeuxECP1985\"                        # soil-dynamics non-linear problems"
        << "\n    - \"IsotropicLinearHardeningPlasticity\"   # Von Mises elasto-plastic problem"
+       << "\n    - \"Iwan\"                                 # soil-dynamics non-linear problems"
        << "\n"
        << "\n\033[1;31m---------------------------------------------------------------------------------------------\033[0m\n"
        << "## Material Hypothesis [INPUT] ##"
@@ -124,6 +127,23 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
 
    const auto b = load(MFRONT_SHARED_LIBRARY_LOCATION, *mfrontBehaviourName , h);
 
+   if(b.params.size() > 0){
+
+       cout
+       << "\n\033[1;31m---------------------------------------------------------------------------------------------\033[0m\n"
+       << "## Parameters [INPUT] ##"
+       << "\n\033[1;31m---------------------------------------------------------------------------------------------\033[0m\n"
+       << "\n"
+       << "\033[1;35m The chosen MFront behaviour expects the following Parameters \033[0m"
+       << "\n"
+       <<
+       endl;
+
+       for (int i=0; i < b.params.size(); i++)
+           cout << "    Parameters name :   \033[1;36m" <<  b.params[i] << "\033[0m"
+                << "\tof value \033[1;36m" <<  getParameterDefaultValue<double>(b, b.params[i])   << "\033[0m" <<
+            endl;
+   }
 
    if( b.mps.size() > 0){
 
