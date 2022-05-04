@@ -1,3 +1,8 @@
 lab/*
 !include/dummy.cxx
 !include/dummy.hxx
+!include/cpplapack.h
+!include/hujeux.cpp
+!include/hujeux.h
+!include/mat_tools.cpp
+!include/utils.h
