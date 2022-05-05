@@ -2,7 +2,7 @@ SHELL := /usr/bin/zsh
 
 preprocess-stress-based:	
 	PSD_PreProcess -problem linear_elasticity -dimension 2 -getreactionforce -reactionforce stress_based \
-	-dirichletconditions 1 -postprocess u -bodyforceconditions 1 && \
+	-dirichletconditions 1 -bodyforceconditions 1 && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#,lambda;#,lambda, E, nu, L = 5., H = 1.;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#real E  = 200.e9  ,#     E  = 1.e5    ;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#macro  Dbc0On 2  #macro  Dbc0On 444#g" {} \; && \
@@ -16,7 +16,7 @@ solve-stress-based:
 
 preprocess-varf-based:	
 	PSD_PreProcess -problem linear_elasticity -dimension 2 -getreactionforce -reactionforce variational_based \
-	-dirichletconditions 1 -postprocess u -bodyforceconditions 1 && \
+	-dirichletconditions 1 -bodyforceconditions 1 && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#,lambda;#,lambda, E, nu, L = 5., H = 1.;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#real E  = 200.e9  ,#     E  = 1.e5    ;#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#macro  Dbc0On 2  #macro  Dbc0On 444#g" {} \; && \
@@ -38,4 +38,4 @@ mfront:
 	source /home/mb258512/PSDInstall/mfront-env.sh
 
 clean:
-	@rm -rf VTUs* *.edp result* *.csv
+	@rm -rf *.edp *.csv *.data *.eps
