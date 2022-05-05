@@ -1,3 +1,4 @@
 !ref-plain-stress.data
 !ref-plain-strain.data
 !Makefile
+*.eps

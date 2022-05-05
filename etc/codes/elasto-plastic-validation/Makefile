@@ -18,8 +18,5 @@ gnuplot:
 
 run: preprocess solve gnuplot
 
-mfront:
-	source /home/mb258512/PSDInstall/mfront-env.sh
-
 clean:
-	@rm -rf VTUs* *.edp result* *.csv
+	@rm -rf VTUs* *.edp *.data *.csv
