@@ -1,8 +1,21 @@
 SUBDIRS = test
 
-LIST_COMPILE = Elasticity.mfront \
-Nonlinear-IsotropicLinearHardeningPlasticity.mfront \
+LIST_COMPILE = HelloWorld.mfront  \
+HujeuxECP1985.mfront \
+Elasticity.mfront  \
+IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront
+
+if HAVEMFRONT
+LIST_OBJ_FILES = src/HelloWorld.o  \
+src/HujeuxECP1985.o \
+src/Elasticity.o  \
+src/IsotropicLinearHardeningPlasticity.o  \
+src/Iwan.o
+else
+LIST_OBJ_FILES = 
+endif
+
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
 
@@ -14,8 +27,29 @@ all-local: $(DEP1)
 	@echo ""
 	@echo " Compilation list $(LIST_COMPILE)"
 
-$(DEP1): Elasticity.mfront IsotropicLinearHardeningPlasticity.mfront Iwan.mfront HelloWorld.mfront
-if HAVEMFRONT
+$(DEP1): $(LIST_OBJ_FILES)
+
+src/Elasticity.o: Elasticity.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled Elasticity support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  Elasticity.mfront
+	${mfront}/bin/mfront --obuild
+
+
+src/IsotropicLinearHardeningPlasticity.o: IsotropicLinearHardeningPlasticity.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled IsotropicLinearHardeningPlasticity support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  IsotropicLinearHardeningPlasticity.mfront
+	${mfront}/bin/mfront --obuild
+
+
+src/HelloWorld.o: HelloWorld.mfront
 	@echo ""
 	@echo "----------------------------------------"
 	@echo "Compiled HelloWorld support for mfront"
@@ -23,36 +57,26 @@ if HAVEMFRONT
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  HelloWorld.mfront
 	${mfront}/bin/mfront --obuild
+
+
+src/Iwan.o: Iwan.mfront
 	@echo ""
 	@echo "----------------------------------------"
-	@echo "Compiling Elastic law support for mfront"
-	@echo "----------------------------------------"
-	@echo ""
-	${mfront}/bin/mfront --interface=generic  Elasticity.mfront
-	${mfront}/bin/mfront --obuild
-	@echo ""
-	@echo "----------------------------------------"
-	@echo "Compiling Isotropic Linear-Hardening Plasticity law support for mfront"
-	@echo "----------------------------------------"
-	@echo ""
-	${mfront}/bin/mfront --interface=generic  IsotropicLinearHardeningPlasticity.mfront
-	${mfront}/bin/mfront --obuild
-	@echo ""
-	@echo "----------------------------------------"
-	@echo "Compiled Iwan law support for mfront"
+	@echo "Compiled Iwan support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  Iwan.mfront
 	${mfront}/bin/mfront --obuild
+
+
+src/HujeuxECP1985.o: HujeuxECP1985.mfront
 	@echo ""
 	@echo "----------------------------------------"
-	@echo "Compiled Hujeux law support for mfront"
+	@echo "Compiled HujeuxECP1985 support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  HujeuxECP1985.mfront
 	${mfront}/bin/mfront --obuild
-endif
-	@echo ""
 
 install-exec-local:
 if HAVEMFRONT

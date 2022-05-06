@@ -10,17 +10,30 @@
 
 
 //------------------------------------------------------------------------//
-// Testing Parameter
+// Testing @Include and @Source
+//  - tring out dummy include
+//------------------------------------------------------------------------//
+
+@Includes {
+#include "dummy.hxx"
+}
+
+@Sources {
+#include "dummy.cxx"
+}
+
+//------------------------------------------------------------------------//
+// Testing @Parameter
 //  - parameters are local these will not be shared with PSD
 //  - values will be set here in mfront file
 //  - these need a default value or else there will be error
 //------------------------------------------------------------------------//
 
-@Parameter par1 = 0.2;                       // par1 is a varialbe
+@Parameter real par1 = 0.2;                  // par1 is a varialbe
 par1.setEntryName("Parmtr1");                // par1 is named "Parmtr1"
 
 
-@Parameter par2{100}, par3{0.001};           // list of 2 variables
+@Parameter  par2{100}, par3{0.001};          // list of 2 variables
                                              // they will haves names "par2" and "par3"
 
 @Parameter par4(0), par5(0);                 // again a list of 2 variables
@@ -28,7 +41,7 @@ par5.setEntryName("parmt5");                 // they will haves names "par4" and
 
 
 //@Parameter par6;                          // error if we just define parameter
-@Parameter par6;                            // par6 is a varialbe with name "par6"
+@Parameter  par6;                           // par6 is a varialbe with name "par6"
 par6.setDefaultValue(1.e-9);                // this is another way of seeting value of paramter
 
 
@@ -37,7 +50,18 @@ youngMod.setEntryName("NonGlossaryName");   // youngMod is named "NonGlossaryNam
 //youngMod.setGlossaryName("YoungModulus"); // youngMod can be named YoungModulus
 
 //------------------------------------------------------------------------//
-// Testing MaterialProperty
+// Testing @StaticVariable`
+//  - static variable are local these will not be shared with PSD
+//  - values will be set here in mfront can't be changed after compilation
+//  - these  must be followed by the type of the constant
+//------------------------------------------------------------------------//
+
+@StaticVariable real A = 1.001e12;
+
+@StaticVariable int B = 2;
+
+//------------------------------------------------------------------------//
+// Testing @MaterialProperty
 //   - MaterialProperty is a global and will be shared with PSD
 //   - No need of value here
 //------------------------------------------------------------------------//
@@ -52,21 +76,7 @@ matProp1.setEntryName("materialProperty1"); // matProp1 is named "materialProper
 
 
 //------------------------------------------------------------------------//
-// Testing Include and Source
-//  - tring out dummy include
-//------------------------------------------------------------------------//
-
-@Includes {
-#include "dummy.hxx"
-}
-
-@Sources {
-#include "dummy.cxx"
-}
-
-
-//------------------------------------------------------------------------//
-// Testing Integrator
+// Testing @Integrator
 //  - tring out dummy include
 //------------------------------------------------------------------------//
 @Integrator {

@@ -28,6 +28,12 @@ check-header:
 	@echo " Checking mfront Elastic law : RUNNING                      "
 	@echo "*============================================================*"
 	@echo ""
+
+Test_0: HelloWorld-For-A-Quadrature-Point-3D.cxx
+	@echo "Test_0 : mfront unit test for HelloWorld"
+	$(CXX) HelloWorld-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out > Test_0.log
+	@echo "  PASSED "
 	
 Test_1: Elasticity-For-A-Quadrature-Point.cxx
 	@echo "Test_1 : mfront unit test for Elasticity (Quadrature point)"
