@@ -248,10 +248,22 @@ varf varfForce(def(u),def(v)) =
 //--------------------------------------------------------------------------
 // $+int_{\\Omega}((\\epsilon(u):\\mathbbm(E):\\epsilon(v)))$
 //--------------------------------------------------------------------------
-  intN(Th,qforder=3)(
-         (lambda*divergence(u)*divergence(v)
-         + 2.*mu*( epsilon(u)'*epsilon(v) )))
-;
+  intN(Th,qforder=3)
 )"""";
+
+
+if(!useMfront){
+codeSnippet R""""(
+         ((lambda*divergence(u)*divergence(v)
+         + 2.*mu*( epsilon(u)'*epsilon(v) )));
+)"""";
+}
+
+if(useMfront){
+codeSnippet R""""(
+         (  epsilonXMt(u,Mt)'*epsilon(v) );
+)"""";
+}
+
 
 }
