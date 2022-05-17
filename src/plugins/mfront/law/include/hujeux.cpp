@@ -235,6 +235,93 @@ void HujeuxLaw::initConst()
 //=================================================================================================================//
 // Initializing when reading user parameters at the beginning of each step for a given integration point
 //=================================================================================================================//
+void HujeuxLaw::init(const mfrontVector& param)
+{
+  m_param.assign(param.begin(),param.end()); // tab of size NPROPHUJ
+  nmecdev = 3;
+  nmeciso = 1;
+  inc = 0.;
+  im = jm = km = lm = 0;
+  facinc = m_param[20];
+  iecoul = (int)m_param[21];
+  incmax = (int)m_param[22];
+  incmin = 1. / incmax;
+
+  // local variables used during iterations
+  m_mu = m_param[1];
+  m_lamda = m_param[0] - 2 * m_mu / 3.;
+  pref = Pa;
+  ptrac = pref * 1.e-12;
+  sgncyc = 0.;
+  ppp = 0.;
+  pc = m_param[6];
+  auto	phi = m_param[3]; // already in radians (converted when reading data)
+  auto	psi = m_param[4]; // already in radians
+  sinphi = sin(phi);
+  sinpsi = sin(psi);
+
+  // initializing values of inipl/ipl tabs (-1=elastic, 1=plastic)
+  // default = on yield surface
+  for (int i = 0; i < 4; i++)
+  {
+      inipl[i] = 1;
+      ipl[i] = 1;
+      lambdap[i] = 0.;
+  }
+  iipl = 0;
+
+  for (int i = 0; i < 4; i++)
+  {
+      for (int j = 0; j < 6; j++)
+      {
+          Phi[i][j] = 0.;
+          Psi[i][j] = 0.;
+          CPsi[i][j] = 0.;
+      }
+  }
+
+  for (int i = 0; i < 3; i++)
+  {
+      vn[i] = Real2::zero();
+      sigb[i] = Real2::zero();
+  }
+  evp = 0.;
+
+  cout << "// ================================================================================= //"
+       << "\n  0  Ki      = "<< param[0] 
+       << "\n  1  Gi      = "<< param[1] 
+       << "\n  2  ne      = "<< param[2] 
+       << "\n  3  phi(°)  = "<< param[3] 
+       << "\n  4  psi(°)  = "<< param[4] 
+       << "\n  5  beta    = "<< param[5] 
+       << "\n  6  pci     = "<< param[6]
+       << "\n  7  amon    = "<< param[7]
+       << "\n  8  b       = "<< param[8] 
+       << "\n  9  acyc    = "<< param[9] 
+       << "\n  10 alfa    = "<< param[10] 
+       << "\n  11 rayela  = "<< param[11] 
+       << "\n  12 rayhys  = "<< param[12] 
+       << "\n  13 raymbl  = "<< param[13] 
+       << "\n  14 cmon    = "<< param[14] 
+       << "\n  15 d       = "<< param[15] 
+       << "\n  16 ccyc    = "<< param[16] 
+       << "\n  17 dltela  = "<< param[17] 
+       << "\n  18 xkimin  = "<< param[18] 
+       << "\n  19 m       = "<< param[19] 
+       << "\n  20 facinc  = "<< param[20] 
+       << "\n  21 iecoul  = "<< param[21] 
+       << "\n  22 incmax  = "<< param[22] 
+       << "\n  23 Kaux    = "<< param[23] 
+       << "\n  24 Gaux    = "<< param[24]        
+       << "\n// ================================================================================= //"
+       << endl; 
+       
+}
+/**/
+
+//=================================================================================================================//
+// Initializing when reading user parameters at the beginning of each step for a given integration point
+//=================================================================================================================//
 void HujeuxLaw::init(const dvector& param)
 {
     m_param.assign(param.begin(),param.end()); // tab of size NPROPHUJ
@@ -286,7 +373,7 @@ void HujeuxLaw::init(const dvector& param)
     	sigb[i] = Real2::zero();
 	}
 	evp = 0.;
-	
+
   cout << "// ================================================================================= //"
        << "\n  0  Ki      = "<< param[0] 
        << "\n  1  Gi      = "<< param[1] 
@@ -373,8 +460,8 @@ bool HujeuxLaw::readParameters(const string& name)
 	if (param[8] > 1.) param[8] = 1.; // b
 #endif
 
-	//param[3] *= RAD;
-	//param[4] *= RAD;
+	param[3] *= RAD;
+	param[4] *= RAD;
 
 	init(param);                                                                    
 
@@ -486,6 +573,41 @@ void HujeuxLaw::computeTangentTensor(const Tensor2& sig)
 
 //=================================================================================================================//
 //=================================================================================================================//
+void HujeuxLaw::initHistory(mfrontVector*  histab)
+{
+   // mfrontVector*  histab;
+   // histab = &histabAdd;
+     
+    evp = histab->front();
+
+	int ii = 1, jj = 15;
+    for (auto & r : ray)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            r[j] = (*histab)[ii + j];
+        }
+        ii += 2;
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            vn[i][j] = (*histab)[ii + j];
+            sigb[i][j] = (*histab)[jj + j];
+        }
+        ii += 2;
+        jj += 2;
+    }
+    pldiso = (*histab)[jj++];
+    set_ipl(histab->back());
+}
+//=================================================================================================================//
+/**/
+
+//=================================================================================================================//
+//=================================================================================================================//
 void HujeuxLaw::initHistory(dvector* histab)
 {
     evp = histab->front();
@@ -517,6 +639,76 @@ void HujeuxLaw::initHistory(dvector* histab)
 /**/
 
 
+//=================================================================================================================//
+// sig = stress tensor at the end of previous converged time step
+// histab : tab containing internal variables(=hardening parameters) stored on each integration point(size = NHISTHUJ)
+// 
+//=================================================================================================================//
+bool HujeuxLaw::initState(mfrontVector& histabAdd, const Tensor2& sig)
+{
+  mfrontVector *histab;
+  histab = &histabAdd;
+  
+  if (sig == Tensor2::zero() || histab == nullptr) return true;
+	auto beta = m_param[5];
+	pc = m_param[6] * exp(beta * evp);
+	initHistory(histab);
+
+	// initialisation des mecanismes
+	// mecanismes deviatoires
+	bool stop = false;
+	
+	for (int k = 0; k < nmecdev && !stop; k++)
+	{
+		im = ipermu[k][0];
+		jm = ipermu[k][1];
+		lm = ipermu[k][2];
+		km = k;
+		stop = initMecdev(sig,inipl[km], ipl[k], vn[k], sigb[k], ray[k]);
+	}
+
+	// mecanisme isotrope
+	if (!stop) stop = initMeciso(sig, inipl[3], ipl[3], ray[3]);
+
+	if (stop)
+	{
+		filebuf ficherr;
+		ficherr.open(ferrlog.c_str(), ios::out | ios::app);
+		ostream oserr(&ficherr);
+		oserr << "Warning : error while initializing mechanisms - Stop!" << endl;
+		ficherr.close();
+		return true;
+	}
+
+	iipl = (ipl[0] + 2) + 5 * (ipl[1] + 2) + 25 * (ipl[2] + 2) + 125 * (ipl[3] + 2);
+	histab->back() = iipl;
+	histab->front() = evp;
+
+	int ii = 1;
+	int jj = 15;
+	for (auto & r : ray)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			(*histab)[ii + j] = r[j];
+		}
+		ii += 2;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			(*histab)[ii + j] = vn[i][j];
+			(*histab)[jj + j] = sigb[i][j];
+		}
+		ii += 2;
+		jj += 2;
+	}
+	(*histab)[jj++] = pldiso;
+	
+	return stop;
+}
 
 
 //=================================================================================================================//
@@ -1543,6 +1735,434 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 //=================================================================================================================//
 /**/
 
+
+//=================================================================================================================//
+// Computing stresses at step n+1 (small strain formulation)
+// Deviatoric plane mechanisms : mec1=YZ    mec2=ZX    mec3=XY
+//=================================================================================================================//
+void HujeuxLaw::ComputeStress(mfrontVector& histabAdd,Tensor2& sig, Tensor2& eps, Tensor2& epsp, Tensor2& dsig,
+        const Tensor2& deps,bool is_converge)
+{
+	mfrontVector* histab;
+	histab = &histabAdd;
+	
+	Real	resinc = 1., // portion d'increment restant a calculer
+			beta = m_param[5],
+			pci = m_param[6],
+			n = m_param[2],
+			b = m_param[8],
+			p = 0.,
+			factmp = 0., fac = 0., actif = 0.,
+			seuil[4], fidsig[4], hray[4], xlray[4],
+			daux[6][6];
+	auto hh1 = new Real*[4];
+	auto hb = new Real[4];
+
+
+	initHistory(histab);
+	auto evp0 = evp;
+
+	int	incfai = 0,// nb of sub-icrements done during iterative main loop
+		i = 0, j = 0, k = 0, ii = 0, jj = 0, lmec = 0, kmec = 0, l = 0,
+		nmec = 0, jpl[4], imec[4], jmec[4], iv = 0;
+	
+	Tensor2 sign(sig), epspn(epsp), depsp;
+
+	inc = 0.;
+	incmin = 1./incmax;
+	for (i = 0; i < 4; i++)
+	{
+		hh1[i] = new Real[4];
+		hray[i] = 0.;
+		seuil[i] = 0.;
+		fidsig[i] = 0.;
+		xlray[i] = 0.;
+	}
+
+	Real depsv = trace(deps);
+	
+	computeTangentTensor(sig);
+	
+	// subincrements loop start
+	do
+	{
+		ii = 0;
+
+		inc = resinc;
+		incfai++;
+		if (incmin > resinc) incmin = resinc;
+
+		// if no yield surface (=mechanism) is active, restarting the loop with a bigger increment
+		if (incfai == 1 || (incfai > 1 && nmec > 0))
+		{
+			pc = pci * exp(beta * evp);
+			p = trace(sig) / 3.;
+			factmp = 50. * p / pc;
+			fac = factmp;
+			if (factmp < 0.1) fac = 0.1;
+			if (fac < 1.) inc *= fac;
+			if (inc < incmin) inc = incmin;
+		}
+		
+		if (p >= 0.) p = ptrac;
+		else if (p >= -1.e-7) p = -1.e-7;
+
+		computeElastTensor(p);
+
+		auto K = m_lamda + 2. * m_mu / 3.;
+		dsig = m_elast_tensor * deps;
+
+		// treating possible traction or liquefaction (not done yet)
+
+		// determining active yield surfaces and terms depending on stresses and hardening
+
+		// Computing vectors Phi, Psi, CPsi and yield surface for each plane mechanism
+		// Phi = (df/dsig, -df/devp)
+		// Psi = dgk/dsig
+		// CPsi = C(K,G) * Psi
+
+		// Deviatoric mechanisms
+		for (k = 0; k < nmecdev; k++)
+		{
+			im = ipermu[k][0];
+			jm = ipermu[k][1];
+			lm = ipermu[k][2];
+			km = k;
+			jpl[k] = abs(ipl[k]);
+			for (i = 0; i < 6; i++)
+			{
+				Phi[k][i] = 0.;
+				Psi[k][i] = 0.;
+				CPsi[k][i] = 0.;
+			}
+
+			ComputeMecdev(sig,dsig,Phi[k], Psi[k], CPsi[k], seuil[k], fidsig[k], hray[k], xlray[k], ipl[k],
+				jpl[k], vn[k], sigb[k], ray[k]);
+		}
+
+		// Isotropic mechanism
+		for (i = 0; i < 6; i++)
+		{
+			Phi[3][i] = 0.;
+			Psi[3][i] = 0.;
+			CPsi[3][i] = 0.;
+		}
+		jpl[3] = abs(ipl[3]);
+
+		ComputeMeciso(sig,dsig,Phi[3], Psi[3], CPsi[3], seuil[3], fidsig[3], hray[3], xlray[3], ipl[3],
+			jpl[3], ray[3]);
+
+		// dividing into sub-increments for elasticity
+		factmp = depsv;
+
+		auto dum = fabs(factmp * inc * K * n / p / facinc);
+
+		if (dum > 1.) inc /= dum;
+		if (inc < incmin) inc = incmin;
+
+		// checking if dev. mechanisms are active for this sub-increment
+		nmec = 0;
+
+		for (i = 0; i < 4; i++)
+		{
+			imec[i] = 0;
+			jmec[i] = 0;// used to compute tangent operator
+			hb[i] = 0.;
+			for (j = 0; j < 4; j++)
+			{
+				hh1[i][j] = 0.;
+			}
+		}
+
+		for (k = 0; k < nmecdev + nmeciso; k++)
+		{
+			if (ipl[k] > 0.)
+			{
+				actif = seuil[k] + fidsig[k] * inc;
+
+				// Accuracy issue
+				//	if (fidsig[k]*inc != 0. && fabs(1. + seuil[k]/(fidsig[k]*inc)) < EPS) actif = 0.; 
+
+				if (k < nmecdev && actif <= 0.)
+					ipl[k] = -jpl[k];
+
+				else
+				{
+					// isotropic yield surface always assumed active (original hujeux model...)
+					// computig RHS
+					hb[nmec] = actif;
+					imec[nmec] = k;
+					jmec[k] = nmec++;
+				}
+			}
+		}
+
+		// building the system to be inverted
+		if (nmec > 0)
+		{
+		
+		
+			int kk = 0;
+			for (i = 0; i < nmec; i++)
+			{
+				k = imec[i];
+				hh1[i][i] = hray[k] + Phi[k][4] * CPsi[k][4];
+
+				for (j = 0; j < nmec; j++)
+				{
+					kk = imec[j];
+					for (int iii = 0; iii < 4; iii++)
+					{
+						hh1[i][j] += Phi[k][ii] * CPsi[kk][ii];
+					}
+				}
+			}
+
+			// solving for lambdap by gauss elimination
+			Real lpi = 0.;
+			bool stop = false;
+			int niter = 0, maxit = incmax / 2;
+			
+			do
+			{
+				niter++;
+	
+				for (i = 0; i < 4; i++) lambdap[i] = 0.;
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////				
+				gauss(hh1, hb, lambdap, nmec);
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////				
+
+				// test on lambdap (> 0)
+				j = 0;
+				for (i = 0; i < nmec; i++)
+				{
+					lpi = lambdap[i];
+
+					// Accuracy issue
+					// if (fabs(lpi) < EPS) lpi = 0.; 
+
+					if (lpi >= 0.) j++;
+					else
+					{
+						if (niter < maxit && lpi < -1.e-7)
+						{
+							j--;
+							hh1[i][i] = 1.e20;
+							hb[i] = 0.;
+						}
+						else
+						{
+							lambdap[i] = 0.;
+							j++;
+						}
+					}
+				}
+				stop = (j == nmec);
+			} while (!stop || niter == maxit / 2);
+				
+			// computing plastic strain rates and hardening
+			dvector dep(6,0.);
+			int kpl = 0;
+			for (i = 0; i < nmec; i++)
+			{
+				k = imec[i];
+				kpl = ipl[k] - 1;
+				lpi = lambdap[i];
+				//	if (lpi < -EPS) lpi = 0.;
+				evp += lpi * CPsi[k][3];
+				ray[k][kpl] += lpi * xlray[k];
+				ray[k][kpl] = min_(ray[k][kpl], Real(1.));
+
+				for (j = 0; j < 6; j++)
+					dep[j] += lpi * Psi[k][j];
+			}
+
+			// Accuracy issue
+			if (fabs(evp) < EPS) evp = 0.;
+			else
+			{
+				evp = max_(evp, Real(-1.));
+				evp = min_(evp, Real(1.));
+			}
+
+			if (indaux == 1 && is_converge)
+			{
+			    // replace double** with matrix type from existing lib
+			    // use inversion fct from existing lib (not implemented here)
+			    
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////
+				auto	hhi = new Real*[4];
+				for (i = 0; i <4; i++) 
+				{
+					hhi[i] = new Real[4];
+					for (j = 0; j < 4; j++) hhi[i][j] = hh1[i][j];
+				}
+				gauss(hhi,hb,hb,nmec);              
+			    ///////////////////////////////////////// CHANGE WITH LAPACK ////////////////////////////////////
+				
+				auto	G2 = 2.*m_mu;
+
+				for (i = 0; i < 6; i++)
+				    for (j = 0; j < 6; j++)
+				        daux[i][j] = 0.;
+
+				for (ii = 0; ii < nmecdev; ii++)
+				{
+					for (jj = 0; jj < nmecdev; jj++)
+					{
+						for (kmec = 0; kmec < nmec; kmec++)
+						{
+							k = imec[kmec];
+							if (k != 3)
+							{
+								for (lmec = 0; lmec < nmec; lmec++)
+								{
+									l = imec[lmec];
+									if (l != 3)
+									{
+										daux[ii][jj] += (m_lamda*(Psi[k][0] + Psi[k][1] + Psi[k][2])
+														+ G2*Psi[k][ii])*hhi[kmec][lmec]*(m_lamda*(Phi[l][0]
+														+ Phi[l][1] + Phi[l][2]) + G2*Phi[l][jj]);
+									}
+								}
+							}
+						}
+					}
+				}
+
+				for (ii = 0; ii < nmecdev; ii++)
+				{
+					for (jj = nmecdev; jj < 6; jj++)
+					{
+						for (kmec = 0; kmec < nmec; kmec++)
+						{
+							k = imec[kmec];
+							if (k != 3)
+							{
+								if ((l = jmec[6 - jj]) != 0)
+								{
+									daux[ii][jj] += (m_lamda*(Psi[k][0] + Psi[k][1] + Psi[k][2])
+													+ G2*Psi[k][ii])*hhi[kmec][l]*G2*Phi[l][4];
+								}
+							}
+						}
+					}
+				}
+
+				for (ii = nmecdev; ii < 6; ii++)
+				{
+					for (jj = 0; jj < nmecdev; jj++)
+					{
+						for (kmec = 0; kmec < nmec; kmec++)
+						{
+							k = imec[kmec];
+							if (k != 3)
+							{
+								if ((l = jmec[6 - ii]) != 0)
+								{
+									daux[ii][jj] += (m_lamda*(Phi[k][0] + Phi[k][1] + Phi[k][2])
+													+ G2*Phi[k][jj])*hhi[l][kmec]*G2*Psi[l][4];
+								}
+							}
+						}
+					}
+				}
+
+				if ((l = jmec[1]) != 0)
+				{
+					daux[3][3] += G2*Phi[2][4]*hhi[l][l]*G2*Psi[2][3];
+				}
+				if ((l = jmec[2]) != 0)
+				{
+					daux[4][4] += G2*Phi[1][4]*hhi[l][l]*G2*Psi[1][4];
+				}
+				if ((l = jmec[0]) != 0)
+				{
+					daux[5][5] += G2*Phi[0][4]*hhi[l][l]*G2*Psi[0][5];
+				}
+			}
+			
+
+			// computing elastoplastic stresses
+			depsp = dep;
+			sig -= m_elast_tensor * depsp;
+			epsp += depsp;
+	
+		}
+		
+		sig += dsig * inc;
+		resinc -= inc;
+   
+	} while (resinc > FTOL);
+
+ 
+	bool is_plastic = (fabs(evp) >= EPS || norm(epsp.m_vec) >= EPS);	
+	 
+	if (!is_plastic)
+	{
+
+		epsp = epspn;
+		evp = evp0;
+		sig = sign;
+	  p = trace(sig) / 3.;
+		if (p >= 0.) p = ptrac;
+		else if (p >= -1.e-7) p = -1.e-7;
+
+		computeElastTensor(p);
+
+		dsig = m_elast_tensor * deps;
+		sig += dsig;
+
+	}
+
+	if (is_converge)
+	{
+		computeTangentTensor(sig);
+
+	    // computing tangent elastoplastic stiffness operator
+		if (indaux == 1)
+		{
+			for (i = 0; i < 6; i++)
+			{
+			    for (j = 0; j < 6; j++)
+			    {
+			        m_tangent_tensor[i][j] -= daux[i][j];
+			    }
+			}
+		}
+
+		// updating internal variables in histab
+		histab->front() = evp;
+
+		ii = 1;
+		for (i = 0; i < 4; i++)
+		{
+			for (j = 0; j < 2; j++)
+			{
+				(*histab)[ii + j] = ray[i][j];
+			}
+			ii += 2;
+		}
+
+		jj = 15;
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 2; j++)
+			{
+				(*histab)[ii + j] = vn[i][j];
+				(*histab)[jj + j] = sigb[i][j];
+			}
+			ii += 2;
+			jj += 2;
+		}
+		(*histab)[jj++] = pldiso;
+
+    	iipl = (ipl[0] + 2) + 5 * (ipl[1] + 2) + 25 * (ipl[2] + 2) + 125 * (ipl[3] + 2);
+		histab->back() = iipl;
+	}	
+}
+//=================================================================================================================//
+/**/
 //=================================================================================================================//
 // Test class to get number
 //=================================================================================================================//

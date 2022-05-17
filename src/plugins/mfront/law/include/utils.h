@@ -21,6 +21,10 @@ typedef double Real;
 //typedef vector<double>	dvector;
 typedef vector<Real>	dvector;
 
+typedef tfel::math::vector<double>  mfrontVector;
+
+//typedef tfel::math::vector<double > dvector;
+
 //extern void		gauss(double**, double*, double*, const int&);
 extern void		gauss(Real**, Real*, Real*, const int&);
 extern dvector	operator-(const dvector&, const dvector&);

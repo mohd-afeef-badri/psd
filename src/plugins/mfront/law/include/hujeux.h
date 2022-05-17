@@ -169,15 +169,21 @@ public:
 //	HujeuxLaw& operator=(const HujeuxLaw&);
 	
 //	static Real get_dev(const Tensor2&, bool /*is_sig*/ = true);
-	void init(const dvector& /*param*/);         
+	void init(const dvector& /*param*/);
+	void init(const tfel::math::vector<double>& /*param*/);
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);
 	void computeElastTensor(const Real& /*p*/);
 	void computeTangentTensor(const Tensor2& /*sign*/);
 	bool initState(const Tensor2& /*sign*/ = Tensor2::zero(), dvector* /*histab*/ = nullptr);
+	bool initState( mfrontVector& /*histab*/, const Tensor2& /*sign*/ = Tensor2::zero()  );
 	void initHistory(dvector* /*histab*/);
+	void initHistory(mfrontVector* /*histab*/);
 
-	void ComputeStress(dvector* /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/, 
+	void ComputeStress(dvector* /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/,
+		              const Tensor2& /*deps*/,bool /*is_converge*/ = false);
+
+	void ComputeStress(mfrontVector& /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/,
 		              const Tensor2& /*deps*/,bool /*is_converge*/ = false);
 
 	bool initMecdev(const Tensor2& /*sig*/, int& /*iniplkm*/, int& /*iplk*/, Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/),
