@@ -1,26 +1,13 @@
-// Test HelloWorld : a dummy law	//
+// Test Hujeux.mfront : a non-linear soil law	//
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "MGIS/LibrariesManager.hxx"
 #include "MGIS/Behaviour/State.hxx"
 #include "MGIS/Behaviour/Behaviour.hxx"
 #include "MGIS/Behaviour/BehaviourData.hxx"
 #include "MGIS/Behaviour/Integrate.hxx"
-
-std::string MaterialPropertyKind( int in )
-{
-     std::string out;
-     if( in == 0 )
-       out = "SCALAR";
-     if( in == 1 )
-       out = "VECTOR";
-     if( in == 2 )
-       out = "STENSOR";
-     return out;
-}
 
 void printLine(std::string s)
 {
@@ -37,10 +24,13 @@ int main(const int argc, const char *const *argv)
   using namespace mgis;
   using namespace mgis::behaviour;
 
+  using std::ifstream;
+  using std::ofstream;
+  
   bool verbos = true;
 
   printLine("=");
-  std::cout << "   tesing HelloWorld law MFront-MGIS              " << std::endl;
+  std::cout << "   tesing Hujeux law MFront-MGIS              " << std::endl;
   printLine("=");
 
    	//------------------------------------------------------------
@@ -50,7 +40,7 @@ int main(const int argc, const char *const *argv)
     std::cout << "   ->  Loading Behaviour   " << std::endl;
     constexpr
     const auto h = Hypothesis::TRIDIMENSIONAL;
-    const auto b = load("/home/mb258512/Work/repo/psd_sources/src/plugins/mfront/law/src/libBehaviour.so", "HelloWorld", h);
+    const auto b = load("./../../law/src/libBehaviour.so", "Hujeux", h);
     std::cout << "       Done   " << std::endl;
     printLine("-");
 
@@ -59,33 +49,6 @@ int main(const int argc, const char *const *argv)
    	//------------------------------------------------------------
     if (verbos)
     {
-      std::cout << "   ->  Behaviour objects   " << std::endl;
-
-      const auto n = getArraySize(b.isvs, b.hypothesis);
-
-      std::cout << "         Internal State Variables (isvs)  "<< std::endl;
-      std::cout << "           b.isvs size =  " <<
-        n << std::endl;
-      for (int i = 0; i < b.isvs.size(); i++)
-        std::cout << "             - isvs "<< i << " name :   \033[1;36m" << b.isvs[i].name << "\033[0m" <<
-        "\t\tof type \033[1;36m" << MaterialPropertyKind(b.isvs[i].type) <<"\033[0m" <<
-        std::endl;
-
-      std::cout << "         External State Variables (esvs)  "<< std::endl;
-      std::cout << "           b.esvs.size =  " <<
-        b.esvs.size() << std::endl;
-      for (int i = 0; i < b.esvs.size(); i++)
-        std::cout << "             - esvs "<< i << " name :   \033[1;36m" << b.esvs[i].name << "\033[0m" <<
-        "\t\tof type \033[1;36m" << MaterialPropertyKind(b.esvs[i].type) <<"\033[0m" <<
-        std::endl;
-
-      std::cout << "         Material Parameters (mps)  "<< std::endl;
-      std::cout << "           b.mps.size() =  " <<
-        b.mps.size() << std::endl;
-      for (int i = 0; i < b.mps.size(); i++)
-        std::cout << "             - mps "<< i << " name :   \033[1;36m" << b.mps[i].name << "\033[0m" <<
-        "\t\tof type \033[1;36m" << MaterialPropertyKind(b.mps[i].type) <<"\033[0m" <<
-        std::endl;
 
 
       std::cout << "         Parameters (params)  "<< std::endl;
@@ -95,23 +58,50 @@ int main(const int argc, const char *const *argv)
         std::cout << "             - params "<< i << " name :   \033[1;36m" << b.params[i] << "\033[0m" <<
         std::endl;
 
+              std::cout << "   ->  Behaviour objects   " << std::endl;
 
-      std::cout << "         Strain information (gradients)  "<< std::endl;
-      std::cout << "           b.gradients.size() =  " <<
-        b.gradients.size() << std::endl;
-      std::cout << "           b.gradients[0].name =  " <<
+
+      std::cout << "         Material Parameters (mps)  "<< std::endl;
+      std::cout << "           b.mps.size() =  " <<
+        b.mps.size() << std::endl;
+      for (int i = 0; i < b.mps.size(); i++)
+        std::cout << "             - mps "<< i << " name :   \033[1;36m" << b.mps[i].name << "\033[0m" <<
+        std::endl;
+
+
+
+      const auto n = getArraySize(b.isvs, b.hypothesis);
+
+      std::cout << "         b.isvs size =  " <<
+        n << std::endl;
+      for (int i = 0; i < b.isvs.size(); i++)
+        std::cout << "    internal state variables name :   \033[1;36m" << b.isvs[i].name << "\033[0m" <<
+        "\t\tof type \033[1;36m" << "\033[0m" <<
+        std::endl;
+
+      for (int i = 0; i < b.esvs.size(); i++)
+        std::cout << "    external state variables name :   \033[1;36m" << b.esvs[i].name << "\033[0m" <<
+        "\t\tof type \033[1;36m" << "\033[0m" <<
+        std::endl;
+
+      std::cout << "         b.mps.size() =  " <<
+        b.mps.size() << std::endl;
+      for (int i = 0; i < b.mps.size(); i++)
+        std::cout << "         b.mps[" << i << "].name =  " <<
+        b.mps[i].name << std::endl;
+
+      for (int i = 0; i < b.mps.size(); i++)
+        std::cout << "         b.mps[" << i << "].type =  " <<
+        b.mps[i].type << std::endl;
+
+      std::cout << "         b.gradients[0].name =  " <<
         b.gradients[0].name << std::endl;
-      std::cout << "           b.gradients[0].type =  " <<
-        MaterialPropertyKind(b.gradients[0].type) << std::endl;
-
-
-      std::cout << "         Stress information (thermodynamic_forces)  "<< std::endl;
-      std::cout << "           b.thermodynamic_forces.size() =  " <<
+      std::cout << "         b.gradients[0].type =  " <<
+        b.gradients[0].type << std::endl;
+      std::cout << "         b.thermodynamic_forces.size() =  " <<
         b.thermodynamic_forces.size() << std::endl;
-      std::cout << "           b.thermodynamic_forces[0].name =  " <<
+      std::cout << "         b.thermodynamic_forces[0].name =  " <<
         b.thermodynamic_forces[0].name << std::endl;
-      std::cout << "           b.thermodynamic_forces[0].type =  " <<
-        MaterialPropertyKind(b.thermodynamic_forces[0].type) << std::endl;
 
       std::cout << "       ....                " << std::endl;
       std::cout << "       Done   " << std::endl;
@@ -125,6 +115,7 @@ int main(const int argc, const char *const *argv)
     if (verbos)
     {
       std::cout << "   ->  Creating behaviour data and view   " << std::endl;
+      std::cout << "       ....                      " << std::endl;
     }
 
     auto d = BehaviourData
@@ -135,27 +126,6 @@ int main(const int argc, const char *const *argv)
 
     if (verbos)
     {
-
-
-      std::cout << "         Material Parameters (mps)  "<< std::endl;
-      for (int i = 0; i < b.mps.size(); i++)
-        std::cout << "             - mps "<< i << " name :   \033[1;36m" << b.mps[i].name << "\033[0m" <<
-        "\t\tof type \033[1;36m" << MaterialPropertyKind(b.mps[i].type) <<"\033[0m" <<
-        "\t\tof value \033[1;36m" << *getMaterialProperty(d.s1, b.mps[i].name) <<"\033[0m" <<
-        std::endl;
-/*
-      auto &lm = mgis::LibrariesManager::get();
-      lm.setParameter(b.library, b.behaviour, b.hypothesis, "par4", 200.);
-      update(d);
-*/
-      setParameter(b,"NonGlossaryName", double(300.));
-      std::cout << "         Parameters (params)  "<< std::endl;
-      for (int i = 0; i < b.params.size(); i++)
-        std::cout << "             - params "<< i << " name :   \033[1;36m" << b.params[i] << "\033[0m" <<
-        "\t\tof value \033[1;36m" << getParameterDefaultValue<double>(b,b.params[i])   << "\033[0m" <<
-        std::endl;
-
-      std::cout << "       ....                " << std::endl;
       std::cout << "       Done   " << std::endl;
       std::cout << "   ----------------------- " << std::endl;
       std::cout << std::endl;
@@ -166,6 +136,7 @@ int main(const int argc, const char *const *argv)
    	//------------------------------------------------------------
     printLine("-");
     std::cout << "   ->  Initilizing Strain vector   " << std::endl;
+
 
     d.s1.gradients[0] = 0;	//E11
     d.s1.gradients[1] = 0;	//E22
@@ -202,6 +173,8 @@ int main(const int argc, const char *const *argv)
       std::cout << "   ----------------------- " << std::endl;
       std::cout << std::endl;
     }
+
+
    	//------------------------------------------------------------
    	// print stress vector
    	//------------------------------------------------------------
@@ -255,20 +228,50 @@ int main(const int argc, const char *const *argv)
       std::cout << std::endl;
     }
 
-   	//------------------------------------------------------------
-   	// Inntegrating the law
-   	//------------------------------------------------------------
-    printLine("-");
-    std::cout << "   ->  Inntegrating the law   " << std::endl;
+
+  //------------------------------------------------------------
+  // Inntegrating the law
+  //------------------------------------------------------------
+  printLine("-");
+  std::cout << "   ->  Inntegrating the law   " << std::endl;
+
+
+
+  ifstream EPsin;
+  EPsin.open("fileEpsIn.data");
+
+  ifstream EPsPSD;
+  EPsPSD.open("in.data");
+
+  bool psdTest = false;
+  double dummy;
+
+  ofstream SigOut;
+  SigOut.open("fileSigOut.data");
+
+  for(int n=0; n < 200; n++){
+
+    EPsin >> d.s1.gradients[3];
 
     integrate(v, b);
+    update(d);
+    SigOut  << d.s1.thermodynamic_forces[3] << "\t" <<  d.s0.gradients[3] << std::endl;
+  }
+
+
+/*
+    d.s1.gradients[3] = 6.28215e-05;
+    integrate(v, b);
+    update(d);
+
+*/
 
     std::cout << "       Done   " << std::endl;
     printLine("-");
+
    	//------------------------------------------------------------
    	// MFRONT update
    	//-----------------------------------------------------------
-
       update(d);
 
    	//------------------------------------------------------------
@@ -296,7 +299,6 @@ int main(const int argc, const char *const *argv)
       std::cout << "   ----------------------- " << std::endl;
       std::cout << std::endl;
     }
-
 
   printLine("=");
   std::cout << "              END OF PROGRAM                " << std::endl;

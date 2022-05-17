@@ -1,0 +1,241 @@
+//=======================================================================================
+@DSL DefaultDSL;
+@Behaviour Hujeux;
+@Date 10-05-2022;
+@Description{
+
+ Hujeux behaviour model is a cyclic constitutive law for non-linear soil behaviour.
+ the model comprises a nonlinear elasticity controlled by  the  Young  modulus that
+ depends on the confining pressure.
+
+ Reference:
+ J. C. Hujeux, A constitutive law for the cyclic loading of the soils.
+ Parasismique genius Presses ENPC, Davidovici V. & al., pages 287-302, 1985
+
+ D. Aubry , J.C. Hujeux, F. Lassoudiere & Y. Meimon, A doubles memory
+ multiple model with mechanisms for cyclic soil behaviors,
+ Int. Symp. Num. Models in Geomechanics, Zurich, vol. 1, pp 3-13, (1982).
+
+}
+//=======================================================================================
+
+//! this is a boolean parameter which controls the verbosity.
+//! Intended to use for debugging.
+@Parameter psdVerbosity = 0;
+psdVerbosity.setEntryName("psdVerbosity");
+
+//! $K_i$ is the modulus of compressibility
+@Parameter K_0 = 628.e6;
+K_0.setEntryName("K_0");
+
+//! $G_i$ is the shear modulus
+@Parameter G_0 = 290.e6;
+G_0.setEntryName("G_0");
+
+//! $ne\in[0,1[$ is the non-linear elastic characteristic
+//! $ne = 0$ corresponds to linear elasticity
+@Parameter ne = 0.5;
+ne.setEntryName("ne");
+
+//! Friction angle at perfect plasticity (in degrees)
+@Parameter phi_pp = -33.;
+phi_pp.setEntryName("phi_pp");
+
+//! Characteristic State Line or dilatancy angle $\psi$ (in radians)
+//! between th contracting field $p$ and dilating filed $q$:
+//! $q = |p|\cdot \sin(\psi)$
+@Parameter psi = -33. ;
+psi.setEntryName("psi");
+
+//! volumetric coefficient of plastic compressibility ($\beta > 0$)
+@Parameter beta = 33.;
+beta.setEntryName("beta");
+
+//! Initial Critical Pressure (or pre-consolidation stress) $p_{c0} < 0$
+@Parameter p_c0 = -50.e3;
+p_c0.setEntryName("p_c0");
+
+//!  Volumetric monotonous hardening coefficient ($a_{m} > 0$)
+@Parameter a_m = 0.0025;
+a_m.setEntryName("a_m");
+
+//! Deviatoric cyclic hardening coefficient ($a_{c} > 0$)
+@Parameter a_c =  0.00001;
+a_c.setEntryName("a_c");
+
+//! $b\in[0,1[$ Shape coefficient
+//! $b=0$ i.e Mohr-Coulomb and $b=1$  modified Cam-Clay
+@Parameter b =  0.20 ;
+b.setEntryName("b");
+
+@Parameter alfa = 1.0;
+alfa.setEntryName("alfa");
+
+//! Elastic Domain Limit (deviatoric hardening coef $r_{ela} \in ]0,1[$ )
+@Parameter r_ela = 0.03;
+r_ela.setEntryName("r_ela");
+
+//! Hysteretic Domain Limit (deviatoric hardening coef $r_{hys}$)
+@Parameter r_hys =  0.04;
+r_hys.setEntryName("r_hys");
+
+//! Mobilized Domain Limit (deviatoric hardening coef $r_{mob}$)
+@Parameter r_mob =  0.80;
+r_mob.setEntryName("r_mob");
+
+//! Volumetric monotonous hardening coefficient ($c_{m} > 0$)
+@Parameter c_m = 0.004;
+c_m.setEntryName("c_m");
+
+//! Volumetric cylic hardening coefficient ($c_{c} > 0$)
+@Parameter c_c = 0.002;
+c_c.setEntryName("c_c");
+
+//! Distance in e-lnp plane between Isotropic Consolidation and Critical State Lines
+@Parameter d =  2.0;
+d.setEntryName("d");
+
+//! Elastic Domain Limit (volumetric hardening coef)
+@Parameter dltela =  0.02;
+dltela.setEntryName("dltela");
+
+@Parameter xkimin = 0;
+xkimin.setEntryName("xkimin");
+
+@Parameter m = 1.0;
+m.setEntryName("m");
+
+@Parameter facinc = 0.2;
+facinc.setEntryName("facinc");
+
+@Parameter iecoul = 1;
+iecoul.setEntryName("iecoul");
+
+@Parameter incmax = 50;
+incmax.setEntryName("incmax");
+
+@Parameter Kaux = 628.e6;
+Kaux.setEntryName("Kaux");
+
+@Parameter Gaux = 290.e6;
+Gaux.setEntryName("Gaux");
+
+/*!Factor reduction on law integration increments */
+@Parameter pref = -1.e6;
+pref.setEntryName("pref");
+
+@Parameter indaux = 0;
+indaux.setEntryName("indaux");
+
+
+@Includes{
+#include "stdafx.h"
+#include "utils.h"
+#include "hujeux.h"
+}
+@Sources {
+#include "utils.cpp"
+#include "hujeux.cpp"
+}
+
+
+@StateVariable real hujxIsv[24];
+hujxIsv.setEntryName("hujeuxInternalStateVariables");
+
+
+@LocalVariable Tensor2 Hujsig;
+@LocalVariable Tensor2 Hujeps;
+@LocalVariable Tensor2 Hujepsp;
+@LocalVariable Tensor2 Hujdeps;
+@LocalVariable Tensor2 Hujdsig;
+
+@StateVariable Stensor dSig;
+@StateVariable Stensor depsP;
+
+@StateVariable real InitStressH;
+
+@InitLocalVariables {
+
+  if(!sig[0]){
+   for(int i = 0; i < 3; i++) sig[i] = p_c0;
+   for(int i = 3; i < 6; i++) sig[i] = 0.;
+  }
+
+}
+
+
+/*!
+ * In this block the law is integrated
+ *   1. compute the Lame parameters lambda, mu
+ *   2. compute the stress state
+ *   2. compute the stiffness matrix
+ */
+@Integrator{
+
+//  static_cast<void>(smt); // remove compiler warning
+
+  bool is_converge = true;
+
+  dvector mfront_parameters = {
+    K_0    , G_0    , ne     , phi_pp , psi    ,
+    beta   , p_c0   , a_m    , b      , a_c    ,
+    alfa   , r_ela  , r_hys  , r_mob  , c_m    ,
+    d      , c_c    , dltela , xkimin , m      ,
+    facinc , iecoul , incmax , Kaux   , Gaux } ;
+
+  dvector *Hujisv = new dvector(24);
+  for(int i = 0; i < 24; i++)
+    (*Hujisv)[i] = hujxIsv[i];
+
+  for(int i = 0; i < 6; i++)
+    Hujdeps.m_vec[i] =  deto[i];
+
+  for(int i = 0; i < 6; i++)
+    Hujeps.m_vec[i] = eto[i] + Hujdeps.m_vec[i];
+
+  HujeuxLaw psdSoilLaw;
+  psdSoilLaw.init(mfront_parameters);
+
+  for(int i = 0; i < 6; i++)
+    Hujsig.m_vec[i] = sig[i];
+
+  for(int i = 0; i < 6; i++)
+    Hujdsig.m_vec[i] = dSig[i];
+
+  for(int i = 0; i < 6; i++)
+    Hujepsp.m_vec[i] = depsP[i];
+
+
+   if(!InitStressH)  {
+      psdSoilLaw.initState(Hujsig, Hujisv);
+      InitStressH = true;
+   }
+
+  psdSoilLaw.ComputeStress( Hujisv, Hujsig, Hujeps, Hujepsp, Hujdsig, Hujdeps, is_converge );
+
+  for(int i = 0; i < 6; i++)
+    sig[i] = Hujsig.m_vec[i];
+
+  for(int i = 0; i < 6; i++)
+    dSig[i] = Hujdsig.m_vec[i];
+
+  for(int i = 0; i < 6; i++)
+    depsP[i] = Hujepsp.m_vec[i];
+
+  for(int i = 0; i < 6; i++)
+    eto[i] = Hujeps.m_vec[i];
+
+  for(int i = 0; i < 24; i++)
+     hujxIsv[i] = (*Hujisv)[i] ;
+
+
+
+  //const stress lambda = computeLambda(E,nu);
+  //const stress mu     = computeMu(,nu);
+  //sig = 10*trace(eto+deto)*StrainStensor::Id()+2*20*(eto+deto);
+  //if(computeTangentOperator_){
+  //  Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
+  //}
+}
+
+

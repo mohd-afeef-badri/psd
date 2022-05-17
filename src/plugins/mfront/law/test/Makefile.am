@@ -1,7 +1,8 @@
-LIST_CODE = Elasticity-For-A-Quadrature-Point.cxx
-
-LIST_TESTS = Test_1 \
-	     Test_2
+LIST_TESTS = Test_0 \
+	     Test_1 \
+	     Test_2 \
+	     Test_3 \
+	     Test_4
 
 all-local:
 	@echo ""
@@ -60,6 +61,11 @@ Test_4: Elasticity-For-A-Quadrature-Point_Threaded.cxx
 	@./a.out > Test_4.log	
 	@echo "  PASSED "
 
+Test_5: Hujeux-For-A-Quadrature-Point-3D.cxx
+	@echo "Test_5 : Hujeux-For-A-Quadrature-Point-3D (Quadrature point) in 3D"
+	@$(CXX) Hujeux-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out
+	@echo "  PASSED "
 
 clean-local:
 	@echo ""

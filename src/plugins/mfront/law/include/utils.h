@@ -1,9 +1,5 @@
-/*!
- * \file   hujeux_utils.hxx
- * \brief  General utilities for Soil Constitutive Models (Hujeux, etc.)
- * \author Evelyne Foerster
- * \date   26/11/2021
- */
+// General utilities for soil laws
+// Developed by Evelyne FOERSTER - 2019
 
 #ifndef _UTILS_H_
 #define _UTILS_H_
@@ -12,26 +8,21 @@
 
 #include <cmath>
 #include <vector>
-#include <array>
 #include <iterator>
-#include <string>
-#include <functional>
-#include <numeric>
-#include <fstream>
-#include "TFEL/Math/stensor.hxx"
-#include "TFEL/Math/tvector.hxx"
 
 using namespace std;
 
-//! Simple aliases
-using real = double;
-using Real = double;
-using dvector = std::vector<Real>;
-using iarray4 = std::array<int,4>;
-using darray4 = std::array<Real,4>;
-//using Stensor = std::array<Real,6>; // Tensor type for MFront
+#ifdef _WIN32
+typedef long double Real;
+#else
+typedef double Real;
+#endif
 
-extern void		gauss(dvector*, darray4&, darray4&);
+//typedef vector<double>	dvector;
+typedef vector<Real>	dvector;
+
+//extern void		gauss(double**, double*, double*, const int&);
+extern void		gauss(Real**, Real*, Real*, const int&);
 extern dvector	operator-(const dvector&, const dvector&);
 extern dvector	operator+(const dvector&, const dvector&);
 extern dvector	operator+(const dvector&, const double&);
@@ -41,8 +32,14 @@ extern dvector	operator-(const double&, const dvector&);
 extern dvector	operator/(const dvector&, const double&);
 extern dvector	operator*(const dvector&, const double&);
 extern dvector	operator*(const double&, const dvector&);
+//extern dvector	vect_prod(const dvector&, const dvector&);
 extern Real	dot(const dvector&, const dvector&);
 extern Real	norm(const dvector&);
+//extern double	norm_sqr(const dvector&);
+//extern double	dist(const dvector&, const dvector&);
+//extern double	dist_sqr(const dvector&, const dvector&);
+//extern double	interpol(const double& /*val_before*/, const double& /*val_after*/,
+//	const double& /*t*/, const double& /*t_before*/, const double& /*t_after*/);
 extern bool		operator==(const dvector&, const dvector&);
 extern bool		operator!=(const dvector&, const dvector&);
 //extern void		AfficheMessage(const char*);
@@ -52,24 +49,13 @@ extern const Real	EPS, RAD;
 extern char		szout[];
 extern string	ferrlog;
 
-template<typename T>
-auto min_(T const& a, T const& b) {
-    return (a < b ? a : b);
-}
+template<class T> T min_(T a, T b) { return (a < b ? a : b); }
+template<class T> T max_(T a, T b) { return (a > b ? a : b); }
+template<class T> T signe(T a) { return (a >= 0 ? 1 : -1); }
 
-template<typename T>
-auto max_(T const& a, T const& b) {
-    return (a > b ? a : b);
-}
-
-template<typename T>
-auto signe(T const& a) {
-    return (a >= 0 ? 1 : -1);
-}
-
-/*********************************************/
-/** 2D real vector for Arcane compatibility **/
-/*********************************************/
+//////////////////////////////////////////////////////////////////////
+//  class Real2: 2D real vector same as Real3 from Arcane
+//
 class Real2
 {
 public:
@@ -126,14 +112,11 @@ public:
 /*---------------------------------------------------------------------------*/
     friend Real2 operator*(const Real&, const Real2&);
 };
+typedef vector<Real2> VecReal2;
 
-//! Simple aliases
-using VecReal2 = vector<Real2>;
-
-/*********************************************/
-/** 3D real vector for Arcane compatibility **/
-/*********************************************/
 //////////////////////////////////////////////////////////////////////
+// class Real3: 3D real vector same as Real3 from Arcane
+//
 class Real3x3;
 
 class Real3
@@ -210,9 +193,7 @@ public:
 /*---------------------------------------------------------------------------*/
     friend bool operator<(const Real3&, const Real3&);
 };
-
-//! Simple aliases
-using VecReal3 = vector<Real3>;
+typedef vector<Real3> VecReal3;
 
 //////////////////////////////////////////////////////////////////////
 // class Real3x3: Matrix 3x3 same as Real3x3 from Arcane
@@ -318,7 +299,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////////////////
 // class Tensor2: class for symmetric 2nd-order tensors (useful for stresses, strains)
-// Storage in vectorial form (xx yy zz xy yz zx)
+// Storage in vectorial form (xx yy zz xy yz zx) 
 
 class Tensor2
 {
