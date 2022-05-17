@@ -4,5 +4,6 @@
 #include <iostream>
 
 bool dummyPrint();
+int  dummyInt();
 
 #endif

@@ -5,3 +5,7 @@ bool dummyPrint() {
   std::cout << "\n\n\n\ndummyPrint\n\n\n\n" << std::endl;
   return true;
 }
+
+int  dummyInt(){
+  return 10;
+}
