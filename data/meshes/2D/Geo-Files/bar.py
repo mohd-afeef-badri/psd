@@ -10,6 +10,10 @@ salome.salome_init()
 
 from salome.shaper import model
 
+lc = 1.0/31.0
+lengthBar = 5.0
+
+
 model.begin()
 partSet = model.moduleDocument()
 
@@ -34,12 +38,12 @@ SketchLine_2 = SketchProjection_2.createdFeature()
 Sketch_1.setCoincident(SketchLine_1.endPoint(), SketchLine_2.result())
 
 ### Create SketchLine
-SketchLine_3 = Sketch_1.addLine(5, 0, 5, 1)
+SketchLine_3 = Sketch_1.addLine(lengthBar, 0, 5, 1)
 Sketch_1.setCoincident(SketchLine_1.endPoint(), SketchLine_3.startPoint())
 Sketch_1.setVertical(SketchLine_3.result())
 
 ### Create SketchLine
-SketchLine_4 = Sketch_1.addLine(5, 1, 0, 1)
+SketchLine_4 = Sketch_1.addLine(lengthBar, 1, 0, 1)
 Sketch_1.setCoincident(SketchLine_3.endPoint(), SketchLine_4.startPoint())
 
 ### Create SketchProjection
@@ -52,7 +56,7 @@ Sketch_1.setHorizontal(SketchLine_4.result())
 SketchLine_6 = Sketch_1.addLine(0, 1, 0, 0)
 Sketch_1.setCoincident(SketchLine_4.endPoint(), SketchLine_6.startPoint())
 Sketch_1.setCoincident(SketchLine_1.startPoint(), SketchLine_6.endPoint())
-Sketch_1.setLength(SketchLine_1.result(), 5)
+Sketch_1.setLength(SketchLine_1.result(), lengthBar)
 Sketch_1.setLength(SketchLine_3.result(), 1)
 model.do()
 
@@ -107,8 +111,8 @@ smesh = smeshBuilder.New()
 Mesh_1 = smesh.Mesh(Face_1_1,'Mesh_1')
 NETGEN_1D_2D = Mesh_1.Triangle(algo=smeshBuilder.NETGEN_1D2D)
 NETGEN_2D_Parameters_1 = NETGEN_1D_2D.Parameters()
-NETGEN_2D_Parameters_1.SetMaxSize( 1./31 )
-NETGEN_2D_Parameters_1.SetMinSize( 1./31 )
+NETGEN_2D_Parameters_1.SetMaxSize( lc )
+NETGEN_2D_Parameters_1.SetMinSize( lc )
 NETGEN_2D_Parameters_1.SetSecondOrder( 0 )
 NETGEN_2D_Parameters_1.SetOptimize( 1 )
 NETGEN_2D_Parameters_1.SetFineness( 2 )
@@ -129,7 +133,7 @@ isDone = Mesh_1.Compute()
 [ surface_left, surface_top, surface_right, surface_bottom, volume_1 ] = Mesh_1.GetGroups()
 smesh.SetName(Mesh_1, 'Mesh_1')
 try:
-  Mesh_1.ExportMED( r'/home/mb258512/Work/repo/psd_sources/data/meshes/2D/Geo-Files/bar.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
+  Mesh_1.ExportMED( r'./bar.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
   pass
 except:
   print('ExportPartToMED() failed. Invalid file name?')

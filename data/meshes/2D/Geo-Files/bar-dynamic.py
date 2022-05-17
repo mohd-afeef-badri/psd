@@ -4,7 +4,6 @@ import sys
 import salome
 
 salome.salome_init()
-sys.path.insert(0, r'/home/mb258512/Work/repo/psd_sources/data/meshes/2D/Geo-Files')
 ###
 ### SHAPER component
 ###
