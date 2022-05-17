@@ -260,7 +260,7 @@ int main()
      os.setf(std::ios::left);
      os.precision(8);
      os << "#Simple shear test on a material point";
-     os << string("\n#gamxy[%]\tgampxy[%]\tsigxy[kPa]\tpmean[kPa]\tepsv[%]\tepsvp[%]") << endl;
+     os << string("\n#t[s]\tgamxy[%]\tgampxy[%]\tsigxy[kPa]\tpmean[kPa]\tepsv[%]\tepsvp[%]") << endl;
 
      Tensor2 sig(Real3(pc0, pc0,pc0), Real3::zero()),// effective stress tensor for current step
              eps,	// strain tensor for current step
@@ -269,7 +269,7 @@ int main()
              dsig;// effective stress tensor increment
 
      // saving order: gamxy[%]  gampxy[%]  sigxy[kPa] pmean[kPa] epsv[%]  epsvp[%]
-     os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
+     os << setw(15) << "0." << setw(15) << "0." << setw(15) << "0." << setw(15) << "0.";
      os << setw(15) << -pc0 * facsig << setw(15) << "0." << setw(15) << "0." << endl;
 
 //     DO.initHistory(histab);
@@ -278,7 +278,15 @@ int main()
          cout << "\nStop: Hujeux initialization failed!!\n";
          return -1;
      }
-     
+ 
+ 
+//   ofstream zzz("fileEpsIn.data");
+     ofstream sss("fileSigOutRef.data");                 
+
+     ifstream EPsin;
+     EPsin.open("fileEpsIn.data"); 
+  
+                    
      bool is_converge = true;
      auto t = 0.;
      for (int i = 0; i < npas; i++)
@@ -291,11 +299,30 @@ int main()
          dx = x - x0;
 
          // x = gamxy, dx = dgamxy
-         eps.m_vec[3] = 2 * x;//epsxy = 2*gamxy
-         deps.m_vec[3] = 2 * dx;
+         // eps.m_vec[3] = 2 * x;//epsxy = 2*gamxy
+         
+         EPsin >> eps.m_vec[3]   ;
+         deps.m_vec[3] = 2. * dx ;
 
+         for(int j = 0; j < 6; j++)
+            cout <<  std::setprecision(16) << " INITIAL  sig.m_vec[" << j <<"] " << sig.m_vec[j] << endl;
+         for(int j = 0; j < 6; j++)
+            cout << " INITIAL  dsig.m_vec[" << j <<"] " << dsig.m_vec[j] << endl;
+         for(int j = 0; j < 6; j++)
+            cout << " INITIAL  eps.m_vec[" << j <<"] " << eps.m_vec[j] << endl;
+            
+     //    zzz  <<  std::setprecision(16) << eps.m_vec[3] << endl;
+            
+         for(int j = 0; j < 6; j++)
+            cout << " INITIAL  deps.m_vec[" << j <<"] " << deps.m_vec[j] << endl; 
+         for(int j = 0; j < 6; j++)
+            cout <<" INITIAL  epsp.m_vec[" << j <<"] " << epsp.m_vec[j] << endl;            
+         for(int j = 0; j < NHISTHUJ; j++)
+            cout << " INITIAL (*histab)[" << j <<"] " << (*histab)[j] << endl;;
+               
+                
          DO.ComputeStress(histab,sig, eps, epsp, dsig, deps,is_converge);
-
+            
          // saving order: gamxy[%]  gampxy[%]  sigxy[kPa] pmean[kPa] epsv[%]  epsvp[%]
          auto gamxy = eps.m_vec[3] * faceps / 2.; // in %
          auto gampxy = epsp.m_vec[3] * faceps / 2.; // in %
@@ -304,8 +331,24 @@ int main()
          auto epsv = trace(eps) * faceps;// in %
          auto epsvp = trace(epsp) * faceps; // in %
 
-         cout << "\nprinting step results in Hujeuxresults.ouput...";
-         os << setw(15) << gamxy << setw(15) << gampxy << setw(15) << sigxy;
+         for(int j = 0; j < 6; j++)
+            cout << " FINAL sig.m_vec[" << j <<"] " << sig.m_vec[j] << endl; 
+         for(int j = 0; j < 6; j++)
+            cout << " FINAL dsig.m_vec[" << j <<"] " << dsig.m_vec[j] << endl;
+         for(int j = 0; j < 6; j++)
+            cout << " FINAL  eps.m_vec[" << j <<"] " << eps.m_vec[j] << endl;
+         for(int j = 0; j < 6; j++)
+            cout << " FINAL  deps.m_vec[" << j <<"] " << deps.m_vec[j] << endl;
+         for(int j = 0; j < 6; j++)
+            cout << " FINAL  epsp.m_vec[" << j <<"] " << epsp.m_vec[j] << endl;                          
+         for(int j = 0; j < NHISTHUJ; j++)
+            cout << " FINAL (*histab)[" << j <<"] " << (*histab)[j] << endl;;
+ 
+          sss <<  std::setprecision(16) << sig.m_vec[3] << endl;
+          
+                                              
+         cout << "\n\n";
+         os << setw(15) << t << setw(15) << gamxy << setw(15) << gampxy << setw(15) << sigxy;
          os << setw(15) << pmean << setw(15) << epsv << setw(15) << epsvp << endl;
      }
      fichout.close();
