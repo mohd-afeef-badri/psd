@@ -4,7 +4,8 @@
 @Author Mohd Afeef Badri;
 @Date 04-05-2022;
 @Description{
- "Hello World: A dummy MFRONT behaviour for testing MFRONT-PSD interface"
+ Hello World: A dummy MFRONT behaviour for testing MFRONT-PSD interface.
+ Short descrition and examples will are provided in this program.
 }
 //------------------------------------------------------------------------//
 
@@ -21,6 +22,16 @@
 @Sources {
 #include "dummy.cxx"
 }
+
+@Private{
+
+  void display(std::string pp, int aa) const{
+      std::cout << pp <<  aa << std::endl;
+  }
+
+
+} // end of @Private
+
 
 //------------------------------------------------------------------------//
 // Testing @Parameter
@@ -42,7 +53,7 @@ par5.setEntryName("parmt5");                 // they will haves names "par4" and
 
 //@Parameter par6;                          // error if we just define parameter
 @Parameter  par6;                           // par6 is a varialbe with name "par6"
-par6.setDefaultValue(1.e-9);                // this is another way of seeting value of paramter
+par6.setDefaultValue(300);                // this is another way of seeting value of paramter
 
 
 @Parameter youngMod = 150e9;                // youngMod is a Parameter
@@ -60,6 +71,7 @@ youngMod.setEntryName("NonGlossaryName");   // youngMod is named "NonGlossaryNam
 
 @StaticVariable int B = 2;
 
+
 //------------------------------------------------------------------------//
 // Testing @MaterialProperty
 //   - MaterialProperty is a global and will be shared with PSD
@@ -67,6 +79,9 @@ youngMod.setEntryName("NonGlossaryName");   // youngMod is named "NonGlossaryNam
 //------------------------------------------------------------------------//
 
 
+/*!
+materialProperty1 is is a of type [real]
+*/
 @MaterialProperty real matProp1;            // matProp1 is a of type [real]
 matProp1.setEntryName("materialProperty1"); // matProp1 is named "materialProperty1"
 //matProp1.setGlossaryName("YoungModulus"); // youngMod can be named YoungModulus
@@ -74,6 +89,9 @@ matProp1.setEntryName("materialProperty1"); // matProp1 is named "materialProper
 //@MaterialProperty integer matProp2;             // matProp1 is a of type [int]
 //matProp2.setEntryName("materialProperty2"); // matProp1 is named "materialProperty2"
 
+
+@MaterialProperty stress C[55];
+C.setEntryName("BackStressCoefficeints") ;
 
 //------------------------------------------------------------------------//
 // Testing @Integrator
@@ -83,4 +101,5 @@ matProp1.setEntryName("materialProperty1"); // matProp1 is named "materialProper
   static_cast<void>(computeTangentOperator_);       // avoide warning
   static_cast<void>(smt);                           //  avoide warning
   dummyPrint();                                     // dummyPrint function comes from dummy.cxx
+  display("Youngs Modulus", youngMod);
 }
