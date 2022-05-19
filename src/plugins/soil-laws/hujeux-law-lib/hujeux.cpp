@@ -255,8 +255,8 @@ void HujeuxLaw::init(const dvector& param)
     sgncyc = 0.;
 	ppp = 0.;
 	pc = m_param[6];
-	auto	phi = m_param[3]; // already in radians (converted when reading data)
-	auto	psi = m_param[4]; // already in radians
+	auto	phi = m_param[3]*RAD; // RAD converts to radians
+	auto	psi = m_param[4]*RAD; // RAD converts to radians
 	sinphi = sin(phi);
 	sinpsi = sin(psi);
 
@@ -316,7 +316,7 @@ void HujeuxLaw::init(const dvector& param)
        << "\n  24 Gaux    = "<< param[24]
        << "\n// ================================================================================= //"
        << endl;
-#ifdef DEBUG
+#endif
 }
 //=================================================================================================================//
 /**/
