@@ -1,5 +1,6 @@
 //=======================================================================================
-@DSL DefaultDSL;
+//@DSL DefaultDSL;
+@DSL DefaultGenericBehaviour;
 @Behaviour Hujeux;
 @Date 10-05-2022;
 @Description{
@@ -19,6 +20,17 @@
 }
 //=======================================================================================
 
+
+//@ModellingHypotheses{PlaneStrain, Axisymmetrical, Tridimensional};
+
+//! Strain tensor $\epsilon$
+@Gradient StrainStensor eto;
+eto.setGlossaryName("Strain");
+
+//! Stress tensor $\sigma$
+@Flux StressStensor sig;
+sig.setGlossaryName("Stress");
+
 //! this is a boolean parameter which controls the verbosity.
 //! Intended to use for debugging.
 @Parameter psdVerbosity = 0;
@@ -32,23 +44,23 @@ K_0.setEntryName("K_0");
 @Parameter G_0 = 290.e6;
 G_0.setEntryName("G_0");
 
-//! $ne\in[0,1[$ is the non-linear elastic characteristic
+//! $ne\in[0,1]$ is the non-linear elastic characteristic
 //! $ne = 0$ corresponds to linear elasticity
 @Parameter ne = 0.5;
 ne.setEntryName("ne");
 
 //! Friction angle at perfect plasticity (in degrees)
-@Parameter phi_pp = -0.5759586532;
+@Parameter phi_pp = -33;
 phi_pp.setEntryName("phi_pp");
 
 //! Characteristic State Line or dilatancy angle $\psi$ (in radians)
 //! between th contracting field $p$ and dilating filed $q$:
 //! $q = |p|\cdot \sin(\psi)$
-@Parameter psi = -0.5759586532 ;
+@Parameter psi = -33;
 psi.setEntryName("psi");
 
 //! volumetric coefficient of plastic compressibility ($\beta > 0$)
-@Parameter beta = 33.;
+@Parameter beta = 33;
 beta.setEntryName("beta");
 
 //! Initial Critical Pressure (or pre-consolidation stress) $p_{c0} < 0$
@@ -63,7 +75,7 @@ a_m.setEntryName("a_m");
 @Parameter a_c =  0.00001;
 a_c.setEntryName("a_c");
 
-//! $b\in[0,1[$ Shape coefficient
+//! $b\in[0,1]$ Shape coefficient
 //! $b=0$ i.e Mohr-Coulomb and $b=1$  modified Cam-Clay
 @Parameter b =  0.20 ;
 b.setEntryName("b");
@@ -71,15 +83,15 @@ b.setEntryName("b");
 @Parameter alfa = 1.0;
 alfa.setEntryName("alfa");
 
-//! Elastic Domain Limit (deviatoric hardening coef $r_{ela} \in ]0,1[$ )
+//! Elastic Domain Limit (deviatoric hardening coef $r_{ela} \in ]0,1]$ )
 @Parameter r_ela = 0.03;
 r_ela.setEntryName("r_ela");
 
-//! Hysteretic Domain Limit (deviatoric hardening coef $r_{hys}$)
+//! Hysteretic Domain Limit (deviatoric hardening coef $r_{hys} \in ]0,1]$)
 @Parameter r_hys =  0.04;
 r_hys.setEntryName("r_hys");
 
-//! Mobilized Domain Limit (deviatoric hardening coef $r_{mob}$)
+//! Mobilized Domain Limit (deviatoric hardening coef $r_{mob} \in ]0,1]$)
 @Parameter r_mob =  0.80;
 r_mob.setEntryName("r_mob");
 
@@ -105,12 +117,15 @@ xkimin.setEntryName("xkimin");
 @Parameter m = 1.0;
 m.setEntryName("m");
 
+//! integration reduction at group level
 @Parameter facinc = 0.2;
 facinc.setEntryName("facinc");
 
+//! hypothesis variable of Hujeux group level
 @Parameter iecoul = 1;
 iecoul.setEntryName("iecoul");
 
+//! integration variable max iteration at group level
 @Parameter incmax = 50;
 incmax.setEntryName("incmax");
 
@@ -120,9 +135,6 @@ Kaux.setEntryName("Kaux");
 @Parameter Gaux = 290.e6;
 Gaux.setEntryName("Gaux");
 
-
-
-
 //------------------- TO DO ------------------------------//
 // @Evelyne: pref and indaux  seem to be orphan parameters
 // I did not find them in the original Hujeux test can you
@@ -130,8 +142,8 @@ Gaux.setEntryName("Gaux");
 //--------------------------------------------------------//
 
 /*!Factor reduction on law integration increments */
-@Parameter pref = -1.e6;
-pref.setEntryName("pref");
+//@Parameter pref = -1.e6;
+//pref.setEntryName("pref");
 
 /*!
 Indicator for auxiliary tangent operator type
@@ -143,6 +155,11 @@ indaux.setEntryName("indaux");
 
 
 @Private{
+
+  void convert_stensor_to_mfront(StrainStensor& Sr){
+    constexpr const auto icste = tfel::math::Cste<real>::isqrt2;
+    std::cout << "  SQRT 2 " <<  icste << std::endl;
+  }
 
   void print(std::string pp) const{
       std::cout << pp << std::endl;
@@ -166,7 +183,6 @@ indaux.setEntryName("indaux");
 
 }
 
-
 @Includes{
 #include "stdafx.h"
 #include "utils.h"
@@ -181,7 +197,6 @@ indaux.setEntryName("indaux");
 /*
 @StateVariable StrainStensor eel;
 eel.setGlossaryName("ElasticStrain");
-
 
 @StateVariable real epl;
 epl.setGlossaryName("EquivalentPlasticStrain");
@@ -199,33 +214,39 @@ raym.setEntryName("MonotonousHardeningDegrees");
 //  $r_c4$ isotropic and kinematical mixed hardening
 @StateVariable real r_c[4];
 rayc.setEntryName("CyclicHardeningDegrees");
-
 */
 
 @StateVariable real hujxIsv[24];
 hujxIsv.setEntryName("hujeuxInternalStateVariables");
 
-
+/*
 @LocalVariable Tensor2 Hujsig;
 @LocalVariable Tensor2 Hujeps;
 @LocalVariable Tensor2 Hujepsp;
 @LocalVariable Tensor2 Hujdeps;
 @LocalVariable Tensor2 Hujdsig;
+*/
 
 @StateVariable Stensor dSig;
 @StateVariable Stensor depsP;
 
 @StateVariable real InitStressH;
 
+/*
 @InitLocalVariables {
+  if(!sig[0])
+  {
+    print("Entering InitLocalVariables for stress initilization ");
 
-  if(!sig[0]){
-   print("ENTERING InitLocalVariables for STRESS INITILIZATION ");
-   for(int i = 0; i < 3; i++) sig[i] = p_c0;
-   for(int i = 3; i < 6; i++) sig[i] = 0.;
+    for(int i = 0; i < 3; i++)
+      sig[i] = p_c0;
+
+    for(int i = 3; i < 6; i++)
+      sig[i] = 0.;
   }
 
-  if(psdVerbosity){
+  if(psdVerbosity)
+  {
     display("initial compressibility modulus       :: K_0    = ", K_0  );
     display("initial shear modulus                 :: G_0    = ", G_0  );
     display("nonlinear elastic characteristic      :: ne     = ", ne   );
@@ -237,17 +258,18 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
     display("vol. coef. of plastic compressibility :: beta   = ", beta );
     display("friction angle at perfect plasticity (in degrees) :: phi_pp = ", phi_pp);
   }
-
 }
+*/
+
 
 /*
-
   Tensor2 Hujsig(Real3(p_c0, p_c0, p_c0), Real3::zero()), // effective stress tensor for current step
           Hujeps,	// strain tensor for current step
           Hujepsp,      // plastic strain tensor for current step
           Hujdeps,      // strain tensor increment
           Hujdsig;      // effective stress tensor increment
 */
+
 /*!
  * We request Mfront to calculate the SymmetricTangentOperator
  * which is nothing but the stiffness matrix
@@ -263,9 +285,20 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
  */
 @Integrator{
 
+  if(!sig[0])
+  {
+    print("Entering InitLocalVariables for stress initilization ");
+
+    for(int i = 0; i < 3; i++)
+      sig[i] = p_c0;
+
+    for(int i = 3; i < 6; i++)
+      sig[i] = 0.;
+  }
+
 //  static_cast<void>(smt); // remove compiler warning
 
-  bool is_converge = true;
+  bool is_converge = true;                // Wrong Wrong correct MAB
 
   tfel::math::vector<double> mfront_parameters = {
     K_0    , G_0    , ne     , phi_pp , psi    ,
@@ -274,19 +307,21 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
     d      , c_c    , dltela , xkimin , m      ,
     facinc , iecoul , incmax , Kaux   , Gaux } ;
 
- // dvector *Hujisv = new dvector(24);
- // for(int i = 0; i < 24; i++)
- //   (*Hujisv)[i] = hujxIsv[i];
-
+/*
+if(oldMethod){
   for(int i = 0; i < 6; i++)
     Hujdeps.m_vec[i] =  deto[i];
 
   for(int i = 0; i < 6; i++)
     Hujeps.m_vec[i] = eto[i] + Hujdeps.m_vec[i];
+}
+*/
 
-  HujeuxLaw psdSoilLaw;
+  behaviour_psd::HujeuxLaw psdSoilLaw;
   psdSoilLaw.init(mfront_parameters);
 
+/*
+if(oldMethod){
   for(int i = 0; i < 6; i++)
     Hujsig.m_vec[i] = sig[i];
 
@@ -295,34 +330,45 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
 
   for(int i = 0; i < 6; i++)
     Hujepsp.m_vec[i] = depsP[i];
+}
+*/
 
 
-   if(!InitStressH)  {
-      display("FirstIter ----------------- ", InitStressH);
-      //psdSoilLaw.initState(Hujsig, Hujisv);
-      psdSoilLaw.initState(hujxIsv,Hujsig);
-      InitStressH = true;
+   if(!InitStressH)
+   {
+     display("First time iteration detected -----  ", InitStressH);
+
+    //   psdSoilLaw.initState(hujxIsv,Hujsig); //old-Method//
+       psdSoilLaw.initState(hujxIsv,sig);
+
+     InitStressH = true;
    }
 
-  dvector *Hujisv = new dvector(24);
-  for(int i = 0; i < 24; i++)
-    (*Hujisv)[i] = hujxIsv[i];
+/*  //old-Method//
+  if(psdVerbosity)
+  {
 
-  for(int i = 0; i < 6; i++)
-    display("INITIAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
-  for(int i = 0; i < 6; i++)
-    display("INITIAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
-  for(int i = 0; i < 6; i++)
-    display("INITIAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
-  for(int i = 0; i < 6; i++)
-    display("INITIAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
-  for(int i = 0; i < 6; i++)
-    display("INITIAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
-  for(int i = 0; i < 24; i++)
-    display("INITIAL  (*Hujisv)[i] ",(*Hujisv)[i]);
+   for(int i = 0; i < 6; i++)
+      display("INITIAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("INITIAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("INITIAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("INITIAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("INITIAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
+    for(int i = 0; i < 24; i++)
+      display("INITIAL  hujxIsv[i] ",hujxIsv[i]);
+  }
+*/
 
-//  psdSoilLaw.ComputeStress( Hujisv, Hujsig, Hujeps, Hujepsp, Hujdsig, Hujdeps, is_converge );
-  psdSoilLaw.ComputeStress( hujxIsv, Hujsig, Hujeps, Hujepsp, Hujdsig, Hujdeps, is_converge );
+
+    psdSoilLaw.ComputeStress( hujxIsv, sig, eto, depsP, dSig, deto, is_converge );
+
+/*  //old-Method//
+
+  psdSoilLaw.ComputeStress( hujxIsv, Hujsig, Hujeps, Hujepsp, Hujdsig, Hujdeps, is_converge ); //old-Method
 
   for(int i = 0; i < 6; i++)
     sig[i] = Hujsig.m_vec[i];
@@ -336,31 +382,22 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
   for(int i = 0; i < 6; i++)
     eto[i] = Hujeps.m_vec[i];
 
-//  for(int i = 0; i < 24; i++)
-//     hujxIsv[i] = (*Hujisv)[i] ;
-
-
-  for(int i = 0; i < 6; i++)
-    display("FINAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
-
-  for(int i = 0; i < 6; i++)
-    display("FINAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
-
-  for(int i = 0; i < 6; i++)
-    display("FINAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
-
-  for(int i = 0; i < 6; i++)
-    display("FINAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
-
-  for(int i = 0; i < 6; i++)
-    display("FINAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
-
-  for(int i = 0; i < 24; i++)
-    display("FINAL  (*Hujisv)[i] ",(*Hujisv)[i]);
-
-  for(int i = 0; i < 24; i++)
-    display("FINAL  hujxIsv[i] ",hujxIsv[i]);
-
+  if(psdVerbosity)
+  {
+   for(int i = 0; i < 6; i++)
+     display("FINAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("FINAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("FINAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("FINAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
+    for(int i = 0; i < 6; i++)
+      display("FINAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
+    for(int i = 0; i < 24; i++)
+      display("FINAL  hujxIsv[i] ",hujxIsv[i]);
+  }
+*/
 
   //const stress lambda = computeLambda(E,nu);
   //const stress mu     = computeMu(,nu);
@@ -369,5 +406,3 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
   //  Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
   //}
 }
-
-

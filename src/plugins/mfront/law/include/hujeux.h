@@ -8,6 +8,9 @@
 #if !defined(__HUJEUX_H__)
 #define __HUJEUX_H__
 
+#include "TFEL/Math/stensor.hxx"
+#include "TFEL/Math/tvector.hxx"
+
 #pragma once
 
 extern const int NHISTHUJ , // nb of internal variables (history) for Hujeux
@@ -107,6 +110,10 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////
 // class HujeuxLaw: Hujeux 3D constitutive model with 3 deviatoric + 1 isotropic mechanisms
 //
+
+
+namespace behaviour_psd {
+
 class HujeuxLaw
 {
 	// Member Variables
@@ -170,11 +177,10 @@ public:
 	
 //	static Real get_dev(const Tensor2&, bool /*is_sig*/ = true);
 	void init(const dvector& /*param*/);
-	void init(const tfel::math::vector<double>& /*param*/);
 	void initConst();
 	void set_ipl(const int& /*iiplval*/);
 	void computeElastTensor(const Real& /*p*/);
-	void computeTangentTensor(const Tensor2& /*sign*/);
+	void computeTangentTensor(const Tensor2& /*sign*/);	
 	bool initState(const Tensor2& /*sign*/ = Tensor2::zero(), dvector* /*histab*/ = nullptr);
 	bool initState( mfrontVector& /*histab*/, const Tensor2& /*sign*/ = Tensor2::zero()  );
 	void initHistory(dvector* /*histab*/);
@@ -197,7 +203,64 @@ public:
                        Real& /*fidsig*/, Real& /*hray*/, Real& /*xldelta*/, int& /*ipl3*/, int& /*jpl3*/, Real2& /*delta*/);
 
 	bool readParameters(const string&);
-  int TestClass();	       
+        int TestClass();
+
+
+        // methods for Mfront (function overloading is used)
+        // we should optimize this later
+ 	template <unsigned short N>
+ 	bool convert_stensor_to_psd (tfel::math::stensor<N, double>& sigMf){
+  		sigMf[0] = sigMf[0]/ tfel::math::Cste<double>::isqrt2;
+ 	}
+
+ 	template <unsigned short N>
+	bool initState(tfel::math::vector<double>& inHist, tfel::math::stensor<N, double>& inStress){
+	  Tensor2 sig(Real3(inStress[0], inStress[1],inStress[2]), Real3(inStress[3], inStress[4],inStress[5]));
+	  HujeuxLaw::initState(inHist,sig);
+	  for(int i= 0; i<6; i++)
+	    inStress[i]  = sig.m_vec[i];
+	}
+
+
+ 	template <unsigned short N>
+	void ComputeStress(  tfel::math::vector<double>&      inHist   ,
+	                     tfel::math::stensor<N, double>&  inStress ,
+	                     tfel::math::stensor<N, double>&  ineps    ,
+	                     tfel::math::stensor<N, double>&  inepsp   ,
+	                     tfel::math::stensor<N, double>&  indsig   ,
+		             tfel::math::stensor<N, double>&  indeps   ,
+		             bool& is_converge
+		           )
+	  {
+
+	    Tensor2 sig(Real3(inStress[0], inStress[1],inStress[2]), Real3(inStress[3], inStress[4],inStress[5]));
+	    Tensor2 eps(Real3(ineps[0], ineps[1],ineps[2]), Real3(ineps[3], ineps[4],ineps[5]));
+	    Tensor2 epsp(Real3(inepsp[0], inepsp[1],inepsp[2]), Real3(inepsp[3], inepsp[4],inepsp[5]));
+	    Tensor2 dsig(Real3(indsig[0], indsig[1],indsig[2]), Real3(indsig[3], indsig[4],indsig[5]));
+	    Tensor2 deps(Real3(indeps[0], indeps[1],indeps[2]), Real3(indeps[3], indeps[4],indeps[5]));
+
+	    HujeuxLaw::ComputeStress(inHist,sig, eps, epsp, dsig, deps, is_converge);
+
+	    for(int i= 0; i<6; i++)
+	    {
+	      inStress[i]  = sig.m_vec[i];
+	      ineps[i]  = eps.m_vec[i];
+	      inepsp[i] = epsp.m_vec[i];
+	      indsig[i] = dsig.m_vec[i];
+	      indeps[i] = deps.m_vec[i];
+	    }
+
+#ifdef DEBUG
+	    std::cout << "  ComputeStress via  ------------ Mfront " << std::endl;
+#endif
+
+	}
+
+	void init(const tfel::math::vector<double>& /*param*/);
+			       
 };
+};
+
+//#include "hujeux.tpp"   // let us add template based procedures here
 ///////////////////////////////////////////////////////////////////////////////
 #endif // __HUJEUX_H__

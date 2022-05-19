@@ -73,7 +73,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""	
-	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat *.gnu *.output
+	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat  *.output
 	rm  -f *~ *.log	 *.o a.out
 	
 

@@ -156,6 +156,8 @@ const int   NHISTHUJ = 24, // nb of internal variables (history) for Hujeux
 	        NPROPHUJ = 25; // nb of const properties (user data) for Hujeux
 
 //=================================================================================================================//
+
+using namespace behaviour_psd;
 //=================================================================================================================//
 HujeuxLaw::HujeuxLaw() 
 {
@@ -255,8 +257,8 @@ void HujeuxLaw::init(const mfrontVector& param)
   sgncyc = 0.;
   ppp = 0.;
   pc = m_param[6];
-  auto	phi = m_param[3]; // already in radians (converted when reading data)
-  auto	psi = m_param[4]; // already in radians
+  auto	phi = m_param[3]*RAD; // RAD converts to radians
+  auto	psi = m_param[4]*RAD; // RAD converts to radians
   sinphi = sin(phi);
   sinpsi = sin(psi);
 
@@ -287,6 +289,7 @@ void HujeuxLaw::init(const mfrontVector& param)
   }
   evp = 0.;
 
+#ifdef DEBUG
   cout << "// ================================================================================= //"
        << "\n  0  Ki      = "<< param[0] 
        << "\n  1  Gi      = "<< param[1] 
@@ -315,7 +318,7 @@ void HujeuxLaw::init(const mfrontVector& param)
        << "\n  24 Gaux    = "<< param[24]        
        << "\n// ================================================================================= //"
        << endl; 
-       
+#endif
 }
 /**/
 
@@ -342,8 +345,8 @@ void HujeuxLaw::init(const dvector& param)
     sgncyc = 0.;
 	ppp = 0.;
 	pc = m_param[6];
-	auto	phi = m_param[3]; // already in radians (converted when reading data)
-	auto	psi = m_param[4]; // already in radians
+	auto	phi = m_param[3]*RAD; // RAD converts to radians
+	auto	psi = m_param[4]*RAD; // RAD converts to radians
 	sinphi = sin(phi);
 	sinpsi = sin(psi);
 
@@ -374,6 +377,7 @@ void HujeuxLaw::init(const dvector& param)
 	}
 	evp = 0.;
 
+#ifdef DEBUG
   cout << "// ================================================================================= //"
        << "\n  0  Ki      = "<< param[0] 
        << "\n  1  Gi      = "<< param[1] 
@@ -402,7 +406,7 @@ void HujeuxLaw::init(const dvector& param)
        << "\n  24 Gaux    = "<< param[24]        
        << "\n// ================================================================================= //"
        << endl; 
-       
+#endif
 }
 //=================================================================================================================//
 /**/
@@ -637,8 +641,6 @@ void HujeuxLaw::initHistory(dvector* histab)
 }
 //=================================================================================================================//
 /**/
-
-
 //=================================================================================================================//
 // sig = stress tensor at the end of previous converged time step
 // histab : tab containing internal variables(=hardening parameters) stored on each integration point(size = NHISTHUJ)
@@ -649,7 +651,12 @@ bool HujeuxLaw::initState(mfrontVector& histabAdd, const Tensor2& sig)
   mfrontVector *histab;
   histab = &histabAdd;
   
-  if (sig == Tensor2::zero() || histab == nullptr) return true;
+  if (sig == Tensor2::zero() || histab == nullptr){
+#ifdef DEBUG
+     cout << "\n Zero stress or no History variables Detected "<<endl;
+#endif
+    return true;
+  }
 	auto beta = m_param[5];
 	pc = m_param[6] * exp(beta * evp);
 	initHistory(histab);

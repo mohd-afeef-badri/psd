@@ -255,7 +255,7 @@ int main(const int argc, const char *const *argv)
 
     integrate(v, b);
     update(d);
-    SigOut  << d.s1.thermodynamic_forces[3] << "\t" <<  d.s0.gradients[3] << std::endl;
+    SigOut <<  std::setprecision(16) << d.s1.thermodynamic_forces[3] << "\t" <<  d.s0.gradients[3] << std::endl;
   }
 
 
