@@ -8,6 +8,9 @@
 #if !defined(__HUJEUX_H__)
 #define __HUJEUX_H__
 
+#define Tensor2_to_Stensor(x,y)  \
+		    Tensor2 x( Real3(y[0], y[1], y[2]), Real3(y[3], y[4],y[5]) );
+
 #include "TFEL/Math/stensor.hxx"
 #include "TFEL/Math/tvector.hxx"
 
@@ -130,9 +133,9 @@ public:
 			nmeciso{},// = 1 if isotropic mechanism is active, else 0
 			incmax{}, // nb max of sub-increments for law integration (user data)
 			indaux,//indicator for auxiliary (tangent) constitutive operator type:
-			       // 0 = elastic operator (defaut, symmetric),1 = plastic (unsymmetric)
+			       // 0 = elastic operator (default, symmetric),1 = plastic (unsymmetric)
 
-	//  inipl[4]: tab to intialize plastic yield surfaces (resp. 0-yz 1-zx 2-xy planes & 3-isotropic)
+	//  inipl[4]: tab to initialize plastic yield surfaces (resp. 0-yz 1-zx 2-xy planes & 3-isotropic)
 	//  values: 1 = plastic (default value recommended for Hujeux model), -1 = elastic
 			inipl[4]{},
 		
@@ -182,14 +185,14 @@ public:
 	void computeElastTensor(const Real& /*p*/);
 	void computeTangentTensor(const Tensor2& /*sign*/);	
 	bool initState(const Tensor2& /*sign*/ = Tensor2::zero(), dvector* /*histab*/ = nullptr);
-	bool initState( mfrontVector& /*histab*/, const Tensor2& /*sign*/ = Tensor2::zero()  );
+	bool initState( tfel::math::vector<double>& /*histab*/, const Tensor2& /*sign*/ = Tensor2::zero()  );
 	void initHistory(dvector* /*histab*/);
-	void initHistory(mfrontVector* /*histab*/);
+	void initHistory(tfel::math::vector<double>* /*histab*/);
 
 	void ComputeStress(dvector* /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/,
 		              const Tensor2& /*deps*/,bool /*is_converge*/ = false);
 
-	void ComputeStress(mfrontVector& /*histab*/, Tensor2& /*sig*/, Tensor2& /*eps*/, Tensor2& /*epsp*/, Tensor2& /*dsig*/,
+	void ComputeStress(tfel::math::vector<double>& /*histab*/, Tensor2& /*sig*/, Tensor2& /*epsp*/, /* Tensor2& /*dsig*//*,*/
 		              const Tensor2& /*deps*/,bool /*is_converge*/ = false);
 
 	bool initMecdev(const Tensor2& /*sig*/, int& /*iniplkm*/, int& /*iplk*/, Real2& /*vnk*/, Real2& /*sigbk*/, Real2& /*rayk*/),
@@ -206,48 +209,49 @@ public:
         int TestClass();
 
 
-        // methods for Mfront (function overloading is used)
+        // functions for Mfront (function overloading is used)
         // we should optimize this later
  	template <unsigned short N>
- 	bool convert_stensor_to_psd (tfel::math::stensor<N, double>& sigMf){
+ 	bool convert_stensor_to_psd (  tfel::math::stensor<N, double>& sigMf  ){
   		sigMf[0] = sigMf[0]/ tfel::math::Cste<double>::isqrt2;
  	}
 
  	template <unsigned short N>
-	bool initState(tfel::math::vector<double>& inHist, tfel::math::stensor<N, double>& inStress){
-	  Tensor2 sig(Real3(inStress[0], inStress[1],inStress[2]), Real3(inStress[3], inStress[4],inStress[5]));
-	  HujeuxLaw::initState(inHist,sig);
-	  for(int i= 0; i<6; i++)
-	    inStress[i]  = sig.m_vec[i];
-	}
+	bool initState(  tfel::math::vector<double>&     inHist , 
+	                 tfel::math::stensor<N, double>& insig  )
+	{
 
+	  Tensor2_to_Stensor(sig  , insig) ;
+	  bool returnVal = HujeuxLaw::initState(inHist, sig);
+	  for(int i= 0; i<6; i++)
+	    insig[i]  = sig.m_vec[i];
+	  return returnVal;
+	}
 
  	template <unsigned short N>
 	void ComputeStress(  tfel::math::vector<double>&      inHist   ,
-	                     tfel::math::stensor<N, double>&  inStress ,
-	                     tfel::math::stensor<N, double>&  ineps    ,
+	                     tfel::math::stensor<N, double>&  insig    ,
+	                    /*tfel::math::stensor<N, double>&  ineps    ,*/
 	                     tfel::math::stensor<N, double>&  inepsp   ,
-	                     tfel::math::stensor<N, double>&  indsig   ,
-		             tfel::math::stensor<N, double>&  indeps   ,
-		             bool& is_converge
-		           )
-	  {
+	                    /* tfel::math::stensor<N, double>&  indsig   ,*/
+	                     tfel::math::stensor<N, double>&  indeps   ,
+	                     bool& is_converge                         )
+	{
+	    Tensor2_to_Stensor(sig  , insig) ;
+	    /*Tensor2_to_Stensor(eps  , ineps) ;*/
+	    Tensor2_to_Stensor(epsp , inepsp);
+	    /*Tensor2_to_Stensor(dsig , indsig);*/
+	    Tensor2_to_Stensor(deps , indeps);
 
-	    Tensor2 sig(Real3(inStress[0], inStress[1],inStress[2]), Real3(inStress[3], inStress[4],inStress[5]));
-	    Tensor2 eps(Real3(ineps[0], ineps[1],ineps[2]), Real3(ineps[3], ineps[4],ineps[5]));
-	    Tensor2 epsp(Real3(inepsp[0], inepsp[1],inepsp[2]), Real3(inepsp[3], inepsp[4],inepsp[5]));
-	    Tensor2 dsig(Real3(indsig[0], indsig[1],indsig[2]), Real3(indsig[3], indsig[4],indsig[5]));
-	    Tensor2 deps(Real3(indeps[0], indeps[1],indeps[2]), Real3(indeps[3], indeps[4],indeps[5]));
+	    HujeuxLaw::ComputeStress( inHist, sig, epsp,/* dsig,*/ deps, is_converge );
 
-	    HujeuxLaw::ComputeStress(inHist,sig, eps, epsp, dsig, deps, is_converge);
-
-	    for(int i= 0; i<6; i++)
+	    for(int i= 0; i < 6; i++)
 	    {
-	      inStress[i]  = sig.m_vec[i];
-	      ineps[i]  = eps.m_vec[i];
-	      inepsp[i] = epsp.m_vec[i];
-	      indsig[i] = dsig.m_vec[i];
-	      indeps[i] = deps.m_vec[i];
+	      insig[i]     = sig.m_vec[i];
+	      /*ineps[i]     = eps.m_vec[i];*/
+	      inepsp[i]    = epsp.m_vec[i];
+	      /*indsig[i]    = dsig.m_vec[i];*/
+	      indeps[i]    = deps.m_vec[i];
 	    }
 
 #ifdef DEBUG
@@ -256,8 +260,8 @@ public:
 
 	}
 
-	void init(const tfel::math::vector<double>& /*param*/);
-			       
+	void init( const tfel::math::vector<double>& /*param*/ );
+
 };
 };
 

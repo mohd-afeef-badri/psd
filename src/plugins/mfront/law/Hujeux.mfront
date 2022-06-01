@@ -1,5 +1,6 @@
 //=======================================================================================
 //@DSL DefaultDSL;
+//@DSL Implicit;
 @DSL DefaultGenericBehaviour;
 @Behaviour Hujeux;
 @Date 10-05-2022;
@@ -21,7 +22,7 @@
 //=======================================================================================
 
 
-//@ModellingHypotheses{PlaneStrain, Axisymmetrical, Tridimensional};
+@ModellingHypotheses{PlaneStrain, Axisymmetrical, Tridimensional};
 
 //! Strain tensor $\epsilon$
 @Gradient StrainStensor eto;
@@ -37,12 +38,12 @@ sig.setGlossaryName("Stress");
 psdVerbosity.setEntryName("psdVerbosity");
 
 //! $K_i$ is the modulus of compressibility
-@Parameter K_0 = 628.e6;
-K_0.setEntryName("K_0");
+@Parameter K_i = 628.e6;
+K_i.setEntryName("K_i");
 
 //! $G_i$ is the shear modulus
-@Parameter G_0 = 290.e6;
-G_0.setEntryName("G_0");
+@Parameter G_i = 290.e6;
+G_i.setEntryName("G_i");
 
 //! $ne\in[0,1]$ is the non-linear elastic characteristic
 //! $ne = 0$ corresponds to linear elasticity
@@ -53,7 +54,7 @@ ne.setEntryName("ne");
 @Parameter phi_pp = -33;
 phi_pp.setEntryName("phi_pp");
 
-//! Characteristic State Line or dilatancy angle $\psi$ (in radians)
+//! Characteristic State Line or dilatancy angle $\psi$ (in degrees)
 //! between th contracting field $p$ and dilating filed $q$:
 //! $q = |p|\cdot \sin(\psi)$
 @Parameter psi = -33;
@@ -150,15 +151,16 @@ Indicator for auxiliary tangent operator type
  *   0 = elastic (symmetric) => default
  *   1 = plastic (unsymmetric)
 */
+
 @Parameter indaux = 0;
 indaux.setEntryName("indaux");
 
 
 @Private{
 
-  void convert_stensor_to_mfront(StrainStensor& Sr){
-    constexpr const auto icste = tfel::math::Cste<real>::isqrt2;
-    std::cout << "  SQRT 2 " <<  icste << std::endl;
+  void convert_stensor_to_mfront(StrainStensor& STensor){
+    for(int i=0; i<6; i++)
+      STensor[i] = STensor[i]*tfel::math::Cste<real>::isqrt2;
   }
 
   void print(std::string pp) const{
@@ -193,46 +195,23 @@ indaux.setEntryName("indaux");
 #include "hujeux.cpp"
 }
 
-
-/*
-@StateVariable StrainStensor eel;
-eel.setGlossaryName("ElasticStrain");
-
-@StateVariable real epl;
-epl.setGlossaryName("EquivalentPlasticStrain");
-
-
-//! Monotonous hardening degrees ${r_m}={r_m1,r_m2,r_m3,r_m4}$
-//! ${r_mk}_{k=1}^3$ - factors of mobilization for hardening in the plane pressure-shears
-//  $r_m4$ hardening of the spherical mechanism of consolidation
-@StateVariable real r_m[4];
-raym.setEntryName("MonotonousHardeningDegrees");
-
-//! Cyclic hardening degrees ${r_c} = {r_c1,r_c2,r_c3,r_c4}$
-//! ${r_ck}_{k=1}^3$ - factors of mobilization for hisotropic and kinematical
-//! mixed hardening in the plane pressure-shears
-//  $r_c4$ isotropic and kinematical mixed hardening
-@StateVariable real r_c[4];
-rayc.setEntryName("CyclicHardeningDegrees");
-*/
-
+//! A vector to 24 parameters for hujeux
 @StateVariable real hujxIsv[24];
 hujxIsv.setEntryName("hujeuxInternalStateVariables");
 
-/*
-@LocalVariable Tensor2 Hujsig;
-@LocalVariable Tensor2 Hujeps;
-@LocalVariable Tensor2 Hujepsp;
-@LocalVariable Tensor2 Hujdeps;
-@LocalVariable Tensor2 Hujdsig;
-*/
+//! previous step stress  ---- I DOUBT it is a InternalStateVariables
+//@StateVariable Stensor dSig;
 
-@StateVariable Stensor dSig;
-@StateVariable Stensor depsP;
+//! plastic strain  ---- I DOUBT it is a InternalStateVariables
+@StateVariable Stensor epsP;
 
+//! variable to control initilization ----- FIND ANOTHER WAY TO DO THIs
 @StateVariable real InitStressH;
 
 /*
+//-------------------------------
+// USED IN @DSL DefaultDSL; mode
+//-------------------------------
 @InitLocalVariables {
   if(!sig[0])
   {
@@ -262,14 +241,6 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
 */
 
 
-/*
-  Tensor2 Hujsig(Real3(p_c0, p_c0, p_c0), Real3::zero()), // effective stress tensor for current step
-          Hujeps,	// strain tensor for current step
-          Hujepsp,      // plastic strain tensor for current step
-          Hujdeps,      // strain tensor increment
-          Hujdsig;      // effective stress tensor increment
-*/
-
 /*!
  * We request Mfront to calculate the SymmetricTangentOperator
  * which is nothing but the stiffness matrix
@@ -279,125 +250,50 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
 
 /*!
  * In this block the law is integrated
- *   1. compute the Lame parameters lambda, mu
- *   2. compute the stress state
- *   2. compute the stiffness matrix
  */
 @Integrator{
 
-  if(!sig[0])
-  {
-    print("Entering InitLocalVariables for stress initilization ");
-
-    for(int i = 0; i < 3; i++)
-      sig[i] = p_c0;
-
-    for(int i = 3; i < 6; i++)
-      sig[i] = 0.;
-  }
-
-//  static_cast<void>(smt); // remove compiler warning
+  //static_cast<void>(smt); // remove compiler warning
 
   bool is_converge = true;                // Wrong Wrong correct MAB
 
   tfel::math::vector<double> mfront_parameters = {
-    K_0    , G_0    , ne     , phi_pp , psi    ,
+    K_i    , G_i    , ne     , phi_pp , psi    ,
     beta   , p_c0   , a_m    , b      , a_c    ,
     alfa   , r_ela  , r_hys  , r_mob  , c_m    ,
     d      , c_c    , dltela , xkimin , m      ,
     facinc , iecoul , incmax , Kaux   , Gaux } ;
 
-/*
-if(oldMethod){
-  for(int i = 0; i < 6; i++)
-    Hujdeps.m_vec[i] =  deto[i];
-
-  for(int i = 0; i < 6; i++)
-    Hujeps.m_vec[i] = eto[i] + Hujdeps.m_vec[i];
-}
-*/
-
   behaviour_psd::HujeuxLaw psdSoilLaw;
   psdSoilLaw.init(mfront_parameters);
 
-/*
-if(oldMethod){
-  for(int i = 0; i < 6; i++)
-    Hujsig.m_vec[i] = sig[i];
+  if(!InitStressH)
+  {
 
-  for(int i = 0; i < 6; i++)
-    Hujdsig.m_vec[i] = dSig[i];
+   // --------------------------------------------------------------
+   // This will be done via PSD file in future //
+   //---------------------------------------------------------------
 
-  for(int i = 0; i < 6; i++)
-    Hujepsp.m_vec[i] = depsP[i];
-}
-*/
-
-
-   if(!InitStressH)
+   if( (!sig[0] || !sig[1] || !sig[2] || !sig[3] || !sig[4] || !sig[5]) )
    {
-     display("First time iteration detected -----  ", InitStressH);
 
-    //   psdSoilLaw.initState(hujxIsv,Hujsig); //old-Method//
-       psdSoilLaw.initState(hujxIsv,sig);
+     print("  Stress initialization detected -----  ");
 
-     InitStressH = true;
+     for(int i = 0; i < 3; i++)
+       sig[i] = p_c0;
+
+     for(int i = 3; i < 6; i++)
+       sig[i] = 0.;
+
    }
 
-/*  //old-Method//
-  if(psdVerbosity)
-  {
+   display("  First iteration detected initState -----  ", InitStressH);
+   psdSoilLaw.initState(hujxIsv,sig);
+   InitStressH = true;
 
-   for(int i = 0; i < 6; i++)
-      display("INITIAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("INITIAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("INITIAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("INITIAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("INITIAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
-    for(int i = 0; i < 24; i++)
-      display("INITIAL  hujxIsv[i] ",hujxIsv[i]);
   }
-*/
 
-
-    psdSoilLaw.ComputeStress( hujxIsv, sig, eto, depsP, dSig, deto, is_converge );
-
-/*  //old-Method//
-
-  psdSoilLaw.ComputeStress( hujxIsv, Hujsig, Hujeps, Hujepsp, Hujdsig, Hujdeps, is_converge ); //old-Method
-
-  for(int i = 0; i < 6; i++)
-    sig[i] = Hujsig.m_vec[i];
-
-  for(int i = 0; i < 6; i++)
-    dSig[i] = Hujdsig.m_vec[i];
-
-  for(int i = 0; i < 6; i++)
-    depsP[i] = Hujepsp.m_vec[i];
-
-  for(int i = 0; i < 6; i++)
-    eto[i] = Hujeps.m_vec[i];
-
-  if(psdVerbosity)
-  {
-   for(int i = 0; i < 6; i++)
-     display("FINAL  Hujsig.m_vec i ",Hujsig.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("FINAL  Hujdsig.m_vec i ",Hujdsig.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("FINAL  Hujeps.m_vec i ",Hujeps.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("FINAL  Hujdeps.m_vec i ",Hujdeps.m_vec[i]);
-    for(int i = 0; i < 6; i++)
-      display("FINAL  Hujepsp.m_vec i ",Hujepsp.m_vec[i]);
-    for(int i = 0; i < 24; i++)
-      display("FINAL  hujxIsv[i] ",hujxIsv[i]);
-  }
-*/
+  psdSoilLaw.ComputeStress( hujxIsv, sig /*, eto*/, epsP, deto, is_converge );
 
   //const stress lambda = computeLambda(E,nu);
   //const stress mu     = computeMu(,nu);

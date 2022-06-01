@@ -1747,8 +1747,8 @@ void HujeuxLaw::ComputeStress(dvector* histab,Tensor2& sig, Tensor2& eps, Tensor
 // Computing stresses at step n+1 (small strain formulation)
 // Deviatoric plane mechanisms : mec1=YZ    mec2=ZX    mec3=XY
 //=================================================================================================================//
-void HujeuxLaw::ComputeStress(mfrontVector& histabAdd,Tensor2& sig, Tensor2& eps, Tensor2& epsp, Tensor2& dsig,
-        const Tensor2& deps,bool is_converge)
+void HujeuxLaw::ComputeStress(mfrontVector& histabAdd, Tensor2& sig, Tensor2& epsp, /*Tensor2& dsig,*/
+        const Tensor2& deps, bool is_converge)
 {
 	mfrontVector* histab;
 	histab = &histabAdd;
@@ -1773,7 +1773,7 @@ void HujeuxLaw::ComputeStress(mfrontVector& histabAdd,Tensor2& sig, Tensor2& eps
 		i = 0, j = 0, k = 0, ii = 0, jj = 0, lmec = 0, kmec = 0, l = 0,
 		nmec = 0, jpl[4], imec[4], jmec[4], iv = 0;
 	
-	Tensor2 sign(sig), epspn(epsp), depsp;
+	Tensor2 sign(sig), epspn(epsp), depsp, dsig;
 
 	inc = 0.;
 	incmin = 1./incmax;

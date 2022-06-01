@@ -50,7 +50,6 @@ int main(const int argc, const char *const *argv)
     if (verbos)
     {
 
-
       std::cout << "         Parameters (params)  "<< std::endl;
       std::cout << "           b.params.size() =  " <<
         b.mps.size() << std::endl;
@@ -67,8 +66,6 @@ int main(const int argc, const char *const *argv)
       for (int i = 0; i < b.mps.size(); i++)
         std::cout << "             - mps "<< i << " name :   \033[1;36m" << b.mps[i].name << "\033[0m" <<
         std::endl;
-
-
 
       const auto n = getArraySize(b.isvs, b.hypothesis);
 
@@ -249,13 +246,13 @@ int main(const int argc, const char *const *argv)
   ofstream SigOut;
   SigOut.open("fileSigOut.data");
 
-  for(int n=0; n < 200; n++){
+  EPsin >> d.s0.gradients[3];
+  for(int n=0; n < 201; n++){
 
     EPsin >> d.s1.gradients[3];
-
     integrate(v, b);
     update(d);
-    SigOut <<  std::setprecision(16) << d.s1.thermodynamic_forces[3] << "\t" <<  d.s0.gradients[3] << std::endl;
+    SigOut <<  std::setprecision(32) << d.s1.thermodynamic_forces[3] << "\t" <<  d.s0.gradients[3] << std::endl;
   }
 
 
