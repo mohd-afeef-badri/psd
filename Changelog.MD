@@ -9,6 +9,7 @@ PSD has been maturing and evolving with time, following subsections present the 
   - New `load "medio"` enables loading of medio library for PSD
   - Function `savemedmesh()` used for saving med file (see unit test `Test_1.edp`)
   - Function `loadmedmesh()` used for saving med file (see unit test `Test_2.edp`)
+  - Function `getMedLabelsOnGroup()` used for getting the label tag for a group (see unit test `Test_2.edp`)
 - Additional tests for Elastodynamics, Damage Mechanics.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.

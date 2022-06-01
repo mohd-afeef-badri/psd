@@ -52,7 +52,6 @@ int getMedLabelsOnGroup( KN<R>* const &part, std::string* const &inputfile, std:
   for (auto i: famIds){
     part[iter] = i;
     iter++;
-    cout << " iter " << iter << " G tage "  << part[iter-1] << endl;
   }
 
   return 0;
