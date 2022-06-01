@@ -24,12 +24,15 @@ load    "./../cpp/medio";         // load med io lib
 load    "msh3"
 
 
+//-----------------------------------------------
+// Test mesh saving and loading
+//-----------------------------------------------
+
 // test for 2D mesh //
 mesh Th = square (31,1);
 savemedmesh(Th, "test2DLoad.med");
 Th=loadmedmesh("test2DLoad.med", meshname = "TriangularMesh");
 plot (Th,wait=1);
-
 
 // test for 3D mesh //
 mesh3 Th3 = cube(3,4,5);
@@ -51,3 +54,24 @@ meshL ThL=buildmeshL(E(1000));
 savemedmesh(ThL, "test3DLLoad.med");
 ThL=loadmedmeshL("test3DLLoad.med", meshname = "CurveMesh");
 plot (ThL,wait=1);
+
+//-----------------------------------------------
+// Test mesh group to label plugin
+//-----------------------------------------------
+
+int[int] labelMed;
+
+// test for 2D mesh //
+getMedLabelsOnGroup( labelMed,"test2DLoad.med","edge_group_1");
+cout << labelMed << endl;
+
+getMedLabelsOnGroup( labelMed,"test2DLoad.med","edge_group_2");
+cout << labelMed << endl;
+
+
+// test for 3D mesh //
+getMedLabelsOnGroup( labelMed,"test3DLoad.med","tria_group_1");
+cout << labelMed << endl;
+
+getMedLabelsOnGroup( labelMed,"test3DLoad.med","tria_group_2");
+cout << labelMed << endl;

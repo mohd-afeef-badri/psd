@@ -26,6 +26,7 @@ using namespace MEDCoupling;
 
 #include "medioSaveMedMesh.hpp"
 #include "medioLoadMedMesh.hpp"
+#include "medioGetGroupLabel.hpp"
 #include "medio.hpp"
 
 using namespace std;
@@ -39,6 +40,8 @@ static void InitFF()
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmesh,  std::string* >(savemedmesh));
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshS, std::string* >(savemedmesh));
   Global.Add("savemedmesh", "(", new OneOperator2_< int,  pmeshL, std::string* >(savemedmesh));
+//Global.Add("getMedLabelsOnGroup", "(", new OneOperator3s_< KN< long > *,  KN< long > *, std::string*, std::string* >(getMedLabelsOnGroup)); // also needs // #include "AFunction_ext.hpp" 
+  Global.Add("getMedLabelsOnGroup", "(", new OneOperator3_< int, KN< long > *, std::string*, std::string* >(getMedLabelsOnGroup));
   Global.Add("loadmedmesh", "(", new medloader);
   Global.Add("loadmedmesh3", "(", new medloader3);
   Global.Add("loadmedmeshS", "(", new medloaderS);

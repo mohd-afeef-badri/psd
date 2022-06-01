@@ -82,7 +82,12 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
   for (int i=0; i < mesh->getNumberOfCells(); i++)
     (ttff++)->set(vff, NodalConnectivity[i*4 + 1], NodalConnectivity[i*4 + 2], NodalConnectivity[i*4 + 3], famIds->getIJ(i,0));
 
-
+  if(verbosity > 99)
+    for (int i=0; i < mesh->getNumberOfCells(); i++)
+      cout << "Tria   "<< i << " (" <<  NodalConnectivity[i*4 + 1]
+                            << "\t" <<  NodalConnectivity[i*4 + 2]
+                            << "\t" <<  NodalConnectivity[i*4 + 3]
+                            << ")\tlab\t" << famIds->getIJ(i,0) << endl;
 
 
   // create edges //
@@ -97,6 +102,11 @@ Mesh *loadmed(std::string &inputfile, std::string &meshname){
   for (int i=0; i < mesh1d->getNumberOfCells(); i++)
     (bbff++)->set(vff, NodalConnectivity1d[i*3 + 1], NodalConnectivity1d[i*3 + 2], famIds1d->getIJ(i,0));
 
+  if(verbosity > 99)
+    for (int i=0; i < mesh1d->getNumberOfCells(); i++)
+      cout << "Edge   "<< i << " (" <<  NodalConnectivity1d[i*3 + 1]
+                            << "\t" <<  NodalConnectivity1d[i*3 + 2]
+                            << ")\tlab\t" << famIds1d->getIJ(i,0) << endl;
 
   // create mesh //
   Mesh *pTh = new Mesh(nv, nt, nbe, vff, tff, bff);
@@ -281,6 +291,12 @@ MeshS *loadmedS(std::string &inputfile, std::string &meshname){
     (ttff++)->set(vff, indexTet, famIds->getIJ(i,0));
   }
 
+  if(verbosity > 99)
+    for (int i=0; i < mesh->getNumberOfCells(); i++)
+      cout << "Tria   "<< i << " (" <<  NodalConnectivity[i*4 + 1]
+                            << "\t" <<  NodalConnectivity[i*4 + 2]
+                            << "\t" <<  NodalConnectivity[i*4 + 3]
+                            << ")\tlab\t" << famIds->getIJ(i,0) << endl;
 
   // create edges //
   BoundaryEdgeS *bff = new BoundaryEdgeS[nbe];
@@ -298,6 +314,11 @@ MeshS *loadmedS(std::string &inputfile, std::string &meshname){
     (bbff++)->set(vff, indexSeg, famIds1d->getIJ(i,0));
   }
 
+  if(verbosity > 99)
+    for (int i=0; i < mesh1d->getNumberOfCells(); i++)
+      cout << "Edge   "<< i << " (" <<  NodalConnectivity1d[i*3 + 1]
+                            << "\t" <<  NodalConnectivity1d[i*3 + 2]
+                            << ")\tlab\t" << famIds1d->getIJ(i,0) << endl;
 
   // create mesh //
   MeshS *pThS = new MeshS(nv, nt, nbe, vff, tff, bff);
