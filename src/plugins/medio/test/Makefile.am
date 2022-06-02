@@ -62,7 +62,7 @@ clean-local:
 	@echo "*============================================================*"
 	@echo ""
 	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat *.gnu *.med
-	rm  -f *~ *.log *.out
+	rm  -f *~ *.log *.out *.txt
 
 
 maintainer-clean-local: clean-local
