@@ -14,8 +14,8 @@ set tics font "times,10"
 set key font "times,8" bottom
 set xlabel '' font "times,10"
 set ylabel 'Error %' font "Helvetica,8"
-set xtic 50  
-set ytic 20  
+set xtic 50
+set ytic 10
 set size 0.5, 0.35
 set origin 0.45, 0.5
 
