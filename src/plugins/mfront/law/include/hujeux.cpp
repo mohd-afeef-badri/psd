@@ -1773,7 +1773,7 @@ void HujeuxLaw::ComputeStress(mfrontVector& histabAdd, Tensor2& sig, Tensor2& ep
 		i = 0, j = 0, k = 0, ii = 0, jj = 0, lmec = 0, kmec = 0, l = 0,
 		nmec = 0, jpl[4], imec[4], jmec[4], iv = 0;
 	
-	Tensor2 sign(sig), epspn(epsp), depsp, dsig;
+	Tensor2 sign(sig),epspn(epsp), depsp, dsig;
 
 	inc = 0.;
 	incmin = 1./incmax;
@@ -2094,8 +2094,7 @@ void HujeuxLaw::ComputeStress(mfrontVector& histabAdd, Tensor2& sig, Tensor2& ep
 			depsp = dep;
 			sig -= m_elast_tensor * depsp;
 			epsp += depsp;
-	
-		}
+        }
 		
 		sig += dsig * inc;
 		resinc -= inc;
@@ -2111,7 +2110,7 @@ void HujeuxLaw::ComputeStress(mfrontVector& histabAdd, Tensor2& sig, Tensor2& ep
 		epsp = epspn;
 		evp = evp0;
 		sig = sign;
-	  p = trace(sig) / 3.;
+	    p = trace(sig) / 3.;
 		if (p >= 0.) p = ptrac;
 		else if (p >= -1.e-7) p = -1.e-7;
 
@@ -2119,7 +2118,6 @@ void HujeuxLaw::ComputeStress(mfrontVector& histabAdd, Tensor2& sig, Tensor2& ep
 
 		dsig = m_elast_tensor * deps;
 		sig += dsig;
-
 	}
 
 	if (is_converge)

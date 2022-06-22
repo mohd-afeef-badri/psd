@@ -202,10 +202,10 @@ Indicator for auxiliary tangent operator type
 @StateVariable real hujxIsv[24];
 hujxIsv.setEntryName("hujeuxInternalStateVariables");
 
-//! previous step stress  ---- I DOUBT it is a InternalStateVariables
+//! previous step stress  ---- I DOUBT it is a InternalStateVariables =>ef: it is not (computed each time)
 //@StateVariable Stensor dSig;
 
-//! plastic strain  ---- I DOUBT it is a InternalStateVariables
+//! plastic strain  ---- I DOUBT it is a InternalStateVariables =>ef: yes, we need to keep track of it along simulation
 @StateVariable Stensor epsP;
 
 //! variable to control initilization ----- FIND ANOTHER WAY TO DO THIs
@@ -270,6 +270,18 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
   behaviour_psd::HujeuxLaw psdSoilLaw;
   psdSoilLaw.init(mfront_parameters);
 
+// Stress (strain) tensor expected for Hujeux: xx yy zz xy yz xz
+// MFront Stress (strain) tensor: xx yy zz xy xz yz
+   Stensor sighuj = sig;
+   Stensor detohuj = deto;
+   Stensor epsPhuj = epsP;
+   sighuj[4] = sig[5];
+   sighuj[5] = sig[4];
+   detohuj[4] = deto[5];
+   detohuj[5] = deto[4];
+   epsPhuj[4] = epsP[5];
+   epsPhuj[5] = epsP[4];
+
   if(!InitStressH)
   {
 
@@ -277,31 +289,43 @@ hujxIsv.setEntryName("hujeuxInternalStateVariables");
    // This will be done via PSD file in future //
    //---------------------------------------------------------------
 
-   if( (!sig[0] || !sig[1] || !sig[2] || !sig[3] || !sig[4] || !sig[5]) )
+//   if( (!sig[0] || !sig[1] || !sig[2] || !sig[3] || !sig[4] || !sig[5]) ) =>ef: test is wrong
+   if( (!sighuj[0] && !sighuj[1] && !sighuj[2]) )
    {
 
      print("  Stress initialization detected -----  ");
 
+     // ef: this initialization is working only for material point testing
+     // (not for true FEM simulations)
      for(int i = 0; i < 3; i++)
-       sig[i] = p_c0;
+       sighuj[i] = p_c0;
 
      for(int i = 3; i < 6; i++)
-       sig[i] = 0.;
+       sighuj[i] = 0.;
 
    }
 
    display("  First iteration detected initState -----  ", InitStressH);
-   psdSoilLaw.initState(hujxIsv,sig);
+
+//   psdSoilLaw.initState(hujxIsv,sig);
+   psdSoilLaw.initState(hujxIsv,sighuj);
    InitStressH = true;
 
   }
 
-  psdSoilLaw.ComputeStress( hujxIsv, sig /*, eto*/, epsP, deto, is_converge );
 
-  //const stress lambda = computeLambda(E,nu);
-  //const stress mu     = computeMu(,nu);
-  //sig = 10*trace(eto+deto)*StrainStensor::Id()+2*20*(eto+deto);
-  //if(computeTangentOperator_){
-  //  Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
-  //}
+//  psdSoilLaw.ComputeStress( hujxIsv, sig /*, eto*/, epsP, deto, is_converge );
+  psdSoilLaw.ComputeStress( hujxIsv, sighuj, epsPhuj, detohuj, is_converge );
+
+   // Back to MFront ordering
+   sig = sighuj;
+   deto = detohuj;
+   epsP = epsPhuj;
+
+   sig[4] = sighuj[5];
+   sig[5] = sighuj[4];
+   deto[4] = detohuj[5];
+   deto[5] = detohuj[4];
+   epsP[4] = epsPhuj[5];
+   epsP[5] = epsPhuj[4];
 }
