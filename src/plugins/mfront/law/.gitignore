@@ -5,4 +5,6 @@ lab/*
 !include/hujeux.cpp
 !include/hujeux.h
 !include/mat_tools.cpp
+!include/stdafx.h
 !include/utils.h
+!include/utils.cpp

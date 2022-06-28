@@ -21,20 +21,107 @@
  *   1 = plastic (unsymmetric)
 */
 
-// MaterialProperty tab of 24 constant real scalars (user data) to be read on the fly:
-// 0-Ei  1-Nu  2-ne  3-phi(°)  4-psi(°)  5-beta  6-pci  7-b
-// 8-amon 9-acyc 10-cmon  11-ccyc  12-d 13-alfa
-// 14-rayela 15-rayhys 16-raymbl 17-dltela
-// 18-xkimin   19-m   20-facinc   21-iecoul  22-incmax
-// 23-Eaux 24-indaux
+//@Gradient StrainStensor eto;                              // Confirm 
+//eto.setGlossaryName("Strain");                      // Confirm 
+ 
+//@Flux StressStensor sig;           // Confirm 
+//sig.setGlossaryName("Stress");     // Confirm 
 
+// MaterialProperty tab with 24 constant law parameters (user data) which will be read on the fly:
+// 0-Ei  1-Nu     2-ne      3-phi(°)  4-psi(°)  5-beta    6-pci    7-b
+// 8-amon 9-acyc 10-cmon  11-ccyc  12-d 11-alfa 12-rayela 12-rayhys 16-raymbl 17-dltela
+// 18-xkimin   19-m   20-facinc   21-iecoul  22-incmax 23-Eaux 24-indaux
 //! Material properties
+
 @MaterialProperty real matProp[25];
 matProp.setEntryName("HujeuxMaterialProperties");
 
-//! State (internal) variables stored as a tab of 25 real scalars
-@StateVariable real histTab[24];
-histTab.setEntryName("HujeuxInternalVariables");
+//! State variables
+@StateVariable real raym[4];
+raym.setEntryName("MonotonousHardeningDegrees");
+
+@StateVariable real rayc[4];
+rayc.setEntryName("CyclicHardeningDegrees");
+
+@StateVariable strain lp[4];
+lp.setGlossaryName("EquivalentPlasticStrain");
+
+//! Initial Young modulus
+@LocalVariable stress young;
+
+//! Poisson ratio (assumed as constant along the simulation)
+@LocalVariable real   nu;
+
+//! Exponant for nonlinear elasticity
+@LocalVariable real ne;
+
+//! Friction angle at perfect plasticity (in degrees)
+@LocalVariable real phi;
+
+//! Characteristic State Line or dilatancy angle (in radians)
+@LocalVariable real psi;
+
+//! Plastic Compressibility Module
+@LocalVariable real beta;
+
+//! Initial Critical Pressure (or pre-consolidation stress)
+@LocalVariable stress pci;
+
+//! Shape coefficient between 0 (= Mohr-Coulomb) and 1 (= modified Cam-Clay)
+@LocalVariable real b;
+
+//! Deviatoric monotonous hardening coefficient
+@LocalVariable real amon[2];
+
+//! Deviatoric cyclic hardening coefficient
+@LocalVariable real acyc;
+
+//! Volumetric monotonous hardening coefficient
+@LocalVariable real cmon;
+
+//! Volumetric cyclic hardening coefficient
+@LocalVariable real ccyc;
+
+//! Distance in e-lnp plane between Isotropic Consolidation and Critical State Lines 
+@LocalVariable real d;
+
+//! Coefficient for Roscoe dilatancy rule
+@LocalVariable real alfapsi;
+
+//! Elastic Domain Limit (deviatoric hardening coef)
+@LocalVariable real rayel;
+
+//! Hysteretic Domain Limit (deviatoric hardening coef)
+@LocalVariable real rayhys;
+
+//! Mobilized Domain Limit (deviatoric hardening coef)
+@LocalVariable real raymbl;
+
+//! Elastic Domain Limit (volumetric hardening coef)
+@LocalVariable real dltela;
+
+@LocalVariable real xkimin;
+
+//! Exponent for the hardening evolution
+@LocalVariable real xm;
+
+//! Initial bulk modulus
+@LocalVariable stress Ki;
+
+//! Hydrostatic effective pressure (=mean stress)
+@LocalVariable real ppp;
+
+//! Current 1st Lame coeeficient
+@LocalVariable stress lambda;
+
+//! Current shear modulus
+@LocalVariable stress mu;
+
+//! Current Bulk modulus
+@LocalVariable stress K;
+
+//! Current critical pressure
+@LocalVariable stress pc;
 
 //! Status for active yield surfaces
 @LocalVariable bool bplast[4];
@@ -42,27 +129,64 @@ histTab.setEntryName("HujeuxInternalVariables");
 //! Stress at the beginning of the time step
 @LocalVariable StressStensor sig0;
 
+@LocalVariable real incmin;
+@LocalVariable real sinphi;
+@LocalVariable real sinpsi;
+@LocalVariable int nmecdev;
+@LocalVariable int nmeciso;
+@LocalVariable int im;
+@LocalVariable int jm;
+@LocalVariable int km;
+@LocalVariable int lm;
+@LocalVariable int inc;
+@LocalVariable stress ptrac;
+
+/*
 @Includes{
-#include "HujeuxECP1985-core-implement.hxx"
-#include "nlsoil_utils.hxx"
+//#include"TFEL/Material/Lame.hxx"
+#include "hujeux.h"
+#include "utils.h"
 }
 @Sources {
-#include "HujeuxECP1985-core-implement.cxx"
-#include "mat_tools.cc"
+#include "hujeux.cpp"
+#include "utils.cpp"
+#include "mat_tools.cpp"
 }
+*/
+
+
 
 @InitLocalVariables {
-  sig0 = sig;
-  for (auto &b: bplast) {
-      b = false;
-  }
+/*  using namespace tfel::material::lame;
+  mu = computeMu(young, nu);
+  lambda = computeLambda(young, nu);
+
+  incmin = 1./incmax;
+  nmecdev = 3;
+  nmeciso = 1;
+  inc = 0;
+  im = 0;
+  jm = 0;
+  km = 0;
+  lm = 0;
+  ptrac = pref*1.e-12;
+  sinphi = sin(phi);
+  sinpsi = sin(psi);
+
+  ppp = trace(sig)/3.;
+  K = young / (3 * (1 - 2 * nu));
+    
+  for (unsigned short i = 0; i != 4; ++i)
+    bplast[i] = false;*/
 }
+
 
 /*!
  * We request Mfront to calculate the SymmetricTangentOperator
  * which is nothing but the stiffness matrix
  */
 @ProvidesSymmetricTangentOperator;
+
 
 /*!
  * In this block the law is integrated
@@ -72,11 +196,10 @@ histTab.setEntryName("HujeuxInternalVariables");
  */
 @Integrator{
   static_cast<void>(smt); // remove compiler warning
-//  sig = lambda*trace(eto+deto)*StrainStensor::Id()+2*mu*(eto+deto);
-
-
-
+//  const stress lambda = computeLambda(young,nu);
+//  const stress mu     = computeMu(young,nu);
+  sig = lambda*trace(eto+deto)*StrainStensor::Id()+2*mu*(eto+deto);
   if(computeTangentOperator_){
-//    Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
+    Dt = lambda*Stensor4::IxI()+2*mu*Stensor4::Id();
   }
 }
