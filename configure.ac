@@ -48,6 +48,9 @@ dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
 dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
+AC_ARG_VAR(MPIRUN,[MPIRUN command])
+AC_CHECK_PROGS(MPIRUN, mpiexec mpirun srun ccc_mprun, $MPIRUN)
+
 
 
 AC_ARG_WITH([dependencies],
@@ -115,7 +118,8 @@ AU_ALIAS([ACX_MPI], [AX_MPI])
 AC_DEFUN([AX_MPI], [
 AC_PREREQ(2.50)
 
-AC_LANG_CASE([C], [
+AC_LANG_CASE(
+[C], [
 	AC_REQUIRE([AC_PROG_CC])
 	AC_ARG_VAR(MPICC,[MPI C compiler command])
 	AC_CHECK_PROGS(MPICC, mpicc hcc mpxlc_r mpxlc mpcc cmpicc, $CC)
@@ -260,6 +264,12 @@ AC_ARG_WITH(MPIF77,
 	[  --with-MPIF77=          path of the MPI C++ compiler to be used
 	                  (e.g. --with-MPIF77=your/MPIF77/Install/path/bin/mpif77)],
 	   MPIF77="${withval}")
+
+AC_ARG_WITH(MPIRUN,
+	[  --with-MPIRUN=          path of the MPIRUN to be used
+	                  (e.g. --with-MPIRUN=your/Install/path/bin/mpirun)],
+	   MPIRUN="${withval}")
+
 
 test "$MPICXX" == "$CXX" && AC_MSG_ERROR([
 
@@ -499,6 +509,7 @@ AC_MSG_RESULT([])
 AC_MSG_RESULT([ C/C++ compiler flags   : '$CXXFLAGS'])
 AC_MSG_RESULT([ F77/FC compiler flags  : '$FCFLAGS'])
 AC_MSG_RESULT([])
+AC_MSG_RESULT([ MPIRUN             : '$MPIRUN'])
 AC_MSG_RESULT([ MPIC++ compiler    : '$MPICXX'])
 AC_MSG_RESULT([ MPIC   compiler    : '$MPICC'])
 AC_MSG_RESULT([ MPIF77 compiler    : '$MPIF77'])

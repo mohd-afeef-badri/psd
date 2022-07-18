@@ -205,7 +205,7 @@ endif
 	--prefix=${prefix}/ff-petsc/r \
 	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
-	--with-mpiexec=mpirun \
+	--with-mpiexec=$(MPIRUN) \
 	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
 	--with-cudac=0 --with-ssl=0 --with-x=0 \
 	--with-debugging=no \
@@ -258,7 +258,7 @@ FreeFem-sources-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so: FreeFem-sources-$(FREEFE
 	CC=$(MPICC) CCOPTFLAGS='$(CXXFLAGS)' \
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
-	MPIRUN=mpirun \
+	MPIRUN=$(MPIRUN) \
 	--without-petsc_complex \
 	--disable-superlu \
 	--with-hdf5=no &&  \
