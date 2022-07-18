@@ -7,18 +7,19 @@ GMSH_VERSION=4.8.4
 
 ENVFILE=envvar.tmp
 
+PETSC_ARCH_PSD  =fr
 
 if BUILDDEPENDENCIES
-LIST_MAKE_EXECUTE = petsc-build \
-FreeFEM-build \
+LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
 mgis-build \
-gmsh-build
+petsc-build \
+FreeFEM-build
 else
-LIST_MAKE_EXECUTE = \
-mfront-build \
-mgis-build
+LIST_MAKE_EXECUTE =
 endif
+
+
 
 if MAC
 MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
@@ -27,18 +28,34 @@ MAKEANDINSTALL = make -j4 && make install
 endif
 
 define mfrontenv
-export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
+export PATH=\$$PATH:${prefix}/bin \nexport LD_LIBRARY_PATH=\$$LD_LIBRARY_PATH:${prefix}/lib
 endef
 
 all-local: $(LIST_MAKE_EXECUTE)
 	@echo ""
 
-gmsh-build:
-if MAC
+
+
+#--------------------------------------------------------------------------------
+# Gmsh installation
+#  - Not working for MAC OS
+#  - Download from wget version GMSH_VERSION
+#  - User can override downlaod by providing ext/gmsh-$(GMSH_VERSION).tar.gz
+#--------------------------------------------------------------------------------
+
+gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
+
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so: gmsh-$(GMSH_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
-	@echo " IMPORTANT NOTE:   "
+	@echo " PSD is compiling gmsh for you be patient:   "
 	@echo "*============================================================*"
+	@echo ""
+if MAC
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " IMPORTANT NOTE:   "
+	@echo "*---------------------------------*"
 	@echo ""
 	@echo "  PSD Cannot install Gmsh for MacOS please install this"
 	@echo "  yourself by downlding the precompiled 'dmg' from"
@@ -51,58 +68,138 @@ if MAC
 	@echo ""
 	@echo "  with /your/gmsh/install/bin being the path where you install"
 	@echo "  the dmg install"
-else
-	@echo ""
-	@echo "*============================================================*"
-	@echo " PSD is installing gmsh for you be patient:   "
-	@echo "*============================================================*"
-	@echo ""
-	tar -xf gmsh-sources.tar.xz
-	cd gmsh-$(GMSH_VERSION) && cp -rf ./bin/* ${prefix}/bin/. && cp -rf ./share/doc/*  ${prefix}/share/doc/.  && cp -rf ./share/man  ${prefix}/share/man
 endif
+if !MAC
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   untaring gmsh-$(GMSH_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf gmsh-$(GMSH_VERSION).tar.gz
+if !BUILDZIPPEDDEPENDENCIES
+	mv gmsh-$(GMSH_VERSION)-Linux64 gmsh-$(GMSH_VERSION)
+endif
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " installing gmsh "
+	@echo "*---------------------------------*"
+	@echo ""
+	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
+	cd gmsh-$(GMSH_VERSION) && \
+	cp -rf ./bin/* ${prefix}/bin/. && \
+	cp -rf ./share/doc/*  ${prefix}/share/doc/.  && \
+	cp -rf ./share/man  ${prefix}/share/man
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " finished installing Gmsh v$(GMSH_VERSION)   "
+	@echo "*---------------------------------*"
+	@echo ""
+endif
+
+gmsh-$(GMSH_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	wget -c  https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz -O gmsh-$(GMSH_VERSION).tar.gz
+endif
+
+#--------------------------------------------------------------------------------
+# MFront installation
+#  - Download from wget version MFRONT_VERSION
+#  - User can override downlaod by providing ext/Mfront-sources-$(MFRONT_VERSION).tar.gz
+#--------------------------------------------------------------------------------
 
 mfront-build: Mfront-sources-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so
 
 
-Mfront-sources-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so: Mfront-sources.tar.xz
+Mfront-sources-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so: Mfront-sources-$(MFRONT_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling mfront for you be patient:   "
 	@echo "*============================================================*"
 	@echo ""
-	tar -xf Mfront-sources.tar.xz
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   untaring mfront-$(MFRONT_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf Mfront-sources-$(MFRONT_VERSION).tar.gz
+if !BUILDZIPPEDDEPENDENCIES
+	mv tfel-TFEL-$(MFRONT_VERSION) Mfront-sources-$(MFRONT_VERSION)
+endif
 	cd Mfront-sources-$(MFRONT_VERSION) &&  rm -rf build && mkdir -p build && cd build && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  && \
 	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
 	@echo ""
+	@echo "*---------------------------------*"
+	@echo " finished installing mfront v$(MFRONT_VERSION)   "
+	@echo "*---------------------------------*"
+	@echo ""
+
+Mfront-sources-$(MFRONT_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz -O Mfront-sources-$(MFRONT_VERSION).tar.gz
+endif
+
+
+#--------------------------------------------------------------------------------
+# Mgis installation
+#  - Download from wget version MGIS_VERSION
+#  - User can override downlaod by providing ext/Mgis-sources-$(MGIS_VERSION).tar.gz
+#--------------------------------------------------------------------------------
 
 mgis-build: Mgis-sources-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so
 
-Mgis-sources-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so: Mgis-sources.tar.xz
+Mgis-sources-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so: Mgis-sources-$(MGIS_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling Mgis for you be patient:   "
 	@echo "*============================================================*"
 	@echo ""
-	tar -xf Mgis-sources.tar.xz
+	@echo "*---------------------------------*"
+	@echo "   untaring Mgis-$(MGIS_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf Mgis-sources-$(MGIS_VERSION).tar.gz
+if !BUILDZIPPEDDEPENDENCIES
+	mv MFrontGenericInterfaceSupport-MFrontGenericInterfaceSupport-$(MGIS_VERSION) Mgis-sources-$(MGIS_VERSION)
+endif
 	cd Mgis-sources-$(MGIS_VERSION) && rm -rf build && mkdir -p build && cd build && \
 	echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)   && echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE) && \
 	eval `cat $(ENVFILE)` && \
 	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix}  -DCMAKE_C_COMPILER=$(CC)  -DCMAKE_CXX_COMPILER=$(CXX)  && \
 	make -j8 && make install
 	@echo ""
+	@echo "*---------------------------------*"
+	@echo " finished installing mgis v$(MGIS_VERSION)   "
+	@echo "*---------------------------------*"
+	@echo ""
+
+Mgis-sources-$(MGIS_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport/archive/refs/tags/MFrontGenericInterfaceSupport-$(MGIS_VERSION).tar.gz -O Mgis-sources-$(MGIS_VERSION).tar.gz
+endif
 
 
-petsc-build:
+
+#--------------------------------------------------------------------------------
+# PETSc installation
+#  - Download from wget version PETSC_VERSION
+#  - User can override downlaod by providing ext/petsc-$(PETSC_VERSION).tar.gz
+#--------------------------------------------------------------------------------
+
+petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
+
+petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling PETSc, HPDDM, METIS, PARMETIS, SCALAPACK,   "
 	@echo " MUMPS, SLEPC, SUITSPAR for you be patient:   "
 	@echo "*============================================================*"
 	@echo ""
-	export PETSCPKG=$(CURDIR)
-	tar -xf Petsc-sources.tar.xz
+	@echo "*---------------------------------*"
+	@echo "   untaring Petsc-$(PETSC_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf petsc-$(PETSC_VERSION).tar.gz
+if !BUILDZIPPEDDEPENDENCIES
+	mv petsc-v$(PETSC_VERSION) petsc-$(PETSC_VERSION)
+endif
 	cd petsc-$(PETSC_VERSION) && ./configure \
 	--with-scalar-type=real \
 	--prefix=${prefix}/ff-petsc/r \
@@ -119,19 +216,40 @@ petsc-build:
 	--download-slepc=$(CURDIR)/slepc-sources.tar.gz \
 	--download-hpddm=$(CURDIR)/hpddm-sources.tar.gz \
 	--download-scalapack=$(CURDIR)/scalapack-sources.tar.gz \
-	PETSC_ARCH=fr
+	PETSC_ARCH=$(PETSC_ARCH_PSD)
 	cd petsc-$(PETSC_VERSION) &&  \
 	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr all &&  \
 	make PETSC_DIR=$(CURDIR)/petsc-$(PETSC_VERSION) PETSC_ARCH=fr install
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " finished installing Petsc v$(PETSC_VERSION)   "
+	@echo "*---------------------------------*"
+	@echo ""
+
+petsc-$(PETSC_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz -O petsc-$(PETSC_VERSION).tar.gz
+endif
 
 
-FreeFEM-build:
+#--------------------------------------------------------------------------------
+# FreeFEM installation
+#  - Download from wget version PETSC_VERSION
+#  - User can override downlaod by providing ext/petsc-$(PETSC_VERSION).tar.gz
+#--------------------------------------------------------------------------------
+
+FreeFEM-build: FreeFem-sources-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so
+
+FreeFem-sources-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so: FreeFem-sources-$(FREEFEM_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling FreeFEM for you be patient:"
 	@echo "*============================================================*"
 	@echo ""
-	tar -xf FreeFem-sources.tar.xz
+	@echo "*---------------------------------*"
+	@echo "   untaring FreeFem-$(FREEFEM_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf FreeFem-sources-$(FREEFEM_VERSION).tar.gz
 	cd FreeFem-sources-$(FREEFEM_VERSION) && autoreconf -i && \
 	./configure \
 	--prefix=${prefix} \
@@ -145,6 +263,14 @@ FreeFEM-build:
 	--disable-superlu \
 	--with-hdf5=no &&  \
 	$(MAKEANDINSTALL)
+
+FreeFem-sources-$(FREEFEM_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz -O FreeFem-sources-$(FREEFEM_VERSION).tar.gz
+endif
+
+
+
 
 check-local:
 	@echo ""

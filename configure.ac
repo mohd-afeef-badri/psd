@@ -51,8 +51,13 @@ dnl AC_SUBST(FFMPI)
 
 
 AC_ARG_WITH([dependencies],
-	[  --with-dependencies=            Dependencies installation : (e.g. --with-dependencies=yes)],
+	[  --with-dependencies=         Dependencies installation : (e.g. --with-dependencies=yes)],
         [dependencies="$withval"], [dependencies="no"])
+
+AC_ARG_WITH([zipped_dependencies],
+	[  --with-zipped_dependencies=  Folder contaning tar.gz for dependencies : (e.g. --with-zipped_dependencies=yes)
+	],
+        [zipped_dependencies="$withval"], [zipped_dependencies="no"])
 
 AC_ARG_WITH(FreeFEM,
 	[  --with-FreeFEM=         FreeFEM  installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
@@ -65,7 +70,7 @@ AC_ARG_WITH(Gmsh,
 	   GMSH="${withval}/gmsh")
 
 AC_ARG_WITH([mfront],
-	[  --with-mfront=            mfront installation path : (e.g. --with-mfront=/opt/install/local)],
+	[  --with-mfront=          mfront installation path : (e.g. --with-mfront=/opt/install/local)],
         [mfront="$withval"], [mfront="no"])
 
 AC_ARG_WITH([mgis],
@@ -73,21 +78,37 @@ AC_ARG_WITH([mgis],
         [mgis="$withval"], [mgis="no"])
 
 AC_ARG_WITH([salome],
-	[  --with-salome=            salome installation path : (e.g. --with-salome=/opt/install/local)],
+	[  --with-salome=          salome installation path : (e.g. --with-salome=/opt/install/local)
+	],
         [salome="$withval"], [salome="no"])
-
-
+ 
 AC_SUBST([dependencies])
 AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])
 test "$dependencies" == "no" && AC_MSG_WARN([
 
  PSD can automatically build for you its dependencies
- FreeFEM, PETSc, MFront, MGIS, METIS, ParMETIS, etc.
+ FreeFEM, PETSc, MFront, MGIS, METIS,  ParMETIS, etc.
+ A power user is adviced to build these on their own.
  In order to do so
 
  --with-dependencies=yes
 
- A power user is adviced to build these on their own.
+ The wget command will be used to download these,  if
+ you wish to provided already downloaded  files,  use
+   --with-zipped_dependencies  option.
+ ])
+
+
+AC_SUBST([zipped_dependencies])
+AM_CONDITIONAL([BUILDZIPPEDDEPENDENCIES], [test $zipped_dependencies != no])
+test "$zipped_dependencies" == "no" && AC_MSG_WARN([
+
+ PSD can automatically build for you its dependencies
+ FreeFEM, PETSc, MFront,  MGIS, METIS, ParMETIS, etc.
+ from *.tar.gz files. In order to do so, provide the
+ tar.gz files for dependencies in /ext folder of PSD
+
+ --with-zipped_dependencies=yes
  ])
 
 AU_ALIAS([ACX_MPI], [AX_MPI])
@@ -226,12 +247,12 @@ AC_ARG_WITH(MPICXX,
 	   MPICXX="${withval}")
 
 AC_ARG_WITH(MPICC,
-	[  --with-MPICC=          path of the MPI C compiler to be used
+	[  --with-MPICC=           path of the MPI C compiler to be used
 	                  (e.g. --with-MPICC=your/MPIC++/Install/path/bin/mpicc)],
 	   MPICC="${withval}")
 
 AC_ARG_WITH(MPIFC,
-	[  --with-MPIFC=          path of the MPI Fortran compiler to be used
+	[  --with-MPIFC=           path of the MPI Fortran compiler to be used
 	                  (e.g. --with-MPIFC=your/MPIFC/Install/path/bin/mpicf90)],
 	   MPIFC="${withval}")
 
@@ -487,7 +508,8 @@ AC_MSG_RESULT([ FreeFEM compiler   : '$FF'])
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 AC_MSG_RESULT([])
-test "$dependencies"   != "no"            &&  AC_MSG_RESULT([ Dependencies  compile   : ENABLED])
+test "$dependencies"          != "no"     &&  AC_MSG_RESULT([ Dependencies  compile        : ENABLED])
+test "$zipped_dependencies"   != "no"     &&  AC_MSG_RESULT([ Dependencies  from *.tar.gz  : ENABLED])
 AC_MSG_RESULT([])
 test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront   : YES])
 test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront   : NO])
