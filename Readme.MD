@@ -26,7 +26,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 
 **Dependencies**
 
- PSD has some essential prerequistes without which PSD will not function. These dependencis can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
+ PSD has some essential prerequisites without which PSD will not function. These dependencies can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.
 
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
@@ -45,7 +45,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 
 Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
 
-Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
+Generally there are two procedures of installing PSD. One where user takes charge and installs all the dependencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
@@ -141,7 +141,7 @@ autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 ```
 **Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. 
 **Note**:   for CentOS7 you might have to load mpi with `module load mpi/openmpi-x86_64`
-- Make all depndencies
+- Make all dependencies
 ```bash
 cd ext && make && cd ..
 ```

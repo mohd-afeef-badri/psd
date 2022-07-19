@@ -49,7 +49,7 @@ dnl AC_SUBST(FFMPI)
 ])dnl ACX_FFMPI
 
 AC_ARG_VAR(MPIRUN,[MPIRUN command])
-AC_CHECK_PROGS(MPIRUN, mpiexec mpirun srun ccc_mprun, $MPIRUN)
+AC_CHECK_PROGS(MPIRUN, mpirun mpiexec srun ccc_mprun, $MPIRUN)
 
 
 
