@@ -1,0 +1,13 @@
+diff --git a/src/femlib/fem.cpp b/src/femlib/fem.cpp
+index 71f55730..d8279d51 100644
+--- a/src/femlib/fem.cpp
++++ b/src/femlib/fem.cpp
+@@ -1806,7 +1806,7 @@ Mesh::Mesh(const Mesh & Th,int * split,bool WithMortar,int label)
+ 	    if (split[it])
+ 		hm=Min(hm,rho(Th[it])/(R) split[it]);
+ 	}
+-	R seuil=hm/splitmax/4.0;
++	R seuil=hm/splitmax/4.0/1000.0;
+ 	vertices = new Vertex[nvmax];
+ 	assert( vertices );
+ 
