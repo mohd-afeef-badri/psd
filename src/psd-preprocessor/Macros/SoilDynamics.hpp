@@ -276,10 +276,6 @@ if(spc==3){
   "                     i#2 ] //                                                   \n"
   "                                                                                \n";
 
- if(top2vol)
- writeIt
- "  macro DummyMesh() cube(1,1,1);       // Dummy mesh macro                     \n";
-
 if(!vectorial){
   writeIt
   "  macro Pk [ P"<<lag<<" ,                                                     \n"

@@ -54,10 +54,6 @@ macro bbN()bb2				// two-dimensional bounding box
 macro intN()int2d			// two-dimensional integral
 macro intN1()int1d			// one-dimensional integral
 macro readmeshN()readmesh		// two-dimensional 'mesh' reader
-macro gmshloadN()gmshload		// two-dimensional 'msh' reader
-macro vtkloadN()vtkload 		// two-dimensional 'vtk' reader
-macro DummyMesh()square(1,1)		// two-dimensional dummymesh
-macro grad(i) [dx(i),dy(i)]		// two-dimensional gradient
 ENDIFMACRO
 IFMACRO(dimension,3)
 load "msh3"
@@ -66,10 +62,6 @@ macro bbN()bb3				// three-dimensional bounding box
 macro intN()int3d			// three-dimensional integral
 macro intN1()int2d			// two-dimensional   integral
 macro readmeshN()readmesh3		// three-dimensional problem
-macro gmshloadN()gmshload3		// three-dimensional 'msh' reader
-macro vtkloadN()vtkload3		// three-dimensional 'vtk' reader
-macro DummyMesh()cube(1,1,1)		// three-dimensional dummymesh
-macro grad(i)[dx(i),dy(i),dz(i)]	// three-dimensional gradient
 ENDIFMACRO
 
 

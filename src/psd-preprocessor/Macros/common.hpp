@@ -32,13 +32,15 @@ codeSnippet R""""(
 //=============================================================================
 //      ------- remapping Macros -------
 // ---------------------------------------------------------------------------
-// meshN     : Two-dimensional problem mesh
-// intN      : Two-dimensional integral
-// intN1     : One-dimensional integral
-// grad      : Two-dimensional gradient
-// readmeshN : Two-dimensional mesh reading .mesh format
-// gmshloadN : Two-dimensional mesh reading .msh format
-// vtkloadN  : Two-dimensional mesh reading .vtk format
+// meshN     : Two/Three-dimensional problem mesh
+// intN      : Two/Three-dimensional integral
+// intN1     : One/Two-dimensional integral
+// grad      : Two/Three-dimensional gradient
+// DummyMesh : A unit cube/square mesh in 3D/2D
+// readmeshN : Two/Three-dimensional mesh reading .mesh format
+// gmshloadN : Two/Three-dimensional mesh reading .msh format
+// vtkloadN  : Two/Three-dimensional mesh reading .vtk format
+// loadmedmeshN : Two/Three-dimensional mesh reading .med format
 //=============================================================================
 )"""";
 
@@ -48,9 +50,11 @@ codeSnippet R""""(
   macro meshN()mesh3                  //
   macro intN()int3d                   //
   macro intN1()int2d                  //
+  macro loadmedmeshN()loadmedmesh3    //
   macro readmeshN()readmesh3          //
   macro gmshloadN()gmshload3          //
   macro vtkloadN()vtkload3            //
+  macro DummyMesh()cube(1,1,1)        //
   macro grad(i)[dx(i),dy(i),dz(i)]    //
 )"""";
 
@@ -59,11 +63,45 @@ codeSnippet R""""(
   macro meshN()mesh                   //
   macro intN()int2d                   //
   macro intN1()int1d                  //
+  macro loadmedmeshN()loadmedmesh     //
   macro readmeshN()readmesh           //
   macro gmshloadN()gmshload           //
   macro vtkloadN()vtkload             //
+  macro DummyMesh()square(1,1)        //
   macro grad(i) [dx(i),dy(i)]         //
 )"""";
+}else{
+
+codeSnippet R""""(
+//=============================================================================
+//      ------- remapping Macros -------
+// ---------------------------------------------------------------------------
+// grad      : Two-dimensional gradient
+// DummyMesh : A unit cube/square mesh in 3D/2D
+// gmshloadN : Two-dimensional mesh reading .msh format
+// vtkloadN  : Two-dimensional mesh reading .vtk format
+// loadmedmeshN : Two/Three-dimensional mesh reading .med format
+//=============================================================================
+)"""";
+
+if(spc==3)
+codeSnippet R""""(
+  macro loadmedmeshN()loadmedmesh3    //
+  macro gmshloadN()gmshload3          //
+  macro vtkloadN()vtkload3            //
+  macro DummyMesh()cube(1,1,1)        //
+  macro grad(i)[dx(i),dy(i),dz(i)]    //
+)"""";
+
+if(spc==2)
+codeSnippet R""""(
+  macro loadmedmeshN()loadmedmesh     //
+  macro gmshloadN()gmshload           //
+  macro vtkloadN()vtkload             //
+  macro DummyMesh()square(1,1)        //
+  macro grad(i) [dx(i),dy(i)]         //
+)"""";
+
 }
 
 codeSnippet R""""(
@@ -219,7 +257,7 @@ codeSnippet R""""(
 macro loadfemesh(meshObject,meshName)
 
   if(meshName.find(".med") > -1){
-    load "medio"; meshObject=loadmedmesh(meshName, meshname = "Mesh_1");
+    load "medio"; meshObject=loadmedmeshN(meshName, meshname = "Mesh_1");
   }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
@@ -249,7 +287,7 @@ codeSnippet R""""(
 macro loadfemesh(meshObject,meshName)
 
   if(meshName.find(".med") > -1){
-    load "medio"; meshObject=loadmedmesh(meshName, meshname = "Mesh_1");
+    load "medio"; meshObject=loadmedmeshN(meshName, meshname = "Mesh_1");
   }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
