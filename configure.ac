@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.4], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.5], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -463,14 +463,9 @@ AC_CONFIG_FILES([
  src/plugins/mfront/law/Makefile
  src/plugins/mfront/law/test/Makefile
  src/plugins/mfront/test/Makefile
- src/plugins/paraview-output/Makefile
- src/plugins/paraview-output/cpp/Makefile
- src/plugins/paraview-output/test/Makefile
  src/plugins/pdmt/Makefile
  src/plugins/pdmt/cpp/Makefile
  src/plugins/pdmt/test/Makefile
- src/plugins/petsc/Makefile
- src/plugins/petsc/cpp/Makefile
  src/plugins/soil-laws/Makefile
  src/plugins/soil-laws/cpp/Makefile
  src/plugins/soil-laws/hujeux-law-lib/Makefile

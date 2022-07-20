@@ -1,17 +1,17 @@
 
 MFRONT_VERSION=3.4.0
 MGIS_VERSION=1.2
-PETSC_VERSION=3.16.1
-FREEFEM_VERSION=4.10
-GMSH_VERSION=4.8.4
+PETSC_VERSION=3.17.0
+FREEFEM_VERSION=4.11
+GMSH_VERSION=4.10.4
 
 MUMPS_VERSION=5.4.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
-SLEPC_VERSION=3.16.1
-SCALAPACK_VERSION=2.1.0
-HPDDM_VERSION=832303ecdffd25c34206e5392fb3cf85960490a2
-#832303ecdffd25c34206e5392fb3cf85960490a2
+SLEPC_VERSION=3.17.0
+SCALAPACK_VERSION=2.2.0
+HPDDM_VERSION=b9ae0dc6cf88af52b1572b990f8b1731cabceaaf
+
 
 ENVFILE=envvar.tmp
 
@@ -50,8 +50,9 @@ SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VE
                        -O slepc-$(SLEPC_VERSION).tar.gz
 PARMETIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p6.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz                      
-SCALAPACK_DOWNLOAD  =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p2.tar.gz \
+SCALAPACK_DOWNLOAD  =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-scalapack.patch
 
 
 if MAC
@@ -69,17 +70,42 @@ all-local: $(LIST_MAKE_EXECUTE)
 	@echo ""
 
 download-dependencies:
-	$(GMSH_DOWNLOAD)
-	$(HPDDM_DOWNLOAD)
-	$(MFRONT_DOWNLOAD)
-	$(MGIS_DOWNLOAD)
-	$(PETSC_DOWNLOAD)
-	$(FREEFEM_DOWNLOAD)
-	$(MUMPS_DOWNLOAD)
-	$(METIS_DOWNLOAD)
-	$(SLEPC_DOWNLOAD)
-	$(PARMETIS_DOWNLOAD)
-	$(SCALAPACK_DOWNLOAD)
+	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
+		$(GMSH_DOWNLOAD); \
+	fi
+	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
+		$(HPDDM_DOWNLOAD); \
+	fi
+	@if [ ! -f mfront-$(MFRONT_VERSION).tar.gz ]; then \
+		$(MFRONT_DOWNLOAD); \
+	fi
+	@if [ ! -f mgis-$(MGIS_VERSION).tar.gz ]; then \
+		$(MGIS_DOWNLOAD); \
+	fi
+	@if [ ! -f petsc-$(PETSC_VERSION).tar.gz ]; then \
+		$(PETSC_DOWNLOAD); \
+	fi
+	@if [ ! -f freefem-$(FREEFEM_VERSION).tar.gz ]; then \
+		$(FREEFEM_DOWNLOAD); \
+	fi
+	@if [ ! -f mumps-$(MUMPS_VERSION).tar.gz ]; then \
+		$(MUMPS_DOWNLOAD); \
+	fi
+	@if [ ! -f metis-$(METIS_VERSION).tar.gz ]; then \
+		$(METIS_DOWNLOAD); \
+	fi
+	@if [ ! -f slepc-$(SLEPC_VERSION).tar.gz ]; then \
+		$(SLEPC_DOWNLOAD); \
+	fi
+	@if [ ! -f parmetis-$(PARMETIS_VERSION).tar.gz ]; then \
+		$(PARMETIS_DOWNLOAD); \
+	fi
+	@if [ ! -f scalapack-$(SCALAPACK_VERSION).tar.gz ]; then \
+		$(SCALAPACK_DOWNLOAD); \
+	fi
+	@if [ ! -f petsc-scalapack.patch ]; then \
+		$(PETSC_PATCH_DOWNLOAD); \
+	fi
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -126,11 +152,11 @@ if !MAC
 	@echo " installing gmsh "
 	@echo "*---------------------------------*"
 	@echo ""
-	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
 	cd gmsh-$(GMSH_VERSION)                      && \
 	cp -rf ./bin/* ${prefix}/bin/.               && \
 	cp -rf ./share/doc/*  ${prefix}/share/doc/.  && \
-	cp -rf ./share/man  ${prefix}/share/man
+	cp -rf ./share/man  ${prefix}/share/man      && \
+	touch gmsh-$(GMSH_VERSION).so
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing Gmsh v$(GMSH_VERSION)   "
@@ -260,7 +286,9 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION)
 	@echo "*---------------------------------*"
 	tar -xf petsc-$(PETSC_VERSION).tar.gz
 	[ -d petsc-v$(PETSC_VERSION) ] && mv petsc-v$(PETSC_VERSION) petsc-$(PETSC_VERSION)
-	cd petsc-$(PETSC_VERSION) && ./configure \
+	cd petsc-$(PETSC_VERSION) && \
+	patch -p1 < ../petsc-scalapack.patch     && \
+	./configure \
 	--with-scalar-type=real \
 	--prefix=${prefix}/ff-petsc/r \
 	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \

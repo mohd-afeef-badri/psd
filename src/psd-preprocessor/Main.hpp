@@ -26,7 +26,7 @@ writeIt
 
 if(!Sequential)
  writeIt
- "  load    \"PSD-PETSc\"                            // PETSc plugin activated  \n";
+ "  load    \"PETSc\"                                // PETSc plugin activated  \n";
 
 if(useMfront)
  writeIt
