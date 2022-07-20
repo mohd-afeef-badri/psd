@@ -242,8 +242,7 @@ codeSnippet R""""(
 
 }
 
-if(!Sequential){
-
+#ifdef MEDCOUPLING
 codeSnippet R""""(
 
 //=============================================================================
@@ -272,7 +271,7 @@ macro loadfemesh(meshObject,meshName)
 
 )"""";
 
-}else{
+#else
 
 codeSnippet R""""(
 
@@ -286,9 +285,6 @@ codeSnippet R""""(
 
 macro loadfemesh(meshObject,meshName)
 
-  if(meshName.find(".med") > -1){
-    load "medio"; meshObject=loadmedmeshN(meshName, meshname = "Mesh_1");
-  }
   if(meshName.find(".msh") > -1){
     load "gmsh";   meshObject = gmshloadN(meshName);
   }
@@ -301,8 +297,7 @@ macro loadfemesh(meshObject,meshName)
 //
 
 )"""";
-
-}
+#endif
 
 codeSnippet R""""(
 
@@ -327,7 +322,7 @@ macro checkmesh(meshName)
            << "     1) .msh   Gmsh's  .msh  format version 2    \n"
            << "     2) .mesh  INRIA's medit format              \n"
            << "     3) .vtk   VTK's unstructured mesh format    \n"
-           << "     4) .med   SALOME's .med format              \n"
+           << "     4) .med   SALOME's .med format (needs medio)\n"
            << "                                                 \n"
            << "  ****************** ERROR ********************* \n";
       exit(11111);
