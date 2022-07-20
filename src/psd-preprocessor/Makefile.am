@@ -72,7 +72,11 @@ all-local: PSD_PreProcess.o
 
 
 PSD_PreProcess.o: PSD_PreProcess.cpp $(PSD_PREPROCESSOR_HPP_LIST)
+if HAVESALOME
+	$(CXX) -c PSD_PreProcess.cpp -std=c++11 -DMEDCOUPLING
+else !HAVESALOME
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11
+endif
 
 check-local:
 
