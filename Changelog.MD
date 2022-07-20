@@ -1,7 +1,19 @@
 # Changelog
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
-## Rolling release (2.4)
+## Rolling release (2.5)
+
+### Added
+
+### Changed
+
+### Removed
+
+
+
+
+
+## [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) - 2022-07-20
 
 ### Added
 
@@ -11,6 +23,7 @@ PSD has been maturing and evolving with time, following subsections present the 
   - Function `loadmedmesh()` used for saving med file (see unit test `Test_2.edp`)
   - Function `getMedLabelsOnGroup()` used for getting the label tag for a group (see unit test `Test_2.edp`)
 - Additional tests for Elastodynamics, Damage Mechanics.
+- Additional validation tests in `tests/validation` folder.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.
 - New flag `-validation` to produce valdiation test case code, for now only accepts `iwan`.

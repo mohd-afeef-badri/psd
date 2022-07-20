@@ -114,14 +114,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD has successfully been deployed on the following platforms:</p>
 <ul>
 <li>CentOS 7 / 8</li>
-<li>Ubuntu 16.04 / 18.04 / 20.04</li>
+<li>Ubuntu 16.04 / 18.04 / 20.04 / 22.04</li>
 <li>Raspberry Pi</li>
-<li>Fedora 30 / 32</li>
+<li>Fedora 30 / 32 / 34</li>
 <li>MacOS X Puma:10.1.5</li>
 </ul>
 <p>Before installing PSD please ensure that you have the following dependencies installed on your OS.</p>
 <p><strong>Dependencies</strong></p>
-<p>PSD has some essential prerequistes without which PSD will not function. These dependencis can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.</p>
+<p>PSD has some essential prerequisites without which PSD will not function. These dependencies can either be preinstalled by user. In that case following list needs to be installed, and assured that these are intercompatiable.</p>
 <table>
 <thead>
 <tr class="header">
@@ -148,7 +148,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tr>
 <tr class="even">
 <td><a href="http://gmsh.info/">Gmsh</a></td>
-<td>Version <strong>4.8</strong></td>
+<td>Version <strong>4.8.4</strong></td>
 <td>YES</td>
 </tr>
 <tr class="odd">
@@ -167,48 +167,64 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td>YES</td>
 </tr>
 <tr class="even">
+<td><a href="https://www.salome-platform.org/">salome</a></td>
+<td>Version <strong>9</strong> or Higher</td>
+<td>OPTIONAL</td>
+</tr>
+<tr class="odd">
 <td><a href="http://tfel.sourceforge.net/">MFront</a></td>
 <td>Version <strong>3.4.0</strong></td>
 <td>OPTIONAL</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="https://thelfer.github.io/mgis/web/bindings-cxx.html">MGIS</a></td>
 <td>Version <strong>1.2</strong></td>
 <td>OPTIONAL</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="http://www.gnuplot.info/">gnuplot</a></td>
 <td>Version <strong>4.0</strong> or Higher</td>
 <td>OPTIONAL</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<p>Note that PETSc and FreeFEM need to be compiled with METIS, ParMETIS, SLEPc, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.</p>
-<p>Generally there are two procedures of installing PSD. One where user takes charge and installs all the depndencies. To follow this type of installation read the section <em>Installation Procedure 1: I install my own dependencies</em>Alternatively, PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is avaliable in the system. To know how this type of installation is done, please skip to section <em>Installation Procedure 2: PSD installs all dependencies</em>.</p>
+<p>Note that PETSc and FreeFEM need to be compiled with METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. Have a look at <code>Download.MD</code> file which explains a little bit about the dependencies and also provides the version and the links to download the dependencies from.</p>
+<p>Generally there are two procedures of installing PSD.</p>
+<ul>
+<li><em>Installation Procedure 1: I install my own dependencies</em>.</li>
+<li><em>Installation Procedure 2: PSD installs all dependencies</em>.</li>
+</ul>
+<p>Among the two the second one is the recommended. With <em>Installation Procedure 1</em> user takes charge and installs all the dependencies. To follow this type of installation read the section <em>Installation Procedure 1: I install my own dependencies</em>. Alternatively, PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront, and MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system and that your system has an active internet connection. To know how this type of installation is done, please skip to section <em>Installation Procedure 2: PSD installs all dependencies</em>.</p>
 <h4 id="installation-procedure-1-i-install-my-own-dependencies">Installation Procedure 1: I install my own dependencies</h4>
 <ul>
-<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
+<li><p>Grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources</code></pre></div></li>
-<li><p>Use automake PSD within the cloned folder</p>
+<li><p>Use automake within the cloned PSD folder (<code>psd_sources</code>)</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">autoreconf</span> -i</code></pre></div></li>
 <li><p>Configure PSD within the cloned folder</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./configure</span></code></pre></div>
-<p><strong>Note</strong>: <code>./configure</code> will install PSD in <code>/usr/local/bin</code> and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. Remember to add <code>Your/Own/Path</code> to your <code>$PATH</code> variable, you can do so by <code>export PATH=$PATH:Your/Own/Path</code>. Also <code>./configure</code> will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in <code>usr/bin/</code> or <code>usr/local/bin/</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> , <code>--with-Gmsh=</code>, etc. as shown below. For example</p>
+<p><strong>Note</strong>: <code>./configure</code> will install PSD in <code>/usr/local/bin</code> and you would need <code>sudo</code> rights (superuser) to perform installation, for non <code>sudo</code> users or for local install consider changing directory of installation. To change this directory use <code>--prefix=Your/Own/Path</code> with <code>./configure</code>. Remember to add <code>Your/Own/Path</code> to your <code>$PATH</code> variable, you can do so by <code>export PATH=$PATH:Your/Own/Path</code>.</p></li>
+</ul>
+<p><strong>Note</strong>: <code>./configure</code> will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in your <code>PATH</code> directories. If you have these packages installed in some other directory this should be specified during <code>./configure</code> by using flags <code>--with-FreeFEM=</code> , <code>--with-Gmsh=</code>, etc. as shown below. For example</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">./configure</span> --prefix=<span class="va">$HOME</span>/Install/local \
   --with-mgis=<span class="va">$HOME</span>/Install/local/mgis   \
   --with-mfront=<span class="va">$HOME</span>/Install/local/mfront/bin/mfront  \
   --with-FreeFEM=<span class="va">$HOME</span>/Install/local/FreeFem/bin       \
-  --with-Gmsh=<span class="va">$HOME</span>/Install/local/Gmsh/bin        </code></pre></div></li>
-<li><p>Make PSD directives</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span></code></pre></div></li>
+  --with-Gmsh=<span class="va">$HOME</span>/Install/local/Gmsh/bin        </code></pre></div>
+<p>Additionally <code>--with-salome=/salome/install/dir</code> can be used for compiling PSD with SALOME support.</p>
+<ul>
+<li>Make PSD directives</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span></code></pre></div>
+<ul>
 <li><p>Install PSD</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sudo</span> make install</code></pre></div>
-<p><strong>Note</strong> : You should not use <code>sudo</code> if you have used <code>--prefix</code> during the <code>./configure</code></p></li>
+<p><strong>Note</strong> : You should not use <code>sudo</code> if you have used <code>--prefix</code> during the <code>./configure</code> phase.</p></li>
 <li><p>Install PSD tutorials</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">make</span> tutorials</code></pre></div></li>
 </ul>
@@ -219,15 +235,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>by the following</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">R</span> seuil=hm/splitmax/4.0/1000.0<span class="kw">;</span></code></pre></div>
 <h4 id="installation-procedure-2-psd-installs-all-the-dependencies">Installation Procedure 2: PSD installs all the dependencies</h4>
+<p><strong>Note</strong>: please make sure that you are using PSD version 2.5 or above.</p>
 <ul>
-<li><p>Go ahead and grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
+<li><p>Grab the latest copy of PSD. The code is hosted on GitLab <a href="https://gitlab.com/PsdSolver/psd_sources">repository</a>.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources</code></pre></div></li>
 <li><p>We will install PSD and all its dependencies in folder <code>/home/PSDinstall</code> . Let us start by making it a temporary environmental variable.</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">export</span> <span class="va">PREFIXPSD=</span>/home/PSDinstall</code></pre></div></li>
-<li><p>Use automake PSD within the cloned folder and configure PSD</p>
+<li><p>Use <code>automake</code> within the cloned folder and configure PSD</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">autoreconf</span> -i <span class="kw">&amp;&amp;</span> <span class="ex">./configure</span> --prefix=<span class="va">$PREFIXPSD</span> --with-dependencies=yes</code></pre></div>
-<p><strong>Note</strong>: we will install PSD in <code>/home/PSDinstall</code> and you would need read and write rights to perform installation in this folder.</p></li>
-<li><p>Make all depndencies</p>
+<p><strong>Note</strong>: we will install PSD in <code>/home/PSDinstall</code> and you would need read and write rights to perform installation in this folder. <code>--with-dependencies=yes</code> uses <code>wget</code> and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files <code>*.tar.gz</code> files of the dependencies within the <code>/ext</code> folder and use the flag <code>--with-zipped_dependecies</code>.<br />
+<strong>Note</strong>: for CentOS7 you might have to load MPI with <code>module load mpi/openmpi-x86_64</code></p></li>
+<li><p>Make all dependencies</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> ext <span class="kw">&amp;&amp;</span> <span class="fu">make</span> <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ..</code></pre></div></li>
 <li><p>The <code>PATH</code> and <code>LSD_LIBRARY_PATH</code> variables need to be updated. Add the following two line to your <code>~/.bashrc</code></p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">export</span> <span class="va">PATH=</span>/home/PSDInstall/bin:<span class="va">$PATH</span> 
@@ -545,14 +563,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td><code>--with-mgis=/usr</code> <br /><code>--with-mgis=/home/install</code> <br /><code>--with-mgis=/usr/local</code></td>
 </tr>
 <tr class="odd">
+<td><code>--with-salome</code></td>
+<td>Enter the directory where SALOME has been installed. <br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-salome=/home/SALOME-UB22.04</code> <br /><code>--with-salome=/home/install/SALOME-UB22.04</code> <br /><code>--with-salome=/usr/local/SALOME-UB22.04</code></td>
+</tr>
+<tr class="even">
 <td><code>--with-mfront</code></td>
 <td>Enter the directory where Mfront binary has been installed. <br /><br /><em>This flag is an optional flag</em></td>
 <td><code>--with-mfront=/usr/bin</code> <br /><code>--with-mfront=/home/install/bin</code> <br /><code>--with-mfront=/usr/local/bin</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>--with-dependencies</code></td>
-<td>Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compil PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br /><em>This flag is an optional flag</em></td>
+<td>Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compile PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br /><em>This flag is an optional flag</em></td>
 <td><code>--with-dependencies=yes</code> <br /><code>--with-dependencies=no</code> <br /></td>
+</tr>
+<tr class="even">
+<td><code>--with-zipped_dependencies</code></td>
+<td>Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will look for <code>.tar.gz</code> files for <br />dependencies in <code>ext</code> folder and compile them<br />for you. If yes PSD will expect <code>.tar.gz</code> for PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen from ext folder.<br /><br /><em>This flag is an optional flag</em></td>
+<td><code>--with-zipped_dependencies=yes</code> <br /><code>--with-zipped_dependencies=no</code> <br /></td>
 </tr>
 </tbody>
 </table>

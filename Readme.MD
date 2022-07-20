@@ -33,7 +33,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
 | [FreeFEM](https://freefem.org/)                              | Version **4.10**                                             | YES       |
 | [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.16.1**                                           | YES       |
-| [Gmsh](http://gmsh.info/)                                    | Version **4.8**                                              | YES       |
+| [Gmsh](http://gmsh.info/)                                    | Version **4.8.4**                                            | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
@@ -43,9 +43,14 @@ Before installing PSD please ensure that you have the following dependencies ins
 | [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |
 |                                                              |                                                              |           |
 
-Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD.
+Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. Have a look at `Download.MD` file which explains a little bit about the dependencies and also provides the version and the links to download the dependencies from.
 
-Generally there are two procedures of installing PSD. One where user takes charge and installs all the dependencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
+Generally there are two procedures of installing PSD. 
+
+- *Installation Procedure 1: I install my own dependencies*.
+- *Installation Procedure 2: PSD installs all dependencies*.
+
+Among the two the second one is the recommended. With *Installation Procedure 1* user takes charge and installs all the dependencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront, and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system and that your system has an active internet connection. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
@@ -66,7 +71,7 @@ autoreconf -i
 ```bash
 ./configure
 ```
-**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need sudo rights to perform installation, for non sudo users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. 
+**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need `sudo` rights (superuser) to perform installation, for non `sudo` users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. 
 
 **Note**: `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in your `PATH` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
 
@@ -120,10 +125,7 @@ R seuil=hm/splitmax/4.0/1000.0;
 
 #### Installation Procedure 2: PSD installs all the dependencies ####
 
-**Note**: please make sure that you are on devel branch
-```bash
-git checkout devel
-```
+**Note**: please make sure that you are using PSD version 2.5 or above.
 
 - Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
 ```bash
@@ -135,12 +137,13 @@ git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 export PREFIXPSD=/home/PSDinstall
 ```
 
-- Use automake PSD within the  cloned folder and configure PSD
+- Use `automake` within the  cloned folder and configure PSD
 ```bash
 autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 ```
-**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. 
-**Note**:   for CentOS7 you might have to load mpi with `module load mpi/openmpi-x86_64`
+**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependecies`.    
+**Note**:   for CentOS7 you might have to load MPI with `module load mpi/openmpi-x86_64`
+
 - Make all dependencies
 ```bash
 cd ext && make && cd ..
