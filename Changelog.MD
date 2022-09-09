@@ -7,7 +7,15 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Changed
 
+- Moved to FreeFEM 4.11
+- Moved to PETSc 3.17.0
+- `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
+- `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
+
 ### Removed
+
+- `PSD-PETSc` module removed
+- `PSD-iovtk` module removed
 
 
 
@@ -334,3 +342,4 @@ check NP=USER_PROCS`.
 | [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) | 8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2 |
 | [2.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) | 5e0368f990d505d3bf1960122cb99a23e08567b0 |
 | [2.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.3) | 0744b19fbe7da6d523754092e92f3882b57f0760 |
+| [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) | 3dea315606ab98b95d18b84fa0c3afa01acc6e54 |
