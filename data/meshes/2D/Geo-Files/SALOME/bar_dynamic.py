@@ -108,7 +108,7 @@ smesh = smeshBuilder.New()
 Mesh_1 = smesh.Mesh(Face_1_1)
 NETGEN_1D_2D = Mesh_1.Triangle(algo=smeshBuilder.NETGEN_1D2D)
 NETGEN_2D_Simple_Parameters_1 = NETGEN_1D_2D.Parameters(smeshBuilder.SIMPLE)
-NETGEN_2D_Simple_Parameters_1.SetLocalLength( 0.05 )
+NETGEN_2D_Simple_Parameters_1.SetLocalLength( 0.01 )
 NETGEN_2D_Simple_Parameters_1.LengthFromEdges()
 NETGEN_2D_Simple_Parameters_1.SetAllowQuadrangles( 0 )
 surface_left = Mesh_1.GroupOnGeom(surface_left,'surface-left',SMESH.EDGE)
@@ -120,7 +120,7 @@ isDone = Mesh_1.Compute()
 [ surface_left, surface_top, surface_right, surface_bottom, volume_1 ] = Mesh_1.GetGroups()
 smesh.SetName(Mesh_1, 'Mesh_1')
 try:
-  Mesh_1.ExportMED( r'./bar.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
+  Mesh_1.ExportMED( r'./bar_dynamic.med', 0, 41, 1, Mesh_1, 1, [], '',-1, 1 )
   pass
 except:
   print('ExportPartToMED() failed. Invalid file name?')

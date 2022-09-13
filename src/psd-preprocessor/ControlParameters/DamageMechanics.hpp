@@ -25,7 +25,7 @@ writeHeader;
 if(Model=="hybrid_phase_field")
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/tensile-crack.msh\";                 \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/tensile_crack.msh\";                 \n";
 
 if(Model=="Mazar")
  writeIt

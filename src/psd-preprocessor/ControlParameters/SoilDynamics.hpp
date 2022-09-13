@@ -42,7 +42,7 @@ if(top2vol)
  if(doublecouple=="force_based" || doublecouple=="displacement_based" && !top2vol)
   writeIt
   "                                                                             \n"
-  "  string ThName = \"../Meshes/"<<spc<<"D/soil-dc.msh\";                      \n";
+  "  string ThName = \"../Meshes/"<<spc<<"D/soil_dc.msh\";                      \n";
 
  if(doublecouple=="unused" && !top2vol)
   writeIt

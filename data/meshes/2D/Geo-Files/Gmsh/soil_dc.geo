@@ -38,7 +38,7 @@ BoxBottomLeftYCord = 0.0   ;       // Bottom left y coordinate
 // ---- Double couple parameters ----
 //==============================================================================
 
-lcDC         = .1    ;     // Force arm length for double couple
+lcDC         = .1    ;    // Force arm length for double couple
 DCSouthXCord = 5.0   ;    // South coordinate X 
 DCSouthYCord = 5.0   ;    // South coordinate Y     
 

@@ -22,7 +22,7 @@ writeHeader;
 
  writeIt
  "                                                                              \n"
- "  string ThName = \"../Meshes/"<<spc<<"D/bar-dynamic.msh\";                   \n";
+ "  string ThName = \"../Meshes/"<<spc<<"D/bar_dynamic.msh\";                   \n";
 
  writeIt
  "                                                                              \n"
