@@ -22,7 +22,7 @@ bar.msh: bar.geo
 	@echo ""
 
 L_shape.msh: L_shape.geo
-	$(GMSH) -3 L-shape.geo -o L-shape.msh -format msh2 -v 0
+	$(GMSH) -3 L_shape.geo -o L_shape.msh -format msh2 -v 0
 	@echo ""
 
 bar_dynamic.msh: bar_dynamic.geo
