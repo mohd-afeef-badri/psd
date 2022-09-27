@@ -26,7 +26,7 @@ L_shape.msh: L_shape.geo
 	@echo ""
 
 bar_dynamic.msh: bar_dynamic.geo
-	$(GMSH) -3 bar_dynamic.geo -o bar-dynamic.msh -format msh2 -v 0
+	$(GMSH) -3 bar_dynamic.geo -o bar_dynamic.msh -format msh2 -v 0
 	@echo ""
 
 soil.msh: soil.geo

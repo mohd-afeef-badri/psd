@@ -1,9 +1,24 @@
+
+if HAVESALOME
+#
+CHECK_LIST= 
+
+MESHDIR2=./../../data/meshes/2D/Geo-Files/Salome/
+MESHDIR3=./../../data/meshes/3D/Geo-Files/
+#
+else !HAVESALOME
+#
 CHECK_LIST=check-sequential \
 check-sequential-reactionforce \
 check-parallel \
 check-parallel-reactionforce \
 check-fracture-mechanics \
 check-point-bc
+
+MESHDIR2=./../../data/meshes/2D/Geo-Files/Gmsh/
+MESHDIR3=./../../data/meshes/3D/Geo-Files/
+#
+endif
 
 all-local:
 	@echo ""
@@ -37,7 +52,7 @@ check-sequential:
 	@echo ""
 	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_FM) > PreProcess-2D.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D.log
 	@echo ""
 	@echo "*============================================================*"
@@ -46,7 +61,7 @@ check-sequential:
 	@echo ""
 	./PSD_PreProcess -dimension 3 $(SEQUENTIAL_FLAG_FM) > PreProcess-3D.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-3D.log
 
 
@@ -64,7 +79,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_FM) > PreProcess-2D_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq  Main.edp -v 1 -ns -nw > Solve-2D_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -74,7 +89,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 3 $(SEQUENTIAL_FLAG_FM) > PreProcess-3D_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-3D_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -84,7 +99,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_FM)  -reactionforce stress_based > PreProcess-2D_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -94,7 +109,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 3 $(SEQUENTIAL_FLAG_FM)  -reactionforce stress_based > PreProcess-3D_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-3D_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -104,7 +119,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_FM)  -reactionforce variational_based > PreProcess-2D_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -114,7 +129,7 @@ check-sequential-reactionforce:
 	./PSD_PreProcess -dimension 3 $(SEQUENTIAL_FLAG_FM)  -reactionforce variational_based  > PreProcess-3D_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-3D_reaction-force_variational-based.log
 
 
@@ -135,7 +150,7 @@ check-parallel:
 	./PSD_PreProcess -dimension 2 $(PARALLEL_FLAG_FM)  > PreProcess-2D_Parallel.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -145,7 +160,7 @@ check-parallel:
 	./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_FM) > PreProcess-3D_Parallel.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_Parallel.log
 
 
@@ -162,7 +177,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 2 $(PARALLEL_FLAG_FM_RF) > PreProcess-2D_Parallel_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -172,7 +187,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_FM_RF) > PreProcess-3D_Parallel_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -182,7 +197,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 2 $(PARALLEL_FLAG_FM_RF)  -reactionforce stress_based > PreProcess-2D_Parallel_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -192,7 +207,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_FM_RF)  -reactionforce stress_based > PreProcess-3D_Parallel_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -202,7 +217,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 2 $(PARALLEL_FLAG_FM_RF)  -reactionforce variational_based > PreProcess-2D_Parallel_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -212,7 +227,7 @@ check-parallel-reactionforce:
 	./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_FM_RF)  -reactionforce variational_based  > PreProcess-3D_Parallel_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_Parallel_reaction-force_variational-based.log
 
 
@@ -227,7 +242,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PreProcess-2D_vectorial.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
@@ -237,7 +252,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -testflags > PreProcess-3D_vectorial.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
@@ -247,7 +262,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -crackdirichletcondition -getreactionforce -testflags > PreProcess-2D_vectorial_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -257,7 +272,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -testflags > PreProcess-3D_vectorial_reaction-force.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -267,7 +282,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress_based -testflags > PreProcess-2D_vectorial_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -277,7 +292,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -crackdirichletcondition -reactionforce stress_based -testflags > PreProcess-3D_vectorial_reaction-force_stress-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -287,7 +302,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PreProcess-2D_vectorial_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -297,7 +312,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -dirichletconditions 2 -vectorial -getreactionforce -reactionforce variational_based -crackdirichletcondition -testflags > PreProcess-3D_vectorial_reaction-force_variational-based.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -307,7 +322,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PreProcess-2D_energydecomp.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
@@ -317,7 +332,7 @@ check-fracture-mechanics: check-header
 	./PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 2 -energydecomp -crackdirichletcondition -testflags > PreProcess-3D_energydecomp.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-3D_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
@@ -328,7 +343,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -339,7 +354,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw  > Solve-3D_energydecomp_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -350,7 +365,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -361,7 +376,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -372,7 +387,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -383,7 +398,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -394,7 +409,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -405,7 +420,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -416,7 +431,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
@@ -427,7 +442,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_vectorial.log
 	@echo ""
 	@echo "*============================================================*"
@@ -438,7 +453,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -449,7 +464,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_vectorial_reaction-force.log
 	@echo ""
 	@echo "*============================================================*"
@@ -460,7 +475,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -471,7 +486,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_vectorial_reaction-force_stress-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -482,7 +497,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -493,7 +508,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-3D_energydecomp_Parallel_vectorial_reaction-force_variational-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -504,7 +519,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_GFP.log
 	@echo ""
 	@echo "*============================================================*"
@@ -515,7 +530,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_GFP.log
 	@echo ""
 	@echo "*============================================================*"
@@ -526,7 +541,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -537,7 +552,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -548,7 +563,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel_vectoiral.log
 	@echo ""
 	@echo "*============================================================*"
@@ -559,7 +574,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel_vectoiral.log
 	@echo ""
 	@echo "*============================================================*"
@@ -570,7 +585,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_GFP_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
@@ -581,7 +596,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > Solve-2D_GFP_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
@@ -592,7 +607,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel_energydecomp.log
 	@echo ""
 	@echo "*============================================================*"
@@ -603,7 +618,7 @@ check-fracture-mechanics: check-header
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > Solve-2D_GFP_Parallel_energydecomp.log
 
 
@@ -619,7 +634,7 @@ check-point-bc: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -sequential -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags > PreProcess-2D_PointBC.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;if(abs(uold[].max-7.618458e+01) > 1e-5)exit(111111);break;/g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
-	./PSD_Solve_Seq Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC.log
+	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR2)L_shaped_crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture point-bc"
@@ -628,7 +643,7 @@ check-point-bc: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags > PreProcess-2D_PointBC_Parallel.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
-	./PSD_Solve -np 4  Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel.log
+	./PSD_Solve -np 4  Main.edp -mesh $(MESHDIR2)L_shaped_crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D phase-field fracture point-bc vectorial"
@@ -637,7 +652,7 @@ check-point-bc: check-header
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags -vectorial > PreProcess-2D_PointBC_Parallel_vectorial.log && \
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
-	./PSD_Solve -np 4  Main.edp -mesh ./../../data/meshes/2D/Geo-Files/L-shaped-crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel_vectorial.log
+	./PSD_Solve -np 4  Main.edp -mesh $(MESHDIR2)L_shaped_crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel_vectorial.log
 
 clean-local:
 	@echo ""
