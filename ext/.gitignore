@@ -4,3 +4,4 @@ mgis-*
 petsc-*
 gmsh-*
 *.tar.gz
+!petsc-scalapack.patch
