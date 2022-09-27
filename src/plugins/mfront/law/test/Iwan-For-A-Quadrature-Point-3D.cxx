@@ -68,7 +68,7 @@ int main(const int argc, const char *const *argv)
     if (!tt) std::cout << "   ->  Loading Behaviour   " << std::endl;
     constexpr
     const auto h = Hypothesis::TRIDIMENSIONAL;
-    const auto b = load("/home/mb258512/Work/repo/psd_sources/src/plugins/mfront/law/src/libBehaviour.so", "Iwan", h);
+    const auto b = load("./../src/libBehaviour.so", "Iwan", h);
     if (!tt) std::cout << "       Done   " << std::endl;
     if (!tt) printLine("-");
 

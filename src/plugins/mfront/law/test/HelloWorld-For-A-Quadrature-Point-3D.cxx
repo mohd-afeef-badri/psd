@@ -50,7 +50,7 @@ int main(const int argc, const char *const *argv)
     std::cout << "   ->  Loading Behaviour   " << std::endl;
     constexpr
     const auto h = Hypothesis::TRIDIMENSIONAL;
-    const auto b = load("/home/mb258512/Work/repo/psd_sources/src/plugins/mfront/law/src/libBehaviour.so", "HelloWorld", h);
+    const auto b = load("./../src/libBehaviour.so", "HelloWorld", h);
     std::cout << "       Done   " << std::endl;
     printLine("-");
 
