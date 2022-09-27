@@ -65,8 +65,14 @@ define mfrontenv
 export PATH=\$$PATH:${prefix}/bin \nexport LD_LIBRARY_PATH=\$$LD_LIBRARY_PATH:${prefix}/lib
 endef
 
-all-local: $(LIST_MAKE_EXECUTE)
+all-local: make-directories $(LIST_MAKE_EXECUTE)
 	@echo ""
+
+
+make-directories:
+	@mkdir -p ${prefix}/bin
+	@mkdir -p ${prefix}/share/doc
+	@mkdir -p ${prefix}/share/man
 
 download-dependencies:
 	$(GMSH_DOWNLOAD)
