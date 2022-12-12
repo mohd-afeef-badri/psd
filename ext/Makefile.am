@@ -1,16 +1,17 @@
 
 MFRONT_VERSION=3.4.0
 MGIS_VERSION=1.2
-PETSC_VERSION=3.17.0
-FREEFEM_VERSION=4.11
+PETSC_VERSION=3.18.2
+FREEFEM_VERSION=4.12
 GMSH_VERSION=4.10.4
 
-MUMPS_VERSION=5.4.1
+MUMPS_VERSION=5.5.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
-SLEPC_VERSION=3.17.0
+SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
 SCALAPACK_VERSION=2.2.0
-HPDDM_VERSION=b9ae0dc6cf88af52b1572b990f8b1731cabceaaf
+HPDDM_VERSION=2.2.2
+HYPRE_VERSION=2.25.0
 
 
 ENVFILE=envvar.tmp
@@ -34,25 +35,27 @@ GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linu
                        -O gmsh-$(GMSH_VERSION).tar.gz
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
                        -O freefem-$(FREEFEM_VERSION).tar.gz
-HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
+HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
                        -O hpddm-$(HPDDM_VERSION).tar.gz
+HYPRE_DOWNLOAD   =  wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
+                       -O hypre-$(HYPRE_VERSION).tar.gz
 MFRONT_DOWNLOAD  = wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz \
                        -O mfront-$(MFRONT_VERSION).tar.gz
 MGIS_DOWNLOAD    = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport/archive/refs/tags/MFrontGenericInterfaceSupport-$(MGIS_VERSION).tar.gz \
                        -O mgis-$(MGIS_VERSION).tar.gz
 PETSC_DOWNLOAD   = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
                        -O petsc-$(PETSC_VERSION).tar.gz
-MUMPS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-mumps/get/v$(MUMPS_VERSION)-p1.tar.gz \
+MUMPS_DOWNLOAD   =  wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
                        -O mumps-$(MUMPS_VERSION).tar.gz           
 METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p10.tar.gz \
                        -O metis-$(METIS_VERSION).tar.gz
 SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p6.tar.gz \
+PARMETIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz                      
 SCALAPACK_DOWNLOAD  =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-scalapack.patch
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 
 if MAC
@@ -81,6 +84,9 @@ download-dependencies:
 	fi
 	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
 		$(HPDDM_DOWNLOAD); \
+	fi
+	@if [ ! -f hypre-$(HYPRE_VERSION).tar.gz ]; then \
+		$(HYPRE_DOWNLOAD); \
 	fi
 	@if [ ! -f mfront-$(MFRONT_VERSION).tar.gz ]; then \
 		$(MFRONT_DOWNLOAD); \
@@ -268,6 +274,7 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
+	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz
 else !BUILDZIPPEDDEPENDENCIES
 PETSC_DEP = --download-mumps \
@@ -275,6 +282,7 @@ PETSC_DEP = --download-mumps \
 	--download-parmetis  \
 	--download-slepc     \
 	--download-hpddm     \
+	--download-hypre     \
 	--download-scalapack
 endif
 
@@ -293,7 +301,7 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION)
 	tar -xf petsc-$(PETSC_VERSION).tar.gz
 	[ -d petsc-v$(PETSC_VERSION) ] && mv petsc-v$(PETSC_VERSION) petsc-$(PETSC_VERSION)
 	cd petsc-$(PETSC_VERSION) && \
-	patch -p1 < ../petsc-scalapack.patch     && \
+	patch -p1 < ../petsc-cmake-seq.patch     && \
 	./configure \
 	--with-scalar-type=real \
 	--prefix=${prefix}/ff-petsc/r \
@@ -301,7 +309,7 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION)
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
 	--with-mpiexec=$(MPIRUN) \
 	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
-	--with-cudac=0 --with-ssl=0 --with-x=0 \
+	--with-cudac=0 --with-ssl=0 --with-x=1 \
 	--with-debugging=no \
 	--with-fortran-bindings=no \
 	$(PETSC_DEP) \
@@ -360,9 +368,6 @@ freefem-$(FREEFEM_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(FREEFEM_DOWNLOAD)
 endif
-
-
-
 
 check-local:
 	@echo ""
