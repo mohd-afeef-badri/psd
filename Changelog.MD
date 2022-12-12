@@ -4,7 +4,12 @@ PSD has been maturing and evolving with time, following subsections present the 
 ## Rolling release (2.5)
 
 ### Added
+
 - Hypre compilation for testing BoomerAMG
+- Universal binary of SALOME 9.9.0 is shipped along
+- MED handled in a more robust way, one can used wither MEDCOUPLING or SALOME for MED support
+- New compilation flags `--with-hdf5` `--with-medfile` and
+`--with-medcoupling` for MED support
 
 ### Changed
 
@@ -17,10 +22,6 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 - `PSD-PETSc` module removed
 - `PSD-iovtk` module removed
-
-
-
-
 
 ## [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) - 2022-07-20
 
