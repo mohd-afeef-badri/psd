@@ -3,5 +3,6 @@ freefem-*
 mgis-*
 petsc-*
 gmsh-*
+salome-*
 *.tar.gz
 !petsc-scalapack.patch

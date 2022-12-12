@@ -12,6 +12,7 @@ SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
 SCALAPACK_VERSION=2.2.0
 HPDDM_VERSION=2.2.2
 HYPRE_VERSION=2.25.0
+SALOME_VERSION=9.9.0
 
 
 ENVFILE=envvar.tmp
@@ -25,7 +26,8 @@ LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
-freefem-build
+freefem-build \
+salome-build
 else
 LIST_MAKE_EXECUTE =
 endif
@@ -51,10 +53,12 @@ METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_V
                        -O metis-$(METIS_VERSION).tar.gz
 SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
+PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz                      
-SCALAPACK_DOWNLOAD  =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
+SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
+SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION).tar.gz \
+                       -O salome-$(SALOME_VERSION).tar.gz
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 
@@ -71,7 +75,6 @@ endef
 
 all-local: make-directories $(LIST_MAKE_EXECUTE)
 	@echo ""
-
 
 make-directories:
 	@mkdir -p ${prefix}/bin
@@ -115,6 +118,9 @@ download-dependencies:
 	@if [ ! -f scalapack-$(SCALAPACK_VERSION).tar.gz ]; then \
 		$(SCALAPACK_DOWNLOAD); \
 	fi
+	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
+		$(SALOME_DOWNLOAD); \
+	fi
 	@if [ ! -f petsc-scalapack.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
@@ -123,7 +129,7 @@ download-dependencies:
 # Gmsh installation
 #  - Not working for MAC OS
 #  - Download from wget version GMSH_VERSION
-#  - User can override downlaod by providing ext/gmsh-$(GMSH_VERSION).tar.gz
+#  - User can override download by providing ext/gmsh-$(GMSH_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
@@ -141,7 +147,7 @@ if MAC
 	@echo "*---------------------------------*"
 	@echo ""
 	@echo "  PSD Cannot install Gmsh for MacOS please install this"
-	@echo "  yourself by downlding the precompiled 'dmg' from"
+	@echo "  yourself by downloading the precompiled 'dmg' from"
 	@echo ""
 	@echo "     https://gmsh.info/"
 	@echo ""
@@ -184,7 +190,7 @@ endif
 #--------------------------------------------------------------------------------
 # MFront installation
 #  - Download from wget version MFRONT_VERSION
-#  - User can override downlaod by providing ext/mfront-$(MFRONT_VERSION).tar.gz
+#  - User can override download by providing ext/mfront-$(MFRONT_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so
@@ -224,7 +230,7 @@ endif
 #--------------------------------------------------------------------------------
 # Mgis installation
 #  - Download from wget version MGIS_VERSION
-#  - User can override downlaod by providing ext/mgis-$(MGIS_VERSION).tar.gz
+#  - User can override download by providing ext/mgis-$(MGIS_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so
@@ -265,7 +271,7 @@ endif
 #--------------------------------------------------------------------------------
 # PETSc installation
 #  - Download from wget version PETSC_VERSION
-#  - User can override downlaod by providing ext/petsc-$(PETSC_VERSION).tar.gz
+#  - User can override download by providing ext/petsc-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 if BUILDZIPPEDDEPENDENCIES
@@ -331,8 +337,8 @@ endif
 
 #--------------------------------------------------------------------------------
 # FreeFEM installation
-#  - Download from wget version PETSC_VERSION
-#  - User can override downlaod by providing ext/petsc-$(PETSC_VERSION).tar.gz
+#  - Download from wget version FREEFEM_VERSION
+#  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so
@@ -369,6 +375,47 @@ if !BUILDZIPPEDDEPENDENCIES
 	$(FREEFEM_DOWNLOAD)
 endif
 
+#--------------------------------------------------------------------------------
+# SALOME installation
+#  - Download from wget version SALOME_VERSION
+#  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
+#--------------------------------------------------------------------------------
+
+salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so
+
+salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).tar.gz
+	@echo ""
+	@echo "*============================================================*"
+	@echo " PSD is compiling SALOME for you be patient:"
+	@echo "*============================================================*"
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   untaring SALOME-$(SALOME_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	tar -xf salome-$(SALOME_VERSION).tar.gz
+	[ -d SALOME-$(SALOME_VERSION) ] && mv SALOME-$(SALOME_VERSION) salome-$(SALOME_VERSION)
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " installing SALOME "
+	@echo "*---------------------------------*"
+	@echo ""
+	cd salome-$(SALOME_VERSION)                    			 && \
+	cp -rf ./salome ${prefix}/bin/.                			 && \
+	cp -rf ./mesa_salome   ${prefix}/bin/.          		 && \
+	cp -rf ./env_launch.sh ${prefix}/bin/psd_salome_env_launch.sh    && \
+	cp -rf ./BINARIES-CO7  ${prefix}/bin/. 			         && \
+	touch salome-$(SALOME_VERSION).so	
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " finished installing SALOME v$(SALOME_VERSION) "
+	@echo "*---------------------------------*"
+	@echo ""
+
+salome-$(SALOME_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	$(SALOME_DOWNLOAD)
+endif
+
 check-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -392,8 +439,9 @@ maintainer-clean-local: clean-local
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf Makefile Makefile.in petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION)
-	rm  -rf mfront-$(MFRONT_VERSION) mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)
+	rm  -rf Makefile Makefile.in
+	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
+	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
 	rm *.tar.gz
 
 install-exec-local:

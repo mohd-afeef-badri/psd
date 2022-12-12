@@ -1,12 +1,5 @@
 LIST_COMPILE= medio.cpp
 
-LOCAL_VERSION = no
-REMOTE_VERSION = ${salome}
-
-MEDCOUPLING_ROOT_DIR=${salome}/INSTALL/MEDCOUPLING
-MEDFILE_ROOT_DIR=${salome}/INSTALL/medfile
-HDF5_ROOT_DIR=${salome}/INSTALL/hdf5
-
 DEP1 = medio.$(SO_SUFFIX)
 	
 all-local: $(DEP1)
@@ -18,17 +11,16 @@ all-local: $(DEP1)
 	@echo " Compilation list $(LIST_COMPILE)"
 
 $(DEP1): medio.cpp medio.hpp medioSaveMedMesh.hpp medioLoadMedMesh.hpp medioGetGroupLabel.hpp
-if HAVESALOME
-	export LD_LIBRARY_PATH=$(MEDFILE_ROOT_DIR)/lib:$(HDF5_ROOT_DIR)/lib:$(MEDCOUPLING_ROOT_DIR)/lib
-	$(FFCXX) -auto medio.cpp -I$(MEDCOUPLING_ROOT_DIR)/include -I$(MEDFILE_ROOT_DIR)/include -I$(HDF5_ROOT_DIR)/include -L$(MEDCOUPLING_ROOT_DIR)/lib -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper $(PDMT_DEBUG) -DMEDCOUPLING
-else !HAVESALOME	
+if HAVEMED
+	$(FFCXX) -auto medio.cpp $(CXXFLAGS_MED)  $(LDFLAGS_MED) $(LIBS_MED) $(PDMT_DEBUG) -DMEDCOUPLING
+else !HAVEMED	
 	@echo ""
 endif
 	
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-if HAVESALOME	
+if HAVEMED	
 	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 endif
 		

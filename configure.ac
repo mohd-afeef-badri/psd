@@ -14,6 +14,19 @@ define(SECTION_TITLE,
 	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
+AC_ARG_WITH([hdf5],
+	[  --with-hdf5=               hdf5 root path : (e.g. --with-hdf5=/home/salome/INSTALL/hdf5)],
+        [hdf5="$withval"], [hdf5="no"])
+
+AC_ARG_WITH([medfile],
+	[  --with-medfile=            medfile root path : (e.g. --with-medfile=/home/salome/INSTALL/medfile)],
+        [medfile="$withval"], [medfile="no"])
+
+AC_ARG_WITH([medcoupling],
+	[  --with-medcoupling=        medcoupling root path : (e.g. --with-salome=/home/salome/INSTALL/MEDCOUPLING)],
+        [medcoupling="$withval"], [medcoupling="no"])
+
+
 AU_ALIAS([ACX_GMSH], [AX_GMSH])
 AC_DEFUN([AX_GMSH], [
 AC_PREREQ(2.50)
@@ -401,6 +414,45 @@ test "$salome" == "no" && AC_MSG_WARN([
 
 
 dnl ---------------------------------------------------------------
+dnl Did the user provide salome/medcoupling
+dnl ---------------------------------------------------------------
+SECTION_TITLE([      checking for a med support     ])
+
+AC_SUBST([hdf5])
+AC_SUBST([medfile])
+AC_SUBST([medcoupling])
+
+CXXFLAGS_MED="-I${hdf5}/include -I${medfile}/include -I${medcoupling}/include  ${CXXFLAGS}"
+LDFLAGS_MED="-L${hdf5}/lib -L${medfile}/lib -L${medcoupling}/lib ${LDFLAGS}"
+LIBS_MED="-lhdf5 -lmedC -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper   ${LIBS}"
+AC_SUBST(CXXFLAGS_MED,[$CXXFLAGS_MED])
+AC_SUBST(LDFLAGS_MED,[$LDFLAGS_MED])
+AC_SUBST(LIBS_MED,[$LIBS_MED])
+
+AM_CONDITIONAL([HAVEMED], [test $hdf5 != no -a $medfile != no -a $medcoupling != no])
+
+test $hdf5 != no && AC_MSG_RESULT([checking for hdf5... yes])
+test $hdf5 == no && AC_MSG_RESULT([checking for hdf5... no])
+test $medfile != no && AC_MSG_RESULT([checking for medfile... yes])
+test $medfile == no && AC_MSG_RESULT([checking for medfile... no])
+test $medcoupling != no && AC_MSG_RESULT([checking for medcoupling... yes])
+test $medcoupling == no && AC_MSG_RESULT([checking for medcoupling... yes])
+test $hdf5 != no -a $medfile != no -a $medcoupling != no && AC_MSG_RESULT([med support... yes
+ ])
+
+test $hdf5 == no -o $medfile == no -o $medcoupling == no && AC_MSG_WARN([
+top-ii-vol will not be configured with med support,
+you did not provide the flags:
+    --with-hdf5
+    --with-medfile
+    --with-medcoupling
+
+ SALOME SUPPORT = OFF
+ ])
+dnl ---------------------------------------------------------------
+
+
+dnl ---------------------------------------------------------------
 dnl Associate appropriate suffix for diffrent os
 dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for operating system type    ])
@@ -517,13 +569,21 @@ AC_MSG_RESULT([])
 test "$dependencies"          != "no"     &&  AC_MSG_RESULT([ Dependencies  compile        : ENABLED])
 test "$zipped_dependencies"   != "no"     &&  AC_MSG_RESULT([ Dependencies  from *.tar.gz  : ENABLED])
 AC_MSG_RESULT([])
-test "$mfront" != "no" -a "$mgis" != "no" &&  AC_MSG_RESULT([ Mfront   : YES])
-test "$mfront" == "no" -o "$mgis" == "no" &&  AC_MSG_RESULT([ Mfront   : NO])
-test "$GMSH"   == "no"                    &&  AC_MSG_RESULT([ Gmsh     : NO])
-test "$GMSH"   != "no"                    &&  AC_MSG_RESULT([ Gmsh     : YES])
-test "$salome" != "no"                    &&  AC_MSG_RESULT([ salome   : YES])
-test "$salome" == "no"                    &&  AC_MSG_RESULT([ salome   : NO])
-test "$FF"     != "no"                    &&  AC_MSG_RESULT([ PSD Seq  : YES])
-test "$FFMPI" == "no"                     &&  AC_MSG_RESULT([ PSD Par  : NO])
-test "$FFMPI" != "no"                     &&  AC_MSG_RESULT([ PSD Par  : YES])
+test "$mfront"      != "no" -a "$mgis" != "no" 				&&  AC_MSG_RESULT([ Mfront      : YES])
+test "$mfront"      == "no" -o "$mgis" == "no" 				&&  AC_MSG_RESULT([ Mfront      : NO])
+test "$GMSH"        == "no"                    				&&  AC_MSG_RESULT([ Gmsh        : NO])
+test "$GMSH"        != "no"                    				&&  AC_MSG_RESULT([ Gmsh        : YES])
+test "$hdf5"        != "no" 						&&  AC_MSG_RESULT([ Hdf5        : YES $hdf5])
+test "$hdf5"        == "no" 						&&  AC_MSG_RESULT([ Hdf5        : NO])
+test "$medfile"     != "no" 						&&  AC_MSG_RESULT([ medfile     : YES $medfile])
+test "$medfile"     == "no" 						&&  AC_MSG_RESULT([ medfile     : NO])
+test "$medcoupling" != "no" 						&&  AC_MSG_RESULT([ medcoupling : YES $medcoupling])
+test "$medcoupling" == "no" 						&&  AC_MSG_RESULT([ medcoupling : NO])
+test $hdf5 	    != no -a $medfile != no -a $medcoupling != no 	&&  AC_MSG_RESULT([ med support : YES])
+test $hdf5          == no -o $medfile == no -o $medcoupling == no 	&&  AC_MSG_RESULT([ med support : NO])
+test "$salome" 	    != "no"                    				&&  AC_MSG_RESULT([ salome      : YES])
+test "$salome"      == "no"                    				&&  AC_MSG_RESULT([ salome      : NO])
+test "$FF"          != "no"                    				&&  AC_MSG_RESULT([ PSD Seq     : YES])
+test "$FFMPI"       == "no"                     			&&  AC_MSG_RESULT([ PSD Par     : NO])
+test "$FFMPI"       != "no"                     			&&  AC_MSG_RESULT([ PSD Par     : YES])
 AC_MSG_RESULT([])
