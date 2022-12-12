@@ -4,11 +4,12 @@ PSD has been maturing and evolving with time, following subsections present the 
 ## Rolling release (2.5)
 
 ### Added
+- Hypre compilation for testing BoomerAMG
 
 ### Changed
 
-- Moved to FreeFEM 4.11
-- Moved to PETSc 3.17.0
+- Moved to FreeFEM 4.12
+- Moved to PETSc 3.18.2
 - `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
 - `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
 
