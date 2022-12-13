@@ -172,10 +172,12 @@ source ~/.bashrc
   --with-FreeFEM=$PREFIXPSD/bin \
   --with-Gmsh=$PREFIXPSD/bin    \
   --with-salome=$PREFIXPSD/bin  \
-  --with-hdf5=$PREFIXPSD/bin/BINARIES-CO7/hdf5  		\
-  --with-medfile=$PREFIXPSD/bin/BINARIES-CO7/medfile 	\
-  --with-medcoupling=$PREFIXPSD/bin/BINARIES-CO7/MEDCOUPLING
+  --with-hdf5=$PREFIXPSD/bin/BINARIES-SALOME/hdf5  		\
+  --with-medfile=$PREFIXPSD/bin/BINARIES-SALOME/medfile 	\
+  --with-medcoupling=$PREFIXPSD/bin/BINARIES-SALOME/MEDCOUPLING
 ```
+
+**Note:** for SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
 
 - Compile and install PSD
 

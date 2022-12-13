@@ -1,22 +1,40 @@
 FF_IS = `which $(FFMPI)`
 
+EXPORT_PSD  =\nexport FF_LOADPATH="${prefix}/include/psd";\nexport FF_INCLUDEPATH="${prefix}/include/psd"
+EXPORT_PSD +=\nexport PATH="$$PATH:${prefix}/bin";\nexport LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:${prefix}/lib"
+
+BIN_SALOME_NAME=BINARIES-SALOME
+
+if HAVEMED
+EXPORT_MED  =\nexport out_dir_Path=${prefix}/bin
+EXPORT_MED +=\nexport PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/hdf5/bin:$${PATH}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/hdf5/lib:$${LD_LIBRARY_PATH}"
+EXPORT_MED +=\nexport PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/medfile/bin:$${PATH}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/medfile/lib:$${LD_LIBRARY_PATH}"
+EXPORT_MED +=\nexport MEDCOUPLING_ROOT_DIR="$${out_dir_Path}/$(BIN_SALOME_NAME)/MEDCOUPLING"
+EXPORT_MED +=\nexport PATH="$${MEDCOUPLING_ROOT_DIR}/bin:$${PATH}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${MEDCOUPLING_ROOT_DIR}/lib:$${LD_LIBRARY_PATH}"
+else !HAVEMED	
+EXPORT_MED  =
+endif
+
 all-local: PSD_Solve PSD_Solve_Seq
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Compilation done in :"; pwd
+	@echo " Compilation done in:"; pwd
 	@echo "*============================================================*"
 	@echo ""
 
 PSD_Solve_Seq:
 	cat $(FF_IS) > PSD_Solve_Seq
-	find . -name PSD_Solve_Seq -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun; export FF_LOADPATH="${prefix}/include/psd"; export FF_INCLUDEPATH="${prefix}/include/psd";#g' {} \;
+	find . -name PSD_Solve_Seq -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun;\n$(EXPORT_PSD)\n#g' {} \;
 	find . -name PSD_Solve_Seq -exec sed -i -e 's#^ffmpi=FreeFem++-mpi#ffmpi=FreeFem++#g' {} \;
 	find . -name PSD_Solve_Seq -exec sed -i -e 's#^j=1;#j=1;mpi_run_option=;a[0]=;#g' {} \;
 	chmod a+x PSD_Solve_Seq
 
 PSD_Solve:
 	cat $(FF_IS) > PSD_Solve
-	find . -name PSD_Solve -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun; export FF_LOADPATH="${prefix}/include/psd"; export FF_INCLUDEPATH="${prefix}/include/psd";#g' {} \;
+	find . -name PSD_Solve -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun;\n$(EXPORT_PSD)$(EXPORT_MED);\n#g' {} \;
 	chmod a+x PSD_Solve
 	
 install-exec-local:

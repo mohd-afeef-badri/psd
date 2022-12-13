@@ -12,15 +12,47 @@ SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
 SCALAPACK_VERSION=2.2.0
 HPDDM_VERSION=2.2.2
 HYPRE_VERSION=2.25.0
-SALOME_VERSION=9.9.0
 
+#################################################
+# UBUNTU 22.04
+#################################################
+#SALOME_OS=UB22.04
+#SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
+#SALOME_TAG=-22b4348cf247e9a72539dca3b6f2d65f
+
+#################################################
+# UBUNTU 20.04
+#################################################
+#SALOME_OS=UB20.04
+#SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
+#SALOME_TAG=
+
+#################################################
+# UBUNTU 18.04
+#################################################
+#SALOME_OS=UB18.04
+#SALOME_OS_TAG=-$(SALOME_OS)-SRC
+#SALOME_TAG=
+
+#################################################
+# CENTOS 7
+#################################################
+#SALOME_OS=CO7
+#SALOME_OS_TAG=-MPI-$(SALOME_OS)-SRC
+#SALOME_TAG=
+
+SALOME_OS=UB22.04
+SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
+SALOME_TAG=-22b4348cf247e9a72539dca3b6f2d65f
+
+SALOME_VERSION=9.9.0
 
 ENVFILE=envvar.tmp
 
 
 PETSC_ARCH_PSD  =fr
 
-
+https://files.salome-platform.org/Salome/Salome9.9.0/SALOME-9.9.0-MPI-CO7-SRC.tar.gz
 if BUILDDEPENDENCIES
 LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
@@ -57,7 +89,7 @@ PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(
                        -O parmetis-$(PARMETIS_VERSION).tar.gz                      
 SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
-SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION).tar.gz \
+SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                        -O salome-$(SALOME_VERSION).tar.gz
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
@@ -393,18 +425,24 @@ salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).t
 	@echo "   untaring SALOME-$(SALOME_VERSION).tar.gz"
 	@echo "*---------------------------------*"
 	tar -xf salome-$(SALOME_VERSION).tar.gz
-	[ -d SALOME-$(SALOME_VERSION) ] && mv SALOME-$(SALOME_VERSION) salome-$(SALOME_VERSION)
+	[ -d SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) ] && mv SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) salome-$(SALOME_VERSION)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " installing SALOME "
 	@echo "*---------------------------------*"
 	@echo ""
 	cd salome-$(SALOME_VERSION)                    			 && \
-	cp -rf ./salome ${prefix}/bin/.                			 && \
-	cp -rf ./mesa_salome   ${prefix}/bin/.          		 && \
-	cp -rf ./env_launch.sh ${prefix}/bin/psd_salome_env_launch.sh    && \
-	cp -rf ./BINARIES-CO7  ${prefix}/bin/. 			         && \
-	touch salome-$(SALOME_VERSION).so	
+	cp ./salome ./salome-tmp                    			 && \
+	cp ./mesa_salome ./mesa_salome-tmp                    		 && \
+	cp ./env_launch.sh ./env_launch.sh-tmp                    	 && \
+	find . -name salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
+	find . -name mesa_salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
+	find . -name env_launch.sh-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;	&& \
+	cp -rf ./salome-tmp ${prefix}/bin/salome                		&& \
+	cp -rf ./mesa_salome-tmp   ${prefix}/bin/mesa_salome  		 	&& \
+	cp -rf ./env_launch.sh-tmp ${prefix}/bin/psd_salome_env_launch.sh	&& \
+	cp -rf ./BINARIES-$(SALOME_OS)  ${prefix}/bin/BINARIES-SALOME		&& \
+	touch salome-$(SALOME_VERSION).so
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing SALOME v$(SALOME_VERSION) "
