@@ -52,7 +52,6 @@ ENVFILE=envvar.tmp
 
 PETSC_ARCH_PSD  =fr
 
-https://files.salome-platform.org/Salome/Salome9.9.0/SALOME-9.9.0-MPI-CO7-SRC.tar.gz
 if BUILDDEPENDENCIES
 LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
