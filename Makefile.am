@@ -71,8 +71,8 @@ tutorials:
 	@cp  ./man/*.pdf  $${HOME}/PSD-tutorials/Doc/.
 	@cp  ./man/*.png  $${HOME}/PSD-tutorials/Doc/.	
 	@echo " ## tutorials ##   Copying meshes                  "	
-	@cp  ./data/meshes/2D/Geo-Files/*.msh  $${HOME}/PSD-tutorials/Meshes/2D/.
-	@cp  ./data/meshes/2D/Geo-Files/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.			
+	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.msh  $${HOME}/PSD-tutorials/Meshes/2D/.
+	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.			
 	@cp  ./data/meshes/3D/Geo-Files/*.msh  $${HOME}/PSD-tutorials/Meshes/3D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.geo  $${HOME}/PSD-tutorials/Meshes/3D/.
 	@cp  ./etc/*.xyz 	               $${HOME}/PSD-tutorials/Meshes/3D/.
