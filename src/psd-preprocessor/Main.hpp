@@ -34,7 +34,7 @@ if(useMfront)
 
 if(Sequential)if(ParaViewPostProcess)
  writeIt
- "  load    \"PSD-iovtk\"                            // Paraview support files \n";
+ "  load    \"iovtk\"                                // Paraview support files \n";
 
 if(useGFP)if(!energydecomp)
  writeIt
