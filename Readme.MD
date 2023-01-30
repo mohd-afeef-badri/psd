@@ -1,4 +1,4 @@
-##  PSD version 2.4 ##
+##  PSD version 2.5 ##
 
 ------
 
@@ -31,9 +31,9 @@ Before installing PSD please ensure that you have the following dependencies ins
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
-| [FreeFEM](https://freefem.org/)                              | Version **4.10**                                             | YES       |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.16.1**                                           | YES       |
-| [Gmsh](http://gmsh.info/)                                    | Version **4.8.4**                                            | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.11**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.17.0**                                           | YES       |
+| [Gmsh](http://gmsh.info/)                                    | Version **4.10.4**                                           | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
@@ -77,13 +77,17 @@ autoreconf -i
 
 ```bash
 ./configure --prefix=$HOME/Install/local \
-  --with-mgis=$HOME/Install/local/mgis   \
-  --with-mfront=$HOME/Install/local/mfront/bin/mfront  \
   --with-FreeFEM=$HOME/Install/local/FreeFem/bin       \
   --with-Gmsh=$HOME/Install/local/Gmsh/bin        
 ```
 
-Additionally `--with-salome=/salome/install/dir` can be used for compiling PSD with  SALOME support.
+Additionally `--with-salome=/salome/install/dir` can be used for compiling PSD with  SALOME support,
+
+ `--with-mgis=/mgis/install/dir` can be used for compiling PSD with  MGIS support,
+
+ `--with-mfront=/mfront/install/dir` can be used for compiling PSD with  MFRONT support, and
+
+ `--with-hdf5=/hdf5/install/dir` ,  `--with-medfile=/medfile/install/dir` , and  `--with-medcoupling=/medcoupling/install/dir`  can be used for compiling PSD with  MED support.
 
 
 - Make PSD directives
@@ -166,10 +170,17 @@ source ~/.bashrc
   --with-mgis=$PREFIXPSD        \
   --with-mfront=$PREFIXPSD      \
   --with-FreeFEM=$PREFIXPSD/bin \
-  --with-Gmsh=$PREFIXPSD/bin
+  --with-Gmsh=$PREFIXPSD/bin    \
+  --with-salome=$PREFIXPSD/bin  \
+  --with-hdf5=$PREFIXPSD/bin/BINARIES-SALOME/hdf5  		\
+  --with-medfile=$PREFIXPSD/bin/BINARIES-SALOME/medfile 	\
+  --with-medcoupling=$PREFIXPSD/bin/BINARIES-SALOME/MEDCOUPLING
 ```
 
+**Note:** for SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
+
 - Compile and install PSD
+
 ```bash
 make && make install
 ```
@@ -303,6 +314,9 @@ These are a set of commandline flags/options that control your PSD configuration
 | `--with-Gmsh`         | Enter the directory  where  Gmsh  binary has been installed. <br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin` <br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
 | `--with-mgis`         | Enter the directory  where  Mgis  has been installed. <br /><br />*This flag is an optional flag* | `--with-mgis=/usr` <br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
 | `--with-salome`       | Enter the directory  where  SALOME  has been installed. <br /><br />*This flag is an optional flag* | `--with-salome=/home/SALOME-UB22.04` <br />`--with-salome=/home/install/SALOME-UB22.04` <br />`--with-salome=/usr/local/SALOME-UB22.04` |
+| `--with-hdf5` | Enter the directory  where  hdf5  has been installed. <br /><br />*This flag is an optional flag* | `--with-hdf5=/home/SALOME-UB22.04/INSTALL/hdf5` <br />`--with-hdf5=/home/install/SALOME/BINARIES-UB22.04/hdf5` |
+| `--with-medfile` | Enter the directory  where  medfile  has been installed. <br /><br />*This flag is an optional flag* | `--with-medfile=/home/SALOME-UB22.04/INSTALL/medfile` <br />`--with-medfile=/home/install/SALOME/BINARIES-UB22.04/medfile` |
+| `--with-medcoupling` | Enter the directory  where  MEDCOUPLING  has been installed. <br /><br />*This flag is an optional flag* | `--with-medcoupling=/home/SALOME-UB22.04/INSTALL/MEDCOUPLING` <br />`--with-medcoupling=/home/install/SALOME/BINARIES-UB22.04/MEDCOUPLING` |
 | `--with-mfront`       | Enter the directory  where  Mfront binary  has been installed. <br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin` <br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
 | `--with-dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compile PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes` <br />`--with-dependencies=no` <br /> |
 | `--with-zipped_dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will look for `.tar.gz` files for <br />dependencies in `ext` folder and compile them<br />for you. If yes PSD will expect `.tar.gz` for PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen from ext folder.<br /><br />*This flag is an optional flag* | `--with-zipped_dependencies=yes` <br />`--with-zipped_dependencies=no` <br /> |

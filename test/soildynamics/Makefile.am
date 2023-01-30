@@ -1,8 +1,23 @@
+if HAVESALOME
+#
+CHECK_LIST= 
+
+MESHDIR2=./../../data/meshes/2D/Geo-Files/Salome
+MESHDIR3=./../../data/meshes/3D/Geo-Files
+#
+else !HAVESALOME
+#
+CHECK_LIST=check-Soildynamics
+
+MESHDIR2=./../../data/meshes/2D/Geo-Files/Gmsh
+MESHDIR3=./../../data/meshes/3D/Geo-Files
+#
+endif
 	
 all-local: 
 	@echo ""
 
-check-local: check-header check-Soildynamics
+check-local: check-header $(CHECK_LIST)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Checking Soildynamics : SUCCESS                      "
@@ -31,7 +46,7 @@ check-Soildynamics:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/t += dt;/break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics.log		
 	@echo ""
 	@echo "*============================================================*"
@@ -42,7 +57,7 @@ check-Soildynamics:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/t += dt;/break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)/#g" {} \; && \
 	./PSD_Solve_Seq Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics.log
 	@echo ""
 	@echo "*============================================================*"
@@ -53,7 +68,7 @@ check-Soildynamics:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/t += dt;/break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -64,7 +79,7 @@ check-Soildynamics:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/t += dt;/break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#./../../data/meshes/3D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
@@ -76,7 +91,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_displacement-based.log
 	@echo ""
 	@echo "*============================================================*"
@@ -88,7 +103,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#./../../data/meshes/2D/Geo-Files/#g" {} \; && \
+	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
 	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"

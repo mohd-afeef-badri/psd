@@ -5,13 +5,23 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- Hypre compilation for testing BoomerAMG
+- Universal binary of SALOME 9.9.0 is shipped along
+- MED handled in a more robust way, one can used wither MEDCOUPLING or SALOME for MED support
+- New compilation flags `--with-hdf5` `--with-medfile` and
+`--with-medcoupling` for MED support
+
 ### Changed
+
+- Moved to FreeFEM 4.12
+- Moved to PETSc 3.18.2
+- `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
+- `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
 
 ### Removed
 
-
-
-
+- `PSD-PETSc` module removed
+- `PSD-iovtk` module removed
 
 ## [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) - 2022-07-20
 
@@ -334,3 +344,4 @@ check NP=USER_PROCS`.
 | [2.1](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.1) | 8b9d84f25aedbd684eb0f06cdd4ffbbf9a60a0e2 |
 | [2.2](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.2) | 5e0368f990d505d3bf1960122cb99a23e08567b0 |
 | [2.3](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.3) | 0744b19fbe7da6d523754092e92f3882b57f0760 |
+| [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) | 3dea315606ab98b95d18b84fa0c3afa01acc6e54 |

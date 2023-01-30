@@ -26,7 +26,7 @@ writeIt
 
 if(!Sequential)
  writeIt
- "  load    \"PSD-PETSc\"                            // PETSc plugin activated  \n";
+ "  load    \"PETSc\"                                // PETSc plugin activated  \n";
 
 if(useMfront)
  writeIt
@@ -34,7 +34,7 @@ if(useMfront)
 
 if(Sequential)if(ParaViewPostProcess)
  writeIt
- "  load    \"PSD-iovtk\"                            // Paraview support files \n";
+ "  load    \"iovtk\"                                // Paraview support files \n";
 
 if(useGFP)if(!energydecomp)
  writeIt
