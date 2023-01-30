@@ -107,6 +107,7 @@ endef
 all-local: make-directories $(LIST_MAKE_EXECUTE)
 	@echo ""
 
+
 make-directories:
 	@mkdir -p ${prefix}/bin
 	@mkdir -p ${prefix}/share/doc
