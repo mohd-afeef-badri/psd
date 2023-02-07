@@ -1,0 +1,102 @@
+@DSL Default;
+@Behaviour desmorat20152d;
+@Author Breno Ribeiro Nogueira;
+@Date 24 / 01 / 2023;
+
+@MaterialProperty stress young;
+young.setGlossaryName("YoungModulus");
+@MaterialProperty real nu;
+nu.setGlossaryName("PoissonRatio");
+
+@MaterialProperty real B;
+B.setEntryName("Brittleness");
+@MaterialProperty real k0;
+k0.setEntryName("Kappa0");
+@MaterialProperty real S;
+S.setEntryName("BigS");
+@MaterialProperty real s;
+s.setEntryName("SmallS");
+
+// H-Id
+@StateVariable Stensor rH; //Ladeveze variable minus identity
+@StateVariable Stensor d;  //Damage tensor
+
+//Plane strain hypothesis
+@ModellingHypothesis PlaneStrain;
+
+
+
+@Integrator {
+  static_cast<void>(computeTangentOperator_);
+  const auto K = (young) / (2. * (1. - nu)); // different for 2D
+  const auto G = computeMu(young, nu);
+  // et
+  //sig(2) = 0;
+  const auto tr_sig = trace(sig);
+  
+  // approximation: the triaxilaty is assumed to be constant
+  const auto Rv = [&tr_sig, this] {
+    if (tr_sig > 0) {
+      return min(real(1), B);
+    }
+    //const auto sigpri2d = sig - (3./2.)*(deviator(sig)-sig);
+    //const auto seq = sqrt(2*sigpri2d | sigpri2d );
+    const auto seq = sigmaeq(sig);
+    if (seq > 1e-12 * young) {
+      const auto Tx = tr_sig / (3. * seq);     // sigma_h attention in 2D formulation
+      //const auto Rv1 = 1. + 9. * (1. - 2.* nu) / (3. * (1. + nu)) * Tx * Tx; // correct ?
+      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx;
+      return min(Rv1, B);
+    }
+    return B;
+  }();
+  
+  // total strain at the end of the time step
+  const auto e = eval(eto + deto);
+  const auto tr_e = trace(e);
+  // positive part of the strain
+  const auto ep = positive_part(e);
+  // Mazars' equivalent strain
+  const auto e_mazars = sqrt(ep | ep);
+  // damage evolution
+  const auto Rv_s = pow(Rv, s);
+  //const auto imetric = Stensor::Id() - d;
+  //const auto metric = invert(imetric);
+  //rH = square(metric);
+  const auto tr_rH = trace(rH);
+  // yield strain
+
+  const auto ey = k0 + S * Rv_s * tr_rH;
+  if (e_mazars > ey) {
+    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
+    const auto et = (-nu / young) * tr_sig * Stensor::Id() + ((1 + nu) / young) * sig;
+    // positive part of the strain
+    const auto etp = positive_part(et);
+    // updated trace of H-I value so e_mazars=ey
+    const auto ntr_rH = (e_mazars - k0) / (S * Rv_s); 
+    // lagrange multiplier
+    const auto dl = (ntr_rH - tr_rH) / (trace(etp));
+    // updating the damage
+    rH += dl * etp;
+  }
+  // computing the stress
+  const auto H = rH + Stensor::Id();
+  //const auto H = rH;
+  const auto iH = invert(H);
+  const auto iH2 = square(iH);
+  // retirer le max
+  const auto tr_iH2 = trace(iH2);
+  if (tr_e > 0) {
+    // retirer le max
+    const auto tr_H2 = H | H;
+    // calcul de iH*e*iH probably changes in 2D
+    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+          3. * K / tr_H2 * tr_e * Stensor::Id(); // modification 2 in place of 3 in 2D
+    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
+  } else {
+    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+          K * tr_e * Stensor::Id();
+    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
+  }
+  d = Stensor::Id() - iH2;
+}
