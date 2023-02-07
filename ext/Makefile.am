@@ -325,7 +325,7 @@ endif
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
 
-petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION).tar.gz
+petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling PETSc, HPDDM, METIS, PARMETIS, SCALAPACK,   "
@@ -363,6 +363,11 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION)
 petsc-$(PETSC_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(PETSC_DOWNLOAD)
+endif
+
+petsc-cmake-seq.patch:
+if !BUILDZIPPEDDEPENDENCIES
+	$(PETSC_PATCH_DOWNLOAD)
 endif
 
 
