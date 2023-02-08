@@ -43,6 +43,10 @@ Test_2: Test_2.edp
 	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 >  Test_2.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 >  Test_2_NP2.log
 	@echo "  PASSED "
+	@echo "Test_2 : mfront testing PsdMfrontHandler routine for Desmorat law"
+	@./../../../psd-solve/PSD_Solve -np 1 Test_2_desmorat.edp -v 1 >  Test_2_desmorat.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_2_desmorat.edp -v 1 >  Test_2_NP2_desmorat.log
+	@echo "  PASSED "
 
 Test_3: Test_3.edp
 	@echo "Test_3 : mfront testing PsdMfrontHandler routine with different types of approximations (GENERALISEDPLANESTRAIN, PLANESTRAIN, TRIDIMENSIONAL, etc)."
