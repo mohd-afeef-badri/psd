@@ -53,6 +53,10 @@ Test_3: Test_3.edp
 	@./../../../psd-solve/PSD_Solve -np 1 Test_3.edp -v 1 >  Test_3.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_3.edp -v 1 >  Test_3_NP2.log
 	@echo "  PASSED "
+	@echo "Test_3 : mfront testing PsdMfrontHandler routine with PLANESTRAIN for Desmorat law"
+	@./../../../psd-solve/PSD_Solve -np 1 Test_3_desmorat.edp -v 1 >  Test_3_desmorat.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_3_desmorat.edp -v 1 >  Test_3_NP2_desmorat.log
+	@echo "  PASSED "
 
 Test_4: Test_4.edp
 	@echo "Test_4 : mfront testing sending and printing material properties to Mfront"
