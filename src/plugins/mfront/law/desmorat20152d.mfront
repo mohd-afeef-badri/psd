@@ -1,7 +1,11 @@
 @DSL Default;
 @Behaviour desmorat20152d;
-@Author Breno Ribeiro Nogueira;
-@Date 24 / 01 / 2023;
+@Author Breno Ribeiro Nogueira, Flavien Loiseau;
+@Date 08 / 02 / 2023;
+
+@Includes{
+  #include "TFEL_MatrixFunc.hxx"
+}
 
 @MaterialProperty stress young;
 young.setGlossaryName("YoungModulus");
@@ -24,36 +28,43 @@ s.setEntryName("SmallS");
 //Plane strain hypothesis
 @ModellingHypothesis PlaneStrain;
 
+// Define constant local variables
+@LocalVariable stensor<2u,real>  I2;
 
+@InitLocalVariables{
+    // Define constants
+    I2(0) = 1.;
+    I2(1) = 1.;
+    I2(2) = 0.;
+    I2(3) = 0.;
+}
 
-@Integrator {
+@Integrator{
   static_cast<void>(computeTangentOperator_);
-  const auto K = (young) / (2. * (1. - nu)); // different for 2D
+  const auto K = (young) / (2. * (1. - nu));
   const auto G = computeMu(young, nu);
-  // et
-  //sig(2) = 0;
-  const auto tr_sig = trace(sig);
+  const auto tr_sig = sig|I2;
   
   // approximation: the triaxilaty is assumed to be constant
   const auto Rv = [&tr_sig, this] {
     if (tr_sig > 0) {
       return min(real(1), B);
     }
-    //const auto sigpri2d = sig - (3./2.)*(deviator(sig)-sig);
-    //const auto seq = sqrt(2*sigpri2d | sigpri2d );
-    const auto seq = sigmaeq(sig);
+    const auto sigpri2d = sig - 1./2. * tr_sig * I2;
+    const auto seq = sqrt(2*(sigpri2d|sigpri2d));
+    // const auto seq = sigmaeq(sig);
     if (seq > 1e-12 * young) {
-      const auto Tx = tr_sig / (3. * seq);     // sigma_h attention in 2D formulation
+      const auto Tx = tr_sig / (2. * seq);
       //const auto Rv1 = 1. + 9. * (1. - 2.* nu) / (3. * (1. + nu)) * Tx * Tx; // correct ?
-      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx;
+      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx; // ??????
       return min(Rv1, B);
     }
     return B;
   }();
-  
+
   // total strain at the end of the time step
   const auto e = eval(eto + deto);
-  const auto tr_e = trace(e);
+  const auto tr_e = e|I2;
   // positive part of the strain
   const auto ep = positive_part(e);
   // Mazars' equivalent strain
@@ -62,41 +73,37 @@ s.setEntryName("SmallS");
   const auto Rv_s = pow(Rv, s);
   //const auto imetric = Stensor::Id() - d;
   //const auto metric = invert(imetric);
-  //rH = square(metric);
-  const auto tr_rH = trace(rH);
+  const auto tr_rH = rH|I2;
+  
   // yield strain
-
   const auto ey = k0 + S * Rv_s * tr_rH;
   if (e_mazars > ey) {
-    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
-    const auto et = (-nu / young) * tr_sig * Stensor::Id() + ((1 + nu) / young) * sig;
+    const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig;
     // positive part of the strain
     const auto etp = positive_part(et);
     // updated trace of H-I value so e_mazars=ey
     const auto ntr_rH = (e_mazars - k0) / (S * Rv_s); 
     // lagrange multiplier
-    const auto dl = (ntr_rH - tr_rH) / (trace(etp));
+    const auto dl = (ntr_rH - tr_rH) / (etp|I2);
     // updating the damage
+    // fH -= dl*etp; (for implicit)
     rH += dl * etp;
   }
   // computing the stress
-  const auto H = rH + Stensor::Id();
-  //const auto H = rH;
-  const auto iH = invert(H);
+  const auto H = rH + I2;
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
   const auto iH2 = square(iH);
   // retirer le max
-  const auto tr_iH2 = trace(iH2);
+  const auto tr_iH2 = (iH2|I2);
   if (tr_e > 0) {
     // retirer le max
     const auto tr_H2 = H | H;
     // calcul de iH*e*iH probably changes in 2D
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
-          3. * K / tr_H2 * tr_e * Stensor::Id(); // modification 2 in place of 3 in 2D
-    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
+          2. * K / tr_H2 * tr_e * I2;
   } else {
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
-          K * tr_e * Stensor::Id();
-    //sig(2) = 0;     // in order to have Dzz = 0 in tension on x
+          K * tr_e * I2;
   }
-  d = Stensor::Id() - iH2;
+  d = I2 - iH2;
 }
