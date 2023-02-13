@@ -2,7 +2,7 @@ SUBDIRS = test
 
 LIST_COMPILE = HelloWorld.mfront  \
 HujeuxECP1985.mfront \
-Hujeux.mfront \
+##Hujeux.mfront \
 Elasticity.mfront  \
 IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront \
@@ -11,7 +11,7 @@ desmorat20152d.mfront
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
 src/HujeuxECP1985.o \
-src/Hujeux.o \
+##src/Hujeux.o \
 src/Elasticity.o  \
 src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o \
@@ -96,8 +96,8 @@ src/desmorat20152d.o: desmorat20152d.mfront
 	@echo "Compiled desmorat20152d support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmorat20152d.mfront
-	${mfront}/bin/mfront --obuild
+	${mfront}/bin/mfront -I $//usrtmp/ribeiro/PSD-Sources/src/plugins/mfront/law --obuild --interface=generic  desmorat20152d.mfront
+	##${mfront}/bin/mfront -I ${pwd} --obuild
 
 install-exec-local:
 if HAVEMFRONT
