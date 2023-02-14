@@ -96,8 +96,9 @@ src/desmorat20152d.o: desmorat20152d.mfront
 	@echo "Compiled desmorat20152d support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront -I $//usrtmp/ribeiro/PSD-Sources/src/plugins/mfront/law --obuild --interface=generic  desmorat20152d.mfront
-	##${mfront}/bin/mfront -I ${pwd} --obuild
+	${mfront}/bin/mfront --interface=generic  desmorat20152d.mfront
+	${mfront}/bin/mfront --obuild
+
 
 install-exec-local:
 if HAVEMFRONT
