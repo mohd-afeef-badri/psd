@@ -4,11 +4,12 @@
                                                                               
      -------------------------------------------------------------------      
                                                                               
-     Author(s): Mohd Afeef Badri                                              
-     Email    : mohd-afeef.badri@cea.fr                                       
-     Date     : 2021‑07‑29                                                    
+     Author(s): Breno Ribeiro Nogueira                                              
+     Email    : breno.ribeiro_nogueira@ens-paris-saclay.fr                                       
+     Date     : 2023‑02‑14                                                    
      Comment  : This test checks the MFrontParameter routine provided
-                in the mfront plugin of PSD works well
+                in the mfront plugin of PSD works well. Behaviour is
+                provided in Commandline by -mfront_behaviour flag
                                                                                               
      -------------------------------------------------------------------      
                                                                               
@@ -18,6 +19,9 @@
      the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
                                                                               
 *******************************************************************************/                                                                                                                                                                                                                                     
+  include "getARGV.idp";                         // Get Commandline arguments 
+  
   load    "../cpp/mfront" 
   
-  PsdMfrontHandler( "Elasticity");
+  string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
+  PsdMfrontHandler(mfrontBehaviour);
