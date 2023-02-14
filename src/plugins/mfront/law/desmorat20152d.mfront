@@ -39,6 +39,8 @@ s.setEntryName("SmallS");
     I2(3) = 0.;
 }
 
+@ProvidesSymmetricTangentOperator;
+
 @Integrator{
   static_cast<void>(computeTangentOperator_);
   const auto K = (young) / (2. * (1. - nu));
@@ -95,15 +97,23 @@ s.setEntryName("SmallS");
   const auto iH2 = square(iH);
   // retirer le max
   const auto tr_iH2 = (iH2|I2);
+  
+
   if (tr_e > 0) {
     // retirer le max
     const auto tr_H2 = H | H;
     // calcul de iH*e*iH probably changes in 2D
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           2. * K / tr_H2 * tr_e * I2;
+    if(computeTangentOperator_){
+    	Dt = 2. * G*(symmetric_product_derivative_daba_db(symmetric_product_aba(iH, e))- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
+    }
   } else {
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           K * tr_e * I2;
+    if(computeTangentOperator_){
+    	Dt = 2. * G*(symmetric_product_derivative_daba_db(symmetric_product_aba(iH, e))- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
+    }
   }
   d = I2 - iH2;
 }
