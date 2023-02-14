@@ -40,28 +40,26 @@ Test_1: Test_1.edp
 
 Test_2: Test_2.edp
 	@echo "Test_2 : mfront testing PsdMfrontHandler routine"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 >  Test_2.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 >  Test_2_NP2.log
-	@echo "  PASSED "
-	@echo "Test_2 : mfront testing PsdMfrontHandler routine for Desmorat law"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_2_desmorat.edp -v 1 >  Test_2_desmorat.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_2_desmorat.edp -v 1 >  Test_2_NP2_desmorat.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 -mfront_behaviour Elasticity >  Test_2.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 -mfront_behaviour Elasticity >  Test_2_NP2.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 -mfront_behaviour desmorat20152d >  Test_2_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 -mfront_behaviour desmorat20152d >  Test_2_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_3: Test_3.edp
 	@echo "Test_3 : mfront testing PsdMfrontHandler routine with different types of approximations (GENERALISEDPLANESTRAIN, PLANESTRAIN, TRIDIMENSIONAL, etc)."
 	@./../../../psd-solve/PSD_Solve -np 1 Test_3.edp -v 1 >  Test_3.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_3.edp -v 1 >  Test_3_NP2.log
-	@echo "  PASSED "
-	@echo "Test_3 : mfront testing PsdMfrontHandler routine with PLANESTRAIN for Desmorat law"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_3_desmorat.edp -v 1 >  Test_3_desmorat.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_3_desmorat.edp -v 1 >  Test_3_NP2_desmorat.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_3.edp -v 1 -mfront_behaviour desmorat20152d >  Test_3_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_3.edp -v 1 -mfront_behaviour desmorat20152d >  Test_3_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_4: Test_4.edp
 	@echo "Test_4 : mfront testing sending and printing material properties to Mfront"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_4.edp -v 1 >  Test_4.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_4.edp -v 1 >  Test_4_NP2.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_4.edp -v 1 -mfront_behaviour desmorat20152d >  Test_4_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_4.edp -v 1 -mfront_behaviour desmorat20152d >  Test_4_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_5: Test_5.edp
