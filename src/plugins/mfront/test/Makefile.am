@@ -66,12 +66,16 @@ Test_5: Test_5.edp
 	@echo "Test_5 : mfront testing construction and printing mfrontMaterialTensor"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_5.edp -v 1 >  Test_5.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_5.edp -v 1 >  Test_5_NP2.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_5.edp -v 1 -mfront_behaviour desmorat20152d >  Test_5_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_5.edp -v 1 -mfront_behaviour desmorat20152d >  Test_5_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_6: Test_6.edp
 	@echo "Test_6 : mfront testing construction and printing mfrontStressTensor"
 	@./../../../psd-solve/PSD_Solve -np 1 Test_6.edp -v 1 >  Test_6.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_6.edp -v 1 >  Test_6_NP2.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_6.edp -v 1 -mfront_behaviour desmorat20152d >  Test_6_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_6.edp -v 1 -mfront_behaviour desmorat20152d >  Test_6_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_7: Test_7.edp
@@ -92,6 +96,10 @@ Test_8: Test_8.edp
 	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats() Iwan "
 	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 -mfront_behaviour Iwan >  Test_8_Iwan.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour Iwan >  Test_8_NP2_Iwan.log	
+	@echo "  PASSED "
+	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats() Desmorat "
+	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
 	@echo "  PASSED "
 
 clean-local:

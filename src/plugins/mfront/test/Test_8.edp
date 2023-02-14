@@ -26,6 +26,10 @@
   
   string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
   string     BehaviourHypothesis = "GENERALISEDPLANESTRAIN" ;
+  
+  if(mfrontBehaviour=="desmorat20152d"){
+  	BehaviourHypothesis = "PLANESTRAIN";
+  }
 
 //-------------------------------------------------------------------------------
 //   PsdMfrontPrintBehaviourStats( "IsotropicLinearHardeningPlasticity"      ,
