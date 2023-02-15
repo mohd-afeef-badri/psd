@@ -106,13 +106,15 @@ s.setEntryName("SmallS");
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           2. * K / tr_H2 * tr_e * I2;
     if(computeTangentOperator_){
-    	Dt = 2. * G*(symmetric_product_derivative_daba_db(symmetric_product_aba(iH, e))- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
+    	//Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
+    	Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
     }
   } else {
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           K * tr_e * I2;
     if(computeTangentOperator_){
-    	Dt = 2. * G*(symmetric_product_derivative_daba_db(symmetric_product_aba(iH, e))- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
+    	//Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
+    	Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
     }
   }
   d = I2 - iH2;
