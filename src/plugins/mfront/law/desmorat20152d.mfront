@@ -23,7 +23,7 @@ s.setEntryName("SmallS");
 
 // H-Id
 @StateVariable Stensor rH; //Ladeveze variable minus identity
-//@StateVariable Stensor d;  //Damage tensor
+@StateVariable Stensor d;  //Damage tensor
 //@StateVariable Stensor g;  //Metric tensor
 //@StateVariable Stensor ig;  //Inverse of the Metric tensor
 //@StateVariable real detg;  //determinant Metric tensor
@@ -109,7 +109,7 @@ s.setEntryName("SmallS");
   const auto tr_iH2 = (iH2|I2);
   
   //updating damage variable and metric tensor
-  //d = I2 - iH2;
+  d = I2 - iH2;
   //ig = I2 - d;
   //g = tfel::math::extensions::myInvert(ig);
   //detg = g(0)*g(1) - g(3)*g(3);
