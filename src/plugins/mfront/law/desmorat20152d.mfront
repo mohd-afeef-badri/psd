@@ -1,7 +1,7 @@
-@DSL Default;
+@DSL ImplicitII;
 @Behaviour desmorat20152d;
 @Author Breno Ribeiro Nogueira, Flavien Loiseau;
-@Date 08 / 02 / 2023;
+@Date 20 / 02 / 2023;
 
 @Includes{
   #include "TFEL_MatrixFunc.hxx"
@@ -23,7 +23,14 @@ s.setEntryName("SmallS");
 
 // H-Id
 @StateVariable Stensor rH; //Ladeveze variable minus identity
-@StateVariable Stensor d;  //Damage tensor
+//@StateVariable Stensor d;  //Damage tensor
+//@StateVariable Stensor g;  //Metric tensor
+//@StateVariable Stensor ig;  //Inverse of the Metric tensor
+//@StateVariable real detg;  //determinant Metric tensor
+
+//Bulk and shear modulus
+@LocalVariable stress K;
+@LocalVariable stress G;
 
 //Plane strain hypothesis
 @ModellingHypothesis PlaneStrain;
@@ -37,14 +44,14 @@ s.setEntryName("SmallS");
     I2(1) = 1.;
     I2(2) = 0.;
     I2(3) = 0.;
+    K = (young) / (2. * (1. - nu));
+    G = computeMu(young, nu);    
 }
 
-@ProvidesSymmetricTangentOperator;
 
 @Integrator{
-  static_cast<void>(computeTangentOperator_);
-  const auto K = (young) / (2. * (1. - nu));
-  const auto G = computeMu(young, nu);
+  // total strain at the end of the time step
+  const auto e = eval(eto + deto);
   const auto tr_sig = sig|I2;
   
   // approximation: the triaxilaty is assumed to be constant
@@ -54,33 +61,30 @@ s.setEntryName("SmallS");
     }
     const auto sigpri2d = sig - 1./2. * tr_sig * I2;
     const auto seq = sqrt(2*(sigpri2d|sigpri2d));
-    // const auto seq = sigmaeq(sig);
     if (seq > 1e-12 * young) {
       const auto Tx = tr_sig / (2. * seq);
-      //const auto Rv1 = 1. + 9. * (1. - 2.* nu) / (3. * (1. + nu)) * Tx * Tx; // correct ?
-      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx; // ??????
+      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx;
       return min(Rv1, B);
     }
     return B;
   }();
 
-  // total strain at the end of the time step
-  const auto e = eval(eto + deto);
-  const auto tr_e = e|I2;
   // positive part of the strain
   const auto ep = positive_part(e);
   // Mazars' equivalent strain
   const auto e_mazars = sqrt(ep | ep);
   // damage evolution
   const auto Rv_s = pow(Rv, s);
+
   //const auto imetric = Stensor::Id() - d;
   //const auto metric = invert(imetric);
-  const auto tr_rH = rH|I2;
-  
+  const auto tr_rH = rH|I2; // computed at step n with old rH
+
   // yield strain
   const auto ey = k0 + S * Rv_s * tr_rH;
   if (e_mazars > ey) {
-    const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig;
+    const auto tr_sig = sig|I2;
+    const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig; //computed at n or n+1 ?
     // positive part of the strain
     const auto etp = positive_part(et);
     // updated trace of H-I value so e_mazars=ey
@@ -88,9 +92,15 @@ s.setEntryName("SmallS");
     // lagrange multiplier
     const auto dl = (ntr_rH - tr_rH) / (etp|I2);
     // updating the damage
-    // fH -= dl*etp; (for implicit)
-    rH += dl * etp;
+    frH -= dl*etp; 
   }
+  
+}
+
+@ComputeFinalStress{
+  const auto e = eto;
+  const auto tr_e = e|I2;
+  
   // computing the stress
   const auto H = rH + I2;
   const auto iH = tfel::math::extensions::myInvert(eval(H));
@@ -98,24 +108,41 @@ s.setEntryName("SmallS");
   // retirer le max
   const auto tr_iH2 = (iH2|I2);
   
-
+  //updating damage variable and metric tensor
+  //d = I2 - iH2;
+  //ig = I2 - d;
+  //g = tfel::math::extensions::myInvert(ig);
+  //detg = g(0)*g(1) - g(3)*g(3);
+  
   if (tr_e > 0) {
-    // retirer le max
     const auto tr_H2 = H | H;
-    // calcul de iH*e*iH probably changes in 2D
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           2. * K / tr_H2 * tr_e * I2;
-    if(computeTangentOperator_){
-    	//Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
-    	Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
-    }
   } else {
     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
           K * tr_e * I2;
-    if(computeTangentOperator_){
-    	//Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
-    	Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
-    }
   }
-  d = I2 - iH2;
+}
+
+@TangentOperator{
+
+  const auto e = eto;
+  const auto tr_e = e|I2;
+  
+  // computing the stress
+  const auto H = rH + I2;
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
+  const auto iH2 = square(iH);
+  // retirer le max
+  const auto tr_iH2 = (iH2|I2);
+
+  if (tr_e > 0) {
+    const auto tr_H2 = H | H;   
+    //Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
+    Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
+  } else {
+    //Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
+    Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
+  }
+
 }
