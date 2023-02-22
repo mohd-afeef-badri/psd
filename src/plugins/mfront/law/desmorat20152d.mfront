@@ -23,10 +23,12 @@ s.setEntryName("SmallS");
 
 // H-Id
 @StateVariable Stensor rH; //Ladeveze variable minus identity
-@StateVariable Stensor d;  //Damage tensor
+//@StateVariable Stensor d;  //Damage tensor
 //@StateVariable Stensor g;  //Metric tensor
 //@StateVariable Stensor ig;  //Inverse of the Metric tensor
 //@StateVariable real detg;  //determinant Metric tensor
+
+@AuxiliaryStateVariable Stensor d;
 
 //Bulk and shear modulus
 @LocalVariable stress K;
@@ -47,7 +49,6 @@ s.setEntryName("SmallS");
     K = (young) / (2. * (1. - nu));
     G = computeMu(young, nu);    
 }
-
 
 @Integrator{
   // total strain at the end of the time step
@@ -75,10 +76,13 @@ s.setEntryName("SmallS");
   const auto e_mazars = sqrt(ep | ep);
   // damage evolution
   const auto Rv_s = pow(Rv, s);
-
+  
+  rH = eval(rH+drH);
+  
   //const auto imetric = Stensor::Id() - d;
   //const auto metric = invert(imetric);
   const auto tr_rH = rH|I2; // computed at step n with old rH
+
 
   // yield strain
   const auto ey = k0 + S * Rv_s * tr_rH;
@@ -91,13 +95,58 @@ s.setEntryName("SmallS");
     const auto ntr_rH = (e_mazars - k0) / (S * Rv_s); 
     // lagrange multiplier
     const auto dl = (ntr_rH - tr_rH) / (etp|I2);
-    // updating the damage
+    // updating the Ladeveze damage variable
     frH -= dl*etp; 
   }
+
+  const auto tr_e = e|I2;
   
+  //computing the stress
+  const auto H = rH + I2;
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
+  const auto iH2 = square(iH);
+  //retirer le max
+  const auto tr_iH2 = (iH2|I2);
+
+  if (tr_e > 0) {
+    const auto tr_H2 = H | H;
+    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+          2. * K / tr_H2 * tr_e * I2;
+  } else {
+    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+          K * tr_e * I2;
+  }
+      
 }
 
-@ComputeFinalStress{
+// @ComputeFinalStress{
+//   const auto e = eto;
+//   const auto tr_e = e|I2;
+  
+//   //computing the stress
+//   const auto H = rH + I2;
+//   const auto iH = tfel::math::extensions::myInvert(eval(H));
+//   const auto iH2 = square(iH);
+//   //retirer le max
+//   const auto tr_iH2 = (iH2|I2);
+  
+//   //updating damage variable and metric tensor
+//   //d = I2 - iH2;
+//   //ig = I2 - d;
+//   //g = tfel::math::extensions::myInvert(ig);
+//   //detg = g(0)*g(1) - g(3)*g(3);
+  
+//   if (tr_e > 0) {
+//     const auto tr_H2 = H | H;
+//     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+//           2. * K / tr_H2 * tr_e * I2;
+//   } else {
+//     sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
+//           K * tr_e * I2;
+//   }
+// }
+
+@UpdateAuxiliaryStateVariables{
   const auto e = eto;
   const auto tr_e = e|I2;
   
@@ -108,32 +157,18 @@ s.setEntryName("SmallS");
   // retirer le max
   const auto tr_iH2 = (iH2|I2);
   
-  //updating damage variable and metric tensor
+  //updating damage variable
   d = I2 - iH2;
-  //ig = I2 - d;
-  //g = tfel::math::extensions::myInvert(ig);
-  //detg = g(0)*g(1) - g(3)*g(3);
-  
-  if (tr_e > 0) {
-    const auto tr_H2 = H | H;
-    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
-          2. * K / tr_H2 * tr_e * I2;
-  } else {
-    sig = 2. * G * (symmetric_product_aba(iH, e) - (iH2 | e) * iH2 / tr_iH2) +
-          K * tr_e * I2;
-  }
 }
 
 @TangentOperator{
-
   const auto e = eto;
   const auto tr_e = e|I2;
   
-  // computing the stress
+  // computing H
   const auto H = rH + I2;
   const auto iH = tfel::math::extensions::myInvert(eval(H));
   const auto iH2 = square(iH);
-  // retirer le max
   const auto tr_iH2 = (iH2|I2);
 
   if (tr_e > 0) {
