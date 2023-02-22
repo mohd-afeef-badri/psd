@@ -6,7 +6,7 @@
                                                                               
      Author(s): Breno Ribeiro Nogueira                                              
      Email    : breno.ribeiro_nogueira@ens-paris-saclay.fr                                       
-     Date     : 2023‑02‑14                                                    
+     Date     : 2023‑02‑22                                                    
      Comment  : This test checks the MFrontParameter routine provided
                 in the mfront plugin of PSD works well. Behaviour is
                 provided in Commandline by -mfront_behaviour flag
@@ -77,7 +77,10 @@
    }
    
    if(mfrontBehaviour=="desmorat20152d"){
-   
+          
+          // Quadrature space with 6 elements for Material tensor
+	  fespace Mh  ( Th , [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2] );
+	  Mh [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33];
    	  // Quadrature space with 3 elements for stress and strain tensor
 	  fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
 	  fespace Ih  (Th,   [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2]);
@@ -86,20 +89,21 @@
 	  Sh [Sig11,Sig22,Sig12];
 	  Ih [Isv0,Isv1,Isv2,Isv3,Isv4,Isv5,Isv6,Isv7]; 
 	  
+	  
+	  //[EpsOld11,EpsOld22,EpsOld12] = [0., 0., 0.]; // Corresponding Bi-axial tension test in Mfront*/
 	  [Eps11,Eps22,Eps12] = [1e-6, 1e-6, 0.]; // Corresponding Bi-axial tension test in Mfront
-	  [Eps11,Eps22,Eps12] = [1e-3, 1e-3, 0.]; // Corresponding Bi-axial tension test in Mfront
 
 	  string    PropertyNames       = "YoungModulus PoissonRatio Brittleness Kappa0 BigS SmallS" ;
-  	  real[int] PropertyValues      = [ 37e3, 0.2, 1.6666666666666667, 9e-5, 1.45e-4, 4.9]; 
+  	  real[int] PropertyValues      = [ 37e9, 0.2, 1.6666666666666667, 9e-5, 1.45e-4, 4.9]; 
 
 	  PsdMfrontHandler( "desmorat20152d"                                               ,
 		                   mfrontBehaviourHypothesis = "PLANESTRAIN",
 		                   mfrontPropertyNames       = PropertyNames           ,
 		                   mfrontPropertyValues      = PropertyValues          ,
-		                   mfrontPreviousStrainTensor = EpsOld11[]             ,
 		                   mfrontStrainTensor        = Eps11[]                 ,
-		                   mfrontStressTensor        = Sig11[]                 ,
-		                   mfrontStateVariable       = Isv0[]
+		                   mfrontMaterialTensor      = Mt11[]                 ,
+		                   mfrontStateVariable       = Isv0[]                 ,
+						   mfrontStressTensor        = Sig11[]                 
 		                 );
 
 	  real epsilon = 1e-9;
@@ -117,7 +121,7 @@
 /*		);*/
 
 	  cout << " ================================================== " << endl;
-	  cout << "      STRESS TENSOR CALUCLATED BY MFRONT DESMORAT LAW NOT DAMAGED (SHOULD REMAIN ELASTIC)         " << endl;
+	  cout << "      STRESS TENSOR CALCULATED BY MFRONT DESMORAT LAW NOT DAMAGED (SHOULD REMAIN ELASTIC)         " << endl;
 	  cout << " ================================================== " << endl;
 	  cout << "                                                    " << endl;
 	  cout << " Sigxx " << Sig11[][0] << endl;
@@ -126,7 +130,32 @@
 	  cout << "                                                    " << endl;
 	  cout << " ================================================== " << endl;
 	  
-	  cout << Isv0[][0] << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "      MATERIAL TENSOR CALUCLATED BY MFRONT (UNDAMAGED)        " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Mt11 " << Mt11[][0] << endl;
+	  cout << " Mt12 " << Mt11[][3] << endl;
+	  cout << " Mt13 " << Mt11[][6] << endl;
+	  cout << " Mt22 " << Mt11[][9] << endl;
+	  cout << " Mt23 " << Mt11[][12] << endl;
+	  cout << " Mt33 " << Mt11[][15] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+		                     /**/
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      INTERNAL VARIABLES CALUCLATED BY MFRONT (UNDAMAGED)         " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " H11 " << Isv0[][0] << endl;
+	  cout << " H22 " << Isv0[][3] << endl;
+	  cout << " H12 " << Isv0[][6] << endl;
+	  cout << " H11 " << Isv0[][9] << endl;
+	  cout << " H22 " << Isv0[][12] << endl;
+	  cout << " H12 " << Isv0[][15] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
 
 		                     /**/
    }		      		            
