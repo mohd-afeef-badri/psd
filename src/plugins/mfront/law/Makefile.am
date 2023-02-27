@@ -2,7 +2,6 @@ SUBDIRS = test
 
 LIST_COMPILE = HelloWorld.mfront  \
 HujeuxECP1985.mfront \
-Hujeux.mfront \
 Elasticity.mfront  \
 IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront
@@ -10,12 +9,12 @@ Iwan.mfront
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
 src/HujeuxECP1985.o \
-src/Hujeux.o \
 src/Elasticity.o  \
+src/Hujeux.o  \
 src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o
 else
-LIST_OBJ_FILES = 
+LIST_OBJ_FILES =
 endif
 
 
