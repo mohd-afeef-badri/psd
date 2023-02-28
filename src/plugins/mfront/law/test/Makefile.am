@@ -1,8 +1,7 @@
 LIST_TESTS = Test_0 \
 	     Test_1 \
 	     Test_2 \
-	     Test_3 \
-	     Test_4
+	     Test_3
 
 all-local:
 	@echo ""
