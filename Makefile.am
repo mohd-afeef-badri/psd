@@ -36,7 +36,7 @@ logo:
 	@echo "*============================================================*"
 	@echo ""
 
-#        ifeq ("x","y")	
+#        ifeq ("x","y")
 #	   THIS IS COMMENTED
 #        endif
 
@@ -50,7 +50,7 @@ install-exec-local:
 	@echo "*============================================================*"
 	@echo " IMPORTANT: In order to test everthing is ok do 'make check'"
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 
 tutorials:
 	@echo "*============================================================*"
@@ -62,142 +62,142 @@ tutorials:
 	@mkdir -p $${HOME}/PSD-tutorials/soildynamics
 	@mkdir -p $${HOME}/PSD-tutorials/fracture-mechanics
 	@mkdir -p $${HOME}/PSD-tutorials/linear-elasticity
-	@mkdir -p $${HOME}/PSD-tutorials/elasto-plastic					
+	@mkdir -p $${HOME}/PSD-tutorials/elasto-plastic
 	@mkdir -p $${HOME}/PSD-tutorials/Doc
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/2D
-	@mkdir -p $${HOME}/PSD-tutorials/Meshes/3D		
+	@mkdir -p $${HOME}/PSD-tutorials/Meshes/3D
 	@echo " ## tutorials ##   Copying PSD documentation       "
 	@cp  ./man/*.html $${HOME}/PSD-tutorials/Doc/.
 	@cp  ./man/*.pdf  $${HOME}/PSD-tutorials/Doc/.
-	@cp  ./man/*.png  $${HOME}/PSD-tutorials/Doc/.	
-	@echo " ## tutorials ##   Copying meshes                  "	
+	@cp  ./man/*.png  $${HOME}/PSD-tutorials/Doc/.
+	@echo " ## tutorials ##   Copying meshes                  "
 	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.msh  $${HOME}/PSD-tutorials/Meshes/2D/.
-	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.			
+	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.msh  $${HOME}/PSD-tutorials/Meshes/3D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.geo  $${HOME}/PSD-tutorials/Meshes/3D/.
 	@cp  ./etc/*.xyz 	               $${HOME}/PSD-tutorials/Meshes/3D/.
-	@echo " ## tutorials ##   Copying text                  "	
-	@echo ""			
+	@echo " ## tutorials ##   Copying text                  "
+	@echo ""
 	@cp  ./demos/elastodynamics/*.pdf      $${HOME}/PSD-tutorials/elastodynamics/.
 	@cp  ./demos/soildynamics/*.pdf        $${HOME}/PSD-tutorials/soildynamics/.
 	@cp  ./demos/linear-elasticity/*.pdf   $${HOME}/PSD-tutorials/linear-elasticity/.
 	@cp  ./demos/fracture-mechanics/*.pdf  $${HOME}/PSD-tutorials/fracture-mechanics/.
-	@cp  ./demos/elasto-plastic/*.pdf      $${HOME}/PSD-tutorials/elasto-plastic/.	
-	@echo "  tutorials installed at :    " $${HOME}/PSD-tutorials/;	
+	@cp  ./demos/elasto-plastic/*.pdf      $${HOME}/PSD-tutorials/elasto-plastic/.
+	@echo "  tutorials installed at :    " $${HOME}/PSD-tutorials/;
 	@echo "  			  "
 	@echo "*============================================================*"
 	@echo " Finished installing  PSD version $(VERSION) tutorials"
 	@echo "*============================================================*"
-	@echo ""	
-	
+	@echo ""
+
 install-devel:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " # Making required directories                   "
 	@mkdir -p $${HOME}/PSD-devel
 	@mkdir -p $${HOME}/PSD-devel/Meshes
-	@mkdir -p $${HOME}/PSD-devel/PSD_PreProcess-devel					
+	@mkdir -p $${HOME}/PSD-devel/PSD_PreProcess-devel
 	@mkdir -p $${HOME}/PSD-devel/Meshes/2D
 	@mkdir -p $${HOME}/PSD-devel/Meshes/3D
 	@mkdir -p $${HOME}/PSD-devel/Plugins
 	@mkdir -p $${HOME}/PSD-devel/Solver
 	@mkdir -p $${HOME}/PSD-devel/Doc
 	@echo ""
-	@echo " # Copying meshes                   "	
+	@echo " # Copying meshes                   "
 	@cp  ./data/meshes/2D/Geo-Files/*.msh $${HOME}/PSD-devel/Meshes/2D/.
-	@cp  ./data/meshes/2D/Geo-Files/*.geo $${HOME}/PSD-devel/Meshes/2D/.			
+	@cp  ./data/meshes/2D/Geo-Files/*.geo $${HOME}/PSD-devel/Meshes/2D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.msh $${HOME}/PSD-devel/Meshes/3D/.
 	@cp  ./data/meshes/3D/Geo-Files/*.geo $${HOME}/PSD-devel/Meshes/3D/.
-	@cp  ./etc/*.xyz 	              $${HOME}/PSD-devel/Meshes/3D/.					
+	@cp  ./etc/*.xyz 	              $${HOME}/PSD-devel/Meshes/3D/.
 	@echo ""
-	@echo " # Copying PSD plugins/support-files                  "		
-	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so          $${HOME}/PSD-devel/Plugins/top-ii-vol.so	
+	@echo " # Copying PSD plugins/support-files                  "
+	@cp  ./src/plugins/top-ii-vol/cpp/top-ii-vol.so          $${HOME}/PSD-devel/Plugins/top-ii-vol.so
 	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.so  $${HOME}/PSD-devel/Plugins/gofastplugins.so
 	@cp  ./src/plugins/go-fast-plugins/cpp/gofastplugins.cpp $${HOME}/PSD-devel/Plugins/gofastplugins.cpp
 	@cp  ./src/plugins/petsc/cpp/PSD-PETSc.so                $${HOME}/PSD-devel/Plugins/PSD-PETSc.so
-	@cp  ./src/plugins/petsc/cpp/PSD-PETSc.cpp               $${HOME}/PSD-devel/Plugins/PSD-PETSc.cpp		
+	@cp  ./src/plugins/petsc/cpp/PSD-PETSc.cpp               $${HOME}/PSD-devel/Plugins/PSD-PETSc.cpp
 	@cp  ./src/plugins/paraview-output/cpp/PSD-iovtk.so      $${HOME}/PSD-devel/Plugins/PSD-iovtk.so
-	@cp  ./src/plugins/paraview-output/cpp/PSD-iovtk.cpp     $${HOME}/PSD-devel/Plugins/PSD-iovtk.cpp	
+	@cp  ./src/plugins/paraview-output/cpp/PSD-iovtk.cpp     $${HOME}/PSD-devel/Plugins/PSD-iovtk.cpp
 	@cp  ./src/ff-files/DDmacro.edp                          $${HOME}/PSD-devel/Plugins/DDmacro.edp
-	@cp  ./src/ff-files/DDplotMacro.edp                      $${HOME}/PSD-devel/Plugins/DDplotMacro.edp	
-	@cp  ./src/ff-files/MacroTools.edp                       $${HOME}/PSD-devel/Plugins/MacroTools.edp	
+	@cp  ./src/ff-files/DDplotMacro.edp                      $${HOME}/PSD-devel/Plugins/DDplotMacro.edp
+	@cp  ./src/ff-files/MacroTools.edp                       $${HOME}/PSD-devel/Plugins/MacroTools.edp
 	@cp  ./src/ff-files/simulation-log.csv                   $${HOME}/PSD-devel/Solver/.
 	@echo ""
-	@echo " # Copying PSD PreProcessor and solver                  "	
+	@echo " # Copying PSD PreProcessor and solver                  "
 	@cp  ./src/psd-preprocessor/PSD_PreProcess $${HOME}/PSD-devel/Solver/PSD_PreProcess
-	@cp  ./src/psd-solve/PSD_Solve             $${HOME}/PSD-devel/Solver/PSD_Solve	
-	@cp  ./src/psd-preprocessor/*.cpp          $${HOME}/PSD-devel/PSD_PreProcess-devel/.	
+	@cp  ./src/psd-solve/PSD_Solve             $${HOME}/PSD-devel/Solver/PSD_Solve
+	@cp  ./src/psd-preprocessor/*.cpp          $${HOME}/PSD-devel/PSD_PreProcess-devel/.
 	@cp  ./src/psd-preprocessor/*.hpp          $${HOME}/PSD-devel/PSD_PreProcess-devel/.
 	@cp  ./etc/Makefile-psd-preprocess-devel   $${HOME}/PSD-devel/PSD_PreProcess-devel/Makefile
 	@echo ""
 	@echo " # Copying PSD documentation                  "
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	@cp  ./man/*.html $${HOME}/PSD-devel/Doc/.
 	@cp  ./man/*.pdf  $${HOME}/PSD-devel/Doc/.
-	@cp  ./man/*.png  $${HOME}/PSD-devel/Doc/.	
+	@cp  ./man/*.png  $${HOME}/PSD-devel/Doc/.
 	@echo "  			  "
 	@echo "*============================================================*"
 	@echo " Finished installing  PSD version $(VERSION) developers edition"
 	@echo "*============================================================*"
-	@echo ""	
-	
+	@echo ""
+
 check-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " 'make check' finished now do 'make install'"
-	@echo "*============================================================*"	
+	@echo "*============================================================*"
 	@echo ""
 
 documentation-readme: Readme.pdf Readme.html Readme.tex
 	@echo ""
 
 Readme.pdf: Readme.MD
-	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style breezedark --latex-engine=xelatex
-	mv Readme.pdf  man/.	
+	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style breezedark --pdf-engine=xelatex
+	mv Readme.pdf  man/.
 
 Readme.tex: Readme.MD
-	pandoc Readme.MD -o Readme.tex -r markdown-auto_identifiers --latex-engine=xelatex --listings
+	pandoc Readme.MD -o Readme.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
 	mv Readme.tex  etc/.
-	
+
 Readme.html: Readme.MD
 	pandoc Readme.MD -o Readme.html --template=easy_template.html --toc
-	mv Readme.html man/.				
-	
+	mv Readme.html man/.
+
 documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
 	@echo ""
 
 Changelog.pdf: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --latex-engine=xelatex
+	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --pdf-engine=xelatex
 	mv Changelog.pdf man/.
-	
+
 Changelog.tex: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.tex -r markdown-auto_identifiers --latex-engine=xelatex --listings
-	mv Changelog.tex etc/.	
+	pandoc 	Changelog.MD -o Changelog.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
+	mv Changelog.tex etc/.
 
 Changelog.html: Changelog.MD
 	pandoc 	Changelog.MD -o Changelog.html
-	mv Changelog.html  man/.			
-	
+	mv Changelog.html  man/.
+
 documentation: documentation-readme documentation-Changelog
 	@echo ""
 	@echo "*============================================================*"
 	@echo " making documentation :"; pwd
 	@echo "*============================================================*"
-	
-	
+
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -f *~ *.pdf *.html
-		
+
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning maintainer mode"
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -rf ${AUTOMAKE_LIST}

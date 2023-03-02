@@ -340,17 +340,17 @@ Once `./configure` runs successfully your Makefiles will be generated thanks to 
 
 ​    
 
-| **Command**        | **Description**                                              | **Example**                            |
-| ------------------ | ------------------------------------------------------------ | -------------------------------------- |
-| `make`             | Command responsible to compile PSD for you. This is necessary. | `make`                                 |
-| `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag* | `make -j4`                             |
+| **Command**        | **Description**                                              | **Example**                              |
+| ------------------ | ------------------------------------------------------------ | ---------------------------------------- |
+| `make`             | Command responsible to compile PSD for you. This is necessary. | `make`                                   |
+| `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag* | `make -j4`                               |
 | `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install` <br /> `make install -j4` |
-| `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                           |
-| `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                           |
-| `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                |
-| `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional* | `make tutorials`                       |
-| `install-devl`     | Command that installs developers version of PSD for you, this command should follow <br />the `make` command.<br /><br />*This command is an optional* | `make install-devel`                   |
-| `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow <br />the `make` command. Note that this needs pandoc installed in your system.<br /><br />*This command is an optional* | `make documentation`                   |
+| `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                             |
+| `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                             |
+| `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                  |
+| `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional* | `make tutorials`                         |
+| `install-devl`     | Command that installs developers version of PSD for you, this command should follow <br />the `make` command.<br /><br />*This command is an optional* | `make install-devel`                     |
+| `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow <br />the `make` command. Note that this needs pandoc installed in your system. And also pandoc support for specific html templates, [Link](https://github.com/ryangrose/easy-pandoc-templates). <br /><br />*This command is an optional* | `make documentation`                     |
 
 
 
