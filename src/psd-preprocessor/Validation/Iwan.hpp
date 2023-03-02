@@ -27,8 +27,9 @@ codeSnippet R""""(
      Date     : 02-March-2022
      Comment  : This test checks the MFront-PSD coupling for Iwan law.
                 This code expects the following INPUTS from user:
-                  i) 'input.data' this file contains 2 columns the time
-                     and input Exy value (loading).
+                  i) 'input.data' which is  a  mult-column  input file
+                     with  the first 2 columns  denoting  the time and
+                     the input Exy value (loading).
                  ii) 'steps' this is an integer value giving the total
                      number of time steps in your file 'in.data'
                 The output of this code is 'out.data' file, an  ASCII
@@ -138,7 +139,6 @@ real[int] PropertyValues =[
 int steps = 2001;
 real timeT, GammaExy;
 real[int] SigxyRef(steps);
-real SigxyMtest;
 real dummy;
 
 ifstream inEpsilon("./data/input.data");
@@ -149,8 +149,10 @@ if (mpirank == 0)
 
 for (int i = 0; i < steps; i++)
 {
-
-	inEpsilon >> timeT >> GammaExy >> SigxyRef(i) >> SigxyMtest >> dummy >> dummy >> dummy;
+        //-----------------------------------------------------------------------------------------------------
+        //           Time  |    G_xy   | Sig_xy_mtest | G_xy*50  | Sig_xy_mtest*50 | Sig_xy_PSD | Sig_xy_PSD*50
+        //-----------------------------------------------------------------------------------------------------
+	inEpsilon >> timeT >> GammaExy >> SigxyRef(i) >> dummy  >>     dummy      >>   dummy   >>   dummy    ;
 	GammaExy = 1. / sqrt(2.) *GammaExy;
         [Eps11, Eps22, Eps33, Eps12, Eps13, Eps23] =[0, 0, 0, GammaExy, 0, 0];
 
@@ -179,7 +181,7 @@ for (int i = 0; i < steps; i++)
 if(pipegnu)
 {
 write<<
-   "system(\"echo \\\"plot 'out-psd.data' u 1:3 w l lw 4 t 'PSD', './data/test.res' u 1:(\\$11/sqrt(2)) w l lw 2 t 'MTEST'\\\" | gnuplot -p\");"
+   "system(\"echo \\\"plot 'out-psd.data' u 1:3 w l lw 4 t 'PSD', './data/test.res' u 1:(\\\\$11/sqrt(2)) w l lw 2 t 'MTEST'\\\" | gnuplot -p\");"
 << endl;
 }
 

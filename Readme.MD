@@ -31,15 +31,15 @@ Before installing PSD please ensure that you have the following dependencies ins
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
-| [FreeFEM](https://freefem.org/)                              | Version **4.11**                                             | YES       |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.17.0**                                           | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.12**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.18.2**                                           | YES       |
 | [Gmsh](http://gmsh.info/)                                    | Version **4.10.4**                                           | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
 | [salome](https://www.salome-platform.org/)                   | Version **9** or Higher                                      | OPTIONAL  |
-| [MFront](http://tfel.sourceforge.net/)                       | Version **3.4.0**                                            | OPTIONAL  |
-| [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | Version **1.2**                                              | OPTIONAL  |
+| [MFront](http://tfel.sourceforge.net/)                       | Version **4.0.0**                                            | OPTIONAL  |
+| [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | Version **2.0**                                              | OPTIONAL  |
 | [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |
 |                                                              |                                                              |           |
 
