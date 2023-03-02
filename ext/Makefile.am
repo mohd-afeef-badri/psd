@@ -56,8 +56,7 @@ LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
-freefem-build \
-salome-build
+freefem-build
 else
 LIST_MAKE_EXECUTE =
 endif

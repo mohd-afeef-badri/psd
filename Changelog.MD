@@ -17,8 +17,8 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Moved to PETSc 3.18.2
 - Moved to MFRONT 4.0.0
 - Moved to MGIS 2.0
-- `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
-- `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
+- `load PSD-PETSc` replace by `load PETSc` (native PETSc module from FreeFEM)
+- `load PSD-iovtk` replace by `load iovtk` (native iovtk module from FreeFEM)
 
 ### Removed
 
@@ -51,7 +51,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
 - Ability to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
-- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGIS)
+- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, MFRONT, MGIS)
 - Dependencies can now be installed by PSD.
 
 ### Changed
@@ -60,7 +60,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 - Moved to FreeFEM 4.10
 - Moved to PETSc 3.16.1
-- Mfront material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
+- MFRONT material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
 
 ### Removed
 

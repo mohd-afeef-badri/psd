@@ -37,7 +37,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
-| [salome](https://www.salome-platform.org/)                   | Version **9** or Higher                                      | OPTIONAL  |
+| [SALOME](https://www.salome-platform.org/)                   | Version **9** or Higher                                      | OPTIONAL  |
 | [MFront](http://tfel.sourceforge.net/)                       | Version **4.0.0**                                            | OPTIONAL  |
 | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | Version **2.0**                                              | OPTIONAL  |
 | [gnuplot](http://www.gnuplot.info/)                          | Version **4.0** or Higher                                    | OPTIONAL  |
@@ -50,7 +50,7 @@ Generally there are two procedures of installing PSD.
 - *Installation Procedure 1: I install my own dependencies*.
 - *Installation Procedure 2: PSD installs all dependencies*.
 
-Among the two the second one is the recommended. With *Installation Procedure 1* user takes charge and installs all the dependencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront, and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system and that your system has an active internet connection. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
+Among the two the second one is the recommended. With *Installation Procedure 1* user takes charge and installs all the dependencies.  To follow this type of installation read the section *Installation Procedure 1: I install my own dependencies*. Alternatively,  PSD can attempt to build and compile FreeFEM, PETSc, Gmsh, MFront, and  MGIS for you. In this case, user needs to ensure that automake, C/C++, git, and MPI is available in the system and that your system has an active Internet connection. To know how this type of installation is done, please skip to section *Installation Procedure 2: PSD installs all dependencies*.
 
 
 
@@ -145,7 +145,8 @@ export PREFIXPSD=/home/PSDinstall
 ```bash
 autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 ```
-**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependecies`.    
+**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependecies`.
+
 **Note**:   for CentOS7 you might have to load MPI with `module load mpi/openmpi-x86_64`
 
 - Make all dependencies
@@ -153,7 +154,10 @@ autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 cd ext && make && cd ..
 ```
 
+**Note:** If you would like PSD to install for you SALOME please run `make salome-build` in the `ext` folder as well.  For SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` in `ext` folder and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
+
 - The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
+
 ```bash
 export PATH=/home/PSDInstall/bin:$PATH 
 export LD_LIBRARY_PATH=/home/PSDInstall/lib:$LD_LIBRARY_PATH
@@ -164,7 +168,18 @@ source ~/.bashrc
 ```
 **Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
 
-- Reconfigure PSD with the installed dependencies
+- Reconfigure PSD with the installed dependencies (PSD without SALOME)
+
+```bash
+./configure --prefix=$PREFIXPSD \
+  --with-mgis=$PREFIXPSD        \
+  --with-mfront=$PREFIXPSD      \
+  --with-FreeFEM=$PREFIXPSD/bin \
+  --with-Gmsh=$PREFIXPSD/bin
+```
+
+Reconfigure PSD with the installed dependencies (PSD with SALOME and MED support)
+
 ```bash
 ./configure --prefix=$PREFIXPSD \
   --with-mgis=$PREFIXPSD        \
@@ -176,8 +191,6 @@ source ~/.bashrc
   --with-medfile=$PREFIXPSD/bin/BINARIES-SALOME/medfile 	\
   --with-medcoupling=$PREFIXPSD/bin/BINARIES-SALOME/MEDCOUPLING
 ```
-
-**Note:** for SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
 
 - Compile and install PSD
 
@@ -194,8 +207,6 @@ make check
 ```bash
 make tutorials
 ```
-
-
 
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `home/PSDInstall`.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
@@ -325,7 +336,7 @@ These are a set of commandline flags/options that control your PSD configuration
 
 ## make options for PSD
 
-Once `./configure` runs successfully your Makefiles will be generated thanks to automake. Different options are available with `make` command some are native to Make (still listed here, sorry to my linux co-geeks)
+Once `./configure` runs successfully your Makefiles will be generated thanks to automake. Different options are available with `make` command some are native to Make (still listed here, sorry to my Linux co-geeks)
 
 ​    
 
