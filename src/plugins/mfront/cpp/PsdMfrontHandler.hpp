@@ -334,7 +334,6 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
     if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN")
     {
-
         if ( mfrontMaterialTensor != NULL && mfrontStrainTensor == NULL )
         {
           if(verbosity)
@@ -443,6 +442,10 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           for (int i = 0; i < totalCells; i++)
           {
+            
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(3*jj)) ;
+            }
 
             indexEx  = i*9;                        // 3 - components of sym. strain/stress tensor and 3 quadrature points per element 3*3= 9
             MacroSetGradient2D(indexEx);           // See file typedefinitions.hxx sets (E11, E22, E33, E12)
@@ -451,7 +454,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             MacroGetSress2D(indexEx);              // See file typedefinitions.hxx gets (S11, S22, S12)
             indexMtTensor  = i*18;                 // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18
             MacroGetStifness2D(indexMtTensor);     // See file typedefinitions.hxx gets Material tensor 6 components for 2D
-
+            
             for(int jj = 0; jj < totalIsv; jj++){
               mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
               mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];
@@ -459,6 +462,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             }
           }
         }
+
     }
 
 
@@ -687,6 +691,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           int indexIsv = totalIsv * 4;
           int indexEx       ;
           int indexMtTensor ;
+          
 
           for (int i = 0; i < totalCells; i++)
           {
@@ -717,6 +722,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
         }
         
     }
+    update(d);
 }
   return 0L;
 }
