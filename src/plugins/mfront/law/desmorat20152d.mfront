@@ -151,7 +151,7 @@ s.setEntryName("SmallS");
 
 
 @TangentOperator{
-  const auto e = eto;
+  const auto e =eval(eto+deto);
   const auto tr_e = e|I2;
   
   // computing H
@@ -163,7 +163,7 @@ s.setEntryName("SmallS");
   if (tr_e > 0) {
     const auto tr_H2 = H | H;   
     Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
-    //Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
+   // Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
   } else {
     Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) +  K * (I2^I2);
     //Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
