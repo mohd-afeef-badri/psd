@@ -6,7 +6,8 @@ HujeuxECP1985.mfront \
 Elasticity.mfront  \
 IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront \
-desmorat20152d.mfront
+desmorat20152d.mfront \
+desmorat20152dnonlocal.mfront
 
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
@@ -15,7 +16,8 @@ src/HujeuxECP1985.o \
 src/Elasticity.o  \
 src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o \
-src/desmorat20152d.o
+src/desmorat20152d.o \
+src/desmorat20152dnonlocal.o
 else
 LIST_OBJ_FILES = 
 endif
@@ -97,6 +99,15 @@ src/desmorat20152d.o: desmorat20152d.mfront
 	@echo "----------------------------------------"
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  desmorat20152d.mfront
+	${mfront}/bin/mfront --obuild
+
+src/desmorat20152dnonlocal.o: desmorat20152dnonlocal.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmorat20152dnonlocal support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmorat20152dnonlocal.mfront
 	${mfront}/bin/mfront --obuild
 
 
