@@ -259,73 +259,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   // Assigning Exterbal state variables for MGIS
   //-----------------------------------------------
 
-  if( b.esvs.size() > 0 && mfrontExternalStateVariableValues != NULL){
-
-
-    if( mfrontExternalStateVariableNames  == NULL || mfrontExternalStateVariableValues == NULL ||
-        mfrontExternalStateVariableValues->n < b.esvs.size() || mfrontExternalStateVariableValues->n > b.esvs.size() ){
-       cout <<
-       "===================================================================\n"
-       " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
-       "===================================================================\n"
-       " mfrontExternalStateVariableNames and/or  mfrontExternalStateVariableValues wrong. Please consider \n"
-       " filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m   and   \033[1;34mmfrontExternalStateVariableValues\033[0m  arguments\n"
-       " correctly in the in PsdMfrontHandler(...) function. For example,\n"
-       "   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableValues = [273.1], .... )\033[0m\n"
-       " \n\n"
-       " Mfront law expects : \n"
-       << endl;
-
-       for( int i=0; i<b.esvs.size(); i++)
-         cout << "  External state variable :   "<<  b.esvs[i].name << " of type " <<  MaterialPropertyKind(b.esvs[i].type) << endl;
-
-       cout <<"===================================================================\n" << endl;
-
-       exit(1);
-    }
-    else {
-        istringstream iss( *mfrontExternalStateVariableNames);
-        string s; int j =0;
-        while ( getline( iss, s, ' ' ) )
-        {
-          setExternalStateVariable(d.s1,s.c_str(),mfrontExternalStateVariableValues->operator[](j));
-          j++;
-        }
-
-        if(j != b.esvs.size())
-        {
-          cout <<
-            "===================================================================\n"
-            " \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
-            "===================================================================\n"
-            " mfrontExternalStateVariableNames are wrong. Please consider \n"
-            " filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
-            " correctly in the in PsdMfrontHandler(...) function. For example,\n"
-            "   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", .... )\033[0m\n"
-            " \n                                                                \n"
-            " Mfront law expects :                                              \n" << endl;
-
-          for (int i=0; i<b.esvs.size(); i++)
-            cout << "  External state names :   " <<  b.esvs[i].name << endl;
-
-          cout << "===================================================================\n" << endl;
-
-          exit(1);
-        }
-
-    }
-
-    if( verbosity ){
-       cout << " \033[1;36m Message MFront :: Following External state variables Detected :: \033[0m " << endl;
-       for (int i=0; i<b.esvs.size(); i++)
-          {
-            double* ygs = getExternalStateVariable(d.s1, b.esvs[i].name);
-            cout <<" \033[1;36m    " <<  b.esvs[i].name << "  =  \033[0m" <<  *ygs << endl;
-           }
-        cout  << " \n" << endl;
-    }
-
-  }
+  
 
 
   // --------------------------------------------------------------- //
@@ -437,6 +371,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           int totalCells =  mfrontMaterialTensor->n / 18;
           int totalIsv = componentsIsvs;
           int indexIsv = totalIsv * 3;
+          int indexExtVar = 6;
           int indexEx       ;
           int indexMtTensor ;
 
@@ -446,6 +381,18 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             for(int jj = 0; jj < totalIsv; jj++){
              d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(3*jj)) ;
             }
+            
+            //Set external state variable field
+            //////
+            istringstream iss( *mfrontExternalStateVariableNames);
+            string s;
+            int ii =0;
+            while ( getline( iss, s, ' ' ) )
+            {
+             setExternalStateVariable(d.s0,s.c_str(),mfrontExternalStateVariableValues->operator[](i*indexExtVar+(3*ii)));
+             ii++;
+            }
+            //////
 
             indexEx  = i*9;                        // 3 - components of sym. strain/stress tensor and 3 quadrature points per element 3*3= 9
             MacroSetGradient2D(indexEx);           // See file typedefinitions.hxx sets (E11, E22, E33, E12)
