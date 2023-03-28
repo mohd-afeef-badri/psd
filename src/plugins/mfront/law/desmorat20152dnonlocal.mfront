@@ -32,7 +32,9 @@ s.setEntryName("SmallS");
 //@StateVariable real detg;  //determinant Metric tensor
 
 @AuxiliaryStateVariable Stensor d;
+@AuxiliaryStateVariable Stensor iH2;
 @AuxiliaryStateVariable strain ey;
+
 
 //Bulk and shear modulus
 @LocalVariable stress K;
@@ -62,7 +64,7 @@ s.setEntryName("SmallS");
   const auto tr_e = e|I2;
   const auto H = rH + I2;
   const auto iH = tfel::math::extensions::myInvert(eval(H));
-  const auto iH2 = square(iH);
+  iH2 = square(iH);
   const auto tr_iH2 = (iH2|I2);
  
   if (tr_e > 0) {
@@ -124,7 +126,8 @@ s.setEntryName("SmallS");
   const auto tr_e = e|I2;
   const auto H = rH + I2;
   const auto iH = tfel::math::extensions::myInvert(eval(H));
-  const auto iH2 = square(iH);
+  iH2 = square(iH);
+  d = I2 - iH2;
   const auto tr_iH2 = (iH2|I2);
 
   if (tr_e > 0) {
@@ -138,27 +141,19 @@ s.setEntryName("SmallS");
   
 }
 
-@UpdateAuxiliaryStateVariables{
-  // computing the stress
-  const auto H = rH + I2;
-  const auto iH = tfel::math::extensions::myInvert(eval(H));
-  const auto iH2 = square(iH); 
-  //updating damage variable
-  d = I2 - iH2;
-}
-
 
 @TangentOperator{
   const auto e = eto;
   const auto tr_e = e|I2;
+  const auto tr_sig = sig|I2;
   
   // computing H
   const auto H = rH + I2;
   const auto iH = tfel::math::extensions::myInvert(eval(H));
-  const auto iH2 = square(iH);
+  iH2 = square(iH);
   const auto tr_iH2 = (iH2|I2);
 
-  if (tr_e > 0) {
+  if (tr_sig > 0) {
     const auto tr_H2 = H | H;   
     Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 2. * K / tr_H2 * (I2^I2);
     //Dt = 2. * G*(symmetric_product_derivative_daba_db(I2)- (I2^I2)/2) +  K * (I2^I2);
