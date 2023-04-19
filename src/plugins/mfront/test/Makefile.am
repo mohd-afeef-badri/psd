@@ -44,6 +44,8 @@ Test_2: Test_2.edp
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 -mfront_behaviour Elasticity >  Test_2_NP2.log
 	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 -mfront_behaviour desmorat20152d >  Test_2_desmorat20152d.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 -mfront_behaviour desmorat20152d >  Test_2_NP2_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp -v 1 -mfront_behaviour desmorat3Dnonlocal >  Test_2_desmorat3Dnonlocal.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp -v 1 -mfront_behaviour desmorat3Dnonlocal >  Test_2_NP2_desmorat3Dnonlocal.log
 	@echo "  PASSED "
 
 Test_3: Test_3.edp
@@ -97,9 +99,13 @@ Test_8: Test_8.edp
 	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 -mfront_behaviour Iwan >  Test_8_Iwan.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour Iwan >  Test_8_NP2_Iwan.log	
 	@echo "  PASSED "
-	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats() Desmorat "
+	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats() Desmorat 2D "
 	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_NP2_desmorat20152d.log
+	@echo "  PASSED "
+	@echo "Test_8 : mfront testing PsdMfrontPrintBehaviourStats() Desmorat 3D nonlocal "
+	@./../../../psd-solve/PSD_Solve -np 1 Test_8.edp -v 1 -mfront_behaviour desmorat3Dnonlocal >  Test_8_desmorat3Dnonlocal.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_8.edp -v 1 -mfront_behaviour desmorat3Dnonlocal >  Test_8_NP2_desmorat3Dnonlocal.log
 	@echo "  PASSED "
 
 clean-local:

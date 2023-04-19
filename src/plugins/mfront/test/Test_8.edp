@@ -31,6 +31,10 @@
   	BehaviourHypothesis = "PLANESTRAIN";
   }
 
+  if(mfrontBehaviour=="desmorat3Dnonlocal"){
+  	BehaviourHypothesis = "TRIDIMENSIONAL";
+  }
+
 //-------------------------------------------------------------------------------
 //   PsdMfrontPrintBehaviourStats( "IsotropicLinearHardeningPlasticity"      ,
 //                           mfrontBehaviourHypothesis = BehaviourHypothesis
