@@ -258,7 +258,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   }
 
   //------------------------------------------------
-  // Assigning Exterbal state variables for MGIS
+  // Assigning External state variables for MGIS
   //-----------------------------------------------
 
   if( b.esvs.size() > 0 && mfrontExternalStateVariableVector == NULL){
