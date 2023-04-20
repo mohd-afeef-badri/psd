@@ -775,6 +775,63 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           }
         }
+
+        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL   && mfrontPreviousStrainTensor !=  NULL  && mfrontExternalStateVariableVector != NULL)
+        {
+         if(verbosity)
+            cout << " \033[1;36m Message MFront :: Calculating Material Tensor      \033[0m \n"
+                 << " \033[1;36m                :: Calculating Stress Tensor        \033[0m \n"
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
+                 << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
+                 << endl;
+
+          int totalCells =  mfrontMaterialTensor->n / 84;
+          int totalIsv = componentsIsvs;
+          int indexIsv = totalIsv * 4;
+          int indexExtVar = 4*b.esvs.size(); //Number of external state variables and 4 quadrature points
+          int indexEx       ;
+          int indexMtTensor ;
+          
+
+          for (int i = 0; i < totalCells; i++)
+          {
+
+            indexEx  = i*24         ;
+ 	  
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(4*jj)) ;
+            }
+
+            //Set external state variable field
+            //////
+            istringstream iss( *mfrontExternalStateVariableNames);
+            string s;
+            int ii =0;
+            while ( getline( iss, s, ' ' ) )
+            {
+             setExternalStateVariable(d.s0,s.c_str(),mfrontExternalStateVariableValues->operator[](i*indexExtVar+(4*ii)));
+             ii++;
+            }
+            //////
+           	  
+ 	          MacroSetGradient3D(indexEx);
+            MacroGetInitialSress3D(indexEx);
+            MacroSetInitialGradient3D(indexEx);
+            d.K[0] = 1.; 	    
+            integrate(v, b); 
+            MacroGetSress3D(indexEx);
+            indexMtTensor  = i*84;
+            MacroGetStifness3D(indexMtTensor);
+
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
+           }
+
+          }
+        }
         
     }
     update(d);
