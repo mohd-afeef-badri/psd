@@ -78,13 +78,13 @@ MGIS_DOWNLOAD    = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupp
 PETSC_DOWNLOAD   = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
                        -O petsc-$(PETSC_VERSION).tar.gz
 MUMPS_DOWNLOAD   =  wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
-                       -O mumps-$(MUMPS_VERSION).tar.gz           
+                       -O mumps-$(MUMPS_VERSION).tar.gz
 METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p10.tar.gz \
                        -O metis-$(METIS_VERSION).tar.gz
 SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
 PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
-                       -O parmetis-$(PARMETIS_VERSION).tar.gz                      
+                       -O parmetis-$(PARMETIS_VERSION).tar.gz
 SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
 SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
@@ -325,7 +325,7 @@ endif
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
 
-petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-$(PETSC_VERSION).tar.gz
+petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling PETSc, HPDDM, METIS, PARMETIS, SCALAPACK,   "
@@ -365,6 +365,11 @@ if !BUILDZIPPEDDEPENDENCIES
 	$(PETSC_DOWNLOAD)
 endif
 
+petsc-cmake-seq.patch:
+if !BUILDZIPPEDDEPENDENCIES
+	$(PETSC_PATCH_DOWNLOAD)
+endif
+
 
 #--------------------------------------------------------------------------------
 # FreeFEM installation
@@ -384,7 +389,7 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so: freefem-$(FREEFEM_VERSION).tar.g
 	@echo "   untaring FreeFem-$(FREEFEM_VERSION).tar.gz"
 	@echo "*---------------------------------*"
 	tar -xf freefem-$(FREEFEM_VERSION).tar.gz
-	[ -d FreeFem-sources-$(FREEFEM_VERSION) ] && mv FreeFem-sources-$(FREEFEM_VERSION) freefem-$(FREEFEM_VERSION)	
+	[ -d FreeFem-sources-$(FREEFEM_VERSION) ] && mv FreeFem-sources-$(FREEFEM_VERSION) freefem-$(FREEFEM_VERSION)
 	cd freefem-$(FREEFEM_VERSION)    && \
 	patch -p1 < ../FreeFEM.patch     && \
 	autoreconf -i                    && \
