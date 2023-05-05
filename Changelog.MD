@@ -15,8 +15,10 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 - Moved to FreeFEM 4.12
 - Moved to PETSc 3.18.2
-- `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
-- `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
+- Moved to MFRONT 4.0.0
+- Moved to MGIS 2.0
+- `load PSD-PETSc` replace by `load PETSc` (native PETSc module from FreeFEM)
+- `load PSD-iovtk` replace by `load iovtk` (native iovtk module from FreeFEM)
 
 ### Removed
 
@@ -36,9 +38,9 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Additional validation tests in `tests/validation` folder.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.
-- New flag `-validation` to produce valdiation test case code, for now only accepts `iwan`.
+- New flag `-validation` to produce validation test case code, for now only accepts `iwan`.
 - Support for Dirichlet Point conditions in sequential for fracture mechanics.
-  - New tests for checking ponint BC.
+  - New tests for checking point BC.
 - New Iwan law for PSD-MFront coupling.
 - PSD installation support for MacOS.
 - New macro `perfromRCMreordering(meshObject)` to perform mesh level Reverse Cuthill-Mackee algo.
@@ -48,8 +50,8 @@ PSD has been maturing and evolving with time, following subsections present the 
 - More unit tests for mfront plugin.
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
-- Ablity to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
-- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGIS)
+- Ability to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
+- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, MFRONT, MGIS)
 - Dependencies can now be installed by PSD.
 
 ### Changed
@@ -58,7 +60,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 - Moved to FreeFEM 4.10
 - Moved to PETSc 3.16.1
-- Mfront material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
+- MFRONT material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
 
 ### Removed
 
@@ -263,7 +265,7 @@ check NP=USER_PROCS`.
 
 ## [1.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4) - 2019-05-14
 ### Added
-- Fully vectorial finite element solver for phase-filed `-vectorial`.
+- Fully vectorial finite element solver for phase-field `-vectorial`.
 - New `-supercomp` for avoiding xterm issues on super computers.
 - New `MatViz()` function for matrix sparsity visualization.
 - Introduced `GFP` plugin support (Go Fast Plugins).

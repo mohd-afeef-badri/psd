@@ -13,15 +13,15 @@ desmorat3Dnonlocal.mfront
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
 src/HujeuxECP1985.o \
-##src/Hujeux.o \
 src/Elasticity.o  \
+##src/Hujeux.o \
 src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o \
 src/desmorat20152d.o \
 src/desmorat20152dnonlocal.o \
 src/desmorat3Dnonlocal.o
 else
-LIST_OBJ_FILES = 
+LIST_OBJ_FILES =
 endif
 
 

@@ -6,7 +6,7 @@ LIST_TESTS = Test_0 \
 all-local:
 	@echo ""
 
-if HAVEMGIS	
+if HAVEMGIS
 check-local: check-header $(LIST_TESTS)
 	@echo ""
 	@echo "*============================================================*"
@@ -34,19 +34,19 @@ Test_0: HelloWorld-For-A-Quadrature-Point-3D.cxx
 	$(CXX) HelloWorld-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
 	@./a.out > Test_0.log
 	@echo "  PASSED "
-	
+
 Test_1: Elasticity-For-A-Quadrature-Point.cxx
 	@echo "Test_1 : mfront unit test for Elasticity (Quadrature point)"
 	$(CXX) Elasticity-For-A-Quadrature-Point.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
-	@./a.out > Test_1.log	
-	@echo "  PASSED "	
+	@./a.out > Test_1.log
+	@echo "  PASSED "
 
 Test_2: Elasticity-For-A-Quadrature-Point-3D.cxx
 	@echo "Test_2 : mfront unit test for Elasticity (Quadrature point) in 3D"
 	@$(CXX) Elasticity-For-A-Quadrature-Point-3D.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
-	@./a.out > Test_2.log	
+	@./a.out > Test_2.log
 	@echo "  PASSED "
-	
+
 
 Test_3: Iwan-For-A-Quadrature-Point-3D.cxx
 	@echo "Test_3 : Iwan-For-A-Quadrature-Point-3D (Quadrature point) in 3D"
@@ -56,8 +56,8 @@ Test_3: Iwan-For-A-Quadrature-Point-3D.cxx
 
 Test_4: Elasticity-For-A-Quadrature-Point_Threaded.cxx
 	@echo "Test_4 : mfront OpenMP based unit test for Elasticity (Quadrature point) in 2D"
-	@$(CXX) Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
-	@./a.out > Test_4.log	
+	@$(CXX) -std=c++17 Elasticity-For-A-Quadrature-Point_Threaded.cxx ${mgis}/lib/libMFrontGenericInterface.so -I${mgis}/include -Wl,-rpath,${mgis}/lib
+	@./a.out > Test_4.log
 	@echo "  PASSED "
 
 Test_5: Hujeux-For-A-Quadrature-Point-3D.cxx
@@ -71,15 +71,15 @@ clean-local:
 	@echo "*============================================================*"
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat  *.output
 	rm  -f *~ *.log	 *.o a.out
-	
+
 
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
-	@echo ""	
+	@echo ""
 	rm  -rf Makefile Makefile.in

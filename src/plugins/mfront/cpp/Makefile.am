@@ -1,5 +1,8 @@
 LIST_COMPILE= mfront.cpp
 
+FF_CPP_IS = `which ff-c++`
+FF_DEP_IS = `which ff-get-dep`
+
 LOCAL_VERSION = no
 REMOTE_VERSION = ${mgis}
 
@@ -15,8 +18,10 @@ all-local: $(DEP1)
 
 $(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp
 if HAVEMGIS
+	cat $(FF_CPP_IS) | sed 's/c++14/c++17/g' > ff-c++-temp && chmod a+x ff-c++-temp
+	cp $(FF_DEP_IS) .
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
-	$(FFCXX) -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
+	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
 	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS	
 	@echo ""
@@ -35,7 +40,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.$(SO_SUFFIX) *.o
+	rm  -f *~  *.$(SO_SUFFIX) *.o ./ff-c++-temp ./ff-get-dep
 
 
 maintainer-clean-local: clean-local
