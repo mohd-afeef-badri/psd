@@ -6,7 +6,11 @@
 namespace tfel::math::extensions {
     /*
      * To improve this function: https://sourceforge.net/p/tfel/discussion/mechanicalbeahviours/thread/6abe71fe/
-     * This is needed for desmorat20152d behaviour law
+     * This is needed for desmorat20152d and desmorat20152dnonlocal behaviour laws
+     * Implemented by Flavien Loiseau, ENS Paris-Saclay
+     * flavien.loiseau@ens-paris-saclay.fr
+     * Integrated with mfront and PSD by Breno Ribeiro Nogueira, ENS Paris-Saclay
+     * bribeiro@ens-paris-saclay.fr 
      */
 
     template <typename real>
