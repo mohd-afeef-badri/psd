@@ -261,7 +261,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   // Assigning External state variables for MGIS
   //-----------------------------------------------
 
-  if( b.esvs.size() > 0 && mfrontExternalStateVariableVector == NULL){
+  if( b.esvs.size() > 0 && mfrontExternalStateVariableVector == NULL && mfrontExternalStateVariableValues != NULL){
 
 
     if( mfrontExternalStateVariableNames  == NULL || mfrontExternalStateVariableValues == NULL ||
@@ -501,6 +501,29 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
              ii++;
             }
             //////
+            
+            if(ii != b.esvs.size())
+            {
+          	cout <<
+            	"===================================================================\n"
+            	" \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+            	"===================================================================\n"
+            	" mfrontExternalStateVariableNames or mfrontExternalStateVariableVector are wrong. Please consider \n"
+            	" filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
+            	" correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            	"   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableVector = ExT[], .... )\033[0m\n"
+      		" \n\n"
+            	" \n                                                                \n"
+            	" Mfront law expects :                                              \n" << endl;
+
+          	for (int k=0; k<b.esvs.size(); k++)
+            		cout << "  External state variable :   "<<  b.esvs[k].name << " of type " <<  MaterialPropertyKind(b.esvs[k].type) << endl;
+            		cout << "  mfrontExternalStateVariableVector needs to be filled with fields.   "  << endl;
+
+          		cout << "===================================================================\n" << endl;
+
+            exit(1);
+            }
 
             indexEx  = i*9;                        // 3 - components of sym. strain/stress tensor and 3 quadrature points per element 3*3= 9
             MacroSetGradient2D(indexEx);           // See file typedefinitions.hxx sets (E11, E22, E33, E12)
@@ -813,8 +836,31 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
              ii++;
             }
             //////
+            
+            if(ii != b.esvs.size())
+            {
+          	cout <<
+            	"===================================================================\n"
+            	" \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+            	"===================================================================\n"
+            	" mfrontExternalStateVariableNames or mfrontExternalStateVariableVector are wrong. Please consider \n"
+            	" filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
+            	" correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            	"   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableVector = ExT[], .... )\033[0m\n"
+      		" \n\n"
+            	" \n                                                                \n"
+            	" Mfront law expects :                                              \n" << endl;
+
+          	for (int k=0; k<b.esvs.size(); k++)
+            		cout << "  External state variable :   "<<  b.esvs[k].name << " of type " <<  MaterialPropertyKind(b.esvs[k].type) << endl;
+            		cout << "  mfrontExternalStateVariableVector needs to be filled with fields.   "  << endl;
+
+          		cout << "===================================================================\n" << endl;
+
+            exit(1);
+            }
            	  
- 	          MacroSetGradient3D(indexEx);
+ 	    MacroSetGradient3D(indexEx);
             MacroGetInitialSress3D(indexEx);
             MacroSetInitialGradient3D(indexEx);
             d.K[0] = 1.; 	    
@@ -834,7 +880,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
         }
         
     }
-    update(d);
+    //update(d);
 }
   return 0L;
 }
