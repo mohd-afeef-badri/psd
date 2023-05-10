@@ -312,7 +312,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-preconditioner"          ) Preconditioner           = argv[i+1];
     if( argvdummy == "-nonlinearmethod"         ) NonLinearMethod          = argv[i+1];
     if( argvdummy == "-reactionforce"           ) reactionforcemethod      = argv[i+1];
-    if( argvdummy == "-validation"              ) Validation               = argv[i+1];    
+    if( argvdummy == "-validation"              ) Validation               = argv[i+1];
     if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
 
@@ -322,7 +322,7 @@ int main(int argc, char *argv[]){
 
  if(wrongArgument)
    cout << wrongArgumentWarning << endl;
-   
+
   int labelBodyForce=1;
   int labelDirichlet=2;
   int labelDirichletTraction=2;
@@ -417,10 +417,10 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
 
   cout << "                                                                   " << endl;
-   
+
 if(versionpsd){
   cout << "  PSD Version 2.5 " << endl;
-  cout << "    Copyright (C) CEA 2019 - 2022 "<< endl;
+  cout << "    Copyright (C) CEA 2019 - 2023 "<< endl;
   cout << "                                                                   " << endl;
   cout << "    This is free software; see the source for copying conditions.  " << endl;
   cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;
@@ -440,7 +440,7 @@ if(help)
 
 if(Validation == "Iwan"){
  #include "Validation/Iwan.hpp"
- 
+
  cout << "                                                                   " << endl;
  cout << " PSD solver is now ready to run the  validation case               " << endl;
  cout << "                                                                   " << endl;
