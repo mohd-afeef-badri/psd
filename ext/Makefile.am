@@ -84,7 +84,7 @@ SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VER
                        -O slepc-$(SLEPC_VERSION).tar.gz
 PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz
-SCALAPACK_DOWNLOAD   =  wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
+SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
 SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                        -O salome-$(SALOME_VERSION).tar.gz
