@@ -18,8 +18,9 @@ PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD 
 
 - CentOS 7 / 8
 - Ubuntu 16.04 / 18.04 / 20.04 / 22.04
+- Debain 11
 - Raspberry Pi
-- Fedora 30 / 32 / 34
+- Fedora 30 / 32 / 34 / 36
 - MacOS X Puma:10.1.5 	
 
 Before installing PSD please ensure that you have the following dependencies installed on your OS.
