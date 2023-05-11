@@ -159,8 +159,8 @@ cd ext && make && cd ..
 - The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
 
 ```bash
-export PATH=/home/PSDInstall/bin:$PATH 
-export LD_LIBRARY_PATH=/home/PSDInstall/lib:$LD_LIBRARY_PATH
+export PATH=$PREFIXPSD/bin:$PATH 
+export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
 ```
 then do 
 ```bash
