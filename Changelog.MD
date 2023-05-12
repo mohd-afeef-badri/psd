@@ -1,20 +1,38 @@
 # Changelog
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
-## Rolling release (2.5)
+## Rolling release (2.6)
 
 ### Added
 
+### Changed
+
+### Removed
+
+### Bug
+
+
+
+## 2.5 - 2023-05-12
+
+### Added
+
+- PDMT - polyhedral dual meshing tool added to PSD, can be accessed via `load pdmt`
+  - meshes can be outputted in `pvtu`, `vtu`, or `med` format
+
+- `medio` now can save polyhedral meshes
 - Hypre compilation for testing BoomerAMG
-- Universal binary of SALOME 9.9.0 is shipped along
+- Universal binary of SALOME 9.9.0 is shipped along, in order to build it look at `Makefile.am` in `ext`
 - MED handled in a more robust way, one can used wither MEDCOUPLING or SALOME for MED support
-- New compilation flags `--with-hdf5` `--with-medfile` and
-`--with-medcoupling` for MED support
+- New compilation flags `--with-hdf5`  `--with-medfile` and
+`--with-medcoupling` for MED support for `medio`
 - New variable added for `PsdMfrontHandler()` function `mfrontExternalStateVariableVector` 
 - New anisotropic 2D and 3D damage laws compiled with mfront plugin for local and nonlocal problems
 - New variables added to `PsdMfrontPrintBehaviourStats()` for printing new laws
-- New file TFEL_MatrixFunc.hxx for computing the inverse of full 2D matrices in mfront plugin includes.
-- New tests in src/plugins/mfront/test/ for anisotropic damage laws
+- New file `TFEL_MatrixFunc.hxx` for computing the inverse of full 2D matrices in mfront plugin includes.
+- New tests in `src/plugins/mfront/test/` for anisotropic damage laws
+- Hujeux law added at C++-MFRONT-PSD level
+- New configuration flag `--with-zipped_dependencies`, can be provided if the user decides to provide zipped files for dependencies and compile without Internet 
 
 ### Changed
 
@@ -24,7 +42,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Moved to MGIS 2.0
 - `load PSD-PETSc` replace by `load PETSc` (native PETSc module from FreeFEM)
 - `load PSD-iovtk` replace by `load iovtk` (native iovtk module from FreeFEM)
--  Test 8 src/plugins/mfront/test/ does iterations to test new anisotropic damage laws 
+-  Test 8 `src/plugins/mfront/test/` does iterations to test new anisotropic damage laws 
 -  old Test 8 for mfront laws becomes now Test_PrintStats 
 
 ### Removed

@@ -3,9 +3,7 @@
 
 
 **Ongoing**
-- [x] Raw string support for hpp files
-- [ ] Mfront integration of PSD (non-linear)
-- [ ] Include Medfile support
+- [x] 
 
 
 
@@ -33,6 +31,10 @@
 
 
 **Done**
+
+- [x] Raw string support for hpp files
+- [x] Mfront integration of PSD (non-linear)
+- [x] Include Medfile support
 
 - [x] Mfront integration of PSD (non-linear)
 

@@ -144,8 +144,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>CentOS 7 / 8</li>
 <li>Ubuntu 16.04 / 18.04 / 20.04 / 22.04</li>
+<li>Debain 11</li>
 <li>Raspberry Pi</li>
-<li>Fedora 30 / 32 / 34</li>
+<li>Fedora 30 / 32 / 34 / 36</li>
 <li>MacOS X Puma:10.1.5</li>
 </ul>
 <p>Before installing PSD please ensure that you have the following dependencies installed on your OS.</p>
@@ -294,8 +295,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The <code>PATH</code> and <code>LSD_LIBRARY_PATH</code> variables need to be updated. Add the following two line to your <code>~/.bashrc</code></li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="bu">export</span> <span class="va">PATH=</span>/home/PSDInstall/bin:<span class="va">$PATH</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH=</span>/home/PSDInstall/lib:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="bu">export</span> <span class="va">PATH=$PREFIXPSD</span>/bin:<span class="va">$PATH</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH=$PREFIXPSD</span>/lib:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
 <p>then do</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="bu">source</span> ~/.bashrc</span></code></pre></div>
 <p><strong>Note:</strong> this can also be done temporarily by <code>source $PREFIXPSD/mfront-env.sh</code>. If you follow this temporary approach, every time before using PSD you will need to redo this command.</p>
