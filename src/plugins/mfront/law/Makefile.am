@@ -24,6 +24,7 @@ else
 LIST_OBJ_FILES =
 endif
 
+export PATH := ${mfront}/bin:$(PATH)
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
 
