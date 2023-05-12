@@ -1,6 +1,6 @@
 
-MFRONT_VERSION=3.4.0
-MGIS_VERSION=1.2
+MFRONT_VERSION=4.0.0
+MGIS_VERSION=2.0
 PETSC_VERSION=3.18.2
 FREEFEM_VERSION=4.12
 GMSH_VERSION=4.10.4
@@ -8,7 +8,7 @@ MUMPS_VERSION=5.5.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
 SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
-SCALAPACK_VERSION=2.2.0
+SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
 HPDDM_VERSION=2.2.2
 HYPRE_VERSION=2.25.0
 
@@ -56,8 +56,7 @@ LIST_MAKE_EXECUTE = gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
-freefem-build \
-salome-build
+freefem-build
 else
 LIST_MAKE_EXECUTE =
 endif
@@ -81,7 +80,7 @@ MUMPS_DOWNLOAD   =  wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSIO
                        -O mumps-$(MUMPS_VERSION).tar.gz
 METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p10.tar.gz \
                        -O metis-$(METIS_VERSION).tar.gz
-SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
+SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VERSION)/slepc-$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
 PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz

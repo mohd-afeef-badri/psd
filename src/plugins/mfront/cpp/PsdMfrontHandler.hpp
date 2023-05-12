@@ -22,7 +22,7 @@ class PsdMfrontHandler_Op : public E_F0mps {
   public:
     Expression behaviourName                          ;
 
-    static const int n_name_param = 10                 ;
+    static const int n_name_param = 11                 ;
     static basicAC_F0::name_and_type name_param[]     ;
     Expression nargs[n_name_param]                    ;
 
@@ -51,7 +51,8 @@ basicAC_F0::name_and_type PsdMfrontHandler_Op<K>::name_param[] =
   {"mfrontStrainTensor"                , &typeid(KN<K>*)      },
   {"mfrontStressTensor"                , &typeid(KN<K>*)      },
   {"mfrontStateVariable"               , &typeid(KN<K>*)      },
-  {"mfrontPreviousStrainTensor"        , &typeid(KN<K>*)      }  
+  {"mfrontPreviousStrainTensor"        , &typeid(KN<K>*)      },
+  {"mfrontExternalStateVariableVector" , &typeid(KN<K>*)      }  
 };
 
 template<class K>
@@ -85,6 +86,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   KN<K>* mfrontStressTensor                 = nargs[7] ? GetAny<KN<K>*>((*nargs[7])(stack))       : NULL;
   KN<K>* mfrontStateVariable                = nargs[8] ? GetAny<KN<K>*>((*nargs[8])(stack))       : NULL;
   KN<K>* mfrontPreviousStrainTensor         = nargs[9] ? GetAny<KN<K>*>((*nargs[9])(stack))       : NULL;
+  KN<K>* mfrontExternalStateVariableVector  = nargs[10] ? GetAny<KN<K>*>((*nargs[10])(stack))     : NULL;
 
   if(mfrontBehaviourName!=NULL && verbosity)
     cout << " \n"
@@ -256,10 +258,10 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   }
 
   //------------------------------------------------
-  // Assigning Exterbal state variables for MGIS
+  // Assigning External state variables for MGIS
   //-----------------------------------------------
 
-  if( b.esvs.size() > 0 && mfrontExternalStateVariableValues != NULL){
+  if( b.esvs.size() > 0 && mfrontExternalStateVariableVector == NULL && mfrontExternalStateVariableValues != NULL){
 
 
     if( mfrontExternalStateVariableNames  == NULL || mfrontExternalStateVariableValues == NULL ||
@@ -328,13 +330,13 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
   }
 
 
+
   // --------------------------------------------------------------- //
   // ---------------------- 2D PROBLEM ----------------------------- //
   // --------------------------------------------------------------- //
 
     if(*mfrontBehaviourHypothesis=="GENERALISEDPLANESTRAIN" || *mfrontBehaviourHypothesis=="PLANESTRAIN")
     {
-
         if ( mfrontMaterialTensor != NULL && mfrontStrainTensor == NULL )
         {
           if(verbosity)
@@ -443,6 +445,11 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           for (int i = 0; i < totalCells; i++)
           {
+            
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(3*jj)) ;
+            }
+            
 
             indexEx  = i*9;                        // 3 - components of sym. strain/stress tensor and 3 quadrature points per element 3*3= 9
             MacroSetGradient2D(indexEx);           // See file typedefinitions.hxx sets (E11, E22, E33, E12)
@@ -451,7 +458,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             MacroGetSress2D(indexEx);              // See file typedefinitions.hxx gets (S11, S22, S12)
             indexMtTensor  = i*18;                 // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18
             MacroGetStifness2D(indexMtTensor);     // See file typedefinitions.hxx gets Material tensor 6 components for 2D
-
+            
             for(int jj = 0; jj < totalIsv; jj++){
               mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
               mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];
@@ -459,6 +466,81 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
             }
           }
         }
+        
+        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL &&  mfrontExternalStateVariableVector != NULL )
+        {
+          if(verbosity)
+            cout << " \033[1;36m Message MFront :: Calculating Material Tensor       \033[0m \n"
+                 << " \033[1;36m                :: Updating Internal state variables \033[0m \n"
+                 << " \033[1;36m                :: Calculating Stress Tensor         \033[0m \n"
+                 << " \033[1;36m                :: Performing Mfront Integration     \033[0m \n"
+                 << endl;
+
+          int totalCells =  mfrontMaterialTensor->n / 18;
+          int totalIsv = componentsIsvs;
+          int indexIsv = totalIsv * 3;
+          int indexExtVar = 3*b.esvs.size(); //Number of external state variables and 3 quadrature points
+          int indexEx       ;
+          int indexMtTensor ;
+
+          for (int i = 0; i < totalCells; i++)
+          {
+            
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(3*jj)) ;
+            }
+            
+            //Set external state variable field
+            //////
+            istringstream iss( *mfrontExternalStateVariableNames);
+            string s;
+            int ii =0;
+            while ( getline( iss, s, ' ' ) )
+            {
+             setExternalStateVariable(d.s0,s.c_str(),mfrontExternalStateVariableValues->operator[](i*indexExtVar+(3*ii)));
+             ii++;
+            }
+            //////
+            
+            if(ii != b.esvs.size())
+            {
+          	cout <<
+            	"===================================================================\n"
+            	" \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+            	"===================================================================\n"
+            	" mfrontExternalStateVariableNames or mfrontExternalStateVariableVector are wrong. Please consider \n"
+            	" filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
+            	" correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            	"   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableVector = ExT[], .... )\033[0m\n"
+      		" \n\n"
+            	" \n                                                                \n"
+            	" Mfront law expects :                                              \n" << endl;
+
+          	for (int k=0; k<b.esvs.size(); k++)
+            		cout << "  External state variable :   "<<  b.esvs[k].name << " of type " <<  MaterialPropertyKind(b.esvs[k].type) << endl;
+            		cout << "  mfrontExternalStateVariableVector needs to be filled with fields.   "  << endl;
+
+          		cout << "===================================================================\n" << endl;
+
+            exit(1);
+            }
+
+            indexEx  = i*9;                        // 3 - components of sym. strain/stress tensor and 3 quadrature points per element 3*3= 9
+            MacroSetGradient2D(indexEx);           // See file typedefinitions.hxx sets (E11, E22, E33, E12)
+            d.K[0] = 1.;                           // Request MFront for updating the stiffness
+            integrate(v, b);                       // Perform integration
+            MacroGetSress2D(indexEx);              // See file typedefinitions.hxx gets (S11, S22, S12)
+            indexMtTensor  = i*18;                 // 6 - components of sym. material tensor and 3 quadrature points per element 3*6= 18
+            MacroGetStifness2D(indexMtTensor);     // See file typedefinitions.hxx gets Material tensor 6 components for 2D
+            
+            for(int jj = 0; jj < totalIsv; jj++){
+              mfrontStateVariable->operator[](i*indexIsv+(3*jj))       = d.s1.internal_state_variables[jj];
+              mfrontStateVariable->operator[](i*indexIsv+(3*jj+1))     = d.s1.internal_state_variables[jj];
+              mfrontStateVariable->operator[](i*indexIsv+(3*jj+2))     = d.s1.internal_state_variables[jj];
+            }
+          }
+        }
+
     }
 
 
@@ -687,6 +769,7 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
           int indexIsv = totalIsv * 4;
           int indexEx       ;
           int indexMtTensor ;
+          
 
           for (int i = 0; i < totalCells; i++)
           {
@@ -715,8 +798,89 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           }
         }
+
+        if ( mfrontMaterialTensor != NULL && mfrontStrainTensor != NULL   && mfrontStateVariable != NULL   && mfrontPreviousStrainTensor !=  NULL  && mfrontExternalStateVariableVector != NULL)
+        {
+         if(verbosity)
+            cout << " \033[1;36m Message MFront :: Calculating Material Tensor      \033[0m \n"
+                 << " \033[1;36m                :: Calculating Stress Tensor        \033[0m \n"
+                 << " \033[1;36m                :: Updating internal state variable \033[0m \n"
+                 << " \033[1;36m                :: Performing Mfront Integration    \033[0m \n"
+                 << endl;
+
+          int totalCells =  mfrontMaterialTensor->n / 84;
+          int totalIsv = componentsIsvs;
+          int indexIsv = totalIsv * 4;
+          int indexExtVar = 4*b.esvs.size(); //Number of external state variables and 4 quadrature points
+          int indexEx       ;
+          int indexMtTensor ;
+          
+
+          for (int i = 0; i < totalCells; i++)
+          {
+
+            indexEx  = i*24         ;
+ 	  
+            for(int jj = 0; jj < totalIsv; jj++){
+             d.s0.internal_state_variables[jj] =  mfrontStateVariable->operator[](i*indexIsv+(4*jj)) ;
+            }
+
+            //Set external state variable field
+            //////
+            istringstream iss( *mfrontExternalStateVariableNames);
+            string s;
+            int ii =0;
+            while ( getline( iss, s, ' ' ) )
+            {
+             setExternalStateVariable(d.s0,s.c_str(),mfrontExternalStateVariableValues->operator[](i*indexExtVar+(4*ii)));
+             ii++;
+            }
+            //////
+            
+            if(ii != b.esvs.size())
+            {
+          	cout <<
+            	"===================================================================\n"
+            	" \033[1;31m ** ERROR DETECTED  ** \033[0m\n"
+            	"===================================================================\n"
+            	" mfrontExternalStateVariableNames or mfrontExternalStateVariableVector are wrong. Please consider \n"
+            	" filling in  \033[1;34mmfrontExternalStateVariableNames\033[0m argument\n"
+            	" correctly in the in PsdMfrontHandler(...) function. For example,\n"
+            	"   \033[1;34m PsdMfrontHandler( ..., mfrontExternalStateVariableNames = \"Temperature\", 34mmfrontExternalStateVariableVector = ExT[], .... )\033[0m\n"
+      		" \n\n"
+            	" \n                                                                \n"
+            	" Mfront law expects :                                              \n" << endl;
+
+          	for (int k=0; k<b.esvs.size(); k++)
+            		cout << "  External state variable :   "<<  b.esvs[k].name << " of type " <<  MaterialPropertyKind(b.esvs[k].type) << endl;
+            		cout << "  mfrontExternalStateVariableVector needs to be filled with fields.   "  << endl;
+
+          		cout << "===================================================================\n" << endl;
+
+            exit(1);
+            }
+           	  
+ 	    MacroSetGradient3D(indexEx);
+            MacroGetInitialSress3D(indexEx);
+            MacroSetInitialGradient3D(indexEx);
+            d.K[0] = 1.; 	    
+            integrate(v, b); 
+            MacroGetSress3D(indexEx);
+            indexMtTensor  = i*84;
+            MacroGetStifness3D(indexMtTensor);
+
+           for(int jj = 0; jj <  totalIsv; jj++){
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj))       = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+1))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+2))     = d.s1.internal_state_variables[jj];
+             mfrontStateVariable->operator[](i*indexIsv+(4*jj+3))     = d.s1.internal_state_variables[jj];             
+           }
+
+          }
+        }
         
     }
+    //update(d);
 }
   return 0L;
 }

@@ -1,38 +1,283 @@
 /*****************************************************************************
-
-         This file is a part of PSD (Parallel Structural Dynamics)
-
-     -------------------------------------------------------------------
-
-     Author(s): Mohd Afeef Badri
-     Email    : mohd-afeef.badri@cea.fr
-     Date     : 2021‑07‑29
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira                                              
+     Email    : breno.ribeiro_nogueira@ens-paris-saclay.fr                                       
+     Date     : 2023‑02‑22                                                    
      Comment  : This test checks the MFrontParameter routine provided
-                in the mfront plugin of PSD works well
-
-     -------------------------------------------------------------------
-
-     PSD a parallel  finite  element framework  provides tools to  solve
-     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
-     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
-
-*******************************************************************************/
-
-  include "getARGV.idp";                         // Get Commandline arguments  
+                in the mfront plugin of PSD works well. Behaviour is
+                provided in Commandline by -mfront_behaviour flag
+                                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/     
+  include "getARGV.idp";                         // Get Commandline arguments
   
+  load    "../cpp/mfront"
+  load    "Element_QF"
   
-  load    "./mfront";
+  mesh Th = square(2,2);
   
   string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
-  string     BehaviourHypothesis = "GENERALISEDPLANESTRAIN" ;
+  
+  int steps = 10;
+  
+   
+   if(mfrontBehaviour=="desmorat20152d"){
+          
+          // Quadrature space with 6 elements for Material tensor
+	  fespace Mh  ( Th , [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2] );
+	  Mh [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33];
+   	  // Quadrature space with 3 elements for stress and strain tensor
+	  fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
+	  fespace Ih  (Th,   [FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2,FEQF2]);
+	  Sh [Eps11,Eps22,Eps12];
+	  Sh [EpsOld11,EpsOld22,EpsOld12];
+	  Sh [Sig11,Sig22,Sig12];
+	  Ih [Isv0,Isv1,Isv2,Isv3,Isv4,Isv5,Isv6,Isv7,Isv8]; 
+	  
+	 
+  
 
-//-------------------------------------------------------------------------------
-//   PsdMfrontPrintBehaviourStats( "IsotropicLinearHardeningPlasticity"      ,
-//                           mfrontBehaviourHypothesis = BehaviourHypothesis
-//                         );
-//-------------------------------------------------------------------------------                         
+	  string    PropertyNames       = "YoungModulus PoissonRatio Brittleness Kappa0 BigS SmallS" ;
+  	  real[int] PropertyValues      = [ 37e9, 0.2, 1.6666666666666667, 9e-5, 1.45e-4, 4.9];
+  	  
+  	  [EpsOld11,EpsOld22,EpsOld12] = [0., 0., 0.]; // Corresponding Bi-axial tension test in Mfront
+	  [Eps11,Eps22,Eps12] = [0., 0., 0.]; // Corresponding Bi-axial tension test in Mfront
+	  real epstot = 1e-3;
+	  real deps = epstot/steps; 
+	  real epsapp = 0.;
 
-  PsdMfrontPrintBehaviourStats( mfrontBehaviour                                ,
-                                mfrontBehaviourHypothesis = BehaviourHypothesis
-                              );
+	 
+	  
+	   /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/
+	   
+	  for (int i =0; i <steps; i++){
+	 
+	  
+	  	  epsapp += deps;
+	  	  [Eps11,Eps22,Eps12] = [epsapp, epsapp, 0.]; // Corresponding Bi-axial tension test in Mfront
+		  cout << " ================================================== " << endl;
+		  cout << "     CALCULATIONS DESMORAT LAW BY MFRONT (DAMAGED)" << endl;
+		  cout << " ================================================== " << endl;
+		  cout << "                                                    " << endl;
+		  cout << " ================================================== " << endl;
+		  cout << "            STEP:          " << steps << endl;
+		  cout << " ================================================== " << endl;
+		  cout << " eps " << epsapp << endl;
+		  cout << " ================================================== " << endl;
+
+		  PsdMfrontHandler( "desmorat20152d"                                               ,
+				           mfrontBehaviourHypothesis = "PLANESTRAIN",
+				           mfrontPropertyNames       = PropertyNames           ,
+				           mfrontPropertyValues      = PropertyValues          ,
+				           mfrontPreviousStrainTensor        = EpsOld11[]       ,
+				           mfrontStrainTensor        = Eps11[]                 ,
+				           mfrontMaterialTensor      = Mt11[]                 ,
+				           mfrontStateVariable       = Isv0[]                 ,
+					   mfrontStressTensor        = Sig11[]                 
+				         );
+		  EpsOld11 [] = Eps11 [];
+		  
+	  }
+	  
+   	  
+   	  real epsilon = 1e-4;
+	  //reference values come from Mtest 
+	  real SigxxRef = 1793183.6829368839971721172332764 ,
+	       SigyyRef = 1793183.6829368839971721172332764 ,
+	       SigxyRef = 0.				  ,
+	       MtRef11 = 1243954521.7664992809295654296875 ,
+	       MtRef12 = 248790904.35329991579055786132812 ,
+	       MtRef22 = 1243954521.7664992809295654296875 ,
+	       MtRef33 = 995163617.41319930553436279296875 ,
+	       H11Ref = 4.5662536633554999809803121024743 ,
+	       H22Ref = 4.5662536633554999809803121024743 ,
+	       eyRef =  0.0012727922061357857617253097615162 ;
+
+	  //int prec = cout.precision(32);
+	
+
+	  //assert sigma
+	  assert( abs(Sig11[][0]-SigxxRef) <= epsilon  &&
+		  abs(Sig11[][3]-SigyyRef) <= epsilon  &&
+		  abs(Sig11[][6]-SigxyRef) <= epsilon
+		);
+	  
+	  //assert H
+	  assert( abs(Isv0[][0]-H11Ref) <= epsilon  &&
+		  abs(Isv0[][3]-H22Ref) <= epsilon 
+		);
+		
+          //assert Mt	
+          assert( abs(Mt11[][0]-MtRef11) <= epsilon  &&
+		  abs(Mt11[][3]-MtRef12) <= epsilon  &&
+		  abs(Mt11[][9]-MtRef22) <= epsilon  &&
+		  abs(Mt11[][15]-MtRef33) <= epsilon
+		);
+		
+	  //assert ey
+	  assert( abs(Isv0[][24]-eyRef) <= epsilon
+		);
+	  	  
+   	  
+   	  
+   	  cout << " ================================================== " << endl;
+	  cout << "      STRESS TENSOR CALCULATED BY MFRONT (DAMAGED)" << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Sigxx " << Sig11[][0] << endl;
+	  cout << " Sigyy " << Sig11[][3] << endl;
+	  cout << " Sigxy " << Sig11[][6] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      MATERIAL TENSOR CALUCLATED BY MFRONT (DAMAGED)        " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Mt11 " << Mt11[][0] << endl;
+	  cout << " Mt12 " << Mt11[][3] << endl;
+	  cout << " Mt13 " << Mt11[][6] << endl;
+	  cout << " Mt22 " << Mt11[][9] << endl;
+	  cout << " Mt23 " << Mt11[][12] << endl;
+	  cout << " Mt33 " << Mt11[][15] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+				     /**/
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      INTERNAL VARIABLES CALUCLATED BY MFRONT (DAMAGED)         " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " H11 " << Isv0[][0] << endl;
+	  cout << " H22 " << Isv0[][3] << endl;
+	  cout << " H12 " << Isv0[][6] << endl;
+	  cout << " H33 " << Isv0[][9] << endl;
+	  cout << " D11 " << Isv0[][12] << endl;
+	  cout << " D22 " << Isv0[][15] << endl;
+	  cout << " D12 " << Isv0[][18] << endl;
+	  cout << " D33 " << Isv0[][21] << endl;
+	  cout << " ey " << Isv0[][24] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+	  
+	
+	  
+	  /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/
+	   
+	  for (int i =0; i <steps; i++){
+	 
+	  
+	  	  epsapp -= deps;
+	  	  [Eps11,Eps22,Eps12] = [epsapp, epsapp, 0.]; // Corresponding Bi-axial tension test in Mfront
+		  cout << " ================================================== " << endl;
+		  cout << "     CALCULATIONS DESMORAT LAW BY MFRONT (DAMAGED) UNLOADING" << endl;
+		  cout << " ================================================== " << endl;
+		  cout << "                                                    " << endl;
+		  
+		  cout << " eps " << epsapp << endl;
+
+		  PsdMfrontHandler( "desmorat20152d"                                               ,
+				           mfrontBehaviourHypothesis = "PLANESTRAIN",
+				           mfrontPropertyNames       = PropertyNames           ,
+				           mfrontPropertyValues      = PropertyValues          ,
+				           mfrontPreviousStrainTensor        = EpsOld11[]       ,
+				           mfrontStrainTensor        = Eps11[]                 ,
+				           mfrontMaterialTensor      = Mt11[]                 ,
+				           mfrontStateVariable       = Isv0[]                 ,
+					   mfrontStressTensor        = Sig11[]                 
+				         );
+		  EpsOld11 [] = Eps11 [];
+		  
+		  
+	  }
+	  
+	  //reference values come from Mtest 
+	  SigxxRef = 6.7434909748620277817947782765042e-12;
+	  SigyyRef = 3.371745487431013083103822191936e-11;
+	  SigxyRef = 0.				       ;
+	  MtRef11 = 1243954521.7664992809295654296875;
+	  MtRef12 = 248790904.35329991579055786132812;
+	  MtRef22 = 1243954521.7664992809295654296875;
+	  MtRef33 = 995163617.41319930553436279296875;
+	  H11Ref = 4.5662536633554999809803121024743;
+	  H22Ref = 4.5662536633554999809803121024743;
+	  eyRef =  0.0014142135623730950257787020163391 ;
+
+	  //int prec = cout.precision(32);
+	
+
+	  //assert sigma
+	  assert( abs(Sig11[][0]-SigxxRef) <= epsilon  &&
+		  abs(Sig11[][3]-SigyyRef) <= epsilon  &&
+		  abs(Sig11[][6]-SigxyRef) <= epsilon
+		);
+	  
+	  //assert H
+	  assert( abs(Isv0[][0]-H11Ref) <= epsilon  &&
+		  abs(Isv0[][3]-H22Ref) <= epsilon 
+		);
+		
+          //assert Mt	
+          assert( abs(Mt11[][0]-MtRef11) <= epsilon  &&
+		  abs(Mt11[][3]-MtRef12) <= epsilon  &&
+		  abs(Mt11[][9]-MtRef22) <= epsilon  &&
+		  abs(Mt11[][15]-MtRef33) <= epsilon
+		);
+		
+	  //assert ey
+	  assert( abs(Isv0[][24]-eyRef) <= epsilon
+		);
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      STRESS TENSOR CALCULATED BY MFRONT (DAMAGED)" << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Sigxx " << Sig11[][0] << endl;
+	  cout << " Sigyy " << Sig11[][3] << endl;
+	  cout << " Sigxy " << Sig11[][6] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      MATERIAL TENSOR CALUCLATED BY MFRONT (DAMAGED)        " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Mt11 " << Mt11[][0] << endl;
+	  cout << " Mt12 " << Mt11[][3] << endl;
+	  cout << " Mt13 " << Mt11[][6] << endl;
+	  cout << " Mt22 " << Mt11[][9] << endl;
+	  cout << " Mt23 " << Mt11[][12] << endl;
+	  cout << " Mt33 " << Mt11[][15] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+			             /**/
+	  
+	  cout << " ================================================== " << endl;
+	  cout << "      INTERNAL VARIABLES CALUCLATED BY MFRONT (DAMAGED)         " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " H11 " << Isv0[][0] << endl;
+	  cout << " H22 " << Isv0[][3] << endl;
+	  cout << " H12 " << Isv0[][6] << endl;
+	  cout << " H33 " << Isv0[][9] << endl;
+	  cout << " D11 " << Isv0[][12] << endl;
+	  cout << " D22 " << Isv0[][15] << endl;
+	  cout << " D12 " << Isv0[][18] << endl;
+	  cout << " D33 " << Isv0[][21] << endl;
+	  cout << " ey " << Isv0[][24] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+
+
+		                     /**/
+   }		      		            

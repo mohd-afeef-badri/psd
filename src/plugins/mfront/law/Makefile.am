@@ -2,20 +2,26 @@ SUBDIRS = test
 
 LIST_COMPILE = HelloWorld.mfront  \
 HujeuxECP1985.mfront \
-Hujeux.mfront \
+##Hujeux.mfront \
 Elasticity.mfront  \
 IsotropicLinearHardeningPlasticity.mfront  \
-Iwan.mfront
+Iwan.mfront \
+desmorat20152d.mfront \
+desmorat20152dnonlocal.mfront \
+desmorat3Dnonlocal.mfront
 
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
 src/HujeuxECP1985.o \
-src/Hujeux.o \
 src/Elasticity.o  \
+##src/Hujeux.o \
 src/IsotropicLinearHardeningPlasticity.o  \
-src/Iwan.o
+src/Iwan.o \
+src/desmorat20152d.o \
+src/desmorat20152dnonlocal.o \
+src/desmorat3Dnonlocal.o
 else
-LIST_OBJ_FILES = 
+LIST_OBJ_FILES =
 endif
 
 
@@ -87,6 +93,34 @@ src/Hujeux.o: Hujeux.mfront
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  Hujeux.mfront
 	${mfront}/bin/mfront --obuild
+
+src/desmorat20152d.o: desmorat20152d.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmorat20152d support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmorat20152d.mfront
+	${mfront}/bin/mfront --obuild
+
+src/desmorat20152dnonlocal.o: desmorat20152dnonlocal.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmorat20152dnonlocal support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmorat20152dnonlocal.mfront
+	${mfront}/bin/mfront --obuild
+
+src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmorat3Dnonlocal support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmorat3Dnonlocal.mfront
+	${mfront}/bin/mfront --obuild
+
 
 install-exec-local:
 if HAVEMFRONT

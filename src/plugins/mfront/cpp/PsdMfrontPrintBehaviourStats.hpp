@@ -100,6 +100,9 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
        << "\n    - \"HujeuxECP1985\"                        # soil-dynamics non-linear problems"
        << "\n    - \"IsotropicLinearHardeningPlasticity\"   # Von Mises elasto-plastic problem"
        << "\n    - \"Iwan\"                                 # soil-dynamics non-linear problems"
+       << "\n    - \"desmorat20152d\"                       # local full 2D anisotropic damage"
+       << "\n    - \"desmorat20152dnonlocal\"               # nonlocal full 2D anisotropic damage"
+       << "\n    - \"desmorat3Dnonlocal\"                  # nonlocal 3D anisotropic damage"
        << "\n"
        << "\n\033[1;31m---------------------------------------------------------------------------------------------\033[0m\n"
        << "## Material Hypothesis [INPUT] ##"
@@ -111,6 +114,7 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
        << "\n    - \"GENERALISEDPLANESTRAIN\"  # for a 2D problem"
        << "\n    - \"PLANESTRAIN\"             # for a 2D problem"
        << "\n    - \"TRIDIMENSIONAL\"          # for a 3D problem"
+       << "## NOTICE THAT full 2D model should be used for anisotropic damage ##"
        <<
    endl;
  
@@ -260,45 +264,98 @@ AnyType PsdMfrontStats_Op<K>::operator()(Stack stack) const {
        }
 
 
-       cout
-       << "\n\033[1;35m To provide infomation about external state variables in  your PSD-MFront code  \033[0m"
-       << "\n\033[1;35m create a  "<< componentsEsvs <<" component string variable (space seperated) for denoting the names \033[0m"
-       << "\n\033[1;35m of the external state variables and a "<< componentsEsvs <<" component vector variable for denoting \033[0m"
-       << "\n\033[1;35m the values of the external state variables  in ControlParameters.edp file.   \033[0m"
-       << "\n"
-       << "\n\033[1;36m"
-       << "              string       ExternalStateVariablesNames = \"";
+       
+       if (*mfrontBehaviourName != "desmorat20152dnonlocal" && *mfrontBehaviourName != "desmorat3Dnonlocal" ){
+       	       
+       	       cout
+	       << "\n\033[1;35m To provide infomation about external state variables in  your PSD-MFront code  \033[0m"
+	       << "\n\033[1;35m create a  "<< componentsEsvs <<" component string variable (space seperated) for denoting the names \033[0m"
+	       << "\n\033[1;35m of the external state variables and a "<< componentsEsvs <<" component vector variable for denoting \033[0m"
+	       << "\n\033[1;35m the values of the external state variables  in ControlParameters.edp file.   \033[0m"
+	       << "\n"
+	       << "\n\033[1;36m"
+	       << "              string       ExternalStateVariablesNames = \"";
 
-       for (int i=0; i < componentsEsvs; i++){
-           if(i < componentsEsvs-1)
-             cout << "" <<  b.esvs[i].name <<" ";
-           else
-             cout << "" <<  b.esvs[i].name <<"\";\033[0m";
-       }
+	       for (int i=0; i < componentsEsvs; i++){
+		   if(i < componentsEsvs-1)
+		     cout << "" <<  b.esvs[i].name <<" ";
+		   else
+		     cout << "" <<  b.esvs[i].name <<"\";\033[0m";
+	       }
+       	       
+       	       
+	       cout
+	       << "\n"
+	       << "\n\033[1;36m"
+	       << "              real[int]    ExternalStateVariablesValues = [";
 
-       cout
-       << "\n"
-       << "\n\033[1;36m"
-       << "              real[int]    ExternalStateVariablesValues = [";
+	       for (int i=0; i < componentsEsvs; i++){
+		   if(i < componentsEsvs-1)
+		     cout << " " <<  MaterialPropertyKind(b.esvs[i].type) <<",";
+		   else
+		     cout << " " <<  MaterialPropertyKind(b.esvs[i].type) <<" ];\033[0m";
+	       }
 
-       for (int i=0; i < componentsEsvs; i++){
-           if(i < componentsEsvs-1)
-             cout << " " <<  MaterialPropertyKind(b.esvs[i].type) <<",";
-           else
-             cout << " " <<  MaterialPropertyKind(b.esvs[i].type) <<" ];\033[0m";
-       }
+	       cout
+	       << "\n"
+	       << "\n\033[1;35m This information can then be provided to the PsdMfrontHandler(....) function   \033[0m"
+	       << "\n"
+	       << "\n\033[1;36m"
+	       << "              PsdMfrontHandler( ...., mfrontExternalStateVariableNames  = ExternalStateVariablesNames,               "
+	       << "\n                                    mfrontExternalStateVariableValues = ExternalStateVariablesValues, ....);\033[0m"
+	       << "\n"
+	       << "\n\033[1;35m MFront will provide you the external state variables for the chosen behaviour.    \033[0m"
+	       << "\n";
+        }//if not nonlocal laws
+	else {
+	
+	       cout
+	       << "\n\033[1;35m To provide infomation about external state variables in  your PSD-MFront code  \033[0m"
+	       << "\n\033[1;35m create a  "<< componentsEsvs <<" component string variable (space seperated) for denoting the names \033[0m"
+	       << "\n\033[1;35m of the external state variables and a "<< componentsEsvs <<" component vector variable for denoting \033[0m"
+	       << "\n\033[1;35m the values of the external state variables.   \033[0m"
+	        << "\n"
+	       << "\n\033[1;36m"
+	       << "              string       ExternalStateVariablesNames = \"";
 
-       cout
-       << "\n"
-       << "\n\033[1;35m This information can then be provided to the PsdMfrontHandler(....) function   \033[0m"
-       << "\n"
-       << "\n\033[1;36m"
-       << "              PsdMfrontHandler( ...., mfrontExternalStateVariableNames  = ExternalStateVariablesNames,               "
-       << "\n                                    mfrontExternalStateVariableValues = ExternalStateVariablesValues, ....);\033[0m"
-       << "\n"
-       << "\n\033[1;35m MFront will provide you the external state variables for the chosen behaviour.    \033[0m"
-       << "\n";
-       }
+	       for (int i=0; i < componentsEsvs; i++){
+		   if(i < componentsEsvs-1)
+		     cout << "" <<  b.esvs[i].name <<" ";
+		   else
+		     cout << "" <<  b.esvs[i].name <<"\";\033[0m";
+	       }
+	       
+	       cout
+	       << "\n\033[1;35m To provide infomation about external state variables in your PSD-MFront code  \033[0m"
+	       << "\n\033[1;35m create a  "<< componentsEsvs <<" component vector variable in vectorial Quadrature finite element  \033[0m"
+	       << "\n\033[1;35m space ('Sh2') for external state variables in FemParameters.edp file.  \033[0m"
+	       << "\n"
+	       << "\n\033[1;36m"
+	       << "		Sh2 [ExtT,ExtEpsnl];";
+	       
+	       cout
+	       << "\n"
+	       << "\n\033[1;35m Create P0 fields temperature and epsnlP0 and then : 			 \033[0m"
+	        << "\n"
+	       << "\n\033[1;36m"
+	       << "		[ExtT,ExtEpsnl] = [Tempera,epsnlP0];"
+	       << "\n";
+	      
+	       cout
+	       << "\n"
+	       << "\n\033[1;35m This information can then be provided to the PsdMfrontHandler(....) function   \033[0m"
+	       << "\n"
+	       << "\n\033[1;36m"
+	       << "              PsdMfrontHandler( ...., mfrontExternalStateVariableNames  = ExternalStateVariablesNames,               " 
+	       << "\n 					 mfrontExternalStateVariableVector = ExtT[], ....);\033[0m"
+	       << "\n"
+	       << "\n\033[1;35m step. Please note that by using ExtT[] we reference the full vector of external   \033[0m"
+	       << "\n\033[1;35m state variables, this is just a programming pratice that may be confusing.       \033[0m"
+	       << "\n";
+	}// else nonlocal laws
+      
+      
+        }//if verbosity
    }
 
    if( b.isvs.size() > 0){
