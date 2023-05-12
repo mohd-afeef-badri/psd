@@ -1,27 +1,59 @@
 # Changelog
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
-## Rolling release (2.5)
+## Rolling release (2.6)
 
 ### Added
 
+### Changed
+
+### Removed
+
+### Bug
+
+
+
+## 2.5 - 2023-05-12
+
+### Added
+
+- PDMT - polyhedral dual meshing tool added to PSD, can be accessed via `load pdmt`
+  - meshes can be outputted in `pvtu`, `vtu`, or `med` format
+
+- `medio` now can save polyhedral meshes
 - Hypre compilation for testing BoomerAMG
-- Universal binary of SALOME 9.9.0 is shipped along
+- Universal binary of SALOME 9.9.0 is shipped along, in order to build it look at `Makefile.am` in `ext`
 - MED handled in a more robust way, one can used wither MEDCOUPLING or SALOME for MED support
-- New compilation flags `--with-hdf5` `--with-medfile` and
-`--with-medcoupling` for MED support
+- New compilation flags `--with-hdf5`  `--with-medfile` and
+`--with-medcoupling` for MED support for `medio`
+- New variable added for `PsdMfrontHandler()` function `mfrontExternalStateVariableVector` 
+- New anisotropic 2D and 3D damage laws compiled with mfront plugin for local and nonlocal problems
+- New variables added to `PsdMfrontPrintBehaviourStats()` for printing new laws
+- New file `TFEL_MatrixFunc.hxx` for computing the inverse of full 2D matrices in mfront plugin includes.
+- New tests in `src/plugins/mfront/test/` for anisotropic damage laws
+- Hujeux law added at C++-MFRONT-PSD level
+- New configuration flag `--with-zipped_dependencies`, can be provided if the user decides to provide zipped files for dependencies and compile without Internet 
 
 ### Changed
 
 - Moved to FreeFEM 4.12
 - Moved to PETSc 3.18.2
-- `load PSD-PETSc` replace by `laod PETSc` (native PETSc module from FreeFEM)
-- `laod PSD-iovtk` replace by `laod iovtk` (native iovtk module from FreeFEM)
+- Moved to MFRONT 4.0.0
+- Moved to MGIS 2.0
+- `load PSD-PETSc` replace by `load PETSc` (native PETSc module from FreeFEM)
+- `load PSD-iovtk` replace by `load iovtk` (native iovtk module from FreeFEM)
+-  Test 8 `src/plugins/mfront/test/` does iterations to test new anisotropic damage laws 
+-  old Test 8 for mfront laws becomes now Test_PrintStats 
 
 ### Removed
 
 - `PSD-PETSc` module removed
 - `PSD-iovtk` module removed
+
+### Bug
+- Mfront-Mgis `PsdMfrontHandler()` Bug in updating internal variables from one step to another in 2D problems has been removed.
+
+
 
 ## [2.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.4) - 2022-07-20
 
@@ -36,9 +68,9 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Additional validation tests in `tests/validation` folder.
 - New argument `-getenergies` works in soildynamics and elastodynamics, can be used to get K.E, E.E, D.E, T.T.
 - New flag `-activeplot` to activate Gnuplot plotting via piping, note this replaces the `-piegnu`.
-- New flag `-validation` to produce valdiation test case code, for now only accepts `iwan`.
+- New flag `-validation` to produce validation test case code, for now only accepts `iwan`.
 - Support for Dirichlet Point conditions in sequential for fracture mechanics.
-  - New tests for checking ponint BC.
+  - New tests for checking point BC.
 - New Iwan law for PSD-MFront coupling.
 - PSD installation support for MacOS.
 - New macro `perfromRCMreordering(meshObject)` to perform mesh level Reverse Cuthill-Mackee algo.
@@ -48,8 +80,8 @@ PSD has been maturing and evolving with time, following subsections present the 
 - More unit tests for mfront plugin.
 - New elasto-plastic von Mises non-linear model using mfornt. Via argument `-problem elasto_plastic` and `-model von_mises`
 - New elasto-plastic tutorial.
-- Ablity to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
-- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, Mfront, MGIS)
+- Ability to calculate reaction forces for linear-elasticity model (use `-getreactionforce -reactionforce .....`)
+- New automake variable `--with-dependencies=yes` for installing all dependencies (FreeFEM, PETSc, Gmsh, MFRONT, MGIS)
 - Dependencies can now be installed by PSD.
 
 ### Changed
@@ -58,7 +90,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 - Moved to FreeFEM 4.10
 - Moved to PETSc 3.16.1
-- Mfront material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
+- MFRONT material handler has a new name: `mfrontElasticityHandler` is now `PsdMfrontHandler`
 
 ### Removed
 
@@ -263,7 +295,7 @@ check NP=USER_PROCS`.
 
 ## [1.4](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.4) - 2019-05-14
 ### Added
-- Fully vectorial finite element solver for phase-filed `-vectorial`.
+- Fully vectorial finite element solver for phase-field `-vectorial`.
 - New `-supercomp` for avoiding xterm issues on super computers.
 - New `MatViz()` function for matrix sparsity visualization.
 - Introduced `GFP` plugin support (Go Fast Plugins).

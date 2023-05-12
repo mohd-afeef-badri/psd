@@ -14,7 +14,7 @@ EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/medfi
 EXPORT_MED +=\nexport MEDCOUPLING_ROOT_DIR="$${out_dir_Path}/$(BIN_SALOME_NAME)/MEDCOUPLING"
 EXPORT_MED +=\nexport PATH="$${MEDCOUPLING_ROOT_DIR}/bin:$${PATH}"
 EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${MEDCOUPLING_ROOT_DIR}/lib:$${LD_LIBRARY_PATH}"
-else !HAVEMED	
+else !HAVEMED
 EXPORT_MED  =
 endif
 
@@ -36,11 +36,11 @@ PSD_Solve:
 	cat $(FF_IS) > PSD_Solve
 	find . -name PSD_Solve -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun;\n$(EXPORT_PSD)$(EXPORT_MED);\n#g' {} \;
 	chmod a+x PSD_Solve
-	
+
 install-exec-local:
-	@cp  PSD_Solve     ${prefix}/bin/.	
-	@cp  PSD_Solve_Seq ${prefix}/bin/.						
-	
+	@cp  PSD_Solve     ${prefix}/bin/.
+	@cp  PSD_Solve_Seq ${prefix}/bin/.
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -56,5 +56,5 @@ maintainer-clean-local: clean-local
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
-	@echo ""	
-	rm  -rf Makefile Makefile.in	
+	@echo ""
+	rm  -rf Makefile Makefile.in

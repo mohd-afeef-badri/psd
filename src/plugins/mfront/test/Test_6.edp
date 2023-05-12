@@ -1,68 +1,77 @@
 /*****************************************************************************
-
-         This file is a part of PSD (Parallel Structural Dynamics)
-
-     -------------------------------------------------------------------
-
-     Author(s): Mohd Afeef Badri
-     Email    : mohd-afeef.badri@cea.fr
-     Date     : 2021‑07‑29
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira                                              
+     Email    : breno.ribeiro_nogueira@ens-paris-saclay.fr                                       
+     Date     : 2023‑02‑22                                                    
      Comment  : This test checks the MFrontParameter routine provided
-                in the mfront plugin of PSD works well
-
-     -------------------------------------------------------------------
-
-     PSD a parallel  finite  element framework  provides tools to  solve
-     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
-     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
-
-*******************************************************************************/
+                in the mfront plugin of PSD works well. Behaviour is
+                provided in Commandline by -mfront_behaviour flag
+                                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/     
+  include "getARGV.idp";                         // Get Commandline arguments
+  
   load    "../cpp/mfront"
   load    "Element_QF"
-
+  
   mesh Th = square(2,2);
+  
+  string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
+  
+  if(mfrontBehaviour=="Elasticity"){
+  
 
-  // Quadrature space with 3 elements for stress and strain tensor
-  fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
-  Sh [Eps11,Eps22,Eps12];
-  Sh [Sig11,Sig22,Sig12];
+	  // Quadrature space with 3 elements for stress and strain tensor
+	  fespace Sh  ( Th , [FEQF2,FEQF2,FEQF2] );
+	  Sh [Eps11,Eps22,Eps12];
+	  Sh [Sig11,Sig22,Sig12];
 
-  [Eps11,Eps22,Eps12] = [1., 1., 1.]; // Dummy strain
+	  [Eps11,Eps22,Eps12] = [1., 1., 1.]; // Dummy strain
 
-  string    PropertyNames   = "YoungModulus PoissonRatio";
-  real[int] PropertyValues  = [ 150, 0.3   ];
+	  string    PropertyNames   = "YoungModulus PoissonRatio";
+	  real[int] PropertyValues  = [ 150, 0.3   ];
 
-  PsdMfrontHandler( "Elasticity"                                               ,
-                           mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
-                           mfrontPropertyNames       = PropertyNames           ,
-                           mfrontPropertyValues      = PropertyValues          ,
-                           mfrontStrainTensor        = Eps11[]                 ,
-                           mfrontStressTensor        = Sig11[]
-                         );
+	  PsdMfrontHandler( "Elasticity"                                               ,
+		                   mfrontBehaviourHypothesis = "GENERALISEDPLANESTRAIN",
+		                   mfrontPropertyNames       = PropertyNames           ,
+		                   mfrontPropertyValues      = PropertyValues          ,
+		                   mfrontStrainTensor        = Eps11[]                 ,
+		                   mfrontStressTensor        = Sig11[]
+		                 );
 
-  real epsilon = 1e-9;
+	  real epsilon = 1e-9;
 
-  real SigxxRef = 288.46153846153845279332017526031 ,
-       SigyyRef = 288.46153846153845279332017526031 ,
-       SigxyRef = 115.38461538461538680166995618492 ;
+	  real SigxxRef = 288.46153846153845279332017526031 ,
+	       SigyyRef = 288.46153846153845279332017526031 ,
+	       SigxyRef = 115.38461538461538680166995618492 ;
 
-  int prec = cout.precision(32);
+	  int prec = cout.precision(32);
 
 
 
-  assert( abs(Sig11[][0]-SigxxRef) <= epsilon  &&
-          abs(Sig11[][3]-SigyyRef) <= epsilon  &&
-          abs(Sig11[][6]-SigxyRef) <= epsilon
-        );
+	  assert( abs(Sig11[][0]-SigxxRef) <= epsilon  &&
+		  abs(Sig11[][3]-SigyyRef) <= epsilon  &&
+		  abs(Sig11[][6]-SigxyRef) <= epsilon
+		);
 
-  cout << " ================================================== " << endl;
-  cout << "      STRESS TENSOR CALUCLATED BY MFRONT          " << endl;
-  cout << " ================================================== " << endl;
-  cout << "                                                    " << endl;
-  cout << " Sigxx " << Sig11[][0] << endl;
-  cout << " Sigyy " << Sig11[][3] << endl;
-  cout << " Sigxy " << Sig11[][6] << endl;
-  cout << "                                                    " << endl;
-  cout << " ================================================== " << endl;
-                             /**/
+	  cout << " ================================================== " << endl;
+	  cout << "      STRESS TENSOR CALUCLATED BY MFRONT          " << endl;
+	  cout << " ================================================== " << endl;
+	  cout << "                                                    " << endl;
+	  cout << " Sigxx " << Sig11[][0] << endl;
+	  cout << " Sigyy " << Sig11[][3] << endl;
+	  cout << " Sigxy " << Sig11[][6] << endl;
+	  cout << "                                                    " << endl;
+	  cout << " ================================================== " << endl;
+		                     /**/
+   }
