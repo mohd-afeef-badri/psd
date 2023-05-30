@@ -52,6 +52,13 @@ dnl AC_CHECK_PROGS(FFCXX, ff-c++, $FFCXX)
 dnl AC_SUBST(FFCXX)
 ])dnl ACX_FFCXX
 
+AU_ALIAS([ACX_FFCXXDEP], [AX_FFCXXDEP])
+AC_DEFUN([AX_FFCXXDEP], [
+AC_PREREQ(2.50)
+AC_ARG_VAR(FFCXXDEP,[ff-c++ compiler dependencies])
+AC_CHECK_PROG(FFCXXDEP,[ff-get-dep],[ff-get-dep],[no])
+])dnl ACX_FFCXXDEP
+
 AU_ALIAS([ACX_FFMPI], [AX_FFMPI])
 AC_DEFUN([AX_FFMPI], [
 AC_PREREQ(2.50)
@@ -79,6 +86,7 @@ AC_ARG_WITH(FreeFEM,
 	[  --with-FreeFEM=         FreeFEM  installation path : (e.g. --with-FreeFEM=/opt/FreeFem/bin)],
 	   FF="${withval}/FreeFem++"
 	   FFCXX="${withval}/ff-c++"
+	   FFCXXDEP="${withval}/ff-get-dep"
 	   FFMPI="${withval}/ff-mpirun")
 
 AC_ARG_WITH(Gmsh,
@@ -97,7 +105,7 @@ AC_ARG_WITH([salome],
 	[  --with-salome=          salome installation path : (e.g. --with-salome=/opt/install/local)
 	],
         [salome="$withval"], [salome="no"])
- 
+
 AC_SUBST([dependencies])
 AM_CONDITIONAL([BUILDDEPENDENCIES], [test $dependencies != no])
 test "$dependencies" == "no" && AC_MSG_WARN([
@@ -356,6 +364,15 @@ AX_FFCXX
 test "$dependencies" == "no" -a  "$FFCXX" == "no" && AC_MSG_ERROR([
   Required  program   'ff-++'   not    found.
   If  'ff-++'  is  not  present  in  /usr/bin
+  or  in  /usr/local/bin consider  using  the
+  '--with-FreeFEM=your/FreeFEM/path/bin' flag
+  with ./configure command.
+                                   ])
+
+AX_FFCXXDEP
+test "$dependencies" == "no" -a  "$FFCXXDEP" == "no" && AC_MSG_ERROR([
+  Required  program   'ff-get-dep'   not    found.
+  If  'ff-get-dep'  is  not  present  in  /usr/bin
   or  in  /usr/local/bin consider  using  the
   '--with-FreeFEM=your/FreeFEM/path/bin' flag
   with ./configure command.

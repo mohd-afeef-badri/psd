@@ -1,13 +1,13 @@
 LIST_COMPILE= mfront.cpp
 
-FF_CPP_IS = `which ff-c++`
-FF_DEP_IS = `which ff-get-dep`
+FF_CPP_IS = `which $(FFCXX)`
+FF_DEP_IS = `which $(FFCXXDEP)`
 
 LOCAL_VERSION = no
 REMOTE_VERSION = ${mgis}
 
 DEP1 = mfront.$(SO_SUFFIX)
-	
+
 all-local: $(DEP1)
 	@echo ""
 	@echo "*============================================================*"
@@ -23,17 +23,17 @@ if HAVEMGIS
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
 	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
 	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
-else !HAVEMGIS	
+else !HAVEMGIS
 	@echo ""
 endif
-	
+
 install-exec-local:
 	@mkdir -p ${prefix}/include
 	@mkdir -p ${prefix}/include/psd
-if HAVEMGIS	
+if HAVEMGIS
 	@cp $(DEP1) ${prefix}/include/psd/$(DEP1)
 endif
-		
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -48,5 +48,5 @@ maintainer-clean-local: clean-local
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
-	@echo ""	
-	rm  -rf Makefile Makefile.in	
+	@echo ""
+	rm  -rf Makefile Makefile.in
