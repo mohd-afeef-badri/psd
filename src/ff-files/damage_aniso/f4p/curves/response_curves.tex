@@ -1,0 +1,403 @@
+\documentclass[final,1p,10pt]{elsarticle}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{subfig}
+\usepackage[table]{xcolor}
+\definecolor{lightRed}{rgb}{1,0.5,0.5}
+\definecolor{lightGreen}{rgb}{0.5,1,0.5}
+\definecolor{lightGray}{rgb}{0.8,0.8,0.8}
+\definecolor{lightOrange}{rgb}{1,0.75,0}
+\definecolor{White}{rgb}{1,1,1}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
+\usepackage{epstopdf}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setlength\parindent{0pt}
+\usepackage[parfill]{parskip}
+\usepackage{lmodern}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\usepackage{tikz}
+\usepackage{pgfplots}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=Figures_pdf/]
+\usetikzlibrary{spy}
+\pgfplotsset{compat=1.16}
+
+\begin{document}
+
+%*****************************************************************************************************
+% Figure 1 
+
+\begin{figure*}[t]
+\centering
+
+%------------  File name
+%\tikzsetnextfilename{Figure-1}
+
+\begin{tikzpicture}[spy using outlines={rectangle, magnification=3, connect spies}]
+
+	\tikzset{
+    every pin/.style={font=\small},    
+    %every pin/.style={fill=black!10!white,rectangle,rounded corners=3pt,font=\small},
+    small dot/.style={fill=black,circle,scale=0.3}
+    }	
+
+	\begin{axis}[
+		%------------ Axis labels
+		xlabel = {Displacement, (m)},
+		ylabel = {Force, (N)},
+		%label style = {font=\small},
+		%------------ Axis ranges and tick labels style    	
+    	xmin = 0,
+    	xmax = 0.05,
+   	ymin = 0.,
+%    	ymax = 5.,
+    	%tick label style = {font=\small}, 
+    	%------------ Size of the graph
+    	width = 0.6\textwidth,
+    	height = 0.6\textwidth,
+    	%------------ Legend properties
+    	legend columns = 1,
+    	legend cell align = {left},
+    	legend pos = outer north east,
+    	%legend style = {font=\small},
+    	%------------ Title of the graph
+    	title = Mesh convergence for Eikonal with Deleting and model B ,
+		]
+
+%		%-------ENLG
+%		\addplot[solid, thick, blue, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/6462_ENLG_lent.data};
+%		\addlegendentry{6462 ENLG low dt}
+%		
+%		\addplot[solid, thick, red, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_ENLG_lent.data};
+%		\addlegendentry{11504 ENLG low dt}
+%		
+%		\addplot[solid, thick, black, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_ENLG_lent.data};
+%		\addlegendentry{16004 ENLG low dt}
+%%		
+		\addplot[solid, thick, brown, line width= 1pt, mark=triangle*, mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/6462_EDB.data};
+		\addlegendentry{ED-B 6462els}
+		
+		\addplot[solid, thick, red, line width= 1pt, mark=square*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_EDB.data};
+		\addlegendentry{ED-B 11504els}
+		
+		%\addplot[solid, dashed, green, line width= 1pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_ENLG_new_1e4.data};
+		%\addlegendentry{EWD-B 11504els}
+		
+		\addplot[solid, thick, blue, line width= 1pt, mark=diamond*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_EDB.data};
+		\addlegendentry{ED-B 16004els}
+		
+		%\addplot[solid, dashed, orange, line width= 1pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_ENLG_new_1e4.data};
+		%\addlegendentry{EWD-B 16004els}
+		
+%		\addplot[solid, dashed, black, line width= 1.5pt, mark=*] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_ENLG_new_1e4.data};
+%		\addlegendentry{EWD-B 30904els}
+
+		\addplot[solid, thick, black, line width= 1pt, mark=*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_EDB.data};
+		\addlegendentry{ED-B 30904els}
+		
+		%----GNL
+%		\addplot[solid, dashed, blue, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/6462_GNL.data};
+%		\addlegendentry{6462 GNL}
+%		
+%		\addplot[solid, dashed, red, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_GNL.data};
+%		\addlegendentry{11504 GNL}
+%		
+%		\addplot[solid, dashed, black, line width= 1.5pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_GNL.data};
+%		\addlegendentry{16004 GNL}
+%		
+	
+		
+		%------------ Add remarks
+		%\node[pin = {[pin distance=0.85cm] 180: {Remark 1}}] at (axis cs:1.77e-3,3.5e5) {}; 
+		%\node[pin = {[pin distance=0.85cm] 270: {Remark 2}}] at (axis cs:1.77e-3,3.5e5) {}; 
+
+		%------------ Add text		
+		%\node[] at (axis cs:1.51e-3,4e5){Text -- $\int f(x)$};
+		
+		%------------ Add zoom
+		%\coordinate (spypoint) at (axis cs:1.85e-3,4.1e5);
+		%\coordinate (spyviewer) at (axis cs:2.0e-3,5.0e5);
+		%\spy[width=2.0cm,height=2.0cm] on (spypoint) in node [fill=white] at (spyviewer)  ;	
+
+	\end{axis}															
+\end{tikzpicture}
+\end{figure*}
+
+
+%*****************************************************************************************************
+% Figure 1b
+
+\begin{figure*}[t]
+\centering
+
+%------------  File name
+%\tikzsetnextfilename{Figure-1}
+
+\begin{tikzpicture}[spy using outlines={rectangle, magnification=3, connect spies}]
+
+	\tikzset{
+    every pin/.style={font=\small},    
+    %every pin/.style={fill=black!10!white,rectangle,rounded corners=3pt,font=\small},
+    small dot/.style={fill=black,circle,scale=0.3}
+    }	
+
+	\begin{axis}[
+		%------------ Axis labels
+		xlabel = {Displacement, (m)},
+		ylabel = {Force, (N)},
+		%label style = {font=\small},
+		%------------ Axis ranges and tick labels style    	
+    	xmin = 0,
+    	xmax = 0.05,
+   	ymin = 0.,
+%    	ymax = 5.,
+    	%tick label style = {font=\small}, 
+    	%------------ Size of the graph
+    	width = 0.6\textwidth,
+    	height = 0.6\textwidth,
+    	%------------ Legend properties
+    	legend columns = 1,
+    	legend cell align = {left},
+    	legend pos = outer north east,
+    	%legend style = {font=\small},
+    	%------------ Title of the graph
+    	title = Mesh convergence for Eikonal with Deleting and model B ,
+		]
+
+
+		
+		\addplot[solid, thick, blue, line width= 1pt, mark=diamond*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_EDB_09.data};
+		\addlegendentry{ED-B Dc 0.9}
+		
+		\addplot[solid, thick, black, line width= 1pt, mark=*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_EDB_0999.data};
+		\addlegendentry{ED-B Dc 0.999}
+		
+
+
+	\end{axis}															
+\end{tikzpicture}
+\end{figure*}
+
+
+%*****************************************************************************************************
+% Figure 2 
+
+\begin{figure*}[t]
+\centering
+
+%------------  File name
+%\tikzsetnextfilename{Figure-1}
+
+\begin{tikzpicture}[spy using outlines={rectangle, magnification=3, connect spies}]
+
+	\tikzset{
+    every pin/.style={font=\small},    
+    %every pin/.style={fill=black!10!white,rectangle,rounded corners=3pt,font=\small},
+    small dot/.style={fill=black,circle,scale=0.3}
+    }	
+
+	\begin{axis}[
+		%------------ Axis labels
+		xlabel = {Displacement, (m)},
+		ylabel = {Force, (N)},
+		%label style = {font=\small},
+		%------------ Axis ranges and tick labels style    	
+    	xmin = 0,
+    	xmax = 0.05,
+   	ymin = 0.,
+%    	ymax = 5.,
+    	%tick label style = {font=\small}, 
+    	%------------ Size of the graph
+    	width = 0.6\textwidth,
+    	height = 0.6\textwidth,
+    	%------------ Legend properties
+    	legend columns = 1,
+    	legend cell align = {left},
+    	legend pos = outer north east,
+    	%legend style = {font=\small},
+    	%------------ Title of the graph
+    	title = Mesh convergence for Eikonal with Constrained Deleting and model B ,
+		]
+		
+		\addplot[solid, thick, brown, line width= 1pt, mark=triangle*, mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/6462_ECDB.data};
+		\addlegendentry{ECD-B 6462els}
+		
+		\addplot[solid, thick, red, line width= 1pt, mark=square*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_ECDB.data};
+		\addlegendentry{ECD-B 11504els}
+		
+		\addplot[solid, thick, blue, line width= 1pt, mark=square*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_ECDB.data};
+		\addlegendentry{ECD-B 16004els}
+		
+		\addplot[solid, thick, black, line width= 1pt, mark=*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_ECDB.data};
+		\addlegendentry{ECD-B 30904els}
+		
+		
+		
+		
+		%------------ Add remarks
+		%\node[pin = {[pin distance=0.85cm] 180: {Remark 1}}] at (axis cs:1.77e-3,3.5e5) {}; 
+		%\node[pin = {[pin distance=0.85cm] 270: {Remark 2}}] at (axis cs:1.77e-3,3.5e5) {}; 
+
+		%------------ Add text		
+		%\node[] at (axis cs:1.51e-3,4e5){Text -- $\int f(x)$};
+		
+		%------------ Add zoom
+		%\coordinate (spypoint) at (axis cs:1.85e-3,4.1e5);
+		%\coordinate (spyviewer) at (axis cs:2.0e-3,5.0e5);
+		%\spy[width=2.0cm,height=2.0cm] on (spypoint) in node [fill=white] at (spyviewer)  ;	
+
+	\end{axis}															
+\end{tikzpicture}
+\end{figure*}
+
+%*****************************************************************************************************
+% Figure 3 
+
+\begin{figure*}[t]
+\centering
+
+%------------  File name
+%\tikzsetnextfilename{Figure-1}
+
+\begin{tikzpicture}[spy using outlines={rectangle, magnification=3, connect spies}]
+
+	\tikzset{
+    every pin/.style={font=\small},    
+    %every pin/.style={fill=black!10!white,rectangle,rounded corners=3pt,font=\small},
+    small dot/.style={fill=black,circle,scale=0.3}
+    }	
+
+	\begin{axis}[
+		%------------ Axis labels
+		xlabel = {Displacement, (m)},
+		ylabel = {Force, (N)},
+		%label style = {font=\small},
+		%------------ Axis ranges and tick labels style    	
+    	xmin = 0,
+    	xmax = 0.05,
+   	ymin = 0.,
+%    	ymax = 5.,
+    	%tick label style = {font=\small}, 
+    	%------------ Size of the graph
+    	width = 0.6\textwidth,
+    	height = 0.6\textwidth,
+    	%------------ Legend properties
+    	legend columns = 1,
+    	legend cell align = {left},
+    	legend pos = outer north east,
+    	%legend style = {font=\small},
+    	%------------ Title of the graph
+    	title = Mesh convergence analysis for Eikonal without Deleting and model B ,
+		]
+
+		%-------ENLG
+		
+		\addplot[solid, thick, brown, line width= 1pt, mark=triangle*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/6462_EWDB.data};
+		\addlegendentry{EWD-B 11504els}
+		
+		\addplot[solid, thick, red, line width= 1pt, mark=square*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_EWDB.data};
+		\addlegendentry{EWD-B 11504els}
+		
+		\addplot[solid, thick, blue, line width= 1pt, mark=diamond*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_EWDB.data};
+		\addlegendentry{EWD-B 16004els}
+		
+		\addplot[solid, thick, black, line width= 1pt, mark=*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_EWDB.data};
+		\addlegendentry{EWD-B 30904els}
+			
+		
+		%------------ Add remarks
+		%\node[pin = {[pin distance=0.85cm] 180: {Remark 1}}] at (axis cs:1.77e-3,3.5e5) {}; 
+		%\node[pin = {[pin distance=0.85cm] 270: {Remark 2}}] at (axis cs:1.77e-3,3.5e5) {}; 
+
+		%------------ Add text		
+		%\node[] at (axis cs:1.51e-3,4e5){Text -- $\int f(x)$};
+		
+		%------------ Add zoom
+		%\coordinate (spypoint) at (axis cs:1.85e-3,4.1e5);
+		%\coordinate (spyviewer) at (axis cs:2.0e-3,5.0e5);
+		%\spy[width=2.0cm,height=2.0cm] on (spypoint) in node [fill=white] at (spyviewer)  ;	
+
+	\end{axis}															
+\end{tikzpicture}
+\end{figure*}
+
+%*****************************************************************************************************
+% Figure 4 
+
+\begin{figure*}[t]
+\centering
+
+%------------  File name
+%\tikzsetnextfilename{Figure-1}
+
+\begin{tikzpicture}[spy using outlines={rectangle, magnification=3, connect spies}]
+
+	\tikzset{
+    every pin/.style={font=\small},    
+    %every pin/.style={fill=black!10!white,rectangle,rounded corners=3pt,font=\small},
+    small dot/.style={fill=black,circle,scale=0.3}
+    }	
+
+	\begin{axis}[
+		%------------ Axis labels
+		xlabel = {Displacement, (m)},
+		ylabel = {Force, (N)},
+		%label style = {font=\small},
+		%------------ Axis ranges and tick labels style    	
+    	xmin = 0,
+    	xmax = 0.05,
+   	ymin = 0.,
+%    	ymax = 5.,
+    	%tick label style = {font=\small}, 
+    	%------------ Size of the graph
+    	width = 0.6\textwidth,
+    	height = 0.6\textwidth,
+    	%------------ Legend properties
+    	legend columns = 1,
+    	legend cell align = {left},
+    	legend pos = outer north east,
+    	%legend style = {font=\small},
+    	%------------ Title of the graph
+    	title = Comparison Eikonal with and without Deleting and model B ,
+		]
+
+		%-------ENLG
+		
+%		\addplot[solid, thick, red, line width= 1pt, mark=square*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/11504_EWDB.data};
+%		\addlegendentry{EWD-B 11504els}
+%		
+%		\addplot[solid, thick, blue, line width= 1pt, mark=diamond*,mark size=2pt] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/16004_EWDB.data};
+%		\addlegendentry{EWD-B 16004els}
+		
+		\addplot[solid, dashed, black, line width= 1pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_EWDB.data};
+		\addlegendentry{EWD-B 30904els}
+		
+		\addplot[solid, thick, black, line width= 1pt, no marks] table [skip first n=0,y expr = \thisrowno{3}*2., x expr = \thisrowno{1}*(-1)]{data/30904_EDB.data};
+		\addlegendentry{ED-B 30904els}
+			
+		
+		%------------ Add remarks
+		%\node[pin = {[pin distance=0.85cm] 180: {Remark 1}}] at (axis cs:1.77e-3,3.5e5) {}; 
+		%\node[pin = {[pin distance=0.85cm] 270: {Remark 2}}] at (axis cs:1.77e-3,3.5e5) {}; 
+
+		%------------ Add text		
+		%\node[] at (axis cs:1.51e-3,4e5){Text -- $\int f(x)$};
+		
+		%------------ Add zoom
+		%\coordinate (spypoint) at (axis cs:1.85e-3,4.1e5);
+		%\coordinate (spyviewer) at (axis cs:2.0e-3,5.0e5);
+		%\spy[width=2.0cm,height=2.0cm] on (spypoint) in node [fill=white] at (spyviewer)  ;	
+
+	\end{axis}															
+\end{tikzpicture}
+\end{figure*}
+
+
+
+
+
+\end{document}
