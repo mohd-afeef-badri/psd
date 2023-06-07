@@ -112,6 +112,7 @@ s.setEntryName("SmallS");
   const auto H = rH + Stensor::Id();
   const auto iH = invert(H);
   iH2 = square(iH);
+  d = Stensor::Id() - iH2;
   const auto tr_iH2 = trace(iH2);
 
   if (tr_e > 0) {
@@ -125,17 +126,18 @@ s.setEntryName("SmallS");
 
 }
 
-@UpdateAuxiliaryStateVariables{
-  const auto H = rH + Stensor::Id();
-  const auto iH = invert(H);
-  iH2 = square(iH); 
+//@UpdateAuxiliaryStateVariables{
+//  const auto H = rH + Stensor::Id();
+//  const auto iH = invert(H);
+//  iH2 = square(iH); 
   //updating damage variable
-  d = Stensor::Id() - iH2;
-}
+//  d = Stensor::Id() - iH2;
+//}
 
 @TangentOperator{
   const auto e = eto;
   const auto tr_e = trace(e);
+  const auto tr_sig = trace(sig);
   
   // computing H
   const auto H = rH + Stensor::Id();
@@ -143,7 +145,7 @@ s.setEntryName("SmallS");
   iH2 = square(iH);
   const auto tr_iH2 = trace(iH2);
 
-  if (tr_e > 0) {
+  if (tr_sig > 0) {
     const auto tr_H2 = H | H;   
     Dt = 2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/tr_iH2) + 3. * K / tr_H2 * (Stensor::Id()^Stensor::Id());
   } else {
