@@ -36,7 +36,7 @@
     //--------------------------------------------------------------------------
 
                         
-       intN(Th,qforder=3)(                                                                       
+       intN(Th,qforder=3,51)(                                                                       
                        (epsilonXMt(u,Mt)'*epsilon(v))*thickness                                           
                      )    
          
@@ -57,7 +57,7 @@
     //--------------------------------------------------------------------------
     
       // GNL CLASSIC
-    intN(Th,qforder=3)(
+    intN(Th,qforder=3,51)(
                thickness*(c*(grad(epsnl)'*grad(q))) +
       			   thickness*( epsnl*q )
                       )
@@ -70,7 +70,7 @@
     
 	
 	// GNL
-	+ intN(Th,qforder=3)(thickness*eqStrain*q)
+	+ intN(Th,qforder=3,51)(thickness*eqStrain*q)
 
  ;
  
@@ -86,7 +86,7 @@ varf varfForce(def2(u),def2(v)) =
     // $+int_{\Omega}(\epsilon(u):\mathbb(\tilde{E}):\epsilon(v)))$
     //--------------------------------------------------------------------------
       
-      intN(Th,qforder=3)(                                                                       
+      intN(Th,qforder=3,51)(                                                                       
                        (epsilonXMt(u,Mt)'*epsilon(v))*thickness                                           
                      )
 
