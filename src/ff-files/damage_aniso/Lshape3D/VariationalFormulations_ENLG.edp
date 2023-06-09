@@ -1,0 +1,99 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑19                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                                                
+//==============================================================================\              
+//  **Variation formulation linear elasticity**                                 \              
+//==============================================================================\              
+                                                                                                
+varf elast(def(u),def(v)) =                                                                     
+                                                                                                
+                                                                                                
+/*                                                                                              
+$$                                                                                              
+\int_{\Omega}(                                                                                
+                 (\epsilon(u):\mathbbm(Mt):\epsilon(v))                                      
+               )                                                                                
+$$                                                                                              
+*/                                                                                              
+                                                                                                
+      intN(Th,qforder=3,1,optimize=0)(                                                                       
+                       epsilonXMt(u,Mt)'*epsilon(v)                                             
+                     )                                                                          
+                                                                                                
+                                     
+                                                                                                                                                                                      
+                                                                                                
+      + on (Dbc0On,DirichletBc0)  
+
+      + on (Dbc1On,DirichletBc1)                                                   
+;                                                                                                
+                                                                                                
+//-----------------------------
+ // Eq. 2 Helmothz-like equation //
+ //-----------------------------
+varf endo(epsnl,q) =
+  
+ 
+    //--------------------------------------------------------------------------
+    //-----------------------------  ENLG  -------------------------------------
+    // $+\int_{\Omega} c \det{\mathbf{H}} (\mathbf{H}^{-2} \cdot \nabla \epsnl) \cdot \nabla q  +
+    // \det{\mathbf{H}} \epsnl q $
+    // Look at FemParameters.edp to see the definitions of Isv variables
+    //--------------------------------------------------------------------------
+
+      //ENLG anisotropic
+      intN(Th,qforder=3,1,optimize=0)(
+                (c*detHold*(iH2gradnl(epsnl,Isv12old,Isv13old,Isv14old,Isv15old/SQ2,Isv16old/SQ2,Isv17old/SQ2)'*grad(q))) +
+      			    (epsnl*q*detHold)		  
+                       )
+                       
+
+    //--------------------------------------------------------------------------
+    //-----------------------------  ENLG  -------------------------------------
+    // $+\int_{\Omega} \det{\mathbf{H}} \epseq q$     WHY PLUS NOT MINUS
+    //--------------------------------------------------------------------------
+	
+	//ENLG anisotropic
+	+ intN(Th,qforder=3,1,optimize=0)(eqStrain*q*detHold)
+  ;
+
+	   
+      // Stress-based Vandoren and Simone 2018 (equivalent stress)
+      //intN(Th,qforder=3)(
+      //          thickness*((stressgradnl(epsnl,sig11,sig22,sig12,maxsp,s,c)'*grad(q))) +
+      //			    thickness*( epsnl*q )			  
+      //                 )
+     
+      // Stress-based Vandoren and Simone 2018 (principal stress)
+      //intN(Th,qforder=3)(
+      //          thickness*((stressgradnlnormal(epsnl,sig11,sig22,sig12,maxsp,s,c,E,kappa0)'*grad(q))) +
+      //			    thickness*( epsnl*q )
+      //                 )
+      
+      // Eikonal stress-damage-based sigprinc
+/*      intN(Th,qforder=3)(*/
+/*               thickness*((1-damagep)*(stressgradnlnormal(epsnl,sig11,sig22,sig12,maxsp,s,c,E,kappa0)'*grad(q))) +*/
+/*      			    thickness*( epsnl*q )*/
+/*                       )*/
+/*                       */
+	
+

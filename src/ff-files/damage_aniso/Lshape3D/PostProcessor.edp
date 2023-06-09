@@ -1,0 +1,23 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2019‑05‑29                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+     system("mv  VTUs/  VTUs_`date '+%b-%d-%Y-%H:%M'`_" + model + "_" + ThNbTriang);                      
+     system("echo \"3Danisodamage\t$(date '+%Y-%b-%d\t%H:%M')\t$HOSTNAME\t\t2D\t\tSeq.\t\t\"" + model + "\t\t" + ThNbTriang +  ">>simulation-log.csv");                                          

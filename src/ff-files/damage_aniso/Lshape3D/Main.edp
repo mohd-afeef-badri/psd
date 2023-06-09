@@ -1,0 +1,51 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Mohd Afeef Badri                                              
+     Email    : mohd-afeef.badri@cea.fr                                       
+     Date     : 2019‑05‑29                                                    
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                               
+//=============================================================================
+// ------ load libraries ------                                                
+//=============================================================================
+                                                                               
+                                                                               
+  load    "mfront"                               // MFront interface active 
+  load    "iovtk"                                // Paraview support files 
+  load    "Element_QF"                           // Quadrature elements     
+  load    "gofastplugins"                       // GoFastPlugins Library  
+
+func int compute(){                                                            
+  include "getARGV.idp"                          // Commandline arguments  
+  include "ControlParameters.edp"                // Parameters & properties
+  include "Macros.edp"                           // User-defined macros    
+  include "OtherParameters.edp"                  // Other Parameters       
+  include "MeshAndFeSpace.edp"                   // Mesh and FE space      
+  include "FemParameters.edp"                    // Fem Parameters         
+  if (model=="GNL"){        
+  	include "VariationalFormulations_GNL.edp"      // Variational formulation
+  	include "LinearFormBuilderAndSolver.edp"       // Build and solve Ax=b   
+  	include "PostProcessor.edp"                    // Post Processing   
+  } else if (model=="ENLG"){
+  	include "VariationalFormulations_ENLG.edp"      // Variational formulation
+  	include "LinearFormBuilderAndSolver.edp"       // Build and solve Ax=b   
+  	include "PostProcessor.edp"                    // Post Processing 
+  }       
+}                                                                            
+                                                                             
+compute();                                                                   

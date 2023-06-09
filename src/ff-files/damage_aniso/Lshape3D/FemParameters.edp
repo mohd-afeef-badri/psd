@@ -1,0 +1,175 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑19                                                   
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                                                                                                
+                                                                              
+//============================================================================
+// ------- Finite element variables -------                                   
+// -------------------------------------------------------------------        
+// def(u)  : displacement vector, it is [ux,uy] in 2D and [ux,uy,uz] in 3D    
+//============================================================================
+                                                                              
+  Vh  def(u)    ,
+      def(uold) ;
+  
+  Vh1 epsnl       ,
+      Tempera     ,                                                        
+      epsnlold    ;
+
+  Vh  def(F)    ; 
+
+//# first column: time
+// # 2 column: 1th component of the strain (EXX)
+// # 3 column: 2th component of the strain (EYY)
+// # 4 column: 3th component of the strain (EZZ)
+// # 5 column: 4th component of the strain (EXY)
+// # 6 column: 5th component of the strain (EXZ)
+// # 7 column: 6th component of the strain (EYZ)
+
+  // P0 scalar fields
+  Wh0  lambdafield ,    // Lame's lambda parameter                                          
+       mufield     ,    // Lame's mu parameter 
+       sig11       ,    // Component s11 of stress stensor
+       sig22       ,    // Component s22 of stress stensor
+       sig33       ,    // Component s33 of stress stensor
+       sig12       ,    // Component s12 of stress stensor
+       sig13       ,    // Component s13 of stress stensor
+       sig23       ,    // Component s23 of stress stensor
+       sp1         ,    // 1st eigenvalue for the stress tensor
+       sp2         ,    // 2nd eigenvalue for the stress tensor
+       sp3         ,    // 3rd eigenvalue for the stress tensor
+       maxsp       ,    // Maximum eigenvalue of the stress tensor
+       H11         ,    // Component H11 of Ladeveze's tensor H
+       H22	       ,    // Component H22 of Ladeveze's tensor H
+       H33	       ,    // Component H33 of Ladeveze's tensor H
+       H12         ,    // Component H12 of Ladeveze's tensor H
+       H13	       ,    // Component H13 of Ladeveze's tensor H
+       H23	       ,    // Component H23 of Ladeveze's tensor H
+       Isv12old    ,    // Component i2H11 of \mathbf{H}^{-2} tensor at previous iteration
+       Isv13old    ,    // Component i2H22 of \mathbf{H}^{-2} tensor at previous iteration
+       Isv14old    ,    // Component i2H33 of \mathbf{H}^{-2} tensor at previous iteration
+       Isv15old    ,    // Component sqrt(2.)*i2H12 of \mathbf{H}^{-2} tensor at previous iteration
+       Isv16old    ,    // Component sqrt(2.)*i2H13 of \mathbf{H}^{-2} tensor at previous iteration
+       Isv17old    ,    // Component sqrt(2.)*i2H23 of \mathbf{H}^{-2} tensor at previous iteration
+       I1eps       ,    // First invariant of the strain tensor for equivalent von mises measure
+       J2eps       ,    // Second invariant of the strain tensor for equivalent von mises measure
+       e11         ,    // Component e11 of the strain tensor                              
+       e22         ,    // Component e22 of the strain tensor                              
+       e33         ,    // Component e33 of the strain tensor
+       e12         ,    // Component e12 of the strain tensor                              
+       e13         ,    // Component e13 of the strain tensor                              
+       e23         ,    // Component e23 of the strain tensor                               
+       ep1         ,    // 1st eigenvalue for the strain tensor            
+       ep2         ,    // 2nd eigenvalue for the strain tensor 
+       ep3         ,    // 3rd eigenvalue for the strain tensor 
+       D1	   ,    // 1st eigenvalue for the damage tensor 
+       D2          ,    // 2nd eigenvalue for the damage tensor   
+       D3          ,    // 3rd eigenvalue for the damage tensor     
+       detH	   ,    // Determinant of Ladeveze's tensor H
+       eqStrain    ,    // Equivalent strain
+       detHold     ,    // Determinant of Ladeveze's tensor H at previous iteration
+       epsnlP0     ;    //  Equivalent nonlocal strain at Gauss points    
+
+//============================================================================
+// ------- Stress/Strain Tensor using Quadrature FE space -------             
+// -------------------------------------------------------------------        
+// Eps  : is array of finite element variable belonging to quadrature         
+//         space Sh. This array  is  used  to define components of the        
+//         symmetric Strain tensor. 3X3 in 2D hence 3 components.  
+// Epsold : same as before but from the previous iteration           
+// Sig  : is array of finite element variable belonging to quadrature         
+//         space Sh. This array  is  used  to define components of the        
+//         symmetric Strain tensor. 3X3 in 2D hence 3 components.
+// ExtT : External temperature field in quadrature space
+// ExtEpnsl : External nonlocal equivalent strain field in quadrature space          
+//============================================================================
+   
+   Sh [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23];
+   Sh [EpsOld11,EpsOld22,EpsOld33,EpsOld12,EpsOld13,EpsOld23];                                                  
+   Sh [Sig11,Sig22,Sig33,Sig12,Sig13,Sig23]; 
+   Sh2 [ExtT,ExtEpsnl];
+
+//============================================================================
+// ------- Internal state variable  vector using Quadrature FE space -------  
+// -------------------------------------------------------------------        
+// Isv  : is array of finite element variable belonging to quadrature         
+//         space Ih. This array  is  used  to define components of the        
+//         elastic Strain tensor (first four components). And a plastic       
+//         state componenent the last 5th component.
+//
+//  Isv0 = rH11, Isv1 = rH22, Isv2 = rH33, Isv3 = sqrt(2.)*rH12, Isv4 = sqrt(2.)*rH13,
+//  Isv5 = sqrt(2.)*rH23, Isv6 = D11, Isv7 = D22, Isv8 = D33, Isv9 = sqrt(2.)*D12, 
+//  Isv10 = sqrt(2.)*D13, Isv11 = sqrt(2.)*D23, Isv12 = i2H11, Isv13 = i2H22, 
+//  Isv14 = i2H33, Isv15 = sqrt(2.)*i2H12, Isv16 = sqrt(2.)*i2H13,
+//  Isv17 = sqrt(2.)*i2H23,
+//  Isv18 = ey.                          
+//============================================================================
+                                                                              
+   Ih [ Isv0, Isv1, Isv2, Isv3, Isv4, Isv5, Isv6, Isv7, Isv8, Isv9, Isv10, Isv11, Isv12, Isv13, Isv14, Isv15, Isv16, Isv17, Isv18 ];                                                                                                                     
+                                                                              
+//============================================================================
+// ------- Material Tensor using Quadrature FE space -------                  
+// -------------------------------------------------------------------        
+// Mt[int]  : is an array of finite element variable belonging to quadratu    
+//            re space Qh. This array is used  to define components of the    
+//            material tensor. 3X3 in 2D and 6X6 in 3D                        
+//            In 3D the material tensor looks like                            
+//                                                                            
+//      [ 2*mu+lambda ,  lambda      ,   lambda    ,   0  ,  0 ,  0 ]         
+// Mt = [ lambda      ,  2*mu+lambda ,   lambda    ,   0  ,  0 ,  0 ]         
+//      [ lambda      ,  lambda      , 2*mu+lambda ,   0  ,  0 ,  0 ]         
+//      [    0        ,    0         ,     0       ,   mu ,  0 ,  0 ]         
+//      [    0        ,    0         ,     0       ,   0  ,  mu,  0 ]         
+//      [    0        ,    0         ,     0       ,   0  ,  0 ,  mu]         
+//============================================================================
+                                                                                                           
+  Qh [ Mt11 , Mt12 ,  Mt13 , Mt14 , Mt15 , Mt16 ,                             
+              Mt22 ,  Mt23 , Mt24 , Mt25 , Mt26 ,                             
+                      Mt33 , Mt34 , Mt35 , Mt36 ,                             
+                             Mt44 , Mt45 , Mt46 ,                             
+                                    Mt55 , Mt56 ,                             
+                                           Mt66 ] ;                           
+                                                                                                                                                        
+
+  Tempera[] = temperature;
+  [ExtT,ExtEpsnl] = [Tempera,epsnlP0];
+   
+  PsdMfrontHandler( MaterialBehaviour                                      , 
+                          mfrontBehaviourHypothesis = MaterialHypothesis     , 
+                          mfrontPropertyNames       = PropertyNames          , 
+                          mfrontPropertyValues      = PropertyValues         ,
+                          mfrontExternalStateVariableNames =ExternalStateVariablesNames,
+                          mfrontExternalStateVariableValues = ExtT[] 	      ,
+                           mfrontPreviousStrainTensor        = EpsOld11[]      ,
+                          mfrontMaterialTensor      = Mt11[]                 ,
+                          mfrontStrainTensor        = Eps11[]                , 
+                          mfrontStressTensor        = Sig11[]                , 
+                        mfrontStateVariable       = Isv0[]  ,
+                        mfrontExternalStateVariableVector = ExtT[]                
+                        );                                                     
+                                                                                                   
+                                                                              
+                                                                              
+                                                                              
+//============================================================================
+// ------- Fem matrices and vectors -------                                   
+//============================================================================
+                                                                              
+  matrix  A, A1                              ;                                
+  real[int]  b(Vh.ndof), b1(Vh1.ndof)        ;                                                  

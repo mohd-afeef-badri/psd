@@ -1,0 +1,109 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑19                                                 
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+
+
+//==============================================================================
+// ------- The finite element mesh name from commandline-------
+//==============================================================================
+
+  ThName = getARGV( "-mesh" , ThName );
+
+//==============================================================================
+// ------- Error message if wrong mesh detected -------
+//==============================================================================
+
+  checkmesh(ThName);
+
+
+
+//==============================================================================
+// ------- The finite element mesh -------
+// ----------------------------------------------------------------------------
+//  Th        : Finite element mesh
+//==============================================================================
+  
+  meshN Th;
+                                                                                                                                    
+  if(ThName.find(".msh") > -1)                                                
+    {                                                                           
+      load "gmsh"                                                             
+      Th = gmshloadN(ThName);                                                   
+    }                                                                           
+  if(ThName.find(".mesh") > -1)                                               
+    {                                                                           
+      Th = readmeshN(ThName);                                                   
+    }                                                                           
+                                                                                
+  Th=trunc(Th, 1, renum=1);
+
+  string ThNbTriang = ThName(0:ThName.find(".msh")-1);
+
+//==============================================================================
+// ------- The finite element space  -------                                    
+// ---------------------------------------------------------------------------- 
+//  Vh        : Mixed finite element space for displacement      
+//  Sh        : Finite element space for quadrature points with 3 (2D) 
+//  components (All the quantities for Mfront like stress and strain tensor in 2D)     
+//  Sh2       : FInite element space for quadrature points with 2 components. 
+//  First component is a temperature scalar field and the second one is the nonlocal equivalent strain
+//  Ih        : Finite element space for all the state variables components which come from Mfront
+//  c.f. desmorat20152dnonlocal.mfront file for the compiled law and corresponding unit test Test_8
+//  Isv0 = rH11, Isv1 = rH22, Isv2 = rH33, Isv3 = sqrt(2.)*rH12, Isv4 = D11, Isv5 = D22, 
+//  Isv6 = D33, Isv7 = sqrt(2.)*D12, Isv8 = i2H11, Isv9 = i2H22, Isv10 = i2H33, Isv11 = sqrt(2.)*i2H12,
+//  Isv12 = ey.
+//  Mh        : Finite element space with 6 components for the effective tensor coming from Mfront.
+//  Wh0       : Finite element for all P0 quantities used in the formulation
+//  Wh00       : Finite element for all [P0,P0] quantities used in the formulation, such as eigenvectors for D
+//  Vh1       : Finite space for the scalar P1 field for the nonlocal equivalent strain solution
+//==============================================================================
+
+                                                                              
+ fespace Vh   ( Th , Pk );                                                      
+                                                                                                                              
+ fespace Sh  ( Th , [FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d] );
+ 
+ fespace Sh2  ( Th , [FEQF23d,FEQF23d] );
+                 
+ fespace Ih  ( Th , [FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d,FEQF23d] );  
+ 
+ fespace Wh0  ( Th , Wk );
+ 
+ fespace Wh00  ( Th , [Wk,Wk]);           
+                                                                              
+ fespace Vh1  ( Th , Zk );  
+
+
+
+//==============================================================================
+// ------- The finite element space  -------
+// ----------------------------------------------------------------------------
+//  Qh       : Quadratur finite element space  for material tensor
+//             FEQF23d implies 4 dof for a tetra cell in the mesh
+//             A vectorial FEM space is built with 21 components
+//==============================================================================
+
+ fespace Qh ( Th, [ FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,
+                             FEQF23d, FEQF23d, FEQF23d, FEQF23d, FEQF23d,
+                                      FEQF23d, FEQF23d, FEQF23d, FEQF23d,
+                                               FEQF23d, FEQF23d, FEQF23d,
+                                                        FEQF23d, FEQF23d,
+                                                                 FEQF23d] );

@@ -1,0 +1,415 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑19                                                
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                               
+//=============================================================================
+//                     ------- Essential Macros -------                        
+// --------------------------------------------------------------------------- 
+// Ux, Uy      : x and y displacements                                         
+// Pk          : finite element space definition                               
+// def(i)      : to define a vectorial field of same order as Pk               
+// init(i)     : to initialize a vectorial field of same order as Pk           
+//=============================================================================
+                                                                               
+  macro Ux u  //                                                               
+  macro Uy u1 //                                                               
+  macro Uz u2 //                                                               
+  macro PlotVec(i) [ i   ,                                                      
+                     i#1 ,                                                      
+                     i#2 ] //                                                   
+                              
+  macro PlotTens(xx,yy,zz,xy,yz,xz) [ xx   ,
+                     yy ,
+                     zz ,
+                     xy ,
+                     yz ,
+                     xz  ] //                                                                
+  macro Pk [ P1 ,                                                     
+             P1 ,                                                     
+             P1 ] //                                                  
+                                                                              
+  macro def(i)  [i   ,                                                        
+                 i#1 ,                                                        
+                 i#2 ] //                                                     
+
+  macro Zk            P1                              // FE space P1
+  macro Wk            P0                              // FE space P0
+                                                                      
+                                                                               
+//=============================================================================
+//                 ------- operator definition macros  -------                 
+// --------------------------------------------------------------------------- 
+// divergence(i) : divergence operator definition, given a displacement vector 
+//                 'i' returns scalar value                                    
+// epsilon(i)    : symmetric strain tensor operator given  displacement vector 
+//                 'i' returns strain  vector [Exx,Eyy,Ezz,Eyz,Exz,Exy]        
+// epsilonXMt(i,Mt) : given  displacement vector 'i' calculates strain X Mt i.e
+//                   Strain X material tensor                                  
+//=============================================================================
+                                                                               
+  macro divergence(i) ( dx( i ) + dy(i#1) + dz(i#2) )   //                     
+                                                                               
+  macro epsilon   (i) [ dx( i )           ,                                    
+                        dy(i#1)           ,                                    
+                        dz(i#2)           ,                                    
+                       (dy( i ) + dx(i#1))/SQ2 ,                               
+                       (dz( i ) + dx(i#2))/SQ2 ,                               
+                       (dz(i#1) + dy(i#2))/SQ2  ]        //                    
+                                                                               
+                                                                               
+                                                                               
+  macro epsilonXMt(u,Mt) [                                                     
+                                                                               
+  epsilon(u)[0]*Mt#11 + epsilon(u)[1]*Mt#12 + epsilon(u)[2]*Mt#13 + epsilon(u)[3]*Mt#14 + epsilon(u)[4]*Mt#15 + epsilon(u)[5]*Mt#16, 
+  epsilon(u)[0]*Mt#12 + epsilon(u)[1]*Mt#22 + epsilon(u)[2]*Mt#23 + epsilon(u)[3]*Mt#24 + epsilon(u)[4]*Mt#25 + epsilon(u)[5]*Mt#26, 
+  epsilon(u)[0]*Mt#13 + epsilon(u)[1]*Mt#23 + epsilon(u)[2]*Mt#33 + epsilon(u)[3]*Mt#34 + epsilon(u)[4]*Mt#35 + epsilon(u)[5]*Mt#36, 
+  epsilon(u)[0]*Mt#14 + epsilon(u)[1]*Mt#24 + epsilon(u)[2]*Mt#34 + epsilon(u)[3]*Mt#44 + epsilon(u)[4]*Mt#45 + epsilon(u)[5]*Mt#46, 
+  epsilon(u)[0]*Mt#15 + epsilon(u)[1]*Mt#25 + epsilon(u)[2]*Mt#35 + epsilon(u)[3]*Mt#45 + epsilon(u)[4]*Mt#55 + epsilon(u)[5]*Mt#56, 
+  epsilon(u)[0]*Mt#16 + epsilon(u)[1]*Mt#26 + epsilon(u)[2]*Mt#36 + epsilon(u)[3]*Mt#46 + epsilon(u)[4]*Mt#56 + epsilon(u)[5]*Mt#66  
+                                                                               
+                        ] //   
+
+  macro iH2 (iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val) [iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val] //
+     
+  macro grad(i)[dx(i),dy(i),dz(i)]    //                                                
+  
+  macro iH2gradnl(j,iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val) [iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[0]*grad(j)[0] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[3]*grad(j)[1] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[4]*grad(j)[2] , 
+                                                                      iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[3]*grad(j)[0] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[1]*grad(j)[1] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[5]*grad(j)[2],
+                                                                      iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[4]*grad(j)[0] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[5]*grad(j)[1] + iH2(iH11Val,iH22Val,iH33Val,iH12Val,iH13Val,iH23Val)[2]*grad(j)[2]]         //
+                                                                      
+                                                                               
+//=============================================================================
+//         ------- Dirichlet boundary condition macros -------                 
+// --------------------------------------------------------------------------- 
+// DirichletBc'I' : will define the full Dirichlet boundary condition on       
+//                  border I                                                   
+//=============================================================================
+                                                                                               
+  IFMACRO(Dbc0Ux) IFMACRO(!Dbc0Uy) IFMACRO(!Dbc0Uz)                          
+    NewMacro DirichletBc0() Ux=Dbc0Ux  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Dbc0Ux) IFMACRO(Dbc0Uy) IFMACRO(!Dbc0Uz)                          
+    NewMacro DirichletBc0() Uy=Dbc0Uy  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Dbc0Ux) IFMACRO(!Dbc0Uy) IFMACRO(Dbc0Uz)                          
+    NewMacro DirichletBc0() Uz=Dbc0Uz  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Dbc0Ux) IFMACRO(Dbc0Uy) IFMACRO(!Dbc0Uz)                           
+    NewMacro DirichletBc0() Ux=Dbc0Ux,Uy=Dbc0Uy  EndMacro                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Dbc0Ux) IFMACRO(!Dbc0Uy) IFMACRO(Dbc0Uz)                           
+    NewMacro DirichletBc0() Ux=Dbc0Ux,Uz=Dbc0Uz  EndMacro                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Dbc0Ux) IFMACRO(Dbc0Uy) IFMACRO(Dbc0Uz)                           
+    NewMacro DirichletBc0() Uy=Dbc0Uy,Uz=Dbc0Uz  EndMacro                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Dbc0Ux) IFMACRO(Dbc0Uy) IFMACRO(Dbc0Uz)                            
+    NewMacro DirichletBc0() Ux=Dbc0Ux,Uy=Dbc0Uy,Uz=Dbc0Uz  EndMacro    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+            
+//DBC  1    ///
+
+// IFMACRO(Dbc1Ux) IFMACRO(!Dbc1Uy) IFMACRO(!Dbc1Uz)                          
+//     NewMacro DirichletBc1() Ux=Dbc1Ux  EndMacro                                    
+//   ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+//   IFMACRO(!Dbc1Ux) IFMACRO(Dbc1Uy) IFMACRO(!Dbc1Uz)                          
+//     NewMacro DirichletBc1() Uy=Dbc1Uy  EndMacro                                    
+//   ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Dbc1Ux) IFMACRO(!Dbc1Uy) IFMACRO(Dbc1Uz)                          
+    NewMacro DirichletBc1() Uz=Dbc1Uz  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  // IFMACRO(Dbc1Ux) IFMACRO(Dbc1Uy) IFMACRO(!Dbc1Uz)                           
+  //   NewMacro DirichletBc1() Ux=Dbc1Ux,Uy=Dbc1Uy  EndMacro                    
+  // ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  // IFMACRO(Dbc1Ux) IFMACRO(!Dbc1Uy) IFMACRO(Dbc1Uz)                           
+  //   NewMacro DirichletBc1() Ux=Dbc1Ux,Uz=Dbc1Uz  EndMacro                    
+  // ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  // IFMACRO(!Dbc1Ux) IFMACRO(Dbc1Uy) IFMACRO(Dbc1Uz)                           
+  //   NewMacro DirichletBc1() Uy=Dbc1Uy,Uz=Dbc1Uz  EndMacro                    
+  // ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  // IFMACRO(Dbc1Ux) IFMACRO(Dbc1Uy) IFMACRO(Dbc1Uz)                            
+  //   NewMacro DirichletBc1() Ux=Dbc1Ux,Uy=Dbc1Uy,Uz=Dbc1Uz  EndMacro    
+  // ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                                                            
+                                                                               
+//=============================================================================
+//      ------- volumetric bodyforce  conditions macro -------                 
+// --------------------------------------------------------------------------- 
+// BodyforceBc'I' : will define the body force boundary condition on region I  
+//=============================================================================
+                                                                                               
+  IFMACRO(Fbc0Fx) IFMACRO(!Fbc0Fy) IFMACRO(!Fbc0Fz)                          
+    NewMacro BodyforceBc0() Fbc0Fx*v  EndMacro                                     
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Fbc0Fx) IFMACRO(Fbc0Fy) IFMACRO(!Fbc0Fz)                          
+    NewMacro BodyforceBc0() Fbc0Fy*v1  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Fbc0Fx) IFMACRO(!Fbc0Fy) IFMACRO(Fbc0Fz)                          
+    NewMacro BodyforceBc0() Fbc0Fz*v2  EndMacro                                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Fbc0Fx) IFMACRO(Fbc0Fy) IFMACRO(!Fbc0Fz)                           
+    NewMacro BodyforceBc0() Fbc0Fx*v+Fbc0Fy*v1  EndMacro                     
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Fbc0Fx) IFMACRO(!Fbc0Fy) IFMACRO(Fbc0Fz)                           
+    NewMacro BodyforceBc0() Fbc0Fx*v+Fbc0Fz*v2  EndMacro                     
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(!Fbc0Fx) IFMACRO(Fbc0Fy) IFMACRO(Fbc0Fz)                           
+    NewMacro BodyforceBc0() Fbc0Fy*v1+Fbc0Fz*v2  EndMacro                    
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+  IFMACRO(Fbc0Fx) IFMACRO(Fbc0Fy) IFMACRO(Fbc0Fz)                            
+    NewMacro BodyforceBc0() Fbc0Fx*v+Fbc0Fy*v1+Fbc0Fz*v2  EndMacro     
+  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             
+                                                                                               
+                                                                               
+//=============================================================================
+//                 ------- Point boundary condition macros -------             
+// --------------------------------------------------------------------------- 
+// PointCoordinates : macro to define point x,y,z coordinates                  
+// GetPointIndiciesMpiRank : macro to get the finite element space index (PCi) 
+//                         of vector of points PC and the MPIrank (mpirankPCi) 
+//                         that holds the distributed chuck of mesh containing 
+//                         points PC.                                          
+// ApplyPointBc(I) : will define the full point boundary condition on point I  
+//=============================================================================
+                                                                               
+  macro GetPointIndiciesMpiRank(PC, PCi, mpirankPCi)                           
+   for (int i = 0; i < Th.nv; i++){                                            
+     for(int j = 0; j < PC.n; j++){                                            
+       if(Th(i).x==PC(j,0) && Th(i).y==PC(j,1) && Th(i).z==PC(j,2)){           
+         PCi[j]=i; mpirankPCi[j]=mpirank;                                      
+       }                                                                       
+     }                                                                         
+   }                                                                           
+  //                                                                           
+                                                                               
+  IFMACRO(!Pbc0Ux) IFMACRO(!Pbc0Uy) IFMACRO(!Pbc0Uz)         
+      NewMacro  ApplyPointBc0(A,b)                                       
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(Pbc0Ux) IFMACRO(!Pbc0Uy) IFMACRO(!Pbc0Uz)        
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3,PCi[0]*3)=tgv;            
+          b[PCi[0]*3]= Pbc0Ux*tgv;}                      
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(!Pbc0Ux) IFMACRO(Pbc0Uy) IFMACRO(!Pbc0Uz)        
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3+1 , PCi[0]*3+1)=tgv;      
+          b[PCi[0]*3+1]= Pbc0Uy*tgv;}                    
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(!Pbc0Ux) IFMACRO(!Pbc0Uy) IFMACRO(Pbc0Uz)        
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3+2 , PCi[0]*3+2)=tgv;      
+          b[PCi[0]*3+2]= Pbc0Uz*tgv;}                    
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(Pbc0Ux) IFMACRO(Pbc0Uy) IFMACRO(!Pbc0Uz)         
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3,PCi[0]*3)=tgv;            
+          b[PCi[0]*3]= Pbc0Ux*tgv;                       
+          A(PCi[0]*3+1 , PCi[0]*3+1)=tgv;      
+          b[PCi[0]*3+1]= Pbc0Uy*tgv;}                    
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(Pbc0Ux) IFMACRO(!Pbc0Uy) IFMACRO(Pbc0Uz)         
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3,PCi[0]*3)=tgv;            
+          b[PCi[0]*3]= Pbc0Ux*tgv;                       
+          A(PCi[0]*3+2 , PCi[0]*3+2)=tgv;      
+          b[PCi[0]*3+2]= Pbc0Uz*tgv;}                    
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(!Pbc0Ux) IFMACRO(Pbc0Uy) IFMACRO(Pbc0Uz)         
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3+1 , PCi[0]*3+1)=tgv;      
+          b[PCi[0]*3+1]= Pbc0Uy*tgv;                     
+          A(PCi[0]*3+2 , PCi[0]*3+2)=tgv;      
+          b[PCi[0]*3+2]= Pbc0Uz*tgv;}                    
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+    IFMACRO(Pbc0Ux) IFMACRO(Pbc0Uy) IFMACRO(Pbc0Uz)          
+      NewMacro  ApplyPointBc0(A,b)                                       
+         if(mpirank==mpirankPCi[0]){                                     
+          A(PCi[0]*3  ,PCi[0]*3  )=tgv;        
+          b[PCi[0]*3  ] = Pbc0Ux*tgv;                    
+          A(PCi[0]*3+1,PCi[0]*3+1)=tgv;        
+          b[PCi[0]*3+1] = Pbc0Uy*tgv;                    
+          A(PCi[0]*3+2,PCi[0]*3+2)=tgv;        
+          b[PCi[0]*3+2] = Pbc0Uz*tgv; }                  
+      EndMacro                                                                 
+    ENDIFMACRO ENDIFMACRO  ENDIFMACRO                                          
+                                                                               
+
+//=============================================================================
+//      ------- remapping Macros -------
+// ---------------------------------------------------------------------------
+// meshN     : Two/Three-dimensional problem mesh
+// intN      : Two/Three-dimensional integral
+// intN1     : One/Two-dimensional integral
+// grad      : Two/Three-dimensional gradient
+// DummyMesh : A unit cube/square mesh in 3D/2D
+// readmeshN : Two/Three-dimensional mesh reading .mesh format
+// gmshloadN : Two/Three-dimensional mesh reading .msh format
+// vtkloadN  : Two/Three-dimensional mesh reading .vtk format
+// loadmedmeshN : Two/Three-dimensional mesh reading .med format
+//=============================================================================
+
+  load "msh3"                         //
+  macro meshN()mesh3                  //
+  macro intN()int3d                   //
+  macro intN1()int2d                  //
+  macro loadmedmeshN()loadmedmesh3    //
+  macro readmeshN()readmesh3          //
+  macro gmshloadN()gmshload3          //
+  macro vtkloadN()vtkload3            //
+  macro DummyMesh()cube(1,1,1)        //
+  
+
+//=============================================================================
+//            ------ Start and End procedure macros  -------
+// -------------------------------------------------------------------
+//    Note these macros will print on screen a message at the start
+//    and end of a procedure, and also print the time taken by that
+//    procedure in seconds. However, -timelog flag needs to be used
+//    for this macro, or else this macro will serve as a dummy macro.
+// -------------------------------------------------------------------
+//=============================================================================
+
+
+//==============================================================================
+// ------- startProcedure (string , real) is a DUMMY macro -------
+//==============================================================================
+
+  macro startProcedure(str1,t0)//
+
+//==============================================================================
+// ------- endProcedure (string , real) is a DUMMY macro  -------
+//==============================================================================
+
+  macro endProcedure(str1,t0)//
+
+
+
+//=============================================================================
+//            ------ Reverse Cuthill-Mackee macros  -------
+// -------------------------------------------------------------------
+//    Note this macros will perform mesh element renumberining based
+//    on reverse Cuthill-Mackee algorithm. This is On by default  in
+//    PSD. User can turn this off by using --useRCM  off | 0 |false.
+//    For such a case this macro will serve as a dummy macro.
+// -------------------------------------------------------------------
+//=============================================================================
+
+
+
+//==============================================================================
+// ------- perfromRCMreordering (meshObject)-------
+//==============================================================================
+
+  macro perfromRCMreordering(meshObject)
+              meshObject = trunc(meshObject, 1, renum = 1);
+  //
+
+
+
+//=============================================================================
+//            ------ load finite element mesh macro  -------
+// -------------------------------------------------------------------
+//    This macros will take in as an input the mesh name (string)
+//    according to which it will load the finite element mesh.
+// -------------------------------------------------------------------
+//=============================================================================
+
+macro loadfemesh(meshObject,meshName)
+
+  if(meshName.find(".msh") > -1){
+    load "gmsh";   meshObject = gmshloadN(meshName);
+  }
+  if(meshName.find(".mesh") > -1){
+    meshObject = readmeshN(meshName);
+  }
+  if(meshName.find(".vtk") > -1){
+    load "iovtk";  meshObject = vtkloadN(meshName);
+  }
+//
+
+
+
+//=============================================================================
+//            ------ check mesh macro  -------
+// -------------------------------------------------------------------
+//    This macros will take in as an input the mesh name (string)
+//    and check if this mesh format (extension) is compatible.
+// -------------------------------------------------------------------
+//=============================================================================
+
+macro checkmesh(meshName)
+{
+  if( meshName.find(".mesh") == -1 &&
+      meshName.find(".med")  == -1 &&
+      meshName.find(".msh")  == -1 &&
+      meshName.find(".vtk")  == -1
+    ){
+      cout << "  ****************** ERROR ********************* \n"
+           << "                                                 \n"
+           << "  PSD only accepts the following mesh formats    \n"
+           << "     1) .msh   Gmsh's  .msh  format version 2    \n"
+           << "     2) .mesh  INRIA's medit format              \n"
+           << "     3) .vtk   VTK's unstructured mesh format    \n"
+           << "     4) .med   SALOME's .med format (needs medio)\n"
+           << "                                                 \n"
+           << "  ****************** ERROR ********************* \n";
+      exit(11111);
+  }
+}
+//
+

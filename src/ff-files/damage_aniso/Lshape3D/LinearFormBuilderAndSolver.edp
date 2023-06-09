@@ -1,0 +1,294 @@
+/*****************************************************************************
+
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑04
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/   
+
+// //---------Preprocessing for point bounday conditions----------//
+//   cout << "PbcCord size:" << PbcCord.n << endl;
+//   GetPointIndiciesMpiRank(PbcCord, PCi);
+
+//---------Initializing variables----------//
+ 
+  real totaliter = 0.;
+  mufield[]      = mu;
+  lambdafield[]  = lambda;
+  Tempera[] = temperature;
+      
+
+//==============================================================================
+// --- Pseudo-time loop until the maximum applied displacement is reached ---
+//==============================================================================
+//timerbegin("Applied displacement while loop",t0)
+while (tr <= maxtr){
+
+  cout <<  "-------------------------------------------------------\n"
+       <<  "Applied displacement (mm) " << tr << "\n" << endl;
+
+  cout <<  "-------------------------------------------------------\n"
+       <<  "Solution step " << iterout << "\n" << endl;
+       
+  
+
+  for(int iter=0; iter<200; iter++){
+    
+    cout << " FIXED POINT SOLUTION ITERATION " << iter << "\n" << endl;
+     
+    //----------------Assembly for bilinear----------------------//
+
+    A = elast(Vh,Vh,solver=CG,sym=1);
+    
+    //---------Additional assembly for A & b (point bounday condition)----------//
+    //ApplyPointBc0(A,b);
+    //--------------------Assembly for linear----------------------//
+    b = elast(0,Vh);
+  
+  //-----------------------Nonlinear loop------------------------//
+     
+    
+    //set(A,sparams =" -ksp_type cg -ksp_rtol 1e-9 ");
+    set(A,solver=CG,sym=1);
+    u[] = A^-1*b;
+    
+    // cout << "Displacement : " << endl;
+    // cout << u1(2.5,10) << endl;
+  
+    e11 = epsilon(u)[0] ;
+    e22 = epsilon(u)[1] ;
+    e33 = epsilon(u)[2] ; 
+    e12 = epsilon(u)[3]/SQ2 ; //epsilon(u)[2] is already divided by sqrt(2) so it makes the real component e12 = (dy(i)+dx(i#1))/2 
+    e13 = epsilon(u)[4]/SQ2 ; //epsilon(u)[2] is already divided by sqrt(2) so it makes the real component e12 = (dy(i)+dx(i#1))/2 
+    e23 = epsilon(u)[5]/SQ2 ; //epsilon(u)[2] is already divided by sqrt(2) so it makes the real component e12 = (dy(i)+dx(i#1))/2 
+    
+    //TODO
+    // Von-mises eq strain
+    I1eps = e11 + e22 + e33;
+    J2eps = 1./6.*((e11-e22)^2+(e22-e33)^2+(e33-e11)^2) + e12^2 + e13^3 + e23^2;
+    
+    eqStrain = ((kmises-1.)/(2.*kmises*(1.-2.*nu)))*I1eps + (1./(2.*kmises))*sqrt((((kmises-1.)/(1.-2.*nu))*I1eps)^2 + (12.*kmises*J2eps)/((1.+nu)^2)); // Von mises equivalent strain
+    
+    //eqStrain = sqrt((max(0,ep1))^2 + (max(0,ep2))^2)  ;  // Mazars Eq strain
+   
+    
+    //----------------Assembly for bilinear----------------------//
+
+    A1 = endo(Vh1,Vh1,solver=CG,sym=1);
+
+    //--------------------Assembly for linear----------------------//
+
+    b1 = endo(0,Vh1);
+
+    //-------------Linear system solving phase-------------------//
+
+    set(A1,solver=CG,sym=1);
+    epsnl[] = A1^-1*b1;
+    
+    epsnlP0 = epsnl;                              //Equivalent nonlocal strain in Gauss points
+    
+    //-----Update Stress, Hook's effective tensor and state variables using Mfront-------------------//   
+        
+    [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23] = epsilon(u); 
+  
+    [ExtT,ExtEpsnl] = [Tempera,epsnlP0];
+ 
+    PsdMfrontHandler( MaterialBehaviour                                      , 
+                          mfrontBehaviourHypothesis = MaterialHypothesis     , 
+                          mfrontPropertyNames       = PropertyNames          , 
+                          mfrontPropertyValues      = PropertyValues         ,
+                          mfrontExternalStateVariableNames =ExternalStateVariablesNames,
+                          mfrontExternalStateVariableValues = ExtT[],
+                          mfrontPreviousStrainTensor        = EpsOld11[]    ,
+                          mfrontMaterialTensor      = Mt11[]                 ,
+                          mfrontStrainTensor        = Eps11[]                , 
+                          mfrontStressTensor        = Sig11[]                , 
+                        mfrontStateVariable       = Isv0[]   ,
+                        mfrontExternalStateVariableVector = ExtT[]                
+                        );                   
+                                                                                                               
+    EpsOld11[] = Eps11 []; 
+    
+       
+    H11 = Isv0+1.; //rH damage state variable from Mfront is rH = H - I. We add 1. to obtain the real H tensor
+    H22 = Isv1+1.; 
+    H33 = Isv2+1.; 
+    H12 = Isv3/SQ2; //off-diagonal terms come from Mfront with sqrt(2.) multiplication
+    H13 = Isv4/SQ2; //off-diagonal terms come from Mfront with sqrt(2.) multiplication
+    H23 = Isv5/SQ2; //off-diagonal terms come from Mfront with sqrt(2.) multiplication
+    detH = H11*H22*H33 + H12*H23*H13 + H13*H12*H23 -H13*H22*H12 - H11*H23*H23 - H12*H12*H33; 
+ 	
+    //Computing damage tensor eigenvalues
+    // D1=0.5*(Isv4+Isv5)+sqrt((0.5*(Isv4+Isv5))^2-(Isv4*Isv5 - Isv7*Isv7/2)); //because D12 = Isv7 commes with sqrt(2) from mfront
+    // D2=0.5*(Isv4+Isv5)-sqrt((0.5*(Isv4+Isv5))^2-(Isv4*Isv5 - Isv7*Isv7/2));
+                                                                                                                                                                                                                                             
+    //------------------Error calculation------------------------//
+
+    uold[]    = uold[]-u[]                         ;
+    epsnlold[]  = epsnlold[]-epsnl[]                     ;
+    real err1 = sqrt( intN(Th,qforder=2) ( uold^2   )  )     ;
+    real err2 = sqrt( intN(Th,qforder=2) ( epsnlold^2 )  )     ;
+
+    //--------------------Solution update for the iteration -------------------------//
+
+    epsnlold[] = epsnl[]  ;
+    uold[]   = u[]    ;
+    
+    // Using variables from last iteration for the ENLG formulation - NEW
+    // Explodes in iteration sometimes and becomes unstable
+    // Needs to critically reduce the time step
+/*    Isv8old = Isv8;*/
+/*    Isv9old = Isv9;*/
+/*    Isv11old = Isv11;*/
+/*    detHold = detH;*/
+    
+    
+    if(err1 < 1e-2 && err2 < 1e-2){
+
+      //------------------Screen output norm----------------------//
+      totaliter = iter;
+      cout.scientific
+      << "NL iteration number :  [ "      << iter
+      << " ]\nL2 error in [u,epsnl] :  [ "  << err1
+      << " , " <<  err2 << " ]"           << endl;
+      
+           // Using results from last previous converged step 
+     // More stable and does not need small time steps
+      Isv12old = Isv12;
+      Isv13old = Isv13;
+      Isv14old = Isv14;
+      Isv15old = Isv15;
+      Isv16old = Isv16;
+      Isv17old = Isv17;
+      detHold[] = detH[];
+      
+      break;
+    }//if error
+
+  }//for loop
+  
+  //-------------------Eigenvectors of damage tensor calculation-----------------------//
+  
+  // FirstDeigvec1 = -(-Isv4 + sqrt( 4.*( (Isv7/SQ2)^2 ) + (Isv4-Isv5)^2 ) + Isv5 )/(2.*max(0.0001,Isv7/SQ2));
+  // FirstDeigvec2 = 1.;
+	    
+  // SecondDeigvec1 = (Isv4 + sqrt( 4.*( (Isv7/SQ2)^2 ) + (Isv4-Isv5)^2 ) - Isv5 )/(2.*max(0.0001,Isv7/SQ2));
+  // SecondDeigvec2 = 1.;
+	    
+  // def2(Firsteigvec) = [FirstDeigvec1,FirstDeigvec2];
+  // def2(Secondeigvec) = [SecondDeigvec1,SecondDeigvec2];
+  
+  //-------------------Force calculation-----------------------//
+
+  real forcetotx  = 0. , forcetoty  = 0., displacy = 0.;
+
+  [Eps11,Eps22,Eps33,Eps12,Eps13,Eps23] = epsilon(u);  
+                                                                                                 
+  [ExtT,ExtEpsnl] = [Tempera,epsnlP0];
+ 
+  
+  PsdMfrontHandler( MaterialBehaviour                                      , 
+                          mfrontBehaviourHypothesis = MaterialHypothesis     , 
+                          mfrontPropertyNames       = PropertyNames          , 
+                          mfrontPropertyValues      = PropertyValues         ,
+                          mfrontExternalStateVariableNames =ExternalStateVariablesNames,
+                          mfrontExternalStateVariableValues = ExtT[],
+                           mfrontPreviousStrainTensor        = EpsOld11[]    ,
+                          mfrontMaterialTensor      = Mt11[]                 ,
+                          mfrontStrainTensor        = Eps11[]                , 
+                          mfrontStressTensor        = Sig11[]                , 
+                        mfrontStateVariable       = Isv0[],
+                        mfrontExternalStateVariableVector = ExtT[]                   
+                        );     
+
+  // A = varfForce(Vh,Vh,solver=CG,sym=1);
+  // F[] = A*u[];
+
+  // // Applying the force calculation if point load applied
+
+  // forcetotx = F[][PCi[0]*2+0];//+F[][PCi[1]*2+0];
+  // forcetoty = F[][PCi[0]*2+1];//+F[][PCi[1]*2+1];
+  // displacy = u[][PCi[0]*2+1];
+
+  //-------------------Structural response data-----------------------//
+  // ofstream ff(ThNbTriang + "_" + model + ".data",append);
+  // ff << displacy <<  "  " << forcetotx*1e-3 << "  " << forcetoty*1e-3 << endl;
+
+
+  //-------Paraview plotting every nth iteration -----------//
+
+  iterout++;
+
+//  if(int(iterout%timesteps)==0){
+//    savevtk(     "VTUs/Solution_"+iterout1+".vtu"  ,
+//                 Th                 ,
+//                 PlotVec(u)         ,
+//                 epsnl               ,
+//                 Sig11               ,
+//                 Sig22               ,
+//                 Sig33               ,
+//                 Sig12              ,
+//                 Sig13              ,
+//                 Sig23              ,
+//                 Isv6               ,
+//                 Isv7               ,
+//                 Isv8               ,
+//                 Isv9               ,
+//                 Isv10               ,
+//                 Isv11               ,
+//                 order=vtuorder     ,
+//                 dataname = "U epsnl s11 s22 s33 s12 s13 s23 D11 D22 D33 D12 D13 D23"
+//          );
+
+//    iterout1++;
+//    }//if iterout
+
+  if(int(iterout%timesteps)==0){
+    savevtk(     "VTUs/Solution_"+iterout1+".vtu"  ,
+                 Th                 ,
+                 PlotVec(u)         ,
+                 epsnl               ,
+                 PlotTens(Sig11,Sig22,Sig33,Sig12/SQ2,Sig23/SQ2,Sig13/SQ2),
+                 PlotTens(Isv6,Isv7,Isv8,Isv9,Isv11/SQ2,Isv10/SQ2),
+                 PlotTens(Isv12,Isv13,Isv14,Isv15/SQ2,Isv17/SQ2,Isv16/SQ2),
+                 order=vtuorder     ,
+                 dataname = "U epsnl Sig D g"
+          );
+
+    iterout1++;
+  }//if iterout
+
+  //-----------------Debug glut plotting----------------------//
+  plot(u1,fill=1,value=1);
+  //plot(Isv6,fill=1,value=1);
+
+
+  //-----------------updating traction----------------//
+  //tr += dtr;
+  if (totaliter <= 1.){
+     tr += dtr;
+  }
+  else{
+     tr += (1./(totaliter))*dtr;
+  }
+  //----------Adjust Dirichlet boundary conditions--------------//              
+                                                                                
+  //duimp = dtr ; 
+
+}//while loop
+
+//timerend("Applied displacement while loop",t0)
+//timerend("Solver",t1)
+
+//-------------------------------THE END------------------------------//
