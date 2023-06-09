@@ -1,0 +1,59 @@
+/*****************************************************************************
+
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Mohd Afeef Badri
+     Email    : mohd-afeef.badri@cea.fr
+     Date     : 2019‑05‑29
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/
+
+
+
+
+//==============================================================================
+// ------- Square root of 2 -------
+//==============================================================================
+
+  real SQ2 = sqrt(2.0);
+
+//============================================================================
+// ------- Paraview plotting parameters -------
+//============================================================================
+
+  int iterout  = 0 ,               // Loop Counter
+      iterout1 = 0 ;               // Loop Counter
+              //int[int] vtuorder=[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+              int[int] vtuorder=[1,1,0,0];
+
+  system("rm -r VTUs");
+  system("mkdir -p VTUs");
+  system("rm *.data");
+  
+
+//=============================================================================
+//       ------- point boundary condition  parameters  -------
+// ---------------------------------------------------------------------------
+// PCi        : point index in finite element space.
+// mpirankPCi : MPI rank that hold point PCi
+// ---------------------------------------------------------------------------
+//  values of  PCi and mpirankPCi are set to -1 as this will sereve as error
+//  indicator should anything go wrong.
+//=============================================================================
+
+  int[int]    PCi(PbcCord.n); PCi=-1;
+
+//=============================================================================
+// ------- Time logging parameters -------
+//=============================================================================
+
+  real t0,t1;
