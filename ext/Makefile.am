@@ -1,16 +1,16 @@
 
 MFRONT_VERSION=4.0.0
 MGIS_VERSION=2.0
-PETSC_VERSION=3.18.2
-FREEFEM_VERSION=4.12
+PETSC_VERSION=3.19.2
+FREEFEM_VERSION=4.13
 GMSH_VERSION=4.10.4
 MUMPS_VERSION=5.5.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
-SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
+SLEPC_VERSION=3.19.1
 SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
-HPDDM_VERSION=2.2.2
-HYPRE_VERSION=2.25.0
+HPDDM_VERSION=314f74e8210b02e76fa16ea706641249594ce92f
+HYPRE_VERSION=2.28.0
 
 #################################################
 # UBUNTU 22.04
@@ -66,7 +66,7 @@ GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linu
                        -O gmsh-$(GMSH_VERSION).tar.gz
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
                        -O freefem-$(FREEFEM_VERSION).tar.gz
-HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
+HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
                        -O hpddm-$(HPDDM_VERSION).tar.gz
 HYPRE_DOWNLOAD   =  wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
                        -O hypre-$(HYPRE_VERSION).tar.gz
@@ -76,13 +76,13 @@ MGIS_DOWNLOAD    = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupp
                        -O mgis-$(MGIS_VERSION).tar.gz
 PETSC_DOWNLOAD   = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
                        -O petsc-$(PETSC_VERSION).tar.gz
-MUMPS_DOWNLOAD   =  wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
+MUMPS_DOWNLOAD   =  wget -c  http://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_VERSION)-p1.tar.gz \
                        -O mumps-$(MUMPS_VERSION).tar.gz
-METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p10.tar.gz \
+METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
                        -O metis-$(METIS_VERSION).tar.gz
-SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VERSION)/slepc-$(SLEPC_VERSION).tar.gz \
+SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
+PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/$(PARMETIS_VERSION).tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz
 SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
@@ -480,7 +480,8 @@ maintainer-clean-local: clean-local
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf Makefile Makefile.in
+	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
+	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
 	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
 	rm *.tar.gz
