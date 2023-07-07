@@ -52,7 +52,8 @@ ENVFILE=envvar.tmp
 PETSC_ARCH_PSD  =fr
 
 if BUILDDEPENDENCIES
-LIST_MAKE_EXECUTE = gmsh-build \
+LIST_MAKE_EXECUTE = download-dependencies \
+gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
@@ -82,9 +83,9 @@ METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_V
                        -O metis-$(METIS_VERSION).tar.gz
 SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/$(PARMETIS_VERSION).tar.gz \
+PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz
-SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
+SCALAPACK_DOWNLOAD   =  wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
 SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                        -O salome-$(SALOME_VERSION).tar.gz
@@ -154,6 +155,7 @@ download-dependencies:
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -304,7 +306,6 @@ endif
 #  - User can override download by providing ext/petsc-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-if BUILDZIPPEDDEPENDENCIES
 PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
@@ -312,15 +313,7 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz
-else !BUILDZIPPEDDEPENDENCIES
-PETSC_DEP = --download-mumps \
-	--download-metis     \
-	--download-parmetis  \
-	--download-slepc     \
-	--download-hpddm     \
-	--download-hypre     \
-	--download-scalapack
-endif
+
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
 

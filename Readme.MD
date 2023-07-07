@@ -32,8 +32,8 @@ Before installing PSD please ensure that you have the following dependencies ins
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
-| [FreeFEM](https://freefem.org/)                              | Version **4.12**                                             | YES       |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.18.2**                                           | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.13**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.19.2**                                           | YES       |
 | [Gmsh](http://gmsh.info/)                                    | Version **4.10.4**                                           | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
@@ -359,3 +359,4 @@ Once `./configure` runs successfully your Makefiles will be generated thanks to 
 
 - **mohd-afeef.badri@cea.fr**
 - **mohd-afeef.badri@hotmail.com**
+
