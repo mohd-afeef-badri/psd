@@ -1,0 +1,94 @@
+/*****************************************************************************
+
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑04
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/   
+
+
+
+
+//==============================================================================
+// -------Variation formulation nonlocal gradient damage (Staggered)-------
+//==============================================================================
+
+ //-----------------------------
+ // Eq. 1 Linear momentum     //
+ //-----------------------------
+
+
+ varf elast(def2(u),def2(v)) =
+
+    //--------------------------------------------------------------------------
+    // $+int_{\Omega}(\epsilon(u):\mathbb{\tilde{E}}:\epsilon(v))$
+    //--------------------------------------------------------------------------
+
+                        
+       intN(Th,qforder=3,51)(                                                                       
+                       (epsilonXMt(u,Mt)'*epsilon(v))*thickness                                           
+                     )    
+         
+
+
+;
+
+//-----------------------------
+ // Eq. 2 Helmothz-like equation //
+ //-----------------------------
+
+  varf endo(epsnl,q) =
+                     
+    //--------------------------------------------------------------------------
+    //-----------------------------  GNL  -------------------------------------
+    // $+\int_{\Omega} c \nabla \epsnl \cdot \nabla q  +
+    // \epsnl q $
+    //--------------------------------------------------------------------------
+    
+      // GNL CLASSIC
+    intN(Th,qforder=3,51)(
+               thickness*(c*(grad(epsnl)'*grad(q))) +
+      			   thickness*( epsnl*q )
+                      )
+
+  	
+    //--------------------------------------------------------------------------
+    //-----------------------------  GNL  -------------------------------------
+    // $+\int_{\Omega} \epseq q$     WHY PLUS NOT MINUS
+    //--------------------------------------------------------------------------
+    
+	
+	// GNL
+	+ intN(Th,qforder=3,51)(thickness*eqStrain*q)
+
+ ;
+ 
+
+
+//==============================================================================
+// -------Variation formulation for calculating force -------
+//==============================================================================
+
+varf varfForce(def2(u),def2(v)) =
+
+    //--------------------------------------------------------------------------
+    // $+int_{\Omega}(\epsilon(u):\mathbb(\tilde{E}):\epsilon(v)))$
+    //--------------------------------------------------------------------------
+      
+      intN(Th,qforder=3,51)(                                                                       
+                       (epsilonXMt(u,Mt)'*epsilon(v))*thickness                                           
+                     )
+
+                        
+;

@@ -1,0 +1,165 @@
+/*****************************************************************************
+                                                                              
+         This file is a part of PSD (Parallel Structural Dynamics)            
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑19                                                  
+                                                                              
+     -------------------------------------------------------------------      
+                                                                              
+     PSD a parallel  finite  element framework  provides tools to  solve      
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope      
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even      
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.           
+                                                                              
+*******************************************************************************/                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                               
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------                            
+// -------------------------------------------------------------------         
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         
+//=============================================================================
+                                                                               
+  string ThName = "../Meshes/3D/bar.msh";                            
+                                                                              
+//=============================================================================
+//                   ------- Material parameters -------
+// ------------------------------------------------------------------
+//  mu, lambda : Lame parameter of the material
+//  c : Gradient damage parameter. Homogenous to the square of an internal length
+//  E : Young's modulus
+//  nu : Poisson's ratio 
+//  Brit : Brittleness (c.f Desmorat 2016 Anisotropic damage model)
+//  S : Damage strength (c.f Desmorat 2016 Anisotropic damage model)
+//  s : Damage triaxility exponent (c.f Desmorat 2016 Anisotropic damage model) 
+//  kappa0 : Damage initiation threshold of the Material
+//  kmises : Coefficient k for Von Mises equivalent strain
+//  thickness : Thickness of the considered structure   
+//============================================================================
+                                                                              
+//=============================================================================
+
+
+   real temperature = 293.15,
+   	    lambda,
+        mu   ,
+        c = 4. ,
+   	    E = 25850.,
+   	    nu = 0.18,
+   	    Brit = 1.6666666666666667,
+        S = 1.45e-4,
+        s = 4.9,
+        kappa0 = 0.000125,
+        kmises = 10.,
+        timesteps = 1.; //each time step to save
+        
+   
+   // For coupling PSD-MFRONT
+   string    MaterialBehaviour   = "desmorat3Dnonlocal";     	 
+   string    MaterialHypothesis  = "TRIDIMENSIONAL";                 
+   string    PropertyNames       = "YoungModulus PoissonRatio Brittleness Kappa0 BigS SmallS" ;
+   string    ExternalStateVariablesNames = "Temperature epsnl";
+   real[int] PropertyValues      = [ E, nu, Brit, kappa0, S, s];
+   
+   //Nonlocal model choice
+   //ENLG: Eikonal non-local gradient-enhanced damage model
+   //GNL: Classic gradient-enhanced damage model
+   string model = "ENLG";      
+
+//============================================================================
+//                  ------- Solver parameters -------
+// -------------------------------------------------------------------
+//  maxtr : Maximum displacement applied
+//  tr : displacement applied
+//  dtr :  displacement increment between time steps
+
+//============================================================================
+
+{
+  mu     = E/(2.*(1.+nu))            ;
+  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;
+}
+
+real maxtr = 0.3,
+       tr    = 0.03,
+       dtr   = 0.01;
+
+
+//============================================================================                        
+                                                                              
+                                                                              
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------             
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition                       
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+//             Dirichlet boundary conditions is to be applied.                
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
+//       or deleted if the user does not wish to apply Dirichlet  condition   
+//       on that particular  direction (let it free)                          
+//============================================================================
+                                                                              
+  macro  Dbc0On 2   //                            
+  macro  Dbc0Ux 0. //                                                
+  macro  Dbc0Uy 0. //                                                
+  macro  Dbc0Uz 0. //   
+
+  macro  Dbc1On 3   //                          
+  macro  Dbc1Uz tr  //                                             
+                                                                              
+//============================================================================
+//       -------Dirichlet point boundary-condition parameters-------          
+// -------------------------------------------------------------------------- 
+// Pbc       : acronym for point boundary condition                           
+// PbcCord   : is the table  containing coordinates of the points for which   
+//             point  boundary condition(s) is to be applied                  
+// Pbc(I)Ux : is x displacement value of the point I. Similar logic applies   
+//            to PC(I)Uy, PC(I)Uz                                             
+// -------------------------------------------------------------------------- 
+// NOTE: either the macro PC(I)Ux or PC(I)Uy or PC(I)Uz should be commented   
+//       if the user does not wish to apply restriction on that  particular   
+//       displacement direction (let it free)                                 
+//============================================================================
+                                                                              
+//   real[int,int] PbcCord = [                                                   
+// //-------------------- [  x  , y  , z  ]--------------------//                
+//                        [  0. , 0. , 0. ]    // point 0                  
+// //----------------------------------------------------------//                
+//                       ];                                                      
+                                                                              
+//    macro Pbc0Ux  -0. //                                                 
+//    macro Pbc0Uy  -0. //                                                 
+//    macro Pbc0Uz  -0. //                                                 
+                                                                              
+                                                                              
+//============================================================================
+//        ------- volumetric bodyforce  parameters -------                    
+// ---------------------------------------------------------------------------
+// Fbc       : acronym for  force boundary condition (body force)             
+// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which     
+//             force boundary conditions is to be applied.                    
+// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)    
+//             denoted by label(s) Fbc(I)On in the mesh.                      
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented   
+//       or deleted if the user  does not wish to apply body force in  that   
+//       particular  direction (let it free)                                  
+//============================================================================
+                                                                              
+  // macro  Fbc0On 6   //                             
+  // macro  Fbc0Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             
+                                                                               
+//=============================================================================
+// ------- Solver control parameters -------                                   
+//=============================================================================
+                 // TO DO                                                      
+                                                                               

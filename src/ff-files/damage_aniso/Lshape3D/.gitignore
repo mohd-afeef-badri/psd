@@ -1,0 +1,3 @@
+## allowing .edp files in this folder ##
+!*.edp
+!*.msh

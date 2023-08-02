@@ -18,7 +18,7 @@ all-local: $(DEP1)
 
 $(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrintBehaviourStats.hpp
 if HAVEMGIS
-	cat $(FF_CPP_IS) | sed 's/c++14/c++17/g' > ff-c++-temp && chmod a+x ff-c++-temp
+	cat $(FF_CPP_IS) | sed 's/++14/++17/g' > ff-c++-temp && chmod a+x ff-c++-temp
 	cp $(FF_DEP_IS) .
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
 	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed

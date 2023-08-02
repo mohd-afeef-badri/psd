@@ -27,7 +27,7 @@ all-local: PSD_Solve PSD_Solve_Seq
 
 PSD_Solve_Seq:
 	cat $(FF_IS) > PSD_Solve_Seq
-	find . -name PSD_Solve_Seq -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun;\n$(EXPORT_PSD)\n#g' {} \;
+	find . -name PSD_Solve_Seq -exec sed -i -e 's#mpirun=mpirun#mpirun=mpirun;\n$(EXPORT_PSD)$(EXPORT_MED)\n#g' {} \;
 	find . -name PSD_Solve_Seq -exec sed -i -e 's#^ffmpi=FreeFem++-mpi#ffmpi=FreeFem++#g' {} \;
 	find . -name PSD_Solve_Seq -exec sed -i -e 's#^j=1;#j=1;mpi_run_option=;a[0]=;#g' {} \;
 	chmod a+x PSD_Solve_Seq

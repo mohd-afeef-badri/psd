@@ -1,0 +1,130 @@
+/*****************************************************************************
+
+         This file is a part of PSD (Parallel Structural Dynamics)
+
+     -------------------------------------------------------------------
+
+     Author(s): Breno Ribeiro Nogueira
+     Email    : bribeiro@ens-paris-saclay.fr
+     Date     : 2023‑04‑04
+
+     -------------------------------------------------------------------
+
+     PSD a parallel  finite  element framework  provides tools to  solve
+     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
+     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
+     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
+
+*******************************************************************************/
+
+
+
+
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
+//=============================================================================
+
+  string ThName = "../Meshes/2D/tensile-crack.msh";
+
+//=============================================================================
+//                   ------- Material parameters -------
+// ------------------------------------------------------------------
+//  mu, lambda : Lame parameter of the material
+//  c : Gradient damage parameter. Homogenous to the square of an internal length
+//  E : Young's modulus
+//  nu : Poisson's ratio 
+//  Brit : Brittleness (c.f Desmorat 2016 Anisotropic damage model)
+//  S : Damage strength (c.f Desmorat 2016 Anisotropic damage model)
+//  s : Damage triaxility exponent (c.f Desmorat 2016 Anisotropic damage model) 
+//  kappa0 : Damage initiation threshold of the Material
+//  kmises : Coefficient k for Von Mises equivalent strain
+//  thickness : Thickness of the considered structure
+
+//=============================================================================
+//=============================================================================
+
+
+   real temperature = 293.15,
+   	lambda,
+        mu   ,
+        c = 4. ,
+   	E = 40000.,
+   	nu = 0.2,
+   	Brit = 1.6666666666666667,
+        S = 1.45e-4,
+        s = 4.9,
+        kappa0 = 0.000075,
+        kmises = 10.,
+        timesteps = 1., //each time step to save
+        thickness = 50.;
+        
+   
+   
+   // For coupling PSD-MFRONT
+   string    MaterialBehaviour   = "desmorat20152dnonlocal";     	 
+   string    MaterialHypothesis  = "PLANESTRAIN";                 
+   string    PropertyNames       = "YoungModulus PoissonRatio Brittleness Kappa0 BigS SmallS" ;
+   string    ExternalStateVariablesNames = "Temperature epsnl";
+   real[int] PropertyValues      = [ E, nu, Brit, kappa0, S, s];
+   
+   //Nonlocal model choice
+   //ENLG: Eikonal non-local gradient-enhanced damage model
+   //GNL: Classic gradient-enhanced damage model
+   string model = "ENLG";
+   
+
+   
+//============================================================================
+//                  ------- Solver parameters -------
+// -------------------------------------------------------------------
+//  maxtr : Maximum displacement applied
+//  tr : displacement applied
+//  dtr :  displacement increment between time steps
+
+//============================================================================
+
+{
+  mu     = E/(2.*(1.+nu))            ;
+  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;
+}
+
+  real maxtr = 0.05,
+       tr    = 0.02,
+       dtr   = 0.001;
+
+
+//============================================================================
+//        ------- Dirichlet Point boundary-condition parameters -------
+// ---------------------------------------------------------------------------
+// Pbc       : acronym for Point boundary condition
+// PbcCord   : is a list with the node coordinates from the mesh geometry
+// Pbc(I)Ux  : is the x component of Dirichlet displacement on the point
+//             (I)
+//============================================================================
+
+ real[int,int] PbcCord = [
+//-------------------- [  x  , y  ] --------------------//
+                       [ -225., 0.] ,   // point 0
+                       [ 225., 0.  ] ,   // point 1
+                       [ 75., 100. ] ,   // point 2
+                       [-75., 100. ]    // point 3
+//------------------------------------------------------//
+                     ];
+                     
+
+
+  // Supports
+  macro Pbc0Ux  0 //
+  macro Pbc0Uy  0 //
+
+
+  macro Pbc1Uy  0 //
+
+  // Displacements
+  macro Pbc2Uy  -tr //
+
+  macro Pbc3Uy  -tr //
+
+

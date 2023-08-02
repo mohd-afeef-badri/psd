@@ -1,16 +1,16 @@
 
 MFRONT_VERSION=4.0.0
 MGIS_VERSION=2.0
-PETSC_VERSION=3.18.2
-FREEFEM_VERSION=4.12
+PETSC_VERSION=3.19.2
+FREEFEM_VERSION=4.13
 GMSH_VERSION=4.10.4
 MUMPS_VERSION=5.5.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
-SLEPC_VERSION=d9df183c341775ffc91510ec6827e13db44a25cd
+SLEPC_VERSION=3.19.1
 SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
-HPDDM_VERSION=2.2.2
-HYPRE_VERSION=2.25.0
+HPDDM_VERSION=314f74e8210b02e76fa16ea706641249594ce92f
+HYPRE_VERSION=2.28.0
 
 #################################################
 # UBUNTU 22.04
@@ -52,7 +52,8 @@ ENVFILE=envvar.tmp
 PETSC_ARCH_PSD  =fr
 
 if BUILDDEPENDENCIES
-LIST_MAKE_EXECUTE = gmsh-build \
+LIST_MAKE_EXECUTE = download-dependencies \
+gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
@@ -66,7 +67,7 @@ GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linu
                        -O gmsh-$(GMSH_VERSION).tar.gz
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
                        -O freefem-$(FREEFEM_VERSION).tar.gz
-HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
+HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
                        -O hpddm-$(HPDDM_VERSION).tar.gz
 HYPRE_DOWNLOAD   =  wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
                        -O hypre-$(HYPRE_VERSION).tar.gz
@@ -76,15 +77,15 @@ MGIS_DOWNLOAD    = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupp
                        -O mgis-$(MGIS_VERSION).tar.gz
 PETSC_DOWNLOAD   = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
                        -O petsc-$(PETSC_VERSION).tar.gz
-MUMPS_DOWNLOAD   =  wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
+MUMPS_DOWNLOAD   =  wget -c  http://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_VERSION)-p1.tar.gz \
                        -O mumps-$(MUMPS_VERSION).tar.gz
-METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p10.tar.gz \
+METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
                        -O metis-$(METIS_VERSION).tar.gz
-SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VERSION)/slepc-$(SLEPC_VERSION).tar.gz \
+SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
                        -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p8.tar.gz \
+PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
                        -O parmetis-$(PARMETIS_VERSION).tar.gz
-SCALAPACK_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-scalapack/get/v$(SCALAPACK_VERSION)-p1.tar.gz \
+SCALAPACK_DOWNLOAD   =  wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
 SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                        -O salome-$(SALOME_VERSION).tar.gz
@@ -155,6 +156,7 @@ download-dependencies:
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
 
+
 #--------------------------------------------------------------------------------
 # Gmsh installation
 #  - Not working for MAC OS
@@ -162,9 +164,9 @@ download-dependencies:
 #  - User can override download by providing ext/gmsh-$(GMSH_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
+gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
-gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so: gmsh-$(GMSH_VERSION).tar.gz
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling gmsh for you be patient:   "
@@ -204,7 +206,7 @@ if !MAC
 	cp -rf ./bin/* ${prefix}/bin/.               && \
 	cp -rf ./share/doc/*  ${prefix}/share/doc/.  && \
 	cp -rf ./share/man  ${prefix}/share/man      && \
-	touch gmsh-$(GMSH_VERSION).so
+	touch gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing Gmsh v$(GMSH_VERSION)   "
@@ -223,10 +225,10 @@ endif
 #  - User can override download by providing ext/mfront-$(MFRONT_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so
+mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX)
 
 
-mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so: mfront-$(MFRONT_VERSION).tar.gz
+mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(MFRONT_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling mfront for you be patient:   "
@@ -263,9 +265,9 @@ endif
 #  - User can override download by providing ext/mgis-$(MGIS_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so
+mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX)
 
-mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so: mgis-$(MGIS_VERSION).tar.gz
+mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MGIS_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling Mgis for you be patient:   "
@@ -304,7 +306,6 @@ endif
 #  - User can override download by providing ext/petsc-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-if BUILDZIPPEDDEPENDENCIES
 PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
@@ -312,19 +313,11 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz
-else !BUILDZIPPEDDEPENDENCIES
-PETSC_DEP = --download-mumps \
-	--download-metis     \
-	--download-parmetis  \
-	--download-slepc     \
-	--download-hpddm     \
-	--download-hypre     \
-	--download-scalapack
-endif
 
-petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
 
-petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
+petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
+
+petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX): petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling PETSc, HPDDM, METIS, PARMETIS, SCALAPACK,   "
@@ -345,7 +338,7 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch 
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
 	--with-mpiexec=$(MPIRUN) \
 	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
-	--with-cudac=0 --with-ssl=0 --with-x=1 \
+	--with-cudac=0 --with-ssl=0 --with-x=0 \
 	--with-debugging=no \
 	--with-fortran-bindings=no \
 	$(PETSC_DEP) \
@@ -376,9 +369,9 @@ endif
 #  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so
+freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
 
-freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so: freefem-$(FREEFEM_VERSION).tar.gz
+freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling FreeFEM for you be patient:"
@@ -416,9 +409,9 @@ endif
 #  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so
+salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
 
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).tar.gz
+salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): salome-$(SALOME_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling SALOME for you be patient:"
@@ -445,7 +438,7 @@ salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).t
 	cp -rf ./mesa_salome-tmp   ${prefix}/bin/mesa_salome  		 	&& \
 	cp -rf ./env_launch.sh-tmp ${prefix}/bin/psd_salome_env_launch.sh	&& \
 	cp -rf ./BINARIES-$(SALOME_OS)  ${prefix}/bin/BINARIES-SALOME		&& \
-	touch salome-$(SALOME_VERSION).so
+	touch salome-$(SALOME_VERSION).$(SO_SUFFIX)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing SALOME v$(SALOME_VERSION) "
@@ -480,7 +473,8 @@ maintainer-clean-local: clean-local
 	@echo " Cleaning automake generated files"
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf Makefile Makefile.in
+	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
+	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
 	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
 	rm *.tar.gz
