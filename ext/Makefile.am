@@ -113,9 +113,28 @@ make-directories:
 	@mkdir -p ${prefix}/share/man
 
 download-dependencies:
+if MAC
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo " IMPORTANT NOTE:   "
+	@echo "*---------------------------------*"
+	@echo ""
+	@echo "  PSD Cannot install Gmsh for MacOS please install this"
+	@echo "  yourself by downloading the precompiled 'dmg' from"
+	@echo ""
+	@echo "     https://gmsh.info/"
+	@echo ""
+	@echo "  Note in the ./configure step you will have to provide"
+	@echo ""
+	@echo "  --with-Gmsh=/your/gmsh/install/bin"
+	@echo ""
+	@echo "  with /your/gmsh/install/bin being the path where you install"
+	@echo "  the dmg install"
+else !MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
 	fi
+endif
 	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
 		$(HPDDM_DOWNLOAD); \
 	fi
@@ -149,13 +168,9 @@ download-dependencies:
 	@if [ ! -f scalapack-$(SCALAPACK_VERSION).tar.gz ]; then \
 		$(SCALAPACK_DOWNLOAD); \
 	fi
-	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
-		$(SALOME_DOWNLOAD); \
-	fi
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
-
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -411,7 +426,7 @@ endif
 
 salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
 
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): salome-$(SALOME_VERSION).tar.gz
+salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome salome-$(SALOME_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling SALOME for you be patient:"
@@ -449,6 +464,11 @@ salome-$(SALOME_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(SALOME_DOWNLOAD)
 endif
+
+download-salome:
+	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
+		$(SALOME_DOWNLOAD); \
+	fi
 
 check-local:
 	@echo ""
