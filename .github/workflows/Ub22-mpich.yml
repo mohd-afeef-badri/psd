@@ -21,9 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install wget cpp freeglut3-dev g++ gcc gfortran m4 make patch pkg-config  unzip liblapack-dev libhdf5-dev libgsl-dev autoconf automake autotools-dev bison flex gdb git cmake mpich
+        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich
     - name: configure
-      run: autoreconf -i && ./configure --with-dependencies
+      run: autoreconf -i && ./configure --prefix=$HOME/psd --with-dependencies
     - name: make
       run: make && sudo make install
     - name: make check
