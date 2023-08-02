@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install wget cpp freeglut3-dev g++ gcc gfortran m4 make patch pkg-config  python unzip liblapack-dev libhdf5-dev libgsl-dev autoconf automake autotools-dev bison flex gdb git cmake mpich
+        sudo apt-get install wget cpp freeglut3-dev g++ gcc gfortran m4 make patch pkg-config  unzip liblapack-dev libhdf5-dev libgsl-dev autoconf automake autotools-dev bison flex gdb git cmake mpich
     - name: configure
       run: autoreconf -i && ./configure --with-dependencies
     - name: make
