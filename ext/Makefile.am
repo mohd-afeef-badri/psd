@@ -164,9 +164,9 @@ download-dependencies:
 #  - User can override download by providing ext/gmsh-$(GMSH_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so
+gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
-gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).so: gmsh-$(GMSH_VERSION).tar.gz
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling gmsh for you be patient:   "
@@ -206,7 +206,7 @@ if !MAC
 	cp -rf ./bin/* ${prefix}/bin/.               && \
 	cp -rf ./share/doc/*  ${prefix}/share/doc/.  && \
 	cp -rf ./share/man  ${prefix}/share/man      && \
-	touch gmsh-$(GMSH_VERSION).so
+	touch gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing Gmsh v$(GMSH_VERSION)   "
@@ -225,10 +225,10 @@ endif
 #  - User can override download by providing ext/mfront-$(MFRONT_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so
+mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX)
 
 
-mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.so: mfront-$(MFRONT_VERSION).tar.gz
+mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(MFRONT_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling mfront for you be patient:   "
@@ -265,9 +265,9 @@ endif
 #  - User can override download by providing ext/mgis-$(MGIS_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so
+mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX)
 
-mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.so: mgis-$(MGIS_VERSION).tar.gz
+mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MGIS_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling Mgis for you be patient:   "
@@ -315,9 +315,9 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz
 
 
-petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so
+petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
 
-petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
+petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX): petsc-cmake-seq.patch petsc-$(PETSC_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling PETSc, HPDDM, METIS, PARMETIS, SCALAPACK,   "
@@ -338,7 +338,7 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.so: petsc-cmake-seq.patch 
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
 	--with-mpiexec=$(MPIRUN) \
 	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
-	--with-cudac=0 --with-ssl=0 --with-x=1 \
+	--with-cudac=0 --with-ssl=0 --with-x=0 \
 	--with-debugging=no \
 	--with-fortran-bindings=no \
 	$(PETSC_DEP) \
@@ -369,9 +369,9 @@ endif
 #  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so
+freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
 
-freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.so: freefem-$(FREEFEM_VERSION).tar.gz
+freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling FreeFEM for you be patient:"
@@ -409,9 +409,9 @@ endif
 #  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so
+salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
 
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).tar.gz
+salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): salome-$(SALOME_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling SALOME for you be patient:"
@@ -438,7 +438,7 @@ salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).so: salome-$(SALOME_VERSION).t
 	cp -rf ./mesa_salome-tmp   ${prefix}/bin/mesa_salome  		 	&& \
 	cp -rf ./env_launch.sh-tmp ${prefix}/bin/psd_salome_env_launch.sh	&& \
 	cp -rf ./BINARIES-$(SALOME_OS)  ${prefix}/bin/BINARIES-SALOME		&& \
-	touch salome-$(SALOME_VERSION).so
+	touch salome-$(SALOME_VERSION).$(SO_SUFFIX)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo " finished installing SALOME v$(SALOME_VERSION) "
