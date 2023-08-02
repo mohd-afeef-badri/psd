@@ -1,0 +1,30 @@
+name: UB22.04-mpich
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+      - '**/.gitignore'
+    branches: [ "main" ]
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+      - '**/.gitignore'
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install wget cpp freeglut3-dev g++ gcc gfortran m4 make patch pkg-config  python unzip liblapack-dev libhdf5-dev libgsl-dev autoconf automake autotools-dev bison flex gdb git cmake mpich
+    - name: configure
+      run: autoreconf -i && ./configure --with-dependencies
+    - name: make
+      run: make && sudo make install
+    - name: make check
+      run: make check
