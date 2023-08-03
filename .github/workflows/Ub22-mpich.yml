@@ -28,6 +28,7 @@ jobs:
         autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies
     - name: make
       run: |
+        export PSDPREFIX=/home/runner/psd
         cd ext && make && cd ..
         export PATH=$PREFIXPSD/bin:$PATH
         export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
