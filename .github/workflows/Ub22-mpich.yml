@@ -23,8 +23,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich
     - name: configure
-      run: autoreconf -i && ./configure --prefix=$HOME/psd --with-dependencies
+      run: |
+        export PSDPREFIX=/home/runner/psd
+        autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies
     - name: make
-      run: make && sudo make install
+      run: |
+        cd ext && make && cd ..
+        export PATH=$PREFIXPSD/bin:$PATH
+        export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
+        source $PREFIXPSD/mfront-env.sh
+        ./configure --prefix=$PREFIXPSD --with-mgis=$PREFIXPSD --with-mfront=$PREFIXPSD --with-FreeFEM=$PREFIXPSD/bin --with-Gmsh=$PREFIXPSD/bin  
+        make && make install
     - name: make check
       run: make check
