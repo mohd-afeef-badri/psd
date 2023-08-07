@@ -22,7 +22,7 @@
   include "getARGV.idp";                         // Get Commandline arguments  
   
   
-  load    "./mfront";
+  load    "./../cpp/mfront";
   
   string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
   string     BehaviourHypothesis = "GENERALISEDPLANESTRAIN" ;
