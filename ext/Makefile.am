@@ -236,6 +236,13 @@ download-salome:
 #   an override by providing the ext/gmsh-$(GMSH_VERSION).tar.gz file.
 #--------------------------------------------------------------------------------
 
+
+if MAC
+GMSHZIP=dmg
+else !MAC
+GMSHZIP=tar.gz
+endif
+
 # Target gmsh-build: This target is used to build Gmsh using the downloaded source code.
 gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
@@ -452,11 +459,9 @@ endif
 #--------------------------------------------------------------------------------
 
 if MAC
-MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
-GMSHZIP=dmg
+MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install 
 else !MAC
 MAKEANDINSTALL = make -j4 && make install
-GMSHZIP=tar.gz
 endif
 
 freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
