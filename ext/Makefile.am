@@ -3,7 +3,7 @@ MFRONT_VERSION=4.0.0
 MGIS_VERSION=2.0
 PETSC_VERSION=3.19.2
 FREEFEM_VERSION=4.13
-GMSH_VERSION=4.10.4
+GMSH_VERSION=4.11.1
 MUMPS_VERSION=5.5.1
 METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
@@ -62,9 +62,14 @@ else
 LIST_MAKE_EXECUTE =
 endif
 
-
+if MAC
+GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/macOS/gmsh-$(GMSH_VERSION)-MacOSARM.dmg \
+                       -O gmsh-$(GMSH_VERSION).dmg
+else !MAC
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
                        -O gmsh-$(GMSH_VERSION).tar.gz
+endif
+
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
                        -O freefem-$(FREEFEM_VERSION).tar.gz
 HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
@@ -94,8 +99,10 @@ PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-so
 
 if MAC
 MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
+GMSHZIP=dmg
 else !MAC
 MAKEANDINSTALL = make -j4 && make install
+GMSHZIP=tar.gz
 endif
 
 
@@ -113,28 +120,6 @@ make-directories:
 	@mkdir -p ${prefix}/share/man
 
 download-dependencies:
-if MAC
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo " IMPORTANT NOTE:   "
-	@echo "*---------------------------------*"
-	@echo ""
-	@echo "  PSD Cannot install Gmsh for MacOS please install this"
-	@echo "  yourself by downloading the precompiled 'dmg' from"
-	@echo ""
-	@echo "     https://gmsh.info/"
-	@echo ""
-	@echo "  Note in the ./configure step you will have to provide"
-	@echo ""
-	@echo "  --with-Gmsh=/your/gmsh/install/bin"
-	@echo ""
-	@echo "  with /your/gmsh/install/bin being the path where you install"
-	@echo "  the dmg install"
-else !MAC
-	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
-		$(GMSH_DOWNLOAD); \
-	fi
-endif
 	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
 		$(HPDDM_DOWNLOAD); \
 	fi
@@ -168,9 +153,21 @@ endif
 	@if [ ! -f scalapack-$(SCALAPACK_VERSION).tar.gz ]; then \
 		$(SCALAPACK_DOWNLOAD); \
 	fi
+	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
+		$(SALOME_DOWNLOAD); \
+	fi
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+if MAC
+	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
+		$(GMSH_DOWNLOAD); \
+	fi
+else !MAC
+	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
+		$(GMSH_DOWNLOAD); \
+	fi
+endif
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -181,7 +178,7 @@ endif
 
 gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
-gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar.gz
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).$(GMSHZIP)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling gmsh for you be patient:   "
@@ -190,20 +187,15 @@ gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar
 if MAC
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo " IMPORTANT NOTE:   "
+	@echo "   using hdiutil for gmsh-$(GMSH_VERSION).dmg"
 	@echo "*---------------------------------*"
 	@echo ""
-	@echo "  PSD Cannot install Gmsh for MacOS please install this"
-	@echo "  yourself by downloading the precompiled 'dmg' from"
-	@echo ""
-	@echo "     https://gmsh.info/"
-	@echo ""
-	@echo "  Note in the ./configure step you will have to provide"
-	@echo ""
-	@echo "  --with-Gmsh=/your/gmsh/install/bin"
-	@echo ""
-	@echo "  with /your/gmsh/install/bin being the path where you install"
-	@echo "  the dmg install"
+	yes | hdiutil attach ./gmsh-$(GMSH_VERSION).dmg	 && \
+	cp -r /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM/Gmsh.app ${prefix}/gmsh-$(GMSH_VERSION) && \
+	hdiutil detach /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM
+	ln -s ${prefix}/gmsh-$(GMSH_VERSION)/Contents/MacOS/gmsh ${prefix}/bin/gmsh
+	mkdir -p gmsh-$(GMSH_VERSION)
+	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 endif
 if !MAC
 	@echo ""
@@ -229,7 +221,7 @@ if !MAC
 	@echo ""
 endif
 
-gmsh-$(GMSH_VERSION).tar.gz:
+gmsh-$(GMSH_VERSION).$(GMSHZIP):
 if !BUILDZIPPEDDEPENDENCIES
 	$(GMSH_DOWNLOAD)
 endif
@@ -426,7 +418,7 @@ endif
 
 salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
 
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome salome-$(SALOME_VERSION).tar.gz
+salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): salome-$(SALOME_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling SALOME for you be patient:"
@@ -464,11 +456,6 @@ salome-$(SALOME_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(SALOME_DOWNLOAD)
 endif
-
-download-salome:
-	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
-		$(SALOME_DOWNLOAD); \
-	fi
 
 check-local:
 	@echo ""

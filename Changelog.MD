@@ -5,7 +5,13 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- Support for Apple silicon MacOSARM
+
 ### Changed
+
+- Moved to FreeFEM 4.13
+- Moved to PETSc 3.19
+- Moved to Gmsh 4.11.1
 
 ### Removed
 
