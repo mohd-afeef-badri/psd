@@ -560,8 +560,8 @@ AnyType PsdMfrontHandler_Op<K>::operator()(Stack stack) const {
 
           int totalCells =  mfrontMaterialTensor->n / 84;
           int indexMtTensor ;
-          cout << "THREADS MAX "<< omp_get_max_threads() <<endl;
-          omp_set_num_threads(omp_get_max_threads());
+//          cout << "THREADS MAX "<< omp_get_max_threads() <<endl;
+//          omp_set_num_threads(omp_get_max_threads());
           
           for (int i = 0; i < totalCells; i++)
           {

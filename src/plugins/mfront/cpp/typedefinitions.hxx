@@ -1,6 +1,6 @@
 //
 
-#define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.so"
+#define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.dylib"
 
 
 /*

@@ -20,7 +20,7 @@
 #include <cmath>
 #include <iostream>
 #include <math.h>
-#include <omp.h>
+//#include <omp.h>
 #include "ff++.hpp"
 #include "RNM.hpp"
 #include "AFunction.hpp"
