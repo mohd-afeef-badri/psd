@@ -30,11 +30,7 @@ $(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrint
 if HAVEMGIS
 	cat $(FF_CPP_IS) | sed 's/++14/++17/g' > ff-c++-temp && chmod a+x ff-c++-temp
 	cp $(FF_DEP_IS) .
-if MAC
-	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib/libBehaviour.so#${prefix}/lib/libBehaviour.dylib#g" {} \;
-else !MAC
-	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib/libBehaviour.so#${prefix}/lib/libBehaviour.so#g" {} \;
-endif
+	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib/libBehaviour.$(SO_SUFFIX)#${prefix}/lib/libBehaviour.$(SO_SUFFIX)#g" {} \;
 	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) $(OPEN_MP_FLAGS_INCLUDE) -I${mgis}/include -Wl,-rpath,${mgis}/lib $(OPEN_MP_FLAGS_LIB) 
 	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS
