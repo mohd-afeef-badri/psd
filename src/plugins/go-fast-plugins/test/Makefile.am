@@ -22,7 +22,7 @@ check-header:
 	
 Test_1: Test_1.edp
 	@echo "Test_1 : gofastplugins load test"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_1.edp >  Test_1.log
+	@./../../../psd-solve/PSD_Solve -np 1 Test_1.edp -v 10 
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
