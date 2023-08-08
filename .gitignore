@@ -68,6 +68,8 @@ simulation-log.csv
 ## SHARED OBJECT FILES ##
 *.o
 *.so
+*.dylib
+*.dll
 
 ## PLOTTING DATA FILES ##
 *.data

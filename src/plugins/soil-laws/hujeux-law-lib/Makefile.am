@@ -36,7 +36,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.so *.o *.output
+	rm  -f *~  *.$(SO_SUFFIX) *.o *.output
 
 maintainer-clean-local: clean-local
 	@echo ""

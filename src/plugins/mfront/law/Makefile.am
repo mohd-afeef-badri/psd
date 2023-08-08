@@ -141,7 +141,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf *~  *.so *.o $(DEP1) ./src ./include/MFront ./include/TFEL
+	rm  -rf *~  *.$(SO_SUFFIX) *.o $(DEP1) ./src ./include/MFront ./include/TFEL
 
 
 maintainer-clean-local: clean-local
