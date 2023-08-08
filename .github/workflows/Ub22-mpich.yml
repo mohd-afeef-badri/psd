@@ -28,12 +28,6 @@ jobs:
         autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies
     - name: make
       run: |
-        export PREFIXPSD=/home/runner/psd
-        cd ext && make && cd ..
-        export PATH=$PREFIXPSD/bin:$PATH
-        export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
-        source $PREFIXPSD/mfront-env.sh
-        ./configure --prefix=$PREFIXPSD --with-mgis=$PREFIXPSD --with-mfront=$PREFIXPSD --with-FreeFEM=$PREFIXPSD/bin --with-Gmsh=$PREFIXPSD/bin  
         make && make install
     - name: make check
       run: make check
