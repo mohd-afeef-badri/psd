@@ -13,7 +13,8 @@ all-local: $(DEP1)
 $(DEP1): gofastplugins.cpp
 	$(FFCXX) -auto gofastplugins.cpp
 #	$(FFCXX) -auto -mpi gofastplugins.cpp -Wl,-rpath,/home/mb258512/Install/local/ff-petsc/r/lib '-L/home/mb258512/Install/local/ff-petsc/r/lib' '-lflapack' '-lfblas'
-	@echo ""	
+	@echo ""
+	ldd gofastplugins.so	
 
 install-exec-local:
 	@mkdir -p ${prefix}/include
