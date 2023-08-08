@@ -21,7 +21,8 @@ PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD 
 - Debain 11
 - Raspberry Pi
 - Fedora 30 / 32 / 34 / 36
-- MacOS X Puma:10.1.5 	
+- MacOS X  Puma:10.1.5
+- MacOS ARM M2 Ventura 13 
 
 Before installing PSD please ensure that you have the following dependencies installed on your OS.
 
@@ -77,18 +78,22 @@ autoreconf -i
 **Note**: `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in your `PATH` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
 
 ```bash
-./configure --prefix=$HOME/Install/local \
-  --with-FreeFEM=$HOME/Install/local/FreeFem/bin       \
-  --with-Gmsh=$HOME/Install/local/Gmsh/bin        
+./configure --prefix=$HOME/Install/local			\
+  --with-FreeFEM=$HOME/Install/local/FreeFem/bin	\
+  --with-Gmsh=$HOME/Install/local/Gmsh/bin
 ```
 
-Additionally `--with-salome=/salome/install/dir` can be used for compiling PSD with  SALOME support,
+Additionally you can use the following flags 
 
- `--with-mgis=/mgis/install/dir` can be used for compiling PSD with  MGIS support,
-
- `--with-mfront=/mfront/install/dir` can be used for compiling PSD with  MFRONT support, and
-
- `--with-hdf5=/hdf5/install/dir` ,  `--with-medfile=/medfile/install/dir` , and  `--with-medcoupling=/medcoupling/install/dir`  can be used for compiling PSD with  MED support.
+| Flag                                          | Function                                          |
+| :-------------------------------------------- | ------------------------------------------------- |
+| `--with-salome=/salome/install/dir`           | SALOME mesher support (don't used `--with-Gmsh`), |
+| `--with-mgis=/mgis/install/dir`               | MGIS support (necessary for MFRONT)               |
+| `--with-mfront=/mfront/install/dir`           | MFRONT support                                    |
+| `--with-hdf5=/hdf5/install/dir`               | HDF5 support (necessary for med in PSD)           |
+| `--with-medfile=/medfile/install/dir`         | MEDFILE support (necessary for med in PSD)        |
+| `--with-medcoupling=/medcoupling/install/dir` | MEDCOUPLING  (necessary for med in PSD)           |
+|                                               |                                                   |
 
 
 - Make PSD directives
@@ -150,51 +155,7 @@ autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
 
 **Note**:   for CentOS7 you might have to load MPI with `module load mpi/openmpi-x86_64`
 
-- Make all dependencies
-```bash
-cd ext && make && cd ..
-```
-
-**Note:** If you would like PSD to install for you SALOME please run `make salome-build` in the `ext` folder as well.  For SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` in `ext` folder and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
-
-- The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
-
-```bash
-export PATH=$PREFIXPSD/bin:$PATH 
-export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
-```
-then do 
-```bash
-source ~/.bashrc
-```
-**Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
-
-- Reconfigure PSD with the installed dependencies (PSD without SALOME)
-
-```bash
-./configure --prefix=$PREFIXPSD \
-  --with-mgis=$PREFIXPSD        \
-  --with-mfront=$PREFIXPSD      \
-  --with-FreeFEM=$PREFIXPSD/bin \
-  --with-Gmsh=$PREFIXPSD/bin
-```
-
-Reconfigure PSD with the installed dependencies (PSD with SALOME and MED support)
-
-```bash
-./configure --prefix=$PREFIXPSD \
-  --with-mgis=$PREFIXPSD        \
-  --with-mfront=$PREFIXPSD      \
-  --with-FreeFEM=$PREFIXPSD/bin \
-  --with-Gmsh=$PREFIXPSD/bin    \
-  --with-salome=$PREFIXPSD/bin  \
-  --with-hdf5=$PREFIXPSD/bin/BINARIES-SALOME/hdf5  		\
-  --with-medfile=$PREFIXPSD/bin/BINARIES-SALOME/medfile 	\
-  --with-medcoupling=$PREFIXPSD/bin/BINARIES-SALOME/MEDCOUPLING
-```
-
 - Compile and install PSD
-
 ```bash
 make && make install
 ```
@@ -211,7 +172,22 @@ make tutorials
 
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `home/PSDInstall`.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
+**Note:** If you would like PSD to install for you SALOME please run `make salome-build` in the `ext` folder as well.  For SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` in `ext` folder and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
 
+- The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
+
+```bash
+export PATH=$PREFIXPSD/bin:$PATH 
+export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
+```
+
+then do 
+
+```bash
+source ~/.bashrc
+```
+
+**Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
 
 
 
