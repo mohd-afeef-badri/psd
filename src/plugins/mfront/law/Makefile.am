@@ -25,6 +25,7 @@ LIST_OBJ_FILES =
 endif
 
 export PATH := ${mfront}/bin:$(PATH)
+export LD_LIBRARY_PATH := ${mfront}/lib:$(LD_LIBRARY_PATH)
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
 
