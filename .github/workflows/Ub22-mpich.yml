@@ -6,6 +6,12 @@ on:
     paths-ignore:
       - '**.MD'
       - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
   pull_request:
     branches:
       - main
@@ -13,6 +19,12 @@ on:
     paths-ignore:
       - '**.MD'
       - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
 jobs:
   build:
 
