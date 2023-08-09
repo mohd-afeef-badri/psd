@@ -1,16 +1,18 @@
 name: UB22.04-mpich
 on:
   push:
+    branches:
+      - main
     paths-ignore:
       - '**/README.md'
       - '**/.gitignore'
-    branches: [ "main" ]
   pull_request:
+    branches:
+      - main
+      - devel
     paths-ignore:
       - '**/README.md'
       - '**/.gitignore'
-    branches: [ "main" ]
-
 jobs:
   build:
 
