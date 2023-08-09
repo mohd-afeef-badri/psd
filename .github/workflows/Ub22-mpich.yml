@@ -44,4 +44,14 @@ jobs:
       run: |
         make && make install
     - name: make check
-      run: make check
+      run: |
+        make check
+        # Save the log file(s) as an artifact
+        mkdir -p $GITHUB_WORKSPACE/artifacts
+        mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
+
+    - name: Upload logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: check-logs
+        path: $GITHUB_WORKSPACE/artifacts
