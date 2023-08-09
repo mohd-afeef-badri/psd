@@ -1,4 +1,4 @@
-##  PSD version 2.5 ##
+##  PSD version 2.6 ##
 
 ------
 
