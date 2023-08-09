@@ -47,7 +47,7 @@ Before installing PSD please ensure that you have the following dependencies ins
 
 Note that PETSc and FreeFEM need to be compiled with  METIS, ParMETIS, and hpddm support, in this case these form extra dependencies. The user in incharge of making sure that all the dependencies are met before installing PSD. Have a look at `Download.MD` file which explains a little bit about the dependencies and also provides the version and the links to download the dependencies from.
 
-Generally there are two procedures of installing PSD. 
+There are two distinct procedures for installing PSD:
 
 - *Installation Procedure 1: I install my own dependencies*.
 - *Installation Procedure 2: PSD installs all dependencies*.
@@ -58,13 +58,13 @@ Among the two the second one is the recommended. With *Installation Procedure 1*
 
 #### Installation Procedure 1: I install my own dependencies ####
 
-- Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
+- Obtain the latest version of PSD by cloning the git repository:
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
 
 
-- Use automake within the  cloned PSD folder (`psd_sources`) 
+- Set up PSD:
 ```bash
 autoreconf -i
 ```
@@ -73,36 +73,17 @@ autoreconf -i
 ```bash
 ./configure
 ```
-**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need `sudo` rights (superuser) to perform installation, for non `sudo` users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`.  Remember to add `Your/Own/Path` to your `$PATH` variable, you can do so by `export PATH=$PATH:Your/Own/Path`. 
+**Note**:   `./configure` will install PSD in `/usr/local/bin`  and you would need `sudo` rights (superuser) to perform installation, for non `sudo` users or for local install consider changing directory of installation. To change this directory use `--prefix=Your/Own/Path` with `./configure`. 
 
-**Note**: `./configure` will try to look for installation of FreeFEM, MGIS, Mfront, and Gmsh in your `PATH` directories. If you have these packages installed in some other directory this should be specified during `./configure` by using flags `--with-FreeFEM=` ,  `--with-Gmsh=`, etc. as shown below. For example
+**Note**: if FreeFEM, MGIS, MFront, and Gmsh are installed in directories other than the default `PATH`, specify their locations during `./configure` using flags like `--with-FreeFEM=`, `--with-Gmsh=`, etc., use `./configure -h` to know more about these flags or see the "Configuration flags" section.
 
-```bash
-./configure --prefix=$HOME/Install/local			\
-  --with-FreeFEM=$HOME/Install/local/FreeFem/bin	\
-  --with-Gmsh=$HOME/Install/local/Gmsh/bin
-```
-
-Additionally you can use the following flags 
-
-| Flag                                          | Function                                          |
-| :-------------------------------------------- | ------------------------------------------------- |
-| `--with-salome=/salome/install/dir`           | SALOME mesher support (don't used `--with-Gmsh`), |
-| `--with-mgis=/mgis/install/dir`               | MGIS support (necessary for MFRONT)               |
-| `--with-mfront=/mfront/install/dir`           | MFRONT support                                    |
-| `--with-hdf5=/hdf5/install/dir`               | HDF5 support (necessary for med in PSD)           |
-| `--with-medfile=/medfile/install/dir`         | MEDFILE support (necessary for med in PSD)        |
-| `--with-medcoupling=/medcoupling/install/dir` | MEDCOUPLING  (necessary for med in PSD)           |
-|                                               |                                                   |
-
-
-- Make PSD directives
+- Build PSD directives:
 
 ```bash
 make
 ```
 
-- Install PSD
+- Install PSD:
 ```bash
 sudo make install
 ```
@@ -117,47 +98,29 @@ Now you should have the PSD solver installed on your machine. Note that, the sol
 
 
 
-**Additional FreeFEM tweak for brittle fracture mechanics**
-
-Note that this procedure is only recommended if you are interested in using PSD for brittle fracture problems. In your FreeFEM source files (installation)  go to `src/femlib/fem.cpp` ,  in this file replace the lines of code
-
-```bash
-R seuil=hm/splitmax/4.0;
-```
-
-by the following
-
-```bash
-R seuil=hm/splitmax/4.0/1000.0;
-```
-
-
-
 #### Installation Procedure 2: PSD installs all the dependencies ####
 
-**Note**: please make sure that you are using PSD version 2.5 or above.
-
-- Grab the latest copy of PSD. The code is hosted on GitLab [repository](https://gitlab.com/PsdSolver/psd_sources).
+- Obtain the latest version of PSD by cloning the git repository:
 ```bash
 git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
 ```
 
-- We will install PSD and all its dependencies in folder `/home/PSDinstall` . Let us start by making it a temporary environmental variable.
+- Use automake within the  cloned PSD folder (`PSD-Sources`) 
 ```bash
-export PREFIXPSD=/home/PSDinstall
+autoreconf -i
+```
+- Configure  PSD within the  cloned folder, we will install PSD in `/home/PSDinstall`
+
+```bash
+./configure --prefix=/home/PSDinstall --with-dependencies=yes
 ```
 
-- Use `automake` within the  cloned folder and configure PSD
-```bash
-autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
-```
-**Note**:   we will install PSD in `/home/PSDinstall`  and you would need read and write rights to perform installation in this folder. `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependecies`.
+**Note**:   `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependecies`.
 
-**Note**:   for CentOS7 you might have to load MPI with `module load mpi/openmpi-x86_64`
-
-- Compile and install PSD
+- Build PSD directives and install PSD
 ```bash
-make && make install
+make
+make install
 ```
 
 - Perform a check to see if everything works 
@@ -172,22 +135,14 @@ make tutorials
 
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `home/PSDInstall`.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
-**Note:** If you would like PSD to install for you SALOME please run `make salome-build` in the `ext` folder as well.  For SALOME and MED integration is here done for UB22.04. If your OS is not UB22.04 please have a look at `Makefile.am` in `ext` folder and add correct flags `SALOME_OS` , `SALOME_OS_TAG` , and `SALOME_TAG`. Another way, get in touch with PSD team and we will help you.
-
-- The `PATH` and `LSD_LIBRARY_PATH` variables need to be updated. Add the following two line to your `~/.bashrc` 
+- Update environment variables permanently: 
 
 ```bash
-export PATH=$PREFIXPSD/bin:$PATH 
-export LD_LIBRARY_PATH=$PREFIXPSD/lib:$LD_LIBRARY_PATH
+echo 'export PATH=/home/PSDinstall/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/home/PSDinstall/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 ```
 
-then do 
-
-```bash
-source ~/.bashrc
-```
-
-**Note:** this can also be done temporarily by `source $PREFIXPSD/mfront-env.sh`. If you follow this temporary approach, every time before using PSD you will need to redo this command.
+**Note:** for temporary approach, run `source $PREFIXPSD/mfront-env.sh` before using PSD.
 
 
 
