@@ -4,14 +4,14 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**/README.MD'
+      - '**.MD'
       - '**/.gitignore'
   pull_request:
     branches:
       - main
       - devel
     paths-ignore:
-      - '**/README.MD'
+      - '**.MD'
       - '**/.gitignore'
 jobs:
   build:
