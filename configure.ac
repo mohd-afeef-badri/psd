@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.5], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.6], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
