@@ -125,7 +125,7 @@ src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
 	${mfront}/bin/mfront --interface=generic  desmorat3Dnonlocal.mfront
 	${mfront}/bin/mfront --obuild
 	
-src/desmorat20152dnonlocal.o: desmoratplanestress.mfront
+src/desmoratplanestress.o: desmoratplanestress.mfront
 	@echo ""
 	@echo "----------------------------------------"
 	@echo "Compiled desmoratplanestress support for mfront"
