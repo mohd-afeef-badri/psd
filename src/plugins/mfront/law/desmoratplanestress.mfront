@@ -1,0 +1,235 @@
+@DSL ImplicitII;
+@Behaviour desmoratplanestress;
+@Author Breno Ribeiro Nogueira;
+@Date 05 / 10 / 2023;
+
+@Theta 1.;
+
+@Includes{
+  #include "TFEL_MatrixFunc.hxx"
+}
+
+@MaterialProperty stress young;
+young.setGlossaryName("YoungModulus");
+@MaterialProperty real nu;
+nu.setGlossaryName("PoissonRatio");
+
+@MaterialProperty real B;
+B.setEntryName("Brittleness");
+@MaterialProperty real k0;
+k0.setEntryName("Kappa0");
+@MaterialProperty real S;
+S.setEntryName("BigS");
+@MaterialProperty real s;
+s.setEntryName("SmallS");
+
+// H-Id
+@StateVariable Stensor rH; //Ladeveze variable minus identity
+@StateVariable real rHz; //rHzz computed in plane stress case
+
+@AuxiliaryStateVariable Stensor d;
+@AuxiliaryStateVariable Stensor iH2;
+@AuxiliaryStateVariable strain ey;
+@AuxiliaryStateVariable strain epsilon_z; //epsilon_zz computed in plane stress case
+
+//Bulk and shear modulus
+@LocalVariable stress K;
+@LocalVariable stress G;
+@LocalVariable Stensor sig_n;
+@LocalVariable Stensor es;
+@LocalVariable stress E_tilde;
+@LocalVariable stress K_tilde;
+
+
+
+//Plane strain hypothesis is used as it is for a full 2D model
+//This code is actually realted to plane stress and epsilon_z computed inside
+@ModellingHypothesis PlaneStrain;
+
+// Define constant local variables
+@LocalVariable stensor<2u,real>  I2;
+
+@InitLocalVariables{
+    // Define constants
+    I2(0) = 1.;
+    I2(1) = 1.;
+    I2(2) = 0.;
+    I2(3) = 0.;
+    K = (young) / (2. * (1. - nu)); //to see if 3D one or 2D used here 
+    G = computeMu(young, nu);    
+}
+
+@Predictor {
+
+  const auto e = eval(eto+deto); //2D epsilon tensor with epsilon_z = 0
+  const auto tr_e = e|I2; //trace for 2D epsilon tensor
+  const auto H = rH + I2; //2D H tensor 
+  const auto Hz = rHz + 1; //Hz component
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
+  iH2 = square(iH);
+  const auto tr_iH2 = (iH2|I2);
+  const auto tr_e_tot = tr_e + epsilon_z;
+
+  if (tr_e_tot > 0) {
+    const auto tr_H2 = H | H;
+    
+    // constructing operators for computing epsilon_z
+    K_tilde = 3*K/(tr_H2 + pow(Hz,2));
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+    epsilon_z = (-es|e)/E_tilde;
+
+    //computing sigma taking in account epsilon_z and H_z
+    sig_n = 2. * G * (symmetric_product_aba(iH, e) - ((iH2 | e) + pow(Hz,-2)*epsilon_z) * iH2 / (tr_iH2 + pow(Hz,-2))) +
+          K_tilde * (tr_e+epsilon_z) * I2 ;
+  
+  } else {
+    // constructing operators for computing epsilon_z
+    K_tilde = K;
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+    epsilon_z = (-es|e)/E_tilde;
+
+    //computing sigma taking in account epsilon_z and H_z
+    sig_n = 2. * G * (symmetric_product_aba(iH, e) - ((iH2 | e) + pow(Hz,-2)*epsilon_z) * iH2 / (tr_iH2 + pow(Hz,-2))) +
+          K_tilde * (tr_e+epsilon_z) * I2 ;
+    
+  }
+  
+}
+
+@Integrator{
+  // total strain at the end of the time step
+  const auto e = eval(eto + deto);
+  const auto tr_sig = sig_n|I2;
+  
+  // approximation: the triaxilaty is assumed to be constant
+  const auto Rv = [&tr_sig, this] {
+    if (tr_sig > 0) {
+      return min(real(1), B);
+    }
+    const auto sigpri2d = sig_n - 1./2. * tr_sig * I2;
+    const auto seq = sqrt(2*(sigpri2d|sigpri2d));
+    if (seq > 1e-12 * young) {
+      const auto Tx = tr_sig / (2. * seq);
+      const auto Rv1 = 1. + 9. * (1. - 2. * nu) / (2. * (1. + nu)) * Tx * Tx;
+      return min(Rv1, B);
+    }
+    return B;
+  }();
+
+  const auto ep = positive_part(e); //positive part of 2D epsilon tensor
+  const auto epz = 0.5*(abs(epsilon_z) + epsilon_z); //positive part epsilon_z
+  // Mazars' equivalent strain
+  const auto e_mazars = sqrt((ep | ep) + pow(epz,2)); //taking into account epsilon_z in equivalent strain
+  // Mazars' equivalent strain
+  const auto epsnleq = e_mazars;
+  // damage evolution
+  const auto Rv_s = pow(Rv, s);
+  
+  
+  //const auto imetric = Stensor::Id() - d;
+  //const auto metric = invert(imetric);
+  const auto tr_rH = (rH|I2) + rHz; // computed at step n with old rH and rHz
+
+  // yield strain
+  ey = k0 + S * Rv_s * tr_rH;
+  if (epsnleq > ey) {
+    const auto tr_sig = sig_n|I2;
+    const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig_n; //computed for 2D epsilon tilde tensor
+    const auto etz = (-nu / young) * tr_sig; //epsilon_z tilde component
+    // positive part of the strain
+    const auto etp = positive_part(et);
+    const auto etpz = 0.5*(abs(etz) + etz); //positive part epsilon_z
+    // norm etp
+    //const auto normetp = sqrt(etp|etp);
+    // direction N
+    //const auto Ntens = etp/normetp;
+    //const auto Ntens = positive_part(sig_n);
+    // updated trace of H-I value so e_mazars=ey
+    const auto ntr_rH = (epsnleq - k0) / (S * Rv_s); 
+    const auto tr_et = (etp|I2) + etpz;
+    // lagrange multiplier
+    const auto dl = (ntr_rH - tr_rH) / (max(tr_et ,strain(1e-14)));
+ 
+    //const auto normetp = 1.;
+    // updating the Ladeveze damage variable
+    frH -= dl*etp; 
+    //frH -= dl*Ntens; 
+    frHz -= dl*etpz;
+  }
+
+  const auto tr_e = e|I2;
+  const auto H = rH + I2;
+  const auto Hz = rHz + 1; //Hz component
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
+  iH2 = square(iH);
+  d = I2 - iH2;
+  d(2) = 1 - pow(Hz,-2);
+  const auto tr_iH2 = (iH2|I2);
+  const auto tr_e_tot = tr_e + epsilon_z;
+
+  //updating sigma
+  if (tr_e_tot > 0) {
+    const auto tr_H2 = H | H;
+    
+    // constructing operators for computing epsilon_z
+    K_tilde = 3*K/(tr_H2 + pow(Hz,2));
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+    epsilon_z = (-es|e)/E_tilde;
+
+    //computing sigma taking in account epsilon_z and H_z
+    sig = 2. * G * (symmetric_product_aba(iH, e) - ((iH2 | e) + pow(Hz,-2)*epsilon_z) * iH2 / (tr_iH2 + pow(Hz,-2))) +
+          K_tilde * (tr_e+epsilon_z) * I2 ;
+  
+  } else {
+    // constructing operators for computing epsilon_z
+    K_tilde = K;
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+    epsilon_z = (-es|e)/E_tilde;
+
+    //computing sigma taking in account epsilon_z and H_z
+    sig = 2. * G * (symmetric_product_aba(iH, e) - ((iH2 | e) + pow(Hz,-2)*epsilon_z) * iH2 / (tr_iH2 + pow(Hz,-2))) +
+          K_tilde * (tr_e+epsilon_z) * I2 ;
+    
+  }
+
+  
+}
+
+
+@TangentOperator{
+  //const auto e = eto;
+  //const auto tr_e = e|I2;
+  const auto tr_sig = sig|I2;
+  
+  // computing H
+  const auto H = rH + I2;
+  const auto Hz = rHz + 1; //Hz component
+  const auto iH = tfel::math::extensions::myInvert(eval(H));
+  iH2 = square(iH);
+  const auto tr_iH2 = (iH2|I2);
+
+  if (tr_sig > 0) {
+    const auto tr_H2 = H | H;  
+    K_tilde = 3*K/(tr_H2 + pow(Hz,2));
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+
+    const auto Etensor_tilde =  2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/(tr_iH2 + pow(Hz,-2))) + K_tilde * (I2^I2);
+    Dt = Etensor_tilde - (es^es)/E_tilde;
+    
+  } else {
+
+    K_tilde = K;
+    es = K_tilde*I2 - 2*G*iH2*(pow(Hz,-2))/(tr_iH2 + pow(Hz,-2));
+    E_tilde =  2*G*(pow(Hz,-2))*tr_iH2/(tr_iH2 + pow(Hz,-2)) + K_tilde;
+    
+    const auto Etensor_tilde =  2. * G*(symmetric_product_derivative_daba_db(iH)- (iH2^iH2)/(tr_iH2 + pow(Hz,-2))) + K_tilde * (I2^I2);
+    Dt = Etensor_tilde - (es^es)/E_tilde;
+    
+  }
+
+}

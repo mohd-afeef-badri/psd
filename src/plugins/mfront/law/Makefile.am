@@ -8,7 +8,8 @@ IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront \
 desmorat20152d.mfront \
 desmorat20152dnonlocal.mfront \
-desmorat3Dnonlocal.mfront
+desmorat3Dnonlocal.mfront \
+desmoratplanestress.mfront
 
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
@@ -19,7 +20,8 @@ src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o \
 src/desmorat20152d.o \
 src/desmorat20152dnonlocal.o \
-src/desmorat3Dnonlocal.o
+src/desmorat3Dnonlocal.o \
+src/desmoratplanestress.o
 else
 LIST_OBJ_FILES =
 endif
@@ -121,6 +123,15 @@ src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
 	@echo "----------------------------------------"
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  desmorat3Dnonlocal.mfront
+	${mfront}/bin/mfront --obuild
+	
+src/desmorat20152dnonlocal.o: desmoratplanestress.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmoratplanestress support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmoratplanestress.mfront
 	${mfront}/bin/mfront --obuild
 
 
