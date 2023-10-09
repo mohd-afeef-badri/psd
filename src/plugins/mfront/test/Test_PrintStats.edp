@@ -27,7 +27,7 @@
   string     mfrontBehaviour     = getARGV( "-mfront_behaviour" , "Elasticity" );
   string     BehaviourHypothesis = "GENERALISEDPLANESTRAIN" ;
   
-  if((mfrontBehaviour=="desmorat20152d") || (mfrontBehaviour=="desmorat20152dnonlocal")){
+  if((mfrontBehaviour=="desmorat20152d") || (mfrontBehaviour=="desmorat20152dnonlocal") || (mfrontBehaviour=="desmoratplanestress")){
   	BehaviourHypothesis = "PLANESTRAIN";
   }
 
