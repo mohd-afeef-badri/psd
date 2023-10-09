@@ -25,11 +25,12 @@ s.setEntryName("SmallS");
 
 // H-Id
 @StateVariable Stensor rH; //Ladeveze variable minus identity
-@StateVariable real rHz; //rHzz computed in plane stress case
+@ExternalStateVariable real epsnl;
 
 @AuxiliaryStateVariable Stensor d;
 @AuxiliaryStateVariable Stensor iH2;
 @AuxiliaryStateVariable strain ey;
+@StateVariable real rHz; //rHzz computed in plane stress case
 @AuxiliaryStateVariable strain epsilon_z; //epsilon_zz computed in plane stress case
 
 //Bulk and shear modulus
@@ -118,12 +119,12 @@ s.setEntryName("SmallS");
     return B;
   }();
 
-  const auto ep = positive_part(e); //positive part of 2D epsilon tensor
-  const auto epz = 0.5*(abs(epsilon_z) + epsilon_z); //positive part epsilon_z
+  //const auto ep = positive_part(e); //positive part of 2D epsilon tensor
+  //const auto epz = 0.5*(abs(epsilon_z) + epsilon_z); //positive part epsilon_z
   // Mazars' equivalent strain
-  const auto e_mazars = sqrt((ep | ep) + pow(epz,2)); //taking into account epsilon_z in equivalent strain
+  //const auto e_mazars = sqrt((ep | ep) + pow(epz,2)); //taking into account epsilon_z in equivalent strain
   // Mazars' equivalent strain
-  const auto epsnleq = e_mazars;
+  const auto epsnleq = epsnl;
   // damage evolution
   const auto Rv_s = pow(Rv, s);
   
