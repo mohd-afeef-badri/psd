@@ -56,7 +56,7 @@ s.setEntryName("SmallS");
     I2(1) = 1.;
     I2(2) = 0.;
     I2(3) = 0.;
-    K = (young) / (2. * (1. - nu)); //to see if 3D one or 2D used here 
+    K = (young) / (3. * (1. - nu)); //to see if 3D one or 2D used here 
     G = computeMu(young, nu);    
 }
 
@@ -138,24 +138,25 @@ s.setEntryName("SmallS");
   if (epsnleq > ey) {
     const auto tr_sig = sig_n|I2;
     const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig_n; //computed for 2D epsilon tilde tensor
-    const auto etz = (-nu / young) * tr_sig; //epsilon_z tilde component
+    //const auto etz = (-nu / young) * tr_sig; //epsilon_z tilde component
     // positive part of the strain
-    const auto etp = positive_part(et);
-    const auto etpz = 0.5*(abs(etz) + etz); //positive part epsilon_z
+    const auto etp = positive_part(e);
+    const auto etpz = 0.5*(abs(epsilon_z) + epsilon_z); //positive part epsilon_z
     // norm etp
-    //const auto normetp = sqrt(etp|etp);
+    const auto normetp = sqrt((etp|etp) + pow(etpz,2));
     // direction N
-    //const auto Ntens = etp/normetp;
+    const auto Ntens = etp/normetp;
     //const auto Ntens = positive_part(sig_n);
     // updated trace of H-I value so e_mazars=ey
     const auto ntr_rH = (epsnleq - k0) / (S * Rv_s); 
-    const auto tr_et = (etp|I2) + etpz;
+    //const auto tr_et = (etp|I2) + etpz;
+    const auto tr_et = (Ntens|I2) + etpz;
     // lagrange multiplier
     const auto dl = (ntr_rH - tr_rH) / (max(tr_et ,strain(1e-14)));
  
     //const auto normetp = 1.;
     // updating the Ladeveze damage variable
-    frH -= dl*etp; 
+    frH -= dl*Ntens; 
     //frH -= dl*Ntens; 
     frHz -= dl*etpz;
   }
