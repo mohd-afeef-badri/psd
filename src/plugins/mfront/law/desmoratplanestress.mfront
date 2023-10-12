@@ -136,9 +136,9 @@ s.setEntryName("SmallS");
   // yield strain
   ey = k0 + S * Rv_s * tr_rH;
   if (epsnleq > ey) {
-    const auto tr_sig = sig_n|I2;
+     const auto tr_sig = sig_n|I2;
     const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig_n; //computed for 2D epsilon tilde tensor
-    //const auto etz = (-nu / young) * tr_sig; //epsilon_z tilde component
+    const auto etz = (-nu / young) * tr_sig; //epsilon_z tilde component
     // positive part of the strain
     const auto etp = positive_part(e);
     const auto etpz = 0.5*(abs(epsilon_z) + epsilon_z); //positive part epsilon_z
@@ -149,8 +149,7 @@ s.setEntryName("SmallS");
     //const auto Ntens = positive_part(sig_n);
     // updated trace of H-I value so e_mazars=ey
     const auto ntr_rH = (epsnleq - k0) / (S * Rv_s); 
-    //const auto tr_et = (etp|I2) + etpz;
-    const auto tr_et = (Ntens|I2) + etpz;
+    const auto tr_et = (Ntens|I2) + etpz/normetp;
     // lagrange multiplier
     const auto dl = (ntr_rH - tr_rH) / (max(tr_et ,strain(1e-14)));
  
@@ -158,7 +157,7 @@ s.setEntryName("SmallS");
     // updating the Ladeveze damage variable
     frH -= dl*Ntens; 
     //frH -= dl*Ntens; 
-    frHz -= dl*etpz;
+    frHz -= dl*etpz/normetp;
   }
 
   const auto tr_e = e|I2;
