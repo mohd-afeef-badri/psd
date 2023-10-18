@@ -56,7 +56,7 @@ s.setEntryName("SmallS");
     I2(1) = 1.;
     I2(2) = 0.;
     I2(3) = 0.;
-    K = (young) / (3. * (1. - nu)); //to see if 3D one or 2D used here 
+    K = (young) / (3. * (1. - 2.*nu)); //to see if 3D one or 2D used here 
     G = computeMu(young, nu);    
 }
 
@@ -202,8 +202,6 @@ s.setEntryName("SmallS");
 
 
 @TangentOperator{
-  //const auto e = eto;
-  //const auto tr_e = e|I2;
   const auto tr_sig = sig|I2;
   
   // computing H
