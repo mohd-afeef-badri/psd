@@ -98,13 +98,17 @@ s.setEntryName("SmallS");
     const auto tr_sig = trace(sig_n);
     const auto et = (-nu / young) * tr_sig * Stensor::Id() + ((1 + nu) / young) * sig_n;
     // positive part of the strain
-    const auto etp = positive_part(et);
+    const auto etp = positive_part(e);
+    // norm etp
+    const auto normetp = sqrt((etp|etp));
+    // direction N
+    const auto Ntens = etp/normetp;
     // updated trace of H-I value so e_mazars=ey
     const auto ntr_rH = (epsnleq - k0) / (S * Rv_s); 
     // lagrange multiplier
-    const auto dl = (ntr_rH - tr_rH) / (max(trace(etp),strain(1e-14)));
+    const auto dl = (ntr_rH - tr_rH) / (max(trace(Ntens),strain(1e-14)));
     // updating the damage
-    frH -= dl * etp;
+    frH -= dl * Ntens;
   }
   
   
