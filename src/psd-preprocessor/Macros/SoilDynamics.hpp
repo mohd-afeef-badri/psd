@@ -476,9 +476,8 @@ if(dirichletpointconditions<1 && Sequential && pointprobe)
   if(spc==2)
   writeIt
   "                                                                               \n"
-  "  macro GetPointProbeIndicies(                                                 \n"
-  "                                PnP,   iProbe                                  \n"
-  "                             )                                                 \n"
+  "  macro GetPointProbeIndicies( PnP, iProbe )                                   \n"
+  "                                                                               \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
@@ -488,9 +487,8 @@ if(dirichletpointconditions<1 && Sequential && pointprobe)
   if(spc==3)
   writeIt
   "                                                                               \n"
-  "  macro GetPointProbeIndicies(                                                 \n"
-  "                                PnP,   iProbe                                  \n"
-  "                             )                                                 \n"
+  "  macro GetPointProbeIndicies( PnP, iProbe )                                   \n"
+  "                                                                               \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
@@ -527,29 +525,35 @@ if(dirichletpointconditions<1 && !Sequential  && pointprobe)
   if(spc==2)
   writeIt
   "                                                                               \n"
-  "  macro GetPointProbeIndicies(                                                 \n"
-  "                                PnP,   iProbe, Prank                           \n"
-  "                             )                                                 \n"
+  "  macro GetPointProbeIndicies(  PnP, iProbe, Prank )                           \n"
+  "                                                                               \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
   "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "    for(int j=0; j < iProbe.n; j++)                                            \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
 
 
   if(spc==3)
   writeIt
   "                                                                               \n"
-  "  macro GetPointProbeIndicies(                                                 \n"
-  "                                PnP,   iProbe, Prank                           \n"
-  "                             )                                                 \n"
+  "  macro GetPointProbeIndicies(  PnP, iProbe, Prank )                           \n"
+  "                                                                               \n"
   "    for (int i = 0; i < Th.nv; i++){                                           \n"
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if( abs(Th(i).x-PnP(j,0))<.01 &&                                       \n"
   "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
   "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
   "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "    for(int j=0; j < iProbe.n; j++)                                            \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
 
  }
 
@@ -600,6 +604,9 @@ if(dirichletpointconditions>=1)
   "       }                                                                      \n"
   "     }                                                                        \n"
   "   }                                                                          \n"
+  "                                                                              \n"
+  "   for(int j=0; j < iProbe.n; j++)                                            \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);           \n"
   "  //                                                                          \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
@@ -673,6 +680,9 @@ if(dirichletpointconditions>=1)
  "       }                                                                       \n"
  "     }                                                                         \n"
  "   }                                                                           \n"
+ "                                                                               \n"
+ "   for(int j=0; j < iProbe.n; j++)                                             \n"
+ "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
  "  //                                                                           \n";
 
  for(int i=0; i<dirichletpointconditions; i++)
@@ -888,8 +898,11 @@ if(dirichletpointconditions>=1)
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
   "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
-
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "   for(int j=0; j < iProbe.n; j++)                                             \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
 
   if(spc==3  && dirichletpointconditions<1)
   writeIt
@@ -903,7 +916,12 @@ if(dirichletpointconditions>=1)
   "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
   "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
   "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "   for(int j=0; j < iProbe.n; j++)                                             \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
+
   }
 
 
@@ -971,7 +989,11 @@ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
   "     for(int j=0; j < iProbe.n; j++)                                           \n"
   "        if(abs(Th(i).x-PnP(j,0))<.01 && abs(Th(i).y-PnP(j,1))<.01 )            \n"
   "          { iProbe[j]=i*2; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "   for(int j=0; j < iProbe.n; j++)                                             \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
 
 
   if(spc==3  && !pointprobe)
@@ -1015,7 +1037,11 @@ if(doublecouple=="displacement_based" || doublecouple=="force_based"){
   "            abs(Th(i).y-PnP(j,1))<.01 &&                                       \n"
   "            abs(Th(i).z-PnP(j,2))<.01    )                                     \n"
   "          { iProbe[j]=i*3; Prank[j]=mpirank; }                                 \n"
-  "     }//                                                                       \n";
+  "     }                                                                         \n"
+  "                                                                               \n"
+  "   for(int j=0; j < iProbe.n; j++)                                             \n"
+  "     mpiAllReduce( Prank[j], PrankGlobal[j], mpiCommWorld, mpiMAX);            \n"
+  "  //                                                                           \n";
 
 if(doublecouple=="displacement_based")
   writeIt
