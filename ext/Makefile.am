@@ -264,6 +264,7 @@ if MAC
 	yes | hdiutil attach ./gmsh-$(GMSH_VERSION).dmg	 && \
 	cp -r /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM/Gmsh.app ${prefix}/gmsh-$(GMSH_VERSION) && \
 	hdiutil detach /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM
+	rm -f ${prefix}/bin/gmsh
 	ln -s ${prefix}/gmsh-$(GMSH_VERSION)/Contents/MacOS/gmsh ${prefix}/bin/gmsh
 	mkdir -p gmsh-$(GMSH_VERSION)
 	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
