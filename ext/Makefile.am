@@ -138,7 +138,7 @@ SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/ar
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                       -O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/00cc91daf44a69ef9cc3595b7f229ec6960bcc93/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 
 #----------------------------------------------------------------------------------------
