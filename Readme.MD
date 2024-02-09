@@ -33,8 +33,8 @@ Before installing PSD please ensure that you have the following dependencies ins
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
-| [FreeFEM](https://freefem.org/)                              | Version **4.13**                                             | YES       |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.19.2**                                           | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.14**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.20.2**                                           | YES       |
 | [Gmsh](http://gmsh.info/)                                    | Version **4.10.4**                                           | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
@@ -102,7 +102,7 @@ Now you should have the PSD solver installed on your machine. Note that, the sol
 
 - Obtain the latest version of PSD by cloning the git repository:
 ```bash
-git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
+git clone https://github.com/mohd-afeef-badri/psd.git PSD-Sources
 ```
 
 - Use automake within the  cloned PSD folder (`PSD-Sources`) 
@@ -143,6 +143,21 @@ echo 'export LD_LIBRARY_PATH=/home/PSDinstall/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 ```
 
 **Note:** for temporary approach, run `source $PREFIXPSD/mfront-env.sh` before using PSD.
+
+**MED support:**
+
+After you finish installing PSD correctly. Follow this to build PSD with `med` support (on Ubuntu 22.04)
+
+```bash 
+cd ext
+make build-salome
+cd ..
+export SALOMEPREFIX=/home/PSDinstall/bin/BINARIES-SALOME
+./configure --prefix=/home/PSDinstall --with-hdf5=$SALOMEPREFIX/hdf5 --with-medfile=$SALOMEPREFIX/medfile --with-medcoupling=$SALOMEPREFIX/MEDCOUPLING
+make clean
+make 
+make install
+```
 
 
 
