@@ -11,16 +11,16 @@ MFRONT_VERSION=4.0.0
 MGIS_VERSION=2.0
 
 # Define the version of PETSc library
-PETSC_VERSION=3.19.2
+PETSC_VERSION=3.20.2
 
 # Define the version of FreeFEM library
-FREEFEM_VERSION=4.13
+FREEFEM_VERSION=4.14
 
 # Define the version of Gmsh library
 GMSH_VERSION=4.11.1
 
 # Define the version of MUMPS library
-MUMPS_VERSION=5.5.1
+MUMPS_VERSION=5.6.1
 
 # Define the version of METIS library
 METIS_VERSION=5.1.0
@@ -29,16 +29,16 @@ METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
 
 # Define the version of SLEPc library
-SLEPC_VERSION=3.19.1
+SLEPC_VERSION=3.20.1
 
 # Define the version of SCALAPACK library
 SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
 
 # Define the version of HPDDM library
-HPDDM_VERSION=314f74e8210b02e76fa16ea706641249594ce92f
+HPDDM_VERSION=2.2.5
 
 # Define the version of HYPRE library
-HYPRE_VERSION=2.28.0
+HYPRE_VERSION=2.29.0
 
 
 #----------------------------------------------------------------------------------------
@@ -58,10 +58,10 @@ SALOME_OS=UB22.04
 SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
 
 # Define a specific tag for the Salome version on Ubuntu 22.04
-SALOME_TAG=-22b4348cf247e9a72539dca3b6f2d65f
+SALOME_TAG=-4948a0c629f58ee7a3b042a672f6f977
 
 # Specify the version of Salome to be used in the project
-SALOME_VERSION=9.9.0
+SALOME_VERSION=9.12.0
 
 #----------------------------------------------------------------------------------------
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
@@ -105,7 +105,7 @@ endif
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
                       -O freefem-$(FREEFEM_VERSION).tar.gz
 # Download HPDDM source code
-HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
+HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
                      -O hpddm-$(HPDDM_VERSION).tar.gz
 # Download HYPRE source code
 HYPRE_DOWNLOAD = wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
@@ -120,7 +120,7 @@ MGIS_DOWNLOAD = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport
 PETSC_DOWNLOAD = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
                      -O petsc-$(PETSC_VERSION).tar.gz
 # Download MUMPS source code
-MUMPS_DOWNLOAD = wget -c http://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_VERSION)-p1.tar.gz \
+MUMPS_DOWNLOAD = wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
                      -O mumps-$(MUMPS_VERSION).tar.gz
 # Download METIS source code
 METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
@@ -138,8 +138,7 @@ SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/ar
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                       -O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/00cc91daf44a69ef9cc3595b7f229ec6960bcc93/3rdparty/ff-petsc/petsc-cmake-seq.patch
-
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the 
