@@ -348,19 +348,6 @@ if(dirichletconditions>=1)
 
 }
 
-if(Prblm=="damage" && precracked)
- writeIt
- "                                                                              \n"
- "//============================================================================\n"
- "//    ------- Dirichlet boundary-condition on pre-cracked border -------      \n"
- "// ---------------------------------------------------------------------------\n"
- "// DbcCrackOn : mention the tag of the surface(s) which are pre-cracked       \n"
- "//              list of surfaces should be comma separated, e.g., 1,2,3       \n"
- "//============================================================================\n"
- "                                                                              \n"
- "  macro  DbcCrackOn 4   //                                                    \n"
- "                                                                              \n";
-
 if(dirichletpointconditions>=1)
  {
  writeIt
