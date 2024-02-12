@@ -1,0 +1,57 @@
+name: UB22.04-mpich
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.MD'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+  pull_request:
+    branches:
+      - main
+      - devel
+    paths-ignore:
+      - '**.MD'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich
+    - name: configure
+      run: |
+        export PREFIXPSD=/home/runner/psd
+        autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies
+    - name: make
+      run: |
+        make && make install
+    - name: make check
+      run: |
+        make check
+        # Save the log file(s) as an artifact
+        mkdir -p $GITHUB_WORKSPACE/artifacts
+        mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
+
+    - name: Upload logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: check-logs
+        path: $GITHUB_WORKSPACE/artifacts

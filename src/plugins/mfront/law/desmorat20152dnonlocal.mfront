@@ -115,12 +115,20 @@ s.setEntryName("SmallS");
     const auto et = (-nu / young) * tr_sig * I2 + ((1 + nu) / young) * sig_n; //computed at n or n+1 ?
     // positive part of the strain
     const auto etp = positive_part(et);
+    // norm etp
+    const auto normetp = sqrt(etp|etp);
+    // direction N
+    const auto Ntens = etp/normetp;
+    //const auto Ntens = positive_part(sig_n);
     // updated trace of H-I value so e_mazars=ey
     const auto ntr_rH = (epsnleq - k0) / (S * Rv_s); 
     // lagrange multiplier
-    const auto dl = (ntr_rH - tr_rH) / (max(etp|I2,strain(1e-14)));
+    const auto dl = (ntr_rH - tr_rH) / (max(Ntens|I2,strain(1e-14)));
+ 
+    //const auto normetp = 1.;
     // updating the Ladeveze damage variable
-    frH -= dl*etp; 
+    //frH -= dl*etp; 
+    frH -= dl*Ntens; 
   }
 
   const auto tr_e = e|I2;

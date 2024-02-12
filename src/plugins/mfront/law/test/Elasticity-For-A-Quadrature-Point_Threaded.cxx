@@ -30,7 +30,17 @@ int main(const int argc, const char* const* argv) {
   std::cout << "       ....                "<< std::endl;
 
   constexpr const auto h = Hypothesis::GENERALISEDPLANESTRAIN;
+#ifdef __APPLE__
+  const auto b = load("./../src/libBehaviour.dylib", "Elasticity", h);
+#endif
+
+#ifdef WIN32
+  const auto b = load("./../src/libBehaviour.dll", "Elasticity", h);
+#endif
+
+#ifdef __linux__
   const auto b = load("./../src/libBehaviour.so", "Elasticity", h);
+#endif
 
   std::cout << "       Done   "<< std::endl;
   std::cout << "   ----------------------- "<< std::endl;

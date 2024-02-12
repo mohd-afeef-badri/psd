@@ -19,6 +19,8 @@ Makefile
 # All so and o files #
 *.so
 *.o
+*.dylib
+*.dll
 
 # All mesh files #
 *.msh

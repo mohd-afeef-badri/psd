@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.5], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD], [2.6], [mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -336,7 +336,21 @@ test "$MPIF77" == "$F77" && AC_MSG_ERROR([
   to provide the location of MPI Fortran 77 compiler.
                                    ])
 
+dnl -----------------------------------------------------------------
+SECTION_TITLE([    override dependencies if --with-dependencies   ])
 
+test $dependencies != no && AC_SUBST(FF,"${prefix}/bin/FreeFem++")
+test $dependencies != no && AC_SUBST(FFCXX,"${prefix}/bin/ff-c++")
+test $dependencies != no && AC_SUBST(FFCXXDEP,"${prefix}/bin/ff-get-dep")
+test $dependencies != no && AC_SUBST(FFMPI,"${prefix}/bin/ff-mpirun")
+
+
+test $dependencies != no && AC_SUBST(GMSH,"${prefix}/bin/gmsh")
+
+
+test $dependencies != no && AC_SUBST(mgis,"${prefix}")
+test $dependencies != no && AC_SUBST(mfront,"${prefix}")
+dnl -----------------------------------------------------------------
 
 
 SECTION_TITLE([      checking for a Gmsh mesher        ])
@@ -507,6 +521,7 @@ test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
 
 AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
 dnl ---------------------------------------------------------------
+
 
 SECTION_TITLE([    generating the required makefiles   ])
 

@@ -5,7 +5,15 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- Support for Apple silicon MacOSARM
+- Installing Gmsh automatically for MacOS
+- Simplified install procedure
+
 ### Changed
+
+- Moved to FreeFEM 4.14
+- Moved to PETSc 3.20.2
+- Moved to Gmsh 4.11.1
 
 ### Removed
 

@@ -1,6 +1,16 @@
 //
 
+#ifdef __APPLE__
+#define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.dylib"
+#endif
+
+#ifdef __linux__
 #define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.so"
+#endif
+
+#ifdef WIN32
+#define MFRONT_SHARED_LIBRARY_LOCATION "/usr/lib/libBehaviour.dll"
+#endif
 
 
 /*

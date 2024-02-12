@@ -1,3 +1,4 @@
+//ff-c++-LIBRARY-dep: [mkl|blas]
 /*****************************************************************************
 
          This file is a part of PSD (Parallel Structural Dynamics)

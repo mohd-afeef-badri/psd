@@ -76,8 +76,11 @@ if(pointprobe && !Sequential)
   "//  indicator should anything go wrong.                                        \n"
   "//============================================================================ \n"
   "                                                                               \n"
-  "  int[int] iProbe(ProbePointCord.n), Prank(ProbePointCord.n);                  \n"
-  "  iProbe=-1;    Prank=-1;                                                      \n"
+  "  int[int] iProbe(ProbePointCord.n),                                           \n"
+  "           Prank(ProbePointCord.n),                                            \n"
+  "           PrankGlobal(ProbePointCord.n);                                      \n"
+  "                                                                               \n"
+  "  iProbe=-1;    Prank=-1;    PrankGlobal=-1;                                   \n"
   "                                                                               \n";
 
 if(pointprobe && Sequential)

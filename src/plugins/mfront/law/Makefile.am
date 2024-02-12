@@ -8,7 +8,9 @@ IsotropicLinearHardeningPlasticity.mfront  \
 Iwan.mfront \
 desmorat20152d.mfront \
 desmorat20152dnonlocal.mfront \
-desmorat3Dnonlocal.mfront
+desmorat3Dnonlocal.mfront \
+desmoratplanestress.mfront \
+desmoratplanestressDelta.mfront
 
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
@@ -19,12 +21,15 @@ src/IsotropicLinearHardeningPlasticity.o  \
 src/Iwan.o \
 src/desmorat20152d.o \
 src/desmorat20152dnonlocal.o \
-src/desmorat3Dnonlocal.o
+src/desmorat3Dnonlocal.o \
+src/desmoratplanestress.o \
+src/desmoratplanestressDelta.o
 else
 LIST_OBJ_FILES =
 endif
 
 export PATH := ${mfront}/bin:$(PATH)
+export LD_LIBRARY_PATH := ${mfront}/lib:$(LD_LIBRARY_PATH)
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
 
@@ -121,6 +126,24 @@ src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  desmorat3Dnonlocal.mfront
 	${mfront}/bin/mfront --obuild
+	
+src/desmoratplanestress.o: desmoratplanestress.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmoratplanestress support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmoratplanestress.mfront
+	${mfront}/bin/mfront --obuild
+
+src/desmoratplanestressDelta.o: desmoratplanestressDelta.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmoratplanestressDelta support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmoratplanestressDelta.mfront
+	${mfront}/bin/mfront --obuild
 
 
 install-exec-local:
@@ -140,7 +163,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -rf *~  *.so *.o $(DEP1) ./src ./include/MFront ./include/TFEL
+	rm  -rf *~  *.$(SO_SUFFIX) *.o $(DEP1) ./src ./include/MFront ./include/TFEL
 
 
 maintainer-clean-local: clean-local

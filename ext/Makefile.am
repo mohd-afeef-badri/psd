@@ -1,57 +1,74 @@
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am defines version variables for various libraries used in the
+# project. These variables specify the versions of external dependencies used during the
+# build process.
+#----------------------------------------------------------------------------------------
 
+# Define the version of MFront library
 MFRONT_VERSION=4.0.0
+
+# Define the version of MGIS library
 MGIS_VERSION=2.0
-PETSC_VERSION=3.19.2
-FREEFEM_VERSION=4.13
-GMSH_VERSION=4.10.4
-MUMPS_VERSION=5.5.1
+
+# Define the version of PETSc library
+PETSC_VERSION=3.20.2
+
+# Define the version of FreeFEM library
+FREEFEM_VERSION=4.14
+
+# Define the version of Gmsh library
+GMSH_VERSION=4.11.1
+
+# Define the version of MUMPS library
+MUMPS_VERSION=5.6.1
+
+# Define the version of METIS library
 METIS_VERSION=5.1.0
+
+# Define the version of ParMETIS library
 PARMETIS_VERSION=4.0.3
-SLEPC_VERSION=3.19.1
+
+# Define the version of SLEPc library
+SLEPC_VERSION=3.20.1
+
+# Define the version of SCALAPACK library
 SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
-HPDDM_VERSION=314f74e8210b02e76fa16ea706641249594ce92f
-HYPRE_VERSION=2.28.0
+
+# Define the version of HPDDM library
+HPDDM_VERSION=2.2.5
+
+# Define the version of HYPRE library
+HYPRE_VERSION=2.29.0
+
+
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am defines the version variables for Salome and its supported 
+# operating systems. The Salome version, along with specific tags, is set for different 
+# operating systems used in the build process.
+#----------------------------------------------------------------------------------------
 
 #################################################
 # UBUNTU 22.04
 #################################################
-#SALOME_OS=UB22.04
-#SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
-#SALOME_TAG=-22b4348cf247e9a72539dca3b6f2d65f
 
-#################################################
-# UBUNTU 20.04
-#################################################
-#SALOME_OS=UB20.04
-#SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
-#SALOME_TAG=
-
-#################################################
-# UBUNTU 18.04
-#################################################
-#SALOME_OS=UB18.04
-#SALOME_OS_TAG=-$(SALOME_OS)-SRC
-#SALOME_TAG=
-
-#################################################
-# CENTOS 7
-#################################################
-#SALOME_OS=CO7
-#SALOME_OS_TAG=-MPI-$(SALOME_OS)-SRC
-#SALOME_TAG=
-
+# Set the operating system for Salome to Ubuntu 22.04
 SALOME_OS=UB22.04
+
+# Define a tag for the Salome source on Ubuntu 22.04
 SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
-SALOME_TAG=-22b4348cf247e9a72539dca3b6f2d65f
 
-SALOME_VERSION=9.9.0
+# Define a specific tag for the Salome version on Ubuntu 22.04
+SALOME_TAG=-4948a0c629f58ee7a3b042a672f6f977
 
-ENVFILE=envvar.tmp
+# Specify the version of Salome to be used in the project
+SALOME_VERSION=9.12.0
 
-
-PETSC_ARCH_PSD  =fr
+#----------------------------------------------------------------------------------------
+# Check if BUILDDEPENDENCIES flag is set to determine the build execution list
+#----------------------------------------------------------------------------------------
 
 if BUILDDEPENDENCIES
+# Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 LIST_MAKE_EXECUTE = download-dependencies \
 gmsh-build \
 mfront-build \
@@ -59,82 +76,104 @@ mgis-build \
 petsc-build \
 freefem-build
 else
+# If BUILDDEPENDENCIES is not set, leave the list empty
 LIST_MAKE_EXECUTE =
 endif
 
 
-GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
-                       -O gmsh-$(GMSH_VERSION).tar.gz
-FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
-                       -O freefem-$(FREEFEM_VERSION).tar.gz
-HPDDM_DOWNLOAD   =  wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
-                       -O hpddm-$(HPDDM_VERSION).tar.gz
-HYPRE_DOWNLOAD   =  wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
-                       -O hypre-$(HYPRE_VERSION).tar.gz
-MFRONT_DOWNLOAD  = wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz \
-                       -O mfront-$(MFRONT_VERSION).tar.gz
-MGIS_DOWNLOAD    = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport/archive/refs/tags/MFrontGenericInterfaceSupport-$(MGIS_VERSION).tar.gz \
-                       -O mgis-$(MGIS_VERSION).tar.gz
-PETSC_DOWNLOAD   = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
-                       -O petsc-$(PETSC_VERSION).tar.gz
-MUMPS_DOWNLOAD   =  wget -c  http://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_VERSION)-p1.tar.gz \
-                       -O mumps-$(MUMPS_VERSION).tar.gz
-METIS_DOWNLOAD   =  wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
-                       -O metis-$(METIS_VERSION).tar.gz
-SLEPC_DOWNLOAD   =  wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
-                       -O slepc-$(SLEPC_VERSION).tar.gz
-PARMETIS_DOWNLOAD    =  wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
-                       -O parmetis-$(PARMETIS_VERSION).tar.gz
-SCALAPACK_DOWNLOAD   =  wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
-                       -O scalapack-$(SCALAPACK_VERSION).tar.gz
-SALOME_DOWNLOAD      =  wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
-                       -O salome-$(SALOME_VERSION).tar.gz
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am contains various download commands to fetch the source code 
+# for different libraries and dependencies used in the project. The download URLs are 
+# specified based on the library versions and the target operating system.
+#----------------------------------------------------------------------------------------
 
+# Check if MAC flag is set to determine the Gmsh download URL
+# If MAC flag is set, download Gmsh for macOS with ARM architecture
+# If MAC flag is not set, download Gmsh for Linux
 
 if MAC
-MAKEANDINSTALL = make -j4 && make MacOsX && cp -r ./idp ${prefix}/lib/ff++/$(FREEFEM_VERSION)/.
+GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/macOS/gmsh-$(GMSH_VERSION)-MacOSARM.dmg \
+                       -O gmsh-$(GMSH_VERSION).dmg
 else !MAC
-MAKEANDINSTALL = make -j4 && make install
+GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
+                       -O gmsh-$(GMSH_VERSION).tar.gz
 endif
 
+# Define download commands for different libraries and dependencies
 
-define mfrontenv
-export PATH=\$$PATH:${prefix}/bin \nexport LD_LIBRARY_PATH=\$$LD_LIBRARY_PATH:${prefix}/lib
-endef
+# Download FreeFEM source code
+FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
+                      -O freefem-$(FREEFEM_VERSION).tar.gz
+# Download HPDDM source code
+HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
+                     -O hpddm-$(HPDDM_VERSION).tar.gz
+# Download HYPRE source code
+HYPRE_DOWNLOAD = wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
+                     -O hypre-$(HYPRE_VERSION).tar.gz
+# Download MFront source code
+MFRONT_DOWNLOAD = wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz \
+                      -O mfront-$(MFRONT_VERSION).tar.gz
+# Download MGIS source code
+MGIS_DOWNLOAD = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport/archive/refs/tags/MFrontGenericInterfaceSupport-$(MGIS_VERSION).tar.gz \
+                    -O mgis-$(MGIS_VERSION).tar.gz
+# Download PETSc source code
+PETSC_DOWNLOAD = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
+                     -O petsc-$(PETSC_VERSION).tar.gz
+# Download MUMPS source code
+MUMPS_DOWNLOAD = wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
+                     -O mumps-$(MUMPS_VERSION).tar.gz
+# Download METIS source code
+METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
+                     -O metis-$(METIS_VERSION).tar.gz
+# Download SLEPc source code
+SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
+                     -O slepc-$(SLEPC_VERSION).tar.gz
+# Download ParMETIS source code
+PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
+                        -O parmetis-$(PARMETIS_VERSION).tar.gz
+# Download SCALAPACK source code
+SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
+                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
+# Download Salome source code
+SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
+                      -O salome-$(SALOME_VERSION).tar.gz
+# Download PETSc patch for cmake
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am defines a target "all-local" that is executed during the 
+# build process. It depends on the targets "make-directories" and the list of make commands
+# in the variable "LIST_MAKE_EXECUTE". It is used to build the required directories and 
+# execute the specified make commands.
+#----------------------------------------------------------------------------------------
+
+# Target to build the necessary directories and execute the specified make commands
 all-local: make-directories $(LIST_MAKE_EXECUTE)
 	@echo ""
 
 
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am defines a target "make-directories" used to create specific
+# directories during the build process. It is responsible for creating directories for 
+# binaries, documentation, and manual pages in the specified installation prefix.
+#----------------------------------------------------------------------------------------
+
+# Target to create the required directories during the build process
 make-directories:
 	@mkdir -p ${prefix}/bin
 	@mkdir -p ${prefix}/share/doc
 	@mkdir -p ${prefix}/share/man
 
+
+#----------------------------------------------------------------------------------------
+# This section in Makefile.am defines a target "download-dependencies" that is responsible 
+# for downloading the required source code for various libraries and dependencies if the 
+# source files are not already present in the build directory. It performs a series of 
+# checks for each library version and downloads the respective source code if necessary.
+#----------------------------------------------------------------------------------------
+
+# Target to download the required source code for libraries and dependencies
 download-dependencies:
-if MAC
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo " IMPORTANT NOTE:   "
-	@echo "*---------------------------------*"
-	@echo ""
-	@echo "  PSD Cannot install Gmsh for MacOS please install this"
-	@echo "  yourself by downloading the precompiled 'dmg' from"
-	@echo ""
-	@echo "     https://gmsh.info/"
-	@echo ""
-	@echo "  Note in the ./configure step you will have to provide"
-	@echo ""
-	@echo "  --with-Gmsh=/your/gmsh/install/bin"
-	@echo ""
-	@echo "  with /your/gmsh/install/bin being the path where you install"
-	@echo "  the dmg install"
-else !MAC
-	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
-		$(GMSH_DOWNLOAD); \
-	fi
-endif
 	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
 		$(HPDDM_DOWNLOAD); \
 	fi
@@ -171,17 +210,45 @@ endif
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+if MAC
+	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
+		$(GMSH_DOWNLOAD); \
+	fi
+else !MAC
+	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
+		$(GMSH_DOWNLOAD); \
+	fi
+endif
+
+
+# Target to download the salome source code for libraries and dependencies
+download-salome:
+	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
+		$(SALOME_DOWNLOAD); \
+	fi
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
-#  - Not working for MAC OS
-#  - Download from wget version GMSH_VERSION
-#  - User can override download by providing ext/gmsh-$(GMSH_VERSION).tar.gz
+# This section in Makefile.am deals with the Gmsh installation process.
+# - It specifies that Gmsh is not working for MAC OS.
+# - It downloads Gmsh from the specified version GMSH_VERSION unless the user provides
+#   an override by providing the ext/gmsh-$(GMSH_VERSION).tar.gz file.
 #--------------------------------------------------------------------------------
 
+
+if MAC
+GMSHZIP=dmg
+else !MAC
+GMSHZIP=tar.gz
+endif
+
+# Target gmsh-build: This target is used to build Gmsh using the downloaded source code.
 gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
-gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar.gz
+
+# Check if MAC flag is set to determine the installation procedure for macOS
+# If not on MAC, install Gmsh for Linux
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).$(GMSHZIP)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling gmsh for you be patient:   "
@@ -190,20 +257,16 @@ gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar
 if MAC
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo " IMPORTANT NOTE:   "
+	@echo "   using hdiutil for gmsh-$(GMSH_VERSION).dmg"
 	@echo "*---------------------------------*"
 	@echo ""
-	@echo "  PSD Cannot install Gmsh for MacOS please install this"
-	@echo "  yourself by downloading the precompiled 'dmg' from"
-	@echo ""
-	@echo "     https://gmsh.info/"
-	@echo ""
-	@echo "  Note in the ./configure step you will have to provide"
-	@echo ""
-	@echo "  --with-Gmsh=/your/gmsh/install/bin"
-	@echo ""
-	@echo "  with /your/gmsh/install/bin being the path where you install"
-	@echo "  the dmg install"
+	yes | hdiutil attach ./gmsh-$(GMSH_VERSION).dmg	 && \
+	cp -r /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM/Gmsh.app ${prefix}/gmsh-$(GMSH_VERSION) && \
+	hdiutil detach /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM
+	rm -f ${prefix}/bin/gmsh
+	ln -s ${prefix}/gmsh-$(GMSH_VERSION)/Contents/MacOS/gmsh ${prefix}/bin/gmsh
+	mkdir -p gmsh-$(GMSH_VERSION)
+	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 endif
 if !MAC
 	@echo ""
@@ -229,7 +292,9 @@ if !MAC
 	@echo ""
 endif
 
-gmsh-$(GMSH_VERSION).tar.gz:
+
+# Target gmsh-$(GMSH_VERSION).$(GMSHZIP): Downloads Gmsh unless BUILDZIPPEDDEPENDENCIES flag is set
+gmsh-$(GMSH_VERSION).$(GMSHZIP):
 if !BUILDZIPPEDDEPENDENCIES
 	$(GMSH_DOWNLOAD)
 endif
@@ -239,6 +304,11 @@ endif
 #  - Download from wget version MFRONT_VERSION
 #  - User can override download by providing ext/mfront-$(MFRONT_VERSION).tar.gz
 #--------------------------------------------------------------------------------
+
+define mfrontenv
+export PATH=\$$PATH:${prefix}/bin \nexport LD_LIBRARY_PATH=\$$LD_LIBRARY_PATH:${prefix}/lib
+endef
+
 
 mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX)
 
@@ -280,6 +350,8 @@ endif
 #  - User can override download by providing ext/mgis-$(MGIS_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
+ENVFILE=envvar.tmp
+
 mgis-build: mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX)
 
 mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MGIS_VERSION).tar.gz
@@ -320,6 +392,8 @@ endif
 #  - Download from wget version PETSC_VERSION
 #  - User can override download by providing ext/petsc-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
+
+PETSC_ARCH_PSD  =fr
 
 PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
@@ -384,6 +458,12 @@ endif
 #  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
+if MAC
+MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install 
+else !MAC
+MAKEANDINSTALL = make -j4 && make install
+endif
+
 freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
 
 freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERSION).tar.gz
@@ -420,10 +500,13 @@ endif
 
 #--------------------------------------------------------------------------------
 # SALOME installation
+# This section in Makefile.am defines a target "salome-build" used to build SALOME 
+# using the downloaded source code. It includes the installation process for SALOME.
 #  - Download from wget version SALOME_VERSION
 #  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
+# Target salome-build: Build and install SALOME using the downloaded source
 salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
 
 salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome salome-$(SALOME_VERSION).tar.gz
@@ -460,16 +543,20 @@ salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome 
 	@echo "*---------------------------------*"
 	@echo ""
 
+# Target salome-$(SALOME_VERSION).tar.gz: Downloads SALOME unless BUILDZIPPEDDEPENDENCIES flag is set
 salome-$(SALOME_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(SALOME_DOWNLOAD)
 endif
 
-download-salome:
-	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
-		$(SALOME_DOWNLOAD); \
-	fi
 
+#--------------------------------------------------------------------------------
+# This section in Makefile.am defines a target "check-local" used to perform checks
+# or tests related to the build. However, in this case, it does not perform any checks 
+# and only displays a message indicating that there is nothing to check.
+#--------------------------------------------------------------------------------
+
+# Target check-local: Nothing to check, just display a message
 check-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -477,6 +564,13 @@ check-local:
 	@echo "*============================================================*"
 	@echo ""
 
+
+#--------------------------------------------------------------------------------
+# This section in Makefile.am defines two targets: "clean-local" and 
+# "maintainer-clean-local" used for cleaning files generated during the build process.
+#--------------------------------------------------------------------------------
+
+# Target clean-local: Clean generated files in the current directory
 clean-local:
 	@echo ""
 	@echo "*============================================================*"
@@ -487,6 +581,7 @@ clean-local:
 	rm  -f *~ *.log
 
 
+# Target maintainer-clean-local: Clean automake generated files and dependencies
 maintainer-clean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
@@ -499,6 +594,13 @@ maintainer-clean-local: clean-local
 	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
 	rm *.tar.gz
 
+#--------------------------------------------------------------------------------
+# This section in Makefile.am defines a target "install-exec-local" that is used to 
+# install executable files. However, in this case, it does not perform any installation 
+# and only displays a message indicating that there is nothing to install.
+#--------------------------------------------------------------------------------
+
+# Target install-exec-local: Nothing to install, just display a message
 install-exec-local:
 	@echo ""
 	@echo "*============================================================*"

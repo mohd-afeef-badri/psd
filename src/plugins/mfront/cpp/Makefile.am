@@ -1,5 +1,15 @@
 LIST_COMPILE= mfront.cpp
 
+if MAC
+OPEN_MP_FLAGS_INCLUDE = 
+OPEN_MP_FLAGS_LIB = 
+#OPEN_MP_FLAGS_INCLUDE = "-I/opt/homebrew/opt/libomp/include"
+#OPEN_MP_FLAGS_LIB = "-L/opt/homebrew/opt/libomp/lib -Xpreprocessor -march=native"
+else !MAC
+OPEN_MP_FLAGS_INCLUDE = ""
+OPEN_MP_FLAGS_LIB = "-fopenmp -march=native -fopt-info-vec-missed"
+endif
+
 FF_CPP_IS = `which $(FFCXX)`
 FF_DEP_IS = `which $(FFCXXDEP)`
 
@@ -20,8 +30,8 @@ $(DEP1): mfront.cpp PsdMfrontHandler.hpp  PsdMfrontHandlerDm.hpp  PsdMfrontPrint
 if HAVEMGIS
 	cat $(FF_CPP_IS) | sed 's/++14/++17/g' > ff-c++-temp && chmod a+x ff-c++-temp
 	cp $(FF_DEP_IS) .
-	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib#${prefix}/lib#g" {} \;
-	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) -I${mgis}/include -Wl,-rpath,${mgis}/lib -fopenmp -march=native -fopt-info-vec-missed
+	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib/libBehaviour.$(SO_SUFFIX)#${prefix}/lib/libBehaviour.$(SO_SUFFIX)#g" {} \;
+	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) $(OPEN_MP_FLAGS_INCLUDE) -I${mgis}/include -Wl,-rpath,${mgis}/lib $(OPEN_MP_FLAGS_LIB) 
 	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS
 	@echo ""

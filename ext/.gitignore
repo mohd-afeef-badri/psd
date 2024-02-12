@@ -4,5 +4,6 @@ mgis-*
 petsc-*
 gmsh-*
 salome-*
+SALOME-*
 *.tar.gz
 !petsc-scalapack.patch

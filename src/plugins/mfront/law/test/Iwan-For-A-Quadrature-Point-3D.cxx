@@ -68,7 +68,17 @@ int main(const int argc, const char *const *argv)
     if (!tt) std::cout << "   ->  Loading Behaviour   " << std::endl;
     constexpr
     const auto h = Hypothesis::TRIDIMENSIONAL;
+#ifdef __APPLE__
+    const auto b = load("./../src/libBehaviour.dylib", "Iwan", h);
+#endif
+
+#ifdef WIN32
+    const auto b = load("./../src/libBehaviour.dll", "Iwan", h);
+#endif
+
+#ifdef __linux__
     const auto b = load("./../src/libBehaviour.so", "Iwan", h);
+#endif
     if (!tt) std::cout << "       Done   " << std::endl;
     if (!tt) printLine("-");
 
