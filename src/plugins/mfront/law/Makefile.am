@@ -9,7 +9,8 @@ Iwan.mfront \
 desmorat20152d.mfront \
 desmorat20152dnonlocal.mfront \
 desmorat3Dnonlocal.mfront \
-desmoratplanestress.mfront
+desmoratplanestress.mfront \
+desmoratplanestressDelta.mfront
 
 if HAVEMFRONT
 LIST_OBJ_FILES = src/HelloWorld.o  \
@@ -21,7 +22,8 @@ src/Iwan.o \
 src/desmorat20152d.o \
 src/desmorat20152dnonlocal.o \
 src/desmorat3Dnonlocal.o \
-src/desmoratplanestress.o
+src/desmoratplanestress.o \
+src/desmoratplanestressDelta.o
 else
 LIST_OBJ_FILES =
 endif
@@ -132,6 +134,15 @@ src/desmoratplanestress.o: desmoratplanestress.mfront
 	@echo "----------------------------------------"
 	@echo ""
 	${mfront}/bin/mfront --interface=generic  desmoratplanestress.mfront
+	${mfront}/bin/mfront --obuild
+
+src/desmoratplanestressDelta.o: desmoratplanestressDelta.mfront
+	@echo ""
+	@echo "----------------------------------------"
+	@echo "Compiled desmoratplanestressDelta support for mfront"
+	@echo "----------------------------------------"
+	@echo ""
+	${mfront}/bin/mfront --interface=generic  desmoratplanestressDelta.mfront
 	${mfront}/bin/mfront --obuild
 
 
