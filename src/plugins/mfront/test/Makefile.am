@@ -116,6 +116,10 @@ Test_PrintStats: Test_PrintStats.edp
 	@./../../../psd-solve/PSD_Solve -np 1 Test_PrintStats.edp -v 1 -mfront_behaviour desmorat3dnonlocal >  Test_PrintStats_desmorat3Dnonlocal.log
 	@./../../../psd-solve/PSD_Solve -np 2 Test_PrintStats.edp -v 1 -mfront_behaviour desmorat3dnonlocal >  Test_PrintStats_NP2_desmorat3Dnonlocal.log
 	@echo "  PASSED "
+	@echo "Test_PrintStats : mfront testing PsdMfrontPrintBehaviourStats() Desmorat planestressDelta nonlocal "
+	@./../../../psd-solve/PSD_Solve -np 1 Test_PrintStats.edp -v 1 -mfront_behaviour desmoratplanestressDelta >  Test_PrintStats_desmoratplanestressDelta.log
+	@./../../../psd-solve/PSD_Solve -np 2 Test_PrintStats.edp -v 1 -mfront_behaviour desmoratplanestressDelta >  Test_PrintStats_NP2_desmoratplanestressDelta.log
+	@echo "  PASSED "
 
 clean-local:
 	@echo ""
