@@ -306,7 +306,7 @@ endif
 #--------------------------------------------------------------------------------
 
 define mfrontenv
-export PATH=\$$PATH:${prefix}/bin \nexport LD_LIBRARY_PATH=\$$LD_LIBRARY_PATH:${prefix}/lib
+export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
 
 
