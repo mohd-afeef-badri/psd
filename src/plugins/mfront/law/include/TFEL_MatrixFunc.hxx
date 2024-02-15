@@ -66,9 +66,9 @@ namespace tfel::math::extensions {
     	stensor<2u, real>::computeEigenTensors(n0, n1, n2, m);
     	// Add terms associated to each eigenvalues
     	real pi = 3.141592653589793;
-    	stensor<2u, real> func_HD = (2./pi)*atan(pow(vp(0)/beta, alpha))*n0 +
-    				    (2./pi)*atan(pow(vp(1)/beta, alpha))*n1 +
-    				    (2./pi)*atan(pow(vp(2)/beta, alpha))*n2;
+    	stensor<2u, real> func_HD = (2./pi)*atan(pow(fabs(vp(0))/beta, alpha))*n0 +
+    				    (2./pi)*atan(pow(fabs(vp(1))/beta, alpha))*n1 +
+    				    (2./pi)*atan(pow(fabs(vp(2))/beta, alpha))*n2;
     	return func_HD;
     				     
     }
@@ -88,9 +88,9 @@ namespace tfel::math::extensions {
     	stensor<2u, real>::computeEigenTensors(n0, n1, n2, m);
     	// Add terms associated to each eigenvalues
     	real pi = 3.141592653589793;
-    	stensor<2u, real> func_HD = (pow(vp(0), puissance))*n0 +
-    				    (pow(vp(1), puissance))*n1 +
-    				    (pow(vp(2), puissance))*n2;
+    	stensor<2u, real> func_HD = (pow(fabs(vp(0)), puissance))*n0 +
+    				    (pow(fabs(vp(1)), puissance))*n1 +
+    				    (pow(fabs(vp(2)), puissance))*n2;
     	return func_HD;
     				     
     }

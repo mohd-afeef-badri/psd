@@ -81,7 +81,7 @@ beta.setEntryName("beta");
 
   //Flavien like
   d = tfel::math::extensions::compute_damage(Delta,alpha,beta);
-  Dz = (2./pi)*atan(pow(Deltaz/beta,alpha));
+  Dz = (2./pi)*atan(pow(fabs(Deltaz)/beta,alpha));
 
   //ln like (Mattiello and Desmorat 2019)
   //d = tfel::math::extensions::compute_damage_ln(Delta,alpha,beta);
@@ -192,7 +192,7 @@ beta.setEntryName("beta");
   //Falvien like
   //computing new damage with updated Delta
   d = tfel::math::extensions::compute_damage(Delta,alpha,beta);
-  Dz = (2./pi)*atan(pow(Deltaz/beta,alpha));
+  Dz = (2./pi)*atan(pow(fabs(Deltaz)/beta,alpha));
 
   //ln like (Mattiello and Desmorat 2019)
   //d = tfel::math::extensions::compute_damage_ln(Delta,alpha,beta);
