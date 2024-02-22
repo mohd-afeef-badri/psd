@@ -22,17 +22,17 @@ check-header:
 	
 Test_1: Test_1.edp
 	@echo "Test_1 : gofastplugins load test"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_1.edp -v 10 
+	@./../../../psd-solve/PSD_Solve -n 1 Test_1.edp -v 10 >  Test_1.log
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
 	@echo "Test_2 : gofastplugins GFPeigenAlone test"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp >  Test_2.log
+	@./../../../psd-solve/PSD_Solve -n 1 Test_2.edp >  Test_2.log
 	@echo "  PASSED "	
 
 Test_3: Test_3.edp
 	@echo "Test_3 : gofastplugins GFPeigen test"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_3.edp >  Test_3.log
+	@./../../../psd-solve/PSD_Solve -n 1 Test_3.edp >  Test_3.log
 	@echo "  PASSED "
 			
 clean-local:

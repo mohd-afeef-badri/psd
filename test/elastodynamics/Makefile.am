@@ -151,7 +151,7 @@ check-parallel:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics"
@@ -161,7 +161,7 @@ check-parallel:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel.log
 
 check-parallel-gfp:
 	@echo ""
@@ -173,7 +173,7 @@ check-parallel-gfp:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics GFP update"
@@ -183,7 +183,7 @@ check-parallel-gfp:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP.log	
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP.log
 
 PARALLEL_FLAG_ED_NB = $(PARALLEL_FLAG_ED)  -useGFP -timediscretization newmark_beta
 check-sequential-gfp-newmark:
@@ -196,7 +196,7 @@ check-sequential-gfp-newmark:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP) Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh -v 1 -ns -nw > Solve-2D_parallel_GFP_Newmark.log
+	./PSD_Solve -n $(NP) Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh -v 1 -ns -nw > Solve-2D_parallel_GFP_Newmark.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics GFP update and Newmark-Beta"
@@ -206,7 +206,7 @@ check-sequential-gfp-newmark:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP) Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_parallel_GFP_Newmark.log
+	./PSD_Solve -n $(NP) Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_parallel_GFP_Newmark.log
 	
 check-parallel-gfp-getenergies:
 	@echo ""
@@ -218,7 +218,7 @@ check-parallel-gfp-getenergies:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP_getenergies.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP_getenergies.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Elastodynamics GFP update  and plot energies"
@@ -228,7 +228,7 @@ check-parallel-gfp-getenergies:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP_getenergies.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP_getenergies.log
 
 PARALLEL_FLAG_ED_NB_NL = $(PARALLEL_FLAG_ED_NB)  -model pseudo_nonlinear -getenergies
 check-parallel-gfp-getenergies-newmark-pseudononlinear:
@@ -241,7 +241,7 @@ check-parallel-gfp-getenergies-newmark-pseudononlinear:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP_getenergies_pseudoNL.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP_getenergies_pseudoNL.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D ElastodynamicsNewmark-beta, GFP update,  plot energies, pseudo NL"
@@ -251,7 +251,7 @@ check-parallel-gfp-getenergies-newmark-pseudononlinear:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dt;/dt;break;/g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP_getenergies_pseudoNL.log
+	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP_getenergies_pseudoNL.log
 	
 
 				

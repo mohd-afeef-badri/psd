@@ -49,7 +49,7 @@ if HAVEMGIS
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 0 -ns -nw > Solve-2D_elasto-plasticity_Parallel_Mfornt.log
+	./PSD_Solve -n $(NP)  Main.edp -v 0 -ns -nw > Solve-2D_elasto-plasticity_Parallel_Mfornt.log
 else !HAVEMGIS	
 	@echo ""
 endif
