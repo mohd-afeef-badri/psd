@@ -20,17 +20,17 @@ check-header:
 	
 Test_1: Test_1.edp
 	@echo "Test_1 : soil-laws load test"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_1.edp >  Test_1.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_1.edp >  Test_1_NP2.log	
+	@./../../../psd-solve/PSD_Solve -n 1 Test_1.edp >  Test_1.log
+	@./../../../psd-solve/PSD_Solve -n 2 Test_1.edp >  Test_1_NP2.log
 	@echo "  PASSED "
 
 Test_2: Test_2.edp
 	@echo "Test_2 : soil-laws testing PSDHujeuxSoilLaw routiner"
-	@./../../../psd-solve/PSD_Solve -np 1 Test_2.edp >  Test_2.log
-	@./../../../psd-solve/PSD_Solve -np 2 Test_2.edp >  Test_2_NP2.log		
+	@./../../../psd-solve/PSD_Solve -n 1 Test_2.edp >  Test_2.log
+	@./../../../psd-solve/PSD_Solve -n 2 Test_2.edp >  Test_2_NP2.log
 	@echo "  PASSED "	
 
-			
+
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

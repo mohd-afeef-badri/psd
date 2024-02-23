@@ -1,4 +1,4 @@
-SUBDIRS = hujeux-law-lib  cpp test
+SUBDIRS =  hujeux-law-lib cpp
 
 clean-local:
 	@echo ""
