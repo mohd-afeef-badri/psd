@@ -40,6 +40,9 @@ HPDDM_VERSION=2.2.5
 # Define the version of HYPRE library
 HYPRE_VERSION=2.29.0
 
+# Define the version of BLAS/LAPACK library
+F2CBLASLAPACK_VERSION=3.8.0
+
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines the version variables for Salome and its supported 
@@ -134,6 +137,9 @@ PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARM
 # Download SCALAPACK source code
 SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
                         -O scalapack-$(SCALAPACK_VERSION).tar.gz
+# Download SCALAPACK source code
+F2CBLASLAPACK_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/f2cblaslapack-$(F2CBLASLAPACK_VERSION).q2.tar.gz \
+                        -O f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
 # Download Salome source code
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                       -O salome-$(SALOME_VERSION).tar.gz
@@ -206,6 +212,9 @@ download-dependencies:
 	fi
 	@if [ ! -f scalapack-$(SCALAPACK_VERSION).tar.gz ]; then \
 		$(SCALAPACK_DOWNLOAD); \
+	fi
+	@if [ ! -f f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz ]; then \
+		$(F2CBLASLAPACK_DOWNLOAD); \
 	fi
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
@@ -401,7 +410,8 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
-	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz
+	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
+	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
 
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)

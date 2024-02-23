@@ -69,7 +69,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics"
@@ -80,7 +80,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/gofastplugins#./../plugins/go-fast-plugins/cpp/gofastplugins#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/#$(MESHDIR3)/#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics with doublecouple (displacement-based)"
@@ -92,7 +92,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_displacement-based.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_displacement-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Soildynamics with doublecouple (force-based)"
@@ -104,7 +104,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/2D/#$(MESHDIR2)/#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-2D_soildynamics_Parallel_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with top-ii-vol meshing "
@@ -116,7 +116,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_force-based.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with doublecouple (force-based) and top-ii-vol meshing "
@@ -128,7 +128,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_force-based.log
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 3D Soildynamics with doublecouple (displacement-based) and top-ii-vol meshing"
@@ -140,7 +140,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -np $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log
+	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log
 					
 clean-local:
 	@echo ""
