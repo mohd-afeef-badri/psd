@@ -78,7 +78,7 @@ AC_ARG_WITH([dependencies],
         [dependencies="$withval"], [dependencies="no"])
 
 AC_ARG_WITH([zipped_dependencies],
-	[  --with-zipped-dependencies=  Folder contaning tar.gz for dependencies : (e.g. --with-zipped-dependencies=yes)
+	[  --with-zipped_dependencies=  Folder contaning tar.gz for dependencies : (e.g. --with-zipped_dependencies=yes)
 	],
         [zipped_dependencies="$withval"], [zipped_dependencies="no"])
 
@@ -119,7 +119,7 @@ test "$dependencies" == "no" && AC_MSG_WARN([
 
  The wget command will be used to download these,  if
  you wish to provided already downloaded  files,  use
-   --with-zipped-dependencies  option.
+   --with-zipped_dependencies  option.
  ])
 
 
@@ -132,7 +132,7 @@ test "$zipped_dependencies" == "no" && AC_MSG_WARN([
  from *.tar.gz files. In order to do so, provide the
  tar.gz files for dependencies in /ext folder of PSD
 
- --with-zipped-dependencies=yes
+ --with-zipped_dependencies=yes
  ])
 
 AU_ALIAS([ACX_MPI], [AX_MPI])

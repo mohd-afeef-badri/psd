@@ -238,13 +238,13 @@ download-dependencies:
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
 	@if [ ! -f parmmg-$(PARMMG_VERSION).tar.gz ]; then \
-                $(PARMMG_DOWNLOAD); \
+        $(PARMMG_DOWNLOAD); \
 	fi
 	@if [ ! -f mmg-$(MMG_VERSION).tar.gz ]; then \
-                $(MMG_DOWNLOAD); \
+        $(MMG_DOWNLOAD); \
         fi
 	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
-                $(PTSCOTCH_DOWNLOAD); \
+        $(PTSCOTCH_DOWNLOAD); \
         fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
