@@ -132,7 +132,7 @@ test "$zipped_dependencies" == "no" && AC_MSG_WARN([
  from *.tar.gz files. In order to do so, provide the
  tar.gz files for dependencies in /ext folder of PSD
 
- --with-zipped_dependencies=yes
+ --with-zipped-dependencies=yes
  ])
 
 AU_ALIAS([ACX_MPI], [AX_MPI])

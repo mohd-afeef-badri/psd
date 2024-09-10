@@ -4,6 +4,15 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
+# Define the version of parmmg
+PARMMG_VERSION=f981ff8eba8a45131821893440720556394e2cad
+
+# Define the version of mmg
+MMG_VERSION=aa5ac04b9e730d9b12948104d057e6e59d799615
+
+# Define the version of ptscotch
+PTSCOTCH_VERSION=7.0.3
+
 # Define the version of MFront library
 MFRONT_VERSION=4.0.0
 
@@ -140,6 +149,18 @@ SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/ar
 # Download SCALAPACK source code
 F2CBLASLAPACK_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/f2cblaslapack-$(F2CBLASLAPACK_VERSION).q2.tar.gz \
                         -O f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
+# Download parmmg source code
+PARMMG_DOWNLOAD = wget https://github.com/MmgTools/ParMmg/archive/$(PARMMG_VERSION).tar.gz \
+        -O parmmg-$(PARMMG_VERSION).tar.gz
+
+# Download parmmg source code
+MMG_DOWNLOAD = wget https://github.com/MmgTools/mmg/archive/$(MMG_VERSION).tar.gz \
+        -O mmg-$(MMG_VERSION).tar.gz
+
+# Download parmmg source code
+PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSCOTCH_VERSION)/scotch-v$(PTSCOTCH_VERSION).tar.gz \
+        -O ptscotch-$(PTSCOTCH_VERSION).tar.gz
+
 # Download Salome source code
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
                       -O salome-$(SALOME_VERSION).tar.gz
@@ -219,6 +240,15 @@ download-dependencies:
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+	@if [ ! -f parmmg-$(PARMMG_VERSION).tar.gz ]; then \
+                $(PARMMG_DOWNLOAD); \
+	fi
+	@if [ ! -f mmg-$(MMG_VERSION).tar.gz ]; then \
+                $(MMG_DOWNLOAD); \
+        fi
+	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
+                $(PTSCOTCH_DOWNLOAD); \
+        fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
 		$(GMSH_DOWNLOAD); \
@@ -411,6 +441,9 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
+	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
+	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
+	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
 	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
 
 
