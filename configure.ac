@@ -78,7 +78,7 @@ AC_ARG_WITH([dependencies],
         [dependencies="$withval"], [dependencies="no"])
 
 AC_ARG_WITH([zipped_dependencies],
-	[  --with-zipped_dependencies=  Folder contaning tar.gz for dependencies : (e.g. --with-zipped_dependencies=yes)
+	[  --with-zipped-dependencies=  Folder contaning tar.gz for dependencies : (e.g. --with-zipped-dependencies=yes)
 	],
         [zipped_dependencies="$withval"], [zipped_dependencies="no"])
 
@@ -119,7 +119,7 @@ test "$dependencies" == "no" && AC_MSG_WARN([
 
  The wget command will be used to download these,  if
  you wish to provided already downloaded  files,  use
-   --with-zipped_dependencies  option.
+   --with-zipped-dependencies  option.
  ])
 
 
