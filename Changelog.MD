@@ -8,6 +8,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Support for Apple silicon MacOSARM
 - Installing Gmsh automatically for MacOS
 - Simplified install procedure
+- ParMMG, MMG, PTSCOTCH dependencies
 
 ### Changed
 

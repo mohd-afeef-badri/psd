@@ -4,6 +4,15 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
+# Define the version of parmmg
+PARMMG_VERSION=f981ff8eba8a45131821893440720556394e2cad
+
+# Define the version of mmg
+MMG_VERSION=aa5ac04b9e730d9b12948104d057e6e59d799615
+
+# Define the version of ptscotch
+PTSCOTCH_VERSION=7.0.3
+
 # Define the version of MFront library
 MFRONT_VERSION=4.0.0
 
@@ -96,53 +105,62 @@ endif
 
 if MAC
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/macOS/gmsh-$(GMSH_VERSION)-MacOSARM.dmg \
-                       -O gmsh-$(GMSH_VERSION).dmg
+			-O gmsh-$(GMSH_VERSION).dmg
 else !MAC
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
-                       -O gmsh-$(GMSH_VERSION).tar.gz
+			-O gmsh-$(GMSH_VERSION).tar.gz
 endif
 
 # Define download commands for different libraries and dependencies
 
 # Download FreeFEM source code
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
-                      -O freefem-$(FREEFEM_VERSION).tar.gz
+			-O freefem-$(FREEFEM_VERSION).tar.gz
 # Download HPDDM source code
 HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
-                     -O hpddm-$(HPDDM_VERSION).tar.gz
+			-O hpddm-$(HPDDM_VERSION).tar.gz
 # Download HYPRE source code
 HYPRE_DOWNLOAD = wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
-                     -O hypre-$(HYPRE_VERSION).tar.gz
+			-O hypre-$(HYPRE_VERSION).tar.gz
 # Download MFront source code
 MFRONT_DOWNLOAD = wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz \
-                      -O mfront-$(MFRONT_VERSION).tar.gz
+			-O mfront-$(MFRONT_VERSION).tar.gz
 # Download MGIS source code
 MGIS_DOWNLOAD = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport/archive/refs/tags/MFrontGenericInterfaceSupport-$(MGIS_VERSION).tar.gz \
-                    -O mgis-$(MGIS_VERSION).tar.gz
+			-O mgis-$(MGIS_VERSION).tar.gz
 # Download PETSc source code
 PETSC_DOWNLOAD = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
-                     -O petsc-$(PETSC_VERSION).tar.gz
+			-O petsc-$(PETSC_VERSION).tar.gz
 # Download MUMPS source code
 MUMPS_DOWNLOAD = wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
-                     -O mumps-$(MUMPS_VERSION).tar.gz
+			-O mumps-$(MUMPS_VERSION).tar.gz
 # Download METIS source code
 METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
-                     -O metis-$(METIS_VERSION).tar.gz
+			-O metis-$(METIS_VERSION).tar.gz
 # Download SLEPc source code
 SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
-                     -O slepc-$(SLEPC_VERSION).tar.gz
+			-O slepc-$(SLEPC_VERSION).tar.gz
 # Download ParMETIS source code
 PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
-                        -O parmetis-$(PARMETIS_VERSION).tar.gz
+			-O parmetis-$(PARMETIS_VERSION).tar.gz
 # Download SCALAPACK source code
 SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
-                        -O scalapack-$(SCALAPACK_VERSION).tar.gz
+			-O scalapack-$(SCALAPACK_VERSION).tar.gz
 # Download SCALAPACK source code
 F2CBLASLAPACK_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/f2cblaslapack-$(F2CBLASLAPACK_VERSION).q2.tar.gz \
-                        -O f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
+			-O f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
+# Download parmmg source code
+PARMMG_DOWNLOAD = wget https://github.com/MmgTools/ParMmg/archive/$(PARMMG_VERSION).tar.gz \
+			-O parmmg-$(PARMMG_VERSION).tar.gz
+# Download mmg source code
+MMG_DOWNLOAD = wget https://github.com/MmgTools/mmg/archive/$(MMG_VERSION).tar.gz \
+			-O mmg-$(MMG_VERSION).tar.gz
+# Download ptscotch source code
+PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSCOTCH_VERSION)/scotch-v$(PTSCOTCH_VERSION).tar.gz \
+			-O ptscotch-$(PTSCOTCH_VERSION).tar.gz
 # Download Salome source code
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
-                      -O salome-$(SALOME_VERSION).tar.gz
+			-O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
@@ -219,6 +237,15 @@ download-dependencies:
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+	@if [ ! -f parmmg-$(PARMMG_VERSION).tar.gz ]; then \
+        $(PARMMG_DOWNLOAD); \
+	fi
+	@if [ ! -f mmg-$(MMG_VERSION).tar.gz ]; then \
+        $(MMG_DOWNLOAD); \
+        fi
+	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
+        $(PTSCOTCH_DOWNLOAD); \
+        fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
 		$(GMSH_DOWNLOAD); \
@@ -411,6 +438,9 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
 	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
+	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
+	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
+	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
 	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
 
 
