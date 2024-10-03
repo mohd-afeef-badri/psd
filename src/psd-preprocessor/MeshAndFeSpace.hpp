@@ -39,6 +39,11 @@ if(Prblm=="soildynamics")
 #include "./MeshAndFeSpace/SoilDynamics.hpp"
 }
 
+if(Prblm=="poisson")
+{
+#include "./MeshAndFeSpace/poisson.hpp"
+}
+
 } //-- [ostream terminator]  MeshAndFeSpace.edp closed --//
 
 cout << " ............... Done \n";

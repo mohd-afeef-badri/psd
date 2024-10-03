@@ -33,6 +33,11 @@ if(Prblm=="soildynamics")
 #include "./LinearFormBuilderAndSolver/SoilDynamics.hpp"
 }
 
+if(Prblm=="poisson")
+{
+#include "./LinearFormBuilderAndSolver/poisson.hpp"
+}
+
 } //-- [ostream terminator]  LinearFormBuilderAndSolver.edp closed --//
 
 cout << " ............... Done \n";

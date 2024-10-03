@@ -277,14 +277,14 @@
       errorArgument = true;
      }
 
-  if ( Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics" && Prblm != "elasto_plastic"
+  if ( Prblm != "poisson" && Prblm != "linear_elasticity" && Prblm != "damage" && Prblm != "elastodynamics" && Prblm != "soildynamics" && Prblm != "elasto_plastic"
      ){
       cout <<
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"
-          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear_elasticity|damage|elastodynamics|soildynamics|elasto_plastic\033[0m\n"
+          "The flag \033[1;31m-problem\033[0m only accepts \033[1;34mlinear_elasticity|damage|elastodynamics|soildynamics|elasto_plastic|poisson\033[0m\n"
           "\033[1;31m-problem "<< Prblm << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";

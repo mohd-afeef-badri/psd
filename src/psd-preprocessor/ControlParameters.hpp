@@ -39,6 +39,12 @@ if(Prblm=="soildynamics")
 #include "./ControlParameters/SoilDynamics.hpp"
 }
 
+
+if(Prblm=="poisson")
+{
+#include "./ControlParameters/poisson.hpp"
+}
+
 } //-- [ostream terminator]  ControlParameters.edp closed --//
 
 cout << " ............... Done \n";
