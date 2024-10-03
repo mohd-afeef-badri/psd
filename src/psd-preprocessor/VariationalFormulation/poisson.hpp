@@ -14,7 +14,7 @@ varf varfPoisson(def(u),def(v)) =
 //--------------------------------------------------------------------------
 // $int_{\\Omega}(\lambda(\\nabla(u)\\cdot\\nabla(v)))$
 //--------------------------------------------------------------------------
-    intN(Th,qforder=3)  (grad(u)'*grad(v))  
+    intN(Th,qforder=3)  (lambda*(grad(u)'*grad(v)))  
  -  intN(Th,qforder=3)  (f*v) 
  +  intN1(Th,qforder=3) (un*v)
  +  on(1,2,3,4, u = ud);  
