@@ -49,3 +49,43 @@ codeSnippet R""""(
 
 )"""";
 }
+
+
+if(Sequential && spc==2){
+
+codeSnippet R""""(
+//=============================================================================
+//      ------- Essential Macros -------
+// ---------------------------------------------------------------------------
+// partitioner : mesh partitioner to be used use metis, parmetis, or scotch
+// dimension   : dimension of the problem 2 or 3 for 2D or 3D
+//=============================================================================
+
+  macro partitioner parmetis     //
+  macro dimension   2            //
+  macro Pk          P1           //
+  macro def(i)      [i]          //
+  macro init(i)     [i]          //
+
+)"""";
+}
+
+
+if(Sequential && spc==3){
+
+codeSnippet R""""(
+//=============================================================================
+//      ------- Essential Macros -------
+// ---------------------------------------------------------------------------
+// partitioner : mesh partitioner to be used use metis, parmetis, or scotch
+// dimension   : dimension of the problem 2 or 3 for 2D or 3D
+//=============================================================================
+
+  macro partitioner parmetis     //
+  macro dimension   3            //
+  macro Pk          P1           //  
+  macro def(i)      [i]          //
+  macro init(i)     [i]          //
+
+)"""";
+}

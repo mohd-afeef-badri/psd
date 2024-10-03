@@ -1,4 +1,4 @@
-SUBDIRS=linear-elasticity fracture-mechanics elastodynamics soildynamics elasto-plastic
+SUBDIRS=linear-elasticity fracture-mechanics elastodynamics soildynamics elasto-plastic poisson
 
 all-local: 
 	@echo ""
