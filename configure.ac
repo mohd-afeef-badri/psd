@@ -568,6 +568,7 @@ AC_CONFIG_FILES([
  test/fracture-mechanics/Makefile
  test/linear-elasticity/Makefile
  test/soildynamics/Makefile
+ test/poisson/Makefile
 ])
 AC_OUTPUT
 

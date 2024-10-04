@@ -44,6 +44,11 @@ if(Prblm=="soildynamics")
 #include "./VariationalFormulation/SoilDynamics.hpp"
 }
 
+if(Prblm=="poisson")
+{
+#include "./VariationalFormulation/poisson.hpp"
+}
+
 } //-- [ostream terminator]  VariationalFormulations.edp closed --//
 
 cout << " .................. Done \n";

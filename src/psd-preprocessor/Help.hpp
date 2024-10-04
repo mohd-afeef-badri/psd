@@ -67,7 +67,7 @@
 
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
-                                    | soildynamics | elasto_plastic.
+                                    | soildynamics | elasto_plastic | poisson.
 
    -model              [string]     Model by which the problem is solved.
                                     Use hybrid_phase_field | pseudo_nonlinear

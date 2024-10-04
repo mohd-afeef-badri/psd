@@ -70,7 +70,8 @@
 
   -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
 
-  -problem         [string] Interested problem. Use linear_elasticity|damage|elastodynamics|elasto_plastic.
+  -problem         [string] Interested problem. This flag accepts the following string value 
+                            linear_elasticity|damage|elastodynamics|soildynamics|elasto_plastic|poisson.
 
   -model           [string] Interested model. Use hybrid_phase_field|Mazar|pseudo_nonlinear|von_mises.
 

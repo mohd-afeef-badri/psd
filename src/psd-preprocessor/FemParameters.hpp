@@ -41,6 +41,11 @@ if(Prblm=="soildynamics")
 #include "./FemParameters/SoilDynamics.hpp"
 }
 
+if(Prblm=="poisson")
+{
+#include "./FemParameters/poisson.hpp"
+}
+
 } //-- [ostream terminator]  FemParameters.edp closed --//
 
 cout << " ............... Done \n";

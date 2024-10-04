@@ -40,6 +40,11 @@ if(Prblm=="soildynamics")
 #include "./Macros/SoilDynamics.hpp"
 }
 
+
+if(Prblm=="poisson")
+{
+#include "./Macros/poisson.hpp"
+}
 #include "./Macros/common.hpp"
 } //-- [ostream terminator]  Macros.edp closed --//
 

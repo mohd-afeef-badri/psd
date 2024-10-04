@@ -1,0 +1,133 @@
+//=====================================================================================
+// ------ Poisson problem for the LinearFormBuilderAndSolver.edp file ------
+//=====================================================================================
+
+
+if(!Sequential){
+
+codeSnippet R""""(
+
+//==============================================================================
+//  ------- Local Au=b assembly and solving -------
+//==============================================================================
+
+//--------------Assembly for bilinear--------------//
+
+  startProcedure("matrix Assembly",t0);
+  ALoc = varfPoisson(Vh,Vh,solver=CG,sym=1);
+  endProcedure  ("matrix Assembly",t0);
+
+//---------------Assembly for linear---------------//
+                                                    
+  startProcedure("RHS assembly",t0);
+  b = varfPoisson(0,Vh);
+  endProcedure  ("RHS assembly",t0);
+
+//---------------PETSc Assembly---------------------//
+
+  startProcedure("PETSc assembly",t0);
+  A = ALoc ;
+  endProcedure("PETSc assembly",t0);
+
+//---------------PETSc solving---------------------//
+
+  startProcedure("PETSc solving",t0);
+  set(A,sparams =" -ksp_type cg -ksp_rtol 1e-9 ");
+  u[] = A^-1*b;
+  endProcedure("PETSc solving",t0);
+
+)"""";
+
+if(debug)
+codeSnippet R""""(
+
+//-------------Debug plotting------------------//
+  macro viz(i)i//
+  plotMPI(Th, u, P1,  viz, real, wait=0, cmm="u");
+
+)"""";
+
+if(ParaViewPostProcess)
+codeSnippet R""""(
+
+//==============================================================================
+// -------Postprocess with paraview-------// 
+//==============================================================================
+  if(mpirank==0)
+    system("mkdir -p VTUs/"); 
+  mpiBarrier(mpiCommWorld); 
+                                              
+  startProcedure("Paraview Postprocess",t0); 
+  int[int] vtuorder=[1];                     // Solution export order 
+  savevtk( "VTUs/Solution.vtu"  , 
+            Th                  , 
+            u                   , 
+            order=vtuorder      , 
+            dataname="U"  
+         ); 
+  endProcedure("Paraview Postprocess",t0); 
+
+)"""";
+
+
+}  //-- [if loop terminator] !Sequential ended --//
+
+if(Sequential){
+codeSnippet R""""(
+
+//==============================================================================\n"
+//  ------- Local Au=b assembly and solving -------                             \n"
+//==============================================================================\n"
+
+//--------------Assembly for bilinear--------------// 
+
+  startProcedure("matrix assembly",t0); 
+  A = varfPoisson(Vh,Vh,solver=CG,sym=1); 
+  endProcedure  ("matrix assembly",t0); 
+ 
+//---------------Assembly for linear---------------// 
+
+  startProcedure("RHS assembly",t0); 
+  b = varfPoisson(0,Vh); 
+  endProcedure  ("RHS assembly",t0); 
+
+  //-----------------Solving du=A^-1*b--------------// 
+
+  startProcedure("solving U",t0); 
+  set(A,solver=CG,sym=1); 
+  u[] = A^-1*b; 
+  endProcedure  ("solving U",t0);
+
+)"""";
+
+if(debug)
+codeSnippet R""""(
+
+  //--------------debug glut plotting---------------// 
+
+   plot (u, wait=1, fill=1, value=1, cmm= \"solution\"); 
+
+)"""";
+
+if(ParaViewPostProcess)
+codeSnippet R""""(
+
+//==============================================================================
+// -------Postprocess with paraview-------                                      
+//==============================================================================
+
+     system("mkdir -p VTUs/"); 
+
+  startProcedure("Paraview Postprocess",t0); 
+  int[int] vtuorder=[1];                             // Solution export order 
+  savevtk( "VTUs/Solution-Seq.vtu"   , 
+            Th                       , 
+            u                        , 
+            order=vtuorder           , 
+            dataname="U" 
+         ); 
+  endProcedure  ("Paraview Postprocess",t0);
+
+)"""";
+
+}  //-- [if loop terminator] Sequential liniear elasticity ended --//
