@@ -323,6 +323,20 @@
       errorArgument = true;
      }
 
+  if ( AdaptmeshBackend != "FreeFEM" && AdaptmeshBackend != "mmg" && AdaptmeshBackend != "parmmg"
+     ){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-adaptmesh_backend\033[0m only accepts \033[1;34mFreeFEM|mmg|parmmg\033[0m\n"
+          "\033[1;31m-adaptmesh_backend "<< AdaptmeshBackend << "\033[0m is not an acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+
   if (PostProcess!="u"   && PostProcess!="v"   && PostProcess!="a"   && PostProcess!="d"
    && PostProcess!="uv"  && PostProcess!="vu"  && PostProcess!="au"  && PostProcess!="ua"
    && PostProcess!="av"  && PostProcess!="va"  && PostProcess!="ud"  && PostProcess!="du"

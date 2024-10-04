@@ -68,6 +68,9 @@
    -validation         [string]     To produce code for a validation test case.
                                     Use Iwan.
 
+   -meshadapt_backend  [string]     Backend to be used for adapting meshes.
+                                    Use FreeFEM | mmg | parmmg.
+
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
                                     | soildynamics | elasto_plastic | poisson.

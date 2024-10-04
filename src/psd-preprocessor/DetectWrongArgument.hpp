@@ -17,6 +17,7 @@
            argvdummy != "-dirichletconditions"      &&
            argvdummy != "-bodyforceconditions"      &&
            argvdummy != "-tractionconditions"       &&
+           argvdummy != "-adaptmesh_backend"        &&
            argvdummy != "-dimension"                &&
            argvdummy != "-lagrange"                 &&
 

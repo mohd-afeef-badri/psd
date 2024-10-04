@@ -58,6 +58,8 @@
             String type arguments these expect an string after the flag
   -------------------------------------------------------------------------------------
 
+  -adaptmesh_backend  [string] Backend for adaptmesh. Use FreeFEM|mmg|parmmg.
+
   -timediscretization [string] Time discretization type. Use generalized_alpha|newmark_beta...
 
   -doublecouple    [string] Soil dynamics double couple. Use force_based|displacement_based.
@@ -195,6 +197,7 @@ int main(int argc, char *argv[]){
   string reactionforcemethod     = "stress_based";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized_alpha";
+  string AdaptmeshBackend        = "FreeFEM";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -329,6 +332,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-validation"              ) Validation               = argv[i+1];
     if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
+    if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
 
   }
 
