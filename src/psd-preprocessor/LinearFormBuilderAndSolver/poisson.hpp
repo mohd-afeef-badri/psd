@@ -105,7 +105,7 @@ codeSnippet R""""(
 
   //--------------debug glut plotting---------------// 
 
-   plot (u, wait=1, fill=1, value=1, cmm= \"solution\"); 
+   plot (u, wait=1, fill=1, value=1, cmm= "solution"); 
 
 )"""";
 
