@@ -28,6 +28,7 @@
            argvdummy != "-useGFP"                   &&
            argvdummy != "-activeplot"               &&
            argvdummy != "-testflags"                &&
+           argvdummy != "-adaptmesh"                &&
            argvdummy != "-timelog"                  &&
            argvdummy != "-vectorial"                &&
            argvdummy != "--version"                 &&
@@ -41,6 +42,7 @@
            argvdummy != "-plotreactionforce"        &&
            argvdummy != "-constrainHPF"             &&
            argvdummy != "-getenergies"              &&
+           argvdummy != "-adaptmesh_iter"           &&
            argvdummy != "-crackdirichletcondition"  &&
            argvdummy != "-withmaterialtensor"       &&
 
