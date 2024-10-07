@@ -69,57 +69,88 @@ codeSnippet R""""(
 
 )"""";
 
-
 }  //-- [if loop terminator] !Sequential ended --//
+
+
 
 if(Sequential){
 codeSnippet R""""(
 
-//==============================================================================\n"
-//  ------- Local Au=b assembly and solving -------                             \n"
-//==============================================================================\n"
+//------ resize vectors x and b -------//
 
-//--------------Assembly for bilinear--------------// 
+macro resizeVectors()
+
+  x.resize(Vh.ndof);
+  b.resize(Vh.ndof);
+//
+
+
+//-------- assemble martix A ---------//
+
+macro assembleMatrixA()
 
   startProcedure("matrix assembly",t0); 
   A = varfPoisson(Vh,Vh,solver=CG,sym=1); 
-  endProcedure  ("matrix assembly",t0); 
- 
-//---------------Assembly for linear---------------// 
+  endProcedure  ("matrix assembly",t0);
+//
+
+
+//-------- assemble vector b ---------//
+
+macro assembleVectorb()
 
   startProcedure("RHS assembly",t0); 
   b = varfPoisson(0,Vh); 
   endProcedure  ("RHS assembly",t0); 
+//
 
-  //-----------------Solving du=A^-1*b--------------// 
+
+//------- solve linear system -------//
+
+macro solve()
 
   startProcedure("solving U",t0); 
   set(A,solver=CG,sym=1); 
-  u[] = A^-1*b; 
+  x = A^-1*b; 
   endProcedure  ("solving U",t0);
+//
 
+
+//------ get u (u = x = A^-1b) ------//
+
+macro getU()
+
+  Vh u;
+  u[] = x;
+//
+
+)"""";
+
+
+codeSnippet R""""(
+
+//--------- postprocessing ---------//
+
+macro postprocess()
 )"""";
 
 if(debug)
 codeSnippet R""""(
 
-  //--------------debug glut plotting---------------// 
-
+  /*--------------debug glut plotting---------------*/ 
    plot (u, wait=1, fill=1, value=1, cmm= "solution"); 
-
 )"""";
 
 if(ParaViewPostProcess)
 codeSnippet R""""(
 
-//==============================================================================
-// -------Postprocess with paraview-------                                      
-//==============================================================================
 
-     system("mkdir -p VTUs/"); 
+  /*------------Postprocess with ParaView----------*/                                      
+
+  system("mkdir -p VTUs/"); 
 
   startProcedure("Paraview Postprocess",t0); 
-  int[int] vtuorder=[1];                             // Solution export order 
+  int[int] vtuorder=[1];
   savevtk( "VTUs/Solution-Seq.vtu"   , 
             Th                       , 
             u                        , 
@@ -129,5 +160,84 @@ codeSnippet R""""(
   endProcedure  ("Paraview Postprocess",t0);
 
 )"""";
+
+codeSnippet R""""(
+//
+)"""";
+
+codeSnippet R""""(
+
+macro solvePoisson
+
+  resizeVectors;
+  assembleMatrixA;
+  assembleVectorb;
+  solve;
+  getU;
+  postprocess;
+
+//
+
+)"""";
+
+if(adaptmesh){
+codeSnippet R""""(
+
+macro solvePoissonAndAdapt
+  solvePoisson;
+)"""";
+
+if(AdaptmeshBackend=="FreeFEM"){
+
+codeSnippet R""""(
+  Th = adaptmesh(Th,u);
+)"""";
+}
+else if (AdaptmeshBackend=="mmg"){
+codeSnippet R""""(
+  Th = adaptmesh(Th,u);
+)"""";
+}
+else if (AdaptmeshBackend=="parmmg"){
+codeSnippet R""""(
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
+  exit(1111);
+)"""";
+}
+else {
+codeSnippet R""""(
+  cout << " Wrong value for -adaptmesh_backend " << endl;
+  exit(11111);
+)"""";
+}
+
+
+codeSnippet R""""(
+//
+
+//--------- solve and adapt mesh ------------//
+// we apply the following algorithm
+//
+// for all i in 1:adaptIter
+//   assemble A;
+//   assemble b;
+//   solve x = A^-1b;
+//   u=x;
+//   postprocess u;
+//   adapt mesh with Hessian(u);
+//
+//-------------------------------------------//
+
+for(int i=0; i < adaptIter; i++){
+  solvePoissonAndAdapt;
+}
+)"""";
+}
+else{
+
+codeSnippet R""""(
+ solvePoisson;
+)"""";
+}
 
 }  //-- [if loop terminator] Sequential liniear elasticity ended --//

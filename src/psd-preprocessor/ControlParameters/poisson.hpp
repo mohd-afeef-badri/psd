@@ -36,3 +36,20 @@ codeSnippet R""""(
   macro    ud()     5.  // 
 )"""";
 
+if(adaptmesh){
+
+codeSnippet R""""(
+
+//============================================================================
+// ------- Mesh Adaption Parameters -------
+// -------------------------------------------------------------------
+//  adaptIter : number of iteration for mesh adaption
+//=============================================================================
+
+)"""";
+
+writeIt
+"  int adaptIter = "<< adaptmeshiteration <<"; \n";
+
+}
+
