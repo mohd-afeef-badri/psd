@@ -46,6 +46,7 @@ codeSnippet R""""(
 //  adaptIter : number of iteration for mesh adaption
 //=============================================================================
 
+  int currentIter = 0;
 )"""";
 
 writeIt

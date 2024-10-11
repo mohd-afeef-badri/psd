@@ -158,12 +158,65 @@ codeSnippet R""""(
             dataname="U" 
          ); 
   endProcedure  ("Paraview Postprocess",t0);
-
 )"""";
 
 codeSnippet R""""(
 //
 )"""";
+
+// I AM ADDING THIS 
+codeSnippet R"""(
+macro preparepostprocess()
+)""";
+if(ParaViewPostProcess)
+codeSnippet R""""(
+
+
+  /*------------Postprocess with ParaView----------*/                                      
+
+  system("mkdir -p VTUs/"); 
+
+  startProcedure("Paraview Postprocess",t0); 
+  int[int] vtuorder=[1];
+)"""";
+codeSnippet R""""(
+//
+)"""";
+
+codeSnippet R""""(
+macro adaptionpostprocess()
+)"""";
+if(debug)
+codeSnippet R""""(
+
+  /*--------------debug glut plotting---------------*/ 
+   plot (u, wait=1, fill=1, value=1, cmm= "solution"); 
+)"""";
+
+if(ParaViewPostProcess)
+codeSnippet R""""(
+  savevtk( "VTUs/Solution" + currentIter + "-Seq.vtu"   , 
+            Th                       , 
+            u                        , 
+            order=vtuorder           , 
+            dataname="U" 
+         ); 
+)"""";
+codeSnippet R""""(
+//
+)"""";
+
+codeSnippet R""""(
+macro closepostprocess()
+)"""";
+if(ParaViewPostProcess)
+codeSnippet R""""(
+  endProcedure  ("Paraview Postprocess",t0);
+)"""";
+codeSnippet R""""(
+//
+)"""";
+// ENDS HERE WHAT I ADDED
 
 codeSnippet R""""(
 
@@ -188,7 +241,6 @@ macro solvePoissonAndAdapt
 )"""";
 
 if(AdaptmeshBackend=="FreeFEM"){
-
 codeSnippet R""""(
   Th = adaptmesh(Th,u);
 )"""";
@@ -209,7 +261,9 @@ codeSnippet R""""(
   cout << " Wrong value for -adaptmesh_backend " << endl;
   exit(11111);
 )"""";
+
 }
+
 
 
 codeSnippet R""""(
@@ -228,9 +282,13 @@ codeSnippet R""""(
 //
 //-------------------------------------------//
 
+  preparepostprocess;
 for(int i=0; i < adaptIter; i++){
   solvePoissonAndAdapt;
+  adaptionpostprocess;
+  currentIter++;
 }
+  closepostprocess;
 )"""";
 }
 else{
