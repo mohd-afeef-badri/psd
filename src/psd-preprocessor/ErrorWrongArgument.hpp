@@ -39,6 +39,24 @@
       }
     }
 
+
+    if( argvdummy == "-adaptmesh_iter")
+    {
+      argvalue = argv[i+1];
+      if (argvalue.find(".") != string::npos){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-adaptmesh_iter\033[0m only accepts \033[1;34mInteger\033[0m values\n"
+          "  \033[1;31m-adaptmesh_iter "<< argvalue << "\033[0m is not acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+      }
+    }
+
     if( argvdummy == "-dirichletconditions"     )
     {
       argvalue = argv[i+1];
@@ -300,6 +318,20 @@
           "\n"
           "The flag \033[1;31m-partitioner\033[0m only accepts \033[1;34mmetis|scotch|parmetis\033[0m\n"
           "\033[1;31m-partitioner "<< Partitioner << "\033[0m is not an acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+     }
+
+  if ( AdaptmeshBackend != "FreeFEM" && AdaptmeshBackend != "mmg" && AdaptmeshBackend != "parmmg"
+     ){
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-adaptmesh_backend\033[0m only accepts \033[1;34mFreeFEM|mmg|parmmg\033[0m\n"
+          "\033[1;31m-adaptmesh_backend "<< AdaptmeshBackend << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";
       errorArgument = true;

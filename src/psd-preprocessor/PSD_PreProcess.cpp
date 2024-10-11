@@ -47,6 +47,8 @@
 
   -dimension                [int]  Dimension of problem. 2 for 2D 3 for 3D. Default 2.
 
+  -adaptmesh_iter           [int]  # iteration to be used for mesh adaption. 
+ 
   -lagrange                 [int]  Lagrange order used for building FE space. Options
                                    are  1 for P1 or 2 for P2. Default is P1.
 
@@ -55,6 +57,8 @@
   -------------------------------------------------------------------------------------
             String type arguments these expect an string after the flag
   -------------------------------------------------------------------------------------
+
+  -adaptmesh_backend  [string] Backend for adaptmesh. Use FreeFEM|mmg|parmmg.
 
   -timediscretization [string] Time discretization type. Use generalized_alpha|newmark_beta...
 
@@ -114,6 +118,8 @@
 
   -getenergies  [bool]     To acctivate routine for extraction of energies K.E, E.E.
 
+  -adaptmesh    [bool]     To acctivate mesh adaption
+
   -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
 
   -getreactionforce   [bool] To activate routine for extraction reactions at surface.
@@ -148,6 +154,7 @@ int main(int argc, char *argv[]){
   int bodyforceconditions      = 0;
   int dirichletconditions      = 1;
   int tractionconditions       = 0;
+  int adaptmeshiteration       = 1;
   int spc                      = 2;
   int lag                      = 1;
 
@@ -159,6 +166,7 @@ int main(int argc, char *argv[]){
   bool top2vol      = false;
   bool pipegnu      = false;
   bool testflags    = false;
+  bool adaptmesh    = false;
   bool vectorial    = false;
   bool useMfront    = false;
   bool fastmethod   = true ;
@@ -189,6 +197,7 @@ int main(int argc, char *argv[]){
   string reactionforcemethod     = "stress_based";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized_alpha";
+  string AdaptmeshBackend        = "FreeFEM";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -207,6 +216,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-dirichletconditions"     ) dirichletconditions      = stoi(argv[i+1]);
     if( argvdummy == "-bodyforceconditions"     ) bodyforceconditions      = stoi(argv[i+1]);
     if( argvdummy == "-tractionconditions"      ) tractionconditions       = stoi(argv[i+1]);
+    if( argvdummy == "-adaptmesh_iter"          ) adaptmeshiteration       = stoi(argv[i+1]);
     if( argvdummy == "-dimension"               ) spc                      = stoi(argv[i+1]);
     if( argvdummy == "-lagrange"                ) lag                      = stoi(argv[i+1]);
 
@@ -285,6 +295,12 @@ int main(int argc, char *argv[]){
                                                    IsArgumentValueFalse constrainHPF = false;
                                                   }
 
+
+    if( argvdummy == "-adaptmesh"               ) {                     adaptmesh    = true;
+                                                   IsArgumentValueTrue  adaptmesh    = true;
+                                                   IsArgumentValueFalse adaptmesh    = false;
+                                                  }
+
     if( argvdummy == "-crackdirichletcondition" ) {                     precracked   = true;
                                                    IsArgumentValueTrue  precracked   = true;
                                                    IsArgumentValueFalse precracked   = false;
@@ -316,6 +332,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-validation"              ) Validation               = argv[i+1];
     if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
+    if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
 
   }
 
@@ -374,6 +391,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " dirichletconditions are ------------> "<<  dirichletconditions      << endl;
   cout << " bodyforceconditions are ------------> "<<  bodyforceconditions      << endl;
   cout << " tractionconditions are -------------> "<<  tractionconditions       << endl;
+  cout << " adaptmeshiterations are ------------> "<<  adaptmeshiteration       << endl;
   cout << " problem dimension is ---------------> "<<  spc                      << endl;
   cout << " lagrange order is ------------------> "<<  lag                      << endl;
 
@@ -404,6 +422,8 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
 
+
+  cout << " adaptmesh is -----------------------> " << adaptmesh                << endl;
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;
   cout << " activeplot is ----------------------> " << pipegnu                  << endl;
   cout << " dirichletbc is ---------------------> " << dirichletbc              << endl;
@@ -421,7 +441,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
 if(versionpsd){
   cout << "  PSD Version 2.6 " << endl;
-  cout << "    Copyright (C) CEA 2019 - 2023 "<< endl;
+  cout << "    Copyright (C) CEA 2019 - 2024 "<< endl;
   cout << "                                                                   " << endl;
   cout << "    This is free software; see the source for copying conditions.  " << endl;
   cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;

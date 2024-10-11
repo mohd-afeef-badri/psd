@@ -32,6 +32,9 @@
    -parmetis_worker          [int]     Number of workers for mesh partitioner
                                        parMETIS. Default MPI size.
 
+   -adaptmesh_iter           [int]     Number of mesh adaption iterations.
+                                       Default 1.
+
    -dimension                [int]     Dimension of  problem. 2 for 2D 3 for 3D
                                        Default 2.
 
@@ -64,6 +67,9 @@
 
    -validation         [string]     To produce code for a validation test case.
                                     Use Iwan.
+
+   -meshadapt_backend  [string]     Backend to be used for adapting meshes.
+                                    Use FreeFEM | mmg | parmmg.
 
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
@@ -114,6 +120,9 @@
                                  splitting/decomposition. Default false.
 
    -sequential        [bool]     To generate a sequential PSD solver.
+                                 Default false.
+
+   -adaptmesh         [bool]     To activate mesh adaption process.
                                  Default false.
 
    -pointprobe        [bool]     To insert point probes for post processing.

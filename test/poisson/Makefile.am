@@ -8,7 +8,8 @@ MESHDIR3=./../../data/meshes/3D/Geo-Files
 else !HAVESALOME
 
 CHECK_LIST=check-sequential \
-check-parallel
+check-sequential-adapt \
+check-parallel 
 
 MESHDIR2=./../../data/meshes/2D/Geo-Files/Gmsh
 MESHDIR3=./../../data/meshes/3D/Geo-Files
@@ -58,6 +59,15 @@ check-sequential:
 	./PSD_PreProcess -dimension 3 $(SEQUENTIAL_FLAG_LE) > PreProcess-3D.log && \
 	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR3)/bar.msh -v 1 -ns -nw > Solve-3D.log
 
+ADAPT_FLAG = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend FreeFEM
+check-sequential-adapt:
+	@echo ""
+	@echo "*============================================================*"
+	@echo " Sequential 2D Adapt"
+	@echo "*============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_LE) $(ADAPT_FLAG) > PreProcess-2D-adapt.log && \
+	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR2)/bar.msh -v 1 -ns -nw > Solve-2D-adapt.log
 
 NP = 4
 PARALLEL_FLAG_LE = -problem poisson -testflags
