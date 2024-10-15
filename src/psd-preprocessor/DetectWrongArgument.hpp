@@ -1,8 +1,8 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 20/05/2021                                                                 *
+* Author : Mohd Afeef BADRI, Rania SAADI                                              *
+* Email  : mohd-afeef.badri@cea.fr, rania.saadi@cea.fr                                *
+* Date   : 15/10/2024                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support file is  responsible for detecting wrong commandline flag     *
@@ -20,6 +20,7 @@
            argvdummy != "-adaptmesh_backend"        &&
            argvdummy != "-dimension"                &&
            argvdummy != "-lagrange"                 &&
+	   argvdummy != "-adaptmesh_type"           &&
 
            argvdummy != "-h"                        &&
            argvdummy != "-useRCM"                   &&

@@ -1,7 +1,7 @@
 /**************************************************************************************
 *                                                                                     *
-* Author:  Mohd Afeef BADRI                                                           *
-* Date:    20/04/2020                                                                 *
+* Author:  Mohd Afeef BADRI, Rania SAADI                                              *
+* Date:    15/10/2024                                                                 *
 * Type:    Execution file                                                             *
 *                                                                                     *
 * Comment: Once executed this file generates following edp files: Main, Macros, Mesh, *
@@ -60,6 +60,8 @@
 
   -adaptmesh_backend  [string] Backend for adaptmesh. Use FreeFEM|mmg|parmmg.
 
+  -adaptmesh_type  [string] Type of adaption for adaptmesh. Use isotropic|anisotropic.
+
   -timediscretization [string] Time discretization type. Use generalized_alpha|newmark_beta...
 
   -doublecouple    [string] Soil dynamics double couple. Use force_based|displacement_based.
@@ -116,9 +118,9 @@
 
   -constrainHPF [bool]     To use constrain condition in hybrid phase-field model.
 
-  -getenergies  [bool]     To acctivate routine for extraction of energies K.E, E.E.
+  -getenergies  [bool]     To activate routine for extraction of energies K.E, E.E.
 
-  -adaptmesh    [bool]     To acctivate mesh adaption
+  -adaptmesh    [bool]     To activate mesh adaption
 
   -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
 
@@ -158,28 +160,29 @@ int main(int argc, char *argv[]){
   int spc                      = 2;
   int lag                      = 1;
 
-  bool RCM          = true ;
-  bool help         = false;
-  bool debug        = false;
-  bool useGFP       = false;
-  bool timelog      = false;
-  bool top2vol      = false;
-  bool pipegnu      = false;
-  bool testflags    = false;
-  bool adaptmesh    = false;
-  bool vectorial    = false;
-  bool useMfront    = false;
-  bool fastmethod   = true ;
-  bool Sequential   = false;
-  bool pointprobe   = false;
-  bool dirichletbc  = false;
-  bool energydecomp = false;
-  bool versionpsd   = false;
-  bool plotreaction = false;
-  bool constrainHPF = false;
-  bool precracked   = false;
-  bool getenergies  = false;
-  bool reactionforce= false;
+  bool RCM          		= true ;
+  bool help         		= false;
+  bool debug        		= false;
+  bool useGFP       		= false;
+  bool timelog      		= false;
+  bool top2vol      		= false;
+  bool pipegnu      		= false;
+  bool testflags    		= false;
+  bool adaptmesh    		= false;
+  bool vectorial    		= false;
+  bool useMfront    		= false;
+  bool fastmethod   		= true ;
+  bool Sequential   		= false;
+  bool pointprobe   		= false;
+  bool dirichletbc  		= false;
+  bool energydecomp 		= false;
+  bool versionpsd   		= false;
+  bool plotreaction 		= false;
+  bool constrainHPF 		= false;
+  bool precracked   		= false;
+  bool getenergies  		= false;
+  bool reactionforce		= false;
+  bool adaptmeshisotropy 	= true;
 
   bool   errorArgument         = false  ;
   bool   wrongArgument         = false  ;
@@ -198,6 +201,7 @@ int main(int argc, char *argv[]){
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized_alpha";
   string AdaptmeshBackend        = "FreeFEM";
+  string AdaptmeshType		 = "";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -334,6 +338,10 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
     if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
 
+    if( argvdummy == "-adaptmesh_type"		) {
+	    					  AdaptmeshType		   = argv[i+1];
+						  adaptmeshisotropy  	   = (AdaptmeshType == "isotropic") ? true : (AdaptmeshType == "anisotropic") ? false : adaptmeshisotropy;
+    						  }
   }
 
  #include "ErrorWrongArgument.hpp"
@@ -407,6 +415,9 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " preconditioner is-------------------> "<<  Preconditioner           << endl;
   cout << " subPreconditioner is----------------> "<<  SubPreconditioner        << endl;
   cout << " timeDiscretization is---------------> "<<  TimeDiscretization       << endl;
+  cout << " adaptmesh_backend is----------------> "<<  AdaptmeshBackend 	<< endl;
+  cout << " adaptmesh_type is-------------------> "<<  AdaptmeshType 		<< endl;
+  cout << " adaptmesh_isotropy is --------------> "<<  adaptmeshisotropy	<< endl;
 
   cout << "===================================================================" << endl;
   cout << "                        BOOL ARGUMENTS                             " << endl;

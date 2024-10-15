@@ -1,8 +1,8 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 20/05/2021                                                                 *
+* Author : Mohd Afeef BADRI, Rania SAADI                                              *
+* Email  : mohd-afeef.badri@cea.fr, rania.saadi@cea.fr                                *
+* Date   : 15/10/2024                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support file is  responsible for detecting wrong commandline flag     *
@@ -22,6 +22,23 @@
 
     #include "DetectWrongArgument.hpp"
 
+    if (argvdummy == "-adaptmesh_type")
+    {
+      argvalue = argv[i+1];
+      if (argvalue != "isotropic" && argvalue != "anisotropic")
+      {
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "The flag \033[1;31m-adaptmesh_type\033[0m only accepts \033[1;34misotropic and anisotropic\033[0m options\n"
+          "  \033[1;31m-adaptmesh_type "<< argvalue << "\033[0m is not acceptable, please correct \n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+      }
+    }
     if( argvdummy == "-dirichletpointconditions")
     {
       argvalue = argv[i+1];

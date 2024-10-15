@@ -187,12 +187,12 @@ macro solvePoissonAndAdapt
 
 if(AdaptmeshBackend=="FreeFEM"){
 codeSnippet R""""(
-  Th = adaptmesh(Th,u);
+  Th = adaptmesh(Th,u, iso = adaptIso);
 )"""";
 }
 else if (AdaptmeshBackend=="mmg"){
 codeSnippet R""""(
-  Th = adaptmesh(Th,u);
+  Th = adaptmesh(Th,u, iso = adaptmeshisotropy);
 )"""";
 }
 else if (AdaptmeshBackend=="parmmg"){

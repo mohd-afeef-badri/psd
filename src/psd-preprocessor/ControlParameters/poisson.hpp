@@ -1,8 +1,8 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 03/10/2024                                                                 *
+* Author : Mohd Afeef BADRI, Rania SAADI                                              *
+* Email  : mohd-afeef.badri@cea.fr, rania.saadi@cea.fr                                *
+* Date   : 15/10/2024                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support  file is  responsible for generating  ControlParameters.edp   *
@@ -44,6 +44,7 @@ codeSnippet R""""(
 // ------- Mesh Adaption Parameters -------
 // -------------------------------------------------------------------
 //  adaptIter : number of iteration for mesh adaption
+//  adaptIso : isotropy conditions for mesh adaption
 //=============================================================================
 
 )"""";
@@ -51,5 +52,7 @@ codeSnippet R""""(
 writeIt
 "  int adaptIter = "<< adaptmeshiteration <<"; \n";
 
+writeIt 
+"  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
 }
 
