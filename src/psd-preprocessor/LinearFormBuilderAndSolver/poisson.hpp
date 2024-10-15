@@ -150,8 +150,7 @@ codeSnippet R""""(
   system("mkdir -p VTUs/"); 
 
   startProcedure("Paraview Postprocess",t0); 
-  int[int] vtuorder=[1];
-  savevtk( "VTUs/Solution-Seq.vtu"   , 
+  savevtk( "VTUs/Solution-" + currentIter + ".vtu"   , 
             Th                       , 
             u                        , 
             order=vtuorder           , 
@@ -163,60 +162,6 @@ codeSnippet R""""(
 codeSnippet R""""(
 //
 )"""";
-
-// I AM ADDING THIS 
-codeSnippet R"""(
-macro preparepostprocess()
-)""";
-if(ParaViewPostProcess)
-codeSnippet R""""(
-
-
-  /*------------Postprocess with ParaView----------*/                                      
-
-  system("mkdir -p VTUs/"); 
-
-  startProcedure("Paraview Postprocess",t0); 
-  int[int] vtuorder=[1];
-)"""";
-codeSnippet R""""(
-//
-)"""";
-
-codeSnippet R""""(
-macro adaptionpostprocess()
-)"""";
-if(debug)
-codeSnippet R""""(
-
-  /*--------------debug glut plotting---------------*/ 
-   plot (u, wait=1, fill=1, value=1, cmm= "solution"); 
-)"""";
-
-if(ParaViewPostProcess)
-codeSnippet R""""(
-  savevtk( "VTUs/Solution" + currentIter + "-Seq.vtu"   , 
-            Th                       , 
-            u                        , 
-            order=vtuorder           , 
-            dataname="U" 
-         ); 
-)"""";
-codeSnippet R""""(
-//
-)"""";
-
-codeSnippet R""""(
-macro closepostprocess()
-)"""";
-if(ParaViewPostProcess)
-codeSnippet R""""(
-  endProcedure  ("Paraview Postprocess",t0);
-)"""";
-codeSnippet R""""(
-//
-)"""";
-// ENDS HERE WHAT I ADDED
 
 codeSnippet R""""(
 
@@ -282,13 +227,11 @@ codeSnippet R""""(
 //
 //-------------------------------------------//
 
-  preparepostprocess;
 for(int i=0; i < adaptIter; i++){
-  solvePoissonAndAdapt;
-  adaptionpostprocess;
-  currentIter++;
+    solvePoissonAndAdapt;
+    postprocess;
+    currentIter++;
 }
-  closepostprocess;
 )"""";
 }
 else{

@@ -39,6 +39,12 @@ if(Prblm=="soildynamics")
 #include "./OtherParameters/SoilDynamics.hpp"
 }
 
+if(Prblm=="poisson")
+{
+#include "./OtherParameters/poisson.hpp"
+}
+
+
 #include "./OtherParameters/common.hpp"
 
 } //-- [ostream terminator]  OtherParameters.edp closed --//
