@@ -54,5 +54,32 @@ writeIt
 
 writeIt 
 "  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
+
+if(AdaptmeshBackend=="mmg")
+{
+codeSnippet R""""(
+//============================================================================
+// ------- Mesh Adaption mmg Parameters -------
+// -------------------------------------------------------------------
+//  hminVal : minimal edge size (not the mmgtools default values)
+//  hmaxVal : maximal edge size (not the mmgtools default values)
+//  hausdVal : maximal hausdorff distance for the boundaries approximation
+//  hgradVal : graduation value
+//  nomoveVal : no point relocation
+//  noswapVal : no edge flipping
+//  noinsertVal : no point insertion or deletion
+//=============================================================================
+
+    real hminVal = 0.0001;
+    real hmaxVal = 0.5;
+    real hausdVal = 0.01;
+    real hgradVal = 1.3; 
+
+    bool nomoveVal = false;
+    bool noswapVal = false;
+    bool noinsertVal = false;
+
+)"""";
+}
 }
 

@@ -179,6 +179,12 @@ macro solvePoisson
 )"""";
 
 if(adaptmesh){
+if (AdaptmeshBackend=="mmg")
+{
+codeSnippet R""""(
+load "mmg"
+)"""";
+}
 codeSnippet R""""(
 
 macro solvePoissonAndAdapt
@@ -192,8 +198,31 @@ codeSnippet R""""(
 }
 else if (AdaptmeshBackend=="mmg"){
 codeSnippet R""""(
-  Th = adaptmesh(Th,u, iso = adaptmeshisotropy);
+  Vh dxu = dx(u);
+  Vh dx2u = dx(dxu);
+  Vh dyu = dy(u);
+  Vh dy2u = dy(dyu);
+  Vh dxdyu = dy(dxu);
+
+  real[int] M(Th.nv * 3);
+  for(int k = 0; k < Th.nv; k = k + 3)
+  {
+     M[k] = dx2u[][k];
+     M[k+1] = dy2u[][k];
+     M[k+2] = dxdyu[][k];
+  }
 )"""";
+if (spc == 2)
+{
+codeSnippet R""""(
+   Th = mmg2d(Th, metric = M, 
+           hmin=hminVal, hmax=hmaxVal, hausd=hausdVal, hgrad=hgradVal,
+           nomove=nomoveVal, noswap=noswapVal, noinsert=noinsertVal);
+)"""";
+}
+else if (spc == 3)
+{
+}
 }
 else if (AdaptmeshBackend=="parmmg"){
 codeSnippet R""""(
