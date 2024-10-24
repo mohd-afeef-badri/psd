@@ -10,6 +10,9 @@ PARMMG_VERSION=f981ff8eba8a45131821893440720556394e2cad
 # Define the version of mmg
 MMG_VERSION=aa5ac04b9e730d9b12948104d057e6e59d799615
 
+# Define the version of mshmet
+MSHMET_VERSION=2012.04.25
+
 # Define the version of ptscotch
 PTSCOTCH_VERSION=7.0.3
 
@@ -54,8 +57,8 @@ F2CBLASLAPACK_VERSION=3.8.0
 
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am defines the version variables for Salome and its supported 
-# operating systems. The Salome version, along with specific tags, is set for different 
+# This section in Makefile.am defines the version variables for Salome and its supported
+# operating systems. The Salome version, along with specific tags, is set for different
 # operating systems used in the build process.
 #----------------------------------------------------------------------------------------
 
@@ -94,8 +97,8 @@ endif
 
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am contains various download commands to fetch the source code 
-# for different libraries and dependencies used in the project. The download URLs are 
+# This section in Makefile.am contains various download commands to fetch the source code
+# for different libraries and dependencies used in the project. The download URLs are
 # specified based on the library versions and the target operating system.
 #----------------------------------------------------------------------------------------
 
@@ -158,6 +161,9 @@ MMG_DOWNLOAD = wget https://github.com/MmgTools/mmg/archive/$(MMG_VERSION).tar.g
 # Download ptscotch source code
 PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSCOTCH_VERSION)/scotch-v$(PTSCOTCH_VERSION).tar.gz \
 			-O ptscotch-$(PTSCOTCH_VERSION).tar.gz
+# Download mshmet source code
+MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdparties/refs/heads/main/mshmet.$(MSHMET_VERSION).tgz \
+			-O mshmet.$(MSHMET_VERSION).tgz
 # Download Salome source code
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
 			-O salome-$(SALOME_VERSION).tar.gz
@@ -165,9 +171,9 @@ SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOM
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am defines a target "all-local" that is executed during the 
+# This section in Makefile.am defines a target "all-local" that is executed during the
 # build process. It depends on the targets "make-directories" and the list of make commands
-# in the variable "LIST_MAKE_EXECUTE". It is used to build the required directories and 
+# in the variable "LIST_MAKE_EXECUTE". It is used to build the required directories and
 # execute the specified make commands.
 #----------------------------------------------------------------------------------------
 
@@ -178,7 +184,7 @@ all-local: make-directories $(LIST_MAKE_EXECUTE)
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "make-directories" used to create specific
-# directories during the build process. It is responsible for creating directories for 
+# directories during the build process. It is responsible for creating directories for
 # binaries, documentation, and manual pages in the specified installation prefix.
 #----------------------------------------------------------------------------------------
 
@@ -190,9 +196,9 @@ make-directories:
 
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am defines a target "download-dependencies" that is responsible 
-# for downloading the required source code for various libraries and dependencies if the 
-# source files are not already present in the build directory. It performs a series of 
+# This section in Makefile.am defines a target "download-dependencies" that is responsible
+# for downloading the required source code for various libraries and dependencies if the
+# source files are not already present in the build directory. It performs a series of
 # checks for each library version and downloads the respective source code if necessary.
 #----------------------------------------------------------------------------------------
 
@@ -245,6 +251,9 @@ download-dependencies:
         fi
 	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
         $(PTSCOTCH_DOWNLOAD); \
+        fi
+	@if [ ! -f mshmet-$(MSHMET_VERSION).tgz ]; then \
+        $(MSHMET_DOWNLOAD); \
         fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
@@ -499,7 +508,7 @@ endif
 #--------------------------------------------------------------------------------
 
 if MAC
-MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install 
+MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install
 else !MAC
 MAKEANDINSTALL = make -j4 && make install
 endif
@@ -519,6 +528,8 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	[ -d FreeFem-sources-$(FREEFEM_VERSION) ] && mv FreeFem-sources-$(FREEFEM_VERSION) freefem-$(FREEFEM_VERSION)
 	cd freefem-$(FREEFEM_VERSION)    && \
 	patch -p1 < ../FreeFEM.patch     && \
+	mkdir ./3rdparty/pkg             && \
+	cp ../mshmet.$(MSHMET_VERSION).tgz ./3rdparty/pkg/. && \
 	autoreconf -i                    && \
 	./configure \
 	--prefix=${prefix} \
@@ -530,6 +541,7 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	MPIRUN=$(MPIRUN) \
 	--without-petsc_complex \
 	--disable-superlu \
+	--enable-download_mshmet \
 	--with-hdf5=no &&  \
 	$(MAKEANDINSTALL)
 
@@ -540,7 +552,7 @@ endif
 
 #--------------------------------------------------------------------------------
 # SALOME installation
-# This section in Makefile.am defines a target "salome-build" used to build SALOME 
+# This section in Makefile.am defines a target "salome-build" used to build SALOME
 # using the downloaded source code. It includes the installation process for SALOME.
 #  - Download from wget version SALOME_VERSION
 #  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
@@ -592,7 +604,7 @@ endif
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "check-local" used to perform checks
-# or tests related to the build. However, in this case, it does not perform any checks 
+# or tests related to the build. However, in this case, it does not perform any checks
 # and only displays a message indicating that there is nothing to check.
 #--------------------------------------------------------------------------------
 
@@ -606,7 +618,7 @@ check-local:
 
 
 #--------------------------------------------------------------------------------
-# This section in Makefile.am defines two targets: "clean-local" and 
+# This section in Makefile.am defines two targets: "clean-local" and
 # "maintainer-clean-local" used for cleaning files generated during the build process.
 #--------------------------------------------------------------------------------
 
@@ -635,8 +647,8 @@ maintainer-clean-local: clean-local
 	rm *.tar.gz
 
 #--------------------------------------------------------------------------------
-# This section in Makefile.am defines a target "install-exec-local" that is used to 
-# install executable files. However, in this case, it does not perform any installation 
+# This section in Makefile.am defines a target "install-exec-local" that is used to
+# install executable files. However, in this case, it does not perform any installation
 # and only displays a message indicating that there is nothing to install.
 #--------------------------------------------------------------------------------
 
