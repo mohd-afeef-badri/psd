@@ -179,12 +179,7 @@ macro solvePoisson
 )"""";
 
 if(adaptmesh){
-if (AdaptmeshBackend=="mmg")
-{
-codeSnippet R""""(
-load "mmg"
-)"""";
-}
+
 codeSnippet R""""(
 
 macro solvePoissonAndAdapt
@@ -205,11 +200,11 @@ codeSnippet R""""(
   Vh dxdyu = dy(dxu);
 
   real[int] M(Th.nv * 3);
-  for(int k = 0; k < Th.nv; k = k + 3)
+  for(int k = 0; k < Th.nv; k++)
   {
-     M[k] = dx2u[][k];
-     M[k+1] = dy2u[][k];
-     M[k+2] = dxdyu[][k];
+     M[3*k] = dx2u[][k];
+     M[3*k+1] = dy2u[][k];
+     M[3*k+2] = dxdyu[][k];
   }
 )"""";
 if (spc == 2)
