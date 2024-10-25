@@ -252,7 +252,7 @@ download-dependencies:
 	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
         $(PTSCOTCH_DOWNLOAD); \
         fi
-	@if [ ! -f mshmet-$(MSHMET_VERSION).tgz ]; then \
+	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
         $(MSHMET_DOWNLOAD); \
         fi
 if MAC
