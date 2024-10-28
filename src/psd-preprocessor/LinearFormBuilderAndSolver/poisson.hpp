@@ -192,27 +192,22 @@ codeSnippet R""""(
 )"""";
 }
 else if (AdaptmeshBackend=="mmg"){
-codeSnippet R""""(
-  Vh dxu = dx(u);
-  Vh dx2u = dx(dxu);
-  Vh dyu = dy(u);
-  Vh dy2u = dy(dyu);
-  Vh dxdyu = dy(dxu);
-
-  real[int] M(Th.nv * 3);
-  for(int k = 0; k < Th.nv; k++)
-  {
-     M[3*k] = dx2u[][k];
-     M[3*k+1] = dy2u[][k];
-     M[3*k+2] = dxdyu[][k];
-  }
-)"""";
 if (spc == 2)
 {
 codeSnippet R""""(
-   Th = mmg2d(Th, metric = M, 
-           hmin=hminVal, hmax=hmaxVal, hausd=hausdVal, hgrad=hgradVal,
-           nomove=nomoveVal, noswap=noswapVal, noinsert=noinsertVal);
+   Vh dx2u, dy2u, dxdyu;
+   adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+
+
+   real[int] M(Th.nv * 3);
+   for (int k = 0; k < Th.nv; k++)
+   {
+        M[3*k] = dx2u[][k];
+        M[3*k+1] = dy2u[][k];
+        M[3*k+2] = dxdyu[][k];
+   }
+   
+   Th = mmg2d(Th, metric = M, verbose=-1); 
 )"""";
 }
 else if (spc == 3)
