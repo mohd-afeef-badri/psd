@@ -168,7 +168,7 @@ MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdpart
 SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
 			-O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/tags/v$(FREEFEM_VERSION)/3rdparty/ff-petsc/petsc-cmake-seq.patch
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the
