@@ -17,10 +17,10 @@ PSD works for two and three dimensional problems only. Unstructured meshes (tria
 PSD is a cross-platform FEM solver built to work with Linux/Unix platforms. PSD has successfully been deployed on the following platforms:
 
 - CentOS 7 / 8
-- Ubuntu 16.04 / 18.04 / 20.04 / 22.04
+- Ubuntu 16.04 / 18.04 / 20.04 / 22.04 / 24.04
 - Debain 11
 - Raspberry Pi
-- Fedora 30 / 32 / 34 / 36
+- Fedora 30 / 32 / 34 / 36 / 38
 - MacOS X  Puma:10.1.5
 - MacOS ARM M2 Ventura 13 
 
@@ -33,9 +33,9 @@ Before installing PSD please ensure that you have the following dependencies ins
 | Package                                                      | Version                                                      | Essential |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------- |
 | [automake](https://www.gnu.org/software/automake/)           | Version **2.8** or higher                                    | YES       |
-| [FreeFEM](https://freefem.org/)                              | Version **4.14**                                             | YES       |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.20.2**                                           | YES       |
-| [Gmsh](http://gmsh.info/)                                    | Version **4.10.4**                                           | YES       |
+| [FreeFEM](https://freefem.org/)                              | Version **4.15**                                             | YES       |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | Version **3.22.2**                                           | YES       |
+| [Gmsh](http://gmsh.info/)                                    | Version **4.11.1**                                           | YES       |
 | [C++](http://www.cplusplus.com/), C                          | Version **7** or Higher                                      | YES       |
 | MPI                                                          | Version **2.0** or Higher (choose either [Mpich](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | YES       |
 | [git](https://git-scm.com/)                                  | -                                                            | YES       |
