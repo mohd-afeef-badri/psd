@@ -150,15 +150,13 @@ codeSnippet R""""(
   system("mkdir -p VTUs/"); 
 
   startProcedure("Paraview Postprocess",t0); 
-  int[int] vtuorder=[1];
-  savevtk( "VTUs/Solution-Seq.vtu"   , 
+  savevtk( "VTUs/Solution-" + currentIter + ".vtu"   , 
             Th                       , 
             u                        , 
             order=vtuorder           , 
             dataname="U" 
          ); 
   endProcedure  ("Paraview Postprocess",t0);
-
 )"""";
 
 codeSnippet R""""(
@@ -181,6 +179,7 @@ macro solvePoisson
 )"""";
 
 if(adaptmesh){
+
 codeSnippet R""""(
 
 macro solvePoissonAndAdapt
@@ -188,15 +187,32 @@ macro solvePoissonAndAdapt
 )"""";
 
 if(AdaptmeshBackend=="FreeFEM"){
-
 codeSnippet R""""(
-  Th = adaptmesh(Th,u);
+  Th = adaptmesh(Th,u, iso = adaptIso);
 )"""";
 }
 else if (AdaptmeshBackend=="mmg"){
+if (spc == 2)
+{
 codeSnippet R""""(
-  Th = adaptmesh(Th,u);
+   Vh dx2u, dy2u, dxdyu;
+   adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+
+
+   real[int] M(Th.nv * 3);
+   for (int k = 0; k < Th.nv; k++)
+   {
+        M[3*k] = dx2u[][k];
+        M[3*k+1] = dy2u[][k];
+        M[3*k+2] = dxdyu[][k];
+   }
+   
+   Th = mmg2d(Th, metric = M, verbose=-1); 
 )"""";
+}
+else if (spc == 3)
+{
+}
 }
 else if (AdaptmeshBackend=="parmmg"){
 codeSnippet R""""(
@@ -209,7 +225,9 @@ codeSnippet R""""(
   cout << " Wrong value for -adaptmesh_backend " << endl;
   exit(11111);
 )"""";
+
 }
+
 
 
 codeSnippet R""""(
@@ -229,7 +247,9 @@ codeSnippet R""""(
 //-------------------------------------------//
 
 for(int i=0; i < adaptIter; i++){
-  solvePoissonAndAdapt;
+    solvePoissonAndAdapt;
+    postprocess;
+    currentIter++;
 }
 )"""";
 }

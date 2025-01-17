@@ -24,6 +24,10 @@ writeIt
 "                                                                               \n"
 "                                                                               \n";
 
+if (AdaptmeshBackend=="mmg")
+ writeIt
+ "  load    \"mmg\"                                  // mmg interface active \n";
+
 if(!Sequential)
  writeIt
  "  load    \"PETSc\"                                // PETSc plugin activated  \n";

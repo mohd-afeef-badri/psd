@@ -9,6 +9,8 @@ else !HAVESALOME
 
 CHECK_LIST=check-sequential \
 check-sequential-adapt \
+check-sequential-adapt-aniso \
+check-sequential-adapt-iso \
 check-parallel 
 
 MESHDIR2=./../../data/meshes/2D/Geo-Files/Gmsh
@@ -68,6 +70,27 @@ check-sequential-adapt:
 	@echo ""
 	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_LE) $(ADAPT_FLAG) > PreProcess-2D-adapt.log && \
 	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR2)/bar.msh -v 1 -ns -nw > Solve-2D-adapt.log
+
+ANISO_FLAG = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend FreeFEM -adaptmesh_type anisotropic
+check-sequential-adapt-aniso:
+	@echo ""
+	@echo "============================================================*"
+	@echo " Sequential 2D Anisotropic Adapt"
+	@echo "============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_LE) $(ANISO_FLAG) > PreProcess-2D-adapt-aniso.log && \
+	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR2)/bar.msh -v 1 -ns -nw > Solve-2D-adapt-aniso.log
+
+ISO_FLAG = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend FreeFEM -adaptmesh_type isotropic
+check-sequential-adapt-iso:
+	@echo ""
+	@echo "============================================================*"
+	@echo " Sequential 2D Isotropic Adapt"
+	@echo "============================================================*"
+	@echo ""
+	./PSD_PreProcess -dimension 2 $(SEQUENTIAL_FLAG_LE) $(ISO_FLAG) > PreProcess-2D-adapt-iso.log && \
+	./PSD_Solve_Seq Main.edp -mesh $(MESHDIR2)/bar.msh -v 1 -ns -nw > Solve-2D-adapt-iso.log
+
 
 NP = 4
 PARALLEL_FLAG_LE = -problem poisson -testflags

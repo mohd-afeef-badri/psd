@@ -1,8 +1,8 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 03/10/2024                                                                 *
+* Author : Mohd Afeef BADRI, Rania SAADI                                              *
+* Email  : mohd-afeef.badri@cea.fr, rania.saadi@cea.fr                                *
+* Date   : 15/10/2024                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
 * Comment: This support  file is  responsible for generating  ControlParameters.edp   *
@@ -44,6 +44,7 @@ codeSnippet R""""(
 // ------- Mesh Adaption Parameters -------
 // -------------------------------------------------------------------
 //  adaptIter : number of iteration for mesh adaption
+//  adaptIso : isotropy conditions for mesh adaption
 //=============================================================================
 
 )"""";
@@ -51,5 +52,34 @@ codeSnippet R""""(
 writeIt
 "  int adaptIter = "<< adaptmeshiteration <<"; \n";
 
+writeIt 
+"  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
+
+if(AdaptmeshBackend=="mmg")
+{
+codeSnippet R""""(
+//============================================================================
+// ------- Mesh Adaption mmg Parameters -------
+// -------------------------------------------------------------------
+//  hminVal : minimal edge size (not the mmgtools default values)
+//  hmaxVal : maximal edge size (not the mmgtools default values)
+//  hausdVal : maximal hausdorff distance for the boundaries approximation
+//  hgradVal : graduation value
+//  nomoveVal : no point relocation
+//  noswapVal : no edge flipping
+//  noinsertVal : no point insertion or deletion
+//=============================================================================
+
+    real hminVal = 0.0001;
+    real hmaxVal = 0.5;
+    real hausdVal = 0.01;
+    real hgradVal = 1.3; 
+
+    bool nomoveVal = false;
+    bool noswapVal = false;
+    bool noinsertVal = false;
+
+)"""";
+}
 }
 

@@ -1,11 +1,11 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 20/04/2020                                                                 *
+* Author : Mohd Afeef BADRI, Rania SAADI                                              *
+* Email  : mohd-afeef.badri@cea.fr, rania.saadi@cea.fr                                *
+* Date   : 15/10/2024                                                                 *
 * Type   : Support file                                                               *
 *                                                                                     *
-* Comment: This support  file is  responsible for generating  OtherParameters.edp   *
+* Comment: This support  file is  responsible for generating  OtherParameters.edp     *
 *          which contain main solver control parameters of PSD.                       *
 *                                                                                     *
 **************************************************************************************/
@@ -38,6 +38,12 @@ if(Prblm=="soildynamics")
 {
 #include "./OtherParameters/SoilDynamics.hpp"
 }
+
+if(Prblm=="poisson")
+{
+#include "./OtherParameters/poisson.hpp"
+}
+
 
 #include "./OtherParameters/common.hpp"
 
