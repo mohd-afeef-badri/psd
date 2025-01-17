@@ -41,24 +41,27 @@ codeSnippet R""""(
   real pi50 = 50. * pi;
   real pi2 = 2. * pi;
 
-  macro left tanh(-100 * (y - 0.5 - 0.25*sin(2*pi*x)))//
-  macro right  tanh(100 * (y - x))//
+  func F1 = tanh(-100 * (y - 0.5 - 0.25*sin(2*pi*x)));
+  func F2 = tanh(100 * (y - x));
 
-  macro dLx() (pi50 * cos(pi2 * x) * (1 - left^2))//
-  macro dLxx() (pi100 * (pi * sin(pi2 * x) * (left^2 - 1) - cos(pi2 * x) * dLx * left))//
-  macro dLy() (100 * (left^2 -1))//
-  macro dLyy() (200 * dLy * left)//
+  func dAx = 50 * pi * cos(2 * pi * x) * (1 - F1^2);
+  func dAxx = 100 * pi * (pi * sin(2 * pi * x) * (F1^2 - 1) - cos(2 * pi * x) * dAx * F1);
+  func dAy = 100 * (F1^2 -1);
+  func dAyy = 200 * dAy * F1;
 
-  macro dRx() (100 * (right^2 - 1))//
-  macro dRxx() (200 * dRx * right)//
-  macro dRy() (100 * (1 - right^2))//
-  macro dRyy() (-200 * dRy * right)//
+  func dBx = 100 * (F2^2 - 1);
+  func dBxx = 200 * dBx * F2;
+  func dBy = 100 * (1 - F2^2);
+  func dByy = -200 * dBy * F2;
+
+  func f = dAxx + dAyy + dBxx + dByy;
+  func um = F1 + F2;
 
 
   macro    lambda() 1                            //
-  macro    f()      (dLxx + dLyy + dRxx + dRyy)  //
+  macro    f()      (dAxx + dAyy + dBxx + dByy)  //
   macro    un()     0.                           //
-  macro    ud()     (left + right)               //
+  macro    ud()     (F1 + F2)                    //
 )"""";
 
 if(adaptmesh){
