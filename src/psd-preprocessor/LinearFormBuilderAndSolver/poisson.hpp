@@ -212,14 +212,23 @@ codeSnippet R""""(
 }
 else if (spc == 3)
 {
+if (AdaptmeshMetricBackend=="mshmet")
 codeSnippet R""""(
   real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
   Th = mmg3d(Th, metric=met, mem=mmgMemory);
+)"""";
+if (AdaptmeshMetricBackend=="freefem")
+codeSnippet R""""(
+  cout << "ERROR ONLY MSHMET IS AVAILABLE FOR 3D METRIC" << endl;
+  exit(999);
 )"""";
 }
 }
 else if (AdaptmeshBackend=="parmmg"){
 codeSnippet R""""(
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
   cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
   exit(1111);
 )"""";
