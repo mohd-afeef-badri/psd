@@ -16,6 +16,16 @@ varf varfPoisson(def(u),def(v)) =
 //--------------------------------------------------------------------------
     intN(Th,qforder=3)  (lambda*(grad(u)'*grad(v)))  
  -  intN(Th,qforder=3)  (f*v) 
- +  intN1(Th,qforder=3) (un*v)
- +  on(1,2,3,4, u = ud);  
+ +  intN1(Th,qforder=3) (un*v))"""";
+if(spc==2)
+{
+codeSnippet R""""(
++  on(1,2,3,4, u = ud);
 )"""";
+}
+else
+{
+codeSnippet R""""(
+ +  on(1,2,3,4,5,6 u = ud);
+)"""";
+}
