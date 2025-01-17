@@ -68,10 +68,10 @@
    -validation         [string]     To produce code for a validation test case.
                                     Use Iwan.
 
-   -meshadapt_backend  [string]     Backend to be used for adapting meshes.
+   -adaptmesh_backend  [string]     Backend to be used for adapting meshes.
                                     Use FreeFEM | mmg | parmmg.
    
-   -meshadapt_type     [string]     Type of adaption to be used. 
+   -adaptmesh_type     [string]     Type of adaption to be used. 
 				    Use isotropic | anisotropic.
 
    -problem            [string]     Interested problem to be solved by PSD.
