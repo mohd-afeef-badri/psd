@@ -1,4 +1,4 @@
-name: UB22.04-mpich
+name: UB24.04-mpich
 on:
   push:
     branches:
