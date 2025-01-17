@@ -81,6 +81,7 @@ codeSnippet R""""(
 macro resizeVectors()
 
   x.resize(Vh.ndof);
+  x = 0.;
   b.resize(Vh.ndof);
 //
 
