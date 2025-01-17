@@ -60,7 +60,7 @@ Among the two the second one is the recommended. With *Installation Procedure 1*
 
 - Obtain the latest version of PSD by cloning the git repository:
 ```bash
-git clone https://gitlab.com/PsdSolver/psd_sources.git PSD-Sources
+git clone https://github.com/mohd-afeef-badri/psd.git PSD-Sources
 ```
 
 
