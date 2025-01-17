@@ -6,4 +6,5 @@ gmsh-*
 salome-*
 SALOME-*
 *.tar.gz
+*.tgz
 !petsc-scalapack.patch
