@@ -5,16 +5,16 @@
 #----------------------------------------------------------------------------------------
 
 # Define the version of parmmg
-PARMMG_VERSION=f981ff8eba8a45131821893440720556394e2cad
+PARMMG_VERSION=beb4147b7b29a2891e1a55745ff95863e93bcc0d
 
 # Define the version of mmg
-MMG_VERSION=aa5ac04b9e730d9b12948104d057e6e59d799615
+MMG_VERSION=2263f92c032a26672c2625230a0689e29e8d96c6
 
 # Define the version of mshmet
 MSHMET_VERSION=2012.04.25
 
 # Define the version of ptscotch
-PTSCOTCH_VERSION=7.0.3
+PTSCOTCH_VERSION=7.0.5
 
 # Define the version of MFront library
 MFRONT_VERSION=4.0.0
@@ -23,16 +23,16 @@ MFRONT_VERSION=4.0.0
 MGIS_VERSION=2.0
 
 # Define the version of PETSc library
-PETSC_VERSION=3.20.2
+PETSC_VERSION=3.22.2
 
 # Define the version of FreeFEM library
-FREEFEM_VERSION=4.14
+FREEFEM_VERSION=4.15
 
 # Define the version of Gmsh library
 GMSH_VERSION=4.11.1
 
 # Define the version of MUMPS library
-MUMPS_VERSION=5.6.1
+MUMPS_VERSION=5.7.3
 
 # Define the version of METIS library
 METIS_VERSION=5.1.0
@@ -41,16 +41,16 @@ METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
 
 # Define the version of SLEPc library
-SLEPC_VERSION=3.20.1
+SLEPC_VERSION=3.22.0
 
 # Define the version of SCALAPACK library
 SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
 
 # Define the version of HPDDM library
-HPDDM_VERSION=2.2.5
+HPDDM_VERSION=2.3.1
 
 # Define the version of HYPRE library
-HYPRE_VERSION=2.29.0
+HYPRE_VERSION=2.31.0
 
 # Define the version of BLAS/LAPACK library
 F2CBLASLAPACK_VERSION=3.8.0

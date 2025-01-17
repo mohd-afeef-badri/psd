@@ -5,6 +5,9 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Added
 
+- New poisson model `-model poisson`
+- New adapt meshing support:
+- New flags `-adaptmesh`, `-adaptmesh_iter`, `-adaptmesh_type`, `-adapt_mesh_backend` 
 - Support for Apple silicon MacOSARM
 - Installing Gmsh automatically for MacOS
 - Simplified install procedure
@@ -12,9 +15,10 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ### Changed
 
-- Moved to FreeFEM 4.14
-- Moved to PETSc 3.20.2
+- Moved to FreeFEM 4.15
+- Moved to PETSc 3.22.2
 - Moved to Gmsh 4.11.1
+- Moved to Hypre 2.31.0
 
 ### Removed
 
