@@ -135,7 +135,7 @@ MGIS_DOWNLOAD = wget -c https://github.com/thelfer/MFrontGenericInterfaceSupport
 PETSC_DOWNLOAD = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSION)/petsc-v$(PETSC_VERSION).tar.gz \
 			-O petsc-$(PETSC_VERSION).tar.gz
 # Download MUMPS source code
-MUMPS_DOWNLOAD = wget -c https://graal.ens-lyon.fr/MUMPS/MUMPS_$(MUMPS_VERSION).tar.gz \
+MUMPS_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/MUMPS_$(MUMPS_VERSION).tar.gz \
 			-O mumps-$(MUMPS_VERSION).tar.gz
 # Download METIS source code
 METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
