@@ -1,4 +1,4 @@
-SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins mfront pdmt medio
+SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins mfront medio
 
 clean-local:
 	@echo ""
