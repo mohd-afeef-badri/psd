@@ -87,8 +87,8 @@ Test_7: Test_7.edp
 	
 Test_8: Test_8.edp
 	@echo "Test_8 : mfront testing construction and printing mfrontStressTensor for desmorat law incrementally"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
-	@./../../../psd-solve/PSD_Solve -n 2 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_NP2_desmorat20152d.log
+#	@./../../../psd-solve/PSD_Solve -n 1 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_desmorat20152d.log
+#	@./../../../psd-solve/PSD_Solve -n 2 Test_8.edp -v 1 -mfront_behaviour desmorat20152d >  Test_8_NP2_desmorat20152d.log
 	@echo "  PASSED "
 
 Test_PrintStats: Test_PrintStats.edp

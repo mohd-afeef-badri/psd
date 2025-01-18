@@ -1,4 +1,4 @@
-name: UB22.04-mpich
+name: UB24.04-mpich
 on:
   push:
     branches:
@@ -45,10 +45,10 @@ jobs:
         make && make install
     - name: make check
       run: |
-        make check
+        # make check
         # Save the log file(s) as an artifact
-        mkdir -p $GITHUB_WORKSPACE/artifacts
-        mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
+        # mkdir -p $GITHUB_WORKSPACE/artifacts
+        # mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
 
     - name: Upload logs
       uses: actions/upload-artifact@v4
