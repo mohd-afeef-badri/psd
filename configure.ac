@@ -547,9 +547,6 @@ AC_CONFIG_FILES([
  src/plugins/mfront/law/Makefile
  src/plugins/mfront/law/test/Makefile
  src/plugins/mfront/test/Makefile
- src/plugins/pdmt/Makefile
- src/plugins/pdmt/cpp/Makefile
- src/plugins/pdmt/test/Makefile
  src/plugins/soil-laws/Makefile
  src/plugins/soil-laws/cpp/Makefile
  src/plugins/soil-laws/hujeux-law-lib/Makefile
