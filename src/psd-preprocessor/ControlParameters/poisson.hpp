@@ -16,11 +16,18 @@ codeSnippet R""""(
 //============================================================================
 // ------- Mesh parameters (Un-partitioned) -------
 // -------------------------------------------------------------------
-//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
+//  ThName : Name of the .msh file in Meshses  folder
 //=============================================================================
+)"""";
 
-  string ThName = "../Meshes/2D/bar.msh";
+if(spc==3)
+  writeIt
+  "  string ThName = \"../Meshes/3D/cube.msh\"; \n";
+if(spc==2)
+  writeIt
+  "  string ThName = \"../Meshes/2D/bar.msh\"; \n";
 
+codeSnippet R""""(
 //============================================================================
 //                   ------- Material parameters ------
 // -------------------------------------------------------------------
@@ -30,10 +37,31 @@ codeSnippet R""""(
 //  ud     : dirichlet term
 //============================================================================
 
-  macro    lambda() 1.5 // 
-  macro    f()      1.  //
-  macro    un()     0.  //
-  macro    ud()     5.  // 
+  real pi100 = 100. * pi;
+  real pi50 = 50. * pi;
+  real pi2 = 2. * pi;
+
+  func F1 = tanh(-100 * (y - 0.5 - 0.25*sin(2*pi*x)));
+  func F2 = tanh(100 * (y - x));
+
+  func dAx = 50 * pi * cos(2 * pi * x) * (1 - F1^2);
+  func dAxx = 100 * pi * (pi * sin(2 * pi * x) * (F1^2 - 1) - cos(2 * pi * x) * dAx * F1);
+  func dAy = 100 * (F1^2 -1);
+  func dAyy = 200 * dAy * F1;
+
+  func dBx = 100 * (F2^2 - 1);
+  func dBxx = 200 * dBx * F2;
+  func dBy = 100 * (1 - F2^2);
+  func dByy = -200 * dBy * F2;
+
+  func f = dAxx + dAyy + dBxx + dByy;
+  func um = F1 + F2;
+
+
+  macro    lambda() 1                            //
+  macro    f()      (dAxx + dAyy + dBxx + dByy)  //
+  macro    un()     0.                           //
+  macro    ud()     (F1 + F2)                    //
 )"""";
 
 if(adaptmesh){
@@ -74,10 +102,39 @@ codeSnippet R""""(
     real hmaxVal = 0.5;
     real hausdVal = 0.01;
     real hgradVal = 1.3; 
+    real mmgMemory = 20000;
 
     bool nomoveVal = false;
     bool noswapVal = false;
     bool noinsertVal = false;
+
+//============================================================================
+// ------- Mesh Adaption metric mshmet parameters -------
+// -------------------------------------------------------------------
+//=============================================================================
+
+    real[int] ddoptions(4);
+    int[int] lloptions(7);
+
+    ddoptions(0) = 0.01; // hmin 0.01
+    ddoptions(1) = 1.0;  // hmax 1.0
+    ddoptions(2) = 0.01; // eps 0.01
+    ddoptions(3) = 0.05; // width 0.05
+
+    lloptions(0) = 2;               // nnu 0
+    lloptions(1) = 1;               // iso 1
+    lloptions(2) = 0;               // ls 0
+    lloptions(3) = 1;               // ddebug 1
+    lloptions(4) = 0;               // imprim verbosity
+    lloptions(5) = 0;               // nlis 0
+    lloptions(6) = 0;               // metric 0
+
+//=======================================================================
+// Todo list:
+// 1. Rania adds doc for mshmt options
+// 2. handle Drichlet
+// 3. check qforder
+//=======================================================================
 
 )"""";
 }

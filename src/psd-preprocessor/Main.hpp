@@ -28,6 +28,10 @@ if (AdaptmeshBackend=="mmg")
  writeIt
  "  load    \"mmg\"                                  // mmg interface active \n";
 
+if ((AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg") && spc==3)
+ writeIt
+ "  load    \"mshmet\"                               // metric interface active \n";
+
 if(!Sequential)
  writeIt
  "  load    \"PETSc\"                                // PETSc plugin activated  \n";

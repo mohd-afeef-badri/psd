@@ -24,116 +24,6 @@
 *                                                                                     *
 **************************************************************************************/
 
-//=====================================================================================
-// ------ All command line argument descriptions [ARGUMENTS] ------
-//=====================================================================================
-/*
-
-  -------------------------------------------------------------------------------------
-                             INTEGER TYPE ARGUMENTS
-  -------------------------------------------------------------------------------------
-            Integer type arguments these expect an integer after the flag
-  -------------------------------------------------------------------------------------
-
-  -dirichletpointconditions [int]  # of Dirchlet points.  Default 0.
-
-  -bodyforceconditions      [int]  # of regions in which body force is define.  Default 0.
-
-  -dirichletconditions      [int]  # of Dirchlet boundaries.  Default 1.
-
-  -tractionconditions       [int]  # of Neumann/traction boundaries.  Default 0.
-
-  -parmetis_worker          [int]  Active when mesh partitioner is parmetis.
-
-  -dimension                [int]  Dimension of problem. 2 for 2D 3 for 3D. Default 2.
-
-  -adaptmesh_iter           [int]  # iteration to be used for mesh adaption. 
- 
-  -lagrange                 [int]  Lagrange order used for building FE space. Options
-                                   are  1 for P1 or 2 for P2. Default is P1.
-
-  -------------------------------------------------------------------------------------
-                             STRING TYPE ARGUMENTS
-  -------------------------------------------------------------------------------------
-            String type arguments these expect an string after the flag
-  -------------------------------------------------------------------------------------
-
-  -adaptmesh_backend  [string] Backend for adaptmesh. Use FreeFEM|mmg|parmmg.
-
-  -adaptmesh_type  [string] Type of adaption for adaptmesh. Use isotropic|anisotropic.
-
-  -timediscretization [string] Time discretization type. Use generalized_alpha|newmark_beta...
-
-  -doublecouple    [string] Soil dynamics double couple. Use force_based|displacement_based.
-
-  -nonlinearmethod [string] Nonlinear method type. Use Picard|Newton_Raphsons.
-
-  -reactionforce   [string] Reaction force calculation method stress_based|variational_based.
-
-  -validation      [string] To produce code for a validation test case.
-
-  -partitioner     [string] Mesh partitioner. Use metis|scotch|parmetis.
-
-  -postprocess     [string] Indicate postprocessing quantity. Use u|v|a|phi|uphi|uva.
-
-  -problem         [string] Interested problem. This flag accepts the following string value 
-                            linear_elasticity|damage|elastodynamics|soildynamics|elasto_plastic|poisson.
-
-  -model           [string] Interested model. Use hybrid_phase_field|Mazar|pseudo_nonlinear|von_mises.
-
-  -mesh            [string] Mesh to be used, use a .mesh or .msh mesh.
-
-  -------------------------------------------------------------------------------------
-                             BOOLEAN TYPE ARGUMENTS
-  -------------------------------------------------------------------------------------
-            Boolean type arguments these expect an bool after the flag
-            One can use     1|0|yes|no|on|off|true|false      as vales
-  -------------------------------------------------------------------------------------
-
-  -help         [bool]     To activate helping message on the terminal.
-
-  -plot         [bool]     To activate plotting routine.
-
-  -debug        [bool]     To activate debug openGL plotting routine.
-
-  -useGFP       [bool]     To activate use of GoFastPlugins. A suite of c++ plugins.
-
-  -timelog      [bool]     To setup time logging for various phases of the solver.
-
-  -useRCM       [bool]     To activate mesh level renumbering via Reverse Cuthill Mckee.
-
-  -pipegnu      [bool]     To activate realtime pipe plotting using GnuPlot.
-
-  -vectorial    [bool]     To generate vectorial space solver for nonlinear.
-
-  -useMfront    [bool]     To activate MFront interface for PSD.
-
-  -energydecomp [bool]     To activate hybrid phase field energy decomposition.
-
-  -sequential   [bool]     To generate a sequential PSD solver.
-
-  -pointprobe   [bool]     To insert point probes for post processing.
-
-  -activeplot   [bool]     To activate realtime pipe plotting using GnuPlot.
-
-  -constrainHPF [bool]     To use constrain condition in hybrid phase-field model.
-
-  -getenergies  [bool]     To activate routine for extraction of energies K.E, E.E.
-
-  -adaptmesh    [bool]     To activate mesh adaption
-
-  -top2vol-meshing    [bool] To activate top-ii-vol meshing for soildynamics.
-
-  -getreactionforce   [bool] To activate routine for extraction reactions at surface.
-
-  -plotreactionforce  [bool] To activate realtime pipe plotting using GnuPlot.
-
-  -withmaterialtensor [bool] Generate variational form that includes material tensor.
-
-  -crackdirichletcondition [bool] To activate pre-cracked surface Dirichlet.
-
-*/
-
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -201,6 +91,7 @@ int main(int argc, char *argv[]){
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized_alpha";
   string AdaptmeshBackend        = "FreeFEM";
+  string AdaptmeshMetricBackend  = "FreeFEM";
   string AdaptmeshType		 = "";
 
 //=====================================================================================
@@ -337,6 +228,8 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-subpreconditioner"       ) SubPreconditioner        = argv[i+1];
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
     if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
+    if( argvdummy == "-adaptmesh_metric_backend") AdaptmeshMetricBackend   = argv[i+1];
+
 
     if( argvdummy == "-adaptmesh_type"		) {
 	    					  AdaptmeshType		   = argv[i+1];
@@ -415,9 +308,10 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " preconditioner is-------------------> "<<  Preconditioner           << endl;
   cout << " subPreconditioner is----------------> "<<  SubPreconditioner        << endl;
   cout << " timeDiscretization is---------------> "<<  TimeDiscretization       << endl;
-  cout << " adaptmesh_backend is----------------> "<<  AdaptmeshBackend 	<< endl;
-  cout << " adaptmesh_type is-------------------> "<<  AdaptmeshType 		<< endl;
-  cout << " adaptmesh_isotropy is --------------> "<<  adaptmeshisotropy	<< endl;
+  cout << " adaptmesh_backend is----------------> "<<  AdaptmeshBackend 	      << endl;
+  cout << " adaptmesh_metric_backend is---------> "<<  AdaptmeshMetricBackend 	<< endl;
+  cout << " adaptmesh_type is-------------------> "<<  AdaptmeshType 		        << endl;
+  cout << " adaptmesh_isotropy is --------------> "<<  adaptmeshisotropy	      << endl;
 
   cout << "===================================================================" << endl;
   cout << "                        BOOL ARGUMENTS                             " << endl;
@@ -452,7 +346,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
 
 if(versionpsd){
   cout << "  PSD Version 2.6 " << endl;
-  cout << "    Copyright (C) CEA 2019 - 2024 "<< endl;
+  cout << "    Copyright (C) CEA 2019 - 2025 "<< endl;
   cout << "                                                                   " << endl;
   cout << "    This is free software; see the source for copying conditions.  " << endl;
   cout << "    There is NO warranty; not even for MERCHANTABILITY or FITNESS  " << endl;

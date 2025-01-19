@@ -81,6 +81,7 @@ codeSnippet R""""(
 macro resizeVectors()
 
   x.resize(Vh.ndof);
+  x = 0.;
   b.resize(Vh.ndof);
 //
 
@@ -195,27 +196,39 @@ else if (AdaptmeshBackend=="mmg"){
 if (spc == 2)
 {
 codeSnippet R""""(
-   Vh dx2u, dy2u, dxdyu;
-   adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+  Vh dx2u, dy2u, dxdyu;
+  adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
 
-
-   real[int] M(Th.nv * 3);
-   for (int k = 0; k < Th.nv; k++)
-   {
-        M[3*k] = dx2u[][k];
-        M[3*k+1] = dy2u[][k];
-        M[3*k+2] = dxdyu[][k];
-   }
+  real[int] M(Th.nv * 3);
+  for (int k = 0; k < Th.nv; k++)
+  {
+       M[3*k] = dx2u[][k];
+       M[3*k+1] = dy2u[][k];
+       M[3*k+2] = dxdyu[][k];
+  }
    
-   Th = mmg2d(Th, metric = M, verbose=-1); 
+  Th = mmg2d(Th, metric = M, verbose=-1); 
 )"""";
 }
 else if (spc == 3)
 {
+if (AdaptmeshMetricBackend=="mshmet")
+codeSnippet R""""(
+  real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+  Th = mmg3d(Th, metric=met, mem=mmgMemory);
+)"""";
+if (AdaptmeshMetricBackend=="freefem")
+codeSnippet R""""(
+  cout << "ERROR ONLY MSHMET IS AVAILABLE FOR 3D METRIC" << endl;
+  exit(999);
+)"""";
 }
 }
 else if (AdaptmeshBackend=="parmmg"){
 codeSnippet R""""(
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
+  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
   cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
   exit(1111);
 )"""";

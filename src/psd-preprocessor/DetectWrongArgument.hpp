@@ -18,9 +18,10 @@
            argvdummy != "-bodyforceconditions"      &&
            argvdummy != "-tractionconditions"       &&
            argvdummy != "-adaptmesh_backend"        &&
+           argvdummy != "-adaptmesh_metric_backend" &&
            argvdummy != "-dimension"                &&
            argvdummy != "-lagrange"                 &&
-	   argvdummy != "-adaptmesh_type"           &&
+	         argvdummy != "-adaptmesh_type"           &&
 
            argvdummy != "-h"                        &&
            argvdummy != "-useRCM"                   &&

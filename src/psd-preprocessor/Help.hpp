@@ -72,7 +72,10 @@
                                     Use FreeFEM | mmg | parmmg.
    
    -adaptmesh_type     [string]     Type of adaption to be used. 
-				    Use isotropic | anisotropic.
+				            Use isotropic | anisotropic.
+
+   -adaptmesh_metric_backend        Backend to be used for adapting meshes.
+                                    To build metric. Use | freefem | mshmet.
 
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
@@ -81,7 +84,6 @@
    -model              [string]     Model by which the problem is solved.
                                     Use hybrid_phase_field | pseudo_nonlinear
                                     | Mazar | von_mises
-
 
   ----------------------------------------------------------------------------
         BOOLEAN type flags, these flags are like activaction switches
