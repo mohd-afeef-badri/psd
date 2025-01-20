@@ -215,7 +215,7 @@ else if (spc == 3)
 if (AdaptmeshMetricBackend=="mshmet")
 codeSnippet R""""(
   real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
-  Th = mmg3d(Th, metric=met, mem=mmgMemory);
+  Th = mmg3d(Th, metric=met, hgrad=hgradVal, hmin=hminVal, hmax=hmaxVal, hausd=hausdVal, mem=mmgMemory);
 )"""";
 if (AdaptmeshMetricBackend=="freefem")
 codeSnippet R""""(
@@ -261,7 +261,6 @@ codeSnippet R""""(
 
 for(int i=0; i < adaptIter; i++){
     solvePoissonAndAdapt;
-    postprocess;
     currentIter++;
 }
 )"""";
