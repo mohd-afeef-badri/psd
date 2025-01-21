@@ -121,7 +121,7 @@ for(int i = 0; i <= adaptIter; ++i) {
   MatCreate(Th, Adapt, P1);
   A = Adapt;
   u = 0.0;
-  endProcedure("variable update", t0);        
+  endProcedure("variable update", t0);
 }
 
 )"""";
@@ -262,7 +262,7 @@ macro solvePoissonAndAdapt
   solvePoisson;
 )"""";
 
-    if (AdaptmeshBackend == "FreeFEM") {
+    if (AdaptmeshBackend == "freefem") {
       codeSnippet R""""(
   Th = adaptmesh(Th,u, iso = adaptIso);
 )"""";

@@ -89,9 +89,10 @@ codeSnippet R"""(
 //============================================================================
 // ------- Mesh Adaption ParMmg Parameters -------
 // -------------------------------------------------------------------
+//  parMmgIter : number of iteration in parmmg values (1,2,3)
+//  rt         : required triangles that are conserved and not adapted
+//  parMmgVerbosityVal : verbosity of parmmg
 //=============================================================================
-    int Pgroups = mpisize;
-    int interpolateSol = 0;
     int parMmgIter = 3;
     int[int] rt(0); 
     real parMmgVerbosityVal = verbosity;
