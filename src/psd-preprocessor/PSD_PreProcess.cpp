@@ -92,7 +92,8 @@ int main(int argc, char *argv[]){
   string TimeDiscretization      = "generalized_alpha";
   string AdaptmeshBackend        = "freefem";
   string AdaptmeshMetricBackend  = "freefem";
-  string AdaptmeshType		 = "";
+  string ParmmgMethod            = "NULL";
+  string AdaptmeshType		       = "";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -229,7 +230,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
     if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
     if( argvdummy == "-adaptmesh_metric_backend") AdaptmeshMetricBackend   = argv[i+1];
-
+    if( argvdummy == "-adaptmesh_parmmg_method" ) ParmmgMethod             = argv[i+1];
 
     if( argvdummy == "-adaptmesh_type"		) {
 	    					  AdaptmeshType		   = argv[i+1];
