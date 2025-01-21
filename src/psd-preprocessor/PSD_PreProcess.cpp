@@ -90,8 +90,8 @@ int main(int argc, char *argv[]){
   string reactionforcemethod     = "stress_based";
   string SubPreconditioner       = "ilu";
   string TimeDiscretization      = "generalized_alpha";
-  string AdaptmeshBackend        = "FreeFEM";
-  string AdaptmeshMetricBackend  = "FreeFEM";
+  string AdaptmeshBackend        = "freefem";
+  string AdaptmeshMetricBackend  = "freefem";
   string AdaptmeshType		 = "";
 
 //=====================================================================================
