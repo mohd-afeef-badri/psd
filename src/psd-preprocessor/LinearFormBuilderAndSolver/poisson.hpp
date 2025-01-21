@@ -69,7 +69,8 @@ if (!Sequential) {
 
 )"""";
   } else {
-    codeSnippet R""""(
+    if (ParmmgMethod == "NULL")
+      codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
   startProcedure("matrix Assembly",t0);
@@ -123,8 +124,87 @@ for(int i = 0; i <= adaptIter; ++i) {
   u = 0.0;
   endProcedure("variable update", t0);
 }
-
 )"""";
+    if (ParmmgMethod == "partition_regrouping")
+      codeSnippet R""""(
+for(int i = 0; i <= adaptIter; ++i) {
+
+  startProcedure("matrix Assembly",t0);
+  A = varfPoisson(Vh, Vh, tgv=-1);
+  endProcedure("matrix Assembly", t0);
+
+  startProcedure("RHS assembly",t0);
+  PetscScalar[int] b = varfPoisson(0, Vh, tgv=-1);
+  endProcedure("RHS assembly", t0);
+
+  startProcedure("PETSc solving", t0);
+  set(A, sparams = "-ksp_monitor -pc_type gamg");
+  u[] = A^-1 * b;
+  endProcedure("PETSc solving", t0);
+
+  startProcedure("Adapt mesh init", t0);
+  mesh3 ThParMmg;
+  DmeshInitialize(ThParMmg);
+  endProcedure("Adapt mesh init", t0);
+
+  startProcedure("Mesh grouping", t0);
+  int div = mpisize / Pgroups;
+  mpiComm commThGather(mpiCommWorld, (mpirank % div == 0 && mpirank / div < Pgroups) ? 0 : mpiUndefined, mpirank / div);
+  mpiComm comm(mpiCommWorld, min(mpirank / div, Pgroups - 1), mpirank - div * min(mpirank / div, Pgroups - 1));
+
+  macro ThGatherComm()commThGather//
+  mesh3 ThGather;
+  DmeshGather(Th, comm, ThGather);
+  fespace VhGather(ThGather, P1);
+  VhGather<PetscScalar> uGather;
+  VecGather(Th, comm, ThGather, P1, u, uGather);
+  macro ThGatherParMmgComm()commThGather//
+
+  mesh3 ThGatherParMmg;
+  DmeshInitialize(ThGatherParMmg);
+  endProcedure("Mesh grouping", t0);
+
+  startProcedure("Mesh adapt", t0);
+  if((mpirank % div == 0 && mpirank / div < Pgroups) != 0)
+  {
+    real[int] met = mshmet(ThGather, uGather, loptions=lloptions, doptions=ddoptions);
+
+    if(mpiSize(commThGather) > 1) {
+      real[int] metParMmg;
+      int[int][int] communicators;
+      ParMmgCommunicatorsAndMetric(ThGather, met, ThGatherParMmg, metParMmg, communicators);
+      ThGatherParMmg = parmmg3d(MmgParameters(ThGatherParMmg, metParMmg, rt, verbosity),
+        nodeCommunicators = communicators, niter = parMmgIter, comm = commThGather);
+    }
+    else
+    {
+      ThGatherParMmg = mmg3d(MmgParameters(ThGather, met, rt, verbosity));
+    }
+  }
+  endProcedure("Mesh adapt", t0);
+
+  startProcedure("Mesh scatter", t0);
+  DmeshScatter(ThGatherParMmg, comm, ThParMmg);
+  endProcedure("Mesh scatter", t0);
+
+  startProcedure("Paraview Postprocess", t0);
+  savevtk("VTUs/sol.vtu", Th, u, order = vtuorder, append = true, dataname="u");
+  endProcedure("Paraview Postprocess", t0);
+
+  startProcedure("Error check", t0);
+  Vh diff = u - um;
+  real l2err = sqrt(int3d(Th)(diff^2));
+  endProcedure("Error check", t0);
+
+  startProcedure("variable update", t0);
+  DmeshCopy(ThParMmg, Th);
+  Mat<PetscScalar> Adapt;
+  MatCreate(Th, Adapt, P1);
+  A = Adapt;
+  u = 0.0;
+  endProcedure("variable update", t0);
+}
+    )"""";
   }
 
 } //-- [if loop terminator] !Sequential ended --//

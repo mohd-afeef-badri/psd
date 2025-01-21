@@ -92,7 +92,8 @@ int main(int argc, char *argv[]){
   string TimeDiscretization      = "generalized_alpha";
   string AdaptmeshBackend        = "freefem";
   string AdaptmeshMetricBackend  = "freefem";
-  string AdaptmeshType		 = "";
+  string ParmmgMethod            = "NULL";
+  string AdaptmeshType		       = "";
 
 //=====================================================================================
 //---- Comandline Parameters -----
@@ -229,7 +230,7 @@ int main(int argc, char *argv[]){
     if( argvdummy == "-timediscretization"      ) TimeDiscretization       = argv[i+1];
     if( argvdummy == "-adaptmesh_backend"       ) AdaptmeshBackend         = argv[i+1];
     if( argvdummy == "-adaptmesh_metric_backend") AdaptmeshMetricBackend   = argv[i+1];
-
+    if( argvdummy == "-adaptmesh_parmmg_method" ) ParmmgMethod             = argv[i+1];
 
     if( argvdummy == "-adaptmesh_type"		) {
 	    					  AdaptmeshType		   = argv[i+1];
@@ -312,6 +313,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " adaptmesh_metric_backend is---------> "<<  AdaptmeshMetricBackend 	<< endl;
   cout << " adaptmesh_type is-------------------> "<<  AdaptmeshType 		        << endl;
   cout << " adaptmesh_isotropy is --------------> "<<  adaptmeshisotropy	      << endl;
+  cout << " adaptmesh_parmmg_method is ---------> "<<  ParmmgMethod      	      << endl;
 
   cout << "===================================================================" << endl;
   cout << "                        BOOL ARGUMENTS                             " << endl;
@@ -326,7 +328,6 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " useMfront is -----------------------> " << useMfront                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
-
 
   cout << " adaptmesh is -----------------------> " << adaptmesh                << endl;
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;

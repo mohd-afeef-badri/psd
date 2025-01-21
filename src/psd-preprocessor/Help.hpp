@@ -77,6 +77,9 @@
    -adaptmesh_metric_backend        Backend to be used for adapting meshes.
                                     To build metric. Use | freefem | mshmet.
 
+   -adaptmesh_parmmg_method         Method for regrouping or not for mesh a-
+                                    daption. Use partition_regrouping.
+
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
                                     | soildynamics | elasto_plastic | poisson.

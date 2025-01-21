@@ -119,6 +119,10 @@ codeSnippet R""""(
     real hausdVal = 0.01;
 )"""";
 
+if (ParmmgMethod == "partition_regrouping")
+    codeSnippet R""""(
+    int  Pgroups = 2;
+    )"""";
 if(adaptmeshisotropy)
 {
 codeSnippet R""""(
