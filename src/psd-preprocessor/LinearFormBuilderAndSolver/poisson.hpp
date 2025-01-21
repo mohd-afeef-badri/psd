@@ -164,28 +164,24 @@ for(int i = 0; i <= adaptIter; ++i) {
   DmeshInitialize(ThGatherParMmg);
   endProcedure("Mesh grouping", t0);
 
+  startProcedure("Mesh adapt", t0);
   if((mpirank % div == 0 && mpirank / div < Pgroups) != 0)
   {
-    startProcedure("Metric calculation", t0);
     real[int] met = mshmet(ThGather, uGather, loptions=lloptions, doptions=ddoptions);
-    endProcedure("Metric calculation", t0);
 
     if(mpiSize(commThGather) > 1) {
-      startProcedure("Mesh adaption", t0);
       real[int] metParMmg;
       int[int][int] communicators;
       ParMmgCommunicatorsAndMetric(ThGather, met, ThGatherParMmg, metParMmg, communicators);
       ThGatherParMmg = parmmg3d(MmgParameters(ThGatherParMmg, metParMmg, rt, verbosity),
         nodeCommunicators = communicators, niter = parMmgIter, comm = commThGather);
-      endProcedure("Mesh adaption", t0);
     }
     else
     {
-      startProcedure("Mesh adaption", t0);
       ThGatherParMmg = mmg3d(MmgParameters(ThGather, met, rt, verbosity));
-      endProcedure("Mesh adaption", t0);
     }
   }
+  endProcedure("Mesh adapt", t0);
 
   startProcedure("Mesh scatter", t0);
   DmeshScatter(ThGatherParMmg, comm, ThParMmg);
