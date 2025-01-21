@@ -26,6 +26,6 @@ codeSnippet R""""(
 else
 {
 codeSnippet R""""(
- +  on(1,2,3,4,5,6, u = ud);
++  on(1,2,3,4,5,6, u = ud);
 )"""";
 }

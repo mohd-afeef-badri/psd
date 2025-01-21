@@ -100,10 +100,19 @@ codeSnippet R""""(
 
     real hminVal = 0.0001;
     real hmaxVal = 0.5;
-    real hausdVal = 0.01;
-    real hgradVal = 1.3; 
+    real hausdVal = 0.01;)"""";
+if(adaptmeshisotropy)
+{
+codeSnippet R""""(
+    real hgradVal = 1.3;)"""";
+}
+else
+{
+codeSnippet R""""(
+    real hgradVal = 2.3;)"""";
+}
+codeSnippet R""""(
     real mmgMemory = 20000;
-
     bool nomoveVal = false;
     bool noswapVal = false;
     bool noinsertVal = false;
@@ -120,9 +129,20 @@ codeSnippet R""""(
     ddoptions(1) = 1.0;  // hmax 1.0
     ddoptions(2) = 0.01; // eps 0.01
     ddoptions(3) = 0.05; // width 0.05
-
+)"""";
+if(adaptmeshisotropy)
+{
+codeSnippet R""""(
     lloptions(0) = 2;               // nnu 0
-    lloptions(1) = 1;               // iso 1
+    lloptions(1) = 1;               // iso 1)"""";
+}
+else
+{
+codeSnippet R""""(
+    lloptions(0) = 0;               // nnu 0
+    lloptions(1) = 0;               // iso 1)"""";
+}
+codeSnippet R""""(
     lloptions(2) = 0;               // ls 0
     lloptions(3) = 1;               // ddebug 1
     lloptions(4) = 0;               // imprim verbosity
@@ -135,7 +155,6 @@ codeSnippet R""""(
 // 2. handle Drichlet
 // 3. check qforder
 //=======================================================================
-
 )"""";
 }
 }
