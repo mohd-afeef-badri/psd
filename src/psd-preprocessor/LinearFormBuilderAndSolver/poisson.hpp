@@ -2,10 +2,10 @@
 // ------ Poisson problem for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
+if (!Sequential) {
 
-if(!Sequential){
-
-codeSnippet R""""(
+  if (!adaptmesh) {
+    codeSnippet R""""(
 
 //==============================================================================
 //  ------- Local Au=b assembly and solving -------
@@ -38,8 +38,8 @@ codeSnippet R""""(
 
 )"""";
 
-if(debug)
-codeSnippet R""""(
+    if (debug)
+      codeSnippet R""""(
 
 //-------------Debug plotting------------------//
   macro viz(i)i//
@@ -47,8 +47,8 @@ codeSnippet R""""(
 
 )"""";
 
-if(ParaViewPostProcess)
-codeSnippet R""""(
+    if (ParaViewPostProcess)
+      codeSnippet R""""(
 
 //==============================================================================
 // -------Postprocess with paraview-------// 
@@ -68,13 +68,69 @@ codeSnippet R""""(
   endProcedure("Paraview Postprocess",t0); 
 
 )"""";
+  } else {
+    codeSnippet R""""(
+for(int i = 0; i <= adaptIter; ++i) {
 
-}  //-- [if loop terminator] !Sequential ended --//
+  startProcedure("matrix Assembly",t0);
+  A = varfPoisson(Vh, Vh, tgv=-1);
+  endProcedure("matrix Assembly", t0);
 
+  startProcedure("RHS assembly",t0);
+  PetscScalar[int] b = varfPoisson(0, Vh, tgv=-1);
+  endProcedure("RHS assembly", t0);
 
+  startProcedure("PETSc solving", t0);
+  set(A, sparams = "-ksp_monitor -pc_type gamg");
+  u[] = A^-1 * b;
+  endProcedure("PETSc solving", t0);
 
-if(Sequential){
-codeSnippet R""""(
+  startProcedure("Adapt mesh init", t0);
+  mesh3 ThParMmg;
+  DmeshInitialize(ThParMmg);
+  endProcedure("Adapt mesh init", t0);
+
+  startProcedure("Metric calculation", t0);
+  real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+  endProcedure("Metric calculation", t0);
+
+  startProcedure("Mesh adaption", t0);
+  real[int] metParMmg;
+  int[int][int] communicators;
+  ParMmgCommunicatorsAndMetric(Th, met, ThParMmg, metParMmg, communicators);
+  ThParMmg = parmmg3d(MmgParameters(ThParMmg, metParMmg, rt, verbosity),
+              nodeCommunicators = communicators, niter = parMmgIter);
+  endProcedure("Mesh adaption", t0);
+
+  startProcedure("Distributed mesh reconstrt", t0);
+  DmeshReconstruct(ThParMmg);
+  endProcedure("Distributed mesh reconstrt", t0);
+
+  startProcedure("Paraview Postprocess", t0);
+  savevtk("VTUs/sol.vtu", Th, u, order = vtuorder, append = true, dataname="u");
+  endProcedure("Paraview Postprocess", t0);
+
+  startProcedure("Error check", t0);
+  Vh diff = u - um;
+  real l2err = sqrt(int3d(Th)(diff^2));
+  endProcedure("Error check", t0);
+
+  startProcedure("variable update", t0);
+  DmeshCopy(ThParMmg, Th);
+  Mat<PetscScalar> Adapt;
+  MatCreate(Th, Adapt, P1);
+  A = Adapt;
+  u = 0.0;
+  endProcedure("variable update", t0);
+}
+
+)"""";
+  }
+
+} //-- [if loop terminator] !Sequential ended --//
+
+if (Sequential) {
+  codeSnippet R""""(
 
 //------ resize vectors x and b -------//
 
@@ -127,23 +183,23 @@ macro getU()
 
 )"""";
 
-
-codeSnippet R""""(
+  codeSnippet R""""(
 
 //--------- postprocessing ---------//
 
 macro postprocess()
 )"""";
 
-if(debug)
-codeSnippet R""""(
+  if (debug)
+    codeSnippet R""""(
 
   /*--------------debug glut plotting---------------*/ 
    plot (u, wait=1, fill=1, value=1, cmm= "solution"); 
 )"""";
 
-if(ParaViewPostProcess)
-codeSnippet R""""(
+  if (ParaViewPostProcess) {
+    if (Sequential)
+      codeSnippet R""""(
 
 
   /*------------Postprocess with ParaView----------*/                                      
@@ -159,12 +215,31 @@ codeSnippet R""""(
          ); 
   endProcedure  ("Paraview Postprocess",t0);
 )"""";
+    else
+      codeSnippet R""""(
 
-codeSnippet R""""(
+
+  /*------------Postprocess with ParaView----------*/                                      
+
+  system("mkdir -p VTUs/"); 
+
+  startProcedure("Paraview Postprocess",t0); 
+  savevtk( "VTUs/Solution.vtu"   , 
+            Th                       , 
+            u                        , 
+            order=vtuorder           , 
+            dataname="U"	     ,
+	    append=true 
+         ); 
+  endProcedure  ("Paraview Postprocess",t0);
+)"""";
+  }
+
+  codeSnippet R""""(
 //
 )"""";
 
-codeSnippet R""""(
+  codeSnippet R""""(
 
 macro solvePoisson
 
@@ -179,23 +254,21 @@ macro solvePoisson
 
 )"""";
 
-if(adaptmesh){
+  if (adaptmesh) {
 
-codeSnippet R""""(
+    codeSnippet R""""(
 
 macro solvePoissonAndAdapt
   solvePoisson;
 )"""";
 
-if(AdaptmeshBackend=="FreeFEM"){
-codeSnippet R""""(
+    if (AdaptmeshBackend == "freefem") {
+      codeSnippet R""""(
   Th = adaptmesh(Th,u, iso = adaptIso);
 )"""";
-}
-else if (AdaptmeshBackend=="mmg"){
-if (spc == 2)
-{
-codeSnippet R""""(
+    } else if (AdaptmeshBackend == "mmg") {
+      if (spc == 2) {
+        codeSnippet R""""(
   Vh dx2u, dy2u, dxdyu;
   adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
 
@@ -209,41 +282,21 @@ codeSnippet R""""(
    
   Th = mmg2d(Th, metric = M, verbose=-1); 
 )"""";
-}
-else if (spc == 3)
-{
-if (AdaptmeshMetricBackend=="mshmet")
-codeSnippet R""""(
+      } else if (spc == 3) {
+        if (AdaptmeshMetricBackend == "mshmet")
+          codeSnippet R""""(
   real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
   Th = mmg3d(Th, metric=met, hgrad=hgradVal, hmin=hminVal, hmax=hmaxVal, hausd=hausdVal, mem=mmgMemory);
 )"""";
-if (AdaptmeshMetricBackend=="freefem")
-codeSnippet R""""(
+        if (AdaptmeshMetricBackend == "freefem")
+          codeSnippet R""""(
   cout << "ERROR ONLY MSHMET IS AVAILABLE FOR 3D METRIC" << endl;
   exit(999);
 )"""";
-}
-}
-else if (AdaptmeshBackend=="parmmg"){
-codeSnippet R""""(
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  exit(1111);
-)"""";
-}
-else {
-codeSnippet R""""(
-  cout << " Wrong value for -adaptmesh_backend " << endl;
-  exit(11111);
-)"""";
+      }
+    }
 
-}
-
-
-
-codeSnippet R""""(
+    codeSnippet R""""(
 //
 
 //--------- solve and adapt mesh ------------//
@@ -264,12 +317,10 @@ for(int i=0; i < adaptIter; i++){
     currentIter++;
 }
 )"""";
-}
-else{
 
-codeSnippet R""""(
+  } else {
+    codeSnippet R""""(
  solvePoisson;
 )"""";
+  }
 }
-
-}  //-- [if loop terminator] Sequential liniear elasticity ended --//

@@ -89,3 +89,31 @@ codeSnippet R""""(
 
 )"""";
 }
+
+if(AdaptmeshBackend=="parmmg" && spc==3)
+{
+codeSnippet R""""(
+macro MmgParameters(ThGather, met, rt, parMmgVerbosityVal)ThGather, metric = met, hgrad = hgradVal, requiredTriangle = rt, verbose = parMmgVerbosityVal// EOM
+
+macro ParMmgCommunicatorsAndMetric(Th, met, ThParMmg, metParMmg, communicators) {
+int[int] n2o;
+ParMmgCreateCommunicators(Th, ThParMmg, n2o, communicators);
+int[int] rest(ThParMmg.nv * (met.n / Th.nv));
+if(met.n == 6 * Th.nv) {
+    fespace VhMet(Th, [P1, P1, P1, P1, P1, P1]);
+    fespace VhParMmg(ThParMmg, [P1, P1, P1, P1, P1, P1]);
+    rest = restrict(VhParMmg, VhMet, n2o);
+}
+else if(met.n == Th.nv) {
+    fespace VhMet(Th, P1);
+    fespace VhParMmg(ThParMmg, P1);
+    rest = restrict(VhParMmg, VhMet, n2o);
+}
+else
+    assert(0);
+metParMmg.resize(rest.n);
+metParMmg = met(rest);
+}//
+)"""";
+
+}
