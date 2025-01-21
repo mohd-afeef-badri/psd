@@ -118,9 +118,11 @@ codeSnippet R""""(
 //  Th        : Finite element mesh
 //==============================================================================
 
-  loadfemesh(Th,ThName);
+
 
   startProcedure("Mesh Partitioning",t0);
+  mesh3 Th;
+  loadfemesh(Th,ThName);
   DmeshCreate(Th);
   endProcedure("Mesh Partitioning",t0);
 

@@ -92,17 +92,17 @@ codeSnippet R"""(
 //=============================================================================
     int Pgroups = mpisize;
     int interpolateSol = 0;
-    int parMmgIter = 2;
+    int parMmgIter = 3;
     int[int] rt(0); 
     real parMmgVerbosityVal = verbosity;
 )""";
 }
 
-if(AdaptmeshBackend=="mmg")
+if(AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg")
 {
 codeSnippet R""""(
 //============================================================================
-// ------- Mesh Adaption mmg Parameters -------
+// ------- Mesh Adaption mmg/parmmg Parameters -------
 // -------------------------------------------------------------------
 //  hminVal : minimal edge size (not the mmgtools default values)
 //  hmaxVal : maximal edge size (not the mmgtools default values)
@@ -115,7 +115,8 @@ codeSnippet R""""(
 
     real hminVal = 0.0001;
     real hmaxVal = 0.5;
-    real hausdVal = 0.01;)"""";
+    real hausdVal = 0.01;
+)"""";
 
 if(adaptmeshisotropy)
 {
@@ -128,12 +129,22 @@ codeSnippet R""""(
     real hgradVal = 2.3;)"""";
 }
 codeSnippet R""""(
-    real mmgMemory = 20000;
     bool nomoveVal = false;
     bool noswapVal = false;
     bool noinsertVal = false;
-    real mmgVerbosityVal = 10;
+)"""";
+}
 
+if(AdaptmeshBackend=="mmg")
+{
+  codeSnippet R""""(
+    real mmgMemory = 20000;
+    real mmgVerbosityVal = verbosity;
+)"""";
+}
+
+if(AdaptmeshMetricBackend=="mshmet"){
+codeSnippet R""""(
 //============================================================================
 // ------- Mesh Adaption metric mshmet parameters -------
 // -------------------------------------------------------------------

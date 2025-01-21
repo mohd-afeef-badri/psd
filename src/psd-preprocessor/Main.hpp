@@ -32,8 +32,9 @@ if ((AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg") && spc==3)
  writeIt
  "  load    \"mshmet\"                               // metric interface active \n";
 
-if (AdaptmeshBackend=="parmmmg" && spc==3)
+if (AdaptmeshBackend=="parmmg" && spc==3)
  writeIt
+ "  load    \"mmg\"                                  // mmg interface active \n"
  "  load    \"parmmg\"                               // parmmg interface active \n";
 
 if(!Sequential)
@@ -78,7 +79,7 @@ writeIt
 "                                                                               \n"
 "func int compute(){                                                            \n";
 
-if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)
+if(debug || ParaViewPostProcess)if(!Sequential && !top2vol)if(!(!Sequential && spc == 3 && adaptmesh))
  writeIt
  "  include \"DDplotMacro.edp\"                     // Domain decomp plotting \n";
 
@@ -101,10 +102,10 @@ if(!Sequential)
  "  include \"OtherParameters.edp\"                  // Other Parameters       \n"
  "  include \"Macros.edp\"                           // User-defined macros    \n";
 
- if(!top2vol)
+ if(!top2vol && !(AdaptmeshBackend=="parmmg" && spc==3))
   writeIt
   "  include \"DDmacro.edp\"                          // Domain decomp macros  \n";
- if(top2vol || (AdaptmeshBackend=="parmmmg" && spc==3))
+ if(top2vol || (AdaptmeshBackend=="parmmg" && spc==3))
   writeIt
   "  include \"macro_ddm.idp\"                        // Domain decomp macros  \n";
 
