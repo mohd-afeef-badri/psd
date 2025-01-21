@@ -41,6 +41,9 @@ compile
 ## MESH info files ## 
 *_INFO.txt
 
+## ADAPT FILES ##
+*.sol 
+
 ## PARAVIEW FILES ##
 *.vtk
 *.vtu
