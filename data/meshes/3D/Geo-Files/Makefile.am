@@ -1,5 +1,5 @@
-LIST_COMPILE= bar.geo  tensile_crack.geo  bar_dynamic.geo quasistatic.geo  soil.geo L_shape.geo
-MESH_FILES  = bar.msh tensile_crack.msh bar_dynamic.msh  quasistatic.msh  soil.msh L_shape.msh
+LIST_COMPILE= cube.geo bar.geo  tensile_crack.geo  bar_dynamic.geo quasistatic.geo  soil.geo L_shape.geo
+MESH_FILES  = cube.msh bar.msh tensile_crack.msh bar_dynamic.msh  quasistatic.msh  soil.msh L_shape.msh
 
 all-local: $(MESH_FILES)
 	@echo ""
@@ -19,6 +19,10 @@ quasistatic.msh: quasistatic.geo
 
 bar.msh: bar.geo
 	$(GMSH) -3 bar.geo -o bar.msh -format msh2 -v 0
+	@echo ""
+
+cube.msh: cube.geo
+	$(GMSH) -3 cube.geo -o cube.msh -format msh2 -clmin 0.5 -clmax 0.5 -v 0
 	@echo ""
 
 L_shape.msh: L_shape.geo
