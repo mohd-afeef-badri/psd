@@ -313,6 +313,7 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " adaptmesh_metric_backend is---------> "<<  AdaptmeshMetricBackend 	<< endl;
   cout << " adaptmesh_type is-------------------> "<<  AdaptmeshType 		        << endl;
   cout << " adaptmesh_isotropy is --------------> "<<  adaptmeshisotropy	      << endl;
+  cout << " adaptmesh_parmmg_method is ---------> "<<  ParmmgMethod      	      << endl;
 
   cout << "===================================================================" << endl;
   cout << "                        BOOL ARGUMENTS                             " << endl;
@@ -327,7 +328,6 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << " useMfront is -----------------------> " << useMfront                << endl;
   cout << " testflags is -----------------------> " << testflags                << endl;
   cout << " sequential is ----------------------> " << Sequential               << endl;
-
 
   cout << " adaptmesh is -----------------------> " << adaptmesh                << endl;
   cout << " pointprobe is ----------------------> " << pointprobe               << endl;
