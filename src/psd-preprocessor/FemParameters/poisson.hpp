@@ -28,6 +28,8 @@ if(Sequential){
 }
 
 if(!Sequential)
+if(!adaptmesh)
+{
 codeSnippet R""""(
 
   matrix       ALoc;
@@ -46,3 +48,14 @@ codeSnippet R""""(
 
   Vh  u , v ;
 )"""";
+}
+else
+{
+codeSnippet R""""(
+  startProcedure("matrix sparsity assembly",t0);
+  Mat<PetscScalar> A;
+  MatCreate(Th, A, P1);
+  Vh<PetscScalar> u;
+  endProcedure("matrix sparsity assembly",t0);
+)"""";
+}

@@ -92,9 +92,9 @@ codeSnippet R"""(
 //=============================================================================
     int Pgroups = mpisize;
     int interpolateSol = 0;
-    int parMmgIter = 3;
+    int parMmgIter = 2;
     int[int] rt(0); 
-    real parMmgVerbosityVal = 10;
+    real parMmgVerbosityVal = verbosity;
 )""";
 }
 
