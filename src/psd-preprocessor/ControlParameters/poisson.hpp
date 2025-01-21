@@ -83,6 +83,21 @@ writeIt
 writeIt 
 "  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
 
+if(AdaptmeshBackend=="parmmg")
+{
+codeSnippet R"""(
+//============================================================================
+// ------- Mesh Adaption ParMmg Parameters -------
+// -------------------------------------------------------------------
+//=============================================================================
+    int Pgroups = mpisize;
+    int interpolateSol = 0;
+    int parMmgIter = 3;
+    int[int] rt(0); 
+    real parMmgVerbosityVal = 10;
+)""";
+}
+
 if(AdaptmeshBackend=="mmg")
 {
 codeSnippet R""""(
@@ -101,6 +116,7 @@ codeSnippet R""""(
     real hminVal = 0.0001;
     real hmaxVal = 0.5;
     real hausdVal = 0.01;)"""";
+
 if(adaptmeshisotropy)
 {
 codeSnippet R""""(
@@ -116,6 +132,7 @@ codeSnippet R""""(
     bool nomoveVal = false;
     bool noswapVal = false;
     bool noinsertVal = false;
+    real mmgVerbosityVal = 10;
 
 //============================================================================
 // ------- Mesh Adaption metric mshmet parameters -------
@@ -157,5 +174,6 @@ codeSnippet R""""(
 //=======================================================================
 )"""";
 }
+
 }
 

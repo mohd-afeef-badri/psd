@@ -32,6 +32,10 @@ if ((AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg") && spc==3)
  writeIt
  "  load    \"mshmet\"                               // metric interface active \n";
 
+if (AdaptmeshBackend=="parmmmg" && spc==3)
+ writeIt
+ "  load    \"parmmg\"                               // parmmg interface active \n";
+
 if(!Sequential)
  writeIt
  "  load    \"PETSc\"                                // PETSc plugin activated  \n";
@@ -100,7 +104,7 @@ if(!Sequential)
  if(!top2vol)
   writeIt
   "  include \"DDmacro.edp\"                          // Domain decomp macros  \n";
- if(top2vol)
+ if(top2vol || (AdaptmeshBackend=="parmmmg" && spc==3))
   writeIt
   "  include \"macro_ddm.idp\"                        // Domain decomp macros  \n";
 

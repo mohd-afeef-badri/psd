@@ -143,6 +143,8 @@ codeSnippet R""""(
 )"""";
 
 if(ParaViewPostProcess)
+{
+if (Sequential)
 codeSnippet R""""(
 
 
@@ -159,6 +161,25 @@ codeSnippet R""""(
          ); 
   endProcedure  ("Paraview Postprocess",t0);
 )"""";
+else
+codeSnippet R""""(
+
+
+  /*------------Postprocess with ParaView----------*/                                      
+
+  system("mkdir -p VTUs/"); 
+
+  startProcedure("Paraview Postprocess",t0); 
+  savevtk( "VTUs/Solution.vtu"   , 
+            Th                       , 
+            u                        , 
+            order=vtuorder           , 
+            dataname="U"	     ,
+	    append=true 
+         ); 
+  endProcedure  ("Paraview Postprocess",t0);
+)"""";
+}
 
 codeSnippet R""""(
 //
@@ -226,12 +247,64 @@ codeSnippet R""""(
 }
 else if (AdaptmeshBackend=="parmmg"){
 codeSnippet R""""(
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  cout << "ERROR PARMMG DOES NOT WORK WITH SEQUENTIAL SOLVER "<< endl;
-  exit(1111);
+  mesh3 ThParMmg;
+  DmeshInitialize(ThParMmg);
 )"""";
+if (Pgroups==mpisize)
+{
+codeSnippet R""""(
+  real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+
+  real[int] metParMmg;
+  int[int][int] communicators;
+  ParMmgCommunicatorsAndMetric(Th, met, ThParMmg, metParMmg, communicators);
+
+  ThParMmg = parmmg3d(MmgParameters(ThParMmg, metParMmg, rt, parMmgVerbosityVal),
+	nodeCommunicators = communicators, niter = parMmgIter);
+
+  DmeshReconstruct(ThParMmg);
+)"""";
+}
+else
+{
+codeSnippet R""""(
+  int div = mpisize / Pgroups;
+
+  mpiComm commThGather(mpiCommWorld,
+          (mpirank % div == 0 && mpirank / div < Pgroups) ? 0 : mpiUndefined, mpirank / div);
+  mpiComm comm(mpiCommWorld, min(mpirank / div, Pgroups - 1),
+          mpirank - div * min(mpirank / div, Pgroups - 1));
+
+  macro ThGatherComm()commThGatheri//
+  mesh3 ThGather;
+  DmeshGather(Th, comm, ThGather);
+  fespace VhGather(ThGather, P1);
+  VhGather<PetscScalar> uGather;
+  VecGather(Th, comm, ThGather, P1, u, uGather);
+  macro ThGatherParMmgComm()commThGather//
+
+  mesh3 ThGatherParMmg;
+  DmeshInitialize(ThGatherParMmg);
+
+  if((mpirank % div == 0 && mpirank / div < Pgroups) != 0) {
+      real[int] met = mshmet(ThGather, uGather, loptions=lloptions, doptions=ddoptions);
+
+      if(mpiSize(commThGather) > 1) {
+          real[int] metParMmg;
+          int[int][int] communicators;
+          ParMmgCommunicatorsAndMetric(ThGather, met, ThGatherParMmg, metParMmg, communicators);
+          ThGatherParMmg = parmmg3d(MmgParameters(ThGatherParMmg, metParMmg, rt, parMmgVerbosityVal),
+                  nodeCommunicators = communicators, niter = parMmgIter, comm = commThGather);
+      }
+      else
+      {
+          ThGatherParMmg = mmg3d(MmgParameters(ThGather, met, rt, mmgVerbosityVal));
+      }
+  }
+
+  DmeshScatter(ThGatherParMmg, comm, ThParMmg);
+)"""";
+}
 }
 else {
 codeSnippet R""""(
