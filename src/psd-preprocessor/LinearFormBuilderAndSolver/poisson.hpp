@@ -125,7 +125,7 @@ for(int i = 0; i <= adaptIter; ++i) {
   endProcedure("variable update", t0);
 }
 )"""";
-    if (ParmmgMethod == "partition_regrouping")
+    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
       codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
@@ -147,7 +147,12 @@ for(int i = 0; i <= adaptIter; ++i) {
   DmeshInitialize(ThParMmg);
   endProcedure("Adapt mesh init", t0);
 
-  startProcedure("Mesh grouping", t0);
+  startProcedure("Mesh grouping", t0);)"""";
+    if (ParmmgMethod == "partition_automatic_regrouping")
+      codeSnippet R""""(
+  getNt(Th);)"""";
+    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+      codeSnippet R""""(
   int div = mpisize / Pgroups;
   mpiComm commThGather(mpiCommWorld, (mpirank % div == 0 && mpirank / div < Pgroups) ? 0 : mpiUndefined, mpirank / div);
   mpiComm comm(mpiCommWorld, min(mpirank / div, Pgroups - 1), mpirank - div * min(mpirank / div, Pgroups - 1));

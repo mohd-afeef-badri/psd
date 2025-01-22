@@ -78,7 +78,7 @@
                                     To build metric. Use | freefem | mshmet.
 
    -adaptmesh_parmmg_method         Method for regrouping or not for mesh a-
-                                    daption. Use partition_regrouping.
+                                    daption. Use partition_regrouping | partition_automatic_regrouping.
 
    -problem            [string]     Interested problem to be solved by PSD.
                                     linear_elasticity | damage | elastodynamic
