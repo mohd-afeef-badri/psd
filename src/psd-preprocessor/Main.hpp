@@ -28,7 +28,7 @@ if (AdaptmeshBackend=="mmg")
  writeIt
  "  load    \"mmg\"                                  // mmg interface active \n";
 
-if ((AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg") && spc==3)
+if (((AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg") && spc==3) || AdaptmeshMetricBackend=="mshmet")
  writeIt
  "  load    \"mshmet\"                               // metric interface active \n";
 

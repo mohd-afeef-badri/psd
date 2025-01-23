@@ -360,18 +360,21 @@ macro solvePoissonAndAdapt
   adaptmesh(Th, u, err=adaptErr, iso=adaptIso, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
   adaptErr = adaptErr / adaptErrRate;
 
-  real[int] M(Th.nv * 3);
+  real[int] met(Th.nv * 3);
   for (int k = 0; k < Th.nv; k++)
   {
-       M[3*k] = dx2u[][k];
-       M[3*k+1] = dy2u[][k];
-       M[3*k+2] = dxdyu[][k];
+       met[3*k] = dx2u[][k];
+       met[3*k+1] = dy2u[][k];
+       met[3*k+2] = dxdyu[][k];
   }
    
-  Th = mmg2d(Th, metric = M, verbose=mmgVerbosityVal); 
+  Th = mmg2d(Th, metric = met, verbose=mmgVerbosityVal); 
 )"""";
-	      if (AdaptmeshMetricBackend == "freefem")
+	      if (AdaptmeshMetricBackend == "mshmet")
         codeSnippet R""""(
+  Vh met;
+  met[] = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+  Th = mmg2d(Th, metric = met[], verbose=mmgVerbosityVal); 
 )"""";
       } else if (spc == 3) {
         if (AdaptmeshMetricBackend == "mshmet")
