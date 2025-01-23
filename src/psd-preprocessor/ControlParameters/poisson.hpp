@@ -83,6 +83,24 @@ writeIt
 writeIt 
 "  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
 
+if(AdaptmeshBackend=="freefem")
+{
+codeSnippet R""""(
+
+//============================================================================
+// ------- Freefem Adaption Parameters -------
+// -------------------------------------------------------------------
+//  adaptErr : the error passed to the freefem adaption frunction
+//  adaptErrRate : the value by which the error is divided at each iteration
+//=============================================================================
+
+real adaptErr = 0.05;
+real adaptErrRate = 1;
+
+)"""";
+
+}
+
 if(AdaptmeshBackend=="parmmg")
 {
 codeSnippet R""""(

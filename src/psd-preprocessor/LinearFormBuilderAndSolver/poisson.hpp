@@ -69,7 +69,7 @@ if (!Sequential) {
 
 )"""";
   } else {
-    if (ParmmgMethod == "NULL")
+    if (spc == 3 && ParmmgMethod == "NULL")
       codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
@@ -125,7 +125,7 @@ for(int i = 0; i <= adaptIter; ++i) {
   endProcedure("variable update", t0);
 }
 )"""";
-    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping"))
       codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
@@ -148,10 +148,10 @@ for(int i = 0; i <= adaptIter; ++i) {
   endProcedure("Adapt mesh init", t0);
 
   startProcedure("Mesh grouping", t0);)"""";
-    if (ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && ParmmgMethod == "partition_automatic_regrouping")
       codeSnippet R""""(
   getNt(Th);)"""";
-    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping"))
       codeSnippet R""""(
   int div = mpisize / Pgroups;
   mpiComm commThGather(mpiCommWorld, (mpirank % div == 0 && mpirank / div < Pgroups) ? 0 : mpiUndefined, mpirank / div);
@@ -347,9 +347,10 @@ macro solvePoissonAndAdapt
   solvePoisson;
 )"""";
 
-    if (AdaptmeshBackend == "freefem") {
+    if (AdaptmeshMetricBackend == "freefem" && AdaptmeshBackend == "freefem") {
       codeSnippet R""""(
-  Th = adaptmesh(Th,u, iso = adaptIso);
+  Th = adaptmesh(Th,u, iso = adaptIso, err = adaptErr);
+  adaptErr = adaptErr / adaptErrRate;
 )"""";
     } else if (AdaptmeshBackend == "mmg") {
       if (spc == 2) {
