@@ -83,7 +83,7 @@ writeIt
 writeIt 
 "  bool adaptIso = "<< adaptmeshisotropy <<"; \n";
 
-if(AdaptmeshBackend=="freefem")
+if(AdaptmeshMetricBackend=="freefem")
 {
 codeSnippet R""""(
 

@@ -354,9 +354,11 @@ macro solvePoissonAndAdapt
 )"""";
     } else if (AdaptmeshBackend == "mmg") {
       if (spc == 2) {
+	      if (AdaptmeshMetricBackend == "freefem")
         codeSnippet R""""(
   Vh dx2u, dy2u, dxdyu;
-  adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+  adaptmesh(Th, u, err=adaptErr, iso=adaptIso, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+  adaptErr = adaptErr / adaptErrRate;
 
   real[int] M(Th.nv * 3);
   for (int k = 0; k < Th.nv; k++)
@@ -366,7 +368,10 @@ macro solvePoissonAndAdapt
        M[3*k+2] = dxdyu[][k];
   }
    
-  Th = mmg2d(Th, metric = M, verbose=-1); 
+  Th = mmg2d(Th, metric = M, verbose=mmgVerbosityVal); 
+)"""";
+	      if (AdaptmeshMetricBackend == "freefem")
+        codeSnippet R""""(
 )"""";
       } else if (spc == 3) {
         if (AdaptmeshMetricBackend == "mshmet")
