@@ -355,14 +355,14 @@
       errorArgument = true;
      }
 
-  if ( ParmmgMethod != "NULL" && ParmmgMethod != "partition_regrouping"
+  if ( ParmmgMethod != "NULL" && ParmmgMethod != "partition_regrouping" && ParmmgMethod != "partition_automatic_regrouping"
      ){
       cout <<
           "===================================================================\n"
           " ** ERROR **\n"
           "===================================================================\n"
           "\n"
-          "The flag \033[1;31m-adaptmesh_parmmg_method\033[0m only accepts \033[1;34mpartition_regrouping\033[0m\n"
+          "The flag \033[1;31m-adaptmesh_parmmg_method\033[0m only accepts \033[1;34mpartition_regrouping|partition_automatic_regrouping\033[0m\n"
           "\033[1;31m-adaptmesh_parmmg_method "<< AdaptmeshBackend << "\033[0m is not an acceptable, please correct \n"
           "\n"
           "===================================================================\n";

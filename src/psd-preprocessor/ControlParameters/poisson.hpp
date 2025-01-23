@@ -85,18 +85,49 @@ writeIt
 
 if(AdaptmeshBackend=="parmmg")
 {
-codeSnippet R"""(
+codeSnippet R""""(
 //============================================================================
 // ------- Mesh Adaption ParMmg Parameters -------
 // -------------------------------------------------------------------
 //  parMmgIter : number of iteration in parmmg values (1,2,3)
 //  rt         : required triangles that are conserved and not adapted
-//  parMmgVerbosityVal : verbosity of parmmg
+//  parMmgVerbosityVal : verbosity of parmmg)"""";
+if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+codeSnippet R""""(
+//  Pgroups : number of groups used in ParMmg)"""";
+if (ParmmgMethod == "partition_automatic_regrouping")
+codeSnippet R""""(
+//  elemsPerGroup : number of elements per group used in ParMmg
+//  maxP : maximum number of groups used in ParMmg, equal to the number of processes by default
+//  nt: counted number of elements per process)"""";
+codeSnippet R""""(
 //=============================================================================
     int parMmgIter = 3;
     int[int] rt(0); 
     real parMmgVerbosityVal = verbosity;
-)""";
+)"""";
+
+if (ParmmgMethod == "partition_regrouping")
+    codeSnippet R""""(
+    macro Pgroups()  2//
+    )"""";
+if (ParmmgMethod == "partition_automatic_regrouping")
+    codeSnippet R""""(
+    int elemsPerGroup = 8000;
+    int maxP = mpisize;
+    int nt = 0;
+    macro getNt()
+    {
+	fespace Ph(Th, P0);
+        Ph part;
+        PartitionCreate(Th, part[], P0);
+        part = abs(part - 1.0) < 1e-1;
+        int ntLocal = part[].l1;
+        int nt = 0;
+        mpiAllReduce(ntLocal, nt, mpiCommWorld, mpiSUM);
+    }//
+    macro Pgroups() min(maxP, min(mpisize, max(1, nt / elemsPerGroup)))//
+    )"""";
 }
 
 if(AdaptmeshBackend=="mmg" || AdaptmeshBackend=="parmmg")
@@ -119,10 +150,6 @@ codeSnippet R""""(
     real hausdVal = 0.01;
 )"""";
 
-if (ParmmgMethod == "partition_regrouping")
-    codeSnippet R""""(
-    int  Pgroups = 2;
-    )"""";
 if(adaptmeshisotropy)
 {
 codeSnippet R""""(
@@ -153,6 +180,22 @@ codeSnippet R""""(
 //============================================================================
 // ------- Mesh Adaption metric mshmet parameters -------
 // -------------------------------------------------------------------
+//  ddoption 0 hmin : minimal edge size (the mshmet default values)
+//  ddoption 1 hmax : maximal edge size (the mshmet default values)
+//  ddoption 2 eps : tolerence over the error of P1 interpolation (the mshmet default values)
+//  ddoption 3 width : relative width for level sets (the mshmet default values)
+//  lloption 0 nnu : normalization mode (the optimal values)
+//  		- 0 : no normalization, multiplies the hessian values by (1/eps)
+//  		- 1 : normalization relative to the scale of the function, multiplies the Hessian values by 1/(eps * umax)
+//  		- 2 : normalization following local values of the function, multiplies the Hessian values by 1/(err*u)
+//  			with err = 0.01 * umax or err = 0.01 for u = 0, u being the function
+//  		- 3 : normalization relative to the function and its gradient, not yet implemented in mshmet
+//  lloption 1 iso : isotropic or anisotropic metric calculation (the mshmet default values)
+//  lloption 2 ls : level set mode (the mshmet default values)
+//  lloption 3 ddebug : debugging logs (the mshmet default values)
+//  lloption 4 imprim : mshmet verbosity (the value of the verbosity argument)
+//  lloption 5 nlis : number of regularization’s iteration of solutions given (the mshmet default values)
+//  lloption 6 metric : the initial metric (the mshmet default values)
 //=============================================================================
 
     real[int] ddoptions(4);
@@ -178,13 +221,12 @@ codeSnippet R""""(
 codeSnippet R""""(
     lloptions(2) = 0;               // ls 0
     lloptions(3) = 1;               // ddebug 1
-    lloptions(4) = 0;               // imprim verbosity
+    lloptions(4) = verbosity;       // imprim verbosity
     lloptions(5) = 0;               // nlis 0
     lloptions(6) = 0;               // metric 0
 
 //=======================================================================
 // Todo list:
-// 1. Rania adds doc for mshmt options
 // 2. handle Drichlet
 // 3. check qforder
 //=======================================================================
