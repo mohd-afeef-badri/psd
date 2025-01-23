@@ -69,7 +69,7 @@ if (!Sequential) {
 
 )"""";
   } else {
-    if (ParmmgMethod == "NULL")
+    if (spc == 3 && ParmmgMethod == "NULL")
       codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
@@ -125,7 +125,7 @@ for(int i = 0; i <= adaptIter; ++i) {
   endProcedure("variable update", t0);
 }
 )"""";
-    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping"))
       codeSnippet R""""(
 for(int i = 0; i <= adaptIter; ++i) {
 
@@ -148,10 +148,10 @@ for(int i = 0; i <= adaptIter; ++i) {
   endProcedure("Adapt mesh init", t0);
 
   startProcedure("Mesh grouping", t0);)"""";
-    if (ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && ParmmgMethod == "partition_automatic_regrouping")
       codeSnippet R""""(
   getNt(Th);)"""";
-    if (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping")
+    if (spc==3 && (ParmmgMethod == "partition_regrouping" || ParmmgMethod == "partition_automatic_regrouping"))
       codeSnippet R""""(
   int div = mpisize / Pgroups;
   mpiComm commThGather(mpiCommWorld, (mpirank % div == 0 && mpirank / div < Pgroups) ? 0 : mpiUndefined, mpirank / div);
@@ -347,25 +347,34 @@ macro solvePoissonAndAdapt
   solvePoisson;
 )"""";
 
-    if (AdaptmeshBackend == "freefem") {
+    if (AdaptmeshMetricBackend == "freefem" && AdaptmeshBackend == "freefem") {
       codeSnippet R""""(
-  Th = adaptmesh(Th,u, iso = adaptIso);
+  Th = adaptmesh(Th,u, iso = adaptIso, err = adaptErr);
+  adaptErr = adaptErr / adaptErrRate;
 )"""";
     } else if (AdaptmeshBackend == "mmg") {
       if (spc == 2) {
+	      if (AdaptmeshMetricBackend == "freefem")
         codeSnippet R""""(
   Vh dx2u, dy2u, dxdyu;
-  adaptmesh(Th, u, err=0.1, iso=false, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+  adaptmesh(Th, u, err=adaptErr, iso=adaptIso, metric=[dx2u[], dy2u[], dxdyu[]], nomeshgeneration=true);
+  adaptErr = adaptErr / adaptErrRate;
 
-  real[int] M(Th.nv * 3);
+  real[int] met(Th.nv * 3);
   for (int k = 0; k < Th.nv; k++)
   {
-       M[3*k] = dx2u[][k];
-       M[3*k+1] = dy2u[][k];
-       M[3*k+2] = dxdyu[][k];
+       met[3*k] = dx2u[][k];
+       met[3*k+1] = dy2u[][k];
+       met[3*k+2] = dxdyu[][k];
   }
    
-  Th = mmg2d(Th, metric = M, verbose=-1); 
+  Th = mmg2d(Th, metric = met, verbose=mmgVerbosityVal); 
+)"""";
+	      if (AdaptmeshMetricBackend == "mshmet")
+        codeSnippet R""""(
+  Vh met;
+  met[] = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+  Th = mmg2d(Th, metric = met[], verbose=mmgVerbosityVal); 
 )"""";
       } else if (spc == 3) {
         if (AdaptmeshMetricBackend == "mshmet")
