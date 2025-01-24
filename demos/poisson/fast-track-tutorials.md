@@ -9,6 +9,8 @@ header-includes: |
     \usepackage{fancyhdr}
     \usepackage{graphbox}
     \usepackage{subcaption}
+    \usepackage{graphicx}
+    \usepackage{caption}
     \pagestyle{fancy}
     \lstdefinestyle{BashInputStyle}{
 	language=bash,
@@ -91,7 +93,11 @@ Further editing can be done on the produced files to adjust to a problem, mainly
 
 To vizualise the solution, we launch \psd{paraview} and open the file \psd{solution0.vtu}. The result that we see is not the expected solution as the mesh is too coarse to capture the variations in the function.
 
-
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{![2d-noadapt](https://github.com/user-attachments/assets/b2d09cde-2b0f-4f4f-a1d5-31e7e79d8fab)}
+    \caption{Solution on a coarse mesh}
+\end{figure}
 
 \subsection{2D example with discontinuous solution and automatic mesh adaption in sequential}
 
@@ -109,6 +115,22 @@ PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh
 \end{lstlisting}
 
 In order to visualize the solution, we open the group of solution files and view the results of adaption iterations one by one. We start getting a satisfactory approximated solution by the fourth iteration.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{![2d-freefemadapt2](https://github.com/user-attachments/assets/768a6df7-c295-44f2-b869-c18d279c0bda)}
+        \caption{Iteration 2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{![2d-freefemadapt4](https://github.com/user-attachments/assets/e81967e2-1f41-4dc4-98a3-1d0440d46a80)}
+        \caption{Iteration 4}
+    \end{subfigure}
+    \caption{Solution on an adapted mesh}
+\end{figure}
 
 \subsection{2D example with discontinuous solution and automatic mesh adaption in sequential with different backends}
 
@@ -141,6 +163,12 @@ PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backen
 -adaptmesh_backend mmg -adaptmesh_type anisotropic -postprocess u -sequential
 \end{lstlisting}
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{![2d-freefemadaptaniso](https://github.com/user-attachments/assets/2eda7be6-8e3c-404e-8e7a-fd4806008880)}
+    \caption{Solution on an anisotropic adapted mesh}
+\end{figure}
+
 \subsection{3D example with discontinuous solution and automatic mesh adaption in sequential and parallel}
 We solve the same problem but on a 3D cube keeping the solution constant across the z axis. Adaption in 3D is done using mshmet for metric calculation and mmg for mesh adaption. In \psd{ControlParameters.edp}, set the number of adaption iterations to 5 (\psd{adaptIter}). 
 
@@ -153,6 +181,22 @@ PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backen
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/3D/cube.msh
 \end{lstlisting}
 
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{![3d-seq2](https://github.com/user-attachments/assets/531dc427-5873-4608-ad8c-8b00ea2bc41b)}
+        \caption{Iteration 2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{![3d-seq4](https://github.com/user-attachments/assets/bd6263c5-b7ce-4999-8a94-1748a2c20958)}
+        \caption{Iteration 4}
+    \end{subfigure}
+    \caption{Solution on a 3D adapted mesh}
+\end{figure}
+
 Notice how solving and adaption take a lot of time in this example; it is generally the case when we move to 3D as we have an additional axis and more elements on the initial mesh. This is why we prefer to parallelize the process. We omit the \psd{-sequential} flag to enable domain-decomposition, i.e, parallel computing, and change the adaption backend to \psd{parmmg}. We specify the number of procs to \psd{PSD\_Solve} using the flag \psd{-np}. Parallel solving can also be done in 2D but is generally not necessary while parallel adaption (\psd{parmmg}) is only available in 3D.
 
 \begin{lstlisting}[style=BashInputStyle]
@@ -163,6 +207,12 @@ PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backen
 \begin{lstlisting}[style=BashInputStyle]
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/cube.msh -v 0
 \end{lstlisting}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{![3d-parallel2](https://github.com/user-attachments/assets/553a297c-b7c7-4483-a51a-8fb5bb091e9b)}
+    \caption{Partitioned 3D mesh}
+\end{figure}
 
 \subsection{3D example with discontinuous solution and automatic mesh adaption in parallel with different strategies}
 
