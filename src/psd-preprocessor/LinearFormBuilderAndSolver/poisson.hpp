@@ -372,9 +372,8 @@ macro solvePoissonAndAdapt
 )"""";
 	      if (AdaptmeshMetricBackend == "mshmet")
         codeSnippet R""""(
-  Vh met;
-  met[] = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
-  Th = mmg2d(Th, metric = met[], verbose=mmgVerbosityVal); 
+  real[int] met = mshmet(Th, u, loptions=lloptions, doptions=ddoptions);
+  Th = mmg2d(Th, metric = met, verbose=mmgVerbosityVal); 
 )"""";
       } else if (spc == 3) {
         if (AdaptmeshMetricBackend == "mshmet")
