@@ -11,3 +11,130 @@ index 71f55730..d8279d51 100644
  	vertices = new Vertex[nvmax];
  	assert( vertices );
  
+diff --git a/plugin/seq/mshmet.cpp b/plugin/seq/mshmet.cpp
+index 0353721..e9f558e 100644
+--- a/plugin/seq/mshmet.cpp
++++ b/plugin/seq/mshmet.cpp
+@@ -146,6 +146,7 @@ MSHMET_pMesh mesh_to_MSHMET_pMesh(const Mesh &Th) {
+     ux = p2->c[0] - p1->c[0];
+     uy = p2->c[1] - p1->c[1];
+     h3 = sqrt(ux * ux + uy * uy);
++
+   }
+
+   return meshMSHMET;
+@@ -231,13 +232,19 @@ MSHMET_pSol sol_mshmet(const int &dim, const int &np, const int &type, const int
+ }
+
+ void metric_mshmet(MSHMET_pSol sol, MSHMET_Info *info, const KN< double > &metric) {
+-  static const int wrapperMetric[6] = {0, 1, 3, 2, 4, 5};
++  static const int wrapperMetric3D[6] = {0, 1, 3, 2, 4, 5};
++  static const int wrapperMetric2D[3] = {0, 1, 2};
++
++  int compNumber = (sol->dim == 3) ? 6 : 3;
++  const int *wrapperMetric = (sol->dim == 3) ? wrapperMetric3D : wrapperMetric2D;
++
+   int k, ia, i;
+
+   if(verbosity > 1)
+       cout << " info->iso " << info->iso << endl;
++
+   if (info->iso == 1) {
+-    cout << " info->iso 11 " << info->iso << endl;
++    cout << " info->iso 1 " << info->iso << endl;
+     sol->met = (double *)M_calloc(sol->np + 1, sizeof(double), "sol->met");
+     assert(sol->met);
+
+@@ -247,13 +254,13 @@ void metric_mshmet(MSHMET_pSol sol, MSHMET_Info *info, const KN< double > &metri
+     }
+   } else {
+     // anisotropie :: Hessian
+-    sol->met = (double *)M_calloc(sol->np + 1, 6 * sizeof(double), "sol->met6");
++    sol->met = (double *)M_calloc(sol->np + 1, compNumber * sizeof(double), "sol->met" + compNumber);
+     assert(sol->met);
+
+     for (k = 1; k <= sol->np; k++) {
+-      ia = (k - 1) * 6 + 1;
++      ia = (k - 1) * compNumber + 1;
+
+-      for (i = 0; i < 6; i++) {
++      for (i = 0; i < compNumber; i++) {
+         sol->met[ia + i] = metric[(ia - 1) + wrapperMetric[i]];
+       }
+     }
+@@ -261,24 +268,29 @@ void metric_mshmet(MSHMET_pSol sol, MSHMET_Info *info, const KN< double > &metri
+ }
+
+ void metric_mshmet_to_ff_metric(MSHMET_pSol sol, MSHMET_Info *info, KN< double > &metric) {
+-  static const int invwrapperMetric[6] = {0, 1, 3, 2, 4, 5};
++  static const int wrapperMetric3D[6] = {0, 1, 3, 2, 4, 5};
++  static const int wrapperMetric2D[3] = {0, 1, 2};
++  
++  int compNumber = (sol->dim == 3) ? 6 : 3; 
++  const int *wrapperMetric = (sol->dim == 3) ? wrapperMetric3D : wrapperMetric2D;
++  
+   int k, ia, i;
+
+   if (info->iso == 1) {
+-    if (verbosity > 1)
+-        cout << " info->iso "
+-             << " metric " << metric.N( ) << " " << sol->np << endl;
+-
+     // isotrope
++    if (verbosity > 1) {
++        cout << "info->iso "
++             << "metric " << metric.N() << " " << sol->np << endl;
++    }
+     for (k = 1; k <= sol->np; k++) {
+       metric[k - 1] = sol->met[k];
+     }
+   } else {
++    // anisotrope :: Hessian
+     for (k = 1; k <= sol->np; k++) {
+-      ia = (k - 1) * 6 + 1;
+-
+-      for (i = 0; i < 6; i++) {
+-        metric[(ia - 1) + i] = sol->met[ia + invwrapperMetric[i]];
++      ia = (k - 1) * compNumber + 1;
++      for (i = 0; i < compNumber; i++) {
++        metric[(ia - 1) + i] = sol->met[ia + wrapperMetric[i]];
+       }
+     }
+   }
+@@ -610,7 +622,7 @@ class mshmet2d_Op : public E_F0mps {
+     cout << "mshmet2d" << endl;
+     args.SetNameParam(n_name_param, name_param, nargs);
+     eTh = to< pmesh >(args[0]);
+-    dim = 3;
++    dim = 2;
+     nbsol = args.size( ) - 1;
+     int ksol = 0;
+     ffassert(nbsol < GmfMaxTyp);
+@@ -725,21 +737,22 @@ AnyType mshmet2d_Op::operator( )(Stack stack) const {
+   KN< double > *pmetric = new KN< double >(Th.nv);
+   KN< double > &metric = *pmetric;
+
+-  if (intopt[1] == 1) {
+-    metric.resize(6 * Th.nv);
++  metric = 0.;
++  if (intopt[1] == 0) {
++    metric.resize(3 * Th.nv);
+     metric = 0.;
+   }
+
+   // definiton d'une metric par default
+   if (nargs[2]) {
+     metric = GetAny< KN_< double > >((*nargs[2])(stack));
+-    assert(metric.N( ) == Th.nv || metric.N( ) == 6 * Th.nv);
++    assert(metric.N( ) == Th.nv || metric.N( ) == 3 * Th.nv);
+     intopt[6] = 1;
+     if (metric.N( ) == Th.nv) {
+       intopt[1] = 1;
+     }
+
+-    if (metric.N( ) == 6 * Th.nv) {
++    if (metric.N( ) == 3 * Th.nv) {
+       intopt[1] = 0;
+     }
+   }
+                                                                                                                                                                                                 126,1         Ba

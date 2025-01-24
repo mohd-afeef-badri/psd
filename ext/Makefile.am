@@ -527,9 +527,9 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	tar -xf freefem-$(FREEFEM_VERSION).tar.gz
 	[ -d FreeFem-sources-$(FREEFEM_VERSION) ] && mv FreeFem-sources-$(FREEFEM_VERSION) freefem-$(FREEFEM_VERSION)
 	cd freefem-$(FREEFEM_VERSION)    && \
-	patch -p1 < ../FreeFEM.patch     && \
 	mkdir ./3rdparty/pkg             && \
 	cp ../mshmet.$(MSHMET_VERSION).tgz ./3rdparty/pkg/. && \
+	patch -p1 < ../FreeFEM.patch     && \
 	autoreconf -i                    && \
 	./configure \
 	--prefix=${prefix} \
