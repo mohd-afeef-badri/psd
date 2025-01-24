@@ -64,8 +64,8 @@ The variational problem is a *continuous problem*: it defines the solution  in t
 $$\int_\Omega^h \nabla u^h \cdot \nabla v^h~\mathrm{d} x = \int_\Omega^h fv^h~\mathrm{d} x \quad \quad \forall v^h \in \hat{\mathcal{V}^h}.$$
 
 \subsection{2D example with discontinuous solution}
-To showcase the usage of Poisson, we solve for the following manufactured solution on a 2D square unit mesh:
-$$u = \tanh(-100(y - 0.5 -0.25\sin(2\pi x))) + \tanh(100(y - x))$$, 
+To showcase the usage of Poisson, we solve for the following manufactured solution on a 2D rectangular mesh:
+$$u = \tanh(-100(y - 0.5 -0.25\sin(2\pi x))) + \tanh(100(y - x))$$ 
 
 such a function is really challenging as sudden jumps in solution are expected which can only be captured by very fine mesh. This function will also be used to define the Dirichlet condition on all borders. Analytical Laplacian of this function  gives us our source term:
 $$f = 100 \pi^2 \sin(2 \pi x) \left(\tanh^2\left(-100\left(y - 0.5 - 0.25 \sin(2 \pi x)\right)\right) - 1 \right) - 5000 \pi^2 \cos^2(2 \pi x)$$
@@ -84,10 +84,10 @@ PSD_PreProcess -dimension 2 -problem poisson -postprocess u -sequential
 This will produce a set of \psd{.edp} files with \psd{Main.edp} to be run by \psd{PSD\_Solve\_Seq} for sequential solving. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/square.msh
+PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh
 \end{lstlisting}
 
-Further editing can be done on the produced files to adjust to a problem, mainly on \psd{ControlParameters} where all the problem specific parameters are written. For this example, the default provided ones are suitable. This simulation will be done on the mesh \psd{./../Meshes/2D/square.msh}.
+Further editing can be done on the produced files to adjust to a problem, mainly on \psd{ControlParameters.edp} where all the problem specific parameters are written. For this example, the default provided ones are suitable. This simulation will be done on the mesh \psd{./../Meshes/2D/bar.msh}.
 
 To vizualise the solution, we launch \psd{paraview} and open the file \psd{solution0.vtu}. The result that we see is not the expected solution as the mesh is too coarse to capture the variations in the function.
 
@@ -95,20 +95,20 @@ To vizualise the solution, we launch \psd{paraview} and open the file \psd{solut
 
 \subsection{2D example with discontinuous solution and automatic mesh adaption in sequential}
 
- One could uniformly refine the mesh and solve this problem with a very fine mesh, this is not the goal of this tutorial,  instead of using a finer uniform mesh, we will  this  we perform mesh adaption to search for optimized mesh that is suitable for this simulation. In order to do that, we add the flag \psd{-adaptmesh} and specify some more parameters.  Parameters such as the number of iterations for adaption, the minimum and maximum element sizes can be edited in \psd{ControlParameters.edp}.
+One could uniformly refine the mesh and solve this problem with a very fine mesh, this is not the goal of this tutorial, instead of using a finer uniform mesh, we will perform mesh adaption to search for an optimized mesh that is suitable for this simulation. In order to do that, we add the flag \psd{-adaptmesh} and specify some more parameters. Parameters such as the number of iterations for adaption, the minimum and maximum element sizes can be edited in \psd{ControlParameters.edp}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh-metric-backend freefem \
--adaptmesh-metric freefem -postprocess u -sequential
+PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backend freefem \
+-adaptmesh_backend freefem -postprocess u -sequential
 \end{lstlisting}
 
-For this code we have demanded for native FreeFEM kernel  for metric calculation  and FreeFEM handles the adaption. Metric and adaption are two main processes involved to perform automatic mesh adaption given a solution.  Just like above we will now solve and visulize the solution, for solving: 
+For this code we have demanded for native FreeFEM kernel for metric calculation and FreeFEM handles the adaption. Metric and adaption are two main processes involved to perform automatic mesh adaption given a solution. Just like above we will now solve and visulize the solution, for solving: 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/square.msh
+PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh
 \end{lstlisting}
 
-In order to visualize the solution, we open the group of solution files and view the results of adaption iterations one by one. We start getting a satisfactory approximated solution by the NUMBER OF ITERATION iteration.
+In order to visualize the solution, we open the group of solution files and view the results of adaption iterations one by one. We start getting a satisfactory approximated solution by the fourth iteration.
 
 \subsection{2D example with discontinuous solution and automatic mesh adaption in sequential with different backends}
 
@@ -117,28 +117,28 @@ We can also run with different backends. Each have their respective parameters d
 - FreeFEM as mesh backend combined with FreeFEM as metric backend
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh-metric-backend freefem \
--adaptmesh-metric freefem -postprocess u -sequential
+PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backend freefem \
+-adaptmesh_backend freefem -postprocess u -sequential
 \end{lstlisting}
 
 - MMG as mesh backend combined with FreeFEM as metric backend
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh-metric-backend freefem \
--adaptmesh-metric mmg -postprocess u -sequential
+PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backend freefem \
+-adaptmesh_backend mmg -postprocess u -sequential
 \end{lstlisting}
 
-- MMG as mesh backend combined with MshMet as metric backend
+- MMG as mesh backend combined with MshMet as metric backend. Notice that with our example, further adjustments are needed for a MshMet metric backend. MshMet metrics do not scale with respect to the given mesh like FreeFEM metrics. For better refinement, we suggest setting \psd{hmin} to 0.001, \psd{nnu} to 1 and \psd{eps} to 0.02.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh-metric-backend mshmet \
--adaptmesh-metric mmg -postprocess u -sequential
+PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backend mshmet \
+-adaptmesh_backend mmg -postprocess u -sequential
 \end{lstlisting}
 
 We can also reach a good approximation of the solution by enabling anisotropy through the \psd{-adaptmesh\_type} flag.
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh-metric-backend mshmet \
--adaptmesh-metric mmg -adaptmesh_type anisotropic -postprocess u -sequential
+PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backend freefem \
+-adaptmesh_backend mmg -adaptmesh_type anisotropic -postprocess u -sequential
 \end{lstlisting}
 
 \subsection{3D example with discontinuous solution and automatic mesh adaption in sequential and parallel}
@@ -150,12 +150,10 @@ PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backen
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backend mshmet \
--adaptmesh_backend mmg -postprocess u -sequential
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/3D/cube.msh
 \end{lstlisting}
 
-Notice how the solving takes a lot of time in this example; it is generally the case when we move to 3D as we have an additional axis and more elements on the initial mesh. This is why we prefer to parallelize the process. We omit the \psd{-sequential} flag to enable domain-decomposition, i.e, parallel computing, and change the adaption backend to \psd{parmmg}. We specify the number of procs to \psd{PSD\_Solve} using the flag \psd{-np}. Parallel solving can also be done in 2D but is generally not necessary while parallel adaption (\psd{parmmg}) is only available in 3D.
+Notice how solving and adaption take a lot of time in this example; it is generally the case when we move to 3D as we have an additional axis and more elements on the initial mesh. This is why we prefer to parallelize the process. We omit the \psd{-sequential} flag to enable domain-decomposition, i.e, parallel computing, and change the adaption backend to \psd{parmmg}. We specify the number of procs to \psd{PSD\_Solve} using the flag \psd{-np}. Parallel solving can also be done in 2D but is generally not necessary while parallel adaption (\psd{parmmg}) is only available in 3D.
 
 \begin{lstlisting}[style=BashInputStyle]
 PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backend mshmet \
@@ -168,7 +166,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/cube.msh -v 0
 
 \subsection{3D example with discontinuous solution and automatic mesh adaption in parallel with different strategies}
 
-For larger meshes, it can be beneficial to group processes (only for the adaption step) on a bigger partition of the mesh. It was not the case in the  example above.
+For larger meshes, it can be beneficial to group processes (only for the adaption step) on a bigger partition of the mesh. It was not the case in the example above.
 The number of groups can either be fixed across iterations and unrelated to the mesh (it can be changed in \psd{ControlParameters.edp}), or adaptive to the number of elements across iterations; these are the respective commands of the two methods.
 
 - user controlled regrouping method
