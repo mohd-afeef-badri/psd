@@ -9,6 +9,7 @@ header-includes: |
     \usepackage{fancyhdr}
     \usepackage{graphbox}
     \usepackage{subcaption}
+    \usepackage{float}
     \usepackage{graphicx}
     \usepackage{caption}
     \pagestyle{fancy}
@@ -58,9 +59,9 @@ $$\mathcal{V}=\{v\in H^1(\Omega)|v=u_{\text{D}} \quad \text{on} \quad \partial\O
 
 $$\hat{\mathcal{V}}=\{v\in H^1(\Omega)|v=0 \quad \text{on} \quad \partial\Omega \}.$$
 
-Here, $H^1(\Omega)$ is the  Sobolev space containing functions $v$ such that these are square integrable with continuous derivatives over $\Omega$. Note that, the Sobolev space allows functions with discontinuous derivatives. This weaker continuity requirement in our weak formulation (caused by the integration by parts) is of great importance when it comes to constructing the finite element function space. In particular, it allows the use of piecewise polynomial function spaces. This means that the function spaces are constructed by stitching together polynomial functions on simple domains such as intervals, triangles, quadrilaterals, tetrahedra and hexahedra. In principal these simpler domains are  obtaining by converting our domain $\Omega$ to its meshed form $\Omega^h$, such that $h$ defines the size of the mesh.
+Here, $H^1(\Omega)$ is the  Sobolev space containing functions $v$ such that these are square integrable with continuous derivatives over $\Omega$. Note that, the Sobolev space allows functions with discontinuous derivatives. This weaker continuity requirement in our weak formulation (caused by the integration by parts) is of great importance when it comes to constructing the finite element function space. In particular, it allows the use of piecewise polynomial function spaces. This means that the function spaces are constructed by stitching together polynomial functions on simple domains such as intervals, triangles, quadrilaterals, tetrahedra and hexahedra. In principal these simpler domains are  obtained by converting our domain $\Omega$ to its meshed form $\Omega^h$, such that $h$ defines the size of the mesh.
 
-The variational problem is a *continuous problem*: it defines the solution  in the infinite-dimensional function space . The finite element method for the Poisson equation finds an approximate  solution $u^h$ of the variational problem by replacing the  infinite-dimensional function spaces $\mathcal{V}$  and  by *discrete* (finite dimensional) trial  and test spaces  $\mathcal{V}^h$ and $\hat{\mathcal{V}}^h$ . The discrete variational problem reads: Find  find $u^h \in \mathcal{V}^h$ such that
+The variational problem is a *continuous problem*: it defines the solution  in the infinite-dimensional function space . The finite element method for the Poisson equation finds an approximate  solution $u^h$ of the variational problem by replacing the  infinite-dimensional function spaces $\mathcal{V}$ by *discrete* (finite dimensional) trial  and test spaces  $\mathcal{V}^h$ and $\hat{\mathcal{V}}^h$ . The discrete variational problem reads: Find $u^h \in \mathcal{V}^h$ such that
 
 
 $$\int_\Omega^h \nabla u^h \cdot \nabla v^h~\mathrm{d} x = \int_\Omega^h fv^h~\mathrm{d} x \quad \quad \forall v^h \in \hat{\mathcal{V}^h}.$$
@@ -69,7 +70,7 @@ $$\int_\Omega^h \nabla u^h \cdot \nabla v^h~\mathrm{d} x = \int_\Omega^h fv^h~\m
 To showcase the usage of Poisson, we solve for the following manufactured solution on a 2D rectangular mesh:
 $$u = \tanh(-100(y - 0.5 -0.25\sin(2\pi x))) + \tanh(100(y - x))$$ 
 
-such a function is really challenging as sudden jumps in solution are expected which can only be captured by very fine mesh. This function will also be used to define the Dirichlet condition on all borders. Analytical Laplacian of this function  gives us our source term:
+Such a function is really challenging as sudden jumps in solution are expected which can only be captured by very fine mesh. This function will also be used to define the Dirichlet condition on all borders. Analytical Laplacian of this function  gives us our source term:
 $$f = 100 \pi^2 \sin(2 \pi x) \left(\tanh^2\left(-100\left(y - 0.5 - 0.25 \sin(2 \pi x)\right)\right) - 1 \right) - 5000 \pi^2 \cos^2(2 \pi x)$$
 $$\left(1 - \tanh^2\left(-100\left(y - 0.5 - 0.25 \sin(2 \pi x)\right)\right) \right) \tanh\left(-100\left(y - 0.6 - 0.25 \sin(2 \pi x)\right)\right)$$
 $$+ 20000 \left(\tanh^2\left(-100\left(y - 0.5 - 0.25 \sin(2 \pi x)\right)\right) - 1 \right) \tanh\left(-100\left(y - 0.5 - 0.25 \sin(2 \pi x)\right)\right)$$
@@ -93,9 +94,9 @@ Further editing can be done on the produced files to adjust to a problem, mainly
 
 To vizualise the solution, we launch \psd{paraview} and open the file \psd{solution0.vtu}. The result that we see is not the expected solution as the mesh is too coarse to capture the variations in the function.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{![2d-noadapt](https://github.com/user-attachments/assets/b2d09cde-2b0f-4f4f-a1d5-31e7e79d8fab)}
+    \includegraphics[width=0.7\textwidth]{./Images/2d-noadapt.png}
     \caption{Solution on a coarse mesh}
 \end{figure}
 
@@ -116,17 +117,17 @@ PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh
 
 In order to visualize the solution, we open the group of solution files and view the results of adaption iterations one by one. We start getting a satisfactory approximated solution by the fourth iteration.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}{0.45\textwidth}
+    \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{![2d-freefemadapt2](https://github.com/user-attachments/assets/768a6df7-c295-44f2-b869-c18d279c0bda)}
+        \includegraphics[width=\textwidth]{./Images/2d-freefemadapt2.png}
         \caption{Iteration 2}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.45\textwidth}
+    \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{![2d-freefemadapt4](https://github.com/user-attachments/assets/e81967e2-1f41-4dc4-98a3-1d0440d46a80)}
+        \includegraphics[width=\textwidth]{./Images/2d-freefemadapt4.png}
         \caption{Iteration 4}
     \end{subfigure}
     \caption{Solution on an adapted mesh}
@@ -163,9 +164,9 @@ PSD_PreProcess -dimension 2 -problem poisson -adaptmesh -adaptmesh_metric_backen
 -adaptmesh_backend mmg -adaptmesh_type anisotropic -postprocess u -sequential
 \end{lstlisting}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{![2d-freefemadaptaniso](https://github.com/user-attachments/assets/2eda7be6-8e3c-404e-8e7a-fd4806008880)}
+    \includegraphics[width=0.7\textwidth]{./Images/2d-freefemadaptaniso.png}
     \caption{Solution on an anisotropic adapted mesh}
 \end{figure}
 
@@ -181,17 +182,17 @@ PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backen
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/3D/cube.msh
 \end{lstlisting}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}{0.45\textwidth}
+    \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{![3d-seq2](https://github.com/user-attachments/assets/531dc427-5873-4608-ad8c-8b00ea2bc41b)}
+        \includegraphics[width=\textwidth]{./Images/3d-seq2.png}
         \caption{Iteration 2}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.45\textwidth}
+    \begin{subfigure}{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{![3d-seq4](https://github.com/user-attachments/assets/bd6263c5-b7ce-4999-8a94-1748a2c20958)}
+        \includegraphics[width=\textwidth]{./Images/3d-seq4.png}
         \caption{Iteration 4}
     \end{subfigure}
     \caption{Solution on a 3D adapted mesh}
@@ -208,16 +209,18 @@ PSD_PreProcess -dimension 3 -problem poisson -adaptmesh -adaptmesh_metric_backen
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/cube.msh -v 0
 \end{lstlisting}
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{![3d-parallel2](https://github.com/user-attachments/assets/553a297c-b7c7-4483-a51a-8fb5bb091e9b)}
+    \includegraphics[width=0.7\textwidth]{./Images/3d-parallel.png}
     \caption{Partitioned 3D mesh}
 \end{figure}
 
+We now have two parameters representing a number of iterations in the \psd{ControlParameters.edp} file. \psd{adaptIter} is the number of adaption iterations, while \psd{parMmgIter} is the number of inner iterations that ParMmg does to counter the effect of partitioning on the results, that is by repartitioning and remeshing. \psd{parMmgIter} should be set to a value that balances between speed and accuracy. The current default value works well for this example.
+
 \subsection{3D example with discontinuous solution and automatic mesh adaption in parallel with different strategies}
 
-For larger meshes, it can be beneficial to group processes (only for the adaption step) on a bigger partition of the mesh. It was not the case in the example above.
-The number of groups can either be fixed across iterations and unrelated to the mesh (it can be changed in \psd{ControlParameters.edp}), or adaptive to the number of elements across iterations; these are the respective commands of the two methods.
+For certain mesh sizes and functions, it can be beneficial to group processes (only for the adaption step) on a bigger partition of the mesh. It was not the case in the example above.
+The number of groups can either be fixed across iterations and unrelated to the mesh (it can be changed in \psd{ControlParameters.edp}), or be adaptive to the number of elements across iterations; these are the respective commands of the two methods.
 
 - user controlled regrouping method
 
