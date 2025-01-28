@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
   int bodyforceconditions      = 0;
   int dirichletconditions      = 1;
   int tractionconditions       = 0;
-  int adaptmeshiteration       = 1;
+  int adaptmeshiteration       = 5;
   int spc                      = 2;
   int lag                      = 1;
 
