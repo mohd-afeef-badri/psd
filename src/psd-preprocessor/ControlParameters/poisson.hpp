@@ -233,7 +233,7 @@ codeSnippet R""""(
 else
 {
 codeSnippet R""""(
-    lloptions(0) = 0;               // nnu 0
+    lloptions(0) = 2;               // nnu 0
     lloptions(1) = 0;               // iso 1)"""";
 }
 codeSnippet R""""(
