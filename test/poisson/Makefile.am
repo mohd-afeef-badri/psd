@@ -211,9 +211,11 @@ check-parallel-adapt-iso-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
@@ -227,9 +229,11 @@ check-parallel-adapt-aniso-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
@@ -244,9 +248,11 @@ check-parallel-adapt-iso-grouping-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-grouping_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-grouping_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
@@ -260,9 +266,11 @@ check-parallel-adapt-aniso-grouping-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-grouping_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-grouping_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
@@ -276,9 +284,11 @@ check-parallel-adapt-iso-automatic-grouping-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-automatic_grouping_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-automatic_grouping_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
@@ -292,9 +302,11 @@ check-parallel-adapt-aniso-automatic-grouping-3d:
 	@mkdir -p VTUs
 	@if [ "$(LOG_MODE)" = "file" ]; then \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-automatic_grouping_Parallel.log && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-automatic_grouping_Parallel.log; \
 	else \
 		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
+		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
 		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
 	fi
 
