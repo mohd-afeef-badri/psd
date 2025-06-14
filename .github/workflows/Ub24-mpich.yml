@@ -51,7 +51,8 @@ jobs:
         mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
 
     - name: Upload logs
+      if: always()  # upload logs even if test failed
       uses: actions/upload-artifact@v4
       with:
         name: check-logs
-        path: $GITHUB_WORKSPACE/artifacts
+        path: ${{ github.workspace }}/artifacts
