@@ -49,7 +49,7 @@ jobs:
         make check
         # Save the log file(s) as an artifact
         mkdir -p $GITHUB_WORKSPACE/artifacts
-        mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
+        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
 
     - name: Upload logs
       if: always()  # upload logs even if test failed
