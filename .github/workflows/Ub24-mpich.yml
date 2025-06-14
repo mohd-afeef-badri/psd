@@ -1,4 +1,5 @@
 name: UB24.04-mpich
+# This workflow is designed to run on Ubuntu 24.04 with MPICH.
 on:
   push:
     branches:
