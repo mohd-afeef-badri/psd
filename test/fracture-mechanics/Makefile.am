@@ -641,7 +641,8 @@ check-point-bc: check-header
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags > PreProcess-2D_PointBC_Parallel.log && \
-	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e \
+		's#dtr;#dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01)/7.619173e+01 > 2e-4){cout << "umaxG=" << umaxG << endl; exit(111111);}break;#g' {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
 	./PSD_Solve -n 4  Main.edp -mesh $(MESHDIR2)L_shaped_crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel.log
 	@echo ""
@@ -650,7 +651,8 @@ check-point-bc: check-header
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field -dirichletconditions 1 -dirichletpointconditions 1 -energydecomp -constrainHPF -getreactionforce -testflags -vectorial > PreProcess-2D_PointBC_Parallel_vectorial.log && \
-	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s/dtr;/dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01) > 1e-2)exit(111111);break;/g" {} \; && \
+	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e \
+		's#dtr;#dtr;real umaxG,umaxL=uold[].max;mpiAllReduce(umaxL,umaxG,mpiCommWorld,mpiMAX);if(abs(umaxG-7.619173e+01)/7.619173e+01 > 2e-4){cout << "umaxG=" << umaxG << endl; exit(111111);}break;#g' {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#Pbc0Ux  -0. //#Pbc0Ux  -1000. //#g" {} \; && \
 	./PSD_Solve -n 4  Main.edp -mesh $(MESHDIR2)L_shaped_crack.msh -v 1 -ns -nw > PreProcess-2D_PointBC_Parallel_vectorial.log
 

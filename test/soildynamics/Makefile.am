@@ -140,7 +140,7 @@ check-Soildynamics:
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/top-ii-vol#./../plugins/top-ii-vol/cpp/top-ii-vol#g" {} \; && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/DDmacro.edp#./../ff-files/DDmacro.edp#g" {} \; && \
 	find . -name ControlParameters.edp -exec sed -i -e "s#../Meshes/3D/Point-Cloud#./../../etc/Point-Cloud#g" {} \; && \
-	./PSD_Solve -n $(NP)  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log
+	./PSD_Solve -n 2  Main.edp -v 1 -ns -nw > PSD_Solve-3D_soildynamics_Parallel_top2vol_doublecouple_displacement-based.log
 					
 clean-local:
 	@echo ""

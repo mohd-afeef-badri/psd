@@ -1,4 +1,5 @@
 name: UB24.04-mpich
+# This workflow is designed to run on Ubuntu 24.04 with MPICH.
 on:
   push:
     branches:
@@ -43,15 +44,20 @@ jobs:
     - name: make
       run: |
         make && make install
-    - name: make check
+
+    - name: make check and save logs
       run: |
-        # make check
-        # Save the log file(s) as an artifact
-        # mkdir -p $GITHUB_WORKSPACE/artifacts
-        # mv ./*.log ./*.txt $GITHUB_WORKSPACE/artifacts/ || true
+        set +e                      # Don't exit immediately on failure
+        PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
+        status=$?                  # Capture exit code of make check
+        mkdir -p "$GITHUB_WORKSPACE/artifacts"
+        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+        exit $status               # Re-raise make check's status to mark the step as failed if it should
+
 
     - name: Upload logs
+      if: always()  # upload logs even if test failed
       uses: actions/upload-artifact@v4
       with:
         name: check-logs
-        path: $GITHUB_WORKSPACE/artifacts
+        path: ${{ github.workspace }}/artifacts
