@@ -48,7 +48,7 @@ jobs:
     - name: make check and save logs
       run: |
         set +e                      # Don't exit immediately on failure
-        PARMMG_ACTIVE=yes make check # Run make check, ignoring PARMMG_ACTIVE
+        PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
         status=$?                   # Capture exit code of make check
         mkdir -p "$GITHUB_WORKSPACE/artifacts"
         find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
