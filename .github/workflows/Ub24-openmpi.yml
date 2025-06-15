@@ -1,0 +1,63 @@
+name: UB24.04-OpenMPI
+# This workflow is designed to run on Ubuntu 24.04 with OpenMPI
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.MD'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+  pull_request:
+    branches:
+      - main
+      - devel
+    paths-ignore:
+      - '**.MD'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake libopenmpi-dev
+    - name: configure
+      run: |
+        export PREFIXPSD=/home/runner/psd
+        autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies
+    - name: make
+      run: |
+        make && make install
+
+    - name: make check and save logs
+      run: |
+        set +e                      # Don't exit immediately on failure
+        PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
+        status=$?                   # Capture exit code of make check
+        mkdir -p "$GITHUB_WORKSPACE/artifacts"
+        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+        exit $status               # Re-raise make check's status to mark the step as failed if it should
+
+
+    - name: Upload logs
+      if: always()  # upload logs even if test failed
+      uses: actions/upload-artifact@v4
+      with:
+        name: check-logs
+        path: ${{ github.workspace }}/artifacts
