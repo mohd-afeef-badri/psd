@@ -1,5 +1,6 @@
 LOG_MODE ?= file
 LOG_FILE_PREFIX ?= TestLogs
+PARMMG_ACTIVE ?= yes
 
 if HAVESALOME
 
@@ -203,112 +204,128 @@ check-parallel:
 
 PAR_ISO_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type isotropic -adaptmesh_metric_backend mshmet
 check-parallel-adapt-iso-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D isotropic Adapt"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D isotropic Adapt"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
 
 PAR_ANISO_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type anisotropic -adaptmesh_metric_backend mshmet
 check-parallel-adapt-aniso-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D anisotropic Adapt"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D anisotropic Adapt"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
 
 
 PAR_ISO_METHOD2_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type isotropic -adaptmesh_metric_backend mshmet -adaptmesh_parmmg_method partition_regrouping
 check-parallel-adapt-iso-grouping-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D isotropic Adapt Grouping Method"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-grouping_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-grouping_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D isotropic Adapt Grouping Method"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-grouping_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-grouping_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
+
 
 PAR_ANISO_METHOD2_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type anisotropic -adaptmesh_metric_backend mshmet -adaptmesh_parmmg_method partition_regrouping
 check-parallel-adapt-aniso-grouping-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D anisotropic Adapt Grouping Method"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-grouping_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-grouping_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D anisotropic Adapt Grouping Method"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-grouping_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-grouping_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD2_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
+
 
 PAR_ISO_METHOD3_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type isotropic -adaptmesh_metric_backend mshmet -adaptmesh_parmmg_method partition_automatic_regrouping
 check-parallel-adapt-iso-automatic-grouping-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D isotropic Adapt Automatic Grouping Method"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-automatic_grouping_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-automatic_grouping_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D isotropic Adapt Automatic Grouping Method"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-iso-automatic_grouping_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-iso-automatic_grouping_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
+
 
 PAR_ANISO_METHOD3_FLAG_3D = -adaptmesh -adaptmesh_iter 1 -adaptmesh_backend parmmg -adaptmesh_type anisotropic -adaptmesh_metric_backend mshmet -adaptmesh_parmmg_method partition_automatic_regrouping
 check-parallel-adapt-aniso-automatic-grouping-3d:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Parallel 3D anisotropic Adapt Automatic Grouping Method"
-	@echo "*============================================================*"
-	@echo ""
-	@mkdir -p VTUs
-	@if [ "$(LOG_MODE)" = "file" ]; then \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-automatic_grouping_Parallel.log && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-automatic_grouping_Parallel.log; \
-	else \
-		./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
-		find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
-		./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+	@if [ "$(PARMMG_ACTIVE)" = "yes" ]; then \
+		echo ""; \
+		echo "*============================================================*"; \
+		echo " Parallel 3D anisotropic Adapt Automatic Grouping Method"; \
+		echo "*============================================================*"; \
+		echo ""; \
+		mkdir -p VTUs; \
+		if [ "$(LOG_MODE)" = "file" ]; then \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) > $(LOG_FILE_PREFIX)-PreProcess-3D-adapt-aniso-automatic_grouping_Parallel.log && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw > $(LOG_FILE_PREFIX)-Solve-3D-adapt-aniso-automatic_grouping_Parallel.log; \
+		else \
+			./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_LE) $(PAR_ANISO_METHOD3_FLAG_3D) | tee /dev/stdout && \
+			find . -name ControlParameters.edp -exec sed -i -e "s#ddoptions(2) = 0.01;#ddoptions(2) = 0.05;#g" {} \; && \
+			./PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR3)/cube.msh -v 1 -ns -nw | tee /dev/stdout; \
+		fi; \
 	fi
+
 
 clean-local:
 	@echo ""
