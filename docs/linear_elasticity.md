@@ -17,14 +17,13 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1
 
 *What do the arguments mean ?*
 
-
 - `-problem linear_elasticity` means that we are solving a linear elasticity problem;
 - `-dimension 2` means it is a 2D simulation;
 - `-bodyforceconditions 1` with applied body force (body weight) acting on the domain;
 - `-dirichletconditions 1` says we have one Dirichlet border (clamped end);
 - `-postprocess u` means we would like to have ParaView post processing files.
 
-After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform - in this case 2D linear elasticity bending under its own body weight.
+After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D linear elasticity bending under its own body weight.
 
 At this stage the input properties of Youngs modulus and Poissons ratio ($E,\nu$) can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho \times g=8.e3 \times -9.81 = -78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"`. Note that mesh can also be provided in the next step i.e, Step 2: solving. In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
 
@@ -46,7 +45,12 @@ Here `-np 4` (number of processes) denote the argument used to enter the number 
 
 PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
+<div>
+  <img width="300" align="left" style="margin-right: 20px;" src="https://github.com/user-attachments/assets/068ab7c2-6733-4b45-9946-db33f9d826d7" />
+  <img width="300" align="left" style="margin-left: 20px;" src="https://github.com/user-attachments/assets/eac01fca-8e95-41c2-97bb-606554432dc7" />
+</div>
 
+<div style="clear: both;"></div>
 You are all done with your 2D linear-elasticty simulation.
 
 > 2D bar is ok, but what about 3D ?
@@ -69,3 +73,6 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0
 ```
 
 Finally, using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown below can be extracted.
+
+<img width="300" align="left" src="https://github.com/user-attachments/assets/44313bd4-6436-4a9f-9ca5-1e2e35832c3b" />
+<img width="300" align="right" src="https://github.com/user-attachments/assets/a8453c65-6254-4d9c-a608-e6e2433dc4aa" />
