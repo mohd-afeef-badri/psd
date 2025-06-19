@@ -11,6 +11,11 @@
   <!-- Docsify theme -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/buble.css" />
 
+    <style>
+    p {
+      text-align: justify;
+    }
+  </style>
 </head>
 
 <body>
@@ -23,7 +28,9 @@
       name: 'PSD',
       repo: 'mohd-afeef-badri/psd',
       loadSidebar: true,
+      subMaxLevel: 2,
       maxLevel: 2,
+      sidebarDisplayLevel: 1,
       themeColor: '#3F51B5',
       search: 'auto',
       latex: {
@@ -41,6 +48,9 @@
   <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <!--  docsify-latex plugin -->
   <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
+  <!-- plugins -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
 </body>
 
 </html>
