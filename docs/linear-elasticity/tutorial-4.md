@@ -112,6 +112,7 @@ Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) usin
 
 > 📊 From ParaView, you can visualize displacement, mesh partitions, and more (e.g., as in the figure below).
 
-[INSERT IMAGE]
-
-✅ **You are all done with your 2D linear-elasticity simulation!**
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/fdd2b873-bf86-48ca-abd7-9fae4e609bb0" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/fec43b7b-b218-4fe3-8886-c55b8ecfaeda" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
