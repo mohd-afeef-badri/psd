@@ -76,8 +76,10 @@ PSD/Solver/VTUs_DATE_TIME/
 
 ### Simulation Results
 
-<img src="./Images/2d-bar-partitioned5.png" width="45%" alt="Partitioned Mesh" />
-<img src="./Images/2d-bar-clamped-traction.png" width="45%" alt="Warped Displacement Field" />
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/a5e842c5-5584-4c63-9211-6b4f73e6824b" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/651b309a-9d7b-4304-99a2-12d3164fdd50" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
 
 **Figure:** Partitioned mesh (left) and 100× warped displacement field (right)
 
