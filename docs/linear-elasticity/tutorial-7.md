@@ -18,11 +18,6 @@ The material is characterized by:
 
 The first step in a `PSD` simulation is **preprocessing**. Here, you specify the physics, boundary conditions, approximations, mesh, etc.
 
-In the terminal, `cd` to the folder:
-
-`...`
-<pre><code>(...)</code></pre>
-
 Launch `PSD_PreProcess` by running:
 
 <pre><code>PSD_PreProcess  -problem linear_elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u</code></pre>
@@ -68,18 +63,16 @@ To solve the problem using 4 cores, run the following command:
 
 ## Step 3: Postprocessing
 
-Open ParaView and load the `.pvd` file found in:
-
-```
-PSD/Solver/VTUs_DATE_TIME/
-```
+Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
 
 ### Simulation Results
 
-![Clamped 3D Bar](./Images/3d-bar-clamped-ends.png)
-![3D Bar Pulled and Partitioned](./Images/3d-bar-clamped-pulled-partioned.png)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/44313bd4-6436-4a9f-9ca5-1e2e35832c3b" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/a8453c65-6254-4d9c-a608-e6e2433dc4aa" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
 
-**Figure:** 3D bar results. Partitioned mesh (left) and 0.5× warped displacement field (right)
+*Figure: 3D bar results. Partitioned mesh (left) and 0.5× warped displacement field (right)*
 
 > 💡 **Note**:  
 > Since 4 cores were used, the domain was partitioned into 4 subdomains, as visible in the left image above.
