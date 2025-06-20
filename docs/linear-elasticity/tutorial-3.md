@@ -78,8 +78,10 @@ PSD outputs ParaView-compatible files. After solving, open the `.pvd` file in th
 
 You can visualize outputs like in the figure below:
 
-![Partitioned mesh and displacement field](./Images/le-2d-bar-partitioned3.png)
-![Clamped bar with deformed shape](./Images/le-2d-bar-clamped-ends.png)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/309c159b-92bf-4c23-900a-4218e61bc694" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/a1ea08ab-b5b7-4e48-ba1e-5351c98ed7ec" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
 
 **Figure**: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.
 
@@ -103,7 +105,9 @@ Then redo Step 2 (solving) and Step 3 (postprocessing).
 
 Side-by-side visualization:
 
-![Warped field on the Moon](./Images/le-2d-bar-moon.png)
-![Warped field on Jupiter](./Images/le-2d-bar-Jupiter.png)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/e26d4688-1392-4db3-b9f9-6984f0636eb3" width="300" style="margin-left: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/2b0cc837-f827-4845-baba-20d39844eab5" width="300" style="margin-right: 20px; vertical-align: middle;" />
+</div>
 
 **Figure**: 2D clamped bar with 20000× warped displacement fields — Moon (left) and Jupiter (right).
