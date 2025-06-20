@@ -11,7 +11,10 @@ You can obtain the CAD geometry (the Gmsh `.geo` file) from your local Gmsh inst
 
 Now the PSD simulation can proceed.
 
-![3D mechanical piece](./Images/3d-mechanical.png)
+
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/9707d85c-05bb-48db-9ba2-e38684e2985f" width="300" />
+</div>
 *Figure: 3D mechanical piece.*
 
 ## Step 1: Preprocessing
@@ -47,15 +50,23 @@ Use 2 cores:
 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
-![Partitioned mesh](./Images/3d-mechanical-part.png)
-![Warped displacement field](./Images/3d-mechanical-result.png)
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/bc0b1de7-bd6d-4c04-bb9b-517a8ccbd1f9" width="300" />
+  <img src="https://github.com/user-attachments/assets/c33dfdd7-cea1-4376-95a2-f45e16e7b700" width="300" />
+</div>
 
 *Figure: Mechanical piece test results. Partitioned mesh (left) and warped displacement field (right).*
 
 ## Redoing the Test with Different Conditions
 
-![Results with tx = 1e9](./Images/3d-mechanical-result-x.png)
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/0ae6ccce-0013-439d-a177-d9fc1b6b547c" width="300" />
+</div>
+
 *Figure: Mechanical piece test results: `real tx0 = 1.e9, ty0 = 0, tz0 = 0.;`*
 
-![Results with tx = -1e9](./Images/3d-mechanical-result--x.png)
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/ccc3fea7-405e-48d2-b37a-484bd4666fcc" width="300" />
+</div>
+
 *Figure: Mechanical piece test results: `real tx0 = 1.e9, ty0 = 0, tz0 = 0.;`*
