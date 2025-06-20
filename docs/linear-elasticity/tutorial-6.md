@@ -50,9 +50,13 @@ The mesh file `bar.msh` is provided in the `../Meshes/2D/` folder. This is a tri
 
 Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TIME` folder.
 
-![2D bar results. Partitioned mesh (left) and 100X warped displacement field (right).](./Images/2d-bar-partitioned6.png)
 
-![2D bar results. Partitioned mesh (left) and 100X warped displacement field (right).](./Images/2d-bar-clamped-traction-point.png)
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/c5414d8b-0e3b-4c32-a7bf-daca0cddd25e" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/d9af4fcf-5585-409a-9666-cd2c2c75a53c" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
+
+*Figure: Partitioned mesh (left) and 100X warped displacement field (right).*
 
 > 💡 **Note**:  
 > In the figure above, there are six subdomains in the partitioned mesh. As expected, the right and left ends of the bar contract in the $y$-direction, while the bar elongates in the $x$-direction due to the applied force.
