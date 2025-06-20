@@ -48,7 +48,9 @@ We solve the problem using four MPI processes, with the given mesh file `bar.msh
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-![Time logging output produced for parallel run on 4 processes.](./Images/le-time-par.png)
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/8bc291a8-229a-454a-9b67-8620721f7b06" width="300" />
+</div>
 
 *Figure: Time logging output produced for parallel run on 4 processes using `-timelog` flag. Take note of timings produced for different operations of the solver.*
 
