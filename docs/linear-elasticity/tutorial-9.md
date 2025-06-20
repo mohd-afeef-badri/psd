@@ -5,7 +5,10 @@ This tutorial details one to use PSD-MFront interface for linear elasticity prob
 We reintroduce the problem from tutorial 1, an example of a 2D bar which bends under its own load -- typical case of linear elasticity.   A bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Youngs modulus $E=200\times 10^9$, and Poissons ratio $\nu=0.3$.
 
 
-![The 2D clamped bar problem.](./Images/3d-mechanical.png)
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://github.com/user-attachments/assets/b2d0b7d6-6d59-4470-a302-e5b7790afcd6" width="300" />
+</div>
+
 *Figure: The 2D clamped bar problem.*
 
 ## Step 1: Preprocessing
@@ -46,8 +49,11 @@ As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do 
 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
-![Partitioned mesh](./Images/3d-mechanical-part.png)
-![Warped displacement field](./Images/3d-mechanical-result.png)
+
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/068ab7c2-6733-4b45-9946-db33f9d826d7" width="300" style="margin-right: 20px; vertical-align: middle;" />
+  <img src="https://github.com/user-attachments/assets/eac01fca-8e95-41c2-97bb-606554432dc7" width="300" style="margin-left: 20px; vertical-align: middle;" />
+</div>
 
 *Figure: Mechanical piece test results. Partitioned mesh (left) and warped displacement field (right).*
 
