@@ -6,7 +6,7 @@ To showcase the usage of linear elasticity, we shall discuss here an example of 
   <img src="https://github.com/user-attachments/assets/b2d0b7d6-6d59-4470-a302-e5b7790afcd6" width="300" />
 </div>
 
-### Step 1: Preprocessing
+## Step 1: Preprocessing
 
 First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. PSD is a TUI (terminal user interface) based application, so the user needs to use the terminal (command-line) to communicate to PSD.
 
@@ -15,13 +15,13 @@ In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity` Note 
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 2 \
 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u</code></pre>
 
-*What do the arguments mean ?*
+**What do the arguments mean?**
 
-- `-problem linear_elasticity` means that we are solving a linear elasticity problem;
-- `-dimension 2` means it is a 2D simulation;
-- `-bodyforceconditions 1` with applied body force (body weight) acting on the domain;
-- `-dirichletconditions 1` says we have one Dirichlet border (clamped end);
-- `-postprocess u` means we would like to have ParaView post processing files.
+- `-problem linear_elasticity` → solving linear elasticity
+- `-dimension 2` → 2D simulation
+- `-bodyforceconditions 1` → apply a body force on the domain
+- `-dirichletconditions 2` → two Dirichlet borders
+- `-postprocess u` → enable ParaView output
 
 After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D linear elasticity bending under its own body weight.
 
@@ -29,7 +29,7 @@ At this stage the input properties of Youngs modulus and Poisson's ratio ($E, \n
 
 Please note that for this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder, this mesh is a triangular mesh produced with Gmsh. Moreover detailing meshing procedure is not the propose of PSD tutorials. A user has the choice of performing their own meshing step and providing them to PSD in `.msh` (Please use version 2) or `.mesh` format, we recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
-### Step 2: Solving
+## Step 2: Solving
 
 As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do so enter the following command:
 
@@ -39,7 +39,7 @@ This will launch the PSD simulation.
 
 Here `-np 4` (number of processes) denote the argument used to enter the number of parallel processes (MPI processes) used by PSD while solving. `-mesh ./../Meshes/2D/bar.msh` is used to provide the mesh file to the solver, `-mesh` argument is not needed if the user has indicated the right mesh in `ControlParameters.edp` file. `-v 0` denotes the verbosity level on screen. `PSD_Solve` is a wrapper around `FreeFem++-mpi`. Note that if your problem is large use more cores. PSD has been tested upto 24,000 parallel processes (on the French Joliot-Curie supercomputer) and problem sizes with billions of unknowns, surely you will not need that many for the 2D bar problem.
 
-### Step 3: Postprocessing
+## Step 3: Postprocessing
 
 PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
@@ -50,7 +50,7 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 
 You are all done with your 2D linear-elasticity simulation.
 
-> 2D bar is ok, but what about 3D ?
+# 3D bar problem
 
 In PSD a 3D simulation follows the same logic as a 2D one, in the preprocessing step. Imagine the same problem as above, however now the geometry is 3D with length 5 m and cross sectional area 1 m $\times$ 1 m. Indeed all what changes for this simulation is the geometry (consequently the mesh) and the dimension of the problem, these two changes will be handled by (`-dimension` and `-mesh`) arguments.
 
