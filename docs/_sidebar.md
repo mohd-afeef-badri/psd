@@ -12,5 +12,3 @@
 * [Tutorial 7](linear-elasticity/tutorial-7.md)
 * [Tutorial 8](linear-elasticity/tutorial-8.md)
 * [Tutorial 9](linear-elasticity/tutorial-9.md)
-
-
