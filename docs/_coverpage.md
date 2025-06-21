@@ -11,7 +11,7 @@
 - Easy to use
 
 <div style="text-align: center;">
-  <a href="https://github.com/mohd-afeef-badri/psd"
+  <a href="https://mohd-afeef-badri.github.io/psd/#/?id=introduction"
      style="display:inline-block; padding:10px 20px; border:1px solid #42b983; border-radius:15px; color:#42b983; text-decoration:none; margin: 0 10px;">
      Getting Started
   </a>
