@@ -107,7 +107,12 @@ echo 'export LD_LIBRARY_PATH=$HOME/PSDinstall/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 
 **MED support:**
 
-Follow this to build PSD with `med` support, use `--with-hdf5=$SALOMEPREFIX/hdf5 --with-medfile=$SALOMEPREFIX/medfile --with-medcoupling=$SALOMEPREFIX/MEDCOUPLING` to provide med supports.
+Follow this to build PSD with `med` support, use 
+- provide SALOME's hdf5 `--with-hdf5=$SALOMEPREFIX/hdf5` 
+- provide SALOME's medfile `--with-medfile=$SALOMEPREFIX/medfile`
+- provide SALOME's MedCoupling `--with-medcoupling=$SALOMEPREFIX/MEDCOUPLING`
+All these flags can be set by downloading SALOME and providing the SALOME's install path directory in `SALOMEPREFIX`.
+
 
 ## Installation Procedure 2
 **I install my own dependencies for PSD**
@@ -200,4 +205,3 @@ Once `./configure` runs successfully your Makefiles will be generated thanks to 
 
 - **mohd-afeef.badri@cea.fr**
 - **mohd-afeef.badri@hotmail.com**
-
