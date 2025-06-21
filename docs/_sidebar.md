@@ -1,4 +1,8 @@
-### Linear Elasticity
+- [Introduction](/README.md)
+- [Installation](/install.md)
+- [Changelog](/Changelog.md)
+
+- Linear Elasticity
 * [Tutorial 1](linear-elasticity/tutorial-1.md)
 * [Tutorial 2](linear-elasticity/tutorial-2.md)
 * [Tutorial 3](linear-elasticity/tutorial-3.md)
