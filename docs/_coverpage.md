@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-<img src="/psd_logo.jpg" alt="PSD Logo" style="height:120px; margin: 20px auto; display: block;">
+<img src="https://github.com/user-attachments/assets/6494ea34-4f6a-4e13-9d23-c5746da41942" alt="PSD Logo" style="height:120px; margin: 20px auto; display: block;">
 
 # <small>Version 2.5.0</small>
 
@@ -9,7 +9,6 @@
 - Massively Parallel HPC 
 - Robust FEM models
 - Easy to use
-
 
 <div style="text-align: center;">
   <a href="https://github.com/mohd-afeef-badri/psd"
