@@ -39,8 +39,8 @@ Before installing PSD, ensure the following dependencies are installed and compa
 
 ---
 
-## Installation Procedure 1: *Recommended* ✅
-**PSD installs all the dependencies** 
+## Installation Procedure 1
+**PSD installs all the dependencies**  *Recommended* ✅
 
 * Ensure the following are pre-installed:
   `automake`, a C/C++ compiler, `git`, `MPI`, `lapack`, and others. For ubuntu following is suggested :
@@ -109,7 +109,7 @@ echo 'export LD_LIBRARY_PATH=$HOME/PSDinstall/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 
 Follow this to build PSD with `med` support, use `--with-hdf5=$SALOMEPREFIX/hdf5 --with-medfile=$SALOMEPREFIX/medfile --with-medcoupling=$SALOMEPREFIX/MEDCOUPLING` to provide med supports.
 
-## Installation Procedure 2: 
+## Installation Procedure 2
 **I install my own dependencies for PSD**
 
 - Obtain the latest version of PSD by cloning the git repository:
