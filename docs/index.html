@@ -11,7 +11,7 @@
   <!-- Docsify theme -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/buble.css" />
 
-    <style>
+  <style>
     p {
       text-align: justify;
     }
@@ -25,12 +25,19 @@
   <!-- Docsify config -->
   <script>
     window.$docsify = {
-      name: '<img src="https://github.com/user-attachments/assets/6494ea34-4f6a-4e13-9d23-c5746da41942" alt="PSD Logo" style="height:120px; vertical-align:middle; margin-right:8px;"><span style="vertical-align:middle;"></span>',   
-      repo: 'mohd-afeef-badri/psd',
+      auto2top: true,
       coverpage: true,
+      executeScript: true,
+      // hideSidebar: true,
       loadSidebar: true,
-      subMaxLevel: 2,
-      maxLevel: 2,
+      loadNavbar: true,
+      // mergeNavbar: true,
+      maxLevel: 4,
+      // repo: 'docsifyjs/docsify',
+      // routerMode: 'history',
+      subMaxLevel: 3,
+      name: '<img src="https://github.com/user-attachments/assets/6494ea34-4f6a-4e13-9d23-c5746da41942" alt="PSD Logo" style="height:120px; vertical-align:middle; margin-right:8px;"><span style="vertical-align:middle;"></span>',
+      repo: 'mohd-afeef-badri/psd',
       sidebarDisplayLevel: 1,
       themeColor: '#3F51B5',
       search: 'auto',
