@@ -1,3 +1,5 @@
+### [Installation](/install.md)
+
 ### Linear Elasticity
 * [Tutorial 1](linear-elasticity/tutorial-1.md)
 * [Tutorial 2](linear-elasticity/tutorial-2.md)
