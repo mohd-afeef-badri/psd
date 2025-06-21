@@ -6,9 +6,11 @@ on:
       - main
     paths-ignore:
       - '**.MD'
+      - '**.md'
       - '**/.gitignore'
       - 'data/**'
       - 'demos/**'
+      - 'docs/**'
       - 'etc/**'
       - 'man/**'
       - 'src/ff-files/**'
@@ -19,9 +21,11 @@ on:
       - devel
     paths-ignore:
       - '**.MD'
+      - '**.md'
       - '**/.gitignore'
       - 'data/**'
       - 'demos/**'
+      - 'docs/**'
       - 'etc/**'
       - 'man/**'
       - 'src/ff-files/**'
