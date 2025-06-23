@@ -4,9 +4,10 @@
 
 To showcase the usage of linear elasticity, we shall discuss here an example of a 2D bar which bends under its own load (body weight). The bar $5$ m in length and $1$ m in width, and is supposed to be made up of a material with density $\rho=8\times10^3$, Youngs modulus $E=200\times10^9$, and Poisson's ratio $\nu=0.3$. Figure below shows this bar considered in this tutorial.
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/b2d0b7d6-6d59-4470-a302-e5b7790afcd6" width="300" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-clamped-bar.png" width="40%" alt="clamped-bar">
+  <figcaption><em>Figure: the clamped bar setup.</em></figcaption>
+</figure>
 
 #### Step 1: Preprocessing
 
@@ -45,10 +46,11 @@ Here `-np 4` (number of processes) denote the argument used to enter the number 
 
 PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/068ab7c2-6733-4b45-9946-db33f9d826d7" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/eac01fca-8e95-41c2-97bb-606554432dc7" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-2d-bar-partioned.png" width="40%" style="margin-right:2%;" alt="clamped-bar"><br>
+  <img src="_images/linear-elasticity/le-2d-bar-results.png" width="40%" alt="clamped-bar">
+  <figcaption><em>Figure: the 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
+</figure>
 
 You are all done with your 2D linear-elasticity simulation.
 
@@ -69,12 +71,12 @@ Solving step remains exactly the same with except `-mesh` flag now pointing towa
 
 Finally, using ParaView for postprocessing the results that are provided in the `VTUs..` folder, results such as those shown below can be extracted.
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/44313bd4-6436-4a9f-9ca5-1e2e35832c3b" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/a8453c65-6254-4d9c-a608-e6e2433dc4aa" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
 
------
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-3d-bar-clamped-ends.png" width="40%" alt="3d-clamped-bar-ends"><br>
+  <img src="_images/linear-elasticity/le-3d-bar-clamped-pulled-partioned.png" width="40%" alt="3d-clamped-bar-partitioned">
+  <figcaption><em>Figure: the 3D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
+</figure>
 
 ## Tutorial 2
 ### Sequential solver
@@ -83,9 +85,9 @@ Finally, using ParaView for postprocessing the results that are provided in the 
 
 Same problem of linear elasticity as in tutorial 1 -- 2D bar which bends under its own load --, is discussed here. The bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Young's modulus $E=200\times 10^9$, and Poisson's ratio $\nu=0.3$. To avoid text repetition, readers are encouraged to go ahead with this tutorial only after tutorial 1.
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/a8453c65-6254-4d9c-a608-e6e2433dc4aa" width="300" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-3d-bar-clamped-pulled-partioned.png" width="40%" alt="3d-clamped-bar-partitioned">
+</figure>
 
 As we will not use a parallel solver but a sequential one, naturally, this tutorial leads to a slower solver than the previous tutorial 1. So this tutorial is not for speed lovers, but rather for detailing the full capacity of PSD. Also, sequential solvers are easier to develop and understand — hence this tutorial.
 
@@ -129,12 +131,10 @@ We solve the problem using four MPI processes, with the given mesh file `bar.msh
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/0760f40c-9632-4bc2-83ff-a019cd5c2ab7" width="300" />
-</div>
-
-
-*Figure: Time logging output produced for parallel run on 4 processes using `-timelog` flag. Take note of timings produced for different operations of the solver.*
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-time-par.png" width="40%" alt="time-parallel-log">
+  <figcaption><em>Figure: Time logging output produced for parallel run on 4 processes.</em></figcaption>
+</figure>
 
 Now let us repeat the procedure but this time using the sequential solver:
 
@@ -152,8 +152,6 @@ PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 > 💡 **Note**: You should now see timings that are higher in comparison to the parallel solver.
 
 Approximately, for large meshes, using 4 MPI processes should lead to a solver that's around 4 times faster.
-
------
 
 ## Tutorial 3
 #### Multiple Dirichlet Conditions in Linear Elasticity (2D Clamped Bar)
@@ -236,12 +234,12 @@ PSD outputs ParaView-compatible files. After solving, open the `.pvd` file in th
 
 You can visualize outputs like in the figure below:
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/309c159b-92bf-4c23-900a-4218e61bc694" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/a1ea08ab-b5b7-4e48-ba1e-5351c98ed7ec" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-2d-bar-partitioned3.png" width="40%" style="margin-right:2%;" alt="2d-bar-partitioned">
+  <img src="_images/linear-elasticity/le-2d-bar-clamped-ends.png" width="40%" alt="2d-bar-clamped-ends">
+  <figcaption><em>Figure: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
+</figure>
 
-**Figure**: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.
 
 You’re all done with the 2D linear elasticity simulation!
 
@@ -263,15 +261,15 @@ Then redo Step 2 (solving) and Step 3 (postprocessing).
 
 Side-by-side visualization:
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/e26d4688-1392-4db3-b9f9-6984f0636eb3" width="300" style="margin-left: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/2b0cc837-f827-4845-baba-20d39844eab5" width="300" style="margin-right: 20px; vertical-align: middle;" />
-</div>
-
-**Figure**: 2D clamped bar with 20000× warped displacement fields — Moon (left) and Jupiter (right).
-
-
------
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 40%; vertical-align: top;">
+    <img src="_images/linear-elasticity/le-2d-bar-moon.png" width="100%" alt="2d-bar-moon">
+  </div>
+  <div style="display: inline-block; width: 40%; vertical-align: top; margin-left: 5%;">
+    <img src="_images/linear-elasticity/le-2d-bar-Jupiter.png" width="100%" alt="2d-bar-jupiter">
+  </div>
+  <figcaption><em>Figure: 2D clamped bar 20000X warped displacement fields. On Moon (left) and on Jupiter (right).</em></figcaption>
+</figure>
 
 ## Tutorial 4
 ####  2D Linear Elasticity: Clamped Bar Pulled at One End
@@ -360,8 +358,6 @@ ThName = "../Meshes/2D/bar.msh";
 
 > ⚠️ The mesh file `bar.msh` (Gmsh v2 format) is in the `../Meshes/2D/` folder. You can generate your own using SALOME or Gmsh.
 
----
-
 #### Step 2: Solving
 
 Since PSD is a **parallel solver**, we run it with 2 MPI processes:
@@ -377,8 +373,6 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 > 🧠 For large problems, you can increase the number of cores. PSD has been tested with up to **24,000 parallel processes** and problems with **billions of unknowns**.
 
----
-
 #### Step 3: Postprocessing
 
 Once the solver finishes, you can visualize results in **ParaView**.
@@ -387,13 +381,12 @@ Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) usin
 
 > 📊 From ParaView, you can visualize displacement, mesh partitions, and more (e.g., as in the figure below).
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/fdd2b873-bf86-48ca-abd7-9fae4e609bb0" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/fec43b7b-b218-4fe3-8886-c55b8ecfaeda" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-2d-bar-clamped-pulled-partioned.png" width="39%" style="margin-right:2%;" alt="2d-bar-clamped-pulled-partitioned">
+  <img src="_images/linear-elasticity/le-2d-bar-clamped-pulled.png" width="50%" alt="2d-bar-clamped-pulled">
+  <figcaption><em>Figure: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
+</figure>
 
-
------
 
 ## Tutorial 5
 ####  2D Linear Elasticity: Clamped Bar Pulled at One End
@@ -470,18 +463,20 @@ PSD/Solver/VTUs_DATE_TIME/
 
 #### Simulation Results
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/a5e842c5-5584-4c63-9211-6b4f73e6824b" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/651b309a-9d7b-4304-99a2-12d3164fdd50" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 36%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/2d-bar-partitioned5.png" width="100%" alt="2d-bar-partitioned5">
+  </div>
+  <div style="display: inline-block; width: 50%; vertical-align: bottom; margin-left: 4%;">
+    <img src="_images/linear-elasticity/2d-bar-clamped-traction.png" width="100%" alt="2d-bar-clamped-traction">
+  </div>
+  <figcaption><em>Figure: 2D bar results. Partitioned mesh (left) and 100X warped displacement field (right).</em></figcaption>
+</figure>
 
-**Figure:** Partitioned mesh (left) and 100× warped displacement field (right)
 
 > 💡 **Note**:  
 > Since 5 cores were used, the mesh was partitioned into 5 subdomains.  
 > Unlike in the previous tutorial, the right end of the bar contracts in the $y$-direction. This behavior is expected because there is **no Dirichlet condition** at that end, allowing it to move laterally.
-
------
 
 ## Tutorial 6
 ####   Linear Elasticity Tutorial 2D bar problem clamped at one end wile being pulled at the other end (Dirichlet-Neumann-Point boundary conditions case)
@@ -536,18 +531,19 @@ The mesh file `bar.msh` is provided in the `../Meshes/2D/` folder. This is a tri
 
 Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TIME` folder.
 
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 36%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/2d-bar-partitioned6.png" width="100%" alt="2d-bar-partitioned6">
+  </div>
+  <div style="display: inline-block; width: 50%; vertical-align: bottom; margin-left: 4%;">
+    <img src="_images/linear-elasticity/2d-bar-clamped-traction-point.png" width="100%" alt="2d-bar-clamped-traction-point">
+  </div>
+  <figcaption><em>Figure: 2D bar results. Partitioned mesh (left) and 100X warped displacement field (right).</em></figcaption>
+</figure>
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/c5414d8b-0e3b-4c32-a7bf-daca0cddd25e" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/d9af4fcf-5585-409a-9666-cd2c2c75a53c" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
-
-*Figure: Partitioned mesh (left) and 100X warped displacement field (right).*
 
 > 💡 **Note**:  
 > In the figure above, there are six subdomains in the partitioned mesh. As expected, the right and left ends of the bar contract in the $y$-direction, while the bar elongates in the $x$-direction due to the applied force.
-
----
 
 ## Tutorial 7
 #### 3D Clamped Bar with Vertical Traction
@@ -617,17 +613,19 @@ Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
 
 #### Simulation Results
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/44313bd4-6436-4a9f-9ca5-1e2e35832c3b" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/a8453c65-6254-4d9c-a608-e6e2433dc4aa" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 38%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/3d-bar-clamped-ends.png" width="100%" alt="3d-bar-clamped-ends">
+  </div>
+  <div style="display: inline-block; width: 40%; vertical-align: bottom; margin-left: 4%;">
+    <img src="_images/linear-elasticity/3d-bar-clamped-pulled-partioned.png" width="100%" alt="3d-bar-clamped-pulled-partioned">
+  </div>
+  <figcaption><em>Figure: 3D bar results. Partitioned mesh (left) and 0.5X warped displacement field (right).</em></figcaption>
+</figure>
 
-*Figure: 3D bar results. Partitioned mesh (left) and 0.5× warped displacement field (right)*
 
 > 💡 **Note**:  
 > Since 4 cores were used, the domain was partitioned into 4 subdomains, as visible in the left image above.
-
----
 
 ## Tutorial 8
 #### 3D  mechanical piece (Dirichlet-Neumann case) with complex mesh
@@ -644,10 +642,11 @@ You can obtain the CAD geometry (the Gmsh `.geo` file) from your local Gmsh inst
 Now the PSD simulation can proceed.
 
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/9707d85c-05bb-48db-9ba2-e38684e2985f" width="300" />
-</div>
-*Figure: 3D mechanical piece.*
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/3d-mechanical.png" width="50%" alt="3d-mechanical-piece" style="vertical-align: bottom;">
+  <figcaption><em>Figure: 3D mechanical piece.</em></figcaption>
+</figure>
+
 
 #### Step 1: Preprocessing
 
@@ -682,29 +681,35 @@ Use 2 cores:
 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/bc0b1de7-bd6d-4c04-bb9b-517a8ccbd1f9" width="300" />
-  <img src="https://github.com/user-attachments/assets/c33dfdd7-cea1-4376-95a2-f45e16e7b700" width="300" />
-</div>
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 36%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/3d-mechanical-part.png" width="100%" alt="mechanical-piece-partitioned">
+  </div>
+  <div style="display: inline-block; width: 40%; vertical-align: bottom; margin-left: 4%;">
+    <img src="_images/linear-elasticity/3d-mechanical-result.png" width="100%" alt="mechanical-piece-result">
+  </div>
+  <figcaption><em>Figure: Mechanical piece test results. Partitioned mesh (left) and warped displacement field (right).</em></figcaption>
+</figure>
 
-*Figure: Mechanical piece test results. Partitioned mesh (left) and warped displacement field (right).*
 
 #### Redoing the Test with Different Conditions
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/0ae6ccce-0013-439d-a177-d9fc1b6b547c" width="300" />
-</div>
-
-*Figure: Mechanical piece test results: `real tx0 = 1.e9, ty0 = 0, tz0 = 0.;`*
-
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/ccc3fea7-405e-48d2-b37a-484bd4666fcc" width="300" />
-</div>
-
-*Figure: Mechanical piece test results: `real tx0 = 1.e9, ty0 = 0, tz0 = 0.;`*
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 42%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/3d-mechanical-result-x.png" width="100%" alt="mechanical-piece-result-x">
+  </div>
+  <figcaption><em>Figure: Mechanical piece test results: <code>real  tx0=1.e9, ty0=0, tz0=0.,;</code></em></figcaption>
+</figure>
 
 
----
+<figure style="text-align: center;">
+  <div style="display: inline-block; width: 40%; vertical-align: bottom;">
+    <img src="_images/linear-elasticity/3d-mechanical-result--x.png" width="100%" alt="mechanical-piece-result-x">
+  </div>
+  <figcaption>
+    <em>Figure: Mechanical piece test results: <code>real tx0=-1.e9, ty0=0, tz0=0.,;</code></em>
+  </figcaption>
+</figure>
 
 ## Tutorial 9
 #### Using Mfront-PSD interface
@@ -714,11 +719,10 @@ This tutorial details one to use PSD-MFront interface for linear elasticity prob
 We reintroduce the problem from tutorial 1, an example of a 2D bar which bends under its own load -- typical case of linear elasticity.   A bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Youngs modulus $E=200\times 10^9$, and Poissons ratio $\nu=0.3$.
 
 
-<div style="text-align: center; margin-bottom: 1em;">
-  <img src="https://github.com/user-attachments/assets/b2d0b7d6-6d59-4470-a302-e5b7790afcd6" width="300" />
-</div>
-
-*Figure: The 2D clamped bar problem.*
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-clamped-bar.png" width="40%" alt="clamped-bar">
+  <figcaption><em>Figure: the clamped bar setup.</em></figcaption>
+</figure>
 
 #### Step 1: Preprocessing
 
@@ -759,12 +763,12 @@ As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
 
-<div style="text-align: center;">
-  <img src="https://github.com/user-attachments/assets/068ab7c2-6733-4b45-9946-db33f9d826d7" width="300" style="margin-right: 20px; vertical-align: middle;" />
-  <img src="https://github.com/user-attachments/assets/eac01fca-8e95-41c2-97bb-606554432dc7" width="300" style="margin-left: 20px; vertical-align: middle;" />
-</div>
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-2d-bar-partioned.png" width="40%" style="vertical-align: top; margin-right: 4%;" alt="2d bar partitioned mesh" />
+  <img src="_images/linear-elasticity/le-2d-bar-results.png" width="40%" style="vertical-align: top;" alt="2d bar displacement results" />
+  <figcaption><em>Figure: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
+</figure>
 
-*Figure: Mechanical piece test results. Partitioned mesh (left) and warped displacement field (right).*
 
 You are all done with your 2D linear-elasticty simulation with Mfront interface.
 
