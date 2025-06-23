@@ -8,4 +8,6 @@
     * [Elastodynamics](/elastodynamics.md)
     * [Soildynamics](/soildynamics.md)
     * [Elastoplastic](/elasto-plastic.md)
+
+- [TUI flags](/flags.md)
     
