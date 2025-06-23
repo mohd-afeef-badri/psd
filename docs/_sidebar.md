@@ -2,4 +2,6 @@
 - [Installation](/install.md)
 - [Changelog](/Changelog.md)
 
-- [Linear Elasticity](/linear-elasticity.md)
+- Tutorials
+    * [Linear Elasticity](/linear-elasticity.md)
+    * [Fracture Mechanics](/fracture-mechanics.md)
