@@ -1,13 +1,14 @@
 ## Tutorial 1
----
 ### Tensile Cracking of a Pre-Cracked Plate (2D PSD Example)
----
 
 > 💡 **Note**: This document details tutorials from the *fracture mechanics* module of PSD.
 
 A two-dimensional test is introduced. The problem of interest is a typical single-notch square plate cracking test under tensile loading. A unit square with a pre-existing crack is clamped at the bottom with $u_1 = u_2 = 0$ (first boundary condition), and is loaded quasi-statically on its top surface with $u_2 = u_2 + \Delta u_2$ until the crack propagates through its walls. Thus, two Dirichlet conditions are applied: one on the top and one on the bottom border.
 
-![Domain of the single notch square cracking problem under tensile loading.](./Images/square-notch.png)  
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/square-notch.png" width="25%" alt="Domain of the single notch square cracking problem under tensile loading.">
+</div>
+
 *Figure: Domain of the single notch square cracking problem under tensile loading.*
 
 To model this test, PSD provides a hybrid phase-field modelling technique. We use ParaView to post-process displacement $u$ and phase-field $d$ for visualising the cracking process. A PSD simulation consists of two steps, the first being the `PSD_PreProcess`:
@@ -29,29 +30,44 @@ Once the preprocessing step is done, we solve the problem using four MPI process
 <pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
 </code></pre>
 
-![Finite element displacement visualised for the 2D problem with ParaView at different timesteps (quasi-statics).](./Images/u0.png)
-![...](./Images/u1.png)
-![...](./Images/u2.png)
-![...](./Images/u3.png)  
-![...](./Images/u4.png)
-![...](./Images/u5.png)
-![...](./Images/u6.png)
-![...](./Images/u7.png)  
+<p align="center">
+  <img src="_images/fracture-mechanics/u0.png" width="24%">
+  <img src="_images/fracture-mechanics/u1.png" width="24%">
+  <img src="_images/fracture-mechanics/u2.png" width="24%">
+  <img src="_images/fracture-mechanics/u3.png" width="24%">
+</p>
+
+<p align="center">
+  <img src="_images/fracture-mechanics/u4.png" width="24%">
+  <img src="_images/fracture-mechanics/u5.png" width="24%">
+  <img src="_images/fracture-mechanics/u6.png" width="24%">
+  <img src="_images/fracture-mechanics/u7.png" width="24%">
+</p> 
+
 *Figure: Finite element displacement visualised for the 2D problem using ParaView at different timesteps. Time progresses left to right and top to bottom.*
 
-![Finite element damage visualised for the 2D problem with ParaView at different timesteps (quasi-statics).](./Images/d0000.png)
-![...](./Images/d0010.png)
-![...](./Images/d0020.png)
-![...](./Images/d0030.png)  
-![...](./Images/d0040.png)
-![...](./Images/d0050.png)
-![...](./Images/d0060.png)
-![...](./Images/d0069.png)  
+<p align="center">
+  <img src="_images/fracture-mechanics/d0000.png" width="24%">
+  <img src="_images/fracture-mechanics/d0010.png" width="24%">
+  <img src="_images/fracture-mechanics/d0020.png" width="24%">
+  <img src="_images/fracture-mechanics/d0030.png" width="24%">
+</p>
+
+<p align="center">
+  <img src="_images/fracture-mechanics/d0040.png" width="24%">
+  <img src="_images/fracture-mechanics/d0050.png" width="24%">
+  <img src="_images/fracture-mechanics/d0060.png" width="24%">
+  <img src="_images/fracture-mechanics/d0069.png" width="24%">
+</p>
+
 *Figure: Finite element damage visualised for the 2D problem using ParaView at different timesteps. Time progresses left to right and top to bottom.*
 
 Figures above show the finite element displacement and damage fields, which allow us to visualise the progression of cracking in the square plate.
 
-![Terminal output during simulation run.](./Images/terminal1.png)  
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/terminal1.png" width="50%" alt="Terminal output during simulation run.">
+</div>
+
 *Figure: Applied traction, non-linear iterations, and residual printed in the terminal.*
 
 During the simulation, the terminal displays the traction updates, non-linear iterations to convergence at each time step, and the residuals of $u$ and $d$. Refer to the figure above for a sample output.
@@ -59,9 +75,7 @@ During the simulation, the terminal displays the traction updates, non-linear it
 To construct your own test case, try editing the `ControlParameters.edp` file.
 
 ## Tutorial 2
----
 ### Tensile Cracking of a Pre-Cracked Cube: A 3D Example of the PSD Parallel Solver
----
 
 A three-dimensional test, analogous to its two-dimensional counterpart introduced earlier, is used here as a tutorial example. The problem of interest involves a unit cube undergoing extrusion along the $z$-axis. Cracking is initiated and propagated under tensile loading. 
 
@@ -94,18 +108,24 @@ After preprocessing, we solve the problem using MPI with the mesh file <code>ten
 
 ### Displacement Field
 
-![u3d0](./Images/u3d0.png)
-![u3d1](./Images/u3d1.png)
-![u3d2](./Images/u3d2.png)
-![u3d3](./Images/u3d3.png)  
+<p align="center">
+  <img src="_images/fracture-mechanics/u3d0.png" width="24%" alt="u3d0">
+  <img src="_images/fracture-mechanics/u3d1.png" width="24%" alt="u3d1">
+  <img src="_images/fracture-mechanics/u3d2.png" width="24%" alt="u3d2">
+  <img src="_images/fracture-mechanics/u3d3.png" width="24%" alt="u3d3">
+</p>
+
 *Figure: Finite element displacement visualized for the 3D problem in ParaView at different timesteps (quasi-static simulation). Time progresses from left to right in a row and top to bottom across rows.*
 
 ### Damage Field
 
-![d3d0](./Images/d3d0.png)
-![d3d1](./Images/d3d1.png)
-![d3d2](./Images/d3d2.png)
-![d3d3](./Images/d3d3.png)  
+<p align="center">
+  <img src="_images/fracture-mechanics/d3d0.png" width="24%" alt="d3d0">
+  <img src="_images/fracture-mechanics/d3d1.png" width="24%" alt="d3d1">
+  <img src="_images/fracture-mechanics/d3d2.png" width="24%" alt="d3d2">
+  <img src="_images/fracture-mechanics/d3d3.png" width="24%" alt="d3d3">
+</p> 
+
 *Figure: Finite element damage visualized for the 3D problem in ParaView at different timesteps (quasi-static simulation). Time progresses from left to right in a row and top to bottom across rows.*
 
 > 💡 **Note**: Figures above present the evolution of both displacement and damage fields, enabling a clear visualization of crack propagation in the cubic specimen.
@@ -118,7 +138,6 @@ A PSD simulation is a two-step process, with step one being the inline code `PSD
 
 ## Tutorial 3
 ### Parallel 2D tensile cracking and calculate-plotting reaction-force
-
 
 > 💡 **Note**: This document presents concise tutorials for the **fracture mechanics** module of PSD. The aim is to provide a practical starting point for users and developers rather than exhaustive documentation.
 
@@ -164,16 +183,23 @@ You can then plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with $\De
 * 2nd column: $F\_x$
 * 3rd column: $F\_y$
 
-![Plot of Applied Traction vs Force in Y Direction](./Images/plot-fd.png)
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/plot-fd.png" width="60%" alt="Plot of Applied Traction vs Force in Y Direction">
+</div>
+
 *Figure: Applied traction vs. force in the y direction.*
 
 > ⚠️ **Warning**: Ensure the output file `force.data` is correctly written before plotting; incomplete simulations might yield corrupted files.
 
 If you have **GnuPlot** configured with PSD, you can enable **live plotting** of the force-displacement curve using the flag `-plotreactionforce` during preprocessing.
 
-![Live Gnuplot 1](./Images/gp0.png)
-![Live Gnuplot 2](./Images/gp1.png)
-![Live Gnuplot 3](./Images/gp2.png)
+
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/gp0.png" width="32%" alt="Live Gnuplot 1">
+  <img src="_images/fracture-mechanics/gp1.png" width="32%" alt="Live Gnuplot 2">
+  <img src="_images/fracture-mechanics/gp2.png" width="32%" alt="Live Gnuplot 3">
+</div>
+
 *Figure: Live plotting of traction vs. force using PSD and GnuPlot.*
 
 ### Parallel 3D and Reaction Force Calculation
@@ -197,13 +223,12 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
 
 ## Tutorial 4
 ### Fracture mechanics Tutorials - L-shape cracking
----
-title: Fracture mechanics Tutorials - L-shape cracking
-author: Mohd Afeef Badri
-abstract: This document details a tutorial of 'fracture mechanics' module of PSD. This tutorial involves cracking of L shaped specimen, where loading is controlled by a point boundary condition.
----
 
-![Geometry of the L-shaped test used in this tutorial.](./Images/fm-geometry.png)  
+
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/fm-geometry.png" width="30%" alt="Geometry of the L-shaped test used in this tutorial.">
+</div>
+
 *Figure: Geometry of the L-shaped test used in this tutorial.*
 
 ### Preprocessing
@@ -356,7 +381,10 @@ to
      tr += dtr;
 </code></pre>
 
-![Finite element mesh of the L-shaped test.](./Images/fm-mesh.png)  
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/fm-mesh.png" width="30%" alt="Finite element mesh of the L-shaped test.">
+</div>
+
 *Figure: Finite element mesh of the L-shaped test.*
 
 ### Solving
@@ -371,12 +399,19 @@ PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
 
 Use ParaView to post-process results.
 
-![Finite element solution showing: Crack initiation, movement, and development.](./Images/fm-d1.png)
-![...](./Images/fm-d2.png)
-![...](./Images/fm-d3.png)  
+
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/fm-d1.png" width="30%" alt="Crack initiation">
+  <img src="_images/fracture-mechanics/fm-d2.png" width="30%" alt="Crack movement">
+  <img src="_images/fracture-mechanics/fm-d3.png" width="30%" alt="Crack development">
+</div>
+
 *Figure: Finite element solution showing crack initiation, movement, and development.*
 
 On your screen, the force-displacement curve which plots `force.data` should look something like this:
 
-![Force-displacement curve with cyclic loading.](./Images/fm-force-displacement.png)  
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/fm-force-displacement.png" width="50%" alt="Force-displacement curve with cyclic loading.">
+</div>
+
 *Figure: Force-displacement curve with cyclic loading.*
