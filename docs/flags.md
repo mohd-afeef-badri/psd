@@ -264,7 +264,6 @@ Just like `PSD_PreProcess`, the solver in PSD, `PSD_Solve`, also relies heavily 
   </tbody>
 </table>
 
-
 ### String  flags
 
 <table>
@@ -328,8 +327,6 @@ Just like `PSD_PreProcess`, the solver in PSD, `PSD_Solve`, also relies heavily 
   </tbody>
 </table>
 
-
-
 ## Flags physics-wise
 
 | **Flag Type**   | **Linear Elasticity**                                                                                                                                                                    | **Damage Mechanics**                                                                                                                                                                        | **Elastodynamics**                                                                                                                                                                       | **Soildynamics**                                                                                                                                                                         |
@@ -338,7 +335,3 @@ Just like `PSD_PreProcess`, the solver in PSD, `PSD_Solve`, also relies heavily 
 | **REAL TYPE**   | -ksp\_rtol<br>-ksp\_atol                                                                                                                                                                 | -ksp\_rtol<br>-ksp\_atol                                                                                                                                                                    | -ksp\_rtol<br>-ksp\_atol                                                                                                                                                                 | -ksp\_rtol<br>-ksp\_atol                                                                                                                                                                 |
 | **STRING TYPE** | -partitioner<br>-postprocess<br>-sub\_pc\_type<br>-ksp\_type<br>-pc\_type<br>-problem<br>-mesh                                                                                           | -nonlinearmethod<br>-reactionforce<br>-partitioner<br>-postprocess<br>-sub\_pc\_type<br>-ksp\_type<br>-pc\_type<br>-problem<br>-mesh<br>-model                                              | -timediscretization<br>-partitioner<br>-postprocess<br>-sub\_pc\_type<br>-ksp\_type<br>-pc\_type<br>-problem<br>-mesh<br>-model                                                          | -doublecouple<br>-postprocess<br>-partitioner<br>-sub\_pc\_type<br>-ksp\_type<br>-pc\_type<br>-problem<br>-mesh<br>-model                                                                |
 | **BOOL TYPE**   | -withmaterialtensor<br>-sequential<br>-timelog<br>-useGFP<br>-useRCM<br>-debug<br>-help<br>-wg<br>-nw<br>-ns                                                                             | -crackdirichletcondition<br>-plotreactionforce<br>-getreactionforce<br>-energydecomp<br>-sequential<br>-vectorial<br>-timelog<br>-useGFP<br>-useRCM<br>-debug<br>-help<br>-wg<br>-nw<br>-ns | -sequential<br>-timelog<br>-useGFP<br>-useRCM<br>-debug<br>-help<br>-wg<br>-nw<br>-ns                                                                                                    | -top2vol-meshing<br>-sequential<br>-timelog<br>-useGFP<br>-useRCM<br>-debug<br>-help<br>-wg<br>-nw<br>-ns                                                                                |
-
----
-
-If you want, I can format it further (like adding row grouping, colors, or collapsible sections) — just say the word!
