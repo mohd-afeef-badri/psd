@@ -5,5 +5,7 @@
 - Tutorials
     * [Linear Elasticity](/linear-elasticity.md)
     * [Fracture Mechanics](/fracture-mechanics.md)
+    * [Elastodynamics](/elastodynamics.md)
     * [Soildynamics](/soildynamics.md)
     * [Elastoplastic](/elasto-plastic.md)
+    
