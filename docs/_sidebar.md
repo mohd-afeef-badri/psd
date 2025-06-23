@@ -6,3 +6,4 @@
     * [Linear Elasticity](/linear-elasticity.md)
     * [Fracture Mechanics](/fracture-mechanics.md)
     * [Soildynamics](/soildynamics.md)
+    * [Elastoplastic](/elasto-plastic.md)
