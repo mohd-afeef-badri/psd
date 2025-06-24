@@ -25,9 +25,9 @@ To model this test, PSD provides a hybrid phase-field modelling technique. We us
 > - There are two Dirichlet conditions: `-dirichletconditions 2`.
 > - Post-processing is done for displacement $u$ and phase-field $d$ using `-postprocess ud`.
 
-Once the preprocessing step is done, we solve the problem using four MPI processes with the given mesh file `tensile-crack.msh`. This is step two of the PSD simulation: `PSD_Solve`.
+Once the preprocessing step is done, we solve the problem using four MPI processes with the given mesh file `tensile_crack.msh`. This is step two of the PSD simulation: `PSD_Solve`.
 
-<pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+<pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 </code></pre>
 
 <p align="center">
@@ -99,9 +99,9 @@ Notice that the flags are nearly identical to the 2D example, except for the add
 
 ### Step 2: Solving
 
-After preprocessing, we solve the problem using MPI with the mesh file <code>tensile-crack.msh</code>:
+After preprocessing, we solve the problem using MPI with the mesh file <code>tensile_crack.msh</code>:
 
-<pre><code>PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+<pre><code>PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 </code></pre>
 
 ### Results and Visualization
@@ -172,7 +172,7 @@ $$
 Run the simulation using `PSD_Solve` with the appropriate mesh and number of processes:
 
 <pre><code>
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 </code></pre>
 
 While the solver runs, a file named `force.data` will be created containing both the **reaction force** and **applied traction**.
@@ -214,7 +214,7 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
 And then solve using:
 
 <pre><code>
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 </code></pre>
 
 
