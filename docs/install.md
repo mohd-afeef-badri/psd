@@ -46,7 +46,7 @@ Before installing PSD, ensure the following dependencies are installed and compa
   `automake`, a C/C++ compiler, `git`, `MPI`, `lapack`, and others. For ubuntu following is suggested :
   <pre><code>
   sudo apt-get install libgsl-dev libhdf5-dev \
-        liblapack-dev libopenmpi-dev freeglut3-dev
+        liblapack-dev libopenmpi-dev freeglut3-dev \
         cpp g++ gcc gfortran bison flex gdb git \
         m4 make patch pkg-config wget python unzip \
         autoconf automake autotools-dev cmake
