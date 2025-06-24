@@ -1,6 +1,6 @@
 LOG_MODE ?= file
 LOG_FILE_PREFIX ?= TestLogs
-PARMMG_ACTIVE ?= yes
+PARMMG_ACTIVE ?= no
 
 if HAVESALOME
 
