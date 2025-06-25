@@ -4,6 +4,9 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
+# Define the version of Ipopt library
+IPOPT_VERSION=3.12.4
+
 # Define the version of parmmg
 PARMMG_VERSION=beb4147b7b29a2891e1a55745ff95863e93bcc0d
 
@@ -169,6 +172,9 @@ SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOM
 			-O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/tags/v$(FREEFEM_VERSION)/3rdparty/ff-petsc/petsc-cmake-seq.patch
+# Download Ipopt source code
+IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
+			-O Ipopt-$(IPOPT_VERSION).tgz
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the
@@ -243,22 +249,25 @@ download-dependencies:
 	@if [ ! -f petsc-cmake-seq.patch ]; then \
 		$(PETSC_PATCH_DOWNLOAD); \
 	fi
+	@if [ ! -f Ipopt-$(IPOPT_VERSION).tgz ]; then \
+		$(IPOPT_DOWNLOAD); \
+	fi
 	@if [ ! -f parmmg-$(PARMMG_VERSION).tar.gz ]; then \
-        $(PARMMG_DOWNLOAD); \
+		$(PARMMG_DOWNLOAD); \
 	fi
 	@if [ ! -f mmg-$(MMG_VERSION).tar.gz ]; then \
-        $(MMG_DOWNLOAD); \
-        fi
+		$(MMG_DOWNLOAD); \
+    fi
 	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
-        $(PTSCOTCH_DOWNLOAD); \
-        fi
+		$(PTSCOTCH_DOWNLOAD); \
+    fi
 	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
-        $(MSHMET_DOWNLOAD); \
-        fi
+		$(MSHMET_DOWNLOAD); \
+    fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
 		$(GMSH_DOWNLOAD); \
-	fi
+    fi
 else !MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
@@ -440,7 +449,7 @@ endif
 
 PETSC_ARCH_PSD  =fr
 
-PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
+PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
@@ -529,12 +538,15 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	cd freefem-$(FREEFEM_VERSION)    && \
 	mkdir ./3rdparty/pkg             && \
 	cp ../mshmet.$(MSHMET_VERSION).tgz ./3rdparty/pkg/. && \
+	cp ../Ipopt-$(IPOPT_VERSION).tgz ./3rdparty/pkg/. && \
+	cp ../mumps-$(MUMPS_VERSION).tar.gz ./3rdparty/pkg/MUMPS_$(MUMPS_VERSION).tar.gz && \
 	patch -p1 < ../FreeFEM.patch     && \
 	autoreconf -i                    && \
 	./configure \
 	--prefix=${prefix} \
 	CXX=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)'  \
-	FC=$(FC) FCOPTFLAGS='$(FCFLAGS)' \
+	FC=$(MPIFC) FCOPTFLAGS='$(FCFLAGS)'  \
+	FFLAGS='-std=legacy' \
 	CC=$(MPICC) CCOPTFLAGS='$(CXXFLAGS)' \
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
@@ -542,6 +554,8 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	--without-petsc_complex \
 	--disable-superlu \
 	--enable-download_mshmet \
+	--enable-download_ipopt \
+	--enable-download_mumps_seq \
 	--with-hdf5=no &&  \
 	$(MAKEANDINSTALL)
 
