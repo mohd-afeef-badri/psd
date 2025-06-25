@@ -9,9 +9,9 @@ The problem of interest involves a clamped-end bar with a single Dirichlet bound
 -timediscretization newmark_beta -postprocess uav
 </code></pre>
 
-Once the preprocessing step is complete, solve the problem using two MPI processes and the given mesh file `(...bar-dynamic.msh)`.
+Once the preprocessing step is complete, solve the problem using two MPI processes and the given mesh file `(...bar_dynamic.msh)`.
 
-<pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+<pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
 <figure style="text-align: center;">
@@ -36,9 +36,9 @@ The problem of interest involves a clamped-end bar with a single Dirichlet bound
 -timediscretization newmark_beta
 </code></pre>
 
-Once the preprocessing step is completed, solve the problem using four MPI processes and the given mesh file `(...bar-dynamic.msh)`.
+Once the preprocessing step is completed, solve the problem using four MPI processes and the given mesh file `(...bar_dynamic.msh)`.
 
-<pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar-dynamic.msh -v 0
+<pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar_dynamic.msh -v 0
 </code></pre>
 
 
@@ -55,9 +55,9 @@ The workflow for the **2D problem** becomes:
 -timediscretization newmark_beta -postprocess uav -sequential
 </code></pre>
 
-Once preprocessing is complete, solve the problem using the given mesh file `(...bar-dynamic.msh)`:
+Once preprocessing is complete, solve the problem using the given mesh file `(...bar_dynamic.msh)`:
 
-<pre><code>PSD_Solve_Seq -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+<pre><code>PSD_Solve_Seq -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
 > ⚠️ **Warning**: Even in sequential mode, the `-np` flag may be required for compatibility but typically has no effect on parallelism.
@@ -77,9 +77,9 @@ This is done by specifying the option `(...-timediscretization generalized_alpha
 -timediscretization generalized_alpha -postprocess uav
 </code></pre>
 
-After preprocessing, solve the problem using **three MPI processes** with the mesh file `(...bar-dynamic.msh)`:
+After preprocessing, solve the problem using **three MPI processes** with the mesh file `(...bar_dynamic.msh)`:
 
-<pre><code>PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+<pre><code>PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
 You can similarly try out the **3D problem** by using `-dimension 3` and the appropriate 3D mesh.
@@ -108,7 +108,7 @@ Run the preprocessing step with the `-timelog` flag:
 
 Then solve the problem using two MPI processes with the provided 2D mesh file:
 
-<pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+<pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
 

@@ -1,6 +1,6 @@
 - [Introduction](/README.md)
 - [Installation](/install.md)
-- [Changelog](/Changelog.md)
+
 
 - Tutorials
     * [Linear Elasticity](/linear-elasticity.md)
@@ -10,4 +10,6 @@
     * [Elastoplastic](/elasto-plastic.md)
 
 - [TUI flags](/flags.md)
+
+- [Changelog](/Changelog.md)
     

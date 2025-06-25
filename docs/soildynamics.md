@@ -85,10 +85,10 @@ PSD_PreProcess -dimension 2 -problem soildynamics  -timediscretization newmark_b
 -useGFP -doublecouple displacement_based -postprocess uav
 </code></pre>
 
-Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file `soil-dc.msh`. 
+Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file `soil_dc.msh`. 
 
 <pre><code class="bash">
-PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
+PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil_dc.msh
 </code></pre>
 
 <div style="text-align: center;">
