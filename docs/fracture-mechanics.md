@@ -1,7 +1,8 @@
 ## Tutorial 1
-### Tensile Cracking of a Pre-Cracked Plate (2D PSD Example)
+### Tensile Cracking of a 2D Pre-Cracked Plate
 
-> 💡 **Note**: This document details tutorials from the *fracture mechanics* module of PSD.
+> ⚠️ **Warning**:
+> You are requested to having followed at least the linear-elasticity tutorials before attempting to follow this tutorial. This will make the understanding process here simpler.
 
 A two-dimensional test is introduced. The problem of interest is a typical single-notch square plate cracking test under tensile loading. A unit square with a pre-existing crack is clamped at the bottom with $u_1 = u_2 = 0$ (first boundary condition), and is loaded quasi-statically on its top surface with $u_2 = u_2 + \Delta u_2$ until the crack propagates through its walls. Thus, two Dirichlet conditions are applied: one on the top and one on the bottom border.
 
@@ -11,24 +12,123 @@ A two-dimensional test is introduced. The problem of interest is a typical singl
 
 *Figure: Domain of the single notch square cracking problem under tensile loading.*
 
-To model this test, PSD provides a hybrid phase-field modelling technique. We use ParaView to post-process displacement $u$ and phase-field $d$ for visualising the cracking process. A PSD simulation consists of two steps, the first being the `PSD_PreProcess`:
+The material is supposed to have the Lame coefficients, $\lambda=121.15e3$ and $\mu=80.77e3$, additionally the fracture toughness $G_c=2.7$.
+
+To model this test, PSD provides a hybrid phase-field modelling technique under damage mechanics (fracture mechanics). We use ParaView to post-process displacement $u$ and phase-field $d$ for visualising the cracking process.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. PSD is a command-line (TUI: Terminal User Interface) based tool. All user interactions are done via terminal commands.
+
+In the terminal `cd` to the folder `/home/PSD-tutorials/fracture-mechanics` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/fracture-mechanics` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
 
 <pre><code>PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2 -postprocess ud
 </code></pre>
 
-> 💡 **Note**: Explanation of flags:
->
-> - This is a two-dimensional problem, so we use the flag `-dimension 2`.
-> - The problem falls under damage mechanics, hence `-problem damage`.
-> - We solve it using hybrid phase-field modelling: `-model hybrid_phase_field`.
-> - There are two Dirichlet conditions: `-dirichletconditions 2`.
-> - Post-processing is done for displacement $u$ and phase-field $d$ using `-postprocess ud`.
+> 🧠 What do the arguments mean?
 
-Once the preprocessing step is done, we solve the problem using four MPI processes with the given mesh file `tensile_crack.msh`. This is step two of the PSD simulation: `PSD_Solve`.
+| Flag      | Description       |
+| ---------------------------- | --------------------------------------------------- |
+| `-problem damage`            | Enables damage mechanics physics |
+| `-dimension 2`               | Sets the simulation dimension to 2D                 |
+| `-model hybrid_phase_field`  | Activate using hybrid phase-field modelling         |
+| `-dirichletconditions 2`     | Applies Dirichlet conditions on two borders         |
+| `-postprocess ud`            | Requests displacement and damage output for ParaView|
+
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D tensile loading fracture problem.
+
+At this stage the input of the solver need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+- Let us start by setting mesh in `tensile_crack.msh`. This is step two of the PSD simulation: `PSD_Solve`.
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
+//=============================================================================
+  
+  string ThName = "../Meshes/2D/tensile_crack.msh";
+</code></pre>
+
+- Next, we setup the material properties, including Lame parameters and fracture toughness:
+
+<pre><code class="cpp">
+//=============================================================================
+//------- Material parameters -------
+// -------------------------------------------------------------------         
+//  mu, lambda : Lame parameter of the material
+//  Gc : Material fracture toughness
+//=============================================================================
+  
+  real lambda = 121.15e3 ,
+       mu     = 80.77e3  ,
+       Gc     = 2.7      ;
+</code></pre>  
+
+- Maximal tensile loading of $7e-3$ in $y$-direction is applied in quasi static manner with a loading step $\Delta u_2=1e-5$, additionally for phase field model we assume the fracture diffusion capacity  of 2, these are provided in:
+
+<pre><code class="cpp">
+//============================================================================
+//                  ------- Solver parameters -------
+// -------------------------------------------------------------------        
+//  lfac : # of cells within which fracture diffusion occurs
+//  maxtr : Maximum traction force applied
+//  tr : Traction force applied
+//  dtr :  Change in traction force between two pseudo-time steps             
+//  lo :  Mesh dependent lateral fracture length
+//============================================================================
+  
+  real lfac  = 2.0  ,
+       maxtr = 7e-3 ,
+       tr    = 1e-5 ,
+       dtr   = 1e-5 ,
+       lo           ;
+</code></pre>  
+
+- Finally the two Dirichlet conditions are applied, clamped bottom border (label = 1) with $u_1=u_2=0$, top border (label = 2) subjected to tensile pull (traction = `tr` as defined above)  in $y$-direction:
+
+<pre><code class="cpp">
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------             
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition    
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+//             Dirichlet boundary conditions is to be applied.                
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
+//       or deleted if the user does not wish to apply Dirichlet  condition   
+//       on that particular  direction (let it free)       
+//============================================================================
+  
+                  
+  macro  Dbc0On 1   //
+  macro  Dbc0Ux 0.  //
+  macro  Dbc0Uy 0.  //
+                  
+  macro  Dbc1On 2   //       
+  macro  Dbc1Uy tr  // 
+</code></pre>  
+
+This completes the solver setup and preprocessing phase. With this we are ready to move to next step.
+
+#### ⚙️ Step 2: Solving the Problem
+
+As PSD is a parallel solver, let us use 4 cores to solve the problem. To do so enter the following command:
 
 <pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 </code></pre>
+
+This will launch the PSD simulation.
+
+Here `-np 4` (number of processes) denote the argument used to enter the number of parallel processes (MPI processes) used by PSD while solving. `-mesh ./../Meshes/2D/tensile_crack.msh` is used to provide the mesh file to the solver, `-mesh` argument is not needed if the user has indicated the right mesh in `ControlParameters.edp` file. `-v 0` denotes the verbosity level on screen. `PSD_Solve` is a wrapper around `FreeFem++-mpi`. Note that if your problem is large use more cores.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Once the simulation is finished. PSD allows postprocessing of results in ParaView. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
 <p align="center">
   <img src="_images/fracture-mechanics/u0.png" width="24%">
@@ -72,10 +172,14 @@ Figures above show the finite element displacement and damage fields, which allo
 
 During the simulation, the terminal displays the traction updates, non-linear iterations to convergence at each time step, and the residuals of $u$ and $d$. Refer to the figure above for a sample output.
 
-To construct your own test case, try editing the `ControlParameters.edp` file.
+> 🧪 Optional Exercise: To construct your own test case, try editing the `ControlParameters.edp` file. Maybe try adding shear force instead of tensile one. In this case loading will be in $x$ direction, you should observe different cracking behaviors.
+
 
 ## Tutorial 2
-### Tensile Cracking of a Pre-Cracked Cube: A 3D Example of the PSD Parallel Solver
+### Tensile Cracking of a Pre-Cracked Cube
+
+> ⚠️ **Warning**:
+> You are requested to having followed at least the linear-elasticity tutorials before attempting to follow this tutorial. This will make the understanding process here simpler.
 
 A three-dimensional test, analogous to its two-dimensional counterpart introduced earlier, is used here as a tutorial example. The problem of interest involves a unit cube undergoing extrusion along the $z$-axis. Cracking is initiated and propagated under tensile loading. 
 
@@ -85,26 +189,117 @@ A quasi-static displacement is applied on the top surface
 $$u_2 = u_2 + \Delta u_2$$ 
 until the crack propagates through the walls. There are two Dirichlet conditions—one on the bottom and one on the top surface.
 
-Just like in the 2D case, PSD's hybrid phase-field modelling technique is employed. We use ParaView post-processing to visualize the displacement field $u$ and the phase-field $d$ during the cracking process. A PSD simulation involves two steps.
+Just like in the 2D case, PSD's hybrid phase-field modelling technique is employed. We use ParaView post-processing to visualize the displacement field $u$ and the phase-field $d$ during the cracking process. Indeed all what changes for this simulation is the geometry (consequently the mesh) and the dimension of the problem, these two changes will be handled by (`-dimension` and `-mesh`) arguments.
 
-### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing the Simulation
 
-A preprocessing step is run with:
+As before, preprocessing sets up the problem definition. The main change is the dimension of the problem.
+
+Run the following command in your terminal:
 
 <pre><code>PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field  \
 -dirichletconditions 2 -postprocess ud
 </code></pre>
 
-Notice that the flags are nearly identical to the 2D example, except for the additional <code>-dimension 3</code> flag, which indicates a three-dimensional problem.
+> 🧠 What is different from the 2D case?
 
-### Step 2: Solving
+compared to the 2D problem, note that all what has changed `-dimension 3` instead of `-dimension 2`.
+
+Again, as we followed for the 2D case, we begin here in the same manner by editing `ControlParameters.edp`.
+
+- For the mesh we provide:
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------         
+// -------------------------------------------------------------------         
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         
+//=============================================================================
+  
+  string ThName = "../Meshes/3D/tensile_crack.msh"; 
+</code></pre>
+
+- For the material properties, as the material remains the same we add :
+
+<pre><code class="cpp">
+//=============================================================================
+//------- Material parameters -------    
+// -------------------------------------------------------------------         
+//  mu, lambda : Lame parameter of the material             
+//  Gc : Material fracture toughness         
+//  kappa0 : Damage initiation threshold of the Material    
+//  kappac :  Critical strain level of the Material         
+//=============================================================================
+  
+  real lambda = 121.15e3 ,                  
+       mu     = 80.77e3  ,                  
+       Gc     = 2.7      ;  
+</code></pre>
+
+- For the solver parameters, as it remains the same we add :
+
+<pre><code class="cpp">
+//============================================================================
+//                  ------- Solver parameters -------      
+// -------------------------------------------------------------------        
+//  lfac : # of cells within which fracture diffusion occurs                  
+//  maxtr : Maximum traction force applied  
+//  tr : Traction force applied             
+//  dtr :  Change in traction force between two pseudo-time steps             
+//  lo :  Mesh dependent lateral fracture length           
+//============================================================================
+  
+  real lfac  = 2.0  ,
+       maxtr = 7e-3 ,
+       tr    = 1e-5 ,
+       dtr   = 1e-5 ,
+       lo           ;  
+</code></pre>
+
+- Finally, the Dirichlet border on the bottom differs in the sense that it also includes the third $z$ component :
+
+<pre><code class="cpp">
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------             
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition    
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+//             Dirichlet boundary conditions is to be applied.                
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
+//       or deleted if the user does not wish to apply Dirichlet  condition   
+//       on that particular  direction (let it free)       
+//============================================================================
+  
+                  
+  macro  Dbc0On 1   //
+  macro  Dbc0Ux 0.  //
+  macro  Dbc0Uy 0.  //
+  macro  Dbc0Uz 0.  //
+                  
+  macro  Dbc1On 2   //       
+  macro  Dbc1Uy tr  //
+</code></pre>
+
+With edit cycle complete we can now proceed to solving. 
+
+#### ⚙️ Step 2: Solving the Problem
 
 After preprocessing, we solve the problem using MPI with the mesh file <code>tensile_crack.msh</code>:
 
 <pre><code>PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 </code></pre>
 
-### Results and Visualization
+As a reminder:
+`-np 3` specifies the number of MPI processes.
+`-mesh` provides the mesh to PSD.
+`-v 0` sets verbosity to minimal.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Finally, using ParaView for postprocessing the results that are provided in the `VTUs..` folder, results such as those shown below can be extracted.
 
 ### Displacement Field
 
@@ -128,27 +323,31 @@ After preprocessing, we solve the problem using MPI with the mesh file <code>ten
 
 *Figure: Finite element damage visualized for the 3D problem in ParaView at different timesteps (quasi-static simulation). Time progresses from left to right in a row and top to bottom across rows.*
 
-> 💡 **Note**: Figures above present the evolution of both displacement and damage fields, enabling a clear visualization of crack propagation in the cubic specimen.
+> 💡 **Note**: 
+> Figures above present the evolution of both displacement and damage fields, enabling a clear visualization of crack propagation in the cubic specimen.
 
 ### Additional Remarks
 
 A PSD simulation is a two-step process, with step one being the inline code `PSD_PreProcess` and step two as `PSD_Solve`.
 
-> ⚠️ **Warning**: Ensure the mesh file is correctly referenced and that MPI is configured properly on your system.
+> ⚠️ **Warning**: 
+> Ensure the mesh file is correctly referenced and that MPI is configured properly on your system.
+
+> 🧪 Optional Exercise: Try changing the material properties to prepone or postpone the fracture process. 
 
 ## Tutorial 3
 ### Parallel 2D tensile cracking and calculate-plotting reaction-force
 
-> 💡 **Note**: This document presents concise tutorials for the **fracture mechanics** module of PSD. The aim is to provide a practical starting point for users and developers rather than exhaustive documentation.
+> 💡 **Note**: 
+> This document presents concise tutorials for the **fracture mechanics** module of PSD. The aim is to provide a practical starting point for users and developers rather than exhaustive documentation.
 
 In solid mechanics, quantities of interest often include plots such as **reaction force on a surface** versus the applied displacement. These outputs are frequently used in experimental validations.
 
-PSD provides routines for calculating the reaction force on a surface and also allows live (runtime) plotting of these results.
+PSD provides routines for calculating the reaction force on a surface and also allows live (runtime) plotting of these results. 
 
 Imagine a 2D tensile cracking test case. To observe the **reaction force vs. applied displacement**, two extra flags must be used during the preprocessing step with `PSD_PreProcess`:
 
 > `-getreactionforce`
-
 > `-reactionforce stress_based`
 
 <pre><code>
@@ -163,7 +362,8 @@ $$
 F_y = \int_{\partial\Omega_{\text{top}}} \sigma_y
 $$
 
-> 💡 **Note**: An alternative method is `-reactionforce variational_based`, which is more accurate but slower. It uses matrix-vector multiplication:
+> 💡 **Note**: 
+>An alternative method is `-reactionforce variational_based`, which is more accurate but slower. It uses matrix-vector multiplication:
 >
  $$
  \{F_x, F_y\} = \mathbf{A} \{u_1, u_2\}
@@ -189,10 +389,10 @@ You can then plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with $\De
 
 *Figure: Applied traction vs. force in the y direction.*
 
-> ⚠️ **Warning**: Ensure the output file `force.data` is correctly written before plotting; incomplete simulations might yield corrupted files.
+> ⚠️ **Warning**: 
+> Ensure the output file `force.data` is correctly written before plotting; incomplete simulations might yield corrupted files.
 
 If you have **GnuPlot** configured with PSD, you can enable **live plotting** of the force-displacement curve using the flag `-plotreactionforce` during preprocessing.
-
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/gp0.png" width="32%" alt="Live Gnuplot 1">
@@ -218,12 +418,12 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 </code></pre>
 
 
-> 💡 **Note**: Replace `<code>` elements above with appropriate `.edp` scripts and meshes relevant to your problem domain. The plotting routines are compatible with most GnuPlot-enabled systems.
+> 💡 **Note**: 
+> Replace `<code>` elements above with appropriate `.edp` scripts and meshes relevant to your problem domain. The plotting routines are compatible with most GnuPlot-enabled systems.
 
 
 ## Tutorial 4
 ### Fracture mechanics Tutorials - L-shape cracking
-
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/fm-geometry.png" width="30%" alt="Geometry of the L-shaped test used in this tutorial.">
@@ -298,9 +498,9 @@ to
 <pre><code>
   real[int,int] PbcCord = [
 //-------------------- [  x  , y  ] --------------------//
-                       [  0. , 0. ]    // point 0
+    [  0. , 0. ]    // point 0
 //------------------------------------------------------//
-                      ];
+   ];
 
    macro Pbc0Ux  -0. //
    macro Pbc0Uy  -0. //
@@ -311,9 +511,9 @@ to
 <pre><code>
   real[int,int] PbcCord = [
 //-------------------- [  x  , y  ] --------------------//
-                       [  470., 250. ]    // point 0
+    [  470., 250. ]    // point 0
 //------------------------------------------------------//
-                      ]
+   ]
 ;
    macro Pbc0Uy  tr //
 </code></pre>
