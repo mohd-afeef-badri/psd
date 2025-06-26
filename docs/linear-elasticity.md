@@ -415,7 +415,9 @@ In the terminal, `cd` into the folder:
 
 Launch `PSD_PreProcess` with the following command:
 
-<pre><code>PSD_PreProcess -problem linear-elasticity -dimension 2 -dirichletconditions 1 -tractionconditions 1 -postprocess u</code></pre>
+<pre><code>PSD_PreProcess -problem linear_elasticity -dimension 2 -dirichletconditions 1 \
+-tractionconditions 1 -postprocess u
+</code></pre>
 
 > 💡 **Note**:  
 > The command-line flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end of the bar.  
@@ -652,7 +654,8 @@ Now the PSD simulation can proceed.
 
 Place the mesh `piece.msh` in a folder of your choice (assume `psd-complex-simulation`). Open a terminal in this folder and run:
 
-<pre><code>PSD_PreProcess  -problem linear-elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u
+<pre><code>PSD_PreProcess  -problem linear_elasticity -dimension 3 \
+-dirichletconditions 1 -tractionconditions 1 -postprocess u
 </code></pre>
 
 This sets one Dirichlet condition (small hole) and one traction condition (large hole). The file `piece.msh` assigns label `4` to the Dirichlet border and `3` to the traction border.

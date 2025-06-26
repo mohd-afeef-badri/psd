@@ -392,7 +392,7 @@ to
 Irrespective of whether vectorial or staggered mode is used, solve the problem using `PSD_Solve`:
 
 <pre><code>
-PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
+PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L_shaped_crack.msh
 </code></pre>
 
 ### Postprocessing
