@@ -12,7 +12,7 @@ This model applies well to many engineering materials under moderate loads and f
 
 ### Governing Equations
 
-Let $\Omega \subset \mathbb{R}^d$ be the $d$-dimnesional domain of a deformable solid (with $d=2$ or $3$), and let $\mathbf{u} : \Omega \rightarrow \mathbb{R}^d$ be the displacement field vector $\mathbf{u}=\{u_1,u_2,u_3\}$.
+Let $\Omega \subset \mathbb{R}^d$ be the $d$-dimnesional domain of a deformable solid (with $d=2$ or $3$), and let $\mathbf{u} : \Omega \rightarrow \mathbb{R}^d$ be the displacement field vector $\mathbf{u}=\{ u_i \}_{1}^{d}$.
 
 #### 1. **Equilibrium (strong form)**
 
@@ -23,7 +23,6 @@ $$
 $$
 
 where:
-
 * $\boldsymbol{\sigma}$ is the Cauchy stress tensor,
 * $\mathbf{f}$ is the body force per unit volume (e.g., gravity).
 
@@ -34,7 +33,6 @@ $$
 $$
 
 where:
-
 * $\mathbb{C}$ is the fourth-order elasticity tensor (depends on $E$ and $\nu$),
 * $\boldsymbol{\varepsilon}(\mathbf{u}) = \frac{1}{2} (\nabla \mathbf{u} + \nabla \mathbf{u}^\top)$ is the symmetric strain tensor.
 
@@ -101,7 +99,6 @@ where:
 
 This formulation allows the use of finite-dimensional function spaces to approximate the displacement field.
 
-
 ### Finite Element Discretization
 
 In the finite element method, the domain $\Omega$ is discretized into elements (triangles in 2D, tetrahedra in 3D), and the continuous problem is reduced to solving a system of linear equations.
@@ -125,13 +122,13 @@ In the finite element method, the domain $\Omega$ is discretized into elements (
 The displacement $\mathbf{u}_h$ is the FEM approximation of the true displacement $\mathbf{u}$.
 
 
->💡 **Note on Gravity Loading as Body Force**
+>💡 **Note** 
+> _Gravity Loading as Body Force_
 >
-> In our tutorials, we often use gravity as the only loading. This enters through the body force term:
+>In our tutorials, we often use gravity as the only loading. For 2D problem this enters through the body force term:
 >$$\mathbf{f} = \rho \mathbf{g} = \begin{bmatrix} 0 \\ -\rho g \end{bmatrix},$$
 >and is incorporated directly into $L(\mathbf{v})$:
 >$$L(\mathbf{v}) = \int_{\Omega} \rho \mathbf{g} \cdot \mathbf{v} \, d\Omega.$$
-
 
 ## Tutorial 1
 ### 2D Clamped Bar
@@ -143,7 +140,7 @@ To showcase the usage of linear elasticity, we shall discuss here an example of 
 
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/le-clamped-bar.png" width="40%" alt="clamped-bar">
-  <figcaption><em>Figure 1: Geometry and boundary conditions — a 2D bar clamped at the left end and subject to body force due to gravity.</em></figcaption>
+  <figcaption><em>Figure: Geometry and boundary conditions — a 2D bar clamped at the left end and subject to body force due to gravity.</em></figcaption>
 </figure>
 
 #### 🛠️ Step 1: Preprocessing the Simulation
@@ -168,7 +165,85 @@ In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity` Note 
 
 Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D linear elasticity bending under its own body weight.
 
-At this stage the input properties of Youngs modulus and Poisson's ratio ($E, \nu$) can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho\times g=8.e3\times -9.81=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"`. Note that mesh can also be provided in the next step i.e, Step 2: solving. In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$). Dirichlet conditions fix values (e.g., displacements) on specific boundary regions — in this case, clamping one end of the bar.
+At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+- Youngs modulus and Poisson's ratio ($E, \nu$) are mentioned in the file,  `E = 200.e9`, and `nu = 0.3;`, these are inturn used to calculate $\lambda$ and $\mu$:
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Material parameters -------                      
+// -------------------------------------------------------------------        
+//  mu, lambda : Lame parameter of the material                               
+//  E, nu : Modulus of Elasticity and Poisson ratio of the material           
+//============================================================================
+                                                                              
+  real    mu                                                                  
+         ,lambda;                                                             
+                                                                              
+{                                                                             
+  real E  = 200.e9  ,                                                         
+       nu = 0.3     ;                                                         
+                                                                              
+  mu     = E/(2.*(1.+nu))            ;                                        
+  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        
+}    
+</code></pre>
+
+- Next, the volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho\times g=8.e3\times -9.81=-78480.0$). In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh.
+
+<pre><code class="cpp">
+//============================================================================
+//        ------- volumetric bodyforce  parameters -------                    
+// ---------------------------------------------------------------------------
+// Fbc       : acronym for  force boundary condition (body force)             
+// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which     
+//             force boundary conditions is to be applied.                    
+// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)    
+//             denoted by label(s) Fbc(I)On in the mesh.                      
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented   
+//       or deleted if the user  does not wish to apply body force in  that   
+//       particular  direction (let it free)                                  
+//============================================================================
+                                                                              
+  macro  Fbc0On 1   //                             
+  macro  Fbc0Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             
+
+</code></pre>
+
+- To provide the mesh to be used in, use  variable `ThName = "../Meshes/2D/bar.msh"`. Note that mesh can also be provided in the next step i.e, Step 2: solving. 
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------                            
+// -------------------------------------------------------------------         
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         
+//=============================================================================
+                                                                               
+  string ThName = "../Meshes/2D/bar.msh";  
+</code></pre>
+
+ - Dirichlet boundary conditions are also provided in the same file. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$). Dirichlet conditions fix values (e.g., displacements) on specific boundary regions — in this case, clamping one end of the bar.
+
+<pre><code class="cpp">
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------             
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition                       
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+//             Dirichlet boundary conditions is to be applied.                
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
+//       or deleted if the user does not wish to apply Dirichlet  condition   
+//       on that particular  direction (let it free)                          
+//============================================================================
+                                                                              
+  macro  Dbc0On 2   //                            
+  macro  Dbc0Ux 0.  //                                               
+  macro  Dbc0Uy 0.  //  
+</code></pre>
 
 Please note that for this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder, this mesh is a triangular mesh produced with Gmsh. Moreover detailing meshing procedure is not the propose of PSD tutorials. A user has the choice of performing their own meshing step and providing them to PSD in `.msh` (Please use version 2) or `.mesh` format, we recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
@@ -270,19 +345,24 @@ Similar to tutorial 1, we solve the problem using the given mesh file `bar.msh`.
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-> 💡 **Note**: Users are encouraged to try out the 3D problem with the sequential solver.
+> 💡 **Note**: 
+> Users are encouraged to try out the 3D problem with the sequential solver.
 
-> 💡 **Note**: For this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder. This mesh is a triangular mesh produced with Gmsh. Detailing the meshing procedure is not the purpose of PSD tutorials.
+> 💡 **Note**: 
+> For this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder. This mesh is a triangular mesh produced with Gmsh. Detailing the meshing procedure is not the purpose of PSD tutorials.
 
-> 💡 **Note**: Users can generate their own meshes and provide them to PSD in `.msh` (please use version 2) or `.mesh` format. We recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
+> 💡 **Note**: 
+> Users can generate their own meshes and provide them to PSD in `.msh` (please use version 2) or `.mesh` format. We recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
 ### ⏱️ Step 3: Comparing CPU Time
 
 Naturally, since we are not using parallel PSD for solving, we lose the advantage of solving fast. To testify to this claim, checking solver timings can be helpful. PSD provides means to time-log your solver via the `-timelog` flag.
 
-> 💡 **Note**: This flag prints the amount of time taken by each step of your solver directly in the terminal.
+> 💡 **Note**:
+> This flag prints the amount of time taken by each step of your solver directly in the terminal.
 
-> ⚠️ **Warning**: Using `-timelog` makes the solver slower, as it involves `MPI_Barrier` routines for correctly timing each operation.
+> ⚠️ **Warning**:
+> Using `-timelog` makes the solver slower, as it involves `MPI_Barrier` routines for correctly timing each operation.
 
 An example workflow of 2D solver (parallel) with time logging:
 
@@ -315,7 +395,8 @@ We solve the problem now in sequential mode, with the given mesh file `bar.msh`:
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-> 💡 **Note**: You should now see timings that are higher in comparison to the parallel solver.
+> 💡 **Note**: 
+> You should now see timings that are higher in comparison to the parallel solver.
 
 Approximately, for large meshes, using 4 MPI processes should lead to a solver that's around 4 times faster.
 
@@ -359,34 +440,50 @@ After `PSD_PreProcess` runs successfully, you should see many `.edp` files in yo
 
 Since both problems (from tutorials 1 and 2) are essentially the same, the command is almost identical. The only difference is the added Dirichlet condition: `-dirichletconditions 2`.
 
-To provide Dirichlet conditions for the left clamped end ($u_x=u_y=0$), in `ControlParameters.edp` set:
+To provide Dirichlet conditions for the left and right clamped ends ($u_x=u_y=0$), in `ControlParameters.edp` set:
 
-- `Dbc0On 2`
-- `Dbc0Ux 0.`
-- `Dbc0Uy 0.`
-
-For the right clamped end, set:
-
-- `Dbc1On 4`
-- `Dbc1Ux 0.`
-- `Dbc1Uy 0.`
+<pre><code class="cpp">
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------             
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition                       
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+//             Dirichlet boundary conditions is to be applied.                
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// -------------------------------------------------------------------------- 
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
+//       or deleted if the user does not wish to apply Dirichlet  condition   
+//       on that particular  direction (let it free)                          
+//============================================================================
+                                                                              
+  macro  Dbc0On 2   //  Dirichlet Border label 2                           
+  macro  Dbc0Ux 0.  //  Dirichlet Border label 2 ux = 0                                            
+  macro  Dbc0Uy 0.  //  Dirichlet Border label 2 uy = 0                                           
+  macro  Dbc1On 4   //  Dirichlet Border label 4                           
+  macro  Dbc1Ux 0.  //  Dirichlet Border label 4 ux = 0                                           
+  macro  Dbc1Uy 0.  //  Dirichlet Border label 4 uy = 0
+</code></pre>
 
 Each of these corresponds to borders labeled `2` and `4` in the mesh `../Meshes/2D/bar.msh`.
 
-Material and force properties in `ControlParameters.edp`:
+Just like the previous tutorial, material and force properties are set in `ControlParameters.edp`:
 
-- `E = 200.e9`
-- `nu = 0.3`
-- `Fbc0Fy -78480.0` (from $\rho g = 8 \times 10^3 \times (-9.81)$)
+- `E = 200.e9`   specifies Youngs modulus
+- `nu = 0.3`  specifies Poisson's ratio
+- `Fbc0Fy -78480.0` (from $\rho g = 8 \times 10^3 \times (-9.81)$) specifies body force, i.e, gravity
+- `Fbc0On 1` to identify the volume tag for which body force is acting
 
-Specify the mesh via:
+Finally the mesh is also set up via:
 
 - `ThName = "../Meshes/2D/bar.msh"`
-- `Fbc0On 1` to identify the volume tag
 
-> 💡 **Note**: For this simple problem, the mesh `bar.msh` is provided in `../Meshes/2D/`. This is a triangular mesh created using Gmsh.
 
-> 💡 **Note**: You may also generate your own meshes in `.msh` (version 2) or `.mesh` format using Salome or Gmsh.
+> 💡 **Note**: 
+> For this simple problem, the mesh `bar.msh` is provided in `../Meshes/2D/`. This is a triangular mesh created using Gmsh.
+
+> 💡 **Note**: 
+> You may also generate your own meshes in `.msh` (version 2) or `.mesh` format using Salome or Gmsh.
 
 #### ⚙️ Step 2: Solving the Problem
 
@@ -402,7 +499,8 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 `PSD_Solve` is a wrapper around `FreeFem++-mpi`.
 
-> 💡 **Note**: PSD has been tested with up to 24,000 processes on Joliot-Curie (GENCI). But for this problem, a few are enough.
+> 💡 **Note**: 
+> PSD has been tested with up to 24,000 processes on Joliot-Curie (GENCI). But for this problem, a few are enough.
 
 #### 📊 Step 3: Postprocessing and Visualization
 
@@ -419,7 +517,8 @@ You can visualize outputs like in the figure below:
 
 You’re all done with the 2D linear elasticity simulation!
 
-> 💡 **Note**: Try running the 3D version. Use `-dimension 3` in `PSD_PreProcess` and update the mesh and Dirichlet border labels accordingly in `ControlParameters.edp`.
+> 💡 **Note**: 
+> Try running the 3D version. Use `-dimension 3` in `PSD_PreProcess` and update the mesh and Dirichlet border labels accordingly in `ControlParameters.edp`.
 
 #### Redoing the Test on Jupiter and Moon
 
@@ -501,17 +600,17 @@ In `ControlParameters.edp`, define the boundary conditions as:
 * Clamped end (mesh label `2`):
 
 <pre><code>
-Dbc0On = 2;
-Dbc0Ux = 0.;
-Dbc0Uy = 0.;
+Dbc0On 2  //
+Dbc0Ux 0. //
+Dbc0Uy 0. //
 </code></pre>
 
 * Pulled end (mesh label `4`):
 
 <pre><code>
-Dbc1On = 4;
-Dbc1Ux = 1.;
-Dbc1Uy = 0.; // Optional: remove this line to allow vertical compression
+Dbc1On  4  //
+Dbc1Ux  1. //
+Dbc1Uy  0. // Optional: remove this line to allow vertical compression
 </code></pre>
 
 #### Material Properties
@@ -538,7 +637,8 @@ Specify the mesh (if not passed during solving) in the same file:
 ThName = "../Meshes/2D/bar.msh";
 </code></pre>
 
-> ⚠️ The mesh file `bar.msh` (Gmsh v2 format) is in the `../Meshes/2D/` folder. You can generate your own using SALOME or Gmsh.
+> 💡 **Note**:
+> The mesh file `bar.msh` (Gmsh v2 format) is in the `../Meshes/2D/` folder. You can generate your own using SALOME or Gmsh.
 
 #### ⚙️ Step 2: Solving the Problem
 
@@ -661,7 +761,7 @@ PSD/Solver/VTUs_DATE_TIME/
 > Unlike in the previous tutorial, the right end of the bar contracts in the $y$-direction. This behavior is expected because there is **no Dirichlet condition** at that end, allowing it to move laterally.
 
 ## Tutorial 6
-####   Linear Elasticity Tutorial 2D bar problem clamped at one end wile being pulled at the other end (Dirichlet-Neumann-Point boundary conditions case)
+#### 2D bar problem clamped at one end wile being pulled at the other end (Dirichlet-Neumann-Point boundary conditions case)
 
 Similar simulations as in the previous tutorial are presented in this section. We showcase the 2D bar problem simulation with one end clamped while being pulled at the other end. Contrary to the simulation in the previous tutorial, the clamped end restricts only $x$-direction movement, i.e., $u_x=0$. As before, body force is neglected. The pull at the non-clamped end is approximated with a Neumann force term: $\int_{\partial\Omega^h_{\text N}}(\mathbf t\cdot \mathbf{v}^h)$.
 
@@ -788,7 +888,6 @@ To solve the problem using 4 cores, run the following command:
 > This is a tetrahedral mesh generated with Gmsh. Mesh generation is not covered in this tutorial.  
 > You may create your own meshes using Gmsh or Salome. Please ensure the format is either <code>.msh</code> (Gmsh version 2) or <code>.mesh</code>.
 
-
 #### 📊 Step 3: Postprocessing and Visualization
 
 Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
@@ -804,7 +903,6 @@ Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
   </div>
   <figcaption><em>Figure: 3D bar results. Partitioned mesh (left) and 0.5X warped displacement field (right).</em></figcaption>
 </figure>
-
 
 > 💡 **Note**:  
 > Since 4 cores were used, the domain was partitioned into 4 subdomains, as visible in the left image above.
@@ -823,12 +921,10 @@ You can obtain the CAD geometry (the Gmsh `.geo` file) from your local Gmsh inst
 
 Now the PSD simulation can proceed.
 
-
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/3d-mechanical.png" width="50%" alt="3d-mechanical-piece" style="vertical-align: bottom;">
   <figcaption><em>Figure: 3D mechanical piece.</em></figcaption>
 </figure>
-
 
 #### 🛠️ Step 1: Preprocessing
 
@@ -929,7 +1025,6 @@ After the `PSD\_PreProcess` runs successfully you should see many `.edp` files i
 | `-dirichletconditions 1`     | Applies Dirichlet conditions on one border          |
 | `-postprocess u`             | Requests displacement output for ParaView           |
 | `useMfront`                  | Activates MFront interface for PSD                  |
-
 
 At this stage the input properties $E,\nu$ can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3`. In contrast to tutorial 1, notice that these values of `E` and `nu` are fed to a vector `PropertyValues = [E, nu];`  verbosed by `PropertyNames   = "YoungModulus PoissonRatio";`. We also signify that we will be solving linear elasticity via `MforntMaterialBehaviour   = "Elasticity";` and also `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` which signifies the hypothesis to be used for the Linear elasticity. The `MaterialHypothesis` accepts `"GENERALISEDPLANESTRAIN"`,  `"PLANESTRAIN"`, `"PLANESTRESS"`,  and  `"TRIDIMENSIONAL"` as arguments. `PropertyValues`, `PropertyNames`, and `MaterialHypothesis`  will eventually be provided to MFront in `FemParameters.edp` file via `PsdMfrontHandler(...)` function *User is encouraged to have a look at `FemParameters.edp` file.   The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"` (*note that mesh can also be provided in the next step*) .In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
 
