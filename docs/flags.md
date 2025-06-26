@@ -39,6 +39,11 @@ The `PSD_PreProcess`  is a TUI-based application, hence it heavily relies on com
       <td><code>0</code></td>
     </tr>
     <tr>
+      <td><code>-adaptmesh_iter</code></td>
+      <td>Mesh adaption iterations.</td>
+      <td><code>1</code></td>
+    </tr>
+    <tr>
       <td><code>-dimension</code></td>
       <td>Dimension of problem. 2 for 2D, 3 for 3D.</td>
       <td><code>2</code></td>
@@ -72,6 +77,31 @@ The `PSD_PreProcess`  is a TUI-based application, hence it heavily relies on com
       <td><code>-nonlinearmethod</code></td>
       <td>Nonlinear method type.</td>
       <td><code>Picard</code> | <code>Newton_Raphsons</code></td>
+    </tr>
+    <tr>
+      <td><code>-validation</code></td>
+      <td>To produce code for a validation test case.</td>
+      <td><code>Iwan</code></td>
+    </tr>
+    <tr>
+      <td><code>-adaptmesh_backend</code></td>
+      <td>Backend to be used for adapting meshes.</td>
+      <td><code>FreeFEM</code> | <code>mmg</code> | <code>parmmg</code></td>
+    </tr>
+    <tr>
+      <td><code>-adaptmesh_type</code></td>
+      <td>Type of adaption to be used.</td>
+      <td><code>isotropic</code> | <code>anisotropic</code></td>
+    </tr>
+    <tr>
+      <td><code>-adaptmesh_metric_backend</code></td>
+      <td>Backend to be used for adapting meshes.</td>
+      <td><code>freefem</code> | <code>mshmet</code></td>
+    </tr>
+    <tr>
+      <td><code>-adaptmesh_parmmg_method</code></td>
+      <td>Method for regrouping or not for mesh adaption.</td>
+      <td><code>partition_regrouping</code> | <code>partition_automatic_regrouping</code></td>
     </tr>
     <tr>
       <td><code>-partitioner</code></td>
