@@ -1,3 +1,138 @@
+## Linear Elasticity and Finite Element Resolution
+
+> 🧠  What Is Linear Elasticity?
+
+Linear elasticity is the mathematical model used to describe small deformations of solid materials under external loads, assuming:
+
+* **Small strains** (geometric linearity),
+* **Linear stress-strain relationship** (material linearity, Hooke’s law),
+* **Elastic behavior** (fully reversible deformations).
+
+This model applies well to many engineering materials under moderate loads and forms the foundation of structural mechanics.
+
+### Governing Equations
+
+Let $\Omega \subset \mathbb{R}^d$ be the $d$-dimnesional domain of a deformable solid (with $d=2$ or $3$), and let $\mathbf{u} : \Omega \rightarrow \mathbb{R}^d$ be the displacement field vector $\mathbf{u}=\{u_1,u_2,u_3\}$.
+
+#### 1. **Equilibrium (strong form)**
+
+The balance of linear momentum in the absence of inertial effects (quasi-static case) reads:
+
+$$
+- \nabla \cdot \boldsymbol{\sigma} = \mathbf{f} \quad \text{in } \Omega,
+$$
+
+where:
+
+* $\boldsymbol{\sigma}$ is the Cauchy stress tensor,
+* $\mathbf{f}$ is the body force per unit volume (e.g., gravity).
+
+#### 2. **Constitutive law (Hooke's Law)**
+
+$$
+\boldsymbol{\sigma} = \mathbb{C} : \boldsymbol{\varepsilon}(\mathbf{u}),
+$$
+
+where:
+
+* $\mathbb{C}$ is the fourth-order elasticity tensor (depends on $E$ and $\nu$),
+* $\boldsymbol{\varepsilon}(\mathbf{u}) = \frac{1}{2} (\nabla \mathbf{u} + \nabla \mathbf{u}^\top)$ is the symmetric strain tensor.
+
+For **isotropic linear elasticity**, the constitutive law simplifies to:
+
+$$
+\boldsymbol{\sigma} = 2\mu \boldsymbol{\varepsilon}(\mathbf{u}) + \lambda \, \mathrm{tr}(\boldsymbol{\varepsilon}(\mathbf{u})) \mathbf{I},
+$$
+
+with:
+
+$$
+\mu = \frac{E}{2(1+\nu)}, \qquad \lambda = \frac{E\nu}{(1+\nu)(1-2\nu)}.
+$$
+
+#### 3. **Boundary conditions**
+
+The problem is closed by imposing:
+
+* **Dirichlet conditions** (prescribed displacements) on $\partial\Omega_D \subset \partial \Omega$:
+
+  $$
+  \mathbf{u} = \bar{\mathbf{u}} \quad \text{on } \Omega_D,
+  $$
+* **Neumann conditions** (prescribed tractions) on $\partial\Omega_N = \partial \Omega \setminus \partial\Omega_D$:
+
+  $$
+  \boldsymbol{\sigma} \cdot \mathbf{n} = \bar{\mathbf{t}} \quad \text{on } \partial\Omega_N.
+  $$
+
+### Variational (Weak) Formulation
+
+To solve the PDE with FEM, we recast the problem in **variational form**.
+
+#### 1. **Function spaces**
+
+Let $V$ be the space of admissible displacements:
+
+$$
+V = \left\{ \mathbf{v} \in [H^1(\Omega)]^d \; | \; \mathbf{v} = \mathbf{0} \text{ on } \partial\Omega_D \right\}.
+$$
+
+#### 2. **Weak form**
+
+The variational formulation reads:
+**Find** $\mathbf{u} \in V$ such that:
+
+$$
+a(\mathbf{u}, \mathbf{v}) = L(\mathbf{v}) \quad \forall \mathbf{v} \in V,
+$$
+
+where:
+
+* The bilinear form:
+
+  $$
+  a(\mathbf{u}, \mathbf{v}) = \int_{\Omega} \boldsymbol{\sigma}(\mathbf{u}) : \boldsymbol{\varepsilon}(\mathbf{v}) \, d\Omega,
+  $$
+* The linear form:
+
+  $$
+  L(\mathbf{v}) = \int_{\Omega} \mathbf{f} \cdot \mathbf{v} \, d\Omega + \int_{\partial\Omega_N} \bar{\mathbf{t}} \cdot \mathbf{v} \, d\partial\Omega.
+  $$
+
+This formulation allows the use of finite-dimensional function spaces to approximate the displacement field.
+
+
+### Finite Element Discretization
+
+In the finite element method, the domain $\Omega$ is discretized into elements (triangles in 2D, tetrahedra in 3D), and the continuous problem is reduced to solving a system of linear equations.
+
+#### Steps:
+
+1. **Discretize** $\Omega$ into a mesh $\Omega^h$ of triangular of tetrahedral elements (e.g., using Gmsh or Salome),
+2. **Choose basis functions** (e.g., linear Lagrange polynomials),
+3. **Assemble** the stiffness matrix $\mathbf{A}$ and force vector $\mathbf{b}$:
+
+   $$
+   A_{ij} = a(\phi_j, \phi_i), \qquad b_i = L(\phi_i),
+   $$
+4. **Apply boundary conditions**, often applied to $\mathbf{A}$ and \mathbf{b},
+5. **Solve** the resulting linear system:
+
+   $$
+   \mathbf{A} \mathbf{u}_h = \mathbf{b}.
+   $$
+
+The displacement $\mathbf{u}_h$ is the FEM approximation of the true displacement $\mathbf{u}$.
+
+
+>💡 **Note on Gravity Loading as Body Force**
+>
+> In our tutorials, we often use gravity as the only loading. This enters through the body force term:
+>$$\mathbf{f} = \rho \mathbf{g} = \begin{bmatrix} 0 \\ -\rho g \end{bmatrix},$$
+>and is incorporated directly into $L(\mathbf{v})$:
+>$$L(\mathbf{v}) = \int_{\Omega} \rho \mathbf{g} \cdot \mathbf{v} \, d\Omega.$$
+
+
 ## Tutorial 1
 ### 2D Clamped Bar
 _Simulation using linear elasticity with PSD_
@@ -20,7 +155,7 @@ In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity` Note 
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 2 \
 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u</code></pre>
 
-> 🧠 **What do the arguments mean?**
+> 🧠 What do the arguments mean?
 
 | Flag                         | Description                                         |
 | ---------------------------- | --------------------------------------------------- |
@@ -73,7 +208,7 @@ Run the following command in your terminal:
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 3 \ 
 -bodyforceconditions 1  -dirichletconditions 1 -postprocess u</code></pre>
 
-> 🧠 **What is different from the 2D case?**
+> 🧠 What is different from the 2D case?
 
 compared to the 2D problem, note that all what has changed `-dimension 3` instead of `-dimension 2`.
 
@@ -114,7 +249,7 @@ Same problem of linear elasticity as in tutorial 1 -- 2D bar which bends under i
 
 > ⚠️ To avoid redundancy, please complete Tutorial 1 before proceeding.
 
-> 🔍 Why Sequential?
+> 🧠 Why Sequential?
 
 As we will not use a parallel solver but a sequential one, naturally, this tutorial leads to a slower solver than the previous tutorial 1. So this tutorial is not for speed lovers, but rather for detailing the full capacity of PSD. Also, sequential solvers are easier to develop and understand — hence this tutorial.
 
@@ -193,6 +328,11 @@ To showcase the usage of linear elasticity with more than one Dirichlet conditio
 
 Contrary to tutorials 1 and 2, now **both ends** of the bar are clamped (i.e., two Dirichlet conditions instead of one).
 
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-clamped-bar21.png" width="60%" alt="clamped-bar">
+  <figcaption><em>Figure 1: Geometry and boundary conditions — a 2D bar clamped at the two ends and subject to body force due to gravity.</em></figcaption>
+</figure>
+
 #### 🛠️ Step 1: Preprocessing
 
 First step in a PSD simulation is preprocessing. At this step, you tell PSD what kind of physics, boundary conditions, approximations, and mesh you expect to solve.
@@ -206,13 +346,16 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 
 After `PSD_PreProcess` runs successfully, you should see many `.edp` files in your current folder.
 
-**What do the arguments mean?**
+> 🧠 What do the arguments mean?
 
-- `-problem linear_elasticity` → solving linear elasticity
-- `-dimension 2` → 2D simulation
-- `-bodyforceconditions 1` → apply a body force on the domain
-- `-dirichletconditions 2` → two Dirichlet borders
-- `-postprocess u` → enable ParaView output
+| Flag                         | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| `-problem linear_elasticity` | Enables linear elasticity physics                   |
+| `-dimension 2`               | Sets the simulation dimension to 2D                 |
+| `-bodyforceconditions 1`     | Activates body force term                           |
+| `-dirichletconditions 2`     | Applies Dirichlet conditions on two borders         |
+| `-postprocess u`             | Requests displacement output for ParaView           |
+
 
 Since both problems (from tutorials 1 and 2) are essentially the same, the command is almost identical. The only difference is the added Dirichlet condition: `-dirichletconditions 2`.
 
@@ -305,7 +448,7 @@ Side-by-side visualization:
 </figure>
 
 ## Tutorial 4
-####  2D Linear Elasticity: Clamped Bar Pulled at One End
+####  2D Linear Elasticity: Clamped Bar Pulled (Dirichlet) at One End
 
 In this tutorial, we showcase the 2D bar simulation with one end clamped while being pulled at the other end. Body force is neglected, and the pull is modeled using a Dirichlet displacement \( u_1 = 1 \). Compared to the problems in **Tutorial 1** and **Tutorial 2**, the only difference is:
 
@@ -319,8 +462,12 @@ We consider the same setup:
   - Young’s modulus: \( E = 200 \times 10^9 \, \text{Pa} \)  
   - Poisson’s ratio: \( \nu = 0.3 \)
 
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-clamped-bar31.png" width="60%" alt="clamped-bar">
+  <figcaption><em>Figure 1: Geometry and boundary conditions — a 2D bar clamped at one end and pulled at the other.</em></figcaption>
+</figure>
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 First step is to tell PSD what kind of physics, boundary conditions, approximations, mesh, etc., are expected.
 
@@ -336,12 +483,14 @@ Then launch the preprocessing tool:
 PSD_PreProcess -problem linear_elasticity -dimension 2 -dirichletconditions 2 -postprocess u
 </code></pre>
 
-#### What do the arguments mean?
+> 🧠 What do the arguments mean?
 
-* `-problem linear_elasticity`: Solving a linear elasticity problem
-* `-dimension 2`: 2D simulation
-* `-dirichletconditions 2`: Two Dirichlet boundaries (clamped and pulled ends)
-* `-postprocess u`: Generate postprocessing output for ParaView
+| Flag                         | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| `-problem linear_elasticity` | Enables linear elasticity physics                   |
+| `-dimension 2`               | Sets the simulation dimension to 2D                 |
+| `-dirichletconditions 2`     | Applies Dirichlet conditions on two borders         |
+| `-postprocess u`             | Requests displacement output for ParaView           |
 
 > 🔍 Compared to previous tutorials, `-bodyforceconditions 1` is **omitted** here since no body force is applied.
 
@@ -391,7 +540,7 @@ ThName = "../Meshes/2D/bar.msh";
 
 > ⚠️ The mesh file `bar.msh` (Gmsh v2 format) is in the `../Meshes/2D/` folder. You can generate your own using SALOME or Gmsh.
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Since PSD is a **parallel solver**, we run it with 2 MPI processes:
 
@@ -406,13 +555,13 @@ PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 > 🧠 For large problems, you can increase the number of cores. PSD has been tested with up to **24,000 parallel processes** and problems with **billions of unknowns**.
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Once the solver finishes, you can visualize results in **ParaView**.
 
 Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) using ParaView.
 
-> 📊 From ParaView, you can visualize displacement, mesh partitions, and more (e.g., as in the figure below).
+> From ParaView, you can visualize displacement, mesh partitions, and more (e.g., as in the figure below).
 
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/le-2d-bar-clamped-pulled-partioned.png" width="39%" style="margin-right:2%;" alt="2d-bar-clamped-pulled-partitioned">
@@ -422,7 +571,7 @@ Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) usin
 
 
 ## Tutorial 5
-####  2D Linear Elasticity: Clamped Bar Pulled at One End
+####  2D Linear Elasticity: Clamped Bar Pulled (Neumann) at One End
 
 A similar simulation to the previous tutorial is presented here. We showcase the 2D bar problem, where one end is clamped while the other end is pulled. As in the previous simulation, the body force is neglected. However, in this case, the pull on the non-clamped end is approximated using a Neumann (traction) force:
 
@@ -438,7 +587,7 @@ acting on the non-clamped right end of the bar. This means a force of $10^9$ uni
 - Young’s modulus $E = 200 \times 10^9$
 - Poisson’s ratio $\nu = 0.3$
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 The first step in a `PSD` simulation is **preprocessing**. In this step, we specify the physics, boundary conditions, approximations, mesh, etc., to `PSD`.
 
@@ -472,8 +621,7 @@ To add a vertical traction component (e.g. $t_y = 100$), simply include:
 
 <pre><code>macro Tbc0Ty 100.  //</code></pre>
 
-
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Use 5 cores to solve the problem by running:
 
@@ -487,8 +635,7 @@ The mesh file `bar.msh` is available in the `../Meshes/2D/` folder. It is a tria
 > ⚠️ **Warning**:  
 > This tutorial does **not** cover the meshing process in detail. You are free to use your own mesh, as long as it's in `.msh` (Gmsh version 2) or `.mesh` format. We recommend using Salome or Gmsh for mesh generation.
 
-
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Launch ParaView and open the `.pvd` file located in:
 
@@ -522,7 +669,7 @@ To simulate the pull, we assume a traction vector $\mathbf t=[t_x,t_y]=[10^9,0]$
 
 Here is how `PSD` simulation of this case can be performed.
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 First step in a `PSD` simulation is preprocessing. At this step, you tell `PSD` what kind of physics, boundary conditions, approximations, mesh, etc., you expect to solve.
 
@@ -547,7 +694,7 @@ in `ControlParameters.edp`.
 
 `PSD` understands that label `2` refers to the mesh border on which the Dirichlet condition is applied.
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Use 6 cores to solve this problem by running:
 
@@ -562,7 +709,7 @@ The mesh file `bar.msh` is provided in the `../Meshes/2D/` folder. This is a tri
 > ⚠️ **Warning**:  
 > Detailed meshing is outside the scope of this tutorial. However, users can generate their own meshes using tools like **Salome** or **Gmsh**, and provide them to `PSD` in `.msh` (version 2 recommended) or `.mesh` format.
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TIME` folder.
 
@@ -597,7 +744,7 @@ The material is characterized by:
 - Poisson’s ratio $\nu = 0.3$
 
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 The first step in a `PSD` simulation is **preprocessing**. Here, you specify the physics, boundary conditions, approximations, mesh, etc.
 
@@ -627,7 +774,7 @@ Tbc0Ty -1.e9</code></pre>
 Mesh label `2` corresponds to the surface where the traction is applied.
 
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 To solve the problem using 4 cores, run the following command:
 
@@ -642,7 +789,7 @@ To solve the problem using 4 cores, run the following command:
 > You may create your own meshes using Gmsh or Salome. Please ensure the format is either <code>.msh</code> (Gmsh version 2) or <code>.mesh</code>.
 
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
 
@@ -683,7 +830,7 @@ Now the PSD simulation can proceed.
 </figure>
 
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 Place the mesh `piece.msh` in a folder of your choice (assume `psd-complex-simulation`). Open a terminal in this folder and run:
 
@@ -706,14 +853,14 @@ Use steel material properties in `ControlParameters.edp`:
 - `real E = 200.e9;`
 - `real nu = 0.3;`
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Use 2 cores:
 
 <pre><code>PSD_Solve -np 2 Main.edp -mesh ./piece.msh
 </code></pre>
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
@@ -760,7 +907,7 @@ We reintroduce the problem from tutorial 1, an example of a 2D bar which bends u
   <figcaption><em>Figure: the clamped bar setup.</em></figcaption>
 </figure>
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. More importantly for this tutorial we will signify to PSD that MFront has to be used.
 
@@ -772,20 +919,22 @@ In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity`. Laun
 
 After the `PSD\_PreProcess` runs successfully you should see many `.edp` files in your current folder.
 
-**What do the arguments mean?**
+> 🧠 What do the arguments mean?
 
-- `-problem linear_elasticity` → solving linear elasticity
-- `-dimension 2` → 2D simulation
-- `-bodyforceconditions 1` → apply a body force on the domain
-- `-dirichletconditions 1` → one Dirichlet borders
-- `-postprocess u` → enable ParaView output
-- `-useMfront` → activates MFront interface for PSD
+| Flag                         | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| `-problem linear_elasticity` | Enables linear elasticity physics                   |
+| `-dimension 2`               | Sets the simulation dimension to 2D                 |
+| `-bodyforceconditions 1`     | Activates body force term                           |
+| `-dirichletconditions 1`     | Applies Dirichlet conditions on one border          |
+| `-postprocess u`             | Requests displacement output for ParaView           |
+| `useMfront`                  | Activates MFront interface for PSD                  |
 
 
 At this stage the input properties $E,\nu$ can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3`. In contrast to tutorial 1, notice that these values of `E` and `nu` are fed to a vector `PropertyValues = [E, nu];`  verbosed by `PropertyNames   = "YoungModulus PoissonRatio";`. We also signify that we will be solving linear elasticity via `MforntMaterialBehaviour   = "Elasticity";` and also `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` which signifies the hypothesis to be used for the Linear elasticity. The `MaterialHypothesis` accepts `"GENERALISEDPLANESTRAIN"`,  `"PLANESTRAIN"`, `"PLANESTRESS"`,  and  `"TRIDIMENSIONAL"` as arguments. `PropertyValues`, `PropertyNames`, and `MaterialHypothesis`  will eventually be provided to MFront in `FemParameters.edp` file via `PsdMfrontHandler(...)` function *User is encouraged to have a look at `FemParameters.edp` file.   The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"` (*note that mesh can also be provided in the next step*) .In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
 
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Use 2 cores:
 
@@ -794,7 +943,7 @@ As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do 
 <pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
@@ -808,7 +957,7 @@ Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 
 You are all done with your 2D linear-elasticty simulation with Mfront interface.
 
-#### How and what is being done in PSD-MFront interface? 
+> 🧠 How and what is being done in PSD-MFront interface? 
 
 To explain how PSD-MFront interface works we will compare how a PSD solver acts when using MFront or without. In other words what is different when `-useMfront` is used at preprocessing. Note that ultimately the problem results (displacement fields, stresses, strains) will be the same.
 
