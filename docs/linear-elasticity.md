@@ -1,38 +1,43 @@
 ## Tutorial 1
-### 2D bar problem
-#### Simulation of bar problem bending under own body weight
+### 2D Clamped Bar
+_Simulation using linear elasticity with PSD_
+
+> This tutorial walks you through setting up, solving, and visualizing a simple 2D linear elasticity problem using PSD. A horizontal rectangular bar clamped at one end and subject to its own body weight is simulated.
 
 To showcase the usage of linear elasticity, we shall discuss here an example of a 2D bar which bends under its own load (body weight). The bar $5$ m in length and $1$ m in width, and is supposed to be made up of a material with density $\rho=8\times10^3$, Youngs modulus $E=200\times10^9$, and Poisson's ratio $\nu=0.3$. Figure below shows this bar considered in this tutorial.
 
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/le-clamped-bar.png" width="40%" alt="clamped-bar">
-  <figcaption><em>Figure: the clamped bar setup.</em></figcaption>
+  <figcaption><em>Figure 1: Geometry and boundary conditions — a 2D bar clamped at the left end and subject to body force due to gravity.</em></figcaption>
 </figure>
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing the Simulation
 
-First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. PSD is a TUI (terminal user interface) based application, so the user needs to use the terminal (command-line) to communicate to PSD.
+First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. PSD is a command-line (TUI: Terminal User Interface) based tool. All user interactions are done via terminal commands.
 
-In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/linear-elasticity` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch `PSD_PreProcess` with some flags from the terminal, to do so run the following command.
+In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/linear-elasticity` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
 
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 2 \
 -bodyforceconditions 1 -dirichletconditions 1 -postprocess u</code></pre>
 
-**What do the arguments mean?**
+> 🧠 **What do the arguments mean?**
 
-- `-problem linear_elasticity` → solving linear elasticity
-- `-dimension 2` → 2D simulation
-- `-bodyforceconditions 1` → apply a body force on the domain
-- `-dirichletconditions 2` → two Dirichlet borders
-- `-postprocess u` → enable ParaView output
+| Flag                         | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| `-problem linear_elasticity` | Enables linear elasticity physics                   |
+| `-dimension 2`               | Sets the simulation dimension to 2D                 |
+| `-bodyforceconditions 1`     | Activates body force term                           |
+| `-dirichletconditions 1`     | Applies Dirichlet conditions on one or more borders |
+| `-postprocess u`             | Requests displacement output for ParaView           |
 
-After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D linear elasticity bending under its own body weight.
 
-At this stage the input properties of Youngs modulus and Poisson's ratio ($E, \nu$) can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho\times g=8.e3\times -9.81=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"`. Note that mesh can also be provided in the next step i.e, Step 2: solving. In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform, in this case 2D linear elasticity bending under its own body weight.
+
+At this stage the input properties of Youngs modulus and Poisson's ratio ($E, \nu$) can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3;`. The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho\times g=8.e3\times -9.81=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"`. Note that mesh can also be provided in the next step i.e, Step 2: solving. In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$). Dirichlet conditions fix values (e.g., displacements) on specific boundary regions — in this case, clamping one end of the bar.
 
 Please note that for this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder, this mesh is a triangular mesh produced with Gmsh. Moreover detailing meshing procedure is not the propose of PSD tutorials. A user has the choice of performing their own meshing step and providing them to PSD in `.msh` (Please use version 2) or `.mesh` format, we recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 As PSD is a parallel solver, let us use 4 cores to solve the 2D bar case. To do so enter the following command:
 
@@ -42,7 +47,7 @@ This will launch the PSD simulation.
 
 Here `-np 4` (number of processes) denote the argument used to enter the number of parallel processes (MPI processes) used by PSD while solving. `-mesh ./../Meshes/2D/bar.msh` is used to provide the mesh file to the solver, `-mesh` argument is not needed if the user has indicated the right mesh in `ControlParameters.edp` file. `-v 0` denotes the verbosity level on screen. `PSD_Solve` is a wrapper around `FreeFem++-mpi`. Note that if your problem is large use more cores. PSD has been tested upto 24,000 parallel processes (on the French Joliot-Curie supercomputer) and problem sizes with billions of unknowns, surely you will not need that many for the 2D bar problem.
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 PSD allows postprocessing of results in ParaView. After the step 2 mentioned above finishes. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
@@ -54,23 +59,40 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 
 You are all done with your 2D linear-elasticity simulation.
 
-### 3D bar problem
+### 3D Bar Problem
+_Simulation of a 3D clamped bar bending under its own weight_
 
 In PSD a 3D simulation follows the same logic as a 2D one, in the preprocessing step. Imagine the same problem as above, however now the geometry is 3D with length 5 m and cross sectional area 1 m $\times$ 1 m. Indeed all what changes for this simulation is the geometry (consequently the mesh) and the dimension of the problem, these two changes will be handled by (`-dimension` and `-mesh`) arguments.
 
-The preprocessing step now becomes:
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+As before, preprocessing sets up the problem definition. The main change is the dimension of the problem.
+
+Run the following command in your terminal:
 
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 3 \ 
 -bodyforceconditions 1  -dirichletconditions 1 -postprocess u</code></pre>
 
+> 🧠 **What is different from the 2D case?**
+
 compared to the 2D problem, note that all what has changed `-dimension 3` instead of `-dimension 2`.
 
-Solving step remains exactly the same with except `-mesh` flag now pointing towards the 3D mesh of the bar.
+#### ⚙️ Step 2: Solving the Problem
+
+To solve the 3D problem using 4 parallel MPI processes, execute:
 
 <pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar.msh -v 0</code></pre>
 
-Finally, using ParaView for postprocessing the results that are provided in the `VTUs..` folder, results such as those shown below can be extracted.
+Here, the only change compared to the 2D run is the mesh path, which now points to the 3D bar mesh (`bar.msh`) located in the `Meshes/3D/` directory.
 
+As a reminder:
+`-np 4` specifies the number of MPI processes.
+`-mesh` provides the mesh to PSD.
+`-v 0` sets verbosity to minimal.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Finally, using ParaView for postprocessing the results that are provided in the `VTUs..` folder, results such as those shown below can be extracted.
 
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/le-3d-bar-clamped-ends.png" width="40%" alt="3d-clamped-bar-ends"><br>
@@ -78,18 +100,25 @@ Finally, using ParaView for postprocessing the results that are provided in the 
   <figcaption><em>Figure: the 3D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
 </figure>
 
+> 🧪 Optional Exercise: Try changing the material density to $\rho = 5000$ and observe how the displacement field changes. What do you notice
+
 ## Tutorial 2
-### Sequential solver
-#### Sequential vs. Parallel Solver for 2D Linear Elasticity
+### Sequential Solver
+_Sequential vs. Parallel Solver for 2D Linear Elasticity_
 
-
-Same problem of linear elasticity as in tutorial 1 -- 2D bar which bends under its own load --, is discussed here. The bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Young's modulus $E=200\times 10^9$, and Poisson's ratio $\nu=0.3$. To avoid text repetition, readers are encouraged to go ahead with this tutorial only after tutorial 1.
+Same problem of linear elasticity as in tutorial 1 -- 2D bar which bends under its own load --, is discussed here. The bar 5 m in length and 1 m in width, and is supposed to be made up of a material with density $\rho=8\times 10^3$, Young's modulus $E=200\times 10^9$, and Poisson's ratio $\nu=0.3$.
 
 <figure style="text-align: center;">
   <img src="_images/linear-elasticity/le-3d-bar-clamped-pulled-partioned.png" width="40%" alt="3d-clamped-bar-partitioned">
 </figure>
 
+> ⚠️ To avoid redundancy, please complete Tutorial 1 before proceeding.
+
+> 🔍 Why Sequential?
+
 As we will not use a parallel solver but a sequential one, naturally, this tutorial leads to a slower solver than the previous tutorial 1. So this tutorial is not for speed lovers, but rather for detailing the full capacity of PSD. Also, sequential solvers are easier to develop and understand — hence this tutorial.
+
+#### 🛠️ Step 1: Preprocessing
 
 As the problem remains the same as tutorial 1, simply add `-sequential` flag to `PSD_PreProcess` flags from tutorial 1 for a PSD sequential solver. The flag `-sequential` signifies the use of sequential PSD solver. So the workflow for the 2D problem would be:
 
@@ -98,19 +127,21 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -sequential
 </code></pre>
 
+#### ⚙️ Step 2: Solving the Problem
+
 Similar to tutorial 1, we solve the problem using the given mesh file `bar.msh`. However, now we need to use `PSD_Solve_Seq` instead of `PSD_Solve`, as such:
 
 <pre><code>
 PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-> 💡 **Note**: Users are encouraged to try out the 3D problem with the sequential solver. Also, comparing the results from a sequential solver to those from a parallel solver can help verify that both lead to exactly the same results.
+> 💡 **Note**: Users are encouraged to try out the 3D problem with the sequential solver.
 
 > 💡 **Note**: For this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder. This mesh is a triangular mesh produced with Gmsh. Detailing the meshing procedure is not the purpose of PSD tutorials.
 
 > 💡 **Note**: Users can generate their own meshes and provide them to PSD in `.msh` (please use version 2) or `.mesh` format. We recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
-### Comparing CPU Time
+### ⏱️ Step 3: Comparing CPU Time
 
 Naturally, since we are not using parallel PSD for solving, we lose the advantage of solving fast. To testify to this claim, checking solver timings can be helpful. PSD provides means to time-log your solver via the `-timelog` flag.
 
@@ -153,14 +184,16 @@ PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 Approximately, for large meshes, using 4 MPI processes should lead to a solver that's around 4 times faster.
 
+> 🧪 Optional Exercise: Compare results between parallel and sequential solvers to confirm that both yield the same physical response.
+
 ## Tutorial 3
-#### Multiple Dirichlet Conditions in Linear Elasticity (2D Clamped Bar)
+### Multiple Dirichlet Conditions
 
 To showcase the usage of linear elasticity with more than one Dirichlet condition, we discuss here a 2D bar which bends under its own load. The same problem from tutorials 1 and 2 is reused: a bar 5 m in length and 1 m in width, made of a material with density $\rho=8\times 10^3$, Young's modulus $E=200\times 10^9$, and Poisson's ratio $\nu=0.3$.
 
 Contrary to tutorials 1 and 2, now **both ends** of the bar are clamped (i.e., two Dirichlet conditions instead of one).
 
-#### Step 1: Preprocessing
+#### 🛠️ Step 1: Preprocessing
 
 First step in a PSD simulation is preprocessing. At this step, you tell PSD what kind of physics, boundary conditions, approximations, and mesh you expect to solve.
 
@@ -212,7 +245,7 @@ Specify the mesh via:
 
 > 💡 **Note**: You may also generate your own meshes in `.msh` (version 2) or `.mesh` format using Salome or Gmsh.
 
-#### Step 2: Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Use 3 parallel processes to solve the 2D bar problem:
 
@@ -228,7 +261,7 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 
 > 💡 **Note**: PSD has been tested with up to 24,000 processes on Joliot-Curie (GENCI). But for this problem, a few are enough.
 
-#### Step 3: Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 PSD outputs ParaView-compatible files. After solving, open the `.pvd` file in the `VTUs_DATE_TIME` folder using ParaView.
 
