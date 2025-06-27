@@ -1,3 +1,95 @@
+## Fracture Mechanics and Finite Element Resolution
+  
+PSD uses Hybrid Phase-Field models under the hood to solve fracture mechanics problems. Theory behind these models is introduced next. 
+
+### Finite Element Formulation for Hybrid Phase-Field Fracture Mechanics
+
+This section introduces the finite element spatial discretization of the boundary value problem (BVP) governing the hybrid phase-field model for brittle fracture. For illustration, we consider a three-dimensional (3D) setting, though the formulation generalizes naturally to other dimensions.
+
+#### Discretized Variational Formulations
+
+Let the computational domain be denoted as $ \Omega_h \subset \Omega \subset \mathbb{R}^3 $, discretized using finite elements. We define the unknown nodal displacement vector $ \mathbf{u}_h = [u_1, u_2, u_3]^T $ and scalar damage field $ d_h $. The finite element variational formulation for the displacement field reads:
+
+Find $\mathbf{u}_h \in \mathcal{V}_h$ such that $\forall t \in [0, T]$:
+
+$$
+\int_{\Omega_h} \left( (1 - d_h)^2 + \kappa \right) \boldsymbol{\sigma}(\mathbf{u}_h) : \boldsymbol{\varepsilon}(\mathbf{v}_h) \, dv = \int_{\partial \Omega_h^N} \mathbf{t} \cdot \mathbf{v}_h \, ds, \quad \forall \mathbf{v}_h \in \mathcal{V}_h
+\tag{1}
+$$
+
+Here, $\boldsymbol{\varepsilon}$ is the small strain tensor, $\boldsymbol{\sigma}$ the Cauchy stress tensor, and $\kappa \ll 1$ is a small regularization parameter preventing singularities as $d_h \to 1$. The test and trial functions belong to the Sobolev space:
+
+$$
+\mathcal{V}_h = \left\{ \mathbf{u}_h \in [H^1(\Omega_h)]^3 \;|\; \mathbf{u}_h = \bar{\mathbf{u}} \text{ on } \partial \Omega_h^D \right\}
+\tag{2}
+$$
+
+For the damage field $d_h$, the scalar variational problem becomes:
+
+Find $d_h \in \mathcal{W}_h$ such that $\forall t \in [0, T]$:
+
+$$
+\int_{\Omega_h} \left( \frac{G_c}{\ell_0} + 2 H^+(\mathbf{u}_h) \right) d_h \theta_h \, dv + \int_{\Omega_h} G_c \ell_0 \nabla d_h \cdot \nabla \theta_h \, dv = \int_{\Omega_h} 2 H^+(\mathbf{u}_h) \theta_h \, dv, \quad \forall \theta_h \in \mathcal{W}_h
+\tag{3}
+$$
+
+where $G_c$ is the critical energy release rate, $\ell_0$ is the regularization length, and $H^+(\cdot)$ denotes the tensile part of the elastic energy. The admissible space is:
+
+$$
+\mathcal{W}_h = \left\{ d_h \in H^1(\Omega_h) \;|\; d_h \in [0, 1] \right\}
+\tag{4}
+$$
+
+#### Vectorial FEM for the Hybrid Phase-Field Model
+
+To solve equations (1) and (3), a common strategy is the **staggered scheme**, where the displacement and damage fields are updated alternately. This approach benefits from simplicity and reduced memory usage but may converge slowly due to weak coupling.
+
+Alternatively, the **monolithic strategy** solves the coupled system simultaneously. This results in better convergence and potentially higher accuracy, albeit at increased computational and memory cost.
+
+#### Fully Coupled Vectorial Formulation
+
+To derive the monolithic formulation, we define a combined trial field $\mathbf{w}_h = [u_{h,1}, u_{h,2}, u_{h,3}, d_h]^T$ and corresponding test field $\mathbf{q}_h$, both belonging to:
+
+$$
+\mathcal{W}_h = \left\{ \mathbf{w}_h \in [H^1(\Omega_h)]^4 \;|\; \mathbf{w}_h|_{\partial \Omega_h^D} = [\bar{\mathbf{u}}, \cdot], \; w_{h,4} \in [0, 1] \right\}
+\tag{5}
+$$
+
+The coupled variational formulation reads:
+
+Find $\mathbf{w}_h \in \mathcal{W}_h$ such that:
+
+$$
+\begin{aligned}
+\int_{\Omega_h} \left( (1 - w_{h,4})^2 + \kappa \right) \boldsymbol{\sigma}(\mathbf{w}_h) : \boldsymbol{\varepsilon}(\mathbf{q}_h) \, dv
++ \int_{\Omega_h} \left( \frac{G_c}{\ell_0} + 2 H^+(\mathbf{w}_h) \right) w_{h,4} q_{h,4} \, dv \\
++ \int_{\Omega_h} G_c \ell_0 \nabla w_{h,4} \cdot \nabla q_{h,4} \, dv
+= \int_{\partial \Omega_h^N} \mathbf{t} \cdot \mathbf{q}_{h,1:3} \, ds + \int_{\Omega_h} 2 H^+(\mathbf{w}_h) q_{h,4} \, dv
+\end{aligned}
+\tag{6}
+$$
+
+#### Nonlinear Solving via Picard Iterations
+
+The monolithic system is nonlinear due to the coupling terms. To solve it, we adopt a **Picard iteration** scheme, which provides a fixed-point iteration framework:
+
+Given $\mathbf{w}_h^j$, find $\mathbf{w}_h^{j+1} \in \mathcal{W}_h$ such that:
+
+$$
+\begin{aligned}
+\int_{\Omega_h} \left( (1 - w_{h,4}^j)^2 + \kappa \right) 
+\left[ \lambda \nabla \mathbf{w}_h^{j+1} \cdot \nabla \mathbf{q}_h + 2 \mu \boldsymbol{\varepsilon}(\mathbf{w}_h^{j+1}) : \boldsymbol{\varepsilon}(\mathbf{q}_h) \right] dv \\
++ \int_{\Omega_h} \left( \frac{G_c}{\ell_0} + 2 H^+(\mathbf{w}_h^j) \right) w_{h,4}^{j+1} q_{h,4} \, dv
++ \int_{\Omega_h} G_c \ell_0 \nabla w_{h,4}^{j+1} \cdot \nabla q_{h,4} \, dv \\
+= \int_{\partial \Omega_h^N} \mathbf{t} \cdot \mathbf{q}_{h,1:3} \, ds + \int_{\Omega_h} 2 H^+(\mathbf{w}_h^j) q_{h,4} \, dv
+\end{aligned}
+\tag{7}
+$$
+
+This formulation leads to symmetric linear systems at each iteration, facilitating efficient resolution using standard finite element libraries and solvers.
+
+
+
 ## Tutorial 1
 ### Tensile Cracking of a 2D Pre-Cracked Plate
 
