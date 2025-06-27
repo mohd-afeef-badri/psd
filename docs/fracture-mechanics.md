@@ -106,7 +106,7 @@ A two-dimensional test is introduced. The problem of interest is a typical singl
 
 The material is supposed to have the Lame coefficients, $\lambda=121.15e3$ and $\mu=80.77e3$, additionally the fracture toughness $G_c=2.7$.
 
-To model this test, PSD provides a hybrid phase-field modelling technique under damage mechanics (fracture mechanics). We use ParaView to post-process displacement $u$ and phase-field $d$ for visualising the cracking process.
+To model this test, PSD provides a hybrid phase-field modelling technique under damage mechanics (fracture mechanics). We use ParaView to post-process displacement $u$ and phase-field $d$ for visualizing the cracking process.
 
 #### 🛠️ Step 1: Preprocessing the Simulation
 
@@ -132,7 +132,7 @@ Upon successful preprocessing, several `.edp` (FreeFEM) script files will be gen
 
 At this stage the input of the solver need to be set. All of these are setup in `ControlParameters.edp` file. 
 
-- Let us start by setting mesh in `tensile_crack.msh`. This is step two of the PSD simulation: `PSD_Solve`.
+- Let us start by setting mesh in `tensile_crack.msh`.
 
 <pre><code class="cpp">
 //=============================================================================
