@@ -157,7 +157,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
   real lambda = 121.15e3 ,
        mu     = 80.77e3  ,
        Gc     = 2.7      ;
-</code></pre>  
+</code></pre>
 
 - Maximal tensile loading of $7e-3$ in $y$-direction is applied in quasi static manner with a loading step $\Delta u_2=1e-5$, additionally for phase field model we assume the fracture diffusion capacity  of 2, these are provided in:
 
@@ -177,7 +177,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
        tr    = 1e-5 ,
        dtr   = 1e-5 ,
        lo           ;
-</code></pre>  
+</code></pre>
 
 - Finally the two Dirichlet conditions are applied, clamped bottom border (label = 1) with $u_1=u_2=0$, top border (label = 2) subjected to tensile pull (traction = `tr` as defined above)  in $y$-direction:
 
@@ -185,15 +185,15 @@ At this stage the input of the solver need to be set. All of these are setup in 
 //============================================================================
 //        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
-// Dbc       : acronym for Dirichlet boundary condition    
-// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+// Dbc       : acronym for Dirichlet boundary condition
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which
 //             Dirichlet boundary conditions is to be applied.
-// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface
 //             border (I) denoted by label(s) Dbc(I)On in the mesh.
-// -------------------------------------------------------------------------- 
-// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
-//       or deleted if the user does not wish to apply Dirichlet  condition   
-//       on that particular  direction (let it free)       
+// --------------------------------------------------------------------------
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented
+//       or deleted if the user does not wish to apply Dirichlet  condition
+//       on that particular  direction (let it free)
 //============================================================================
   
 
@@ -201,9 +201,9 @@ At this stage the input of the solver need to be set. All of these are setup in 
   macro  Dbc0Ux 0.  //
   macro  Dbc0Uy 0.  //
 
-  macro  Dbc1On 2   //       
-  macro  Dbc1Uy tr  // 
-</code></pre>  
+  macro  Dbc1On 2   //
+  macro  Dbc1Uy tr  //
+</code></pre>
 
 This completes the solver setup and preprocessing phase. With this we are ready to move to next step.
 
@@ -319,21 +319,21 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 // -------------------------------------------------------------------
 //  mu, lambda : Lame parameter of the material
 //  Gc : Material fracture toughness
-//  kappa0 : Damage initiation threshold of the Material    
+//  kappa0 : Damage initiation threshold of the Material
 //  kappac :  Critical strain level of the Material
 //=============================================================================
   
   real lambda = 121.15e3 ,
        mu     = 80.77e3  ,
-       Gc     = 2.7      ;  
+       Gc     = 2.7      ;
 </code></pre>
 
 - For the solver parameters, as it remains the same we add :
 
 <pre><code class="cpp">
 //============================================================================
-//                  ------- Solver parameters -------      
-// -------------------------------------------------------------------        
+//                  ------- Solver parameters -------
+// -------------------------------------------------------------------
 //  lfac : # of cells within which fracture diffusion occurs
 //  maxtr : Maximum traction force applied  
 //  tr : Traction force applied
@@ -345,7 +345,7 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
        maxtr = 7e-3 ,
        tr    = 1e-5 ,
        dtr   = 1e-5 ,
-       lo           ;  
+       lo           ;
 </code></pre>
 
 - Finally, the Dirichlet border on the bottom differs in the sense that it also includes the third $z$ component :
@@ -355,14 +355,14 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 //        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
 // Dbc       : acronym for Dirichlet boundary condition    
-// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which
 //             Dirichlet boundary conditions is to be applied.
-// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface
 //             border (I) denoted by label(s) Dbc(I)On in the mesh.
-// -------------------------------------------------------------------------- 
-// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
-//       or deleted if the user does not wish to apply Dirichlet  condition   
-//       on that particular  direction (let it free)       
+// --------------------------------------------------------------------------
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented
+//       or deleted if the user does not wish to apply Dirichlet  condition
+//       on that particular  direction (let it free)
 //============================================================================
   
 
@@ -371,7 +371,7 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
   macro  Dbc0Uy 0.  //
   macro  Dbc0Uz 0.  //
 
-  macro  Dbc1On 2   //       
+  macro  Dbc1On 2   //
   macro  Dbc1Uy tr  //
 </code></pre>
 
@@ -525,6 +525,7 @@ During the simulation run this shall lead to continuous plots as shown below:
 
 ## Tutorial 4
 ### L-shape specimen cracking with cyclic loading
+_Solving the Problem with Vectorial FEM approach_
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/Concrete-L-shaped-panel-Experimental-fracture-paths
@@ -534,86 +535,78 @@ During the simulation run this shall lead to continuous plots as shown below:
 
 *Figure: Geometry of the L-shaped test used in this tutorial. Concrete L-shaped panel is shown with experimental fracture paths*
 
-This is a benchmark tests for concrete fracture mechanics problem. The figure above presents the geometry and the experimental cracks that are observed. To observe cracking, the specimen is loaded via two Dirichlet conditions: the clamped bottom wall, and Dirichlet point loading at point P.  
+This is a benchmark tests for concrete fracture mechanics problem. The figure above presents the geometry and the experimental cracks that are observed. To observe cracking, the specimen is loaded via two Dirichlet conditions: the clamped bottom wall, and Dirichlet point loading at point P. What is atypical in this case is that the loading, is cyclic, at point P we load for 50 time steps we load the specimen with a $\Delta u_y = 1e-2$ (loading in $y$-direction), then next 60 time steps we impose opposite load $\Delta u_y = -1e-2$ (unloading in negative $y$-direction), and again we then continue to load the specimen with $\Delta u_y = 1e-2$ (loading in $y$-direction). The concrete material is quantified with $(\lambda,\mu,G_c)=(6.16e3,10.95e3,8.9e-2)$.
 
 #### 🛠️ Step 1: Preprocessing the Simulation
 
-You can either solve the problem using vectorial approach (recommended) or using staggered approach. To generate the solver, use one of the following.
-
-**Generation of solver (vectorial)**
+To generate the solver `.edp` files, use:
 
 <pre><code>
 PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
--dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
+-dirichletconditions 1 -dirichletpointconditions 1 -postprocess ud \
 -energydecomp -constrainHPF -vectorial -getreactionforce -plotreactionforce \
 -reactionforce variational_based
 </code></pre>
 
-**Generating solver (staggered)**
+> 💡 **Note**: 
+> The use of boolean `-vectorial` generates the vectorial FEM solver, if this flag is not used staggered solver is generated.
 
-<pre><code>
-PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
--dirichletconditions 1 -dirichletpointconditions 1 -debug -postprocess ud \
--energydecomp -constrainHPF -getreactionforce -plotreactionforce \
--reactionforce variational_based
-</code></pre>
+At this stage we edit `ControlParameter.edp` to introduce the correct parameters and problem setting.
 
-### Edit Cycle
+- Update physical parameter:
 
-#### Edit `ControlParameter.edp`
+<pre><code class="cpp">
+//=============================================================================
+//                   ------- Material parameters -------
+// -------------------------------------------------------------------
+//  mu, lambda : Lame parameter of the material
+//  Gc : Material fracture toughness
+//  kappa0 : Damage initiation threshold of the Material
+//  kappac :  Critical strain level of the Material
+//=============================================================================
 
-- Update physical parameter, change:
-
-<pre><code>
-  real lambda = 121.15e3 ,
-       mu     = 80.77e3  ,
-       Gc     = 2.7      ;
-</code></pre>
-
-to
-
-<pre><code>
-  real lambda = 6.16e3 ,
+  real lambda = 6.16e3  ,
        mu     = 10.95e3 ,
-       Gc     = 8.9e-2  ;
+       Gc     = 8.9e-2  ; 
 </code></pre>
 
-- Update solver parameter, change:
+- Update solver parameter and loading parameters:
 
-<pre><code>
-  real lfac  = 2.0  ,
-       maxtr = 7e-3 ,
-       tr    = 1e-5 ,
-       dtr   = 1e-5 ,
-       lo           ;
-</code></pre>
+<pre><code class="cpp">
+//============================================================================
+//                  ------- Solver parameters -------
+// -------------------------------------------------------------------
+//  lfac : # of cells within which fracture diffusion occurs
+//  maxtr : Maximum traction force applied
+//  tr : Traction force applied
+//  dtr :  Change in traction force between two pseudo-time steps
+//  lo :  Mesh dependent lateral fracture length
+//============================================================================
 
-to
-
-<pre><code>
   real lfac  = 2.0  ,
        maxtr = 1    ,
        tr    = 1e-2 ,
        dtr   = 1e-2 ,
-       lo           ;
+       lo           ; 
 </code></pre>
 
-- Enter the correct point boundary condition, change:
+- Enter the Dirichlet point boundary condition:
 
-<pre><code>
-  real[int,int] PbcCord = [
-//-------------------- [  x  , y  ] --------------------//
-    [  0. , 0. ]    // point 0
-//------------------------------------------------------//
-   ];
+<pre><code class="cpp">
+//============================================================================
+//       -------Dirichlet point boundary-condition parameters-------
+// --------------------------------------------------------------------------
+// Pbc       : acronym for point boundary condition
+// PbcCord   : is the table  containing coordinates of the points for which
+//             point  boundary condition(s) is to be applied
+// Pbc(I)Ux : is x displacement value of the point I. Similar logic applies
+//            to PC(I)Uy, PC(I)Uz
+// --------------------------------------------------------------------------
+// NOTE: either the macro PC(I)Ux or PC(I)Uy or PC(I)Uz should be commented
+//       if the user does not wish to apply restriction on that  particular
+//       displacement direction (let it free)
+//============================================================================
 
-   macro Pbc0Ux  -0. //
-   macro Pbc0Uy  -0. //
-</code></pre>
-
-to
-
-<pre><code>
   real[int,int] PbcCord = [
 //-------------------- [  x  , y  ] --------------------//
     [  470., 250. ]    // point 0
@@ -623,11 +616,44 @@ to
    macro Pbc0Uy  tr //
 </code></pre>
 
-#### Edit `LinearFormBuilderAndSolver.edp`
+- Enter the Dirichlet clamped boundary condition:
+
+<pre><code class="cpp">
+//============================================================================
+//        ------- Dirichlet boundary-condition parameters -------
+// ---------------------------------------------------------------------------
+// Dbc       : acronym for Dirichlet boundary condition
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which
+//             Dirichlet boundary conditions is to be applied.
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.
+// --------------------------------------------------------------------------
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented
+//       or deleted if the user does not wish to apply Dirichlet  condition
+//       on that particular  direction (let it free)
+//============================================================================
+
+  macro  Dbc0On 1   //
+  macro  Dbc0Ux 0.  //
+  macro  Dbc0Uy 0.  //
+</code></pre>
+
+At this stage all parameters and conditions are set. The only remaining edit required is for plotting the reaction force and the cyclic loading. This edit (information) is provided in `LinearFormBuilderAndSolver.edp`. In this file within the 'Force Calculation' section:
 
 - To postprocess correct reaction forces for **vectorial solver**, change:
 
-<pre><code>
+<pre><code class="cpp">
+  //-------------------Force calculation-----------------------//
+
+  startProcedure("force calculation",t0);
+
+  real forcetotx   = 0., forcetotGathx  = 0. ;
+  real forcetoty   = 0., forcetotGathy  = 0. ;
+  real forcetotz   = 0., forcetotGathz  = 0. ;
+
+  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;
+  F[] = A*u[];
+
   for(int i=0; i < Th.nv; i++){
      if(abs(Th(i).y-1.)<.000001){
         forcetotx = forcetotx + F[][i*3]*DP[i*3];
@@ -638,36 +664,29 @@ to
 
 to
 
-<pre><code>
+<pre><code class="cpp">
+  //-------------------Force calculation-----------------------//
+
+  startProcedure("force calculation",t0);
+
+  real forcetotx   = 0., forcetotGathx  = 0. ;
+  real forcetoty   = 0., forcetotGathy  = 0. ;
+  real forcetotz   = 0., forcetotGathz  = 0. ;
+
+  ALoc = varfForce(Vh,Vh,solver=CG,sym=1);  A = ALoc;
+  F[] = A*u[];
+
   if(mpirank==mpirankPCi[0]){
      forcetotx = forcetotx + F[][PCi[0]*3+0]*DP[PCi[0]*3+0];
      forcetoty = forcetoty + F[][PCi[0]*3+1]*DP[PCi[0]*3+1];
   }
 </code></pre>
 
-- To postprocess correct reaction forces for **staggered solver**, change:
+What is changed is we ask for reaction force at a point 'PCi' rather than a border.
 
-<pre><code>
-  for(int i=0; i < Th.nv; i++){
-     if(abs(Th(i).y-1.)<.000001){
-        forcetotx = forcetotx + F[][i*2]*DP[i*2];
-        forcetoty = forcetoty + F[][i*2+1]*DP[i*2+1];
-     }
-  }
-</code></pre>
+- To include cyclic loading in `LinearFormBuilderAndSolver.edp`, change the 'update traction section':
 
-to
-
-<pre><code>
-  if(mpirank==mpirankPCi[0]){
-     forcetotx = forcetotx + F[][PCi[0]*2+0]*DP[PCi[0]*2+0];
-     forcetoty = forcetoty + F[][PCi[0]*2+1]*DP[PCi[0]*2+1];
-  }
-</code></pre>
-
-- To include cyclic loading, change:
-
-<pre><code>
+<pre><code class="cpp">
   //-----------------updating traction----------------//
 
   tr += dtr;
@@ -675,7 +694,7 @@ to
 
 to
 
-<pre><code>
+<pre><code class="cpp">
   //-----------------updating traction----------------//
 
   if(iterout<50)
@@ -685,12 +704,6 @@ to
   if(iterout>=111)
      tr += dtr;
 </code></pre>
-
-<div style="text-align: center;">
-  <img src="_images/fracture-mechanics/fm-mesh.png" width="30%" alt="Finite element mesh of the L-shaped test.">
-</div>
-
-*Figure: Finite element mesh of the L-shaped test.*
 
 #### ⚙️ Step 2: Solving the Problem
 
@@ -704,6 +717,11 @@ PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L_shaped_crack.msh
 
 Use ParaView to post-process results.
 
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/fm-mesh.png" width="30%" alt="Finite element mesh of the L-shaped test.">
+</div>
+
+*Figure: Finite element mesh of the L-shaped test.*
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/fm-d1.png" width="30%" alt="Crack initiation">
@@ -720,3 +738,5 @@ On your screen, the force-displacement curve which plots `force.data` should loo
 </div>
 
 *Figure: Force-displacement curve with cyclic loading.*
+
+> 🧪 Optional Exercise: Try repeating the probelm in tutorial 4 but use the staggered solving approach. You will need to skip the `-vectorial` flag as used in tutorial 4. While rest of the tutorial process should remain the same, the only diffrence will be the extraction of reaction force. Since staggered apprach is used, displacement vector is diffrent than the damage one, hence for retriving force in x `forcetotx = forcetotx + F[][PCi[0]*2+0]*DP[PCi[0]*2+0];` is used instead of `forcetotx = forcetotx + F[][PCi[0]*3+0]*DP[PCi[0]*3+0];`, similar changes are needed for $y$ force. 
