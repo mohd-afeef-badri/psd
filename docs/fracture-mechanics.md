@@ -57,7 +57,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
 <pre><code class="cpp">
 //=============================================================================
 //------- Material parameters -------
-// -------------------------------------------------------------------         
+// -------------------------------------------------------------------
 //  mu, lambda : Lame parameter of the material
 //  Gc : Material fracture toughness
 //=============================================================================
@@ -72,11 +72,11 @@ At this stage the input of the solver need to be set. All of these are setup in 
 <pre><code class="cpp">
 //============================================================================
 //                  ------- Solver parameters -------
-// -------------------------------------------------------------------        
+// -------------------------------------------------------------------
 //  lfac : # of cells within which fracture diffusion occurs
 //  maxtr : Maximum traction force applied
 //  tr : Traction force applied
-//  dtr :  Change in traction force between two pseudo-time steps             
+//  dtr :  Change in traction force between two pseudo-time steps
 //  lo :  Mesh dependent lateral fracture length
 //============================================================================
   
@@ -91,24 +91,24 @@ At this stage the input of the solver need to be set. All of these are setup in 
 
 <pre><code class="cpp">
 //============================================================================
-//        ------- Dirichlet boundary-condition parameters -------             
+//        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
 // Dbc       : acronym for Dirichlet boundary condition    
 // Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
-//             Dirichlet boundary conditions is to be applied.                
+//             Dirichlet boundary conditions is to be applied.
 // Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
-//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.
 // -------------------------------------------------------------------------- 
 // NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
 //       or deleted if the user does not wish to apply Dirichlet  condition   
 //       on that particular  direction (let it free)       
 //============================================================================
   
-                  
+
   macro  Dbc0On 1   //
   macro  Dbc0Ux 0.  //
   macro  Dbc0Uy 0.  //
-                  
+
   macro  Dbc1On 2   //       
   macro  Dbc1Uy tr  // 
 </code></pre>  
@@ -160,9 +160,9 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
   <img src="_images/fracture-mechanics/d0069.png" width="24%">
 </p>
 
-*Figure: Finite element damage visualised for the 2D problem using ParaView at different timesteps. Time progresses left to right and top to bottom.*
+*Figure: Finite element damage visualized for the 2D problem using ParaView at different timesteps. Time progresses left to right and top to bottom.*
 
-Figures above show the finite element displacement and damage fields, which allow us to visualise the progression of cracking in the square plate.
+Figures above show the finite element displacement and damage fields, which allow us to visualize the progression of cracking in the square plate.
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/terminal1.png" width="50%" alt="Terminal output during simulation run.">
@@ -211,9 +211,9 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 
 <pre><code class="cpp">
 //=============================================================================
-// ------- Mesh parameters (Un-partitioned) -------         
-// -------------------------------------------------------------------         
-//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
 //=============================================================================
   
   string ThName = "../Meshes/3D/tensile_crack.msh"; 
@@ -223,16 +223,16 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 
 <pre><code class="cpp">
 //=============================================================================
-//------- Material parameters -------    
-// -------------------------------------------------------------------         
-//  mu, lambda : Lame parameter of the material             
-//  Gc : Material fracture toughness         
+//------- Material parameters -------
+// -------------------------------------------------------------------
+//  mu, lambda : Lame parameter of the material
+//  Gc : Material fracture toughness
 //  kappa0 : Damage initiation threshold of the Material    
-//  kappac :  Critical strain level of the Material         
+//  kappac :  Critical strain level of the Material
 //=============================================================================
   
-  real lambda = 121.15e3 ,                  
-       mu     = 80.77e3  ,                  
+  real lambda = 121.15e3 ,
+       mu     = 80.77e3  ,
        Gc     = 2.7      ;  
 </code></pre>
 
@@ -242,11 +242,11 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 //============================================================================
 //                  ------- Solver parameters -------      
 // -------------------------------------------------------------------        
-//  lfac : # of cells within which fracture diffusion occurs                  
+//  lfac : # of cells within which fracture diffusion occurs
 //  maxtr : Maximum traction force applied  
-//  tr : Traction force applied             
-//  dtr :  Change in traction force between two pseudo-time steps             
-//  lo :  Mesh dependent lateral fracture length           
+//  tr : Traction force applied
+//  dtr :  Change in traction force between two pseudo-time steps
+//  lo :  Mesh dependent lateral fracture length
 //============================================================================
   
   real lfac  = 2.0  ,
@@ -260,25 +260,25 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 
 <pre><code class="cpp">
 //============================================================================
-//        ------- Dirichlet boundary-condition parameters -------             
+//        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
 // Dbc       : acronym for Dirichlet boundary condition    
 // Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
-//             Dirichlet boundary conditions is to be applied.                
+//             Dirichlet boundary conditions is to be applied.
 // Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
-//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.
 // -------------------------------------------------------------------------- 
 // NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
 //       or deleted if the user does not wish to apply Dirichlet  condition   
 //       on that particular  direction (let it free)       
 //============================================================================
   
-                  
+
   macro  Dbc0On 1   //
   macro  Dbc0Ux 0.  //
   macro  Dbc0Uy 0.  //
   macro  Dbc0Uz 0.  //
-                  
+
   macro  Dbc1On 2   //       
   macro  Dbc1Uy tr  //
 </code></pre>
@@ -326,48 +326,59 @@ Finally, using ParaView for postprocessing the results that are provided in the 
 > 💡 **Note**: 
 > Figures above present the evolution of both displacement and damage fields, enabling a clear visualization of crack propagation in the cubic specimen.
 
-### Additional Remarks
-
-A PSD simulation is a two-step process, with step one being the inline code `PSD_PreProcess` and step two as `PSD_Solve`.
-
-> ⚠️ **Warning**: 
-> Ensure the mesh file is correctly referenced and that MPI is configured properly on your system.
-
 > 🧪 Optional Exercise: Try changing the material properties to prepone or postpone the fracture process. 
 
 ## Tutorial 3
-### Parallel 2D tensile cracking and calculate-plotting reaction-force
+### Tensile Cracking and Calculate-Plotting Reaction-Force
 
-> 💡 **Note**: 
-> This document presents concise tutorials for the **fracture mechanics** module of PSD. The aim is to provide a practical starting point for users and developers rather than exhaustive documentation.
+> ⚠️ **Warning**:
+> You are requested to having followed at least the linear-elasticity tutorials and tutorial 1 of fracture mechanics before attempting to follow this tutorial. This will make the understanding process here simpler.
 
-In solid mechanics, quantities of interest often include plots such as **reaction force on a surface** versus the applied displacement. These outputs are frequently used in experimental validations.
+In solid mechanics, quantities of interest often include plots such as **reaction force on a surface** versus the applied displacement. These outputs are frequently used in experimental validations. PSD provides routines for calculating the reaction force on a surface and also allows live (runtime) plotting of these results.
 
-PSD provides routines for calculating the reaction force on a surface and also allows live (runtime) plotting of these results. 
+Here we reuse the tutorial 1 for demonstration. As a reminder, the problem of interest is a typical single-notch square plate cracking test under tensile loading. A unit square with a pre-existing crack is clamped at the bottom with $u_1 = u_2 = 0$ (first boundary condition), and is loaded quasi-statically on its top surface with $u_2 = u_2 + \Delta u_2$ until the crack propagates through its walls. Thus, two Dirichlet conditions are applied: one on the top and one on the bottom border.
 
-Imagine a 2D tensile cracking test case. To observe the **reaction force vs. applied displacement**, two extra flags must be used during the preprocessing step with `PSD_PreProcess`:
+<div style="text-align: center;">
+  <img src="_images/fracture-mechanics/square-notch.png" width="25%" alt="Domain of the single notch square cracking problem under tensile loading.">
+</div>
 
-> `-getreactionforce`
-> `-reactionforce stress_based`
+*Figure: Domain of the single notch square cracking problem under tensile loading.*
+
+The material is supposed to have the Lame coefficients, $\lambda=121.15e3$ and $\mu=80.77e3$, additionally the fracture toughness $G_c=2.7$.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+To observe the **reaction force vs. applied displacement**, two extra flags compared to that of tutorial 1 must be used during the preprocessing step with `PSD_PreProcess`:
 
 <pre><code>
 PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
 -dirichletconditions 2 -getreactionforce -reactionforce stress_based
 </code></pre>
 
-* The `-getreactionforce` flag tells PSD to include the routines for reaction force computation.
-* The `-reactionforce stress_based` method calculates the force using the stress integral in the $y$ direction:
+The two additional flags we find here are:
 
-$$
-F_y = \int_{\partial\Omega_{\text{top}}} \sigma_y
-$$
+`-getreactionforce` which tells PSD to include the routines for reaction force computation.
 
-> 💡 **Note**: 
+`-reactionforce stress_based` method calculates the force using the stress integral in the $y$ direction:
+$$F_y = \int_{\partial\Omega_{\text{top}}} \sigma_y$$
+
+- The `ControlParameters.edp` contains the same parameters than the tutorial 1. Additionally, we need to provide the surface  on which reaction force is to be calculated, in this case it is the top surface (mesh label = 2):
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Reaction force calculation -------
+// -------------------------------------------------------------------
+//  RFOn : Reaction force surface list
+//============================================================================
+
+  macro  RFOn 2   //  
+</code></pre>
+
+> 💡 **Note**:
 >An alternative method is `-reactionforce variational_based`, which is more accurate but slower. It uses matrix-vector multiplication:
->
- $$
- \{F_x, F_y\} = \mathbf{A} \{u_1, u_2\}
- $$
+>$$\{F_x, F_y\} = \mathbf{A} \{u_1, u_2\}$$
+
+#### ⚙️ Step 2: Solving the Problem
 
 Run the simulation using `PSD_Solve` with the appropriate mesh and number of processes:
 
@@ -377,11 +388,15 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 
 While the solver runs, a file named `force.data` will be created containing both the **reaction force** and **applied traction**.
 
-You can then plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with $\Delta u\_2$. In this file:
+#### 📊 Step 3: Postprocessing and Visualization
+
+As in tutorial 1 ParaView can be used to visulize the displacement and damage fields. In this tutorial you can also plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with loading $\Delta u\_2$. In this file:
 
 * 1st column: loading $\Delta u\_2$
 * 2nd column: $F\_x$
 * 3rd column: $F\_y$
+
+This leads to a plot such as shown below:
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/plot-fd.png" width="60%" alt="Plot of Applied Traction vs Force in Y Direction">
@@ -389,10 +404,21 @@ You can then plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with $\De
 
 *Figure: Applied traction vs. force in the y direction.*
 
-> ⚠️ **Warning**: 
+Such a plot is typical, as it shows reaction force rises almost linearly, then as the fracture starts, it quickly drops due to a fractured medium. 
+
+> ⚠️ **Warning**:
 > Ensure the output file `force.data` is correctly written before plotting; incomplete simulations might yield corrupted files.
 
-If you have **GnuPlot** configured with PSD, you can enable **live plotting** of the force-displacement curve using the flag `-plotreactionforce` during preprocessing.
+##### Bonus tutorial : Live plots
+
+If you have **GnuPlot** configured with PSD (i.e, gnuplot was present during PSD installation process), you can enable **live plotting** of the force-displacement curve using additional  flag `-plotreactionforce` during preprocessing.
+
+<pre><code>
+PSD_PreProcess -dimension 2 -problem damage -model hybrid_phase_field \
+-dirichletconditions 2 -getreactionforce -reactionforce stress_based
+</code></pre>
+
+During the simulation run this shall lead to continuous plots as shown below: 
 
 <div style="text-align: center;">
   <img src="_images/fracture-mechanics/gp0.png" width="32%" alt="Live Gnuplot 1">
@@ -402,36 +428,23 @@ If you have **GnuPlot** configured with PSD, you can enable **live plotting** of
 
 *Figure: Live plotting of traction vs. force using PSD and GnuPlot.*
 
-### Parallel 3D and Reaction Force Calculation
 
-To extend the same analysis to a **3D tensile cracking case**, use:
-
-<pre><code>
-PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
--dirichletconditions 2 -getreactionforce -reactionforce stress_based
-</code></pre>
-
-And then solve using:
-
-<pre><code>
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
-</code></pre>
-
-
-> 💡 **Note**: 
-> Replace `<code>` elements above with appropriate `.edp` scripts and meshes relevant to your problem domain. The plotting routines are compatible with most GnuPlot-enabled systems.
-
+> 🧪 Optional Exercise: Try changing dimension of the problem to 3D (`-dimension 3`), and perform the tutorial. You would also need to change the mesh to `./../Meshes/3D/tensile_crack.msh`
 
 ## Tutorial 4
-### Fracture mechanics Tutorials - L-shape cracking
+### L-shape specimen cracking with cyclic loading
 
 <div style="text-align: center;">
-  <img src="_images/fracture-mechanics/fm-geometry.png" width="30%" alt="Geometry of the L-shaped test used in this tutorial.">
+  <img src="_images/fracture-mechanics/Concrete-L-shaped-panel-Experimental-fracture-paths
+.png" width="30%" alt="Geometry of the L-shaped test used in this tutorial.">
 </div>
 
-*Figure: Geometry of the L-shaped test used in this tutorial.*
 
-### Preprocessing
+*Figure: Geometry of the L-shaped test used in this tutorial. Concrete L-shaped panel is shown with experimental fracture paths*
+
+This is a benchmark tests for concrete fracture mechanics problem. The figure above presents the geometry and the experimental cracks that are observed. To observe cracking, the specimen is loaded via two Dirichlet conditions: the clamped bottom wall, and Dirichlet point loading at point P.  
+
+#### 🛠️ Step 1: Preprocessing the Simulation
 
 You can either solve the problem using vectorial approach (recommended) or using staggered approach. To generate the solver, use one of the following.
 
@@ -587,7 +600,7 @@ to
 
 *Figure: Finite element mesh of the L-shaped test.*
 
-### Solving
+#### ⚙️ Step 2: Solving the Problem
 
 Irrespective of whether vectorial or staggered mode is used, solve the problem using `PSD_Solve`:
 
@@ -595,7 +608,7 @@ Irrespective of whether vectorial or staggered mode is used, solve the problem u
 PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L_shaped_crack.msh
 </code></pre>
 
-### Postprocessing
+#### 📊 Step 3: Postprocessing and Visualization
 
 Use ParaView to post-process results.
 
