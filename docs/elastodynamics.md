@@ -120,7 +120,6 @@ $$
 where $\rho_\infty \in [0,1]$ is the spectral radius controlling high-frequency damping ($\rho_\infty = 1$: no dissipation; $\rho_\infty = 0$: maximum dissipation).
 
 ## Tutorial 1
-
 ### Parallel 2D Elastodynamic Simulations with PSD
 
 > ⚠️ **Warning**:
@@ -288,26 +287,9 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
   <figcaption><em>Figure: Finite element displacement field on warped mesh shown at different time steps.</em></figcaption>
 </figure>
 
+> 🧪 Optional Exercise: Perform the same simulation but in 3D, a 3D mesh equivalent to that of 2D case is already present in the `Meshes` folder in the tutorial. 
 
 ## Tutorial 2
-
-### Parallel 3D Elastodynamic Simulations with PSD
-
-> 💡 **Note**:
-> These tutorials aim to kick-start usage of the elastodynamics module in PSD. They are concise by design and intended for users or developers with some familiarity with the software.
-
-The problem of interest involves a clamped-end bar with a single Dirichlet boundary condition and traction loading. This example uses Newmark-$\beta$ time discretization. Postprocessing is intended for displacement, acceleration, and velocity ($u$, $a$, $v$).
-
-<pre><code>PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
--timediscretization newmark_beta
-</code></pre>
-
-Once the preprocessing step is completed, solve the problem using four MPI processes and the given mesh file `(...bar_dynamic.msh)`.
-
-<pre><code>PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar_dynamic.msh -v 0
-</code></pre>
-
-## Tutorial 3
 
 ### Sequential PSD Elastodynamic Simulations
 
@@ -329,7 +311,7 @@ Once preprocessing is complete, solve the problem using the given mesh file `(..
 
 You can similarly try out the **3D problem** by following the same workflow with `-dimension 3` and the appropriate mesh file.
 
-## Tutorial 4
+## Tutorial 3
 
 ### Different Time Discretizations for Elastodynamic Simulations
 
@@ -351,7 +333,7 @@ After preprocessing, solve the problem using **three MPI processes** with the me
 
 You can similarly try out the **3D problem** by using `-dimension 3` and the appropriate 3D mesh.
 
-## Tutorial 5
+## Tutorial 4
 
 ### Timelogging Elastodynamic Simulations
 
