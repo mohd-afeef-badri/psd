@@ -163,24 +163,167 @@ $$
 and the right-hand side $l(\mathbf{v})$ includes known contributions from $\mathbf{u}^n$, $\dot{\mathbf{u}}^n$, $\ddot{\mathbf{u}}^n$, and any prescribed incident fields.
 
 ## Tutorial 1
-
 ### Soildynamics in 2D with PSD
+_Elastic Wave Propagation in Soil Medium with Paraxial Boundaries_
+
+> ⚠️ **Warning**:
+> You are requested to having followed at least the linear-elasticity tutorials before attempting to follow this tutorial. This will make the understanding process here simpler.
 
 > 💡 **Note**:
 >This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's soildynamics module.
 
-The problem of interest is a single Dirichlet condition problem of soildynamics in 2D. For this problem we use Newmark-$\beta$ time discretization. Additionally postprocessing is demanded for displacement, acceleration, and velocity ($u,a,v$).
+This tutorial illustrates the propagation of elastic waves in a 2D soil medium using the `Solidynamics` module of the PSD solver. The objective is to model the dynamic response of a homogeneous, isotropic soil domain subjected to a time-dependent boundary traction, while absorbing outgoing waves through paraxial (absorbing) boundary conditions.
+
+The computational domain is defined by a square domain $\Omega$. It corresponds to a 2D soil, paraxial absorbing boundaries are applied to left, right and bottom edge. The soil is assumed to be a linear elastic and nearly incompressible material with ($\rho$, $E$, $\nu$) = (2500 kg/m³, $6.62 \times 10^6$ Pa, 0.45). The computed values of $\mu$, $\lambda$, $c_s$, and $c_p$ are internally derived using standard isotropic elasticity relations.
+
+Time evolution is handled via the Newmark-$\beta$ method, a second-order accurate implicit scheme. The parameters for this problem are, total simulation time: $t_\text{max} = 4.0$ s, time step size: $\Delta t = 0.01$ s.
+
+For this simulation, a time-dependent sinusoidal traction load is applied on a portion of the bottom boundary (label 5), between $x = 20$ m and $x = 30$ m. The loading function is defined as:
+
+$$
+v_1^{\text{in}}(x,t) = 
+\begin{cases}
+\sin(2\pi t) & \text{if } t \leq 1.0 \text{ and } 20 < x < 30 \\
+0            & \text{otherwise}
+\end{cases}
+$$
+
+This models a localized source excitation lasting for 1 second, representing surface vibrational input (e.g., from a pile driver or seismic shaker). 
+
+The quantities of interest for this tutorial include the displacement field $\mathbf{u}$, velocity field $\mathbf{v}$, and acceleration field $\mathbf{a}$, which are computed and stored at each time step for postprocessing and analysis.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+In the terminal `cd` to the folder `/home/PSD-tutorials/soildynamics` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/soildynamics` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
 
 <pre><code class="bash">
 PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1  \
 -timediscretization newmark_beta -postprocess uav
 </code></pre>
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file `soil.msh`.
+> 🧠 What do the arguments mean?
+
+| Flag                                 | Description                                                                   |
+| ------------------------------------ | ----------------------------------------------------------------------------- |
+| `-problem soildynamics`            | Enables soildynamics physics                                                |
+| `-dimension 2`                     | Sets the simulation dimension to 2D                                           |
+| `-dirichletconditions 1`           | Applies Dirichlet conditions on one border                                    |
+| `-timediscretization newmark_beta` | Sets time discretization via Newmark-$\beta$                                |
+| `-postprocess uav`                 | Requests ($\mathbf{u}$, $\mathbf{a}$, $\mathbf{v}$) output for ParaView |
+
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform. At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+
+- Start by setting mesh in `soil.msh`.
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
+//=============================================================================
+
+  string ThName = "../Meshes/2D/soil.msh";
+</code></pre>
+
+- Next, setup the material (soil) properties:
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Soil parameters -------
+// -------------------------------------------------------------------
+//  rho : density of soil
+//  cp, cs : Primary and secondary wave velocities
+//  mu, lambda : Lame parameter of the soil
+//  E, nu : Modulus of Elasticity and Poisson ratio of the soil
+//============================================================================
+
+  real rho  = 2500.0 ;
+
+  real    mu
+         ,lambda
+         ;
+
+{
+  real E  = 6.62e6  ,
+       nu = 0.45    ;
+
+  mu     = E/(2.*(1.+nu))            ;
+  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;
+}
+  real cs   = sqrt(mu/rho)               ,
+       cp   = sqrt((lambda+(2.*mu))/rho) ;
+</code></pre>
+
+- Set the time discretization parameters:
+
+<pre><code class="cpp">
+//============================================================================
+//           ------- Time discretization parameters -------
+// -------------------------------------------------------------------
+//  t, tmax, dt : Time parameters, time, maximum time, and time step
+//  gamma, beta : Time discretization constants (Newmark-beta)
+//============================================================================
+
+  real tmax = 4.0     ,
+       t    = 0.01    ,
+       dt   = 0.01    ;
+
+  real gamma = 0.5                       ,
+       beta  = (1./4.)*(gamma+0.5)^2     ;
+</code></pre>
+
+- Provide information in Paraxial mesh labels, i.e which surfaces will act as absorbing ones:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary-condition parameters-------
+// -------------------------------------------------------------------
+// PAlabels : is the vector of surface mesh labels that participate as
+//            absorbing boundaries (via paraxial elements)
+//============================================================================
+
+  int [int]   PAlabels = [ 2 ,      // Left-border label
+                           4 ,      // Right-border label
+                           5 ];     // Bottom-border label
+</code></pre>
+
+- Finally, the loading conditions are provided:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary load-------
+// -------------------------------------------------------------------
+// v1in : is a time dependent sinusoidal loading function ( traction )
+//        which exists for time (tt <= 1 sec)
+// LoadLabels : is the vector of surface mesh labels to which external
+//              force is applied to
+//============================================================================
+
+  real tt;
+  func v1in = (tt <= 1.0 ? real(sin(tt*(2.*pi/1.0)))*(x>20&&x<30) : 0. );
+
+  int [int]   LoadLabels = [ 5 ];     // Bottom-border label 
+</code></pre>
+
+With all this, we have now setup the problem and are ready for launching the solver.
+
+#### ⚙️ Step 2: Solving the Problem
+
+As PSD is a parallel solver, let us use 4 cores to solve the problem. To do so enter the following command:
 
 <pre><code class="bash">
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
 </code></pre>
+
+
+This will launch the PSD simulation.
+
+Here `-np 4` (number of processes) denote the argument used to enter the number of parallel processes (MPI processes) used by PSD while solving. `-mesh ./../Meshes/2D/soil.msh` is used to provide the mesh file to the solver, `-mesh` argument is not needed if the user has indicated the right mesh in `ControlParameters.edp` file. `-v 0` denotes the verbosity level on screen. `PSD_Solve` is a wrapper around `FreeFem++-mpi`. Note that if your problem is large use more cores.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Once the simulation is finished. PSD allows postprocessing of results in ParaView. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
 <div style="text-align: center;">
   <img src="_images/soildynamics/sd-u0.png" width="40%" alt="Finite element displacement and velocity fields">
@@ -198,27 +341,7 @@ PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
 
 *Figure: Finite element displacement and velocity fields visualized for the 2D problem with ParaView at different timesteps.*
 
-Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure above can be extracted.
-
-## Tutorial 2
-
-### Soildynamics in 3D with PSD
-
-> 💡 **Note**:
->This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's soildynamics module.
-
-The problem of interest is a single Dirichlet condition problem of soildynamics in 3D. For this problem we use Newmark-$\beta$ time discretization. Additionally postprocessing is demanded for displacement, acceleration, and velocity ($u,a,v$).
-
-<pre><code class="bash">
-PSD_PreProcess -dimension 3 -problem soildynamics -dirichletconditions 1 -timediscretization newmark_beta 
--postprocess uav
-</code></pre>
-
-Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file `soil.msh`.
-
-<pre><code class="bash">
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/soil.msh -v 0
-</code></pre>
+> 🧪 Optional Exercise: Perform the same simulation but in 3D, a 3D mesh equivalent to that of 2D case is already present in the `Meshes` folder in the tutorial. You should yeild results such as shown below.
 
 <div style="text-align: center;">
   <img src="_images/soildynamics/sd-3du0.png" width="40%" alt="Finite element displacement and velocity fields">
@@ -236,27 +359,184 @@ PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/soil.msh -v 0
 
 *Figure: Finite element displacement and velocity fields visualized for the 3D problem with ParaView at different timesteps.*
 
-Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure above can be extracted.
 
-## Tutorial 3
-
-### Parallel 2D with double couple
+## Tutorial 2
+### 2D with double couple source
+_Seismic Wave Propagation from a Double-Couple Source in a 2D Soil Medium_
 
 > 💡 **Note**:
 >This document details some tutorials of soildynamics module of PSD. These tutorials are not verbose, but does instead give a kick start to users/developers for using PSD's soildynamics module.
 
-In the 2D problem above, seismic sources were supplied on the border. In the current one, the source is more realistic and comes from a double couple (point Dirichlet condition). The double couple boundary condition is a way to impose moments caused by faults that create earthquakes. Here, this problem imposes double couple using displacement-based conditions.
+In the current tutorial, the seismic source is more realistic and comes from a double couple (point Dirichlet condition). The double couple boundary condition is a way to impose moments caused by faults that create earthquakes. Here, this problem imposes double couple using displacement-based conditions.
+
+This tutorial models the propagation of seismic waves generated by a **double-couple source**, a simplified yet physically consistent representation of an earthquake shear dislocation, embedded in a 2D soil medium. The simulation uses the `Solidynamics` module of PSD with paraxial boundaries to absorb outgoing waves and minimize reflections.
+
+**Material Properties**
+
+The soil is modeled as an isotropic, linear elastic material, with properties typical of loose to medium-dense soil, with ($\rho$, $c_s$, $c_p$) = (1800 kg/m³, 2300 m/s, 4000 m/s).
+
+**Time Integration**
+
+The time domain response is computed over 4 seconds using the Newmark-$\beta$ method with second-order accuracy. With, simulation time: $t_\text{max} = 4.0$ s and time step: $\Delta t = 0.01$ s.
+
+**paraxial (absorbing) boundaries**
+
+To simulate an open domain, paraxial (absorbing) boundaries are applied on, Left edge (label 2), Right edge (label 4) and Bottom edge (label 5). These conditions help suppress reflections and emulate free radiation of waves.
+
+**Seismic Source: Double-Couple Force System**
+
+A double-couple (DC) source is implemented by applying equal and opposite point forces along orthogonal directions, mimicking a pure shear dislocation — a realistic approximation of a small earthquake source.
+
+The DC source consists of four points located around the epicenter, for this problem:
+
+| Point | Coordinates (x, y) |
+| ----- | ------------------ |
+| North | (5.0, 5.1)         |
+| South | (5.0, 5.0)         |
+| East  | (5.05, 5.05)       |
+| West  | (4.95, 5.05)       |
+
+Note, these points need to be forced in the mesh, PSD assumes that all these points are found in the mesh. 
+
+Each point is assigned a time-dependent displacement or traction function to reproduce the moment release of a double-couple. The loading function is a smooth step function, defined as:
+
+$$
+f(t) = \frac{1}{2} \left(1 + \tanh(8(t - 0.2))\right)
+$$
+
+This function gradually activates the source at $t = 0.2$ seconds. The forces are applied as:
+
+| Point | Loading Function   |
+| ----- | ------------------ |
+| North | $-0.5 \times f(t)$ |
+| South | $+0.5 \times f(t)$ |
+| East  | $+0.5 \times f(t)$ |
+| West  | $-0.5 \times f(t)$ |
+
+This configuration injects shear energy into the medium, generating both S-waves and P-waves, and mimics a strike-slip fault mechanism.
+
+The quantities of interest for this tutorial include the displacement field $\mathbf{u}$, velocity field $\mathbf{v}$, and acceleration field $\mathbf{a}$, which are computed and stored at each time step for postprocessing and analysis.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+In the terminal `cd` to the folder `/home/PSD-tutorials/soildynamics` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/soildynamics` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
 
 <pre><code class="bash">
 PSD_PreProcess -dimension 2 -problem soildynamics  -timediscretization newmark_beta \
 -useGFP -doublecouple displacement_based -postprocess uav
 </code></pre>
 
-Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file `soil_dc.msh`.
+> 💡 **Note**:
+>Compared to the previous tutorial, we note that `-dirichletconditions 1` are not present, and this is being replaced by a boolean flag `-doublecouple`, which enables double-couple loading. Aditionally, `-useGFP`, i.e, use Go Fast Plugin is use, this is optional flag for performance considerations. 
+
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform. At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+- Start by setting mesh in `bar_dynamic.msh`.
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
+//=============================================================================
+
+  string ThName = "../Meshes/2D/soil_dc.msh";
+</code></pre>
+
+- Next, setup the material (soil) properties:
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Soil parameters -------
+// -------------------------------------------------------------------
+//  rho : density of soil
+//  cp, cs : Primary and secondary wave velocities
+//  mu, lambda : Lame parameter of the soil
+//============================================================================
+
+  real rho  = 1800.0 ,
+       cs   = 2300.  ,
+       cp   = 4000.  ;
+
+  real    mu     =  cs*cs*rho,
+          lambda =  cp*cp*rho - 2*mu;
+</code></pre>
+
+- Set the time discretization parameters:
+
+<pre><code class="cpp">
+//============================================================================
+//           ------- Time discretization parameters -------
+// -------------------------------------------------------------------
+//  t, tmax, dt : Time parameters, time, maximum time, and time step
+//  gamma, beta : Time discretization constants (Newmark-beta)
+//============================================================================
+                                                                              
+  real tmax = 4.0     ,
+       t    = 0.01    ,
+       dt   = 0.01    ;
+
+  real gamma = 0.5                       ,
+       beta  = (1./4.)*(gamma+0.5)^2     ;
+</code></pre>
+
+- Provide information in Paraxial mesh labels, i.e which surfaces will act as absorbing ones:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary-condition parameters-------
+// -------------------------------------------------------------------
+// PAlabels : is the vector of surface mesh labels that participate as
+//            absorbing boundaries (via paraxial elements)
+//============================================================================
+
+  int [int]   PAlabels = [ 2 ,      // Left-border label
+                           4 ,      // Right-border label
+                           5 ];     // Bottom-border label
+</code></pre>
+
+- Finally, the double-coule loading conditions are provided:
+
+<pre><code class="cpp">
+//============================================================================
+//     -------Parameters for double couple point source-------
+// -------------------------------------------------------------------
+// DcNorthPointCord : is the vector  containing  coordinates of the
+//                double couple north point. Idiom nomenclature ap-
+//                lies to the south, east, and west points.
+// DcNorthCondition : is the macro containing the applied condition
+//                of the double couple north point.
+//============================================================================
+
+   real [int]   DcNorthPointCord = [5.,5.1];
+   real [int]   DcSouthPointCord = [5.,5.];
+   real [int]   DcEastPointCord  = [5.05,5.05];
+   real [int]   DcWestPointCord  = [4.95,5.05];
+
+   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcSouthCondition()  0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcEastCondition()   0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcWestCondition()  -0.5*(1.+tanh(8*(t-0.2)))//
+</code></pre>
+
+With all this we can now launch and post-process the simulation.
+
+#### ⚙️ Step 2: Solving the Problem
+
+As PSD is a parallel solver, let us use 4 cores to solve the problem. To do so enter the following command:
 
 <pre><code class="bash">
-PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil_dc.msh
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil_dc.msh -v 0
 </code></pre>
+
+
+This will launch the PSD simulation.
+
+Here `-np 4` (number of processes) denote the argument used to enter the number of parallel processes (MPI processes) used by PSD while solving. `-mesh ./../Meshes/2D/soil_dc.msh` is used to provide the mesh file to the solver, `-mesh` argument is not needed if the user has indicated the right mesh in `ControlParameters.edp` file. `-v 0` denotes the verbosity level on screen. `PSD_Solve` is a wrapper around `FreeFem++-mpi`. Note that if your problem is large use more cores.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Once the simulation is finished. PSD allows postprocessing of results in ParaView. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
 
 <div style="text-align: center;">
   <img src="_images/soildynamics/sd-2ddcu0.png" width="45%" alt="Finite element displacement and acceleration fields">
@@ -269,12 +549,10 @@ PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil_dc.msh
 
 *Figure: Finite element displacement and acceleration fields visualized for the 2D problem with ParaView at different timesteps.*
 
-Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure above can be extracted.
 
-Similarly, try out the 3D problem. However, take note that the mesh `./../Meshes/2D/soil-dc.msh` is not provided, so you will have to create your own mesh.
+> 🧪 Optional Exercise: Perform the same simulation but in 3D. Take note that the mesh `./../Meshes/3D/soil-dc.msh` is not provided, so you will have to create your own mesh. Considering the four double couple points and the source points, Gmsh or SALOME is recomended for this task.
 
-## Tutorial 4
-
+## Tutorial 3
 ### Parallel 3D with top-ii-vol meshing
 
 A single Dirichlet boundary condition is applied at the bottom and the simulation uses GFP.
@@ -288,7 +566,7 @@ PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretizat
 PSD_Solve -np 4 Main.edp -v 0 -ns -nw 
 </code></pre>
 
-## Tutorial 5
+## Tutorial 4
 
 ### Parallel 3D with top-ii-vol meshing and double couple source
 
