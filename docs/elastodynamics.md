@@ -334,7 +334,6 @@ After preprocessing, solve the problem using **three MPI processes** with the me
 You can similarly try out the **3D problem** by using `-dimension 3` and the appropriate 3D mesh.
 
 ## Tutorial 4
-
 ### Timelogging Elastodynamic Simulations
 
 > 💡 **Note**:
@@ -345,7 +344,7 @@ PSD provides a way to log timing information from your solver via the `-timelog`
 > ⚠️ **Warning**:
 > Using this feature may slow down your simulation, as it involves `MPI_Barrier` operations to measure timings accurately.
 
-### 🛠 Example Workflow: 2D Solver with Time Logging
+#### 🛠 Example Workflow: 2D Solver with Time Logging
 
 Run the preprocessing step with the `-timelog` flag:
 
@@ -358,7 +357,7 @@ Then solve the problem using two MPI processes with the provided 2D mesh file:
 <pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
-### ⏱️ Example Output
+#### ⏱️ Example Output
 
 <figure style="text-align: center;">
   <img src="_images/elastodynamics/ed-time-par.png" width="40%" alt="Time logging output produced for parallel run on 2 processes">
@@ -377,3 +376,80 @@ A similar time log is produced for the sequential solver:
 > The timing report includes the breakdown of solver phases, but only for the **final time step**.
 
 Use these logs to analyze performance bottlenecks and compare scalability between sequential and parallel executions.
+
+---
+
+## 📚 Additional Exercises
+
+These exercises are designed to deepen your understanding of the various features and numerical strategies available in PSD. They allow you to experiment with performance optimization, modeling approaches, and elastodynamics enhancements.
+
+#### Exercise 1 – Time Discretization Comparison
+
+Use the `-timelog` flag to explore how different time integration schemes affect solver performance. Start by comparing **Newmark-β** and **Generalized-α** time discretizations, then try out other time integrators available in PSD.
+
+**Tasks:**
+* Solve the same elastodynamics problem using different time schemes.
+* Use both `PSD_Solve` (parallel) and `PSD_Solve_Seq` (sequential) to compare performance.
+* Record timing, accuracy, and solver behavior for each case.
+Refer to the PSD documentation for a list of supported time integration schemes.
+
+
+#### Exercise 2 – Mesh Refinement and Convergence Study
+
+PSD supports post-partitioning mesh refinement using the `-split` flag at solver level. This flag refines each triangle (or tetrahedron) into smaller ones:
+
+* `-split 1` → 4 elements per original element
+* `-split 2` → 16 elements, and so on
+* In general, `-split n` results in $4^n$ times more elements in 2D
+
+**Suggested Usage:**
+
+<pre><code>
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -split 2
+</code></pre>
+
+This refines each triangle of the `bar-dynamic.msh` mesh into 4 smaller triangles.
+
+**Try this to:**
+* Assess mesh convergence of the solution
+* Analyze computational time vs. accuracy
+* Explore scaling behavior with parallel computing
+
+
+#### Exercise 3 – Live Visualization with OpenGL Debug Mode
+
+The `-debug` flag (used during preprocessing) activates a live OpenGL visualization of the displacement field. This feature is helpful for quick visual feedback during development or exploratory simulations.
+
+**Step 1: Preprocess with Debug Mode**
+
+<pre><code>
+PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
+-timediscretization newmark_beta -postprocess uav -timelog -debug
+</code></pre>
+
+**Step 2: Solve with Visualization Enabled**
+
+<pre><code>
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+</code></pre>
+
+The additional `-wg` flag enables OpenGL graphics rendering during solving.
+
+#### Exercise 4 – Accelerated Solving with GoFast Plugins (GFP)
+
+PSD includes a high-performance computing kernel known as **GoFast Plugins (GFP)**, which uses optimized C++ structures for various compute-heavy operations. This feature is **disabled by default**, but can be activated using the `-useGFP` flag during preprocessing.
+
+**Step 1: Preprocess with GFP Enabled**
+<pre><code>
+PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -tractionconditions 1 \
+-timediscretization newmark_beta -postprocess uav -useGFP
+</code></pre>
+
+**Step 2: Solve the Problem**
+<pre><code>
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+</code></pre>
+
+Combine with `-timelog` to measure the performance improvement.
+
+**Try this out with other problems** from the tutorial to evaluate the speedup offered by GFP. It is often beneficial to keep this flag enabled by default for larger problems.

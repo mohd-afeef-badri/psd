@@ -480,11 +480,11 @@ While the solver runs, a file named `force.data` will be created containing both
 
 #### 📊 Step 3: Postprocessing and Visualization
 
-As in tutorial 1 ParaView can be used to visulize the displacement and damage fields. In this tutorial you can also plot `force.data` to analyze how $F\_y$ and $F\_x$ evolve with loading $\Delta u\_2$. In this file:
+As in tutorial 1 ParaView can be used to visulize the displacement and damage fields. In this tutorial you can also plot `force.data` to analyze how $F_y$ and $F_x$ evolve with loading $\Delta u_2$. In this file:
 
-* 1st column: loading $\Delta u\_2$
-* 2nd column: $F\_x$
-* 3rd column: $F\_y$
+* 1st column: loading $\Delta u_2$
+* 2nd column: $F_x$
+* 3rd column: $F_y$
 
 This leads to a plot such as shown below:
 
@@ -738,3 +738,92 @@ On your screen, the force-displacement curve which plots `force.data` should loo
 *Figure: Force-displacement curve with cyclic loading.*
 
 > 🧪 Optional Exercise: Try repeating the probelm in tutorial 4 but use the staggered solving approach. You will need to skip the `-vectorial` flag as used in tutorial 4. While rest of the tutorial process should remain the same, the only diffrence will be the extraction of reaction force. Since staggered apprach is used, displacement vector is diffrent than the damage one, hence for retriving force in x `forcetotx = forcetotx + F[][PCi[0]*2+0]*DP[PCi[0]*2+0];` is used instead of `forcetotx = forcetotx + F[][PCi[0]*3+0]*DP[PCi[0]*3+0];`, similar changes are needed for $y$ force. 
+
+---
+
+## 📚 Additional Exercises
+
+These exercises are designed to deepen your understanding of the various features and numerical strategies available in PSD. They allow you to experiment with performance optimization, modeling approaches, and fracture mechanics enhancements.
+
+#### Exercise 1 – Reaction Force Evaluation Methods
+
+When computing the reaction force on a surface, PSD offers two different strategies:
+
+* `-reactionforce stress_based`: Extracts the reaction force by integrating the Cauchy stress field across the boundary.
+* `-reactionforce variational_based`: Computes the reaction force via a variational formulation using virtual work principles.
+
+**Instructions**:
+
+* First, run the simulation with the default `stress_based` method.
+* Then, rerun it using `-reactionforce variational_based`.
+* Compare the magnitude and temporal profile of the reaction forces obtained from each method.
+
+>⚠️ **Note**:
+>The **stress-based** method is significantly faster and typically sufficient for most practical applications. However, comparing both can give insights into the sensitivity of your results and the influence of numerical integration schemes.
+
+#### Exercise 2 – Enable GoFast Plugins (GFP)
+
+Try running the preprocessing and solution stages with the `-useGFP` flag:
+
+<pre><code>
+PSD_PreProcess ... -useGFP
+</code></pre>
+
+**GFP** (GoFast Plugins) is a set of optimized C++ routines integrated into PSD. These plugins accelerate core finite element operations, including matrix assembly, projection, and integration.
+
+* Measure the runtime improvement when using `-useGFP`.
+* Ensure numerical equivalence with the standard build by comparing output fields.
+
+> **Tip**:
+>GFP acceleration is especially impactful for large-scale or 3D simulations.
+
+#### Exercise 3 – Switch to Vectorial Finite Element (Monolithic) Approach
+
+Enable the **vectorial** mode with:
+
+<pre><code>
+PSD_Solve ... -vectorial
+</code></pre>
+
+* **Default**: A **staggered scheme** that solves displacement and damage (fracture) fields separately.
+* **Vectorial**: A **monolithic scheme** that solves all fields simultaneously.
+
+* Compare the accuracy and convergence behavior of the monolithic approach.
+* Study how the solver handles coupling between damage and displacement under dynamic or quasi-static loads.
+
+#### Exercise 4 – Enable Tensile/Compressive Energy Decomposition
+
+Run your simulation with:
+
+<pre><code>
+PSD_Solve ... -energydecomp
+</code></pre>
+
+
+This flag activates the **energy decomposition model** that separates the elastic energy into tensile and compressive contributions.
+
+**Why it matters**:
+
+* Fracture typically occurs under **tensile** conditions.
+* Without decomposition, the model may allow unrealistic crack growth under compression.
+
+**Use Case**:
+
+* Highly recommended for fracture simulations under complex stress states (e.g., compression-tension cycles).
+* Optional for pure tensile tests, where it won’t alter the results significantly.
+
+#### Exercise 5 – Constrained Hybrid Phase-Field (HPF) Fracture Closure
+
+Enable constraint-aware fracture modeling using:
+
+<pre><code>
+PSD_Solve ... -constrainHPF
+</code></pre>
+
+This flag activates constraints in the **hybrid phase-field model**, allowing fractured regions to **reclose** under compressive loads. It models more realistic fracture evolution in loading-unloading cycles.
+
+**Goal**:
+* Observe how crack paths change when compressive forces are present after initial cracking.
+* Compare with unconstrained simulations where cracks remain permanently open.
+
+This feature is crucial for simulating reversible damage or cyclic loading scenarios.

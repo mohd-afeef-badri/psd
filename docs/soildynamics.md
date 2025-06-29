@@ -95,7 +95,7 @@ To emulate an unbounded domain and absorb outgoing seismic waves at the boundary
 
 **Paraxial Traction Approximation**
 
-Let $\mathbf{m}$ denote the outward normal at $\Sigma$. The paraxial approximation replaces the traction $\mathbf{t}\_E$ due to the exterior domain $\Omega\_E$ by:
+Let $\mathbf{m}$ denote the outward normal at $\Sigma$. The paraxial approximation replaces the traction $\mathbf{t}_E$ due to the exterior domain $\Omega_E$ by:
 
 $$
 \mathbf{t}_E \approx \mathbf{A}_0(\dot{\mathbf{u}}) = \rho c_p (\dot{\mathbf{u}} \cdot \mathbf{m}) \mathbf{m} + \rho c_s \left( \dot{\mathbf{u}} - (\dot{\mathbf{u}} \cdot \mathbf{m}) \mathbf{m} \right)
@@ -913,3 +913,73 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
   <img src="_images/soildynamics/t4-min.png" width="45%" alt="clamped-bar">
   <figcaption><em>Figure: Observed wave propogation within the soil medium.</em></figcaption>
 </figure>
+
+
+## 📚 Additional Exercises
+
+These exercises are designed to deepen your understanding of the various features and numerical strategies available in PSD. They allow you to experiment with performance optimization, modeling approaches, and soildynamics enhancements.
+
+#### Exercise 1 – Running the Solver in Sequential Mode
+
+Explore the **sequential solver mode** in PSD by using the `-sequential` flag during the preprocessing step. Then solve the problem using `PSD_Solve_Seq` instead of the default parallel solver.
+
+**Example Workflow:**
+
+<pre><code class="bash">
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 \
+-timediscretization newmark_beta -postprocess uav -sequential
+</code></pre>
+
+<pre><code class="bash">
+PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
+</code></pre>
+
+Try this approach on other problems from the tutorial and compare results against parallel runs. This is especially useful for debugging or smaller-scale tests.
+
+#### Exercise 2 – Double Couple Source: Force-Based Variant
+
+In soildynamics problems, **double couple sources** can be introduced using two methods:
+
+* **Displacement-based** (already used in previous exercises via `-doublecouple displacement_based`)
+* **Force-based**, where forces are applied at source locations and internally converted to equivalent moments.
+
+**Your Task:**
+Try out the **force-based** method by using:
+
+<pre><code class="bash">
+-doublecouple force_based
+</code></pre>
+
+Compare simulation outcomes (e.g., displacement fields, wave propagation) between the two approaches. This is important for validating different earthquake source modeling strategies.
+
+#### Exercise 3 – Time Discretization Performance Study
+
+Investigate how different time integration schemes affect performance and stability.
+
+**Instructions:**
+
+* Enable time logging using the `-timelog` flag.
+* Compare solver performance for **Newmark-β**, **Generalized-α**, and other available time discretization schemes.
+* Use both sequential and parallel solvers for comparison.
+
+Refer to the PSD documentation for the full list of time integration options. Log the timings and interpret differences in accuracy or runtime.
+
+
+#### Exercise 4 – Speeding Up Simulations with GoFast Plugins (GFP)
+
+PSD includes a performance optimization kernel known as **GoFast Plugins (GFP)**, designed to accelerate solving by using optimized C++ structures. This feature is off by default.
+
+**Activate GFP in Preprocessing:**
+
+<pre><code class="bash">
+PSD_PreProcess -dimension 2 -problem soildynamics -dirichletconditions 1 \
+-timediscretization newmark_beta -postprocess uav -useGFP
+</code></pre>
+
+**Solve the Problem in Parallel:**
+
+<pre><code class="bash">
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/soil.msh -v 0
+</code></pre>
+
+Test this feature on multiple examples from the tutorial. Combine with `-timelog` to **quantify the performance gain** from using `-useGFP`.

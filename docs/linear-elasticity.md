@@ -1006,13 +1006,13 @@ We reintroduce the problem from tutorial 1, an example of a 2D bar which bends u
 
 First step in a PSD simulation is PSD preprocessing, at this step you tell PSD what kind of physics, boundary conditions, approximations, mesh, etc are you expecting to solve. More importantly for this tutorial we will signify to PSD that MFront has to be used.
 
-In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity`. Launch `PSD\_PreProcess` from the terminal, to do so run the following command.
+In the terminal `cd` to the folder `/home/PSD-tutorials/linear-elasticity`. Launch `PSD_PreProcess` from the terminal, to do so run the following command.
 
 <pre><code>PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 -dirichletconditions 1 -postprocess u -useMfront
 </code></pre>
 
-After the `PSD\_PreProcess` runs successfully you should see many `.edp` files in your current folder.
+After the `PSD_PreProcess` runs successfully you should see many `.edp` files in your current folder.
 
 > 🧠 What do the arguments mean?
 
@@ -1025,7 +1025,7 @@ After the `PSD\_PreProcess` runs successfully you should see many `.edp` files i
 | `-postprocess u`             | Requests displacement output for ParaView           |
 | `useMfront`                  | Activates MFront interface for PSD                  |
 
-At this stage the input properties $E,\nu$ can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3`. In contrast to tutorial 1, notice that these values of `E` and `nu` are fed to a vector `PropertyValues = [E, nu];`  verbosed by `PropertyNames   = "YoungModulus PoissonRatio";`. We also signify that we will be solving linear elasticity via `MforntMaterialBehaviour   = "Elasticity";` and also `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` which signifies the hypothesis to be used for the Linear elasticity. The `MaterialHypothesis` accepts `"GENERALISEDPLANESTRAIN"`,  `"PLANESTRAIN"`, `"PLANESTRESS"`,  and  `"TRIDIMENSIONAL"` as arguments. `PropertyValues`, `PropertyNames`, and `MaterialHypothesis`  will eventually be provided to MFront in `FemParameters.edp` file via `PsdMfrontHandler(...)` function *User is encouraged to have a look at `FemParameters.edp` file.   The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"` (*note that mesh can also be provided in the next step*) .In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
+At this stage the input properties $E,\nu$ can be mentioned in `ControlParameters.edp`, use `E = 200.e9`, and `nu = 0.3`. In contrast to tutorial 1, notice that these values of `E` and `nu` are fed to a vector `PropertyValues = [E, nu];`  verbosed by `PropertyNames   = "YoungModulus PoissonRatio";`. We also signify that we will be solving linear elasticity via `MforntMaterialBehaviour   = "Elasticity";` and also `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` which signifies the hypothesis to be used for the Linear elasticity. The `MaterialHypothesis` accepts `"GENERALISEDPLANESTRAIN"`,  `"PLANESTRAIN"`, `"PLANESTRESS"`,  and  `"TRIDIMENSIONAL"` as arguments. `PropertyValues`, `PropertyNames`, and `MaterialHypothesis`  will eventually be provided to MFront in `FemParameters.edp` file via `PsdMfrontHandler(...)` function *User is encouraged to have a look at `FemParameters.edp` file.   The volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho*g=8.e3*(-9.81)=-78480.0$). One can also provide the mesh to be used in `ControlParameters.edp`, via `ThName = "../Meshes/2D/bar.msh"` (*note that mesh can also be provided in the next step*). In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh. Dirichlet boundary conditions are also provided in `ControlParameters.edp`. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$).
 
 
 #### ⚙️ Step 2: Solving the Problem
@@ -1062,7 +1062,7 @@ To put it briefly, what MFront does for linear elasticity problem here is build 
 
 The two raised points are handled using `PsdMfrontHandler(...)` in `FemParameters.edp` file.
 
-Firstly, the arguments `E = 200.e9`,  `nu = 0.3`, `MforntMaterialBehaviour   = "Elasticity";`, `PropertyValues = [E, nu];`, `PropertyNames   = "YoungModulus PoissonRatio";`, `PropertyValues = [E, nu];` and   `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` form `ControlParameters.edp` takes care of the first point (the nature of the problem and the material involved). The latter three arguments well define that we have a 2D problem, with given values of properties ($E, \nu$). The snippet from `ControlParameters.edp` (produced after using `-useMfront` argument for `PSD\_PreProcess`) file shows these variables which define the nature of the problem and characteristics of material involved
+Firstly, the arguments `E = 200.e9`,  `nu = 0.3`, `MforntMaterialBehaviour   = "Elasticity";`, `PropertyValues = [E, nu];`, `PropertyNames   = "YoungModulus PoissonRatio";`, `PropertyValues = [E, nu];` and   `MaterialHypothesis = "GENERALISEDPLANESTRAIN";` form `ControlParameters.edp` takes care of the first point (the nature of the problem and the material involved). The latter three arguments well define that we have a 2D problem, with given values of properties ($E, \nu$). The snippet from `ControlParameters.edp` (produced after using `-useMfront` argument for `PSD_PreProcess`) file shows these variables which define the nature of the problem and characteristics of material involved
 
 <pre><code>
 //============================================================================
@@ -1149,3 +1149,118 @@ a(\mathbf{u},\mathbf{v}) = \int_{\Omega}(
 $$
 
 Here, $\varepsilon(\mathbf{u}):\mathbf{Mt}$ is nothing but the stress $\sigma(\mathbf{u})$ operator. User is encourage to have a look at the `VariationalFormulation.edp` file that contains the variational formulation (weak form) of the problem described.
+
+---
+
+## 📚 Additional Exercises
+
+The following exercises are designed to explore advanced functionalities and experimental features of the PSD finite element solver. They provide an opportunity to investigate numerical accuracy, solver performance, and deeper aspects of the generated FreeFem++ source code.
+
+#### Exercise 1 – Mesh Refinement and Convergence Study
+
+PSD supports an internal **mesh refinement feature** that is applied **after partitioning**. This is controlled via the solver-level flag:
+
+<pre><code>
+-split [int]
+</code></pre>
+
+* A value of `-split 1` subdivides each triangle (or tetrahedron) into **4** smaller elements.
+* More generally, `-split n` creates a mesh with **4ⁿ** times more elements.
+
+**Use case**:
+This allows you to study **mesh convergence** and **solution accuracy**, while testing how computational cost scales with finer resolutions.
+
+**Example**:
+
+<pre><code>
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -split 2
+</code></pre>
+
+This will run a simulation using a mesh with each triangle subdivided into 4 smaller ones (total 16× elements).
+
+**Tip**: Use in conjunction with parallel execution to manage the computational load.
+
+
+
+#### Exercise 2 – Debug Visualization with OpenGL
+
+The preprocessing stage supports real-time OpenGL visualization of the displacement field using the `-debug` flag. Though originally intended for developer-level debugging, it is an excellent tool for quickly visualizing simulation behavior.
+
+**Preprocessing**
+
+<pre><code>
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -debug
+</code></pre>
+
+**Solving** 
+
+<pre><code>
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
+</code></pre>
+
+>**Note**:
+>The `-wg` flag is required at the solve stage to enable graphical output.
+
+
+#### Exercise 3 – Solving Linear Elasticity via Pseudo Nonlinear Formulation
+
+PSD provides a special modeling mode that simulates **linear elasticity** using a **pseudo nonlinear formulation**, invoked using:
+
+<pre><code>
+-model pseudo_nonlinear
+</code></pre>
+
+This introduces a Newton-like iteration structure, mimicking nonlinear mechanics.
+
+**Preprocessing**
+
+<pre><code>
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -model pseudo_nonlinear
+</code></pre>
+
+**Solving**
+
+<pre><code>
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
+</code></pre>
+
+**Analysis Task**:
+Compare the FreeFem++ files generated with and without this flag:
+
+* `LinearFormBuilderAndSolver.edp`
+* `VariationalFormulations.edp`
+
+You’ll observe that Newton–Raphson iterations are now employed. However, convergence is immediate (typically in one iteration) due to the linear nature of the actual governing equations.
+
+>💡 **Note**:
+>This feature is supported **only in parallel runs** (i.e., `PSD_Solve`, not `PSD_Solve_Seq`).
+
+#### Exercise 4 – Full Material Tensor Formulation
+
+This advanced feature allows for the use of the **full fourth-order material stiffness tensor** in the variational formulation. This is particularly useful when dealing with **anisotropic** or spatially heterogeneous materials.
+
+Use the `-withmaterialtensor` flag during preprocessing:
+
+**Preprocessing**
+
+<pre><code>
+PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
+-dirichletconditions 1 -postprocess u -timelog -withmaterialtensor
+</code></pre>
+
+**Solving**
+
+<pre><code>
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
+</code></pre>
+
+**Analysis Task**:
+Inspect and compare the following files between standard and tensor-based runs:
+
+* `FemParameters.edp`
+* `MeshAndFeSpace.edp`
+* `VariationalFormulations.edp`
+
+These files will show the use of full tensor expressions in the weak form and the definition of directional material properties.
