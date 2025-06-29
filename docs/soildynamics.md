@@ -427,7 +427,7 @@ PSD_PreProcess -dimension 2 -problem soildynamics  -timediscretization newmark_b
 </code></pre>
 
 > 💡 **Note**:
->Compared to the previous tutorial, we note that `-dirichletconditions 1` are not present, and this is being replaced by a boolean flag `-doublecouple`, which enables double-couple loading. Aditionally, `-useGFP`, i.e, use Go Fast Plugin is use, this is optional flag for performance considerations. 
+>Compared to the previous tutorial, we note that `-dirichletconditions 1` are not present, and this is being replaced by a boolean flag `-doublecouple`, which enables double-couple loading. Additionally, `-useGFP`, i.e, use Go Fast Plugin is use, this is optional flag for performance considerations. 
 
 Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform. At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
 
@@ -735,6 +735,181 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
   <figcaption><em>Figure: Observed wave propogation within the soil medium.</em></figcaption>
 </figure>
 
+## Tutorial 4
+### 3D with top-ii-vol meshing and double couple
+_Topology-to-Volume Meshing with Double-Couple Source Injection_
+
+This tutorial builds upon the previous one by generating the simulation mesh entirely in memory using a 3D point cloud input via PSD's `top-ii-vol` mesher. Instead of an external surface load in tutorial 3, the earthquake source is now modeled using a volumetric double-couple force system at a specified hypocenter depth.
+
+This setup mimics a realistic fault slip by injecting seismic energy from four interior points, representing the classic double-couple moment tensor configuration used in seismology. We will not repete here the soil and time parameters here please see tutorial 3 for that. The only diffrence being double couple is represented below. 
+
+**Double-Couple Point Source**
+
+This tutorial simulates a **subsurface fault rupture** using a classic double-couple moment tensor configuration. The source is modeled by injecting forces at four surrounding points:
+
+| Point | Coordinates $[x, y, z]$ in meters | Condition                     |
+| ----- | --------------------------------- | ----------------------------- |
+| North | \[877421.00, 162180.00, -1441.07] | $-0.5(1 + \tanh(8(t - 0.2)))$ |
+| South | \[877421.00, 162180.00, -1600.71] | $+0.5(1 + \tanh(8(t - 0.2)))$ |
+| East  | \[877341.00, 162180.00, -1520.89] | $+0.5(1 + \tanh(8(t - 0.2)))$ |
+| West  | \[877501.00, 162180.00, -1520.89] | $-0.5(1 + \tanh(8(t - 0.2)))$ |
+
+These forces form two opposing dipoles (N-S and E-W) and activate progressively over time using a smooth **hyperbolic tangent** ramp, centered at $t = 0.2$ seconds.
+
+**Source Time Function (Generic Form)**
+
+$$
+f(t) = \pm \frac{1}{2}\left(1 + \tanh\left(8(t - 0.2)\right)\right)
+$$
+
+This function is continuous and differentiable—ideal for stable numerical wave propagation.
+
+The quantities of interest for this tutorial include the displacement field $\mathbf{u}$, velocity field $\mathbf{v}$, and acceleration field $\mathbf{a}$, which are computed and stored at each time step for postprocessing and analysis.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+In the terminal `cd` to the folder `/home/PSD-tutorials/soildynamics` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/soildynamics` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
+
+<pre><code class="bash">
+PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
+-useGFP -top2vol-meshing -doublecouple displacement_based -postprocess uav
+</code></pre>
+
+> 💡 **Note**:
+>Compared to the previous tutorial3, we note that `-doublecouple displacement_based` has been added which activates the double couple loading for seismic source.
+
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform. At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+- Start by setting top-ii-vol meshing support.
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  PcName : Name of the point cloud
+//  PcNx   : Number of points in x in the point cloud
+//  PcNy   : Number of points in x in the point cloud
+//  PcNz   : Number of points in x in the point cloud
+//  Dptz   : Depth in z for the mesh produced by top-ii-vol
+//  PartX  : Number of partitions in x direction
+//  PartY  : Number of partitions in y direction
+//  PartZ  : Number of partitions in z direction
+// -------------------------------------------------------------------
+// Note that make sure PartX*PartY*PartZ = mpisize
+//=============================================================================
+
+  string PcName = "../Meshes/3D/Point-Cloud";
+  macro PcNx() 63 //
+  macro PcNy() 57 //
+  macro PcNz() 29 //
+  macro Dptz() -1920.0 //
+  macro PartX() 1 //
+  macro PartY() mpisize //
+  macro PartZ() 1 //
+</code></pre>
+
+> 💡 **Note**:
+>The 3D mesh is generated in-memory and automatically partitioned across MPI processes using, partitions along x-axis $P_x$: `PartX() 1`, partitions along y-axis $P_y$: `PartY() mpisize` (one domain per MPI process), and partitions along z-axis $P_z$: `PartZ() 1`.
+
+>🚨 **Important**:
+>The total number of partitions must match the number of MPI processes: i.e. $P_x\times P_y \times P_z = \text{mpisize}$. Users are free to choose 1D, 2D, or 3D decompostion adhearing to the given notice.
+
+- Next, setup the soil material paramters.
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Soil parameters -------
+// -------------------------------------------------------------------
+//  rho : density of soil
+//  cp, cs : Primary and secondary wave velocities
+//  mu, lambda : Lame parameter of the soil
+//============================================================================
+
+  real rho  = 1800.0 ,
+       cs   = 2300.  ,
+       cp   = 4000.  ;
+
+  real    mu     =  cs*cs*rho,
+          lambda =  cp*cp*rho - 2*mu;
+</code></pre>
+
+- Set the time discretization parameters:
+
+<pre><code class="cpp">
+//============================================================================
+//           ------- Time discretization parameters -------
+// -------------------------------------------------------------------
+//  t, tmax, dt : Time parameters, time, maximum time, and time step
+//  gamma, beta : Time discretization constants (Newmark-beta)
+//============================================================================
+
+  real tmax = 4.0     ,
+       t    = 0.01    ,
+       dt   = 0.01    ;
+
+  real gamma = 0.5                       ,
+       beta  = (1./4.)*(gamma+0.5)^2     ;
+</code></pre>
+
+- Provide information in Paraxial mesh labels, i.e which surfaces will act as absorbing ones:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary-condition parameters-------
+// -------------------------------------------------------------------
+// PAlabels : is the vector of surface mesh labels that participate as
+//            absorbing boundaries (via paraxial elements)
+//============================================================================
+
+  int [int]   PAlabels = [1,2,4,5,6];
+                                     
+</code></pre>
+
+- Finally, the  double couple loading conditions are provided:
+
+<pre><code class="cpp">
+//============================================================================
+//     -------Parameters for double couple point source-------
+// -------------------------------------------------------------------
+// DcNorthPointCord : is the vector  containing  coordinates of the
+//                double couple north point. Idiom nomenclature ap-
+//                lies to the south, east, and west points.
+// DcNorthCondition : is the macro containing the applied condition
+//                of the double couple north point.
+//============================================================================
+
+   real [int]   DcNorthPointCord = [877421.00,162180.00, -1441.071429];
+   real [int]   DcSouthPointCord = [877421.00,162180.00, -1600.714286];
+   real [int]   DcEastPointCord  = [877341.00,162180.00, -1520.892857];
+   real [int]   DcWestPointCord  = [877501.00,162180.00, -1520.892857];
+
+   macro DcNorthCondition() -0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcSouthCondition()  0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcEastCondition()   0.5*(1.+tanh(8*(t-0.2)))//
+   macro DcWestCondition()  -0.5*(1.+tanh(8*(t-0.2)))//
+</code></pre>
+
+With all this, we have now setup the problem and are ready for launching the solver.
+
+#### ⚙️ Step 2: Solving the Problem
+
+As PSD is a parallel solver, let us use 8 cores to solve the problem. To do so enter the following command:
+
+<pre><code class="bash">
+PSD_Solve -np 8 Main.edp -v 0 -ns -nw 
+</code></pre>
 
 
-> 🧪 Optional Exercise: Perform the same simulation butinstead of bottom loading use the double-couple loading. You will need `-doublecouple displacement_based` flag to activate this loading. 
+This will launch the PSD simulation.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Once the simulation is finished. PSD allows postprocessing of results in ParaView. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
+
+<figure style="text-align: center;">
+  <img src="_images/soildynamics/t1-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/t2-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/t3-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/t4-min.png" width="45%" alt="clamped-bar">
+  <figcaption><em>Figure: Observed wave propogation within the soil medium.</em></figcaption>
+</figure>
