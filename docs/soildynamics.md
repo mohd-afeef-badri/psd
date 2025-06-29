@@ -735,17 +735,6 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
   <figcaption><em>Figure: Observed wave propogation within the soil medium.</em></figcaption>
 </figure>
 
-## Tutorial 4
 
-### Parallel 3D with top-ii-vol meshing and double couple source
 
-A single Dirichlet boundary condition is imposed via a double couple source, displacement based, using GFP.
-
-<pre><code class="bash">
-PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
--useGFP -top2vol-meshing -doublecouple displacement_based -postprocess uav
-</code></pre>
-
-<pre><code class="bash">
-PSD_Solve -np 3 Main.edp -v 0 -ns -nw
-</code></pre>
+> 🧪 Optional Exercise: Perform the same simulation butinstead of bottom loading use the double-couple loading. You will need `-doublecouple displacement_based` flag to activate this loading. 
