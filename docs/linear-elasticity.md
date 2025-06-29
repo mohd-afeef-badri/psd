@@ -121,7 +121,6 @@ In the finite element method, the domain $\Omega$ is discretized into elements (
 
 The displacement $\mathbf{u}_h$ is the FEM approximation of the true displacement $\mathbf{u}$.
 
-
 >💡 **Note** 
 > _Gravity Loading as Body Force_
 >
@@ -269,7 +268,7 @@ PSD allows postprocessing of results in ParaView. After the step 2 mentioned abo
 
 You are all done with your 2D linear-elasticity simulation.
 
-### 3D Bar Problem
+### 3D Clamped Bar
 _Simulation of a 3D clamped bar bending under its own weight_
 
 In PSD a 3D simulation follows the same logic as a 2D one, in the preprocessing step. Imagine the same problem as above, however now the geometry is 3D with length 5 m and cross sectional area 1 m $\times$ 1 m. Indeed all what changes for this simulation is the geometry (consequently the mesh) and the dimension of the problem, these two changes will be handled by (`-dimension` and `-mesh`) arguments.
@@ -354,7 +353,7 @@ PSD_Solve_Seq Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 > 💡 **Note**: 
 > Users can generate their own meshes and provide them to PSD in `.msh` (please use version 2) or `.mesh` format. We recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
 
-### ⏱️ Step 3: Comparing CPU Time
+#### ⏱️ Step 3: Comparing CPU Time
 
 Naturally, since we are not using parallel PSD for solving, we lose the advantage of solving fast. To testify to this claim, checking solver timings can be helpful. PSD provides means to time-log your solver via the `-timelog` flag.
 
@@ -547,7 +546,7 @@ Side-by-side visualization:
 </figure>
 
 ## Tutorial 4
-####  2D Linear Elasticity: Clamped Bar Pulled (Dirichlet) at One End
+###  Clamped Bar Pulled (Dirichlet)
 
 In this tutorial, we showcase the 2D bar simulation with one end clamped while being pulled at the other end. Body force is neglected, and the pull is modeled using a Dirichlet displacement \( u_1 = 1 \). Compared to the problems in **Tutorial 1** and **Tutorial 2**, the only difference is:
 
@@ -671,7 +670,7 @@ Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) usin
 
 
 ## Tutorial 5
-####  2D Linear Elasticity: Clamped Bar Pulled (Neumann) at One End
+###  Clamped Bar Pulled (Neumann)
 
 A similar simulation to the previous tutorial is presented here. We showcase the 2D bar problem, where one end is clamped while the other end is pulled. As in the previous simulation, the body force is neglected. However, in this case, the pull on the non-clamped end is approximated using a Neumann (traction) force:
 
@@ -761,7 +760,7 @@ PSD/Solver/VTUs_DATE_TIME/
 > Unlike in the previous tutorial, the right end of the bar contracts in the $y$-direction. This behavior is expected because there is **no Dirichlet condition** at that end, allowing it to move laterally.
 
 ## Tutorial 6
-#### 2D bar problem clamped at one end wile being pulled at the other end (Dirichlet-Neumann-Point boundary conditions case)
+### Clamped bar pulled (Dirichlet-Neumann-Point boundary conditions)
 
 Similar simulations as in the previous tutorial are presented in this section. We showcase the 2D bar problem simulation with one end clamped while being pulled at the other end. Contrary to the simulation in the previous tutorial, the clamped end restricts only $x$-direction movement, i.e., $u_x=0$. As before, body force is neglected. The pull at the non-clamped end is approximated with a Neumann force term: $\int_{\partial\Omega^h_{\text N}}(\mathbf t\cdot \mathbf{v}^h)$.
 
@@ -828,7 +827,7 @@ Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TI
 > In the figure above, there are six subdomains in the partitioned mesh. As expected, the right and left ends of the bar contract in the $y$-direction, while the bar elongates in the $x$-direction due to the applied force.
 
 ## Tutorial 7
-#### 3D Clamped Bar with Vertical Traction
+### 3D Clamped Bar with Vertical Traction
 
 
 In this section, we present a 3D simulation of a clamped bar using `PSD`. One end of the bar is clamped, and a vertical traction is applied at the non-clamped end. This setup is similar to previous tutorials but extended to three dimensions. The material properties remain unchanged, and a vertical traction of $t_y = -10^9$ units is applied at the free end.
@@ -908,7 +907,7 @@ Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
 > Since 4 cores were used, the domain was partitioned into 4 subdomains, as visible in the left image above.
 
 ## Tutorial 8
-#### 3D  mechanical piece (Dirichlet-Neumann case) with complex mesh
+### 3D mechanical piece with complex mesh
 
 So far, we have focused on bar simulations, which are relatively simple. The meshes for these cases were pre-provided. Now, we consider a **3D simulation of a mechanical piece**, shown in the figure below.
 
@@ -990,7 +989,7 @@ Launch ParaView and open the `.pvd` file in `PSD/Solver/VTUs_DATE_TIME`.
 </figure>
 
 ## Tutorial 9
-#### Using Mfront-PSD interface
+### Using Mfront-PSD interface
 
 This tutorial details one to use PSD-MFront interface for linear elasticity problem. The same problem from tutorial 1 is repeated, however now MFront is used for building certain finite element essentials. It is advised to follow this tutorial after tutorial 1. Note that, linear elasticity merely provides means of getting started with Mfornt, the real potential lies in using nonlinear materials and laws which Mfront provides. So this tutorial should be considered as baptism to the world of PSD-MFront which we believe has a lot of potential to solve some non trivial problems.
 
@@ -1154,7 +1153,7 @@ Here, $\varepsilon(\mathbf{u}):\mathbf{Mt}$ is nothing but the stress $\sigma(\m
 
 ## 📚 Additional Exercises
 
-The following exercises are designed to explore advanced functionalities and experimental features of the PSD finite element solver. They provide an opportunity to investigate numerical accuracy, solver performance, and deeper aspects of the generated FreeFem++ source code.
+The following exercises are designed to explore advanced functionalities and experimental features of the PSD finite element solver. They provide an opportunity to investigate numerical accuracy, solver performance, and deeper aspects of the generated source code.
 
 #### Exercise 1 – Mesh Refinement and Convergence Study
 
@@ -1180,8 +1179,6 @@ This will run a simulation using a mesh with each triangle subdivided into 4 sma
 
 **Tip**: Use in conjunction with parallel execution to manage the computational load.
 
-
-
 #### Exercise 2 – Debug Visualization with OpenGL
 
 The preprocessing stage supports real-time OpenGL visualization of the displacement field using the `-debug` flag. Though originally intended for developer-level debugging, it is an excellent tool for quickly visualizing simulation behavior.
@@ -1199,7 +1196,7 @@ PSD_PreProcess -problem linear_elasticity -dimension 2 -bodyforceconditions 1 \
 PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0 -wg
 </code></pre>
 
->**Note**:
+>💡 **Note**:
 >The `-wg` flag is required at the solve stage to enable graphical output.
 
 

@@ -267,7 +267,7 @@ During the simulation, the terminal displays the traction updates, non-linear it
 
 
 ## Tutorial 2
-### Tensile Cracking of a Pre-Cracked Cube
+### Tensile Cracking of a Pre-Cracked 3D Cube
 
 > ⚠️ **Warning**:
 > You are requested to having followed at least the linear-elasticity tutorials before attempting to follow this tutorial. This will make the understanding process here simpler.
@@ -402,7 +402,7 @@ Finally, using ParaView for postprocessing the results that are provided in the 
 
 *Figure: Finite element displacement visualized for the 3D problem in ParaView at different timesteps (quasi-static simulation). Time progresses from left to right in a row and top to bottom across rows.*
 
-### Damage Field
+#### Damage Field
 
 <p align="center">
   <img src="_images/fracture-mechanics/d3d0.png" width="24%" alt="d3d0">

@@ -120,7 +120,7 @@ $$
 where $\rho_\infty \in [0,1]$ is the spectral radius controlling high-frequency damping ($\rho_\infty = 1$: no dissipation; $\rho_\infty = 0$: maximum dissipation).
 
 ## Tutorial 1
-### Parallel 2D Elastodynamic Simulations with PSD
+### Clamped Bar with Transient Loading
 
 > ⚠️ **Warning**:
 > You are requested to having followed at least the linear-elasticity tutorials before attempting to follow this tutorial. This will make the understanding process here simpler.
@@ -290,7 +290,6 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
 > 🧪 Optional Exercise: Perform the same simulation but in 3D, a 3D mesh equivalent to that of 2D case is already present in the `Meshes` folder in the tutorial. 
 
 ## Tutorial 2
-
 ### Sequential PSD Elastodynamic Simulations
 
 > 💡 **Note**:
@@ -312,7 +311,6 @@ Once preprocessing is complete, solve the problem using the given mesh file `(..
 You can similarly try out the **3D problem** by following the same workflow with `-dimension 3` and the appropriate mesh file.
 
 ## Tutorial 3
-
 ### Different Time Discretizations for Elastodynamic Simulations
 
 > 💡 **Note**:
@@ -344,7 +342,7 @@ PSD provides a way to log timing information from your solver via the `-timelog`
 > ⚠️ **Warning**:
 > Using this feature may slow down your simulation, as it involves `MPI_Barrier` operations to measure timings accurately.
 
-#### 🛠 Example Workflow: 2D Solver with Time Logging
+#### 2D Solver with Time Logging
 
 Run the preprocessing step with the `-timelog` flag:
 
@@ -357,7 +355,7 @@ Then solve the problem using two MPI processes with the provided 2D mesh file:
 <pre><code>PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 </code></pre>
 
-#### ⏱️ Example Output
+#### Example Output
 
 <figure style="text-align: center;">
   <img src="_images/elastodynamics/ed-time-par.png" width="40%" alt="Time logging output produced for parallel run on 2 processes">

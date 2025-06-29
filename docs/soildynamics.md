@@ -163,7 +163,7 @@ $$
 and the right-hand side $l(\mathbf{v})$ includes known contributions from $\mathbf{u}^n$, $\dot{\mathbf{u}}^n$, $\ddot{\mathbf{u}}^n$, and any prescribed incident fields.
 
 ## Tutorial 1
-### Soildynamics in 2D with PSD
+### Soildynamics with Paraxial Loading
 _Elastic Wave Propagation in Soil Medium with Paraxial Boundaries_
 
 > ⚠️ **Warning**:
@@ -361,7 +361,7 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
 
 
 ## Tutorial 2
-### 2D with double couple source
+### Soildynamics with Double Couple Source
 _Seismic Wave Propagation from a Double-Couple Source in a 2D Soil Medium_
 
 > 💡 **Note**:
@@ -553,7 +553,7 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
 > 🧪 Optional Exercise: Perform the same simulation but in 3D. Take note that the mesh `./../Meshes/3D/soil-dc.msh` is not provided, so you will have to create your own mesh. Considering the four double couple points and the source points, Gmsh or SALOME is recomended for this task.
 
 ## Tutorial 3
-### 3D with top-ii-vol meshing
+### 3D Soildynamics with top-ii-vol Meshing
 _Topology-to-Volume Meshing with External Traction Load (3D Earthquake Meshing)_
 
 In this tutorial, we demonstrate a full in-memory mesh generation and simulation pipeline using **PSD's `top-ii-vol` mesher**. Starting from a 3D **point cloud**, the mesh is constructed automatically in parallel, partitioned across processors. A **sinusoidal traction load** is applied on the surface to simulate wave injection, and **absorbing boundary conditions** are imposed on all relevant sides to emulate an open domain.
