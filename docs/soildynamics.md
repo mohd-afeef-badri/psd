@@ -471,7 +471,7 @@ Upon successful preprocessing, several `.edp` (FreeFEM) script files will be gen
 //  t, tmax, dt : Time parameters, time, maximum time, and time step
 //  gamma, beta : Time discretization constants (Newmark-beta)
 //============================================================================
-                                                                              
+
   real tmax = 4.0     ,
        t    = 0.01    ,
        dt   = 0.01    ;
@@ -553,18 +553,187 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
 > 🧪 Optional Exercise: Perform the same simulation but in 3D. Take note that the mesh `./../Meshes/3D/soil-dc.msh` is not provided, so you will have to create your own mesh. Considering the four double couple points and the source points, Gmsh or SALOME is recomended for this task.
 
 ## Tutorial 3
-### Parallel 3D with top-ii-vol meshing
+### 3D with top-ii-vol meshing
+_Topology-to-Volume Meshing with External Traction Load (3D Earthquake Meshing)_
 
-A single Dirichlet boundary condition is applied at the bottom and the simulation uses GFP.
+In this tutorial, we demonstrate a full in-memory mesh generation and simulation pipeline using **PSD's `top-ii-vol` mesher**. Starting from a 3D **point cloud**, the mesh is constructed automatically in parallel, partitioned across processors. A **sinusoidal traction load** is applied on the surface to simulate wave injection, and **absorbing boundary conditions** are imposed on all relevant sides to emulate an open domain.
+
+This tutorial is ideal for realistic, data-driven earthquake simulations where mesh generation is tied to geospatial input data (e.g., elevation or velocity models).
+
+**Mesh** is in-situ here, instead of a traditional mesh file, the geometry is defined by a **3D point cloud** (`../Meshes/3D/Point-Cloud`). Tis point cloud corresponds to French Cadarache region, with 40 m distance between the mesurments of DEM. The point cloud is quantified by,  $N_x = 63$ and $N_y = 57$, i.e number of points in $x$ and $y$ direction. In order to generate the mesh  we assume a depth of 1920.0.
+
+**Material properties** of  the soil is modeled as an isotropic, linear elastic material, with properties typical of loose to medium-dense soil, with ($\rho$, $c_s$, $c_p$) = (1800 kg/m³, 2300 m/s, 4000 m/s).
+
+**Time integration** handled with Newmark-$\beta$ is assured with total simulation time: $t_{\text{max}} = 4.0$ seconds and a time step: $\Delta t = 0.01$ seconds.
+
+**Paraxial (absorbing) elements** are applied to all walls, excluding the top surface, the following mesh surface labels are concernced `[1, 2, 4, 5, 6]`. Note `top-ii-vol` gives label `3` to the top surace.
+
+**Traction loads** are applied to simulate a source of seismic energy, a localized sinusoidal traction force is applied on a patch of the bottom surface (label 6), within a spatial window of $x$-interval: [875481, 875681] $y$-interval: [160200, 160400]. The traction is applied only during the first second:
+
+$$
+f(t) = \begin{cases}
+\sin\left(2\pi t\right) & \text{if } t \leq 1.0 \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+This load introduces vertical energy at the surface, mimicking a controlled dynamic forcing scenario (e.g., field experiment or induced source).
+
+<figure style="text-align: center;">
+  <img src="_images/soildynamics/figure-min.png" width="50%" alt="clamped-bar">
+  <figcaption><em>Figure: topology (elivation) and bottom boundary loading shown.</em></figcaption>
+</figure>
+
+The quantities of interest for this tutorial include the displacement field $\mathbf{u}$, velocity field $\mathbf{v}$, and acceleration field $\mathbf{a}$, which are computed and stored at each time step for postprocessing and analysis.
+
+#### 🛠️ Step 1: Preprocessing the Simulation
+
+In the terminal `cd` to the folder `/home/PSD-tutorials/soildynamics` Note that one can perform these simulation in any folder provided that PSD has been properly installed. We use `/home/PSD-tutorials/soildynamics` for simplicity, once the user is proficient a simulation can be launch elsewhere. Launch the preprocessing phase by running the following command in your terminal:
 
 <pre><code class="bash">
-PSD_PreProcess -dimension 3 -problem soildynamics -model linear -timediscretization newmark_beta \
+PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
 -useGFP -top2vol-meshing -postprocess uav
 </code></pre>
+
+> 💡 **Note**:
+>Compared to the previous tutorials, we note that `-top2vol-meshing` has been added which activates the top-ii-vol meshing support. Aditionally, `-useGFP`, i.e, use Go Fast Plugin is use, this is optional flag for performance considerations. 
+
+Upon successful preprocessing, several `.edp` (FreeFEM) script files will be generated in your working directory. You will now have to follow an edit cycle, where you will provide PSD with some other additional information about your simulation that you wish to perform. At this stage the input properties need to be set. All of these are setup in `ControlParameters.edp` file. 
+
+
+- Start by setting top-ii-vol meshing support.
+
+<pre><code class="cpp">
+//=============================================================================
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  PcName : Name of the point cloud
+//  PcNx   : Number of points in x in the point cloud
+//  PcNy   : Number of points in x in the point cloud
+//  PcNz   : Number of points in x in the point cloud
+//  Dptz   : Depth in z for the mesh produced by top-ii-vol
+//  PartX  : Number of partitions in x direction
+//  PartY  : Number of partitions in y direction
+//  PartZ  : Number of partitions in z direction
+// -------------------------------------------------------------------
+// Note that make sure PartX*PartY*PartZ = mpisize
+//=============================================================================
+
+  string PcName = "../Meshes/3D/Point-Cloud";
+  macro PcNx() 63 //
+  macro PcNy() 57 //
+  macro PcNz() 29 //
+  macro Dptz() -1920.0 //
+  macro PartX() 1 //
+  macro PartY() mpisize //
+  macro PartZ() 1 //
+</code></pre>
+
+> 💡 **Note**:
+>The 3D mesh is generated in-memory and automatically partitioned across MPI processes using, partitions along x-axis $P_x$: `PartX() 1`, partitions along y-axis $P_y$: `PartY() mpisize` (one domain per MPI process), and partitions along z-axis $P_z$: `PartZ() 1`.
+
+>🚨 **Important**:
+>The total number of partitions must match the number of MPI processes: i.e. $P_x\times P_y \times P_z = \text{mpisize}$. Users are free to choose 1D, 2D, or 3D decompostion adhearing to the given notice.
+
+- Next, setup the soil material paramters.
+
+<pre><code class="cpp">
+//============================================================================
+//                   ------- Soil parameters -------
+// -------------------------------------------------------------------
+//  rho : density of soil
+//  cp, cs : Primary and secondary wave velocities
+//  mu, lambda : Lame parameter of the soil
+//============================================================================
+
+  real rho  = 1800.0 ,
+       cs   = 2300.  ,
+       cp   = 4000.  ;
+
+  real    mu     =  cs*cs*rho,
+          lambda =  cp*cp*rho - 2*mu;
+</code></pre>
+
+- Set the time discretization parameters:
+
+<pre><code class="cpp">
+//============================================================================
+//           ------- Time discretization parameters -------
+// -------------------------------------------------------------------
+//  t, tmax, dt : Time parameters, time, maximum time, and time step
+//  gamma, beta : Time discretization constants (Newmark-beta)
+//============================================================================
+
+  real tmax = 4.0     ,
+       t    = 0.01    ,
+       dt   = 0.01    ;
+
+  real gamma = 0.5                       ,
+       beta  = (1./4.)*(gamma+0.5)^2     ;
+</code></pre>
+
+- Provide information in Paraxial mesh labels, i.e which surfaces will act as absorbing ones:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary-condition parameters-------
+// -------------------------------------------------------------------
+// PAlabels : is the vector of surface mesh labels that participate as
+//            absorbing boundaries (via paraxial elements)
+//============================================================================
+
+  int [int]   PAlabels = [1,2,4,5,6];
+                                     
+</code></pre>
+
+- Finally, the loading conditions are provided:
+
+<pre><code class="cpp">
+//============================================================================
+//        -------Paraxial boundary load-------
+// -------------------------------------------------------------------
+// v1in : is a time dependent sinusoidal loading function ( traction )
+//        which exists for time (tt <= 1 sec)
+// LoadLabels : is the vector of surface mesh labels to which external
+//              force is applied to
+//============================================================================
+
+  real tt;
+  func v1in = (
+                 tt <= 1.0  ?
+                  real( sin(tt*(2.*pi/1.0))) *
+                  (x>875481.&&x<875681.) * (y>160200.&&y<160400.)
+                 :
+                   0.
+               );
+
+  int [int]   LoadLabels = [6];
+</code></pre>
+
+With all this, we have now setup the problem and are ready for launching the solver.
+
+#### ⚙️ Step 2: Solving the Problem
+
+As PSD is a parallel solver, let us use 4 cores to solve the problem. To do so enter the following command:
 
 <pre><code class="bash">
 PSD_Solve -np 4 Main.edp -v 0 -ns -nw 
 </code></pre>
+
+
+This will launch the PSD simulation.
+
+#### 📊 Step 3: Postprocessing and Visualization
+
+Once the simulation is finished. PSD allows postprocessing of results in ParaView. Launch ParaView and have a look at the `.pvd` file in the `VTUs...` folder. Using ParaView for postprocessing the results that are provided in the `VTUs...` folder, results such as those shown in the figure below can be extracted.
+
+<figure style="text-align: center;">
+  <img src="_images/soildynamics/1-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/2-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/3-min.png" width="45%" alt="clamped-bar">
+  <img src="_images/soildynamics/4-min.png" width="45%" alt="clamped-bar">
+  <figcaption><em>Figure: Observed wave propogation within the soil medium.</em></figcaption>
+</figure>
 
 ## Tutorial 4
 
