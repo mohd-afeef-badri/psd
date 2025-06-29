@@ -140,7 +140,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
 // -------------------------------------------------------------------
 //  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
 //=============================================================================
-  
+
   string ThName = "../Meshes/2D/tensile_crack.msh";
 </code></pre>
 
@@ -153,7 +153,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
 //  mu, lambda : Lame parameter of the material
 //  Gc : Material fracture toughness
 //=============================================================================
-  
+
   real lambda = 121.15e3 ,
        mu     = 80.77e3  ,
        Gc     = 2.7      ;
@@ -171,7 +171,7 @@ At this stage the input of the solver need to be set. All of these are setup in 
 //  dtr :  Change in traction force between two pseudo-time steps
 //  lo :  Mesh dependent lateral fracture length
 //============================================================================
-  
+
   real lfac  = 2.0  ,
        maxtr = 7e-3 ,
        tr    = 1e-5 ,
@@ -195,7 +195,6 @@ At this stage the input of the solver need to be set. All of these are setup in 
 //       or deleted if the user does not wish to apply Dirichlet  condition
 //       on that particular  direction (let it free)
 //============================================================================
-  
 
   macro  Dbc0On 1   //
   macro  Dbc0Ux 0.  //
@@ -307,7 +306,7 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 // -------------------------------------------------------------------
 //  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
 //=============================================================================
-  
+
   string ThName = "../Meshes/3D/tensile_crack.msh"; 
 </code></pre>
 
@@ -322,7 +321,7 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 //  kappa0 : Damage initiation threshold of the Material
 //  kappac :  Critical strain level of the Material
 //=============================================================================
-  
+
   real lambda = 121.15e3 ,
        mu     = 80.77e3  ,
        Gc     = 2.7      ;
@@ -340,7 +339,7 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 //  dtr :  Change in traction force between two pseudo-time steps
 //  lo :  Mesh dependent lateral fracture length
 //============================================================================
-  
+
   real lfac  = 2.0  ,
        maxtr = 7e-3 ,
        tr    = 1e-5 ,
@@ -364,7 +363,6 @@ Again, as we followed for the 2D case, we begin here in the same manner by editi
 //       or deleted if the user does not wish to apply Dirichlet  condition
 //       on that particular  direction (let it free)
 //============================================================================
-  
 
   macro  Dbc0On 1   //
   macro  Dbc0Ux 0.  //
@@ -463,7 +461,7 @@ $$F_y = \int_{\partial\Omega_{\text{top}}} \sigma_y$$
 //  RFOn : Reaction force surface list
 //============================================================================
 
-  macro  RFOn 2   //  
+  macro  RFOn 2   //
 </code></pre>
 
 > 💡 **Note**:

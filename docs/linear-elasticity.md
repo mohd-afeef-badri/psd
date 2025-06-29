@@ -171,43 +171,43 @@ At this stage the input properties need to be set. All of these are setup in `Co
 
 <pre><code class="cpp">
 //============================================================================
-//                   ------- Material parameters -------                      
-// -------------------------------------------------------------------        
-//  mu, lambda : Lame parameter of the material                               
-//  E, nu : Modulus of Elasticity and Poisson ratio of the material           
+//                   ------- Material parameters -------
+// -------------------------------------------------------------------
+//  mu, lambda : Lame parameter of the material
+//  E, nu : Modulus of Elasticity and Poisson ratio of the material
 //============================================================================
-                                                                              
-  real    mu                                                                  
-         ,lambda;                                                             
-                                                                              
-{                                                                             
-  real E  = 200.e9  ,                                                         
-       nu = 0.3     ;                                                         
-                                                                              
-  mu     = E/(2.*(1.+nu))            ;                                        
-  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;                                        
-}    
+
+  real    mu
+         ,lambda;
+
+{
+  real E  = 200.e9  ,
+       nu = 0.3     ;
+
+  mu     = E/(2.*(1.+nu))            ;
+  lambda = E*nu/((1.+nu)*(1.-2.*nu)) ;
+}
 </code></pre>
 
 - Next, the volumetric body force condition is mentioned in the same file via variable `Fbc0Fy -78480.0`, i.e ($\rho\times g=8.e3\times -9.81=-78480.0$). In addition variable `Fbc0On 1` has to be provided in order to indicate the volume (region) for which the body force is acting, here `1` is the integer volume tag of the mesh.
 
 <pre><code class="cpp">
 //============================================================================
-//        ------- volumetric bodyforce  parameters -------                    
+//        ------- volumetric bodyforce  parameters -------
 // ---------------------------------------------------------------------------
-// Fbc       : acronym for  force boundary condition (body force)             
-// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which     
-//             force boundary conditions is to be applied.                    
-// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)    
-//             denoted by label(s) Fbc(I)On in the mesh.                      
+// Fbc       : acronym for  force boundary condition (body force)
+// Fbc(I)On  : is/are the  volume  labels tags (integer list) on to which
+//             force boundary conditions is to be applied.
+// Fbc(I)Fx  : is the x  component of body force  acting in the volume (I)
+//             denoted by label(s) Fbc(I)On in the mesh.
 // -------------------------------------------------------------------------- 
-// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented   
-//       or deleted if the user  does not wish to apply body force in  that   
-//       particular  direction (let it free)                                  
+// NOTE: either macro Fbc(I)Fx or Fbc(I)Fy or Fbc(I)Fz should  be commented
+//       or deleted if the user  does not wish to apply body force in  that
+//       particular  direction (let it free)
 //============================================================================
-                                                                              
-  macro  Fbc0On 1   //                             
-  macro  Fbc0Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             
+
+  macro  Fbc0On 1   //
+  macro  Fbc0Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}
 
 </code></pre>
 
@@ -215,34 +215,34 @@ At this stage the input properties need to be set. All of these are setup in `Co
 
 <pre><code class="cpp">
 //=============================================================================
-// ------- Mesh parameters (Un-partitioned) -------                            
-// -------------------------------------------------------------------         
-//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder         
+// ------- Mesh parameters (Un-partitioned) -------
+// -------------------------------------------------------------------
+//  ThName : Name of the .msh file in Meshses/2D or  Meshses/3D folder
 //=============================================================================
-                                                                               
-  string ThName = "../Meshes/2D/bar.msh";  
+
+  string ThName = "../Meshes/2D/bar.msh";
 </code></pre>
 
  - Dirichlet boundary conditions are also provided in the same file. To provide the clamped boundary condition the variables `Dbc0On 2`, `Dbc0Ux 0.`, and `Dbc0Uy 0.` are used, which means for Dirichlet border `2` (`Dbc0On 2`) where `2` is the clamped border label of the mesh Dirichlet constrain is applied and `Dbc0Ux 0.`, `Dbc0Uy 0` i.e., the clamped end condition ($u_x=u_y=0$). Dirichlet conditions fix values (e.g., displacements) on specific boundary regions — in this case, clamping one end of the bar.
 
 <pre><code class="cpp">
 //============================================================================
-//        ------- Dirichlet boundary-condition parameters -------             
+//        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
-// Dbc       : acronym for Dirichlet boundary condition                       
-// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
-//             Dirichlet boundary conditions is to be applied.                
-// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
-//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// Dbc       : acronym for Dirichlet boundary condition
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which
+//             Dirichlet boundary conditions is to be applied.
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.
 // -------------------------------------------------------------------------- 
-// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
-//       or deleted if the user does not wish to apply Dirichlet  condition   
-//       on that particular  direction (let it free)                          
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented
+//       or deleted if the user does not wish to apply Dirichlet  condition
+//       on that particular  direction (let it free)
 //============================================================================
-                                                                              
-  macro  Dbc0On 2   //                            
-  macro  Dbc0Ux 0.  //                                               
-  macro  Dbc0Uy 0.  //  
+
+  macro  Dbc0On 2   //
+  macro  Dbc0Ux 0.  //
+  macro  Dbc0Uy 0.  //
 </code></pre>
 
 Please note that for this simple problem, the bar mesh (`bar.msh`) has been provided in `../Meshes/2D/` folder, this mesh is a triangular mesh produced with Gmsh. Moreover detailing meshing procedure is not the propose of PSD tutorials. A user has the choice of performing their own meshing step and providing them to PSD in `.msh` (Please use version 2) or `.mesh` format, we recommend using Salome or Gmsh meshers for creating your own geometry and meshing them.
@@ -444,24 +444,24 @@ To provide Dirichlet conditions for the left and right clamped ends ($u_x=u_y=0$
 
 <pre><code class="cpp">
 //============================================================================
-//        ------- Dirichlet boundary-condition parameters -------             
+//        ------- Dirichlet boundary-condition parameters -------
 // ---------------------------------------------------------------------------
-// Dbc       : acronym for Dirichlet boundary condition                       
-// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which     
-//             Dirichlet boundary conditions is to be applied.                
-// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface    
-//             border (I) denoted by label(s) Dbc(I)On in the mesh.           
+// Dbc       : acronym for Dirichlet boundary condition
+// Dbc(I)On  : is/are the  surface labels tags (integer list) on to which
+//             Dirichlet boundary conditions is to be applied.
+// Dbc(I)Ux  : is the x component of Dirichlet displacement on the surface
+//             border (I) denoted by label(s) Dbc(I)On in the mesh.
 // -------------------------------------------------------------------------- 
-// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented   
-//       or deleted if the user does not wish to apply Dirichlet  condition   
-//       on that particular  direction (let it free)                          
+// NOTE: either macro Dbc(I)Ux or Dbc(I)Uy or Dbc(I)Uz should  be commented
+//       or deleted if the user does not wish to apply Dirichlet  condition
+//       on that particular  direction (let it free)
 //============================================================================
-                                                                              
-  macro  Dbc0On 2   //  Dirichlet Border label 2                           
-  macro  Dbc0Ux 0.  //  Dirichlet Border label 2 ux = 0                                            
-  macro  Dbc0Uy 0.  //  Dirichlet Border label 2 uy = 0                                           
-  macro  Dbc1On 4   //  Dirichlet Border label 4                           
-  macro  Dbc1Ux 0.  //  Dirichlet Border label 4 ux = 0                                           
+
+  macro  Dbc0On 2   //  Dirichlet Border label 2
+  macro  Dbc0Ux 0.  //  Dirichlet Border label 2 ux = 0
+  macro  Dbc0Uy 0.  //  Dirichlet Border label 2 uy = 0
+  macro  Dbc1On 4   //  Dirichlet Border label 4
+  macro  Dbc1Ux 0.  //  Dirichlet Border label 4 ux = 0
   macro  Dbc1Uy 0.  //  Dirichlet Border label 4 uy = 0
 </code></pre>
 
@@ -551,14 +551,14 @@ Side-by-side visualization:
 
 In this tutorial, we showcase the 2D bar simulation with one end clamped while being pulled at the other end. Body force is neglected, and the pull is modeled using a Dirichlet displacement \( u_1 = 1 \). Compared to the problems in **Tutorial 1** and **Tutorial 2**, the only difference is:
 
-- **No body force is applied**, and  
+- **No body force is applied**, and
 - **An additional Dirichlet condition** is applied at the free end.
 
-We consider the same setup:  
-- A bar 5 m in length and 1 m in width  
-- Material properties:  
-  - Density: \( \rho = 8 \times 10^3 \, \text{kg/m}^3 \)  
-  - Young’s modulus: \( E = 200 \times 10^9 \, \text{Pa} \)  
+We consider the same setup:
+- A bar 5 m in length and 1 m in width
+- Material properties:
+  - Density: \( \rho = 8 \times 10^3 \, \text{kg/m}^3 \)
+  - Young’s modulus: \( E = 200 \times 10^9 \, \text{Pa} \)
   - Poisson’s ratio: \( \nu = 0.3 \)
 
 <figure style="text-align: center;">
@@ -679,8 +679,8 @@ $$
 \int_{\partial\Omega^h_{\text N}}(\mathbf t \cdot \mathbf{v}^h)
 $$
 
-To simulate the pull, we assume a traction vector  
-$\mathbf{t} = [t_x, t_y] = [10^9, 0]$  
+To simulate the pull, we assume a traction vector
+$\mathbf{t} = [t_x, t_y] = [10^9, 0]$
 acting on the non-clamped right end of the bar. This means a force of $10^9$ units in the $x$-direction is applied. We use the same problem setup from tutorials 1 and 2: a bar 5 m in length and 1 m in width, made of a material with:
 
 - density $\rho = 8 \times 10^3$
@@ -701,8 +701,8 @@ Launch `PSD_PreProcess` with the following command:
 -tractionconditions 1 -postprocess u
 </code></pre>
 
-> 💡 **Note**:  
-> The command-line flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end of the bar.  
+> 💡 **Note**:
+> The command-line flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end of the bar.
 > The flag <code>-tractionconditions 1</code> notifies `PSD` that there is one traction boundary — the pulled right end.
 
 To apply the clamped boundary condition ($u_1 = 0,\ u_2 = 0$), set the following variables in <code>ControlParameters.edp</code>:
@@ -727,12 +727,12 @@ Use 5 cores to solve the problem by running:
 
 <pre><code>PSD_Solve -np 5 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0</code></pre>
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > This is the same command used in the previous bar problems, except here we use <code>-np 5</code> to solve in parallel using 5 cores.
 
 The mesh file `bar.msh` is available in the `../Meshes/2D/` folder. It is a triangular mesh created with Gmsh.
 
-> ⚠️ **Warning**:  
+> ⚠️ **Warning**:
 > This tutorial does **not** cover the meshing process in detail. You are free to use your own mesh, as long as it's in `.msh` (Gmsh version 2) or `.mesh` format. We recommend using Salome or Gmsh for mesh generation.
 
 #### 📊 Step 3: Postprocessing and Visualization
@@ -757,7 +757,7 @@ PSD/Solver/VTUs_DATE_TIME/
 
 
 > 💡 **Note**:  
-> Since 5 cores were used, the mesh was partitioned into 5 subdomains.  
+> Since 5 cores were used, the mesh was partitioned into 5 subdomains.
 > Unlike in the previous tutorial, the right end of the bar contracts in the $y$-direction. This behavior is expected because there is **no Dirichlet condition** at that end, allowing it to move laterally.
 
 ## Tutorial 6
@@ -779,7 +779,7 @@ In the terminal, `cd` to the folder `/home/PSD-tutorials/linear-elasticity`. Lau
 -dirichletpointconditions 1 -postprocess u
 </code></pre>
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > The additional flag `-dirichletpointconditions 1` notifies `PSD` that there is one Dirichlet point boundary condition.
 
 Edit the `ControlParameters.edp` file to specify the desired point boundary conditions:
@@ -801,12 +801,12 @@ Use 6 cores to solve this problem by running:
 <pre><code>PSD_Solve -np 6 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0
 </code></pre>
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > This is the same command used in previous tutorials, except now we include `-np 6` to use multiple processors.
 
 The mesh file `bar.msh` is provided in the `../Meshes/2D/` folder. This is a triangular mesh produced with Gmsh.
 
-> ⚠️ **Warning**:  
+> ⚠️ **Warning**:
 > Detailed meshing is outside the scope of this tutorial. However, users can generate their own meshes using tools like **Salome** or **Gmsh**, and provide them to `PSD` in `.msh` (version 2 recommended) or `.mesh` format.
 
 #### 📊 Step 3: Postprocessing and Visualization
@@ -824,7 +824,7 @@ Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TI
 </figure>
 
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > In the figure above, there are six subdomains in the partitioned mesh. As expected, the right and left ends of the bar contract in the $y$-direction, while the bar elongates in the $x$-direction due to the applied force.
 
 ## Tutorial 7
@@ -833,14 +833,14 @@ Launch ParaView and open the `.pvd` file located in the `PSD/Solver/VTUs_DATE_TI
 
 In this section, we present a 3D simulation of a clamped bar using `PSD`. One end of the bar is clamped, and a vertical traction is applied at the non-clamped end. This setup is similar to previous tutorials but extended to three dimensions. The material properties remain unchanged, and a vertical traction of $t_y = -10^9$ units is applied at the free end.
 
-We use the same bar geometry from Tutorials 1 and 2, now in 3D:  
-- Length: 5 m  
-- Width: 1 m  
-- Height: 1 m  
+We use the same bar geometry from Tutorials 1 and 2, now in 3D:
+- Length: 5 m
+- Width: 1 m
+- Height: 1 m
 
-The material is characterized by:  
-- Density $\rho = 8 \times 10^3$  
-- Young’s modulus $E = 200 \times 10^9$  
+The material is characterized by:
+- Density $\rho = 8 \times 10^3$
+- Young’s modulus $E = 200 \times 10^9$
 - Poisson’s ratio $\nu = 0.3$
 
 
@@ -853,8 +853,8 @@ Launch `PSD_PreProcess` by running:
 <pre><code>PSD_PreProcess  -problem linear_elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u</code></pre>
 
 > 💡 **Note**:  
-> The flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end.  
-> The flag <code>-dimension 3</code> sets the simulation to 3D.  
+> The flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end.
+> The flag <code>-dimension 3</code> sets the simulation to 3D.
 > The flag <code>-tractionconditions 1</code> tells `PSD` to apply one traction boundary — the loaded end.
 
 To apply the Dirichlet condition ($u_x = 0,\ u_y = 0,\ u_z = 0$), edit `ControlParameters.edp` and set:
@@ -880,12 +880,12 @@ To solve the problem using 4 cores, run the following command:
 
 <pre><code>PSD_Solve -np 4 Main.edp  -mesh ./../Meshes/3D/bar.msh -v 0</code></pre>
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > This is the same command used in the earlier tutorials, now applied in a 3D setting.
 
-> ⚠️ **Warning**:  
-> The file <code>bar.msh</code> is located in the <code>../Meshes/3D/</code> directory.  
-> This is a tetrahedral mesh generated with Gmsh. Mesh generation is not covered in this tutorial.  
+> ⚠️ **Warning**:
+> The file <code>bar.msh</code> is located in the <code>../Meshes/3D/</code> directory.
+> This is a tetrahedral mesh generated with Gmsh. Mesh generation is not covered in this tutorial.
 > You may create your own meshes using Gmsh or Salome. Please ensure the format is either <code>.msh</code> (Gmsh version 2) or <code>.mesh</code>.
 
 #### 📊 Step 3: Postprocessing and Visualization
@@ -904,7 +904,7 @@ Open ParaView and load the `.pvd` file found in: `PSD/Solver/VTUs_DATE_TIME/...`
   <figcaption><em>Figure: 3D bar results. Partitioned mesh (left) and 0.5X warped displacement field (right).</em></figcaption>
 </figure>
 
-> 💡 **Note**:  
+> 💡 **Note**:
 > Since 4 cores were used, the domain was partitioned into 4 subdomains, as visible in the left image above.
 
 ## Tutorial 8
@@ -939,8 +939,7 @@ This sets one Dirichlet condition (small hole) and one traction condition (large
 To apply boundary conditions, in `ControlParameters.edp`:
 
 - Dirichlet:`Dbc0On 4`, `Dbc0Ux 0.`, `Dbc0Uy 0.`, `Dbc0Uz 0.`
-- Traction:
-  `Tbc0On 3`, `Tbc0Ty -1.e9`
+- Traction:`Tbc0On 3`, `Tbc0Ty -1.e9`
 
 This corresponds to traction vector $\mathbf{t} = [0., 10^9, 0.]$.
 

@@ -186,7 +186,7 @@ Upon successful preprocessing, several `.edp` (FreeFEM) script files will be gen
 <pre><code class="cpp">
 //============================================================================
 //                   ------- Material parameters -------
-// -------------------------------------------------------------------        
+// -------------------------------------------------------------------
 //  rho : density of Material
 //  mu, lambda : Lame parameter of the Material
 //  E, nu : Modulus of Elasticity and Poisson ratio of the Material
@@ -202,7 +202,7 @@ Upon successful preprocessing, several `.edp` (FreeFEM) script files will be gen
 <pre><code class="cpp">
 //============================================================================
 //           ------- Time discretization parameters -------
-// -------------------------------------------------------------------        
+// -------------------------------------------------------------------
 //  etam, etak : damping parameters
 //  t, tmax, dt : Time parameters, time, maximum time, and time step
 //  gamma, beta : Time discretization constants (Newmark-beta)
