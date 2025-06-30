@@ -1,4 +1,4 @@
-# <img src="./docs/psd_logo.jpg" alt="psd_logo" style="zoom:10%;" /> [PSD v2.6](https://mohd-afeef-badri.github.io/psd) 
+# <img width="50" align="left" src="./docs/psd_logo.jpg" /> [PSD v2.6](https://mohd-afeef-badri.github.io/psd) 
 
 **PSD** (Parallel Solid/Structural/Seismic Dynamics) is a high-performance finite element solver for solid mechanics applications. Designed for large-scale simulations, PSD is capable of solving problems with **billions of unknowns** in both **static** and **dynamic** regimes, with support for **linear** and **nonlinear** models.
 
