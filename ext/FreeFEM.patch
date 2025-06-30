@@ -11,43 +11,6 @@ index 71f55730..d8279d51 100644
  	vertices = new Vertex[nvmax];
  	assert( vertices );
  
-diff --git a/3rdparty/mumps-seq/Makefile b/3rdparty/mumps-seq/Makefile
-index de65efb6..5f18c6c3 100644
---- a/3rdparty/mumps-seq/Makefile
-+++ b/3rdparty/mumps-seq/Makefile
-@@ -36,7 +36,7 @@ DIRPKG=../pkg
- SRCDIR=MUMPS_$(VERSION)
- PACKAGE1=$(DIRPKG)/MUMPS_$(VERSION).tar.gz
- INSTALL=../..
--VERSION=5.0.2
-+VERSION=5.7.3
- 
- # FFCS - install and WHERE need to be done sequentially, even in parallel builds
- 
-diff --git a/3rdparty/mumps-seq/Makefile-mumps-5.0.2.inc b/3rdparty/mumps-seq/Makefile-mumps-5.7.3.inc
-similarity index 100%
-rename from Makefile-mumps-5.0.2.inc
-rename to Makefile-mumps-5.7.3.inc
-
-diff --git a/3rdparty/getall b/3rdparty/getall
-index f1806e5c..e318539a 100755
---- a/3rdparty/getall
-+++ b/3rdparty/getall
-@@ -131,10 +131,10 @@ download('mshmet','https://www.ljll.fr/frey/ftp/archives/mshmet.2012.04.25.tgz',
- 	'https://www.ljll.fr/frey/software.html',
- 	'mshmet.2012.04.25.tgz',
- 	'427f397e0602efc56aa897d38a8e9bfa');
--download('MUMPS','https://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_5.0.2.tar.gz',
-+download('MUMPS','https://web.cels.anl.gov/projects/petsc/download/externalpackages/MUMPS_5.7.3.tar.gz',
- 	'https://ftp.mcs.anl.gov/pub/petsc/externalpackages',
--	'MUMPS_5.0.2.tar.gz',
--	'591bcb2c205dcb0283872608cdf04927');
-+	'MUMPS_5.7.3.tar.gz',
-+	'd903a98be98b29a524cc232ed9185b15');
- download('NLopt','http://ab-initio.mit.edu/nlopt/nlopt-2.2.4.tar.gz',
- 	'http://ab-initio.mit.edu/wiki/index.php/NLopt',
- 	'nlopt-2.2.4.tar.gz',
- 
 diff --git a/plugin/seq/mshmet.cpp b/plugin/seq/mshmet.cpp
 index 0353721..e9f558e 100644
 --- a/plugin/seq/mshmet.cpp

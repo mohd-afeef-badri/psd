@@ -34,6 +34,9 @@ FREEFEM_VERSION=4.15
 # Define the version of Gmsh library
 GMSH_VERSION=4.11.1
 
+# Define the version of MUMPS Seq library
+MUMPS_SEQ_VERSION=5.0.2
+
 # Define the version of MUMPS library
 MUMPS_VERSION=5.7.3
 
@@ -57,7 +60,6 @@ HYPRE_VERSION=2.31.0
 
 # Define the version of BLAS/LAPACK library
 F2CBLASLAPACK_VERSION=3.8.0
-
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines the version variables for Salome and its supported
@@ -140,6 +142,9 @@ PETSC_DOWNLOAD = wget -c https://gitlab.com/petsc/petsc/-/archive/v$(PETSC_VERSI
 # Download MUMPS source code
 MUMPS_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/MUMPS_$(MUMPS_VERSION).tar.gz \
 			-O mumps-$(MUMPS_VERSION).tar.gz
+# Download MUMPS source code
+MUMPS_SEQ_DOWNLOAD = wget -c https://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_SEQ_VERSION).tar.gz \
+			-O mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz
 # Download METIS source code
 METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
 			-O metis-$(METIS_VERSION).tar.gz
@@ -230,6 +235,9 @@ download-dependencies:
 	fi
 	@if [ ! -f mumps-$(MUMPS_VERSION).tar.gz ]; then \
 		$(MUMPS_DOWNLOAD); \
+	fi
+	@if [ ! -f mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz ]; then \
+		$(MUMPS_SEQ_DOWNLOAD); \
 	fi
 	@if [ ! -f metis-$(METIS_VERSION).tar.gz ]; then \
 		$(METIS_DOWNLOAD); \
@@ -449,7 +457,7 @@ endif
 
 PETSC_ARCH_PSD  =fr
 
-PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
+PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
@@ -539,7 +547,7 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	mkdir ./3rdparty/pkg             && \
 	cp ../mshmet.$(MSHMET_VERSION).tgz ./3rdparty/pkg/. && \
 	cp ../Ipopt-$(IPOPT_VERSION).tgz ./3rdparty/pkg/. && \
-	cp ../mumps-$(MUMPS_VERSION).tar.gz ./3rdparty/pkg/MUMPS_$(MUMPS_VERSION).tar.gz && \
+	cp ../mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz ./3rdparty/pkg/MUMPS_$(MUMPS_SEQ_VERSION).tar.gz && \
 	patch -p1 < ../FreeFEM.patch     && \
 	autoreconf -i                    && \
 	./configure \
@@ -555,6 +563,7 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	--disable-superlu \
 	--enable-download_mshmet \
 	--enable-download_ipopt \
+	--enable-download_pipe \
 	--enable-download_mumps_seq \
 	--with-hdf5=no &&  \
 	$(MAKEANDINSTALL)
