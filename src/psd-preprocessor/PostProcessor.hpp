@@ -19,12 +19,14 @@ if(!Sequential)
 } //-- [ostream terminator]  PostProcessor.edp closed --//
 
 
-if(!Sequential)
- writeIt
- "  if(mpirank==0)                                                                \n";
+if(Sequential)
  writeIt
  "     system(\"echo \\\""<<Prblm<<"\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
  "\\tSeq.\\\" >>simulation-log.csv\");                                            \n";
-
+ else
+ writeIt
+ "  if(mpirank==0)                                                                \n"
+ "     system(\"echo \\\""<<Prblm<<"\\t$(date '+%Y-%b-%d\\t%H:%M')\\t$HOSTNAME\\t\\t"<<spc<<"D\\t"
+ "\\tPar.\\\" >>simulation-log.csv\");                                            \n";
 
 cout << " ............................ Done \n";
