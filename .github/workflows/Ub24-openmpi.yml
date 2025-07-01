@@ -15,10 +15,10 @@ on:
       - 'man/**'
       - 'src/ff-files/**'
       - '**.png'
+      - 'paper/**'
   pull_request:
     branches:
       - main
-      - devel
     paths-ignore:
       - '**.MD'
       - '**.md'
@@ -30,6 +30,7 @@ on:
       - 'man/**'
       - 'src/ff-files/**'
       - '**.png'
+      - 'paper/**'
 jobs:
   build:
 
