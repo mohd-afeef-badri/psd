@@ -112,7 +112,8 @@ This workflow has been successfully applied to various earthquake engineering pr
 # Applications in Research
 
 
-The software has been successfully applied to various problems in solid mechanics and structural dynamics, it has lead to following puublications: 
+The software has been successfully applied to various problems in solid mechanics and structural dynamics, it has lead to following puublications:
+- [@badri2024top]
 
 # Demonstration
 
