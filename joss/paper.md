@@ -19,9 +19,9 @@ bibliography: paper.bib
 
 # Summary
 
-`PSD` (Parallel Solid/Structural/Seismic Dynamics) is an open-source finite element solver designed for high-performance computing applications in earthquake physics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions, with particular emphasis on fault-to-site analysis scenarios.
+`PSD` (Parallel Solid/Structural/Seismic Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake physics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions, with particular emphasis on fault-to-site analysis scenarios.
 
-Built upon `FreeFEM`  [@MR3043640]  for finite element discretization and `PETSc` [@balay2019petsc] for scalable linear system solving, `PSD` integrates sophisticated material modeling through its dedicated  `Mfront` [@helfer2015],[@helfer2020] interface.   This architecture enables the handling of complex non-linear material behaviors and constitutive laws essential for realistic mechanical phenomena modeling.   `PSD` includes a purpose-built `MPI I/O`-based mesher-partitioner, `top-ii-vol` [@badri2024top], tailored for large-scale earthquake simulations. Further, there is implementation of hybrid phase-field fracture mechanics [@ambati2015review] enables detailed analysis of crack initiation and propagation in materials, these types of simulations are treated at other end of the complete simulation chain for earthquake simulations to structure assessment.
+Built upon `FreeFEM`  [@MR3043640]  for finite element discretization and `PETSc` [@balay2019petsc] for scalable linear system solving, `PSD` integrates sophisticated material modeling through its dedicated  `Mfront` [@helfer2015],[@helfer2020] interface.   This architecture enables the handling of complex non-linear material behaviors and constitutive laws essential for realistic mechanical phenomena modeling.   `PSD` includes a purpose-built `MPI I/O`-based mesher-partitioner, `top-ii-vol` [@badri2024top], tailored for large-scale earthquake simulations. Further, there is implementation of hybrid phase-field fracture mechanics [@ambati2015review], which enables detailed analysis of crack initiation and propagation in materials, these types of simulations are treated at other end of the complete simulation chain for earthquake simulations to structure assessment.
 
 A distinguishing feature of `PSD` is its ability to handle large-scale earthquake simulations, particularly in fault-to-site analysis scenarios. This capability, combined with the solver's parallel architecture and advanced material modeling, makes it particularly suitable for comprehensive seismic risk assessment studies. The solver has demonstrated excellent scalability up to 24,000 cores, allowing it to tackle problems with over 5 billion unknowns, making it capable of resolving the multi-scale nature of seismic wave propagation from fault rupture to local site response.
 
@@ -31,13 +31,13 @@ Seismic hazard assessment and earthquake engineering require computational tools
 
 Current computational challenges in earthquake simulation include: (1) the need for billion-scale degree-of-freedom problems to capture realistic fault-to-site scenarios [@hori2018application], (2) integration of complex material behaviors including fracture mechanics for damage assessment, and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation maps (DEM). While tools like `OpenSees`[@mckenna2011opensees] excel in structural analysis and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] addresses seismic wave propagation. It is of interest  to have an open-source solution with integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
 
-`PSD` tries to fills this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural damage assessment within a single scalable solver. The software's integration of advanced meshing capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment applications requiring both regional-scale wave propagation and local structural response analysis.
+`PSD` tries to fills this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural damage assessment within a single scalable solver.  `PDS`'s integration of advanced meshing-partitioning capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment applications requiring both regional-scale wave propagation and local structural response analysis.
 
-# Example Workflow for Earthquake
+# Example Workflow for Earthquake Simulation in PSD
 
 The following workflow demonstrates `PSD`'s approach to a fundamental earthquake simulation problem: seismic wave propagation in a three-dimensional soil domain with absorbing boundaries. This example illustrates the software's key capabilities including automated distributed mesh generation (combined meshing-partitioning), advanced time integration, and sophisticated boundary condition handling.
 
-**Mathematical Presentation:** `PSD` solves the elastodynamic wave equation using finite element discretization with Newmark-β time integration. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations.
+**Mathematical Presentation:** `PSD` solves the elastodynamic wave equation using finite element discretization with Newmark-β time integration. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations, and seismic source excitations with double-couple theory. 
 
 For a 3D soil domain $\Omega \subset \mathbb{R}^3$ bounded by boundaries $\partial\Omega \subset \mathbb{R}^3$ and with paraxial absorbing boundaries $\partial \Omega_{\text{P}} \subset \partial \Omega$, the finite element variational formulation solved in `PSD` reads:
 
@@ -56,7 +56,7 @@ Here:
 
 - $(\boldsymbol{\sigma}(\mathbf{u}), \boldsymbol{\varepsilon}(\mathbf{v})): \Omega \to \mathbb{R}^{3 \times 3}$ represent the Cauchy stress and strain tensors, respectively, both rank-2 tensor fields;
 
-- $(\rho, \gamma, \beta, \Delta t) \in \mathbb{R}$ are scalar parameters corresponding to soil density ($\rho$) and Newmark-$\beta$ time discretization parameters;
+- $(\rho, \gamma, \beta, t, t_{\text{max}}, \Delta t) \in \mathbb{R}$ are scalar parameters corresponding to soil density ($\rho$),  Newmark-$\beta$ time discretization parameters ($\gamma,\beta$), and time variables ($t,t_{\max},\Delta t$);
 
 - $\boldsymbol{\mathcal{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as
 
@@ -69,21 +69,21 @@ Here:
 
   where, $\mathbf{n} : \partial \Omega_{\text{P}} \to \mathbb{R}^3$ is the outward unit normal vector on the boundary, $\mathbf{I} \in \mathbb{R}^{3 \times 3}$ is the identity tensor, $(c_{\text{p}}, c_{\text{s}} \in \mathbb{R})$ are scalar parameters corresponding to the P-wave and S-wave wave velocities in the soil.
 
-Finally, seismic loading to the equation is applied via a double-couple source, where the seismic moment tensor $\mathbf{M}$ is constructed based on fault slip parameters such as the slip angle and rake. This moment tensor is discretized by imposing equivalent Dirichlet displacement conditions at four orthogonal points within the domain—representing the north, south, east, and west couples or more commonly known as double couple. Formally, for points $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the displacement boundary conditions are given by $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps the moment tensor $\mathbf{M}$ and its time evolution into displacement time histories $\mathbf{d}_i(t)$ at each point, thus effectively reproducing the seismic moment release and the characteristic wave radiation pattern generated by fault slip.
+Finally, seismic source excitation to the equation is applied via a double-couple, where the seismic moment tensor $\mathbf{M}$ is constructed based on fault slip parameters such as the slip angle and rake. This moment tensor is discretized by imposing equivalent Dirichlet displacement conditions at four orthogonal points within the domain $\Omega$—representing the north, south, east, and west couples or more commonly known as double couple. Formally, for points $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the displacement boundary conditions are given by $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps the moment tensor $\mathbf{M}$ and its time evolution into displacement time histories $\mathbf{d}_i(t)$ at each point, thus effectively reproducing the seismic moment release and the characteristic wave radiation pattern generated by fault slip.
 
 The `PSD` workflow begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific finite element code based on user specifications. This approach ensures computational efficiency while maintaining flexibility for different problem configurations.
 
 Sample preprocessing command:
 ```
-PSD_PreProcess -dimension 3 -problem soildynamics -timediscretization newmark_beta \
--useGFP -top2vol-meshing -postprocess uav
+PSD_PreProcess -problem soildynamics -dimension 3 -top2vol-meshing \
+-timediscretization newmark_beta  -postprocess uav
 ```
 
-Material parameters are specified through ASCII configuration files, with typical values for soil properties including density and wave velocities corresponding to standard engineering geology classifications:
+Material parameters are then specified through `ASCII` configuration file, with typical values for soil properties including density and wave velocities corresponding to standard engineering geology classifications:
 ```
   real rho  = 1800.0 ,  // Density (kg/m³)
-       cs   = 2300.  ,  // S-wave welocity (m/s)
-       cp   = 4000.  ;  // P-wave welocity (m/s)
+       cs   = 2300.0 ,  // S-wave welocity (m/s)
+       cp   = 4000.0 ;  // P-wave welocity (m/s)
 ```
 
 Time discretization parameters follow established earthquake engineering practices, with time steps chosen to satisfy numerical stability requirements for wave propagation:
