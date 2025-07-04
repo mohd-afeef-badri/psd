@@ -1,4 +1,4 @@
-- [Introduction](/README.md)
+- [Introduction](/introduction.md)
 - [Installation](/install.md)
 - Tutorials
     * [Linear Elasticity](/linear-elasticity.md)
