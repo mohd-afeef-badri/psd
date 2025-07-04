@@ -9,9 +9,16 @@ tags:
 authors:
   - name: Mohd Afeef Badri
     orcid: 0000-0002-4646-8309
+    corresponding: true
+    affiliation: "1"
+  - name: Giuseppe Rastiello
+    orcid: 0000-0003-2970-6755
+    affiliation: "1"
+  - name: Evelyne Foerster
+    orcid: 0000-0002-5222-2823
     affiliation: "1"
 affiliations:
- - name: CEA  DES, Université Paris-Saclay, 91191, Gif-sur-Yvette, France
+ - name: CEA  Département de Modélisation des Systèmes et Structures (DM2S), Université Paris-Saclay, 91191, Gif-sur-Yvette, France
    index: 1
 date: 3 July 2025
 bibliography: paper.bib
@@ -19,11 +26,11 @@ bibliography: paper.bib
 
 # Summary
 
-`PSD` (Parallel Solid/Structural/Seismic Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake physics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions, with particular emphasis on fault-to-site analysis scenarios.
+`PSD` (Parallel Solid/Structural/Seismic Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake physics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions.
 
 Built upon `FreeFEM`  [@MR3043640]  for finite element discretization and `PETSc` [@balay2019petsc] for scalable linear system solving, `PSD` integrates sophisticated material modeling through its dedicated  `Mfront` [@helfer2015],[@helfer2020] interface.   This architecture enables the handling of complex non-linear material behaviors and constitutive laws essential for realistic mechanical phenomena modeling.   `PSD` includes a purpose-built `MPI I/O`-based mesher-partitioner, `top-ii-vol` [@badri2024top], tailored for large-scale earthquake simulations. Further, there is implementation of hybrid phase-field fracture mechanics [@ambati2015review], which enables detailed analysis of crack initiation and propagation in materials, these types of simulations are treated at other end of the complete simulation chain for earthquake simulations to structure assessment.
 
-A distinguishing feature of `PSD` is its ability to handle large-scale earthquake simulations, particularly in fault-to-site analysis scenarios. This capability, combined with the solver's parallel architecture and advanced material modeling, makes it particularly suitable for comprehensive seismic risk assessment studies. The solver has demonstrated excellent scalability up to 24,000 cores, allowing it to tackle problems with over 5 billion unknowns, making it capable of resolving the multi-scale nature of seismic wave propagation from fault rupture to local site response.
+A distinguishing feature of `PSD` is its ability to handle large-scale earthquake simulations ($\mathcal{O}(10^9)$), particularly in fault-to-site analysis scenarios. This capability, combined with the solver's parallel architecture and advanced material modeling, makes it particularly suitable for comprehensive seismic risk assessment studies. The solver exhibits excellent scalability on tens of thousands of MPI processes, enabling simulations with billions of unknowns on large scale supercomputers. This allows it to accurately capture the multiscale behavior of seismic wave propagation—from fault rupture to local site response.
 
 # Statement of Need
 
@@ -32,6 +39,18 @@ Seismic hazard assessment and earthquake engineering require computational tools
 Current computational challenges in earthquake simulation include: (1) the need for billion-scale degree-of-freedom problems to capture realistic fault-to-site scenarios [@hori2018application], (2) integration of complex material behaviors including fracture mechanics for damage assessment, and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation maps (DEM). While tools like `OpenSees`[@mckenna2011opensees] excel in structural analysis and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] addresses seismic wave propagation. It is of interest  to have an open-source solution with integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
 
 `PSD` tries to fills this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural damage assessment within a single scalable solver.  `PDS`'s integration of advanced meshing-partitioning capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment applications requiring both regional-scale wave propagation and local structural response analysis.
+
+
+
+# `PSD` Features and Architecture
+
+`PSD` provides a comprehensive suite of physics modules addressing diverse computational mechanics applications around earthquake simulations. It includes dedicated modules for linear elasticity, elastodynamics, fracture mechanics, soil dynamics, and elasto-plasticity, making it suitable for applications ranging from static structural analysis to dynamic earthquake simulation and material damage assessment. The `Mfront` interface significantly enhances this versatility by enabling users to implement custom non-linear material models that can be integrated into any of these physics modules, extending `PSD`'s applicability beyond the built-in constitutive laws.
+
+`PSD` adopts a layered architecture that separates mathematical formulation from computational implementation while maintaining high performance through strategic integration with `FreeFEM` for finite element discretization, `PETSc` for scalable linear algebra, and `Mfront` for sophisticated material modeling. `PSD` follows a code generation approach where users specify problem configurations through command-line options, and the software automatically generates optimized code tailored to specific physics, dimensionality, and boundary conditions. This design enables computational efficiency while preserving flexibility for diverse solid mechanics applications across the available physics modules.
+
+The parallel computing architecture in `PSD` employs domain decomposition strategies which enable distribute memory parallelization which are optimized for large-scale FEM simulation [@dolean2015introduction]. `PSD` has demonstrated scalability up to 24,000 cores and capability for handling problems with over 5 billion unknowns for earthquakes. The integration with the `top-ii-vol` meshing tool provides efficient on the fly mesh generation and partitioning specifically designed for earthquake simulation geometries, eliminating traditional bottlenecks associated with sequential meshing approaches.
+
+Each of `PSD` 's module undergoes comprehensive validation and verification testing to ensure numerical accuracy and reliability across its diverse physics modules. The validation framework includes cross-comparison with established numerical codes, comparison with experimental results, and verification against manufactured analytical solutions. Some of the validation results covering all physics modules are documented and publicly available at https://mohd-afeef-badri.github.io/psd/#/validation, providing users with confidence in the `PSD`'s accuracy for their specific applications.
 
 # Example Workflow for Earthquake Simulation in PSD
 
@@ -127,6 +146,8 @@ Additional applications demonstrate `PSD`'s versatility for advanced fracture me
 
 # Acknowledgements
 
-This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) via SIMU and SEISM projects under the GEN2&3 and PICI2 program funding. The authors thank TGCC, France for granting access to the Joliot-Curie supercomputer under the GENDEN quota. This research was initially funded by PTC HPCSEISM at CEA during the period 2018-2021.
+This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) through the SIMU and GEN2&3 program funding. The authors gratefully acknowledge TGCC, France, for providing access to the Joliot-Curie supercomputer under the GENDEN computing quota. This research was initially funded by the PTC HPCSEISM program at CEA during the period 2018–2021.
+
+The authors also acknowledge key contributors to the PSD solver: Dr. Breno Ribeiro Nogueira for his work on the fracture mechanics module via the `MFront` interface, Dr. Reine Fares for integrating non-linear soil behavior models, and Rania Saadi for enabling the parallel mesh adaptation kernel.
 
 # References
