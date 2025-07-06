@@ -4,6 +4,9 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
+# Define the version of MEDCOUPLLING library
+MEDCOUPLING_VERSION=9.14.0
+
 # Define the version of Ipopt library
 IPOPT_VERSION=3.12.4
 
@@ -72,7 +75,8 @@ gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
-freefem-build
+freefem-build \
+medcoupling-build
 else
 # If BUILDDEPENDENCIES is not set, leave the list empty
 LIST_MAKE_EXECUTE =
@@ -155,6 +159,12 @@ PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-so
 # Download Ipopt source code
 IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
 			-O Ipopt-$(IPOPT_VERSION).tgz
+# Download MEDCoupling source code
+MEDCOUPLING_DOWNLOAD =	wget -c \
+  			--header="User-Agent: Mozilla/5.0 (X11; Linux x86_64)" \
+  			--header="Referer: https://www.salome-platform.org/" \
+  			https://files.salome-platform.org/Salome/Salome$(MEDCOUPLING_VERSION)/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz \
+  			-O MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the
@@ -247,6 +257,9 @@ download-dependencies:
 	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
 		$(MSHMET_DOWNLOAD); \
     fi
+	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
+		$(MEDCOUPLING_DOWNLOAD); \
+	fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
 		$(GMSH_DOWNLOAD); \
@@ -416,7 +429,6 @@ if !BUILDZIPPEDDEPENDENCIES
 endif
 
 
-
 #--------------------------------------------------------------------------------
 # PETSc installation
 #  - Download from wget version PETSC_VERSION
@@ -436,7 +448,6 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
 	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
 	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
-
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
 
@@ -489,7 +500,7 @@ endif
 #--------------------------------------------------------------------------------
 # FreeFEM installation
 #  - Download from wget version FREEFEM_VERSION
-#  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
+#  - User can override download by providing ext/freefem-$(FREEFEM_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 if MAC
@@ -540,6 +551,66 @@ freefem-$(FREEFEM_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(FREEFEM_DOWNLOAD)
 endif
+
+#--------------------------------------------------------------------------------
+# MEDCOUPLING installation
+#  - Download from wget version MEDCOUPLING_VERSION
+#  - User can override download by providing ext/freefem-$(MEDCOUPLING_VERSION).tar.gz
+#--------------------------------------------------------------------------------
+
+# Cmake flags for MEDCOUPLING build
+CMAKE_FLAGS_MEDCOUPLING = \
+-DCMAKE_BUILD_TYPE=Release \
+-DMEDCOUPLING_ENABLE_PYTHON=OFF \
+-DMEDCOUPLING_ENABLE_PARTITIONER=OFF \
+-DMEDCOUPLING_ENABLE_RENUMBER=OFF \
+-DMEDCOUPLING_PARTITIONER_METIS=OFF \
+-DMEDCOUPLING_PARTITIONER_PARMETIS=OFF \
+-DMEDCOUPLING_PARTITIONER_SCOTCH=OFF \
+-DMEDCOUPLING_PARTITIONER_PTSCOTCH=OFF \
+-DMEDCOUPLING_MICROMED=OFF \
+-DMEDCOUPLING_BUILD_DOC=OFF \
+-DCMAKE_EXE_LINKER_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1" \
+-DMEDCOUPLING_BUILD_TESTS=OFF \
+-DSALOME_USE_MPI=ON \
+-DCMAKE_INSTALL_PREFIX=./../INSTALL/MEDCOUPLING
+
+medcoupling-build: MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so
+
+MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+	@echo ""
+	@echo "*============================================================*"
+	@echo " MEDCOUPLING installation began for you be patient:   "
+	@echo "   - Download using wget version $(MEDCOUPLING_VERSION)"
+	@echo "   - to overide provide ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
+	@echo "*============================================================*"
+	@echo ""
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   untaring MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
+	@echo "*---------------------------------*"
+	@echo ""
+	tar -xzf MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   creating BUILD and INSTALL directories"
+	@echo "*---------------------------------*"
+	@echo ""
+	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)   && \
+	mkdir -p BUILD   && \
+	mkdir -p INSTALL
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   installing medcoupling"
+	@echo "*---------------------------------*"
+	@echo ""
+	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)/SOURCES       && \
+	tar -xzf ./../ARCHIVES/MEDCOUPLING.tgz && \
+	cd ./../BUILD && \
+	source ./../env_launch.sh && \
+	cmake  $(CMAKE_FLAGS_MEDCOUPLING) ./../SOURCES/MEDCOUPLING && \
+	make -j all && \
+	source ./../env_launch.sh && make install -j all
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "check-local" used to perform checks
