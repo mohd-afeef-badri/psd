@@ -62,28 +62,6 @@ HYPRE_VERSION=2.31.0
 F2CBLASLAPACK_VERSION=3.8.0
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am defines the version variables for Salome and its supported
-# operating systems. The Salome version, along with specific tags, is set for different
-# operating systems used in the build process.
-#----------------------------------------------------------------------------------------
-
-#################################################
-# UBUNTU 22.04
-#################################################
-
-# Set the operating system for Salome to Ubuntu 22.04
-SALOME_OS=UB22.04
-
-# Define a tag for the Salome source on Ubuntu 22.04
-SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
-
-# Define a specific tag for the Salome version on Ubuntu 22.04
-SALOME_TAG=-4948a0c629f58ee7a3b042a672f6f977
-
-# Specify the version of Salome to be used in the project
-SALOME_VERSION=9.12.0
-
-#----------------------------------------------------------------------------------------
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 #----------------------------------------------------------------------------------------
 
@@ -172,9 +150,6 @@ PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSC
 # Download mshmet source code
 MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdparties/refs/heads/main/mshmet.$(MSHMET_VERSION).tgz \
 			-O mshmet.$(MSHMET_VERSION).tgz
-# Download Salome source code
-SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
-			-O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/tags/v$(FREEFEM_VERSION)/3rdparty/ff-petsc/petsc-cmake-seq.patch
 # Download Ipopt source code
@@ -281,13 +256,6 @@ else !MAC
 		$(GMSH_DOWNLOAD); \
 	fi
 endif
-
-
-# Target to download the salome source code for libraries and dependencies
-download-salome:
-	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
-		$(SALOME_DOWNLOAD); \
-	fi
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -574,58 +542,6 @@ if !BUILDZIPPEDDEPENDENCIES
 endif
 
 #--------------------------------------------------------------------------------
-# SALOME installation
-# This section in Makefile.am defines a target "salome-build" used to build SALOME
-# using the downloaded source code. It includes the installation process for SALOME.
-#  - Download from wget version SALOME_VERSION
-#  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
-#--------------------------------------------------------------------------------
-
-# Target salome-build: Build and install SALOME using the downloaded source
-salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
-
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome salome-$(SALOME_VERSION).tar.gz
-	@echo ""
-	@echo "*============================================================*"
-	@echo " PSD is compiling SALOME for you be patient:"
-	@echo "*============================================================*"
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo "   untaring SALOME-$(SALOME_VERSION).tar.gz"
-	@echo "*---------------------------------*"
-	tar -xf salome-$(SALOME_VERSION).tar.gz
-	[ -d SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) ] && mv SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) salome-$(SALOME_VERSION)
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo " installing SALOME "
-	@echo "*---------------------------------*"
-	@echo ""
-	cd salome-$(SALOME_VERSION)                    			 && \
-	cp ./salome ./salome-tmp                    			 && \
-	cp ./mesa_salome ./mesa_salome-tmp                    		 && \
-	cp ./env_launch.sh ./env_launch.sh-tmp                    	 && \
-	find . -name salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
-	find . -name mesa_salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
-	find . -name env_launch.sh-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;	&& \
-	cp -rf ./salome-tmp ${prefix}/bin/salome                		&& \
-	cp -rf ./mesa_salome-tmp   ${prefix}/bin/mesa_salome  		 	&& \
-	cp -rf ./env_launch.sh-tmp ${prefix}/bin/psd_salome_env_launch.sh	&& \
-	cp -rf ./BINARIES-$(SALOME_OS)  ${prefix}/bin/BINARIES-SALOME		&& \
-	touch salome-$(SALOME_VERSION).$(SO_SUFFIX)
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo " finished installing SALOME v$(SALOME_VERSION) "
-	@echo "*---------------------------------*"
-	@echo ""
-
-# Target salome-$(SALOME_VERSION).tar.gz: Downloads SALOME unless BUILDZIPPEDDEPENDENCIES flag is set
-salome-$(SALOME_VERSION).tar.gz:
-if !BUILDZIPPEDDEPENDENCIES
-	$(SALOME_DOWNLOAD)
-endif
-
-
-#--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "check-local" used to perform checks
 # or tests related to the build. However, in this case, it does not perform any checks
 # and only displays a message indicating that there is nothing to check.
@@ -666,7 +582,7 @@ maintainer-clean-local: clean-local
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
-	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
+	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)
 	rm *.tar.gz
 
 #--------------------------------------------------------------------------------
