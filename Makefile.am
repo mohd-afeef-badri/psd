@@ -66,10 +66,6 @@ tutorials:
 	@mkdir -p $${HOME}/PSD-tutorials/Doc
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/2D
 	@mkdir -p $${HOME}/PSD-tutorials/Meshes/3D
-	@echo " ## tutorials ##   Copying PSD documentation       "
-	@cp  ./man/*.html $${HOME}/PSD-tutorials/Doc/.
-	@cp  ./man/*.pdf  $${HOME}/PSD-tutorials/Doc/.
-	@cp  ./man/*.png  $${HOME}/PSD-tutorials/Doc/.
 	@echo " ## tutorials ##   Copying meshes                  "
 	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.msh  $${HOME}/PSD-tutorials/Meshes/2D/.
 	@cp  ./data/meshes/2D/Geo-Files/Gmsh/*.geo  $${HOME}/PSD-tutorials/Meshes/2D/.
@@ -148,43 +144,6 @@ check-local:
 	@echo " 'make check' finished now do 'make install'"
 	@echo "*============================================================*"
 	@echo ""
-
-documentation-readme: Readme.pdf Readme.html Readme.tex
-	@echo ""
-
-Readme.pdf: Readme.MD
-	pandoc Readme.MD -o Readme.pdf -V geometry:margin=0.5in  --highlight-style breezedark --pdf-engine=xelatex
-	mv Readme.pdf  man/.
-
-Readme.tex: Readme.MD
-	pandoc Readme.MD -o Readme.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
-	mv Readme.tex  etc/.
-
-Readme.html: Readme.MD
-	pandoc Readme.MD -o Readme.html --template=easy_template.html --toc
-	mv Readme.html man/.
-
-documentation-Changelog: Changelog.pdf Changelog.html Changelog.tex
-	@echo ""
-
-Changelog.pdf: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.pdf -V geometry:margin=0.5in  --highlight-style espresso --pdf-engine=xelatex
-	mv Changelog.pdf man/.
-
-Changelog.tex: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.tex -r markdown-auto_identifiers --pdf-engine=xelatex --listings
-	mv Changelog.tex etc/.
-
-Changelog.html: Changelog.MD
-	pandoc 	Changelog.MD -o Changelog.html
-	mv Changelog.html  man/.
-
-documentation: documentation-readme documentation-Changelog
-	@echo ""
-	@echo "*============================================================*"
-	@echo " making documentation :"; pwd
-	@echo "*============================================================*"
-
 
 clean-local:
 	@echo ""
