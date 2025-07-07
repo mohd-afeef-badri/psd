@@ -48,8 +48,8 @@ Before installing PSD, ensure the following dependencies are installed and compa
   sudo apt-get install libgsl-dev libhdf5-dev \
         liblapack-dev libopenmpi-dev freeglut3-dev \
         cpp g++ gcc gfortran bison flex gdb git \
-        m4 make patch pkg-config wget python unzip \
-        autoconf automake autotools-dev cmake
+        m4 make patch pkg-config wget python3 unzip \
+        autoconf automake autotools-dev cmake libtirpc-dev
   </code></pre>
 * System must have **active Internet access** to fetch and build dependencies.
 
