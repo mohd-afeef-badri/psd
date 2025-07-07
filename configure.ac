@@ -336,27 +336,18 @@ test "$MPIF77" == "$F77" && AC_MSG_ERROR([
   to provide the location of MPI Fortran 77 compiler.
                                    ])
 
-dnl -----------------------------------------------------------------
-SECTION_TITLE([    override dependencies if --with-dependencies   ])
-
-test $dependencies != no && AC_SUBST(FF,"${prefix}/bin/FreeFem++")
-test $dependencies != no && AC_SUBST(FFCXX,"${prefix}/bin/ff-c++")
-test $dependencies != no && AC_SUBST(FFCXXDEP,"${prefix}/bin/ff-get-dep")
-test $dependencies != no && AC_SUBST(FFMPI,"${prefix}/bin/ff-mpirun")
-
-dnl -----------------------------------------------------------------
-
 dnl ---------------------------------------------------------------
 dnl Did the user provide Gmsh mesher
 dnl ---------------------------------------------------------------
+
 SECTION_TITLE([      checking for a Gmsh mesher        ])
+
+AX_GMSH
 
 if test "$dependencies" != "no"; then
 dnl Use internally built dependencies from ext/
   GMSH="${prefix}/bin/gmsh"
 fi
-
-AX_GMSH
 
 dnl Summary logging
 AC_MSG_RESULT([])
@@ -373,46 +364,59 @@ test "$GMSH" == "no"  && AC_MSG_ERROR([
    '--with-Gmsh=your/Gmsh/path/bin'  flag
    with ./configure command.
                                    ])
+dnl ---------------------------------------------------------------
+
 
 dnl ---------------------------------------------------------------
 dnl Did the user provide FreeFEM compilers
 dnl ---------------------------------------------------------------
-SECTION_TITLE([      checking for a FF++ compilers     ])
+
+SECTION_TITLE([      checking for a FreeFEM compilers     ])
+
+HAVE_FF_SUPPORT=no
+
 AX_FF
-test "$dependencies" == "no" -a  "$FF" == "no" && AC_MSG_ERROR([
-  Required  program  'FreeFem++'  not  found.
-  If 'FreeFem++' is not  present in  /usr/bin
-  or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFCXX
-test "$dependencies" == "no" -a  "$FFCXX" == "no" && AC_MSG_ERROR([
-  Required  program   'ff-++'   not    found.
-  If  'ff-++'  is  not  present  in  /usr/bin
-  or  in  /usr/local/bin consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFCXXDEP
-test "$dependencies" == "no" -a  "$FFCXXDEP" == "no" && AC_MSG_ERROR([
-  Required  program   'ff-get-dep'   not    found.
-  If  'ff-get-dep'  is  not  present  in  /usr/bin
-  or  in  /usr/local/bin consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFMPI
-test "$dependencies" == "no" -a  "$FFMPI" == "no" && AC_MSG_ERROR([
-  Required  program  'ff-mpirun'  not  found.
-  If 'ff-mpirun' is not present  in  /usr/bin
-  or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                  ])
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  FF="${prefix}/bin/FreeFem++"
+  FFCXX="${prefix}/bin/ff-c++"
+  FFCXXDEP="${prefix}/bin/ff-get-dep"
+  FFMPI="${prefix}/bin/ff-mpirun"
+  HAVE_FF_SUPPORT=yes
+fi
+
+if test "$FF" != "no" && test "$FFCXX" != "no" && test "$FFCXXDEP" != "no" && test "$FFMPI" != "no"; then
+  HAVE_FF_SUPPORT=yes
+fi
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for FreeFem++...      $FF])
+AC_MSG_RESULT([checking for ff-c++...         $FFCXX])
+AC_MSG_RESULT([checking for ff-get-dep...     $FFCXXDEP])
+AC_MSG_RESULT([checking for ff-mpirun...      $FFMPI])
+AC_MSG_RESULT([FreeFEM support...             $HAVE_FF_SUPPORT])
+AC_MSG_RESULT([])
+
+
+if test "$HAVE_FF_SUPPORT" = no; then
+  AC_MSG_ERROR([
+ Required  program  'FreeFem++'  not  found.
+ You must provide either:
+
+  --with-dependencies
+    OR
+  --with-FreeFEM=your/FreeFEM/path/bin
+
+ FREEFEM SUPPORT = OFF
+])
+fi
+dnl ---------------------------------------------------------------
 
 dnl ---------------------------------------------------------------
 dnl Did the user provide mfront/mgis
