@@ -53,9 +53,6 @@ if (!Sequential) {
 //==============================================================================
 // -------Postprocess with paraview-------// 
 //==============================================================================
-  if(mpirank==0)
-    system("mkdir -p VTUs/"); 
-  mpiBarrier(mpiCommWorld); 
                                               
   startProcedure("Paraview Postprocess",t0); 
   int[int] vtuorder=[1];                     // Solution export order 
@@ -287,9 +284,7 @@ macro postprocess()
       codeSnippet R""""(
 
 
-  /*------------Postprocess with ParaView----------*/                                      
-
-  system("mkdir -p VTUs/"); 
+  /*------------Postprocess with ParaView----------*/
 
   startProcedure("Paraview Postprocess",t0); 
   savevtk( "VTUs/Solution-" + currentIter + ".vtu"   , 

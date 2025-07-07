@@ -47,6 +47,15 @@ if(ParaViewPostProcess  && !Sequential)
  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n"
  "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");            \n";
 
+if(ParaViewPostProcess  && Sequential)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Paraview folder suppoprt  -------                                   \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ " system(\"mkdir -p VTUs\");                                                    \n";
+
 if(dirichletpointconditions>=1)
   writeIt
   "                                                                               \n"
