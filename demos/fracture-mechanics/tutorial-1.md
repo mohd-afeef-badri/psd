@@ -54,10 +54,10 @@ A note on flags.
 - Versed in the description above the problem contains two Dirichlet conditions, we signal this via the flag \psd{-dirichletconditions 2}.
 - Finally for this problem we use the flag  \psd{-postprocess ud}  which enables post-processing of displacement $u$ and damage (phase-field)  $d$ fields.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile_crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]

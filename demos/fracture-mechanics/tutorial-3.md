@@ -48,7 +48,7 @@ The flag  \psd{-getreactionforce} directs PSD to include the routines to get the
 Run the problem in the usual way bu using \psd{ PSD\_Solve} and appropriate number of processes and mesh.  While the PSD solver runs it will create a file \psd{ force.data} that contains the reaction force and the applied traction.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 \end{lstlisting}
 
  You can then go ahead and plot \psd{ force.data} to see how $F_y$ and $F_x$  evolve  with $\Delta u_2$. Within the file the first column is the loading $\Delta u_2$, the second and the third columns are the forces $F_x$ and $F_y$.
@@ -82,6 +82,6 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 \end{lstlisting}
 

@@ -95,10 +95,10 @@ PSD_PreProcess -dimension 2 -problem soildynamics -timediscretization newmark_be
 -useGFP -doublecouple displacement_based -postprocess uav
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{soil-dc.msh}.
+Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{soil_dc.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
+PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil_dc.msh
 \end{lstlisting}
 
 \begin{figure}[h!]
@@ -111,7 +111,7 @@ PSD_Solve -np 2 Main.edp -v 1 -ns -nw -mesh ./../Meshes/2D/soil-dc.msh
 
 Using ParaView for postprocessing the results that are provided in the \psd{VTUs...} folder, results such as those shown in figure~\ref{bar2ddc-sd} can be extracted.
 
-Similarly try out the 3D problem. However take note that a the mesh \psd{./../Meshes/2D/soil-dc.msh} is not provided, so you will have to create your own mesh.
+Similarly try out the 3D problem. However take note that a the mesh \psd{./../Meshes/2D/soil_dc.msh} is not provided, so you will have to create your own mesh.
 
 
 \subsection{Parallel 3D with top-ii-vol meshing}

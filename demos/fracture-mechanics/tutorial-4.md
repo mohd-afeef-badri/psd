@@ -234,7 +234,7 @@ to
 Irrespective of weather vectorial or staggered mode is used solve the problem using \psd{PSD\_Solve}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L-shaped-crack.msh
+PSD_Solve -np 4 Main.edp -wg -v 0 -mesh ./../Meshes/2D/L_shaped_crack.msh
 \end{lstlisting}
 
 \subsection{Postprocessing}

@@ -40,10 +40,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta -postprocess uav
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{bar-dynamic.msh}.
+Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{bar_dynamic.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]
@@ -66,10 +66,10 @@ PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{bar-dynamic.msh}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{bar_dynamic.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar-dynamic.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 
@@ -82,10 +82,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta -postprocess uav -sequential
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using the given mesh file \psd{bar-dynamic.msh}.
+Once the step above has been performed, we solve the problem using the given mesh file \psd{bar_dynamic.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve_Seq -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+PSD_Solve_Seq -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 Similarly try out the 3D problem as well.
@@ -99,10 +99,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization generalized_alpha -postprocess uav
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file \psd{bar-dynamic.msh}.
+Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file \psd{bar_dynamic.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 Similarly try out the 3D problem as well.
@@ -118,10 +118,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta -postprocess uav -timelog
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{bar-dynamic.msh}.
+Once the step above has been performed, we solve the problem using two MPI processes, with the given mesh file \psd{bar_dynamic.msh}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 
@@ -150,10 +150,10 @@ You are encouraged to try out timelogging and find out if the code (parallel/seq
 There is a solver run level flag for mesh refinement \footnote{Mesh refinement is performed after partitioning.}. This flag is called \psd{-split [int]} which splits the triangles (resp. tetrahedrons) of your mesh into  four smaller  triangles (resp. tetrahedrons). As such \psd{-split 2} will produce a mesh with 4 times the elements of the input mesh. Similarly, \psd{-split n} where $n$ is a positive integer produces $2^n$ times more elements than the input mesh. You are encouraged to use this \psd{-split} flag to produce refined meshes and check, mesh convergence of a problem, computational time, etc. Use of parallel computing is recommended. You could try it out with \psd{PSD\_Solve} or \psd{PSD\_Solve\_Seq}, for example:
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -split 2
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -split 2
 \end{lstlisting}
 
-for splitting each triangle of the mesh  \psd{bar-dynamic.msh} into 4.
+for splitting each triangle of the mesh  \psd{bar_dynamic.msh} into 4.
 
 
 \subsection{Exercise  3}
@@ -168,7 +168,7 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 Then to run the problem we need aditional \psd{-wg} flag
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -wg
 \end{lstlisting}
 
 \subsection{Exercise  4}
@@ -180,10 +180,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta -postprocess uav -useGFP
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using, with the given mesh file \psd{bar-dynamic}.
+Once the step above has been performed, we solve the problem using, with the given mesh file \psd{bar_dynamic}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -wg
 \end{lstlisting}
 
 Try it out for other problems of this tutorial. \psd{-useGFP} should lead to a faster solver, it might be a good idea to always use this option. To go one step further, use \psd{-timelog} flag and determine if you have some speed up.

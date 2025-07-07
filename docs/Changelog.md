@@ -291,7 +291,7 @@ check NP=USER_PROCS`.
 ## [1.5](https://gitlab.com/PsdSolver/psd_sources/-/tree/v1.5) - 2019-05-29
 ### Added
 - Dynamic linear solver in 2D and 3D  sequential.
-- New meshes for dynamics tests `bar-dynamic.msh`.
+- New meshes for dynamics tests `bar_dynamic.msh`.
 - Checking modules `make check`.
 - Faster sparsity pattern calculations.
 

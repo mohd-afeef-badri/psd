@@ -58,10 +58,10 @@ A note on flags.
 - Versed in the description above the problem contains two Dirichlet conditions, we signal this via the flag \psd{-dirichletconditions 2}. 
 - Finally for this problem we use the flag  \psd{-postprocess ud}  which enables post-processing of displacement $u$ and damage (phase-field)  $d$ fields.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile_crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]
@@ -126,10 +126,10 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field  \
 
 Notice that the flags used here are almost similar except for the   \psd{ -dimension 3 } flag, which indeed specifies three-dimensional problem.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile_crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]
@@ -172,7 +172,7 @@ The flag  \psd{-getreactionforce} directs PSD to include the routines to get the
 Run the problem in the usual way bu using \psd{ PSD\_Solve} and appropriate number of processes and mesh.  While the PSD solver runs it will create a file \psd{ force.data} that contains the reaction force and the applied traction. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile-crack.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/2D/tensile_crack.msh -v 0
 \end{lstlisting}
 
  You can then go ahead and plot \psd{ force.data} to see how $F_y$ and $F_x$  evolve  with $\Delta u_2$. Within the file the first column is the loading $\Delta u_2$, the second and the third columns are the forces $F_x$ and $F_y$.
@@ -206,7 +206,7 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field \
 \end{lstlisting}
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 \end{lstlisting}
 
 

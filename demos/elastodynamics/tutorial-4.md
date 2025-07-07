@@ -40,10 +40,10 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization generalized_alpha -postprocess uav
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file \psd{bar-dynamic.msh}. 
+Once the step above has been performed, we solve the problem using three MPI processes, with the given mesh file \psd{bar_dynamic.msh}. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0
 \end{lstlisting}
 
 Similarly try out the 3D problem as well.

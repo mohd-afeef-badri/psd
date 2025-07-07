@@ -41,9 +41,9 @@ PSD_PreProcess -dimension 3 -problem elastodynamics -dirichletconditions 1 -trac
 -timediscretization newmark_beta
 \end{lstlisting}
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{bar-dynamic.msh}. 
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{bar_dynamic.msh}. 
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar-dynamic.msh -v 0
+PSD_Solve -np 4 Main.edp -mesh ./../Meshes/3D/bar_dynamic.msh -v 0
 \end{lstlisting}
 

@@ -45,10 +45,10 @@ PSD_PreProcess -dimension 3 -problem damage -model hybrid_phase_field  \
 
 Notice that the flags used here are almost similar except for the   \psd{ -dimension 3 } flag, which indeed specifies three-dimensional problem.
 
-Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile-crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
+Once the step above has been performed, we solve the problem using four MPI processes, with the given mesh file \psd{tensile_crack.msh}. This is step two of the PSD simulation   \psd{ PSD\_Solve}.
 
 \begin{lstlisting}[style=BashInputStyle]
-PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile-crack.msh -v 0
+PSD_Solve -np 3 Main.edp -mesh ./../Meshes/3D/tensile_crack.msh -v 0
 \end{lstlisting}
 
 \begin{figure}[h!]
