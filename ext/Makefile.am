@@ -555,7 +555,7 @@ endif
 #--------------------------------------------------------------------------------
 # MEDCOUPLING installation
 #  - Download from wget version MEDCOUPLING_VERSION
-#  - User can override download by providing ext/freefem-$(MEDCOUPLING_VERSION).tar.gz
+#  - User can override download by providing ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 # Cmake flags for MEDCOUPLING build
@@ -581,7 +581,7 @@ MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: ME
 	@echo ""
 	@echo "*============================================================*"
 	@echo " MEDCOUPLING installation began for you be patient:   "
-	@echo "   - Download using wget version $(MEDCOUPLING_VERSION)"
+	@echo "   - Downloaded using wget version $(MEDCOUPLING_VERSION)"
 	@echo "   - to overide provide ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
 	@echo "*============================================================*"
 	@echo ""
