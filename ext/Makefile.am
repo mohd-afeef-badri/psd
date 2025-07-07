@@ -610,7 +610,9 @@ MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: ME
 	source ./../env_launch.sh && \
 	cmake  $(CMAKE_FLAGS_MEDCOUPLING) ./../SOURCES/MEDCOUPLING && \
 	make -j all && \
-	source ./../env_launch.sh && make install -j all
+	source ./../env_launch.sh && make install -j all && \
+	cp -rf ./../MEDCOUPLING-$(MEDCOUPLING_VERSION) ${prefix}/. && \
+	rm -rf  ${prefix}/MEDCOUPLING-$(MEDCOUPLING_VERSION)/BINARIES-CO7/medfile/lib/libgfortran.so.5
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "check-local" used to perform checks

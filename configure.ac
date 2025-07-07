@@ -14,6 +14,7 @@ define(SECTION_TITLE,
 	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
+dnl arguments for compiling with med support : hdf5, medfile, medcoupling
 AC_ARG_WITH([hdf5],
 	[  --with-hdf5=               hdf5 root path : (e.g. --with-hdf5=/home/salome/INSTALL/hdf5)],
         [hdf5="$withval"], [hdf5="no"])
@@ -70,7 +71,6 @@ dnl AC_SUBST(FFMPI)
 
 AC_ARG_VAR(MPIRUN,[MPIRUN command])
 AC_CHECK_PROGS(MPIRUN, mpirun mpiexec srun ccc_mprun, $MPIRUN)
-
 
 
 AC_ARG_WITH([dependencies],
@@ -344,12 +344,11 @@ test $dependencies != no && AC_SUBST(FFCXX,"${prefix}/bin/ff-c++")
 test $dependencies != no && AC_SUBST(FFCXXDEP,"${prefix}/bin/ff-get-dep")
 test $dependencies != no && AC_SUBST(FFMPI,"${prefix}/bin/ff-mpirun")
 
-
 test $dependencies != no && AC_SUBST(GMSH,"${prefix}/bin/gmsh")
-
 
 test $dependencies != no && AC_SUBST(mgis,"${prefix}")
 test $dependencies != no && AC_SUBST(mfront,"${prefix}")
+
 dnl -----------------------------------------------------------------
 
 
@@ -449,37 +448,52 @@ dnl Did the user provide salome/medcoupling
 dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for a med support     ])
 
+HAVE_MED_SUPPORT=no
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  hdf5="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/hdf5"
+  medfile="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/medfile"
+  medcoupling="${prefix}/MEDCOUPLING-9.14.0/INSTALL/MEDCOUPLING"
+fi
+
+if test "$hdf5" != "no" && test "$medfile" != "no" && test "$medcoupling" != "no"; then
+  AC_SUBST(CXXFLAGS_MED, "-I${hdf5}/include -I${medfile}/include -I${medcoupling}/include ${CXXFLAGS}")
+  AC_SUBST(LDFLAGS_MED,  "-L${hdf5}/lib -L${medfile}/lib -L${medcoupling}/lib ${LDFLAGS}")
+  AC_SUBST(LIBS_MED,     "-lhdf5 -lmedC -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper ${LIBS}")
+  HAVE_MED_SUPPORT=yes
+fi
+
 AC_SUBST([hdf5])
 AC_SUBST([medfile])
 AC_SUBST([medcoupling])
 
-CXXFLAGS_MED="-I${hdf5}/include -I${medfile}/include -I${medcoupling}/include  ${CXXFLAGS}"
-LDFLAGS_MED="-L${hdf5}/lib -L${medfile}/lib -L${medcoupling}/lib ${LDFLAGS}"
-LIBS_MED="-lhdf5 -lmedC -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper   ${LIBS}"
-AC_SUBST(CXXFLAGS_MED,[$CXXFLAGS_MED])
-AC_SUBST(LDFLAGS_MED,[$LDFLAGS_MED])
-AC_SUBST(LIBS_MED,[$LIBS_MED])
+AM_CONDITIONAL([HAVEMED], [test "$HAVE_MED_SUPPORT" = yes])
 
-AM_CONDITIONAL([HAVEMED], [test $hdf5 != no -a $medfile != no -a $medcoupling != no])
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for hdf5...          $hdf5])
+AC_MSG_RESULT([checking for medfile...       $medfile])
+AC_MSG_RESULT([checking for medcoupling...   $medcoupling])
+AC_MSG_RESULT([MED support...                $HAVE_MED_SUPPORT])
+AC_MSG_RESULT([])
 
-test $hdf5 != no && AC_MSG_RESULT([checking for hdf5... yes])
-test $hdf5 == no && AC_MSG_RESULT([checking for hdf5... no])
-test $medfile != no && AC_MSG_RESULT([checking for medfile... yes])
-test $medfile == no && AC_MSG_RESULT([checking for medfile... no])
-test $medcoupling != no && AC_MSG_RESULT([checking for medcoupling... yes])
-test $medcoupling == no && AC_MSG_RESULT([checking for medcoupling... yes])
-test $hdf5 != no -a $medfile != no -a $medcoupling != no && AC_MSG_RESULT([med support... yes
- ])
+if test "$HAVE_MED_SUPPORT" = no; then
+  AC_MSG_WARN([
+ top-ii-vol will not be configured with MED support.
+ You must provide either:
 
-test $hdf5 == no -o $medfile == no -o $medcoupling == no && AC_MSG_WARN([
-top-ii-vol will not be configured with med support,
-you did not provide the flags:
-    --with-hdf5
-    --with-medfile
-    --with-medcoupling
+  --with-dependencies
+    OR
+  --with-hdf5
+  --with-medfile
+  --with-medcoupling
 
- SALOME SUPPORT = OFF
- ])
+ MED SUPPORT = OFF
+])
+fi
+
 dnl ---------------------------------------------------------------
 
 
@@ -595,6 +609,12 @@ AC_MSG_RESULT([])
 AC_MSG_RESULT([ FreeFEM compiler   : '$FF'])
 AC_MSG_RESULT([ ff-c++  compiler   : '$FFCXX'])
 AC_MSG_RESULT([ ff-mpi  compiler   : '$FFMPI'])
+dnl if test "$HAVE_MED_SUPPORT" = yes; then
+dnl  AC_MSG_RESULT([])
+dnl  AC_MSG_RESULT([ CXXFLAGS_MED       : '$CXXFLAGS_MED'])
+dnl  AC_MSG_RESULT([ LDFLAGS_MED        : '$LDFLAGS_MED'])
+dnl  AC_MSG_RESULT([ LIBS_MED           : '$LIBS_MED'])
+dnl fi
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 AC_MSG_RESULT([])
