@@ -6,17 +6,17 @@ EXPORT_PSD +=\nexport PATH="$$PATH:${prefix}/bin";\nexport LD_LIBRARY_PATH="$$LD
 BIN_SALOME_NAME=BINARIES-SALOME
 
 if HAVEMED
-EXPORT_MED  =\nexport out_dir_Path=${prefix}/bin
-EXPORT_MED +=\nexport PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/hdf5/bin:$${PATH}"
-EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/hdf5/lib:$${LD_LIBRARY_PATH}"
-EXPORT_MED +=\nexport PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/medfile/bin:$${PATH}"
-EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${out_dir_Path}/$(BIN_SALOME_NAME)/medfile/lib:$${LD_LIBRARY_PATH}"
-EXPORT_MED +=\nexport MEDCOUPLING_ROOT_DIR="$${out_dir_Path}/$(BIN_SALOME_NAME)/MEDCOUPLING"
+EXPORT_MED  =\nexport PATH="${hdf5}/bin:$${PATH}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="${hdf5}/lib:$${LD_LIBRARY_PATH}"
+EXPORT_MED +=\nexport PATH="${medfile}/bin:$${PATH}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="${medfile}/lib:$${LD_LIBRARY_PATH}"
+EXPORT_MED +=\nexport MEDCOUPLING_ROOT_DIR="${medcoupling}"
 EXPORT_MED +=\nexport PATH="$${MEDCOUPLING_ROOT_DIR}/bin:$${PATH}"
 EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${MEDCOUPLING_ROOT_DIR}/lib:$${LD_LIBRARY_PATH}"
 else !HAVEMED
 EXPORT_MED  =
 endif
+
 
 all-local: PSD_Solve PSD_Solve_Seq
 	@echo ""

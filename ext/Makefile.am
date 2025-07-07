@@ -4,6 +4,9 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
+# Define the version of MEDCOUPLLING library
+MEDCOUPLING_VERSION=9.14.0
+
 # Define the version of Ipopt library
 IPOPT_VERSION=3.12.4
 
@@ -62,28 +65,6 @@ HYPRE_VERSION=2.31.0
 F2CBLASLAPACK_VERSION=3.8.0
 
 #----------------------------------------------------------------------------------------
-# This section in Makefile.am defines the version variables for Salome and its supported
-# operating systems. The Salome version, along with specific tags, is set for different
-# operating systems used in the build process.
-#----------------------------------------------------------------------------------------
-
-#################################################
-# UBUNTU 22.04
-#################################################
-
-# Set the operating system for Salome to Ubuntu 22.04
-SALOME_OS=UB22.04
-
-# Define a tag for the Salome source on Ubuntu 22.04
-SALOME_OS_TAG=-native-$(SALOME_OS)-SRC
-
-# Define a specific tag for the Salome version on Ubuntu 22.04
-SALOME_TAG=-4948a0c629f58ee7a3b042a672f6f977
-
-# Specify the version of Salome to be used in the project
-SALOME_VERSION=9.12.0
-
-#----------------------------------------------------------------------------------------
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 #----------------------------------------------------------------------------------------
 
@@ -94,7 +75,8 @@ gmsh-build \
 mfront-build \
 mgis-build \
 petsc-build \
-freefem-build
+freefem-build \
+medcoupling-build
 else
 # If BUILDDEPENDENCIES is not set, leave the list empty
 LIST_MAKE_EXECUTE =
@@ -172,14 +154,17 @@ PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSC
 # Download mshmet source code
 MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdparties/refs/heads/main/mshmet.$(MSHMET_VERSION).tgz \
 			-O mshmet.$(MSHMET_VERSION).tgz
-# Download Salome source code
-SALOME_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/Salome$(SALOME_VERSION)/SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG)$(SALOME_TAG).tar.gz \
-			-O salome-$(SALOME_VERSION).tar.gz
 # Download PETSc patch for cmake
 PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/tags/v$(FREEFEM_VERSION)/3rdparty/ff-petsc/petsc-cmake-seq.patch
 # Download Ipopt source code
 IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
 			-O Ipopt-$(IPOPT_VERSION).tgz
+# Download MEDCoupling source code
+MEDCOUPLING_DOWNLOAD =	wget -c \
+  			--header="User-Agent: Mozilla/5.0 (X11; Linux x86_64)" \
+  			--header="Referer: https://www.salome-platform.org/" \
+  			https://files.salome-platform.org/Salome/Salome$(MEDCOUPLING_VERSION)/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz \
+  			-O MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the
@@ -272,6 +257,9 @@ download-dependencies:
 	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
 		$(MSHMET_DOWNLOAD); \
     fi
+	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
+		$(MEDCOUPLING_DOWNLOAD); \
+	fi
 if MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
 		$(GMSH_DOWNLOAD); \
@@ -281,13 +269,6 @@ else !MAC
 		$(GMSH_DOWNLOAD); \
 	fi
 endif
-
-
-# Target to download the salome source code for libraries and dependencies
-download-salome:
-	@if [ ! -f salome-$(SALOME_VERSION).tar.gz ]; then \
-		$(SALOME_DOWNLOAD); \
-	fi
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
@@ -448,7 +429,6 @@ if !BUILDZIPPEDDEPENDENCIES
 endif
 
 
-
 #--------------------------------------------------------------------------------
 # PETSc installation
 #  - Download from wget version PETSC_VERSION
@@ -468,7 +448,6 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
 	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
 	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
-
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
 
@@ -521,7 +500,7 @@ endif
 #--------------------------------------------------------------------------------
 # FreeFEM installation
 #  - Download from wget version FREEFEM_VERSION
-#  - User can override download by providing ext/freefem-$(PETSC_VERSION).tar.gz
+#  - User can override download by providing ext/freefem-$(FREEFEM_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
 if MAC
@@ -574,56 +553,71 @@ if !BUILDZIPPEDDEPENDENCIES
 endif
 
 #--------------------------------------------------------------------------------
-# SALOME installation
-# This section in Makefile.am defines a target "salome-build" used to build SALOME
-# using the downloaded source code. It includes the installation process for SALOME.
-#  - Download from wget version SALOME_VERSION
-#  - User can override download by providing ext/salome-$(SALOME_VERSION).tar.gz
+# MEDCOUPLING installation
+#  - Download from wget version MEDCOUPLING_VERSION
+#  - User can override download by providing ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 #--------------------------------------------------------------------------------
 
-# Target salome-build: Build and install SALOME using the downloaded source
-salome-build: salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX)
+# Cmake flags for MEDCOUPLING build
+CMAKE_FLAGS_MEDCOUPLING = \
+-DCMAKE_BUILD_TYPE=Release \
+-DMEDCOUPLING_ENABLE_PYTHON=OFF \
+-DMEDCOUPLING_ENABLE_PARTITIONER=OFF \
+-DMEDCOUPLING_ENABLE_RENUMBER=OFF \
+-DMEDCOUPLING_PARTITIONER_METIS=OFF \
+-DMEDCOUPLING_PARTITIONER_PARMETIS=OFF \
+-DMEDCOUPLING_PARTITIONER_SCOTCH=OFF \
+-DMEDCOUPLING_PARTITIONER_PTSCOTCH=OFF \
+-DMEDCOUPLING_MICROMED=OFF \
+-DMEDCOUPLING_BUILD_DOC=OFF \
+-DCMAKE_EXE_LINKER_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1" \
+-DMEDCOUPLING_BUILD_TESTS=OFF \
+-DSALOME_USE_MPI=ON \
+-DCMAKE_INSTALL_PREFIX=./../INSTALL/MEDCOUPLING
 
-salome-$(SALOME_VERSION)/salome-$(SALOME_VERSION).$(SO_SUFFIX): download-salome salome-$(SALOME_VERSION).tar.gz
+medcoupling-build: MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so
+
+MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
-	@echo " PSD is compiling SALOME for you be patient:"
+	@echo " MEDCOUPLING installation began for you be patient:   "
+	@echo "   - Downloaded using wget version $(MEDCOUPLING_VERSION)"
+	@echo "   - to overide provide ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
 	@echo "*============================================================*"
 	@echo ""
-	@echo "*---------------------------------*"
-	@echo "   untaring SALOME-$(SALOME_VERSION).tar.gz"
-	@echo "*---------------------------------*"
-	tar -xf salome-$(SALOME_VERSION).tar.gz
-	[ -d SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) ] && mv SALOME-$(SALOME_VERSION)$(SALOME_OS_TAG) salome-$(SALOME_VERSION)
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo " installing SALOME "
+	@echo "   untaring MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
 	@echo "*---------------------------------*"
 	@echo ""
-	cd salome-$(SALOME_VERSION)                    			 && \
-	cp ./salome ./salome-tmp                    			 && \
-	cp ./mesa_salome ./mesa_salome-tmp                    		 && \
-	cp ./env_launch.sh ./env_launch.sh-tmp                    	 && \
-	find . -name salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
-	find . -name mesa_salome-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;		&& \
-	find . -name env_launch.sh-tmp -exec sed -i -e 's#BINARIES-$(SALOME_OS)#BINARIES-SALOME#g' {} \;	&& \
-	cp -rf ./salome-tmp ${prefix}/bin/salome                		&& \
-	cp -rf ./mesa_salome-tmp   ${prefix}/bin/mesa_salome  		 	&& \
-	cp -rf ./env_launch.sh-tmp ${prefix}/bin/psd_salome_env_launch.sh	&& \
-	cp -rf ./BINARIES-$(SALOME_OS)  ${prefix}/bin/BINARIES-SALOME		&& \
-	touch salome-$(SALOME_VERSION).$(SO_SUFFIX)
+	tar -xzf MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo " finished installing SALOME v$(SALOME_VERSION) "
+	@echo "   creating BUILD and INSTALL directories"
 	@echo "*---------------------------------*"
 	@echo ""
-
-# Target salome-$(SALOME_VERSION).tar.gz: Downloads SALOME unless BUILDZIPPEDDEPENDENCIES flag is set
-salome-$(SALOME_VERSION).tar.gz:
-if !BUILDZIPPEDDEPENDENCIES
-	$(SALOME_DOWNLOAD)
-endif
-
+	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)   && \
+	mkdir -p BUILD   && \
+	mkdir -p INSTALL
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   compiling medcoupling"
+	@echo "*---------------------------------*"
+	@echo ""
+	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)/SOURCES       && \
+	tar -xzf ./../ARCHIVES/MEDCOUPLING.tgz && \
+	cd ./../BUILD && \
+	source ./../env_launch.sh && \
+	cmake  $(CMAKE_FLAGS_MEDCOUPLING) ./../SOURCES/MEDCOUPLING && \
+	make -j all && \
+	source ./../env_launch.sh && make install -j all
+	@echo ""
+	@echo "*---------------------------------*"
+	@echo "   installing medcoupling"
+	@echo "*---------------------------------*"
+	@echo ""
+	cp -rf MEDCOUPLING-$(MEDCOUPLING_VERSION) ${prefix}/. && \
+	rm -rf  ${prefix}/MEDCOUPLING-$(MEDCOUPLING_VERSION)/BINARIES-CO7/medfile/lib/libgfortran.so.5
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "check-local" used to perform checks
@@ -666,7 +660,7 @@ maintainer-clean-local: clean-local
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
-	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) salome-$(SALOME_VERSION)
+	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)
 	rm *.tar.gz
 
 #--------------------------------------------------------------------------------
