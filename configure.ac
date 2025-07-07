@@ -344,17 +344,29 @@ test $dependencies != no && AC_SUBST(FFCXX,"${prefix}/bin/ff-c++")
 test $dependencies != no && AC_SUBST(FFCXXDEP,"${prefix}/bin/ff-get-dep")
 test $dependencies != no && AC_SUBST(FFMPI,"${prefix}/bin/ff-mpirun")
 
-test $dependencies != no && AC_SUBST(GMSH,"${prefix}/bin/gmsh")
-
-test $dependencies != no && AC_SUBST(mgis,"${prefix}")
-test $dependencies != no && AC_SUBST(mfront,"${prefix}")
-
 dnl -----------------------------------------------------------------
 
-
+dnl ---------------------------------------------------------------
+dnl Did the user provide Gmsh mesher
+dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for a Gmsh mesher        ])
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  GMSH="${prefix}/bin/gmsh"
+fi
+
 AX_GMSH
-test "$dependencies" == "no" -a "$GMSH" == "no"  && AC_MSG_ERROR([
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for Gmsh...           $GMSH])
+AC_MSG_RESULT([Gmsh support...                $HAVE_MFRONT_SUPPORT])
+AC_MSG_RESULT([])
+
+dnl If GMSH is not found, then error out
+test "$GMSH" == "no"  && AC_MSG_ERROR([
   Required  program  'gmsh'  not   found.
   If 'gmsh' is not  present  in  /usr/bin
   or in /usr/local/bin consider using the
@@ -362,7 +374,9 @@ test "$dependencies" == "no" -a "$GMSH" == "no"  && AC_MSG_ERROR([
    with ./configure command.
                                    ])
 
-
+dnl ---------------------------------------------------------------
+dnl Did the user provide FreeFEM compilers
+dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for a FF++ compilers     ])
 AX_FF
 test "$dependencies" == "no" -a  "$FF" == "no" && AC_MSG_ERROR([
@@ -400,34 +414,56 @@ test "$dependencies" == "no" -a  "$FFMPI" == "no" && AC_MSG_ERROR([
   with ./configure command.
                                   ])
 
+dnl ---------------------------------------------------------------
+dnl Did the user provide mfront/mgis
+dnl ---------------------------------------------------------------
+
 SECTION_TITLE([      checking for a MFront support     ])
 
+HAVE_MFRONT_SUPPORT=no
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  mgis="${prefix}"
+  mfront="${prefix}"
+fi
+
+if test "$mgis" != "no" && test "$mfront" != "no"; then
+  HAVE_MFRONT_SUPPORT=yes
+fi
+
 AC_SUBST([mgis])
-AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])
-test "$mgis" == "no" && AC_MSG_WARN([
- Mfront will not be configured with PSD,
- you did not provide --with-mgis flag so
-
- MGIS SUPPORT = OFF
-
- To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront
- flags.
- ])
-
 AC_SUBST([mfront])
-AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no])
-test "$mfront" == "no" && AC_MSG_WARN([
- Mfront will not be configured with PSD,
- You did not provide --with-front flag so
+
+AM_CONDITIONAL([HAVEMGIS], [test "$HAVE_MFRONT_SUPPORT" = yes])
+AM_CONDITIONAL([HAVEMFRONT], [test "$HAVE_MFRONT_SUPPORT" = yes])
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for mgis...           $mgis])
+AC_MSG_RESULT([checking for mfront...         $mfront])
+AC_MSG_RESULT([Mfront support...              $HAVE_MFRONT_SUPPORT])
+AC_MSG_RESULT([])
+
+if test "$HAVE_MFRONT_SUPPORT" = no; then
+  AC_MSG_WARN([
+ Mfront will not be configured with PSD.
+ You must provide either:
+
+  --with-dependencies
+    OR
+  --with-mgis
+  --with-mfront
 
  MFRONT SUPPORT = OFF
+])
+fi
+dnl ---------------------------------------------------------------
 
- To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront
- flags.
- ])
-
+dnl ---------------------------------------------------------------
+dnl Did the user provide salome
+dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for a salome support     ])
 
 AC_SUBST([salome])
@@ -441,11 +477,12 @@ test "$salome" == "no" && AC_MSG_WARN([
  To have salome support in PSD, please correctly
  provide both  --with-salome flag.
  ])
-
+dnl ---------------------------------------------------------------
 
 dnl ---------------------------------------------------------------
-dnl Did the user provide salome/medcoupling
+dnl Did the user provide hdf5/medfile/medcoupling
 dnl ---------------------------------------------------------------
+
 SECTION_TITLE([      checking for a med support     ])
 
 HAVE_MED_SUPPORT=no
@@ -493,7 +530,6 @@ if test "$HAVE_MED_SUPPORT" = no; then
  MED SUPPORT = OFF
 ])
 fi
-
 dnl ---------------------------------------------------------------
 
 
@@ -625,11 +661,11 @@ test "$mfront"      != "no" -a "$mgis" != "no" 				&&  AC_MSG_RESULT([ Mfront   
 test "$mfront"      == "no" -o "$mgis" == "no" 				&&  AC_MSG_RESULT([ Mfront      : NO])
 test "$GMSH"        == "no"                    				&&  AC_MSG_RESULT([ Gmsh        : NO])
 test "$GMSH"        != "no"                    				&&  AC_MSG_RESULT([ Gmsh        : YES])
-test "$hdf5"        != "no" 						&&  AC_MSG_RESULT([ Hdf5        : YES $hdf5])
+test "$hdf5"        != "no" 						&&  AC_MSG_RESULT([ Hdf5        : YES])
 test "$hdf5"        == "no" 						&&  AC_MSG_RESULT([ Hdf5        : NO])
-test "$medfile"     != "no" 						&&  AC_MSG_RESULT([ medfile     : YES $medfile])
+test "$medfile"     != "no" 						&&  AC_MSG_RESULT([ medfile     : YES])
 test "$medfile"     == "no" 						&&  AC_MSG_RESULT([ medfile     : NO])
-test "$medcoupling" != "no" 						&&  AC_MSG_RESULT([ medcoupling : YES $medcoupling])
+test "$medcoupling" != "no" 						&&  AC_MSG_RESULT([ medcoupling : YES])
 test "$medcoupling" == "no" 						&&  AC_MSG_RESULT([ medcoupling : NO])
 test $hdf5 	    != no -a $medfile != no -a $medcoupling != no 	&&  AC_MSG_RESULT([ med support : YES])
 test $hdf5          == no -o $medfile == no -o $medcoupling == no 	&&  AC_MSG_RESULT([ med support : NO])
