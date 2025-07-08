@@ -93,20 +93,9 @@ endif
 # specified based on the library versions and the target operating system.
 #----------------------------------------------------------------------------------------
 
-# Check if MAC flag is set to determine the Gmsh download URL
-# If MAC flag is set, download Gmsh for macOS with ARM architecture
-# If MAC flag is not set, download Gmsh for Linux
-
-if MAC
-GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/macOS/gmsh-$(GMSH_VERSION)-MacOSARM.dmg \
-			-O gmsh-$(GMSH_VERSION).dmg
-else !MAC
+# Download Gmsh source code
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
 			-O gmsh-$(GMSH_VERSION).tar.gz
-endif
-
-# Define download commands for different libraries and dependencies
-
 # Download FreeFEM source code
 FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
 			-O freefem-$(FREEFEM_VERSION).tar.gz
@@ -261,61 +250,30 @@ download-dependencies:
 	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
 		$(MSHMET_DOWNLOAD); \
     fi
-	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
-		$(MEDCOUPLING_DOWNLOAD); \
-	fi
-if MAC
-	@if [ ! -f gmsh-$(GMSH_VERSION).dmg ]; then \
-		$(GMSH_DOWNLOAD); \
-    fi
-else !MAC
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
+	fi
+if !MAC
+	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
+		$(MEDCOUPLING_DOWNLOAD); \
 	fi
 endif
 
 #--------------------------------------------------------------------------------
 # Gmsh installation
 # This section in Makefile.am deals with the Gmsh installation process.
-# - It specifies that Gmsh is not working for MAC OS.
 # - It downloads Gmsh from the specified version GMSH_VERSION unless the user provides
 #   an override by providing the ext/gmsh-$(GMSH_VERSION).tar.gz file.
 #--------------------------------------------------------------------------------
 
-
-if MAC
-GMSHZIP=dmg
-else !MAC
-GMSHZIP=tar.gz
-endif
-
 # Target gmsh-build: This target is used to build Gmsh using the downloaded source code.
 gmsh-build: gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
 
-
-# Check if MAC flag is set to determine the installation procedure for macOS
-# If not on MAC, install Gmsh for Linux
-gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).$(GMSHZIP)
+gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX): gmsh-$(GMSH_VERSION).tar.gz
 	@echo ""
 	@echo "*============================================================*"
 	@echo " PSD is compiling gmsh for you be patient:   "
 	@echo "*============================================================*"
-	@echo ""
-if MAC
-	@echo ""
-	@echo "*---------------------------------*"
-	@echo "   using hdiutil for gmsh-$(GMSH_VERSION).dmg"
-	@echo "*---------------------------------*"
-	@echo ""
-	yes | hdiutil attach ./gmsh-$(GMSH_VERSION).dmg	 && \
-	cp -r /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM/Gmsh.app ${prefix}/gmsh-$(GMSH_VERSION) && \
-	hdiutil detach /Volumes/gmsh-$(GMSH_VERSION)-MACOSARM
-	rm -f ${prefix}/bin/gmsh
-	ln -s ${prefix}/gmsh-$(GMSH_VERSION)/Contents/MacOS/gmsh ${prefix}/bin/gmsh
-	mkdir -p gmsh-$(GMSH_VERSION)
-	touch gmsh-$(GMSH_VERSION)/gmsh-$(GMSH_VERSION).$(SO_SUFFIX)
-endif
-if !MAC
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo "   untaring gmsh-$(GMSH_VERSION).tar.gz"
@@ -337,11 +295,9 @@ if !MAC
 	@echo " finished installing Gmsh v$(GMSH_VERSION)   "
 	@echo "*---------------------------------*"
 	@echo ""
-endif
 
-
-# Target gmsh-$(GMSH_VERSION).$(GMSHZIP): Downloads Gmsh unless BUILDZIPPEDDEPENDENCIES flag is set
-gmsh-$(GMSH_VERSION).$(GMSHZIP):
+# Target gmsh-$(GMSH_VERSION).tar.gz: Downloads Gmsh unless BUILDZIPPEDDEPENDENCIES flag is set
+gmsh-$(GMSH_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(GMSH_DOWNLOAD)
 endif
