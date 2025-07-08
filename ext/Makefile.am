@@ -69,17 +69,23 @@ F2CBLASLAPACK_VERSION=3.8.0
 #----------------------------------------------------------------------------------------
 
 if BUILDDEPENDENCIES
-# Check if BUILDDEPENDENCIES flag is set to determine the build execution list
-LIST_MAKE_EXECUTE = download-dependencies \
-gmsh-build \
-mfront-build \
-mgis-build \
-petsc-build \
-freefem-build \
-medcoupling-build
+  if MAC
+    LIST_MAKE_EXECUTE = download-dependencies \
+      mfront-build \
+      mgis-build \
+      petsc-build \
+      freefem-build
+  else
+    LIST_MAKE_EXECUTE = download-dependencies \
+      gmsh-build \
+      mfront-build \
+      mgis-build \
+      petsc-build \
+      freefem-build \
+      medcoupling-build
+  endif
 else
-# If BUILDDEPENDENCIES is not set, leave the list empty
-LIST_MAKE_EXECUTE =
+  LIST_MAKE_EXECUTE =
 endif
 
 
