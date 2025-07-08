@@ -14,7 +14,49 @@ define(SECTION_TITLE,
 	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
+
+dnl ---------------------------------------------------------------
+dnl Associate appropriate suffix for diffrent os
+dnl ---------------------------------------------------------------
+SECTION_TITLE([      checking for operating system type    ])
+
+os_uname=`uname`
+case $os_uname in
+     CYGWIN*|MINGW*|MSYS_NT*)
+	os_type="windows";;
+     Darwin)
+	os_type="mac";;
+     Linux)
+	os_type="linux";;
+     *)
+	os_type="unknown";;
+esac
+
+AC_MSG_RESULT([])
+test "$os_type" == "windows" && AC_MSG_RESULT([ OS identified: Windows])
+test "$os_type" == "mac"     && AC_MSG_RESULT([ OS identified: MacOs])
+test "$os_type" == "linux"   && AC_MSG_RESULT([ OS identified: Linux])
+
+test "$os_type" == "unknown" && AC_MSG_ERROR([
+  For the moment PSD is only built on Linux or MacOS
+  please contact  mohd-afeef.badri@cea.fr  for  help
+  regarding to building PSD on your OS.
+                                   ])
+
+AM_CONDITIONAL([WINDOWS], [test "$os_type" == "windows"])
+AM_CONDITIONAL([MAC],     [test "$os_type" == "mac"])
+AM_CONDITIONAL([LINUX],   [test "$os_type" == "linux"])
+
+test "$os_type" == "windows" && AC_SUBST(SO_SUFFIX,"dll"  )
+test "$os_type" == "mac"     && AC_SUBST(SO_SUFFIX,"dylib")
+test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
+
+AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
+dnl ---------------------------------------------------------------
+
+dnl ---------------------------------------------------------------
 dnl arguments for compiling with med support : hdf5, medfile, medcoupling
+dnl ---------------------------------------------------------------
 AC_ARG_WITH([hdf5],
 	[  --with-hdf5=               hdf5 root path : (e.g. --with-hdf5=/home/salome/INSTALL/hdf5)],
         [hdf5="$withval"], [hdf5="no"])
@@ -491,7 +533,7 @@ SECTION_TITLE([      checking for a med support     ])
 
 HAVE_MED_SUPPORT=no
 
-if test "$dependencies" != "no"; then
+if test "$dependencies" != "no" && test "$os_type" != "mac" ; then
 dnl Use internally built dependencies from ext/
   hdf5="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/hdf5"
   medfile="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/medfile"
@@ -534,46 +576,6 @@ if test "$HAVE_MED_SUPPORT" = no; then
  MED SUPPORT = OFF
 ])
 fi
-dnl ---------------------------------------------------------------
-
-
-dnl ---------------------------------------------------------------
-dnl Associate appropriate suffix for diffrent os
-dnl ---------------------------------------------------------------
-SECTION_TITLE([      checking for operating system type    ])
-
-os_uname=`uname`
-case $os_uname in
-     CYGWIN*|MINGW*|MSYS_NT*)
-	os_type="windows";;
-     Darwin)
-	os_type="mac";;
-     Linux)
-	os_type="linux";;
-     *)
-	os_type="unknown";;
-esac
-
-AC_MSG_RESULT([])
-test "$os_type" == "windows" && AC_MSG_RESULT([ OS identified: Windows])
-test "$os_type" == "mac"     && AC_MSG_RESULT([ OS identified: MacOs])
-test "$os_type" == "linux"   && AC_MSG_RESULT([ OS identified: Linux])
-
-test "$os_type" == "unknown" && AC_MSG_ERROR([
-  For the moment PSD is only built on Linux or MacOS
-  please contact  mohd-afeef.badri@cea.fr  for  help
-  regarding to building PSD on your OS.
-                                   ])
-
-AM_CONDITIONAL([WINDOWS], [test "$os_type" == "windows"])
-AM_CONDITIONAL([MAC],     [test "$os_type" == "mac"])
-AM_CONDITIONAL([LINUX],   [test "$os_type" == "linux"])
-
-test "$os_type" == "windows" && AC_SUBST(SO_SUFFIX,"dll"  )
-test "$os_type" == "mac"     && AC_SUBST(SO_SUFFIX,"dylib")
-test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
-
-AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
 dnl ---------------------------------------------------------------
 
 
