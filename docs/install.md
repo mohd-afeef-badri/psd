@@ -162,6 +162,63 @@ make tutorials
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `usr/bin` or ` usr/local/bin` directories if you used `sudo make install` or else it will be in your ` --prefix` location.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
 
+## Installation procedure on MacOS
+**MacOS with Apple Silicon**
+
+- Install dependencies via Homebrew. In this example we are using `gcc-15` and `g++-15`
+  <pre><code>
+  brew install m4 git bison hdf5 wget autoconf automake gcc gmsh scotch scalapack openblas
+  export HOMEBREW_CC=gcc-15
+  export HOMEBREW_CXX=g++-15
+  brew install open-mpi  --build-from-source
+  </code></pre>
+
+> 💡 **Note**:  You should not check that your `mpicc` uses `GNU 15`. Check via `mpicc --version`
+> 💡 **Note**:  System must have **active Internet access** to fetch and build dependencies.
+
+- Obtain the latest version of PSD by cloning the git repository:
+
+<pre><code>
+git clone https://github.com/mohd-afeef-badri/psd.git PSD-Sources
+</code></pre>
+
+- Use automake within the  cloned PSD folder (`PSD-Sources`)
+
+<pre><code>
+autoreconf -i
+</code></pre>
+
+- Configure  PSD within the  cloned folder, we will install PSD in `$HOME/PSDinstall`
+
+<pre><code>
+./configure --prefix=$HOME/PSDinstall --with-dependencies=yes
+</code></pre>
+
+> 💡 **Note**:   `--with-dependencies=yes` uses `wget` and internet, so make sure you are connected. To bypass the internet limitation, for instance on clusters or supercomputers, users can provide the tarball files `*.tar.gz` files of the dependencies within the `/ext` folder and use the flag `--with-zipped_dependencies`.
+> 💡 **Note**:   since `Gmsh` is among the dependencies for MacOS assure that configure finds the `gmsh` that was installed via `Homebrew` if not use `--with-Gmsh=` to provide the correct path.
+
+- Build PSD directives and install PSD
+
+<pre><code>
+make
+make install
+</code></pre>
+
+- Perform a check to see if everything works
+
+<pre><code>
+make check
+</code></pre>
+
+- Install PSD tutorials
+
+<pre><code>
+make tutorials
+</code></pre>
+
+Now you should have the PSD solver installed on your machine.
+
+
 #### Configuration flags 
 
 These are a set of commandline flags/options that control your PSD configuration via the automake ligo.

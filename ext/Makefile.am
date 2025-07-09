@@ -397,7 +397,19 @@ endif
 
 PETSC_ARCH_PSD  =fr
 
-PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
+if MAC
+PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
+	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
+	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
+	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
+	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
+	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
+	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
+	--with-ptscotch-dir=/opt/homebrew 									 \
+	--with-blas-lapack-dir=/opt/homebrew/opt/openblas   				 \
+	--with-scalapack-dir=/opt/homebrew
+else
+PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
@@ -408,6 +420,8 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz         \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
 	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
 	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
+endif
+
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
 

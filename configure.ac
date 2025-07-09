@@ -386,7 +386,7 @@ SECTION_TITLE([      checking for a Gmsh mesher        ])
 
 AX_GMSH
 
-if test "$dependencies" != "no"; then
+if test "$dependencies" != "no"  && test "$os_type" != "mac"; then
 dnl Use internally built dependencies from ext/
   GMSH="${prefix}/bin/gmsh"
 fi
