@@ -204,6 +204,8 @@ make
 make install
 </code></pre>
 
+> 💡 **Note**: `sudo make install` is called for installing `FreeFEM` if one uses `--with-dependencies=yes`, so keep an eye as you might need to enter your password. 
+
 - Perform a check to see if everything works
 
 <pre><code>
