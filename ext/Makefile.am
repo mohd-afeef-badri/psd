@@ -445,7 +445,7 @@ petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX): petsc-cmake-
 	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' --with-cxx-dialect=C++11 \
 	--with-mpiexec=$(MPIRUN) \
-	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)' \
+	--with-fc=$(FC) FOPTFLAGS='$(FCFLAGS)' \
 	--with-cudac=0 --with-ssl=0 --with-x=0 \
 	--with-debugging=no \
 	--with-fortran-bindings=no \
