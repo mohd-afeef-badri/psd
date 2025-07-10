@@ -403,10 +403,14 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
-	--with-mpi-dir=/opt/homebrew 					                     \
 	--with-ptscotch-dir=/opt/homebrew 									 \
 	--with-blas-lapack-dir=/opt/homebrew/opt/openblas   				 \
-	--with-scalapack-dir=/opt/homebrew
+	--with-scalapack-dir=/opt/homebrew									 \
+	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' 			\
+	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' 		\
+	--with-cxx-dialect=C++11 							\
+	--with-mpiexec=$(MPIRUN) 							\
+	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)'
 else
 PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
