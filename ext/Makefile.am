@@ -410,7 +410,7 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' 		\
 	--with-cxx-dialect=C++11 							\
 	--with-mpiexec=$(MPIRUN) 							\
-	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)'
+	--with-fc=0
 else
 PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
