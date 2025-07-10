@@ -68,11 +68,12 @@ F2CBLASLAPACK_VERSION=3.8.0
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 #----------------------------------------------------------------------------------------
 
+#                    mfront-build \
+#                    mgis-build \
+
 if BUILDDEPENDENCIES
 
 LIST_MAKE_EXECUTE = download-dependencies \
-#                    mfront-build \
-#                    mgis-build \
                     petsc-build \
                     freefem-build
 
