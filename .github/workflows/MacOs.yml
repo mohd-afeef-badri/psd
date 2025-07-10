@@ -1,0 +1,69 @@
+name: MacOs-15-openmpi
+# This workflow is designed to run on MacOs
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.MD'
+      - '**.md'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'docs/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+  pull_request:
+    branches:
+      - main
+      - devel
+    paths-ignore:
+      - '**.MD'
+      - '**.md'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'docs/**'
+      - 'etc/**'
+      - 'man/**'
+      - 'src/ff-files/**'
+      - '**.png'
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: |
+        brew install m4 git bison hdf5 wget autoconf automake gcc open-mpi gmsh scotch scalapack openblas
+ #       export HOMEBREW_CC=gcc-15
+ #       export HOMEBREW_CXX=g++-15
+ #       brew reinstall open-mpi  --build-from-source
+    - name: configure
+      run: |
+        autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
+    - name: make
+      run: |
+        make
+    #     make install
+
+    # - name: make check and save logs
+    #   run: |
+    #     set +e                      # Don't exit immediately on failure
+    #     PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
+    #     status=$?                  # Capture exit code of make check
+    #     mkdir -p "$GITHUB_WORKSPACE/artifacts"
+    #     find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+    #     exit $status               # Re-raise make check's status to mark the step as failed if it should
+
+
+    - name: Upload logs
+      if: always()  # upload logs even if test failed
+      uses: actions/upload-artifact@v4
+      with:
+        name: check-logs
+        path: ${{ github.workspace }}/artifacts
