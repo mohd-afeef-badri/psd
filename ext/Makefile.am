@@ -396,8 +396,7 @@ endif
 PETSC_ARCH_PSD  =fr
 
 if MAC
-PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
-	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
+PETSC_DEP = --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
 	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
 	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
@@ -405,7 +404,6 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
 	--with-ptscotch-dir=/opt/homebrew 									 \
 	--with-blas-lapack-dir=/opt/homebrew/opt/openblas   				 \
-	--with-scalapack-dir=/opt/homebrew									 \
 	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' 			\
 	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' 		\
 	--with-cxx-dialect=C++11 							\
