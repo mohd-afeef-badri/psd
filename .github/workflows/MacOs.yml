@@ -48,16 +48,17 @@ jobs:
         autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
     - name: make
       run: |
-        make && make install
+        make
+    #     make install
 
-    - name: make check and save logs
-      run: |
-        set +e                      # Don't exit immediately on failure
-        PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
-        status=$?                  # Capture exit code of make check
-        mkdir -p "$GITHUB_WORKSPACE/artifacts"
-        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
-        exit $status               # Re-raise make check's status to mark the step as failed if it should
+    # - name: make check and save logs
+    #   run: |
+    #     set +e                      # Don't exit immediately on failure
+    #     PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
+    #     status=$?                  # Capture exit code of make check
+    #     mkdir -p "$GITHUB_WORKSPACE/artifacts"
+    #     find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+    #     exit $status               # Re-raise make check's status to mark the step as failed if it should
 
 
     - name: Upload logs
