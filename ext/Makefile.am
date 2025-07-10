@@ -71,8 +71,8 @@ F2CBLASLAPACK_VERSION=3.8.0
 if BUILDDEPENDENCIES
 
 LIST_MAKE_EXECUTE = download-dependencies \
-                    mfront-build \
-                    mgis-build \
+#                    mfront-build \
+#                    mgis-build \
                     petsc-build \
                     freefem-build
 
@@ -405,7 +405,7 @@ PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
 	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
 	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
 	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
-	--download-mpich								                     \
+	--with-mpi-dir=/opt/homebrew 					                     \
 	--with-ptscotch-dir=/opt/homebrew 									 \
 	--with-blas-lapack-dir=/opt/homebrew/opt/openblas   				 \
 	--with-scalapack-dir=/opt/homebrew									 \
