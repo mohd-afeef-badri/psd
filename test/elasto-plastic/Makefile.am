@@ -32,7 +32,7 @@ check-header:
 	@cp ./../../src/psd-preprocessor/PSD_PreProcess ./PSD_PreProcess
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Checking Linear Elasticity : RUNNING                      "
+	@echo " Checking Elasto Plasticity : RUNNING                      "
 	@echo "*============================================================*"
 	@echo ""
 
