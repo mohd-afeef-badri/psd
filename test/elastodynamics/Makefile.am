@@ -15,7 +15,7 @@ check-sequential-gfp-newmark \
 check-sequential-gfp-getenergies \
 check-parallel \
 check-parallel-gfp \
-check-sequential-gfp-newmark \
+check-parallel-gfp-newmark \
 check-parallel-gfp-getenergies \
 check-parallel-gfp-getenergies-newmark-pseudononlinear
 
@@ -186,7 +186,7 @@ check-parallel-gfp:
 	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR3)/bar_dynamic.msh  -v 1 -ns -nw > Solve-3D_Parallel_GFP.log
 
 PARALLEL_FLAG_ED_NB = $(PARALLEL_FLAG_ED)  -useGFP -timediscretization newmark_beta
-check-sequential-gfp-newmark:
+check-parallel-gfp-newmark:
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Parallel 2D Elastodynamics GFP update  and Newmark-Beta"
@@ -244,7 +244,7 @@ check-parallel-gfp-getenergies-newmark-pseudononlinear:
 	./PSD_Solve -n $(NP)  Main.edp  -mesh $(MESHDIR2)/bar_dynamic.msh  -v 1 -ns -nw > Solve-2D_Parallel_GFP_getenergies_pseudoNL.log
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Parallel 3D ElastodynamicsNewmark-beta, GFP update,  plot energies, pseudo NL"
+	@echo " Parallel 3D Elastodynamics Newmark-beta, GFP update,  plot energies, pseudo NL"
 	@echo "*============================================================*"
 	@echo ""
 	./PSD_PreProcess -dimension 3 $(PARALLEL_FLAG_ED_NB_NL) > PreProcess-3D_Parallel_GFP_getenergies_pseudoNL.log && \
