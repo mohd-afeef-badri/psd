@@ -1,6 +1,6 @@
 # <img width="100" align="left" src="./docs/psd_logo.jpg" /> [PSD v2.6](https://mohd-afeef-badri.github.io/psd) 
 
-[![UB24.04](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml) [![MacOs](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml)
+[![UB24.04](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml) [![UB24.04-OpenMPI](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-openmpi.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-openmpi.yml) [![MacOs](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml)
 
 **PSD** (Parallel Solid/Structural/Seismic Dynamics) is a high-performance finite element solver for solid mechanics applications. Designed for large-scale simulations, PSD is capable of solving problems with **billions of unknowns** in both **static** and **dynamic** regimes, with support for **linear** and **nonlinear** models.
 
