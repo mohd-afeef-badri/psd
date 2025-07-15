@@ -638,8 +638,8 @@ maintainer-clean-local: clean-local
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
-	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION)
-	rm *.tar.gz
+	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) Ipopt-$(IPOPT_VERSION).tgz mshmet.$(MSHMET_VERSION).tgz
+	rm  -rf *.tar.gz
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "install-exec-local" that is used to

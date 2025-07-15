@@ -14,6 +14,10 @@ aclocal.m4 \
 config.h.in \
 config.log \
 stamp-h1 \
+compile \
+config.guess \
+config.sub \
+test-driver \
 .swp
 
 homepsd = $${HOME}
