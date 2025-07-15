@@ -120,3 +120,6 @@ Changelog.html
 *.DS_Store
 *.dylib
 *-e
+
+## vscode ##
+*.vscode
