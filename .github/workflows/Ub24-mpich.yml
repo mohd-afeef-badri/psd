@@ -9,6 +9,7 @@ on:
       - '**.md'
       - '**/.gitignore'
       - 'data/**'
+      - 'joss/**'
       - 'demos/**'
       - 'docs/**'
       - 'etc/**'
