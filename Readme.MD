@@ -7,7 +7,7 @@ At its core, PSD uses:
 - [**FreeFEM**](https://freefem.org/) for finite element discretization,
 - [**PETSc**](https://www.mcs.anl.gov/petsc/) for scalable linear algebra and preconditioning.
 
-It supports advanced material and fracture models, including [**hybrid phase-field fracture mechanics**](https://link.springer.com/article/10.1007/s00466-014-1109-y), and leverages the [**generalized-α time integration scheme**](https://hal.archives-ouvertes.fr/hal-00345290/document), enabling seamless use of Newmark-β, central difference, or HHT methods.
+It supports advanced material and fracture models, including [**hybrid phase-field fracture mechanics**](https://link.springer.com/article/10.1007/s00466-014-1109-y), and leverages the [**generalized-α time integration scheme**](https://hal.archives-ouvertes.fr/hal-00345290/document), enabling seamless use of Newmark-β, central difference, or Hilber-Hughes-Taylor (HHT) methods.
 
 PSD’s parallel capabilities are based on a [**domain decomposition approach**](https://www.sciencedirect.com/science/article/pii/S0022407317309597) using vectorial finite elements. It demonstrates **quasi-optimal scalability** and has been successfully tested on up to **24,000 cores**, solving problems with over **5 billion unknowns**.
 
@@ -16,10 +16,10 @@ A **sequential version** of the solver is also available and does **not require 
 ## Features
 
 - 2D and 3D simulations
-- Static and dynamic solid mechanics
-- Linear and nonlinear materials
+- Static solid mechanics
+- Transient solid dynamics 
 - Hybrid phase-field fracture mechanics
-- Elastoplasticity with hardening
+- Linear and nonlinear material behaviors, including elastoplasticity with strain hardening
 - High-performance parallel computing
 - Generalized-α time integration
 - Native support for:
