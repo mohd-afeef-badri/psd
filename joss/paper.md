@@ -20,7 +20,7 @@ authors:
 affiliations:
  - name: CEA  Département de Modélisation des Systèmes et Structures (DM2S), Université Paris-Saclay, 91191, Gif-sur-Yvette, France
    index: 1
-date: 3 July 2025
+date: 16 July 2025
 bibliography: paper.bib
 ---
 
@@ -36,7 +36,7 @@ A distinguishing feature of `PSD` is its ability to handle large-scale earthquak
 
 Seismic risk assessment require computational tools capable of simulating wave propagation across multiple spatial scales, from fault (kilometers away) to local site response (meters), while ensuring sufficient accuracy for earthquake engineering analyses. Existing commercial solutions often lack the computational scalability required for integrated regional to local scale earthquake simulations, while open-source alternatives typically address only specific aspects of the seismic simulation workflow.
 
-Current computational challenges in earthquake simulation include: (1) the need for billions of degrees-of-freedom to capture realistic fault-to-site scenarios [@hori2018application], [@cui2013physics] (2) integration of complex non-linear material behaviors and damage assessment (fracture propagation), and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation models (DEM). Tools like `OpenSees`[@mckenna2011opensees] excel in local site response analysis (soils and structures) based on the finite-element method (FEM) and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] or 'SEM3D' [@Fares2022sem3d] address seismic wave propagation using the Spectral Element Method (SEM). However, it is of interest  to have an open-source integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
+Current computational challenges in earthquake simulation include: (1) the need for billions of degrees-of-freedom to capture realistic fault-to-site scenarios [@hori2018application], [@cui2013physics] (2) integration of complex non-linear material behaviors and damage assessment (fracture propagation), and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation models (DEM). Tools like `OpenSees`[@mckenna2011opensees] excel in local site response analysis (soils and structures) based on the finite-element method (FEM) and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] or `SEM3D` [@Fares2022sem3d] address seismic wave propagation using the Spectral Element Method (SEM). However, it is of interest  to have an open-source integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
 
 `PSD` tries to fills this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural damage assessment within a single scalable FEM solver.  `PDS`'s integration of advanced meshing-partitioning capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment needs requiring both regional-scale wave propagation and local site response including structural analysis.
 
@@ -54,9 +54,7 @@ Each of `PSD` 's module undergoes comprehensive validation and verification test
 
 The following workflow demonstrates `PSD`'s soildynamic module through a fundamental earthquake simulation problem: seismic wave propagation in a three-dimensional soil domain with absorbing boundaries. This example illustrates one of `PSD`'s specialized physics modules among others, the aim here is to briefly illustrates the `PSD`'s key capabilities including automated distributed mesh generation (combined meshing-partitioning), advanced time integration, and sophisticated boundary condition handling.
 
-**Mathematical Presentation:** PSD solves the elastodynamic wave equation using finite-element discretization with Newmark-$\beta$ time integration[^1]. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations, and seismic source excitations with double-couple theory [@benz1987kinematic]. 
-
-[^1]: PSD implements the generalized-$\alpha$  time discretization method [@Chung], which encompasses several classical time integration schemes as special cases depending on the parameter selection: central difference, HHT (Hilber-Hughes-Taylor) [@hilber1977improved], and Newmark-$\beta$ methods.
+**Mathematical Presentation:** PSD solves the elastodynamic wave equation using finite-element discretization with Newmark-$\beta$ time integration[^1]. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations, and seismic source excitations with double-couple theory [@benz1987kinematic].
 
 For a 3D soil domain $\Omega \subset \mathbb{R}^3$ bounded by boundaries $\partial\Omega \subset \mathbb{R}^3$ and with paraxial absorbing boundaries $\partial \Omega_{\text{P}} \subset \partial \Omega$, the finite-element variational formulation solved in `PSD` reads:
 
@@ -79,12 +77,9 @@ Here:
 
 - $\boldsymbol{\mathcal{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as
 
-  
   $$
   \boldsymbol{\mathcal{P}} = c_{\text{p}}\, \mathbf{n} \otimes \mathbf{n} + c_{\text{s}} \left( \mathbf{I} - \mathbf{n} \otimes \mathbf{n} \right),
   $$
-
-  ​	
 
   where, $\mathbf{n} : \partial \Omega_{\text{P}} \to \mathbb{R}^3$ is the outward unit normal vector on the boundary, $\mathbf{I} \in \mathbb{R}^{3 \times 3}$ is the identity $2^{nd}$-order tensor, $(c_{\text{p}}, c_{\text{s}} \in \mathbb{R})$ are scalar parameters corresponding to the P-wave and S-wave wave velocities in the soil.
 
@@ -93,12 +88,14 @@ Finally, seismic excitation is applied via a double-couple point source, where t
 **Workflow**: The `PSD` workflow begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific finite element code based on user specifications. This approach ensures computational efficiency while maintaining flexibility for different problem configurations.
 
 Sample preprocessing command:
+
 ```
 PSD_PreProcess -problem soildynamics -dimension 3 -top2vol-meshing \
 -timediscretization newmark_beta  -postprocess uav
 ```
 
 Material parameters are then specified through `ASCII` configuration file, with typical values for soil properties including density and wave velocities corresponding to standard engineering geology classifications:
+
 ```
   real rho  = 1800.0 ,  // Density (kg/m³)
        cs   = 2300.0 ,  // S-wave welocity (m/s)
@@ -122,7 +119,7 @@ The simulation is executed using the parallel solver with the specified number o
 PSD_Solve -np 6144 Main.edp #6144 MPI-domains are used
 ```
 
-Results such as those presented in figure \ref{fig:example1} can be obtained by launching `PSD` simulation. These results corresponds to seismic wave propagation for hypothetical earthquake. These simulations are then used for risk assessments of potential sites of interest for engineering. 
+Results such as those presented in figure \ref{fig:example1} can be obtained by launching `PSD` simulation. These results corresponds to seismic wave propagation for hypothetical earthquake. These simulations are then used for risk assessments of potential sites of interest for engineering.
 
 # Demonstration
 
@@ -131,8 +128,6 @@ Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the
  ![Regional-scale earthquake simulation of the Cadarache region (50 km × 50 km) demonstrating `PSD`'s capability for large-scale seismic wave propagation modeling. \label{fig:example1}](./images/earthquake.png){width=80%}
 
 Figure \ref{fig:example2} demonstrates `PSD`'s fracture mechanics capabilities through a brittle fracture simulation within a perforated medium, as presented in [@badri2021preconditioning]. This simulation involves more than 64 million degrees of freedom solved across 1008 MPI domains on the French Joliot-Curie supercomputer, illustrating the software's capability for detailed damage assessment applications that complement regional-scale earthquake simulations.
-
-
 
 ![Crack propagation for a perforated medium, simulation performed with `PSD`.\label{fig:example2}](./images/fracture.png){width=80%}
 
@@ -151,3 +146,5 @@ This work is supported by the French Alternative Energies and Atomic Energy Comm
 The authors also acknowledge key contributors to the PSD solver: Dr. Breno Ribeiro Nogueira for his Ph.D. work on the fracture mechanics module via the `MFront` interface, Dr. Reine Fares for integrating Iwan non-linear soil behavior model via the `Mfront` interface, and Rania Saadi for enabling the parallel mesh adaptation kernel.
 
 # References
+
+[^1]: PSD implements the generalized-$\alpha$  time discretization method [@Chung], which encompasses several classical time integration schemes as special cases depending on the parameter selection: central difference, HHT (Hilber-Hughes-Taylor) [@hilber1977improved], and Newmark-$\beta$ methods.
