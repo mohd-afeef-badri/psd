@@ -1,6 +1,6 @@
 /**************************************************************************************
 *                                                                                     *
-*           This file is a part of PSD (Parallel Structural Dynamics)                 *
+*           This file is a part of PSD project                                        *
 *                                                                                     *
 *       -------------------------------------------------------------------           *
 *                                                                                     *
@@ -296,6 +296,8 @@ if(   PostProcess=="u"   || PostProcess=="v"   || PostProcess=="a"   || PostProc
   cout << "                     / /_/ /  / ___/ / __  /                       " << endl;
   cout << "                    / ___ /  (__  ) / /_/ /                        " << endl;
   cout << "                   /_/      /____/  \\___ /                        " << endl;
+  cout << "                                                                   " << endl;
+  cout << "      Parallel finite element Solver for continuum Dynamics        " << endl;
   cout << "                                                                   " << endl;
   cout << "===================================================================" << endl;
 

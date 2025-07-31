@@ -1,7 +1,7 @@
 #define writeHeader writeIt \
 "/****************************************************************************\n" \
 " *                                                                           \n" \
-" *       This file is a part of PSD (Parallel Structural Dynamics)           \n" \
+" *       This file is a part of PSD project                                  \n" \
 " *                                                                           \n" \
 " *   -------------------------------------------------------------------     \n" \
 " *                                                                           \n" \

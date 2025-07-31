@@ -1,6 +1,6 @@
 /**************************************************************************************
 *                                                                                     *
-*           This file is a part of PSD (Parallel Structural Dynamics)                 *
+*           This file is a part of PSD project                                        *
 *                                                                                     *
 *       -------------------------------------------------------------------           *
 *                                                                                     *
@@ -31,34 +31,6 @@ cout << " building PSD-validation-iwan.edp";
 ofstream  write("PSD-validation-iwan.edp");
 
 codeSnippet R""""(
-
-/*****************************************************************************
-
-         This file is a part of PSD (Parallel Structural Dynamics)
-
-     -------------------------------------------------------------------
-
-     Author(s): Mohd Afeef Badri, Reine Fares
-     Email    : mohd-afeef.badri@cea.fr
-     Date     : 02-March-2022
-     Comment  : This test checks the MFront-PSD coupling for Iwan law.
-                This code expects the following INPUTS from user:
-                  i) 'input.data' which is  a  mult-column  input file
-                     with  the first 2 columns  denoting  the time and
-                     the input Exy value (loading).
-                 ii) 'steps' this is an integer value giving the total
-                     number of time steps in your file 'in.data'
-                The output of this code is 'out.data' file, an  ASCII
-                file that contains 3 columns, time, Sigma_xy, Exy.
-
-     -------------------------------------------------------------------
-
-     PSD a parallel  finite  element framework  provides tools to  solve
-     multiple  solid-dynamic  problems; PSD is distributed  in  the hope
-     that it will be useful, but WITHOUT ANY WARRANTY; or  without  even
-     the implied warranty of  FITNESS  FOR  A  PARTICULAR  PURPOSE.
-
-*******************************************************************************/
 load "mfront"
 load "Element_QF"
 load "msh3"

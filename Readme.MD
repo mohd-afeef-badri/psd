@@ -1,8 +1,8 @@
-# <img width="100" align="left" src="./docs/psd_logo.jpg" /> [PSD v2.6](https://mohd-afeef-badri.github.io/psd) 
+# `<img width="100" align="left" src="./docs/psd_logo.jpg" />` [PSD v2.6](https://mohd-afeef-badri.github.io/psd)
 
 [![UB24.04](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-mpich.yml) [![UB24.04-OpenMPI](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-openmpi.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/Ub24-openmpi.yml) [![MacOs](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml/badge.svg)](https://github.com/mohd-afeef-badri/psd/actions/workflows/MacOs.yml)
 
-**PSD** (Parallel Solid/Structural/Seismic Dynamics) is a high-performance finite element solver for solid mechanics applications. Designed for large-scale simulations, PSD is capable of solving problems with **billions of unknowns** in both **static** and **dynamic** regimes, with support for **linear** and **nonlinear** models.
+**PSD** (**P**arallel finite element **S**olver for continuum **D**ynamics) is a high-performance finite element solver for solid mechanics applications. Designed for large-scale simulations, PSD is capable of solving problems with **billions of unknowns** in both **static** and **dynamic** regimes, with support for **linear** and **nonlinear** models.
 
 At its core, PSD uses:
 
@@ -19,7 +19,7 @@ A **sequential version** of the solver is also available and does **not require 
 
 - 2D and 3D simulations
 - Static solid mechanics
-- Transient solid dynamics 
+- Transient solid dynamics
 - Hybrid phase-field fracture mechanics
 - Linear and nonlinear material behaviors, including elastoplasticity with strain hardening
 - High-performance parallel computing
@@ -32,13 +32,9 @@ A **sequential version** of the solver is also available and does **not require 
   - `.pvd`, `.vtk`, `.vtu` (ParaView)
   - ASCII trace files for physical quantities
 
-
-
 ## 🔧 Installation
 
 Refer to the [installation guide here](https://mohd-afeef-badri.github.io/psd/#/install).
-
-
 
 ## 📚 Tutorials
 
@@ -49,8 +45,6 @@ Explore tutorials for different physics modules:
 - [Elastodynamics](https://mohd-afeef-badri.github.io/psd/#/elastodynamics)
 - [Soildynamics](https://mohd-afeef-badri.github.io/psd/#/soildynamics)
 - [Elasto-plasticity](https://mohd-afeef-badri.github.io/psd/#/elasto-plastic)
-
-
 
 ## Quick Start: Typical Workflow of a PSD Simulation
 
@@ -83,31 +77,25 @@ if you complied a parallel PSD version
 ```bash
 PSD_Solve -np $N Main.edp -v 0 -nw
 ```
+
 if you complied a sequential PSD version
+
 ```bash
 PSD_Solve_Seq Main.edp -v 0 -nw
 ```
 
 - In the parallel command **$N** is an `int` value, i.e., number of processes that you want to use for performing the simulation in parallel.
-
 - Additional flag `-wg` may be required while launching the solver, this is in case debug mode is on.
 
 **Step 3: Result visualization**
 Final step is to have a look at the results of the simulation. PSD can provides output results in the form of plots, finite element fields of interest, etc. ParaView's pvd, vtu, and pvtu files are used for postprocessing (see figure below). ASCII data files that to trace certain quantities of interest like reaction forces, kinetic energies, etc can also be outputted.
 
-
-
 <img src="./domaindecomp.png" alt="markdownimage" style="zoom:30%;" />
 
-
-
-
-
-------
+---
 
 ## 📬 Contact
 
 To report bugs, request features, or ask questions, feel free to reach out:
 
 **📧 [mohd-afeef.badri@cea.fr](mailto:mohd-afeef.badri@cea.fr)**
-

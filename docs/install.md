@@ -17,19 +17,19 @@
 
 Before installing PSD, ensure the following dependencies are installed and compatible on your system.
 
-| Package                                                      | Required Version                                                                         | Essential | Install Assist |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | --------- | -------------- |
-| [automake](https://www.gnu.org/software/automake/)           | 2.8 or higher                                                                            | ✅         | ❌              |
-| [C/C++ compiler](http://www.cplusplus.com/)                  | GCC 7 or higher                                                                          | ✅         | ❌              |
-| [MPI](https://www.mpich.org/)                                | 2.0 or higher ([MPICH](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | ✅         | ❌              |
-| [git](https://git-scm.com/)                                  | –                                                                                        | ✅         | ❌              |
-| [FreeFEM](https://freefem.org/)                              | 4.15                                                                                     | ✅         | ✅              |
-| [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.22.2                                                                                   | ✅         | ✅              |
-| [Gmsh](http://gmsh.info/)                                    | 4.11.1                                                                                   | ✅         | ✅              |
-| [SALOME](https://www.salome-platform.org/)                   | 9.0 or higher                                                                            | ❌         | ❌              |
-| [gnuplot](http://www.gnuplot.info/)                          | 4.0 or higher                                                                            | ❌         | ❌              |
-| [MFront](http://tfel.sourceforge.net/)                       | 5.0.0                                                                                    | ❌         | ✅              |
-| [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.0                                                                                      | ❌         | ✅              |
+| Package                                                   | Required Version                                                                   | Essential | Install Assist |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------- | -------------- |
+| [automake](https://www.gnu.org/software/automake/)           | 2.8 or higher                                                                      | ✅        | ❌             |
+| [C/C++ compiler](http://www.cplusplus.com/)                  | GCC 7 or higher                                                                    | ✅        | ❌             |
+| [MPI](https://www.mpich.org/)                                | 2.0 or higher ([MPICH](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | ✅        | ❌             |
+| [git](https://git-scm.com/)                                  | –                                                                                 | ✅        | ❌             |
+| [FreeFEM](https://freefem.org/)                              | 4.15                                                                               | ✅        | ✅             |
+| [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.22.2                                                                             | ✅        | ✅             |
+| [Gmsh](http://gmsh.info/)                                    | 4.11.1                                                                             | ✅        | ✅             |
+| [SALOME](https://www.salome-platform.org/)                   | 9.0 or higher                                                                      | ❌        | ❌             |
+| [gnuplot](http://www.gnuplot.info/)                          | 4.0 or higher                                                                      | ❌        | ❌             |
+| [MFront](http://tfel.sourceforge.net/)                       | 5.0.0                                                                              | ❌        | ✅             |
+| [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.0                                                                                | ❌        | ✅             |
 
 > ⚠️ **Note:**
 > Some dependencies can be automatically installed with PSD. These are marked in the “Install Assist” column above. Others must be installed manually before proceeding.
@@ -40,6 +40,7 @@ Before installing PSD, ensure the following dependencies are installed and compa
 ---
 
 ## Installation Procedure 1
+
 **PSD installs all the dependencies**  *Recommended* ✅
 
 * Ensure the following are pre-installed:
@@ -107,14 +108,15 @@ echo 'export LD_LIBRARY_PATH=$HOME/PSDinstall/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 
 **MED support:**
 
-Follow this to build PSD with `med` support, use 
-- provide SALOME's hdf5 `--with-hdf5=$SALOMEPREFIX/hdf5` 
+Follow this to build PSD with `med` support, use
+
+- provide SALOME's hdf5 `--with-hdf5=$SALOMEPREFIX/hdf5`
 - provide SALOME's medfile `--with-medfile=$SALOMEPREFIX/medfile`
 - provide SALOME's MedCoupling `--with-medcoupling=$SALOMEPREFIX/MEDCOUPLING`
-All these flags can be set by downloading SALOME and providing the SALOME's install path directory in `SALOMEPREFIX`.
-
+  All these flags can be set by downloading SALOME and providing the SALOME's install path directory in `SALOMEPREFIX`.
 
 ## Installation Procedure 2
+
 **I install my own dependencies for PSD**
 
 - Obtain the latest version of PSD by cloning the git repository:
@@ -161,8 +163,8 @@ make tutorials
 
 Now you should have the PSD solver installed on your machine. Note that, the solver will be installed at `usr/bin` or ` usr/local/bin` directories if you used `sudo make install` or else it will be in your ` --prefix` location.  The PSD tutorials are installed in `$HOME/PSD-tutorials`.
 
-
 ## Installation procedure on MacOS
+
 **MacOS with Apple Silicon**
 
 - Install dependencies via Homebrew. In this example we are using `gcc-15` and `g++-15`
@@ -204,7 +206,7 @@ make
 make install
 </code></pre>
 
-> 💡 **Note**: `sudo make install` is called for installing `FreeFEM` if one uses `--with-dependencies=yes`, so keep an eye as you might need to enter your password. 
+> 💡 **Note**: `sudo make install` is called for installing `FreeFEM` if one uses `--with-dependencies=yes`, so keep an eye as you might need to enter your password.
 
 - Perform a check to see if everything works
 
@@ -220,47 +222,41 @@ make tutorials
 
 Now you should have the PSD solver installed on your machine.
 
-
-#### Configuration flags 
+#### Configuration flags
 
 These are a set of commandline flags/options that control your PSD configuration via the automake ligo.
 
-| **Flag**              | **Description**                                              | **Examples**                                                 |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `--prefix`            | Enter the directory where you wish to install PSD.<br />Note that  you  will  need to  have read and write <br />permission for this directory.<br /><br />*This flag is an optional flag* | `--prefix=/usr` <br /> `--prefix=/usr/local` <br /> `--prefix=/home/install` |
-| `--with-FreeFEM`      | Enter the directory where FreeFem binary has been installed. <br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag* | `--with-FreeFEM=/usr/bin` <br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin` |
-| `--with-Gmsh`         | Enter the directory  where  Gmsh  binary has been installed. <br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin` <br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
-| `--with-mgis`         | Enter the directory  where  Mgis  has been installed. <br /><br />*This flag is an optional flag* | `--with-mgis=/usr` <br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
-| `--with-salome`       | Enter the directory  where  SALOME  has been installed. <br /><br />*This flag is an optional flag* | `--with-salome=/home/SALOME-UB22.04` <br />`--with-salome=/home/install/SALOME-UB22.04` <br />`--with-salome=/usr/local/SALOME-UB22.04` |
-| `--with-hdf5` | Enter the directory  where  hdf5  has been installed. <br /><br />*This flag is an optional flag* | `--with-hdf5=/home/SALOME-UB22.04/INSTALL/hdf5` <br />`--with-hdf5=/home/install/SALOME/BINARIES-UB22.04/hdf5` |
-| `--with-medfile` | Enter the directory  where  medfile  has been installed. <br /><br />*This flag is an optional flag* | `--with-medfile=/home/SALOME-UB22.04/INSTALL/medfile` <br />`--with-medfile=/home/install/SALOME/BINARIES-UB22.04/medfile` |
-| `--with-medcoupling` | Enter the directory  where  MEDCOUPLING  has been installed. <br /><br />*This flag is an optional flag* | `--with-medcoupling=/home/SALOME-UB22.04/INSTALL/MEDCOUPLING` <br />`--with-medcoupling=/home/install/SALOME/BINARIES-UB22.04/MEDCOUPLING` |
-| `--with-mfront`       | Enter the directory  where  Mfront binary  has been installed. <br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin` <br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
-| `--with-dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compile PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes` <br />`--with-dependencies=no` <br /> |
-| `--with-zipped_dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will look for `.tar.gz` files for <br />dependencies in `ext` folder and compile them<br />for you. If yes PSD will expect `.tar.gz` for PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen from ext folder.<br /><br />*This flag is an optional flag* | `--with-zipped_dependencies=yes` <br />`--with-zipped_dependencies=no` <br /> |
-
+| **Flag**                 | **Description**                                                                                                                                                                                                                                                                                                                                                                                                          | **Examples**                                                                                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--prefix`                   | Enter the directory where you wish to install PSD.<br />Note that  you  will  need to  have read and write <br />permission for this directory.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                   | `--prefix=/usr` <br /> `--prefix=/usr/local` <br /> `--prefix=/home/install`                                                             |
+| `--with-FreeFEM`             | Enter the directory where FreeFem binary has been installed.<br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                            | `--with-FreeFEM=/usr/bin` <br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin`                                 |
+| `--with-Gmsh`                | Enter the directory  where  Gmsh  binary has been installed.<br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                    | `--with-Gmsh=/usr/bin` <br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin`                                          |
+| `--with-mgis`                | Enter the directory  where  Mgis  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                             | `--with-mgis=/usr` <br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local`                                                      |
+| `--with-salome`              | Enter the directory  where  SALOME  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                           | `--with-salome=/home/SALOME-UB22.04` <br />`--with-salome=/home/install/SALOME-UB22.04` <br />`--with-salome=/usr/local/SALOME-UB22.04`  |
+| `--with-hdf5`                | Enter the directory  where  hdf5  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                             | `--with-hdf5=/home/SALOME-UB22.04/INSTALL/hdf5` <br />`--with-hdf5=/home/install/SALOME/BINARIES-UB22.04/hdf5`                             |
+| `--with-medfile`             | Enter the directory  where  medfile  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                          | `--with-medfile=/home/SALOME-UB22.04/INSTALL/medfile` <br />`--with-medfile=/home/install/SALOME/BINARIES-UB22.04/medfile`                 |
+| `--with-medcoupling`         | Enter the directory  where  MEDCOUPLING  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                      | `--with-medcoupling=/home/SALOME-UB22.04/INSTALL/MEDCOUPLING` <br />`--with-medcoupling=/home/install/SALOME/BINARIES-UB22.04/MEDCOUPLING` |
+| `--with-mfront`              | Enter the directory  where  Mfront binary  has been installed.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                                                                                                                    | `--with-mfront=/usr/bin` <br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin`                                    |
+| `--with-dependencies`        | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compile PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag*                                                                                  | `--with-dependencies=yes` <br />`--with-dependencies=no`                                                                                   |
+| `--with-zipped_dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will look for `.tar.gz` files for <br />dependencies in `ext` folder and compile them<br />for you. If yes PSD will expect `.tar.gz` for PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen from ext folder.<br /><br />*This flag is an optional flag* | `--with-zipped_dependencies=yes` <br />`--with-zipped_dependencies=no`                                                                     |
 
 #### make options for PSD
 
 Once `./configure` runs successfully your Makefiles will be generated thanks to automake. Different options are available with `make` command some are native to Make (still listed here, sorry to my Linux co-geeks)
 
-​    
 
-| **Command**        | **Description**                                              | **Example**                              |
-| ------------------ | ------------------------------------------------------------ | ---------------------------------------- |
-| `make`             | Command responsible to compile PSD for you. This is necessary. | `make`                                   |
-| `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag* | `make -j4`                               |
-| `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install` <br /> `make install -j4` |
-| `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                             |
-| `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                             |
-| `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                  |
-| `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional* | `make tutorials`                         |
-| `install-devl`     | Command that installs developers version of PSD for you, this command should follow <br />the `make` command.<br /><br />*This command is an optional* | `make install-devel`                     |
-| `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow <br />the `make` command. Note that this needs pandoc installed in your system. And also pandoc support for specific html templates, [Link](https://github.com/ryangrose/easy-pandoc-templates). <br /><br />*This command is an optional* | `make documentation`                     |
-
-
+| **Command**    | **Description**                                                                                                                                                                                                                                                                                                              | **Example**                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `make`             | Command responsible to compile PSD for you. This is necessary.                                                                                                                                                                                                                                                                     | `make`                                     |
+| `-j4`              | Activates parallel make, i.e., faster compilation on 4 cores.<br /><br />*This flag is an optional flag*                                                                                                                                                                                                                         | `make -j4`                                 |
+| `install`          | Command that installs PSD for you, this command should follow the `make` command.                                                                                                                                                                                                                                                | `make install` <br /> `make install -j4` |
+| `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended*                                                                                                                                                                                        | `make check`                               |
+| `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional*                                                                                                                                                                                                                                        | `make clean`                               |
+| `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional*                                                                                                                                                                                                                              | `make maintainer-clean`                    |
+| `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional*                                                                                                                                                                | `make tutorials`                           |
+| `install-devl`     | Command that installs developers version of PSD for you, this command should follow<br />the `make` command.<br /><br />*This command is an optional*                                                                                                                                                                          | `make install-devel`                       |
+| `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow<br />the `make` command. Note that this needs pandoc installed in your system. And also pandoc support for specific html templates, [Link](https://github.com/ryangrose/easy-pandoc-templates). <br /><br />*This command is an optional* | `make documentation`                       |
 
 *To report bugs, issues, feature-requests contact:*
 
 - **mohd-afeef.badri@cea.fr**
-- **mohd-afeef.badri@hotmail.com**

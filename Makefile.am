@@ -37,6 +37,8 @@ logo:
 	@echo "                    / ___ /  (__  ) / /_/ /                   "
 	@echo "                   /_/      /____/  \\___ /                   "
 	@echo "                                                              "
+	@echo "     Parallel finite element Solver for continuum Dynamics    "
+	@echo "                                                              "
 	@echo "*============================================================*"
 	@echo ""
 
