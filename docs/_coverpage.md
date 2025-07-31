@@ -2,7 +2,7 @@
 
 <img src="https://github.com/user-attachments/assets/6494ea34-4f6a-4e13-9d23-c5746da41942" alt="PSD Logo" style="height:120px; margin: 20px auto; display: block;">
 
-# `<small>`Version 2.6.0 `</small>`
+# <small>Version 2.6.0 </small>
 
 ## Parallel finite element Solver for continuum Dynamics
 

@@ -675,10 +675,9 @@ Open the `.pvd` file located in the output folder (e.g., `VTUs_DATE_TIME/`) usin
 
 > From ParaView, you can visualize displacement, mesh partitions, and more (e.g., as in the figure below).
 
-figure style="text-align: center;">
-  `<img src="_images/linear-elasticity/le-2d-bar-clamped-pulled-partioned.png" width="39%" style="margin-right:2%;" alt="2d-bar-clamped-pulled-partitioned">`
-  `<img src="_images/linear-elasticity/le-2d-bar-clamped-pulled.png" width="50%" alt="2d-bar-clamped-pulled">`
-
+<figure style="text-align: center;">
+  <img src="_images/linear-elasticity/le-2d-bar-clamped-pulled-partioned.png" width="39%" style="margin-right:2%;" alt="2d-bar-clamped-pulled-partitioned">
+  <img src="_images/linear-elasticity/le-2d-bar-clamped-pulled.png" width="50%" alt="2d-bar-clamped-pulled">
 <figcaption><em>Figure: The 2D clamped bar problem: partitioned mesh and displacement field visualization in ParaView.</em></figcaption>
 </figure>
 
@@ -715,10 +714,10 @@ Launch `PSD_PreProcess` with the following command:
 </code></pre>
 
 > 💡 **Note**:
-> The command-line flag `<code>`-dirichletconditions 1`</code>` tells `PSD` that there is one Dirichlet boundary — the clamped end of the bar.
-> The flag `<code>`-tractionconditions 1`</code>` notifies `PSD` that there is one traction boundary — the pulled right end.
+> The command-line flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end of the bar.
+> The flag <code>-tractionconditions 1</code> notifies `PSD` that there is one traction boundary — the pulled right end.
 
-To apply the clamped boundary condition ($u_1 = 0,\ u_2 = 0$), set the following variables in `<code>`ControlParameters.edp`</code>`:
+To apply the clamped boundary condition ($u_1 = 0,\ u_2 = 0$), set the following variables in <code>ControlParameters.edp</code>:
 
 <pre><code>macro Dbc0On 2     //
 macro Dbc0Ux 0.    //
@@ -741,7 +740,7 @@ Use 5 cores to solve the problem by running:
 <pre><code>PSD_Solve -np 5 Main.edp -mesh ./../Meshes/2D/bar.msh -v 0</code></pre>
 
 > 💡 **Note**:
-> This is the same command used in the previous bar problems, except here we use `<code>`-np 5`</code>` to solve in parallel using 5 cores.
+> This is the same command used in the previous bar problems, except here we use <code>-np 5</code> to solve in parallel using 5 cores.
 
 The mesh file `bar.msh` is available in the `../Meshes/2D/` folder. It is a triangular mesh created with Gmsh.
 
@@ -868,9 +867,9 @@ Launch `PSD_PreProcess` by running:
 <pre><code>PSD_PreProcess  -problem linear_elasticity -dimension 3 -dirichletconditions 1 -tractionconditions 1 -postprocess u</code></pre>
 
 > 💡 **Note**:
-> The flag `<code>`-dirichletconditions 1`</code>` tells `PSD` that there is one Dirichlet boundary — the clamped end.
-> The flag `<code>`-dimension 3`</code>` sets the simulation to 3D.
-> The flag `<code>`-tractionconditions 1`</code>` tells `PSD` to apply one traction boundary — the loaded end.
+> The flag <code>-dirichletconditions 1</code> tells `PSD` that there is one Dirichlet boundary — the clamped end.
+> The flag <code>-dimension 3</code> sets the simulation to 3D.
+> The flag <code>-tractionconditions 1</code> tells `PSD` to apply one traction boundary — the loaded end.
 
 To apply the Dirichlet condition ($u_x = 0,\ u_y = 0,\ u_z = 0$), edit `ControlParameters.edp` and set:
 
@@ -898,9 +897,9 @@ To solve the problem using 4 cores, run the following command:
 > This is the same command used in the earlier tutorials, now applied in a 3D setting.
 
 > ⚠️ **Warning**:
-> The file `<code>`bar.msh`</code>` is located in the `<code>`../Meshes/3D/`</code>` directory.
+> The file <code>bar.msh</code> is located in the <code>../Meshes/3D/</code> directory.
 > This is a tetrahedral mesh generated with Gmsh. Mesh generation is not covered in this tutorial.
-> You may create your own meshes using Gmsh or Salome. Please ensure the format is either `<code>`.msh`</code>` (Gmsh version 2) or `<code>`.mesh`</code>`.
+> You may create your own meshes using Gmsh or Salome. Please ensure the format is either <code>.msh</code> (Gmsh version 2) or <code>.mesh</code>.
 
 #### 📊 Step 3: Postprocessing and Visualization
 
