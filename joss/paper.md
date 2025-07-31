@@ -1,5 +1,5 @@
 ---
-title: '`PSD`: A Parallel Finite Element Solver for Solid/Structural/Seismic Dynamics'
+title: '`PSD`: Parallel finite element Solver for continuum Dynamics'
 tags:
   - finite elements
   - parallel computing
@@ -26,7 +26,7 @@ bibliography: paper.bib
 
 # Summary
 
-`PSD` (Parallel Solid/Structural/Seismic Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake mechanics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions.
+`PSD` (Parallel finite element Solver for continuum Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake mechanics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions.
 
 Built upon `FreeFEM`  [@MR3043640]  for finite element discretization and `PETSc` [@balay2019petsc] for scalable linear system solving, `PSD` integrates sophisticated material modeling through its dedicated  `Mfront` [@helfer2015],[@helfer2020] interface.   This architecture enables the handling of complex material behaviors thanks to non-linear constitutive laws essential for realistic mechanical phenomena modeling.   `PSD` includes a purpose-built `MPI I/O`-based mesher-partitioner, `top-ii-vol` [@badri2024top], tailored for large-scale earthquake simulations. Further, hybrid phase-field fracture mechanics [@ambati2015review] is implemented, which enables detailed analysis of crack initiation and propagation in materials. These types of simulations are treated at the other end of the complete simulation chain from the earthquake source to the structure assessment.
 
@@ -42,13 +42,15 @@ Current computational challenges in earthquake simulation include: (1) the need 
 
 # `PSD` Features and Architecture
 
-`PSD` provides a comprehensive suite of physics modules addressing diverse computational mechanics applications around earthquake simulations. It includes dedicated modules for linear elasticity, elastodynamics, fracture mechanics, soil dynamics, and elasto-plasticity, making it suitable for applications ranging from static structural analysis to dynamic earthquake simulation and material damage assessment. The `Mfront` interface significantly enhances this versatility by enabling users to implement custom non-linear material models that can be integrated into any of these physics modules, extending `PSD`'s applicability beyond the built-in constitutive laws.
+`PSD` provides a comprehensive suite of physics modules addressing diverse computational mechanics applications around earthquake simulations. It includes dedicated modules for linear elasticity, elastodynamics, fracture mechanics, soildynamics [^soildynamics], and elasto-plasticity, making it suitable for applications ranging from static structural analysis to dynamic earthquake simulation and material damage assessment. The `Mfront` interface significantly enhances this versatility by enabling users to implement custom non-linear material models that can be integrated into any of these physics modules, extending `PSD`'s applicability beyond the built-in constitutive laws.
 
 `PSD` adopts a layered architecture that separates mathematical formulation from computational implementation while maintaining high performance through strategic integration with `FreeFEM` for finite element discretization, `PETSc` for scalable linear algebra, and `Mfront` for sophisticated material modeling. `PSD` follows a code generation approach where users specify problem configurations through command-line options, and the software automatically generates optimized code tailored to specific physics, dimensionality, and boundary conditions. This design enables computational efficiency while preserving flexibility for diverse solid mechanics applications across the available physics modules.
 
 The parallel computing architecture in `PSD` employs domain decomposition strategies which enable distribute memory parallelization which are optimized for large-scale FEM simulation [@dolean2015introduction]. `PSD` has demonstrated scalability up to 24,000 cores and capability for handling problems with over 5 billion unknowns for earthquakes. The integration with the `top-ii-vol` meshing tool provides efficient on the fly mesh generation and partitioning specifically designed for earthquake simulation geometries, eliminating traditional bottlenecks associated with sequential meshing approaches.
 
 Each of `PSD` 's module undergoes comprehensive validation and verification testing to ensure numerical accuracy and reliability across its diverse physics modules. The validation framework includes cross-comparison with established numerical codes, comparison with experimental results, and verification against manufactured analytical solutions. Some of the validation results covering all physics modules are documented and publicly available at [https://mohd-afeef-badri.github.io/psd/validation](https://mohd-afeef-badri.github.io/psd/validation), providing users with confidence in the `PSD`'s accuracy for their specific applications.
+
+[^soildynamics]: The *soildynamics* module builds upon the elastodynamics module by incorporating specialized tools essential for earthquake modeling, such as paraxial (absorbing) boundary conditions, double-couple source mechanisms, point-cloud meshing-partitioning algorithm, etc.
 
 # Example Workflow for Earthquake Simulation in PSD
 
