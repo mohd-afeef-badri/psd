@@ -19,7 +19,7 @@ A **sequential version** of the solver is also available and does **not require 
 
 - 2D and 3D simulations
 - Static solid mechanics
-- Transient solid dynamics
+- Transient solid dynamics 
 - Hybrid phase-field fracture mechanics
 - Linear and nonlinear material behaviors, including elastoplasticity with strain hardening
 - High-performance parallel computing
