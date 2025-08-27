@@ -35,10 +35,10 @@ on:
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Install dependencies
       run: |
         brew install m4 git bison hdf5 wget autoconf automake gcc open-mpi gmsh scotch scalapack openblas
@@ -65,7 +65,7 @@ jobs:
 
     - name: Upload logs
       if: always()  # upload logs even if test failed
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: check-logs
         path: ${{ github.workspace }}/artifacts
