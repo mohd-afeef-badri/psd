@@ -131,7 +131,7 @@ Results such as those presented in Figure \ref{fig:example1} can be obtained by 
 
 # Demonstration
 
-Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km) performed with `PSD`, as detailed in [@badri2024top]. This simulation demonstrates `PSD`'s capability for large-scale seismic wave propagation modeling, involving over one billion degrees of freedom distributed across 6144 `MPI` domains. The displacement fields shown at four time intervals illustrate wave propagation patterns characteristic of earthquake scenarios, with computational complexity approaching operational seismic hazard assessment requirements.
+Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km discretized with a 540 million element mesh) performed with `PSD`, as detailed in [@badri2024top]. This simulation demonstrates `PSD`'s capability for large-scale seismic wave propagation modeling, involving over one billion degrees of freedom distributed across 6144 `MPI` domains. The displacement fields shown at four time intervals illustrate wave propagation patterns characteristic of earthquake scenarios, with computational complexity approaching operational seismic hazard assessment requirements.
 
  ![Regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km) demonstrating `PSD`'s capability for large-scale seismic wave propagation modeling. \label{fig:example1}](./images/earthquake.png){width=80%}
 
