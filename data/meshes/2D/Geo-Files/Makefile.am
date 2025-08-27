@@ -148,7 +148,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.msh *.med
+	rm -rf *~  *./$(CAD_FOLDER)/.msh *./$(CAD_FOLDER)/.med
 	rm -rf ../Meshes
 	@echo ""
 

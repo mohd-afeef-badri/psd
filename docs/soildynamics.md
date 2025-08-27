@@ -550,7 +550,7 @@ Once the simulation is finished. PSD allows postprocessing of results in ParaVie
 *Figure: Finite element displacement and acceleration fields visualized for the 2D problem with ParaView at different timesteps.*
 
 
-> 🧪 Optional Exercise: Perform the same simulation but in 3D. Take note that the mesh `./../Meshes/3D/soil-dc.msh` is not provided, so you will have to create your own mesh. Considering the four double couple points and the source points, Gmsh or SALOME is recomended for this task.
+> 🧪 Optional Exercise: Perform the same simulation but in 3D. Take note that the mesh `./../Meshes/3D/soil_dc.msh` is not provided, so you will have to create your own mesh. Considering the four double couple points and the source points, Gmsh or SALOME is recomended for this task.
 
 ## Tutorial 3
 ### 3D Soildynamics with top-ii-vol Meshing

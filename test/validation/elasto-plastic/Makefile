@@ -11,7 +11,7 @@ preprocess:
 	find . -name LinearFormBuilderAndSolver.edp -exec sed -i -e "s#  //------------------Screen output ----------------------//#  //------------------Screen output ----------------------//\n  if(mpirank==0) rr << u(Ri,0) << \"\\\t\" << tl <<endl;#g" {} \; && \
 
 solve:	
-	./../../../src/psd-solve/PSD_Solve -np 4 Main.edp -mesh ./../../../data/meshes/2D/Geo-Files/Gmsh/quater_cylinder.msh -v 0
+	./../../../src/psd-solve/PSD_Solve -np 1 Main.edp -mesh ./../../../data/meshes/2D/Geo-Files/Gmsh/quater_cylinder.msh -v 0
 
 gnuplot:
 	gnuplot gnuplot-compare.gnu -p	

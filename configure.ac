@@ -14,6 +14,49 @@ define(SECTION_TITLE,
 	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
+
+dnl ---------------------------------------------------------------
+dnl Associate appropriate suffix for diffrent os
+dnl ---------------------------------------------------------------
+SECTION_TITLE([      checking for operating system type    ])
+
+os_uname=`uname`
+case $os_uname in
+     CYGWIN*|MINGW*|MSYS_NT*)
+	os_type="windows";;
+     Darwin)
+	os_type="mac";;
+     Linux)
+	os_type="linux";;
+     *)
+	os_type="unknown";;
+esac
+
+AC_MSG_RESULT([])
+test "$os_type" == "windows" && AC_MSG_RESULT([ OS identified: Windows])
+test "$os_type" == "mac"     && AC_MSG_RESULT([ OS identified: MacOs])
+test "$os_type" == "linux"   && AC_MSG_RESULT([ OS identified: Linux])
+
+test "$os_type" == "unknown" && AC_MSG_ERROR([
+  For the moment PSD is only built on Linux or MacOS
+  please contact  mohd-afeef.badri@cea.fr  for  help
+  regarding to building PSD on your OS.
+                                   ])
+
+AM_CONDITIONAL([WINDOWS], [test "$os_type" == "windows"])
+AM_CONDITIONAL([MAC],     [test "$os_type" == "mac"])
+AM_CONDITIONAL([LINUX],   [test "$os_type" == "linux"])
+
+test "$os_type" == "windows" && AC_SUBST(SO_SUFFIX,"dll"  )
+test "$os_type" == "mac"     && AC_SUBST(SO_SUFFIX,"dylib")
+test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
+
+AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
+dnl ---------------------------------------------------------------
+
+dnl ---------------------------------------------------------------
+dnl arguments for compiling with med support : hdf5, medfile, medcoupling
+dnl ---------------------------------------------------------------
 AC_ARG_WITH([hdf5],
 	[  --with-hdf5=               hdf5 root path : (e.g. --with-hdf5=/home/salome/INSTALL/hdf5)],
         [hdf5="$withval"], [hdf5="no"])
@@ -70,7 +113,6 @@ dnl AC_SUBST(FFMPI)
 
 AC_ARG_VAR(MPIRUN,[MPIRUN command])
 AC_CHECK_PROGS(MPIRUN, mpirun mpiexec srun ccc_mprun, $MPIRUN)
-
 
 
 AC_ARG_WITH([dependencies],
@@ -336,99 +378,138 @@ test "$MPIF77" == "$F77" && AC_MSG_ERROR([
   to provide the location of MPI Fortran 77 compiler.
                                    ])
 
-dnl -----------------------------------------------------------------
-SECTION_TITLE([    override dependencies if --with-dependencies   ])
-
-test $dependencies != no && AC_SUBST(FF,"${prefix}/bin/FreeFem++")
-test $dependencies != no && AC_SUBST(FFCXX,"${prefix}/bin/ff-c++")
-test $dependencies != no && AC_SUBST(FFCXXDEP,"${prefix}/bin/ff-get-dep")
-test $dependencies != no && AC_SUBST(FFMPI,"${prefix}/bin/ff-mpirun")
-
-
-test $dependencies != no && AC_SUBST(GMSH,"${prefix}/bin/gmsh")
-
-
-test $dependencies != no && AC_SUBST(mgis,"${prefix}")
-test $dependencies != no && AC_SUBST(mfront,"${prefix}")
-dnl -----------------------------------------------------------------
-
+dnl ---------------------------------------------------------------
+dnl Did the user provide Gmsh mesher
+dnl ---------------------------------------------------------------
 
 SECTION_TITLE([      checking for a Gmsh mesher        ])
+
 AX_GMSH
-test "$dependencies" == "no" -a "$GMSH" == "no"  && AC_MSG_ERROR([
+
+if test "$dependencies" != "no"  && test "$os_type" != "mac"; then
+dnl Use internally built dependencies from ext/
+  GMSH="${prefix}/bin/gmsh"
+fi
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for Gmsh...           $GMSH])
+AC_MSG_RESULT([Gmsh support...                $HAVE_MFRONT_SUPPORT])
+AC_MSG_RESULT([])
+
+dnl If GMSH is not found, then error out
+test "$GMSH" == "no"  && AC_MSG_ERROR([
   Required  program  'gmsh'  not   found.
   If 'gmsh' is not  present  in  /usr/bin
   or in /usr/local/bin consider using the
    '--with-Gmsh=your/Gmsh/path/bin'  flag
    with ./configure command.
                                    ])
+dnl ---------------------------------------------------------------
 
 
-SECTION_TITLE([      checking for a FF++ compilers     ])
+dnl ---------------------------------------------------------------
+dnl Did the user provide FreeFEM compilers
+dnl ---------------------------------------------------------------
+
+SECTION_TITLE([      checking for a FreeFEM compilers     ])
+
+HAVE_FF_SUPPORT=no
+
 AX_FF
-test "$dependencies" == "no" -a  "$FF" == "no" && AC_MSG_ERROR([
-  Required  program  'FreeFem++'  not  found.
-  If 'FreeFem++' is not  present in  /usr/bin
-  or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFCXX
-test "$dependencies" == "no" -a  "$FFCXX" == "no" && AC_MSG_ERROR([
-  Required  program   'ff-++'   not    found.
-  If  'ff-++'  is  not  present  in  /usr/bin
-  or  in  /usr/local/bin consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFCXXDEP
-test "$dependencies" == "no" -a  "$FFCXXDEP" == "no" && AC_MSG_ERROR([
-  Required  program   'ff-get-dep'   not    found.
-  If  'ff-get-dep'  is  not  present  in  /usr/bin
-  or  in  /usr/local/bin consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                   ])
-
 AX_FFMPI
-test "$dependencies" == "no" -a  "$FFMPI" == "no" && AC_MSG_ERROR([
-  Required  program  'ff-mpirun'  not  found.
-  If 'ff-mpirun' is not present  in  /usr/bin
-  or in  /usr/local/bin  consider  using  the
-  '--with-FreeFEM=your/FreeFEM/path/bin' flag
-  with ./configure command.
-                                  ])
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  FF="${prefix}/bin/FreeFem++"
+  FFCXX="${prefix}/bin/ff-c++"
+  FFCXXDEP="${prefix}/bin/ff-get-dep"
+  FFMPI="${prefix}/bin/ff-mpirun"
+  HAVE_FF_SUPPORT=yes
+fi
+
+if test "$FF" != "no" && test "$FFCXX" != "no" && test "$FFCXXDEP" != "no" && test "$FFMPI" != "no"; then
+  HAVE_FF_SUPPORT=yes
+fi
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for FreeFem++...      $FF])
+AC_MSG_RESULT([checking for ff-c++...         $FFCXX])
+AC_MSG_RESULT([checking for ff-get-dep...     $FFCXXDEP])
+AC_MSG_RESULT([checking for ff-mpirun...      $FFMPI])
+AC_MSG_RESULT([FreeFEM support...             $HAVE_FF_SUPPORT])
+AC_MSG_RESULT([])
+
+
+if test "$HAVE_FF_SUPPORT" = no; then
+  AC_MSG_ERROR([
+ Required  program  'FreeFem++'  not  found.
+ You must provide either:
+
+  --with-dependencies
+    OR
+  --with-FreeFEM=your/FreeFEM/path/bin
+
+ FREEFEM SUPPORT = OFF
+])
+fi
+dnl ---------------------------------------------------------------
+
+dnl ---------------------------------------------------------------
+dnl Did the user provide mfront/mgis
+dnl ---------------------------------------------------------------
 
 SECTION_TITLE([      checking for a MFront support     ])
 
+HAVE_MFRONT_SUPPORT=no
+
+if test "$dependencies" != "no"; then
+dnl Use internally built dependencies from ext/
+  mgis="${prefix}"
+  mfront="${prefix}"
+fi
+
+if test "$mgis" != "no" && test "$mfront" != "no"; then
+  HAVE_MFRONT_SUPPORT=yes
+fi
+
 AC_SUBST([mgis])
-AM_CONDITIONAL([HAVEMGIS], [test $mgis != no])
-test "$mgis" == "no" && AC_MSG_WARN([
- Mfront will not be configured with PSD,
- you did not provide --with-mgis flag so
-
- MGIS SUPPORT = OFF
-
- To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront
- flags.
- ])
-
 AC_SUBST([mfront])
-AM_CONDITIONAL([HAVEMFRONT], [test $mfront != no])
-test "$mfront" == "no" && AC_MSG_WARN([
- Mfront will not be configured with PSD,
- You did not provide --with-front flag so
+
+AM_CONDITIONAL([HAVEMGIS], [test "$HAVE_MFRONT_SUPPORT" = yes])
+AM_CONDITIONAL([HAVEMFRONT], [test "$HAVE_MFRONT_SUPPORT" = yes])
+
+dnl Summary logging
+AC_MSG_RESULT([])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for mgis...           $mgis])
+AC_MSG_RESULT([checking for mfront...         $mfront])
+AC_MSG_RESULT([Mfront support...              $HAVE_MFRONT_SUPPORT])
+AC_MSG_RESULT([])
+
+if test "$HAVE_MFRONT_SUPPORT" = no; then
+  AC_MSG_WARN([
+ Mfront will not be configured with PSD.
+ You must provide either:
+
+  --with-dependencies
+    OR
+  --with-mgis
+  --with-mfront
 
  MFRONT SUPPORT = OFF
+])
+fi
+dnl ---------------------------------------------------------------
 
- To have Mfront support in PSD, please correctly
- provide both  --with-mgis   and  --with-mfront
- flags.
- ])
-
+dnl ---------------------------------------------------------------
+dnl Did the user provide salome
+dnl ---------------------------------------------------------------
 SECTION_TITLE([      checking for a salome support     ])
 
 AC_SUBST([salome])
@@ -442,84 +523,59 @@ test "$salome" == "no" && AC_MSG_WARN([
  To have salome support in PSD, please correctly
  provide both  --with-salome flag.
  ])
-
+dnl ---------------------------------------------------------------
 
 dnl ---------------------------------------------------------------
-dnl Did the user provide salome/medcoupling
+dnl Did the user provide hdf5/medfile/medcoupling
 dnl ---------------------------------------------------------------
+
 SECTION_TITLE([      checking for a med support     ])
+
+HAVE_MED_SUPPORT=no
+
+if test "$dependencies" != "no" && test "$os_type" != "mac" ; then
+dnl Use internally built dependencies from ext/
+  hdf5="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/hdf5"
+  medfile="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/medfile"
+  medcoupling="${prefix}/MEDCOUPLING-9.14.0/INSTALL/MEDCOUPLING"
+fi
+
+if test "$hdf5" != "no" && test "$medfile" != "no" && test "$medcoupling" != "no"; then
+  AC_SUBST(CXXFLAGS_MED, "-I${hdf5}/include -I${medfile}/include -I${medcoupling}/include ${CXXFLAGS}")
+  AC_SUBST(LDFLAGS_MED,  "-L${hdf5}/lib -L${medfile}/lib -L${medcoupling}/lib ${LDFLAGS}")
+  AC_SUBST(LIBS_MED,     "-lhdf5 -lmedC -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper ${LIBS}")
+  HAVE_MED_SUPPORT=yes
+fi
 
 AC_SUBST([hdf5])
 AC_SUBST([medfile])
 AC_SUBST([medcoupling])
 
-CXXFLAGS_MED="-I${hdf5}/include -I${medfile}/include -I${medcoupling}/include  ${CXXFLAGS}"
-LDFLAGS_MED="-L${hdf5}/lib -L${medfile}/lib -L${medcoupling}/lib ${LDFLAGS}"
-LIBS_MED="-lhdf5 -lmedC -lmedloader -lmedcoupling -linterpkernel -lmedcouplingremapper   ${LIBS}"
-AC_SUBST(CXXFLAGS_MED,[$CXXFLAGS_MED])
-AC_SUBST(LDFLAGS_MED,[$LDFLAGS_MED])
-AC_SUBST(LIBS_MED,[$LIBS_MED])
+AM_CONDITIONAL([HAVEMED], [test "$HAVE_MED_SUPPORT" = yes])
 
-AM_CONDITIONAL([HAVEMED], [test $hdf5 != no -a $medfile != no -a $medcoupling != no])
-
-test $hdf5 != no && AC_MSG_RESULT([checking for hdf5... yes])
-test $hdf5 == no && AC_MSG_RESULT([checking for hdf5... no])
-test $medfile != no && AC_MSG_RESULT([checking for medfile... yes])
-test $medfile == no && AC_MSG_RESULT([checking for medfile... no])
-test $medcoupling != no && AC_MSG_RESULT([checking for medcoupling... yes])
-test $medcoupling == no && AC_MSG_RESULT([checking for medcoupling... yes])
-test $hdf5 != no -a $medfile != no -a $medcoupling != no && AC_MSG_RESULT([med support... yes
- ])
-
-test $hdf5 == no -o $medfile == no -o $medcoupling == no && AC_MSG_WARN([
-top-ii-vol will not be configured with med support,
-you did not provide the flags:
-    --with-hdf5
-    --with-medfile
-    --with-medcoupling
-
- SALOME SUPPORT = OFF
- ])
-dnl ---------------------------------------------------------------
-
-
-dnl ---------------------------------------------------------------
-dnl Associate appropriate suffix for diffrent os
-dnl ---------------------------------------------------------------
-SECTION_TITLE([      checking for operating system type    ])
-
-os_uname=`uname`
-case $os_uname in
-     CYGWIN*|MINGW*|MSYS_NT*)
-	os_type="windows";;
-     Darwin)
-	os_type="mac";;
-     Linux)
-	os_type="linux";;
-     *)
-	os_type="unknown";;
-esac
-
+dnl Summary logging
 AC_MSG_RESULT([])
-test "$os_type" == "windows" && AC_MSG_RESULT([ OS identified: Windows])
-test "$os_type" == "mac"     && AC_MSG_RESULT([ OS identified: MacOs])
-test "$os_type" == "linux"   && AC_MSG_RESULT([ OS identified: Linux])
+AC_MSG_RESULT([Using internal dependencies... $dependencies])
+AC_MSG_RESULT([checking for hdf5...          $hdf5])
+AC_MSG_RESULT([checking for medfile...       $medfile])
+AC_MSG_RESULT([checking for medcoupling...   $medcoupling])
+AC_MSG_RESULT([MED support...                $HAVE_MED_SUPPORT])
+AC_MSG_RESULT([])
 
-test "$os_type" == "unknown" && AC_MSG_ERROR([
-  For the moment PSD is only built on Linux or MacOS
-  please contact  mohd-afeef.badri@cea.fr  for  help
-  regarding to building PSD on your OS.
-                                   ])
+if test "$HAVE_MED_SUPPORT" = no; then
+  AC_MSG_WARN([
+ top-ii-vol will not be configured with MED support.
+ You must provide either:
 
-AM_CONDITIONAL([WINDOWS], [test "$os_type" == "windows"])
-AM_CONDITIONAL([MAC],     [test "$os_type" == "mac"])
-AM_CONDITIONAL([LINUX],   [test "$os_type" == "linux"])
+  --with-dependencies
+    OR
+  --with-hdf5
+  --with-medfile
+  --with-medcoupling
 
-test "$os_type" == "windows" && AC_SUBST(SO_SUFFIX,"dll"  )
-test "$os_type" == "mac"     && AC_SUBST(SO_SUFFIX,"dylib")
-test "$os_type" == "linux"   && AC_SUBST(SO_SUFFIX,"so"   )
-
-AC_MSG_RESULT([ Shared object sufix   : '$SO_SUFFIX'])
+ MED SUPPORT = OFF
+])
+fi
 dnl ---------------------------------------------------------------
 
 
@@ -595,6 +651,12 @@ AC_MSG_RESULT([])
 AC_MSG_RESULT([ FreeFEM compiler   : '$FF'])
 AC_MSG_RESULT([ ff-c++  compiler   : '$FFCXX'])
 AC_MSG_RESULT([ ff-mpi  compiler   : '$FFMPI'])
+dnl if test "$HAVE_MED_SUPPORT" = yes; then
+dnl  AC_MSG_RESULT([])
+dnl  AC_MSG_RESULT([ CXXFLAGS_MED       : '$CXXFLAGS_MED'])
+dnl  AC_MSG_RESULT([ LDFLAGS_MED        : '$LDFLAGS_MED'])
+dnl  AC_MSG_RESULT([ LIBS_MED           : '$LIBS_MED'])
+dnl fi
 test "$LDFLAGS" != "" && AC_MSG_RESULT([ Building with '$LDFLAGS' for linker flags.])
 test "$LIBS"    != "" && AC_MSG_RESULT([ Building with '$LIBS' libraries.])
 AC_MSG_RESULT([])
@@ -605,11 +667,11 @@ test "$mfront"      != "no" -a "$mgis" != "no" 				&&  AC_MSG_RESULT([ Mfront   
 test "$mfront"      == "no" -o "$mgis" == "no" 				&&  AC_MSG_RESULT([ Mfront      : NO])
 test "$GMSH"        == "no"                    				&&  AC_MSG_RESULT([ Gmsh        : NO])
 test "$GMSH"        != "no"                    				&&  AC_MSG_RESULT([ Gmsh        : YES])
-test "$hdf5"        != "no" 						&&  AC_MSG_RESULT([ Hdf5        : YES $hdf5])
+test "$hdf5"        != "no" 						&&  AC_MSG_RESULT([ Hdf5        : YES])
 test "$hdf5"        == "no" 						&&  AC_MSG_RESULT([ Hdf5        : NO])
-test "$medfile"     != "no" 						&&  AC_MSG_RESULT([ medfile     : YES $medfile])
+test "$medfile"     != "no" 						&&  AC_MSG_RESULT([ medfile     : YES])
 test "$medfile"     == "no" 						&&  AC_MSG_RESULT([ medfile     : NO])
-test "$medcoupling" != "no" 						&&  AC_MSG_RESULT([ medcoupling : YES $medcoupling])
+test "$medcoupling" != "no" 						&&  AC_MSG_RESULT([ medcoupling : YES])
 test "$medcoupling" == "no" 						&&  AC_MSG_RESULT([ medcoupling : NO])
 test $hdf5 	    != no -a $medfile != no -a $medcoupling != no 	&&  AC_MSG_RESULT([ med support : YES])
 test $hdf5          == no -o $medfile == no -o $medcoupling == no 	&&  AC_MSG_RESULT([ med support : NO])

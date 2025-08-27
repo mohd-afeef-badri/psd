@@ -403,10 +403,10 @@ PSD supports post-partitioning mesh refinement using the `-split` flag at solver
 **Suggested Usage:**
 
 <pre><code>
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -split 2
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -split 2
 </code></pre>
 
-This refines each triangle of the `bar-dynamic.msh` mesh into 4 smaller triangles.
+This refines each triangle of the `bar_dynamic.msh` mesh into 4 smaller triangles.
 
 **Try this to:**
 * Assess mesh convergence of the solution
@@ -428,7 +428,7 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 **Step 2: Solve with Visualization Enabled**
 
 <pre><code>
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -wg
 </code></pre>
 
 The additional `-wg` flag enables OpenGL graphics rendering during solving.
@@ -445,7 +445,7 @@ PSD_PreProcess -dimension 2 -problem elastodynamics -dirichletconditions 1 -trac
 
 **Step 2: Solve the Problem**
 <pre><code>
-PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar-dynamic.msh -v 0 -wg
+PSD_Solve -np 2 Main.edp -mesh ./../Meshes/2D/bar_dynamic.msh -v 0 -wg
 </code></pre>
 
 Combine with `-timelog` to measure the performance improvement.

@@ -23769,7 +23769,7 @@
     </Proxy>
     <Proxy group="sources" type="TextSource" id="13380" servers="1">
       <Property name="Text" id="13380.Text" number_of_elements="1">
-        <Element index="0" value="Parallel Structural/Soil Dynamics"/>
+        <Element index="0" value="Parallel finite element Solver for continuum Dynamics"/>
       </Property>
     </Proxy>
     <Proxy group="sources" type="LegacyVTKFileReader" id="9144" servers="1">

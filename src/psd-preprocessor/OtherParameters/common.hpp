@@ -1,9 +1,25 @@
 /**************************************************************************************
 *                                                                                     *
-* Author : Mohd Afeef BADRI                                                           *
-* Email  : mohd-afeef.badri@cea.fr                                                    *
-* Date   : 25/02/2022                                                                 *
-* Type   : Support file                                                               *
+*           This file is a part of PSD project                                        *
+*                                                                                     *
+*       -------------------------------------------------------------------           *
+*                                                                                     *
+*       Copyright 2019-2025 CEA/DES                                                   *
+*                                                                                     *
+*       Licensed under the Apache License, Version 2.0  (the "License");              *
+*       you may not use this file except in compliance with the License.              *
+*       You may obtain a copy of the License at                                       *
+*                                                                                     *
+*           http://www.apache.org/licenses/LICENSE-2.0                                *
+*                                                                                     *
+*       Unless required by applicable law or agreed to in writing, software           *
+*       distributed under the License is distributed on an  "AS IS"  BASIS,           *
+*       WITHOUT  WARRANTIES  OR  CONDITIONS  OF  ANY  KIND,  either express           *
+*       or implied. See  the License  for  the  specific language governing           *
+*       permissions and limitations under the License.                                *
+*                                                                                     *
+*       -------------------------------------------------------------------           *
+*                                                                                     *
 *                                                                                     *
 * Comment: This support file is  responsible for generating OtherParameters.edp which *
 *          is responsible for defining some parameters needed in PSD.                 *
@@ -46,6 +62,15 @@ if(ParaViewPostProcess  && !Sequential)
  "                                                                               \n"
  "  if(mpirank==0)system(\"mkdir -p VTUs\");                                     \n"
  "  if(mpirank==0)system(\"rm -rf VTUs/Solution_\"+mpisize+\".pvd\");            \n";
+
+if(ParaViewPostProcess  && Sequential)
+ writeIt
+ "                                                                               \n"
+ "//=============================================================================\n"
+ "// ------- Paraview folder suppoprt  -------                                   \n"
+ "//=============================================================================\n"
+ "                                                                               \n"
+ " system(\"mkdir -p VTUs\");                                                    \n";
 
 if(dirichletpointconditions>=1)
   writeIt

@@ -145,6 +145,7 @@ if HAVEMGIS
 	@echo ""
 	./PSD_PreProcess -dimension 2 $(PARALLEL_MF_FLAG_LE) > PreProcess-2D_Parallel_Mfornt.log && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
 	./PSD_Solve -n $(NP)  Main.edp -mesh $(MESHDIR2)/bar.msh -v 1 -ns -nw > Solve-2D_Parallel_Mfornt.log
 	@echo ""
 	@echo "*============================================================*"
@@ -153,6 +154,7 @@ if HAVEMGIS
 	@echo ""
 	./PSD_PreProcess -dimension 2 $(PARALLEL_MF_FLAG_LE) -model pseudo_nonlinear > PreProcess-2D_Parallel_Mfornt_pseudo_nonlinear.log && \
 	find . -name Main.edp -exec sed -i -e "s#../Plugins/#./../ff-files/#g" {} \; && \
+	find . -name Main.edp -exec sed -i -e "s#mfront#./../../src/plugins/mfront/cpp/mfront#g" {} \; && \
 	./PSD_Solve -n $(NP) Main.edp -mesh $(MESHDIR2)/bar.msh  -v 1 -ns -nw > Solve-2D_Parallel_Mfornt_pseudo_nonlinear.log
 else !HAVEMGIS
 	@echo ""
@@ -164,7 +166,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat *.gnu *.output
+	rm  -f *~ *.mesh *.pvd *.vtu *.pvtu *.info *.pdf *.xyz *.dat *.gnu *.output *.csv *.edp-e
 	rm  -f *~ *.log *.edp PSD_Solve PSD_PreProcess PSD_Solve_Seq *.csv
 
 
