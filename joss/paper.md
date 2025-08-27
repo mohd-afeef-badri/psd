@@ -30,7 +30,7 @@ bibliography: paper.bib
 
 # Summary
 
-`PSD` (Parallel finite element Solver for continuum Dynamics) is an open-source finite element solver designed for high-performance computing simulations in earthquake mechanics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex structural and seismic dynamics problems in both two and three dimensions.
+`PSD` (Parallel finite element Solver for continuum Dynamics) is an open-source finite element solver designed for high-performance computing simulations in continuum dynamics with a special focus on earthquake mechanics and structural dynamics. `PSD` addresses the computational challenges of large-scale seismic simulations by providing an integrated platform for analyzing complex dynamics problems in both two and three dimensions.
 
 Built upon `FreeFEM`  [@MR3043640]  for finite element discretization and `PETSc` [@balay2019petsc] for scalable linear system solving, `PSD` integrates sophisticated material modeling through its dedicated  `Mfront` [@helfer2015],[@helfer2020] interface.   This architecture enables the handling of complex material behaviors thanks to non-linear constitutive laws essential for realistic mechanical phenomena modeling.   `PSD` includes a purpose-built `MPI I/O`-based mesher-partitioner, `top-ii-vol` [@badri2024top], tailored for large-scale earthquake simulations. Further, hybrid phase-field fracture mechanics [@ambati2015review] is implemented, which enables detailed analysis of crack initiation and propagation in materials. These types of simulations are treated at the other end of the complete simulation chain from the earthquake source to the structure assessment.
 
@@ -40,9 +40,9 @@ A distinguishing feature of `PSD` is its ability to handle large-scale earthquak
 
 Seismic risk assessment require computational tools capable of simulating wave propagation across multiple spatial scales, from fault (kilometers away) to local site response (meters), while ensuring sufficient accuracy for earthquake engineering analyses. Existing commercial solutions often lack the computational scalability required for integrated regional to local scale earthquake simulations, while open-source alternatives typically address only specific aspects of the seismic simulation workflow.
 
-Current computational challenges in earthquake simulation include: (1) the need for billions of degrees-of-freedom to capture realistic fault-to-site scenarios [@hori2018application], [@cui2013physics] (2) integration of complex non-linear material behaviors and damage assessment (fracture propagation), and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation models. Tools like `OpenSees`[@mckenna2011opensees] excel in local site response analysis (soils and structures) based on the finite element method (FEM) and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] or `SEM3D` [@Fares2022sem3d] address seismic wave propagation using the spectral element method. However, it is of interest  to have an open-source integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
+Current computational challenges in earthquake simulation include: (1) the need for billions of degrees-of-freedom to capture realistic fault-to-site scenarios [@hori2018application], [@cui2013physics] (2) integration of complex non-linear material behaviors and damage assessment for solids and structures, and (3) efficient mesh generation and partitioning for irregular geological domains often constructed directly from digital elevation models. Tools like `OpenSees`[@mckenna2011opensees] excel in local site response analysis (soils and structures) based on the finite element method (FEM) and `SPECFEM3D` [@Peter_Forward_and_adjoint_2011] or `SEM3D` [@touhami2022sem3d] address seismic wave propagation using the spectral element method. However, it is of interest  to have an open-source integrated platform addressing the complete fault-to-site simulation workflow with HPC scalability.
 
-`PSD` fills this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural damage assessment within a single scalable FEM solver.  `PDS`'s integration of advanced meshing-partitioning capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment needs requiring both regional-scale wave propagation and local site response including structural analysis.
+`PSD` tries to fill this gap by providing a unified computational framework that combines earthquake source modeling, wave propagation simulation, and structural mechanics assessment  within a single scalable FEM solver.  `PDS`'s integration of advanced meshing-partitioning capabilities (`top-ii-vol`), sophisticated material modeling (`Mfront` interface), and fracture mechanics positions it uniquely for comprehensive seismic risk assessment needs requiring both regional-scale wave propagation and local site response including structural analysis.
 
 # `PSD` Features and Architecture
 
@@ -62,10 +62,10 @@ The following workflow demonstrates `PSD`'s soildynamic module through a fundame
 
 **Mathematical Presentation:** PSD solves the elastodynamic wave equation using finite element discretization with Newmark-$\beta$ time integration[^1]. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations, and seismic source excitations with double-couple theory [@benz1987kinematic].
 
-For a 3D soil domain $\Omega \subset \mathbb{R}^3$ bounded by boundaries $\partial\Omega \subset \mathbb{R}^3$ and with paraxial absorbing boundaries $\partial \Omega_{\text{P}} \subset \partial \Omega$, the finite element variational formulation solved in `PSD` reads:
+For a 3D domain $\Omega \subset \mathbb{R}^3$ bounded by boundaries $\partial\Omega \subset \mathbb{R}^3$ and with paraxial absorbing boundaries $\partial \Omega_{\text{P}} \subset \partial \Omega$, the finite element variational formulation solved in `PSD` reads:
 
 $$
-\begin{aligned} &\text{Find}~\mathbf{u}\in \mathcal{V}~\text{such~that}~\forall~t\in[0,t_{\text{max}}], \forall\mathbf{v}\in \mathcal{V}:\\&  \int_{\Omega} \left( \frac{\rho}{\beta \Delta t^2}    \mathbf{u} \cdot \mathbf{v} + 
+\begin{aligned} &\text{Find}~\mathbf{u}\in \mathcal{U}~\text{such~that}~\forall~t\in[0,t_{\text{max}}], \forall\mathbf{v}\in \mathcal{V}:\\&  \int_{\Omega} \left( \frac{\rho}{\beta \Delta t^2}    \mathbf{u} \cdot \mathbf{v} + 
    \left( \boldsymbol{\sigma}(\mathbf{u}) : \boldsymbol{\varepsilon}(\mathbf{v}) \right)  \right) +    \int_{\partial\Omega_{\text{P}}}    \frac{\rho \gamma}{\beta \Delta t}    \left(\boldsymbol{\mathcal{P}} \mathbf{u} \right) \cdot \mathbf{v}  = \\  &
   \quad \quad\int_{\Omega} \frac{\rho}{\beta} \left( \frac{1}{\Delta t^2} \mathbf{u}_{\text{old}} \cdot \mathbf{v}  + \frac{1}{\Delta t} \dot{\mathbf{u}}_{\text{old}} \cdot \mathbf{v}  +  \left( \frac{1}{2} - \beta \right) \ddot{\mathbf{u}}_{\text{old}} \cdot \mathbf{v}\right) + \\  &  
  \quad \quad\int_{\partial\Omega_{\text{P}}}  \left(    \frac{\rho \gamma}{\beta \Delta t}   \left( \boldsymbol{\mathcal{P}} \mathbf{u}_{\text{old}}  \right)\cdot \mathbf{v} +    \left( \frac{\rho\gamma}{\beta} - \rho \right) \left( \boldsymbol{\mathcal{P}} \dot{\mathbf{u}}_{\text{old}}\right) \cdot \mathbf{v}  +    \left(  \frac{\rho \gamma \Delta t}{2\beta} -\rho \Delta t \right)\left( \boldsymbol{\mathcal{P}} \ddot{\mathbf{u}}_{\text{old}} \right) \cdot \mathbf{v}\right).     \end{aligned}
@@ -73,7 +73,7 @@ $$
 
 Here:
 
-- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, in finite element space $\mathcal{V}$ (linear closed subspace of $[H^1(\Omega)]^3$), both defined over the volumetric domain $\Omega$;
+- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, defined in finite element linear closed spaced $(\mathcal{U},\mathcal{V})$ defined in $\left[H^1(\Omega)\right]^3$. Additionally, at time $t=0$,  $\mathbf{u}$ must fulfill the initial conditions $\mathbf{u}=\mathbf{u}_0$ and $\dot{\mathbf{u}}=\dot{\mathbf{u}}_0$.
 
 - $(\mathbf{u}_{\text{old}}, \dot{\mathbf{u}}_{\text{old}}, \ddot{\mathbf{u}}_{\text{old}}) : \Omega \to \mathbb{R}^3$ represent respectively the displacement, velocity, and acceleration fields computed at previous time step and defined over $\Omega$;
 
@@ -81,7 +81,7 @@ Here:
 
 - $(\rho, \gamma, \beta, t, t_{\text{max}}, \Delta t) \in \mathbb{R}$ are scalar parameters corresponding to soil density ($\rho$),  Newmark-$\beta$ time discretization parameters ($\gamma,\beta$), and time variables ($t,t_{\max},\Delta t$);
 
-- $\boldsymbol{\mathcal{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as
+- $\boldsymbol{\mathcal{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as:
 
   $$
   \boldsymbol{\mathcal{P}} = c_{\text{p}}\, \mathbf{n} \otimes \mathbf{n} + c_{\text{s}} \left( \mathbf{I} - \mathbf{n} \otimes \mathbf{n} \right),
@@ -89,8 +89,10 @@ Here:
 
   where, $\mathbf{n} : \partial \Omega_{\text{P}} \to \mathbb{R}^3$ is the outward unit normal vector on the boundary, $\mathbf{I} \in \mathbb{R}^{3 \times 3}$ is the identity $2^{nd}$-order tensor, $(c_{\text{p}}, c_{\text{s}} \in \mathbb{R})$ are scalar parameters corresponding to the P-wave and S-wave wave velocities in the soil.
 
-Finally, seismic excitation is applied via a double-couple point source, where the seismic moment tensor $\mathbf{M}$ is obtained from on common seismic source features (fault dip, rake and strike). This moment tensor is applied by imposing equivalent displacements (e.g., Dirichlet conditions) at four points located to the north, south, east and west from the source point within the domain $\Omega$. Formally, for points $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the imposed displacement conditions are given by $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps the moment tensor $\mathbf{M}$ and its time evolution into displacement time histories $\mathbf{d}_i(t)$ at each point, thus effectively reproducing the seismic moment release and the characteristic wave radiation pattern generated by fault slip.
-
+Finally, seismic excitation is applied via a double-couple point source, where the seismic moment tensor $\mathbf{M}$ is obtained from on common seismic source features (fault dip, rake and strike). $\mathbf{M}$ is symmetric tensor that characterizes the  equivalent forces acting at a point to reproduce the elastic waves radiated by earthquake source. Physically, it represents the second moment of the force distribution inside the source region. This moment tensor is applied by imposing equivalent displacements (e.g., Dirichlet conditions) at four points located to the north, south, east and west from the source point within the domain $\Omega$. Formally, for points $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the imposed displacement conditions are given by $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps the moment tensor $\mathbf{M}$ and its time evolution into displacement time histories $\mathbf{d}_i(t)$ at each point, thus effectively reproducing the seismic moment release and the characteristic wave radiation pattern generated by fault slip. Mathematically, this condition is imposed within the finite element spaces $(\mathcal{U,V})$:
+$$
+\left(\mathcal{U},\mathcal{V}\right)=\{(\mathbf{u},\mathbf{v})\in\left[H^1(\Omega)\right]^3:(\mathbf{u},0)=(\mathbf{d},0)~\text{on}~\{\mathbf{x}_i\}_{i=0}^4 \in \Omega  \}.
+$$
 **Workflow**: The `PSD` workflow begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific finite element code based on user specifications. This approach ensures computational efficiency while maintaining flexibility for different problem configurations.
 
 Sample preprocessing command:
@@ -125,7 +127,7 @@ The simulation is executed using the parallel solver with the specified number o
 PSD_Solve -np 6144 Main.edp #6144 MPI-domains are used
 ```
 
-Results such as those presented in Figure \ref{fig:example1} can be obtained by launching `PSD` simulation. These results corresponds to seismic wave propagation for hypothetical earthquake. These simulations are then used for risk assessments of potential sites of interest for engineering.
+Results such as those presented in Figure \ref{fig:example1} can be obtained by launching `PSD` simulation. These results corresponds to seismic wave propagation for hypothetical earthquake. These simulations may then used for risk assessments of potential sites of interest for engineering.
 
 # Demonstration
 
@@ -133,11 +135,11 @@ Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the
 
  ![Regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km) demonstrating `PSD`'s capability for large-scale seismic wave propagation modeling. \label{fig:example1}](./images/earthquake.png){width=80%}
 
-Figure \ref{fig:example2} demonstrates `PSD`'s fracture mechanics capabilities through a brittle fracture simulation within a perforated medium, as presented in [@badri2021preconditioning]. This simulation involves more than 64 million degrees of freedom solved across 1008 MPI domains on the French Joliot-Curie supercomputer, illustrating the software's capability for detailed damage assessment applications that complement regional-scale earthquake simulations.
+Figure \ref{fig:example2} demonstrates `PSD`'s fracture mechanics capabilities through a quasi-static brittle fracture simulation within a perforated medium, as presented in [@badri2021preconditioning]. This simulation involves more than 64 million degrees of freedom solved across 1008 MPI domains on the French Joliot-Curie supercomputer, illustrating the software's capability for detailed damage assessment applications that complement regional-scale earthquake simulations.
 
 ![Crack propagation for a perforated medium, simulation performed with `PSD`.\label{fig:example2}](./images/fracture.png){width=80%}
 
-These demonstrations represent significant computational achievements in earthquake simulation, with problem sizes nearing those required for operational seismic hazard and risk assessment. The simulation of the Cadarache region in France demonstrates `PSD`'s applicability to real-world earthquake engineering problems, while the fracture mechanics example illustrates the software's capability for detailed damage assessment applications.
+These demonstrations represent significant computational achievements, with problem sizes nearing those required for operational seismic hazard and risk assessment. The simulation of the Cadarache region in France demonstrates `PSD`'s applicability to real-world earthquake engineering problems, while the fracture mechanics example illustrates the software's capability for detailed damage assessment applications. G. Rastiello was also supported by the SEISM Institute (France).
 
 Additional applications demonstrate `PSD`'s versatility for advanced fracture mechanics research, including eikonal non-local gradient damage model implementations [@nogueira2023numerical],[@nogueira2024differential], which further extend the software's capabilities for comprehensive structural analysis.
 
