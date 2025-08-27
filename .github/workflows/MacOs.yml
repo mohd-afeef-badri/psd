@@ -1,4 +1,4 @@
-name: MacOs-15-openmpi
+name: MacOs-14-openmpi
 # This workflow is designed to run on MacOs
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
     runs-on: macos-14
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
         brew install m4 git bison hdf5 wget autoconf automake gcc open-mpi gmsh scotch scalapack openblas
@@ -65,7 +65,7 @@ jobs:
 
     - name: Upload logs
       if: always()  # upload logs even if test failed
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: check-logs
         path: ${{ github.workspace }}/artifacts
