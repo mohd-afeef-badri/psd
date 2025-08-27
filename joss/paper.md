@@ -73,7 +73,7 @@ $$
 
 Here:
 
-- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, in finite element space $\mathcal{V}$, both defined over the volumetric domain $\Omega$;
+- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, in finite element space $\mathcal{V}$ (linear closed subspace of $[H^1(\Omega)]^3$), both defined over the volumetric domain $\Omega$;
 
 - $(\mathbf{u}_{\text{old}}, \dot{\mathbf{u}}_{\text{old}}, \ddot{\mathbf{u}}_{\text{old}}) : \Omega \to \mathbb{R}^3$ represent respectively the displacement, velocity, and acceleration fields computed at previous time step and defined over $\Omega$;
 
