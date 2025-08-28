@@ -336,7 +336,7 @@ mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(M
 		-DCMAKE_BUILD_TYPE=Release \
 		-Denable-cxx-17=ON \
 		-DCMAKE_INSTALL_PREFIX=${prefix} \
-		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  \
+		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) \
 		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(shell xcrun --sdk macosx --show-sdk-path)) \
 		&& \
 	make -j8 && make install
