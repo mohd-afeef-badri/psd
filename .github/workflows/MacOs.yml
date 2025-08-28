@@ -64,6 +64,10 @@ jobs:
     #     find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
     #     exit $status               # Re-raise make check's status to mark the step as failed if it should
 
+    - name: Collect build artifacts
+      run: |
+        mkdir -p "$GITHUB_WORKSPACE/artifacts"
+        find . -type f \( -name "*.log" -o -name "*.txt"  \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
 
     - name: Upload logs
       if: always()  # upload logs even if test failed
