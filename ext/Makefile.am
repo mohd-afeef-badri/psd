@@ -410,11 +410,7 @@ endif
 
 PETSC_ARCH_PSD  =fr
 
-ifeq ($(MAC),1)
-# Use brew to get correct prefix dynamically
-BREW_OPENBLAS=$(shell brew --prefix openblas)
-BREW_PTSCOTCH=$(shell brew --prefix ptscotch)
-
+if MAC
 PETSC_DEP = \
   --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
   --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
@@ -422,14 +418,14 @@ PETSC_DEP = \
   --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
   --download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz \
   --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
-  --with-ptscotch-dir=$(BREW_PTSCOTCH) \
-  --with-blas-lapack-dir=$(BREW_OPENBLAS) \
-  --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS) -isysroot $(shell xcrun --sdk macosx --show-sdk-path)' \
-  --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS) -isysroot $(shell xcrun --sdk macosx --show-sdk-path)' \
+  --with-ptscotch-dir=/opt/homebrew \
+  --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
+  --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
   --with-cxx-dialect=C++11 \
   --with-mpiexec=$(MPIRUN) \
   --with-fc=0
-else
+else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
   --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
