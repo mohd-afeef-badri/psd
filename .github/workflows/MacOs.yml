@@ -47,7 +47,7 @@ jobs:
  #       brew reinstall open-mpi  --build-from-source
     - name: configure
       run: |
-        autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-14 FC=gfortran-14 F77=gfortran-14
+        autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
     - name: make
       run: |
         make
