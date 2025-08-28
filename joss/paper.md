@@ -58,7 +58,7 @@ Each of `PSD` 's module undergoes comprehensive validation and verification test
 
 # Example Workflow for Earthquake Simulation in PSD
 
-The following workflow demonstrates `PSD`'s soildynamic module through a fundamental earthquake simulation problem: seismic wave propagation in a three-dimensional soil domain with absorbing boundaries. This example illustrates one of `PSD`'s specialized physics modules among others, the aim here is to briefly illustrate `PSD`'s key capabilities including automated distributed mesh generation (combined meshing-partitioning), advanced time integration, and sophisticated boundary condition handling.
+The following workflow demonstrates `PSD`'s soildynamic module through a fundamental large-scale earthquake simulation problem: seismic wave propagation in a three-dimensional elastic soil domain with absorbing boundaries and seismic excitations represented through double-couple  point source. This example illustrates one of `PSD`'s specialized physics modules among others, the aim here is to briefly illustrate `PSD`'s key capabilities including automated distributed mesh generation (combined meshing-partitioning), advanced time integration, and sophisticated boundary condition handling.
 
 **Mathematical Presentation:** PSD solves the elastodynamic wave equation using finite element discretization with Newmark-$\beta$ time integration[^1]. The implementation incorporates paraxial absorbing boundaries [@modaressi1994paraxial] to prevent artificial wave reflections, essential for realistic earthquake simulations, and seismic source excitations with double-couple theory [@benz1987kinematic].
 
@@ -66,33 +66,31 @@ For a 3D domain $\Omega \subset \mathbb{R}^3$ bounded by boundaries $\partial\Om
 
 $$
 \begin{aligned} &\text{Find}~\mathbf{u}\in \mathcal{U}~\text{such~that}~\forall~t\in[0,t_{\text{max}}], \forall\mathbf{v}\in \mathcal{V}:\\&  \int_{\Omega} \left( \frac{\rho}{\beta \Delta t^2}    \mathbf{u} \cdot \mathbf{v} + 
-   \left( \boldsymbol{\sigma}(\mathbf{u}) : \boldsymbol{\varepsilon}(\mathbf{v}) \right)  \right) +    \int_{\partial\Omega_{\text{P}}}    \frac{\rho \gamma}{\beta \Delta t}    \left(\boldsymbol{\mathcal{P}} \mathbf{u} \right) \cdot \mathbf{v}  = \\  &
+    \boldsymbol{\sigma}(\mathbf{u}) : \boldsymbol{\varepsilon}(\mathbf{v}) \right) +    \int_{\partial\Omega_{\text{P}}}    \frac{\rho \gamma}{\beta \Delta t}    \mathbf{u} \cdot \boldsymbol{\mathbf{P}} \cdot \mathbf{v}  = \\  &
   \quad \quad\int_{\Omega} \frac{\rho}{\beta} \left( \frac{1}{\Delta t^2} \mathbf{u}_{\text{old}} \cdot \mathbf{v}  + \frac{1}{\Delta t} \dot{\mathbf{u}}_{\text{old}} \cdot \mathbf{v}  +  \left( \frac{1}{2} - \beta \right) \ddot{\mathbf{u}}_{\text{old}} \cdot \mathbf{v}\right) + \\  &  
- \quad \quad\int_{\partial\Omega_{\text{P}}}  \left(    \frac{\rho \gamma}{\beta \Delta t}   \left( \boldsymbol{\mathcal{P}} \mathbf{u}_{\text{old}}  \right)\cdot \mathbf{v} +    \left( \frac{\rho\gamma}{\beta} - \rho \right) \left( \boldsymbol{\mathcal{P}} \dot{\mathbf{u}}_{\text{old}}\right) \cdot \mathbf{v}  +    \left(  \frac{\rho \gamma \Delta t}{2\beta} -\rho \Delta t \right)\left( \boldsymbol{\mathcal{P}} \ddot{\mathbf{u}}_{\text{old}} \right) \cdot \mathbf{v}\right).     \end{aligned}
+ \quad \quad\int_{\partial\Omega_{\text{P}}}  \left(    \frac{\rho \gamma}{\beta \Delta t}    \mathbf{u}_{\text{old}} \cdot \boldsymbol{\mathbf{P}} \cdot \mathbf{v} +    \left( \frac{\rho\gamma}{\beta} - \rho \right) \dot{\mathbf{u}}_{\text{old}} \cdot \boldsymbol{\mathbf{P}}  \cdot \mathbf{v}  +    \left(  \frac{\rho \gamma \Delta t}{2\beta} -\rho \Delta t \right) \ddot{\mathbf{u}}_{\text{old}} \cdot \boldsymbol{\mathbf{P}}  \cdot \mathbf{v}\right).     \end{aligned}
 $$
 
 Here:
 
-- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, defined in finite element linear closed spaced $(\mathcal{U},\mathcal{V})$ defined in $\left[H^1(\Omega)\right]^3$. Additionally, at time $t=0$,  $\mathbf{u}$ must fulfill the initial conditions $\mathbf{u}=\mathbf{u}_0$ and $\dot{\mathbf{u}}=\dot{\mathbf{u}}_0$.
+- $(\mathbf{u}, \mathbf{v}) : \Omega \to \mathbb{R}^3$ are the finite element trial (unknown displacement) and test functions, respectively, defined in finite element linear closed spaced $(\mathcal{U},\mathcal{V})$ defined in $\left[H^1(\Omega)\right]^3$. Additionally, at time $t=0$,  $\mathbf{u}$ must fulfill the initial conditions $\mathbf{u}=\mathbf{u}_0$ and $\dot{\mathbf{u}}=\dot{\mathbf{u}}_0$. Since no Dirichlet boundary conditions are considered here, $\mathcal{U}$ and $\mathcal{V}$ coincide. In more general cases, fields in $\mathcal{U}$ satisfy Dirichlet conditions, whereas fields in $\mathcal{V}$ vanish on the corresponding boundaries.
 
 - $(\mathbf{u}_{\text{old}}, \dot{\mathbf{u}}_{\text{old}}, \ddot{\mathbf{u}}_{\text{old}}) : \Omega \to \mathbb{R}^3$ represent respectively the displacement, velocity, and acceleration fields computed at previous time step and defined over $\Omega$;
 
-- $(\boldsymbol{\sigma}(\mathbf{u}), \boldsymbol{\varepsilon}(\mathbf{v})): \Omega \to \mathbb{R}^{3 \times 3}$ represent the Cauchy stress and strain tensors, respectively, both rank-2 tensor fields;
+- $(\boldsymbol{\sigma}(\mathbf{u}), \boldsymbol{\varepsilon}(\mathbf{v})): \Omega \to \mathbb{R}^{3 \times 3}$ represent the linear elastic Cauchy stress tensor and the small strain tensor, respectively, both rank-2 tensor fields;
 
 - $(\rho, \gamma, \beta, t, t_{\text{max}}, \Delta t) \in \mathbb{R}$ are scalar parameters corresponding to soil density ($\rho$),  Newmark-$\beta$ time discretization parameters ($\gamma,\beta$), and time variables ($t,t_{\max},\Delta t$);
 
-- $\boldsymbol{\mathcal{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as:
+- ${\mathbf{P}} : \partial \Omega_{\text{P}} \to \mathbb{R}^{3 \times 3}$ is a direction-dependent impedance tensor enforcing paraxial absorbing boundary conditions on the boundary $\partial \Omega_{\text{P}}$. It is defined as:
 
   $$
-  \boldsymbol{\mathcal{P}} = c_{\text{p}}\, \mathbf{n} \otimes \mathbf{n} + c_{\text{s}} \left( \mathbf{I} - \mathbf{n} \otimes \mathbf{n} \right),
+  \boldsymbol{\mathbf{P}} = c_{\text{p}}\, \mathbf{n} \otimes \mathbf{n} + c_{\text{s}} \left( \mathbf{I} - \mathbf{n} \otimes \mathbf{n} \right),
   $$
 
   where, $\mathbf{n} : \partial \Omega_{\text{P}} \to \mathbb{R}^3$ is the outward unit normal vector on the boundary, $\mathbf{I} \in \mathbb{R}^{3 \times 3}$ is the identity $2^{nd}$-order tensor, $(c_{\text{p}}, c_{\text{s}} \in \mathbb{R})$ are scalar parameters corresponding to the P-wave and S-wave wave velocities in the soil.
 
-Finally, seismic excitation is applied via a double-couple point source, where the seismic moment tensor $\mathbf{M}$ is obtained from on common seismic source features (fault dip, rake and strike). $\mathbf{M}$ is symmetric tensor that characterizes the  equivalent forces acting at a point to reproduce the elastic waves radiated by earthquake source. Physically, it represents the second moment of the force distribution inside the source region. This moment tensor is applied by imposing equivalent displacements (e.g., Dirichlet conditions) at four points located to the north, south, east and west from the source point within the domain $\Omega$. Formally, for points $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the imposed displacement conditions are given by $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps the moment tensor $\mathbf{M}$ and its time evolution into displacement time histories $\mathbf{d}_i(t)$ at each point, thus effectively reproducing the seismic moment release and the characteristic wave radiation pattern generated by fault slip. Mathematically, this condition is imposed within the finite element spaces $(\mathcal{U,V})$:
-$$
-\left(\mathcal{U},\mathcal{V}\right)=\{(\mathbf{u},\mathbf{v})\in\left[H^1(\Omega)\right]^3:(\mathbf{u},0)=(\mathbf{d},0)~\text{on}~\{\mathbf{x}_i\}_{i=0}^4 \in \Omega  \}.
-$$
+Finally, seismic excitation is applied via a double-couple point source, where the seismic moment tensor $\mathbf{M}$ is derived from standard source parameters (fault dip, rake, and strike). $\mathbf{M}$ is a symmetric tensor representing the equivalent point forces that reproduce the elastic waves radiated by an earthquake, i.e., the second moment of the force distribution in the source region. This tensor is imposed through equivalent displacements (Dirichlet conditions) at four points north, south, east, and west of the source within $\Omega$. Formally, for $\{\mathbf{x}_i\}_{i=0}^4 \in \Omega$, the imposed displacements are $\mathbf{u}(\mathbf{x}_i, t) = \mathbf{d}_i(t) = \mathbf{f}(\mathbf{M}, t),$ where $\mathbf{f}(\mathbf{M}, t)$ maps $\mathbf{M}$ and its time dependence to displacement histories at each point, reproducing the seismic moment release and radiation pattern. For smaller-scale problems, excitation can alternatively be prescribed via time-dependent Dirichlet or Neumann (force) boundary conditions.
+
 **Workflow**: The `PSD` workflow begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific finite element code based on user specifications. This approach ensures computational efficiency while maintaining flexibility for different problem configurations.
 
 Sample preprocessing command:
@@ -113,9 +111,9 @@ Material parameters are then specified through `ASCII` configuration file, with 
 Time discretization parameters follow established earthquake engineering practices, with time steps chosen to satisfy numerical stability requirements for wave propagation:
 
 ```
-  real tmax = 4.0     ,    // Total simulation time
-       t    = 0.01    ,    // Initial time
-       dt   = 0.01    ;    // Time step
+  real tmax = 20.0    ,    // Total simulation time
+       t    = 0.001   ,    // Initial time
+       dt   = 0.001   ;    // Time step
 
   real gamma = 0.5                       ,
        beta  = (1./4.)*(gamma+0.5)^2     ;
@@ -131,15 +129,15 @@ Results such as those presented in Figure \ref{fig:example1} can be obtained by 
 
 # Demonstration
 
-Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km discretized with a 540 million element mesh) performed with `PSD`, as detailed in [@badri2024top]. This simulation demonstrates `PSD`'s capability for large-scale seismic wave propagation modeling, involving over one billion degrees of freedom distributed across 6144 `MPI` domains. The displacement fields shown at four time intervals illustrate wave propagation patterns characteristic of earthquake scenarios, with computational complexity approaching operational seismic hazard assessment requirements.
+Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the French Cadarache region performed with `PSD`, as detailed in [@badri2024top]. This simulation demonstrates `PSD`'s capability for large-scale seismic wave propagation modeling, involving over one billion degrees of freedom distributed across 6144 `MPI` domains. The displacement fields shown at four time intervals illustrate wave propagation patterns characteristic of earthquake scenarios, with computational complexity approaching operational seismic hazard assessment requirements.
 
- ![Regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km) demonstrating `PSD`'s capability for large-scale seismic wave propagation modeling. \label{fig:example1}](./images/earthquake.png){width=80%}
+ ![Regional-scale earthquake simulation of the French Cadarache region (50 km × 50 km) showing displacement magnitude at four time steps, using a 540-million-element mesh (10 m resolution), $\Delta t = 10^{-3},\text{s}$, and Newmark-$\beta$ parameters $(\beta,\gamma)=(0.5,0.25)$. \label{fig:example1}](./images/earthquake.png){width=72%}
 
 Figure \ref{fig:example2} demonstrates `PSD`'s fracture mechanics capabilities through a quasi-static brittle fracture simulation within a perforated medium, as presented in [@badri2021preconditioning]. This simulation involves more than 64 million degrees of freedom solved across 1008 MPI domains on the French Joliot-Curie supercomputer, illustrating the software's capability for detailed damage assessment applications that complement regional-scale earthquake simulations.
 
-![Crack propagation for a perforated medium, simulation performed with `PSD`.\label{fig:example2}](./images/fracture.png){width=80%}
+![Crack propagation for a perforated medium, simulation performed with `PSD`.\label{fig:example2}](./images/fracture.png){width=72%}
 
-These demonstrations represent significant computational achievements, with problem sizes nearing those required for operational seismic hazard and risk assessment. The simulation of the Cadarache region in France demonstrates `PSD`'s applicability to real-world earthquake engineering problems, while the fracture mechanics example illustrates the software's capability for detailed damage assessment applications. G. Rastiello was also supported by the SEISM Institute (France).
+These demonstrations represent significant computational achievements, with problem sizes nearing those required for operational seismic hazard and risk assessment. The simulation of the Cadarache region in France demonstrates `PSD`'s applicability to real-world earthquake engineering problems, while the fracture mechanics example illustrates the software's capability for detailed damage assessment applications.
 
 Additional applications demonstrate `PSD`'s versatility for advanced fracture mechanics research, including eikonal non-local gradient damage model implementations [@nogueira2023numerical],[@nogueira2024differential], which further extend the software's capabilities for comprehensive structural analysis.
 
@@ -149,7 +147,7 @@ Additional applications demonstrate `PSD`'s versatility for advanced fracture me
 
 # Acknowledgements
 
-This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) through the GEN2&3 program funding. The authors gratefully acknowledge TGCC, France, for providing access to the Joliot-Curie supercomputer under the GENDEN computing quota. This research was initially funded by the PTC HPCSEISM program at CEA during the 2018–2021 period.
+This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) through the GEN2&3 program funding. The authors gratefully acknowledge TGCC, France, for providing access to the Joliot-Curie supercomputer under the GENDEN computing quota. This research was initially funded by the PTC HPCSEISM program at CEA during the 2018–2021 period. G. Rastiello was also supported by the SEISM Institute (France).
 
 The authors also acknowledge key contributors to the PSD solver: Dr. Breno Ribeiro Nogueira for his Ph.D. work on the fracture mechanics module via the `MFront` interface, Dr. Reine Fares for integrating Iwan non-linear soil behavior model via the `Mfront` interface, and Rania Saadi for enabling the parallel mesh adaptation kernel.
 
