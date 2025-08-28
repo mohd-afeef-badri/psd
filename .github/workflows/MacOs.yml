@@ -51,8 +51,12 @@ jobs:
         autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
     - name: make
       run: |
+        set +e                      # Don't exit immediately on failure
         export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
         make SYSROOT=$SYSROOT
+        status=$?                  # Capture exit code of make
+        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+        exit $status               # Re-raise make status to mark the step as failed if it should
     #     make install
 
     # - name: make check and save logs
