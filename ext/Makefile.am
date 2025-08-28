@@ -419,9 +419,6 @@ if MAC
 PETSC_DEP = \
   --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
   --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
-  --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
-  --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
-  --download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz \
   --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
   --with-ptscotch-dir=/opt/homebrew \
   --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
@@ -429,7 +426,7 @@ PETSC_DEP = \
   --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
   --with-cxx-dialect=C++11 \
   --with-mpiexec=$(MPIRUN) \
-  --with-fc=gfortran-15
+  --with-fc=0
 else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
