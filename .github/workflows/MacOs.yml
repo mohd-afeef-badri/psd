@@ -1,4 +1,4 @@
-name: MacOs-14-openmpi
+name: MacOs-15-openmpi
 # This workflow is designed to run on MacOs
 on:
   push:
@@ -35,7 +35,7 @@ on:
 jobs:
   build:
 
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
     - uses: actions/checkout@v4
