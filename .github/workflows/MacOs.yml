@@ -55,7 +55,7 @@ jobs:
         export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
         make SYSROOT=$SYSROOT
         status=$?                  # Capture exit code of make
-        find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
+        find . \( -name "*.log" -o -name "*.txt" \) -exec rsync -R {} "$GITHUB_WORKSPACE/artifacts/" \; || true
         exit $status               # Re-raise make status to mark the step as failed if it should
     #     make install
 
