@@ -332,7 +332,13 @@ mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(M
 	rm -rf build                  && \
 	mkdir -p build                && \
 	cd build                      && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  && \
+	cmake .. \
+		-DCMAKE_BUILD_TYPE=Release \
+		-Denable-cxx-17=ON \
+		-DCMAKE_INSTALL_PREFIX=${prefix} \
+		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  \
+		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(shell xcrun --sdk macosx --show-sdk-path)) \
+		&& \
 	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
 	@echo ""
@@ -375,7 +381,14 @@ mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MG
 	echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)                         && \
 	echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE) && \
 	eval `cat $(ENVFILE)` && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix}  -DCMAKE_C_COMPILER=$(CC)  -DCMAKE_CXX_COMPILER=$(CXX)  && \
+	cmake .. \
+		-DCMAKE_BUILD_TYPE=Release \
+		-Denable-cxx-17=ON \
+		-DCMAKE_INSTALL_PREFIX=${prefix}  \
+		-DCMAKE_C_COMPILER=$(CC)  \
+		-DCMAKE_CXX_COMPILER=$(CXX)  \
+		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(shell xcrun --sdk macosx --show-sdk-path))
+		&& \
 	make -j8 && make install
 	@echo ""
 	@echo "*---------------------------------*"
