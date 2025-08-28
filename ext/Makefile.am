@@ -312,6 +312,11 @@ define mfrontenv
 export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
 
+if MAC
+CMAKESYSROOT = '-DCMAKE_OSX_SYSROOT=$(SYSROOT)'
+else !MAC
+CMAKESYSROOT = 
+endif
 
 mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX)
 
@@ -337,7 +342,7 @@ mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(M
 		-Denable-cxx-17=ON \
 		-DCMAKE_INSTALL_PREFIX=${prefix} \
 		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) \
-		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(SYSROOT)) \
+		$(CMAKESYSROOT) \
 		&& \
 	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
@@ -387,7 +392,7 @@ mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MG
 		-DCMAKE_INSTALL_PREFIX=${prefix}  \
 		-DCMAKE_C_COMPILER=$(CC)  \
 		-DCMAKE_CXX_COMPILER=$(CXX)  \
-		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(SYSROOT)) \
+		$(CMAKESYSROOT) \
 		&& \
 	make -j8 && make install
 	@echo ""
