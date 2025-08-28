@@ -139,7 +139,7 @@ Figure \ref{fig:example2} demonstrates `PSD`'s fracture mechanics capabilities t
 
 These demonstrations represent significant computational achievements, with problem sizes nearing those required for operational seismic hazard and risk assessment. The simulation of the Cadarache region in France demonstrates `PSD`'s applicability to real-world earthquake engineering problems, while the fracture mechanics example illustrates the software's capability for detailed damage assessment applications.
 
-Additional applications demonstrate `PSD`'s versatility for advanced fracture mechanics research, including eikonal non-local gradient damage model implementations [@nogueira2023numerical],[@nogueira2024differential], which further extend the software's capabilities for comprehensive structural analysis.
+Additional applications demonstrate `PSD`'s versatility for advanced fracture mechanics research, including eikonal non-local gradient damage model implementations [@nogueira2023numerical],[@nogueira2024eikonal], which further extend the software's capabilities for comprehensive structural analysis.
 
 # Documentation and Availability
 
