@@ -429,7 +429,7 @@ PETSC_DEP = \
   --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
   --with-cxx-dialect=C++11 \
   --with-mpiexec=$(MPIRUN) \
-  --with-fc=0
+  --with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)'
 else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
