@@ -47,10 +47,12 @@ jobs:
  #       brew reinstall open-mpi  --build-from-source
     - name: configure
       run: |
+        export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
         autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
     - name: make
       run: |
-        make
+        export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
+        make SYSROOT=$SYSROOT
     #     make install
 
     # - name: make check and save logs

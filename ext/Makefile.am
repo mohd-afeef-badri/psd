@@ -337,7 +337,7 @@ mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(M
 		-Denable-cxx-17=ON \
 		-DCMAKE_INSTALL_PREFIX=${prefix} \
 		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) \
-		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(shell xcrun --sdk macosx --show-sdk-path)) \
+		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(SYSROOT)) \
 		&& \
 	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
@@ -387,7 +387,7 @@ mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MG
 		-DCMAKE_INSTALL_PREFIX=${prefix}  \
 		-DCMAKE_C_COMPILER=$(CC)  \
 		-DCMAKE_CXX_COMPILER=$(CXX)  \
-		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(shell xcrun --sdk macosx --show-sdk-path)) \
+		$(if $(MAC),-DCMAKE_OSX_SYSROOT=$(SYSROOT)) \
 		&& \
 	make -j8 && make install
 	@echo ""
