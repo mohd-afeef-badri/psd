@@ -420,6 +420,8 @@ PETSC_DEP = \
   --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
   --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
   --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
+  --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
+  --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
   --with-ptscotch-dir=/opt/homebrew \
   --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
   --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
