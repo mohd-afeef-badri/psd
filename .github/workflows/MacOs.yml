@@ -1,4 +1,4 @@
-name: MacOs-14-openmpi
+name: MacOs-14-mpich
 # This workflow is designed to run on MacOs
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
-        brew install gcc m4 git bison hdf5 wget autoconf automake open-mpi gmsh scotch scalapack openblas
+        brew install gcc m4 git bison hdf5 wget autoconf automake mpich gmsh scotch scalapack openblas
     - name: Setup gfortran symlink for MPI
       run: |
         ln -sfn $(brew --prefix)/bin/gfortran-15 /opt/homebrew/bin/gfortran
