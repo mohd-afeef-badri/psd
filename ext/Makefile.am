@@ -71,10 +71,11 @@ F2CBLASLAPACK_VERSION=3.8.0
 if BUILDDEPENDENCIES
 
 LIST_MAKE_EXECUTE = download-dependencies \
-#                    mfront-build \
-#                    mgis-build   \
                     petsc-build  \
                     freefem-build
+
+#                    mfront-build \
+#                    mgis-build   \
 
 if !MAC
 LIST_MAKE_EXECUTE += \
