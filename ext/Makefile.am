@@ -71,8 +71,8 @@ F2CBLASLAPACK_VERSION=3.8.0
 if BUILDDEPENDENCIES
 
 LIST_MAKE_EXECUTE = download-dependencies \
-                    mfront-build \
-                    mgis-build   \
+#                    mfront-build \
+#                    mgis-build   \
                     petsc-build  \
                     freefem-build
 
@@ -432,9 +432,9 @@ PETSC_DEP = \
   --with-mpiexec=$(MPIRUN) \
   --with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)  -fno-common' \
   LDFLAGS="-Wl,-undefined,dynamic_lookup" \
-  C_LINKER_FLAGS="" \
-  CXX_LINKER_FLAGS="" \
-  F_LINKER_FLAGS=""
+  C-LINKER-FLAGS="" \
+  CXX-LINKER-FLAGS="" \
+  F-LINKER-FLAGS=""
 else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
