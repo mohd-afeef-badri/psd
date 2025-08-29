@@ -312,6 +312,11 @@ define mfrontenv
 export PATH=${prefix}/bin:\$$PATH \nexport LD_LIBRARY_PATH=${prefix}/lib:\$$LD_LIBRARY_PATH
 endef
 
+if MAC
+CMAKESYSROOT = '-DCMAKE_OSX_SYSROOT=$(SYSROOT)'
+else !MAC
+CMAKESYSROOT = 
+endif
 
 mfront-build: mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX)
 
@@ -332,7 +337,13 @@ mfront-$(MFRONT_VERSION)/build/mfront/src/libTFELMFront.$(SO_SUFFIX): mfront-$(M
 	rm -rf build                  && \
 	mkdir -p build                && \
 	cd build                      && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  && \
+	cmake .. \
+		-DCMAKE_BUILD_TYPE=Release \
+		-Denable-cxx-17=ON \
+		-DCMAKE_INSTALL_PREFIX=${prefix} \
+		-DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX) \
+		$(CMAKESYSROOT) \
+		&& \
 	make -j8 && make install
 	@echo -e "$(mfrontenv)" > ${prefix}/mfront-env.sh
 	@echo ""
@@ -375,7 +386,14 @@ mgis-$(MGIS_VERSION)/build/src/libMFrontGenericInterface.$(SO_SUFFIX): mgis-$(MG
 	echo "PATH=${prefix}/bin:$$PATH" > $(ENVFILE)                         && \
 	echo "LD_LIBRARY_PATH=${prefix}/lib:$$LD_LIBRARY_PATH"  >> $(ENVFILE) && \
 	eval `cat $(ENVFILE)` && \
-	cmake .. -DCMAKE_BUILD_TYPE=Release -Denable-cxx-17=ON -DCMAKE_INSTALL_PREFIX=${prefix}  -DCMAKE_C_COMPILER=$(CC)  -DCMAKE_CXX_COMPILER=$(CXX)  && \
+	cmake .. \
+		-DCMAKE_BUILD_TYPE=Release \
+		-Denable-cxx-17=ON \
+		-DCMAKE_INSTALL_PREFIX=${prefix}  \
+		-DCMAKE_C_COMPILER=$(CC)  \
+		-DCMAKE_CXX_COMPILER=$(CXX)  \
+		$(CMAKESYSROOT) \
+		&& \
 	make -j8 && make install
 	@echo ""
 	@echo "*---------------------------------*"
@@ -398,37 +416,39 @@ endif
 PETSC_ARCH_PSD  =fr
 
 if MAC
-PETSC_DEP = --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
-	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
-	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
-	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
-	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
-	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
-	--with-ptscotch-dir=/opt/homebrew 									 \
-	--with-blas-lapack-dir=/opt/homebrew/opt/openblas   				 \
-	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' 			\
-	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' 		\
-	--with-cxx-dialect=C++11 							\
-	--with-mpiexec=$(MPIRUN) 							\
-	--with-fc=0
-else
-PETSC_DEP = --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz     \
-	--download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz             \
-	--download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz    \
-	--download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz             \
-	--download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz             \
-	--download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz             \
-	--download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
-	--download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz          \
-	--download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz                   \
-	--download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz    \
-	--download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz \
-	--with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' 			\
-	--with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' 		\
-	--with-cxx-dialect=C++11 							\
-	--with-mpiexec=$(MPIRUN) 							\
-	--with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)'
+PETSC_DEP = \
+  --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
+  --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
+  --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
+  --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
+  --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
+  --with-ptscotch-dir=/opt/homebrew \
+  --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
+  --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx-dialect=C++11 \
+  --with-mpiexec=$(MPIRUN) \
+  --with-fc=0
+else !MAC
+PETSC_DEP = \
+  --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
+  --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
+  --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
+  --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
+  --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
+  --download-hypre=$(CURDIR)/hypre-$(HYPRE_VERSION).tar.gz \
+  --download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
+  --download-parmmg=$(CURDIR)/parmmg-$(PARMMG_VERSION).tar.gz \
+  --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
+  --download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz \
+  --download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz \
+  --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx-dialect=C++11 \
+  --with-mpiexec=$(MPIRUN) \
+  --with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)'
 endif
+
 
 
 petsc-build: petsc-$(PETSC_VERSION)/$(PETSC_ARCH_PSD)/lib/libpetsc.$(SO_SUFFIX)
@@ -482,9 +502,22 @@ endif
 #--------------------------------------------------------------------------------
 
 if MAC
-MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install
+MAKE_AND_INSTALL_FREEFEM = make -j4 && make MacOsX && sudo make install
+FREEFEM_DEP = \
+	--without-petsc_complex \
+	--disable-superlu \
+	--enable-download_mshmet \
+	--with-hdf5=no
 else !MAC
-MAKEANDINSTALL = make -j4 && make install
+MAKE_AND_INSTALL_FREEFEM = make -j4 && make install
+FREEFEM_DEP = \
+	--without-petsc_complex \
+	--disable-superlu \
+	--enable-download_mshmet \
+	--enable-download_ipopt \
+	--enable-download_pipe \
+	--enable-download_mumps_seq \
+	--with-hdf5=no
 endif
 
 freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
@@ -516,14 +549,8 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
 	MPIRUN=$(MPIRUN) \
-	--without-petsc_complex \
-	--disable-superlu \
-	--enable-download_mshmet \
-	--enable-download_ipopt \
-	--enable-download_pipe \
-	--enable-download_mumps_seq \
-	--with-hdf5=no &&  \
-	$(MAKEANDINSTALL)
+	$(FREEFEM_DEP) &&  \
+	$(MAKE_AND_INSTALL_FREEFEM)
 
 freefem-$(FREEFEM_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
