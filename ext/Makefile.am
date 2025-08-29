@@ -68,12 +68,11 @@ F2CBLASLAPACK_VERSION=3.8.0
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 #----------------------------------------------------------------------------------------
 
-#                    mfront-build
-#                    mgis-build
-
 if BUILDDEPENDENCIES
 
 LIST_MAKE_EXECUTE = download-dependencies \
+                    mfront-build \
+                    mgis-build   \
                     petsc-build  \
                     freefem-build
 
@@ -418,24 +417,18 @@ PETSC_ARCH_PSD  =fr
 
 if MAC
 PETSC_DEP = \
-  --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
   --download-metis=$(CURDIR)/metis-$(METIS_VERSION).tar.gz \
   --download-parmetis=$(CURDIR)/parmetis-$(PARMETIS_VERSION).tar.gz \
   --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
   --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
   --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
   --with-ptscotch-dir=/opt/homebrew \
-  --with-scalapack-dir=/opt/homebrew/opt/scalapack \
   --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
   --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
   --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
   --with-cxx-dialect=C++11 \
   --with-mpiexec=$(MPIRUN) \
-  --with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS)  -fno-common' \
-  LDFLAGS="-Wl,-undefined,dynamic_lookup" \
-  C-LINKER-FLAGS="" \
-  CXX-LINKER-FLAGS="" \
-  F-LINKER-FLAGS=""
+  --with-fc=0
 else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \
