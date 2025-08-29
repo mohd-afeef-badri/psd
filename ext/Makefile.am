@@ -423,14 +423,14 @@ PETSC_DEP = \
   --download-mmg=$(CURDIR)/mmg-$(MMG_VERSION).tar.gz \
   --download-slepc=$(CURDIR)/slepc-$(SLEPC_VERSION).tar.gz \
   --download-hpddm=$(CURDIR)/hpddm-$(HPDDM_VERSION).tar.gz \
-  --download-ptscotch=$(CURDIR)/ptscotch-$(PTSCOTCH_VERSION).tar.gz \
-  --download-scalapack=$(CURDIR)/scalapack-$(SCALAPACK_VERSION).tar.gz \
-  --download-f2cblaslapack=$(CURDIR)/f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz \
-  --download-mpich=1 \
-  --with-cc=$(CC) COPTFLAGS='$(CXXFLAGS)' \
-  --with-cxx=$(CXX) CXXOPTFLAGS='$(CXXFLAGS)' \
+  --with-ptscotch-dir=/opt/homebrew \
+  --with-scalapack-dir=/opt/homebrew/opt/scalapack \
+  --with-blas-lapack-dir=/opt/homebrew/opt/openblas \
+  --with-cc=$(MPICC) COPTFLAGS='$(CXXFLAGS)' \
+  --with-cxx=$(MPICXX) CXXOPTFLAGS='$(CXXFLAGS)' \
   --with-cxx-dialect=C++11 \
-  --with-fc=$(FC) FOPTFLAGS='$(FCFLAGS)'
+  --with-mpiexec=$(MPIRUN) \
+  --with-fc=$(MPIFC) FOPTFLAGS='$(FCFLAGS) -fcommon'
 else !MAC
 PETSC_DEP = \
   --download-mumps=$(CURDIR)/mumps-$(MUMPS_VERSION).tar.gz \

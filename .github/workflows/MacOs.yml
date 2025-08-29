@@ -51,12 +51,14 @@ jobs:
 
     - name: configure
       run: |
+        export LDFLAGS="-Wl,-search_paths_first -Wl,-no_compact_unwind -Wl,-no_warn_duplicate_libraries"
         export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
         autoreconf -i && ./configure --prefix="${HOME}/psd" --with-dependencies=yes CC=gcc-15 CXX=g++-15 FC=gfortran-15 F77=gfortran-15
     - name: make
       run: |
         set +e                      # Don't exit immediately on failure
         export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
+        export LDFLAGS="-Wl,-search_paths_first -Wl,-no_compact_unwind -Wl,-no_warn_duplicate_libraries"
         make SYSROOT=$SYSROOT
         status=$?                  # Capture exit code of make
         find . \( -name "*.log" -o -name "*.txt" \) -exec rsync -R {} "$GITHUB_WORKSPACE/artifacts/" \; || true
