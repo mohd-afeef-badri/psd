@@ -500,9 +500,22 @@ endif
 #--------------------------------------------------------------------------------
 
 if MAC
-MAKEANDINSTALL = make -j4 && make MacOsX && sudo make install
+MAKE_AND_INSTALL_FREEFEM = make -j4 && make MacOsX && sudo make install
+FREEFEM_DEP = \
+	--without-petsc_complex \
+	--disable-superlu \
+	--enable-download_mshmet \
+	--with-hdf5=no
 else !MAC
-MAKEANDINSTALL = make -j4 && make install
+MAKE_AND_INSTALL_FREEFEM = make -j4 && make install
+FREEFEM_DEP = \
+	--without-petsc_complex \
+	--disable-superlu \
+	--enable-download_mshmet \
+	--enable-download_ipopt \
+	--enable-download_pipe \
+	--enable-download_mumps_seq \
+	--with-hdf5=no
 endif
 
 freefem-build: freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX)
@@ -534,14 +547,8 @@ freefem-$(FREEFEM_VERSION)/plugin/mpi/PETSc.$(SO_SUFFIX): freefem-$(FREEFEM_VERS
 	F77=$(F77) F77OPTFLAGS='$(FCFLAGS)' \
 	MPICXX=$(MPICXX) MPICXXOPTFLAGS='$(CXXFLAGS)' \
 	MPIRUN=$(MPIRUN) \
-	--without-petsc_complex \
-	--disable-superlu \
-	--enable-download_mshmet \
-	--enable-download_ipopt \
-	--enable-download_pipe \
-	--enable-download_mumps_seq \
-	--with-hdf5=no &&  \
-	$(MAKEANDINSTALL)
+	$(FREEFEM_DEP) &&  \
+	$(MAKE_AND_INSTALL_FREEFEM)
 
 freefem-$(FREEFEM_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
