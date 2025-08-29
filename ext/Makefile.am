@@ -68,8 +68,8 @@ F2CBLASLAPACK_VERSION=3.8.0
 # Check if BUILDDEPENDENCIES flag is set to determine the build execution list
 #----------------------------------------------------------------------------------------
 
-#                    mfront-build \
-#                    mgis-build   \
+#                    mfront-build
+#                    mgis-build
 
 if BUILDDEPENDENCIES
 
