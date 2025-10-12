@@ -147,7 +147,7 @@ Additional applications demonstrate `PSD`'s versatility for advanced fracture me
 
 # Acknowledgements
 
-This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) through the GEN2&3 program funding. The authors gratefully acknowledge TGCC, France, for providing access to the Joliot-Curie supercomputer under the GENDEN computing quota. This research was initially funded by the PTC HPCSEISM program at CEA during the 2018–2021 period. G. Rastiello was also supported by the SEISM Institute (France).
+This work is supported by the French Alternative Energies and Atomic Energy Commission (CEA) through the GEN2&3 program funding. This research was initially funded by the PTC HPCSEISM program at CEA during the 2018–2021 period. G. Rastiello was also supported by the SEISM Institute (France).
 
 The authors also acknowledge key contributors to the PSD solver: Dr. Breno Ribeiro Nogueira for his Ph.D. work on the fracture mechanics module via the `MFront` interface, Dr. Reine Fares for integrating Iwan non-linear soil behavior model via the `Mfront` interface, and Rania Saadi for enabling the parallel mesh adaptation kernel.
 
