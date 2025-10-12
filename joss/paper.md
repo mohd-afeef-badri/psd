@@ -1,5 +1,5 @@
 ---
-title: '`PSD`: Parallel finite element Solver for continuum Dynamics'
+title: '`PSD`: Parallel Finite Element Solver for Continuum Dynamics'
 tags:
   - finite elements
   - parallel computing
