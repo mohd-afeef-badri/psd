@@ -1,4 +1,4 @@
-AC_INIT([PSD], [2.6], [mohd-afeef.badri@cea.fr])
+AC_INIT([PSD],[2.6],[mohd-afeef.badri@cea.fr])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_HEADERS([config.h])
@@ -72,7 +72,7 @@ AC_ARG_WITH([medcoupling],
 
 AU_ALIAS([ACX_GMSH], [AX_GMSH])
 AC_DEFUN([AX_GMSH], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 AC_ARG_VAR(GMSH,[Gmsh mesher])
 AC_CHECK_PROG(GMSH,[gmsh],[gmsh],[no])
 dnl AC_CHECK_PROGS(GMSH, gmsh, $GMSH)
@@ -81,14 +81,14 @@ dnl AC_SUBST(GMSH)
 
 AU_ALIAS([ACX_FF], [AX_FF])
 AC_DEFUN([AX_FF], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 AC_ARG_VAR(FF,[FreeFEM compiler command])
 AC_CHECK_PROG(FF,[FreeFem++],[FreeFem++],[no])
 ])dnl ACX_FF
 
 AU_ALIAS([ACX_FFCXX], [AX_FFCXX])
 AC_DEFUN([AX_FFCXX], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 AC_ARG_VAR(FFCXX,[FreeFEM compiler command])
 AC_CHECK_PROG(FFCXX,[ff-c++],[ff-c++],[no])
 dnl AC_CHECK_PROGS(FFCXX, ff-c++, $FFCXX)
@@ -97,14 +97,14 @@ dnl AC_SUBST(FFCXX)
 
 AU_ALIAS([ACX_FFCXXDEP], [AX_FFCXXDEP])
 AC_DEFUN([AX_FFCXXDEP], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 AC_ARG_VAR(FFCXXDEP,[ff-c++ compiler dependencies])
 AC_CHECK_PROG(FFCXXDEP,[ff-get-dep],[ff-get-dep],[no])
 ])dnl ACX_FFCXXDEP
 
 AU_ALIAS([ACX_FFMPI], [AX_FFMPI])
 AC_DEFUN([AX_FFMPI], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 AC_ARG_VAR(FFMPI,[FreeFEM compiler command])
 AC_CHECK_PROG(FFMPI,[ff-mpirun],[ff-mpirun],[no])
 dnl AC_CHECK_PROGS(FFMPI, ff-mpirun, $FFMPI)
@@ -179,7 +179,7 @@ test "$zipped_dependencies" == "no" && AC_MSG_WARN([
 
 AU_ALIAS([ACX_MPI], [AX_MPI])
 AC_DEFUN([AX_MPI], [
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 
 AC_LANG_CASE(
 [C], [
@@ -248,16 +248,16 @@ if test x = x"$MPILIBS"; then
 	AC_CHECK_LIB(mpich, MPI_Init, [MPILIBS="-lmpich"])
 fi
 
-dnl We have to use AC_TRY_COMPILE and not AC_CHECK_HEADER because the
+dnl We have to use AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[],[]) and not AC_CHECK_HEADER because the
 dnl latter uses $CPP, not $CC (which may be mpicc).
 AC_LANG_CASE([C], [if test x != x"$MPILIBS"; then
 	AC_MSG_CHECKING([for mpi.h])
-	AC_TRY_COMPILE([#include <mpi.h>],[],[AC_MSG_RESULT(yes)], [MPILIBS=""
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <mpi.h>]], [[]])],[AC_MSG_RESULT(yes)],[MPILIBS=""
 		AC_MSG_RESULT(no)])
 fi],
 [C++], [if test x != x"$MPILIBS"; then
 	AC_MSG_CHECKING([for mpi.h])
-	AC_TRY_COMPILE([#include <mpi.h>],[],[AC_MSG_RESULT(yes)], [MPILIBS=""
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <mpi.h>]], [[]])],[AC_MSG_RESULT(yes)],[MPILIBS=""
 		AC_MSG_RESULT(no)])
 fi],
 [Fortran 77], [if test x != x"$MPILIBS"; then
