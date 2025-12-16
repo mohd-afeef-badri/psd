@@ -222,6 +222,34 @@ make tutorials
 
 Now you should have the PSD solver installed on your machine.
 
+## Docker Image for PSD
+
+To simplify installation and ensure a consistent runtime environment across platforms, a Docker image for PSD is available. This image can be used on Linux and macOS systems with Docker installed.
+
+**Pulling the Docker Image**
+
+Download the latest PSD Docker image from Docker Hub:
+
+<pre><code>
+docker pull mohdafeef/psd:latest
+</code></pre>
+
+**Running the PSD Docker Container**
+
+<pre><code>
+docker run -it mohdafeef/psd:latest
+</code></pre>
+
+PSD is pre-installed and available in `/opt/psd/bin` and is avaliable in `PATH`.
+
+- PSD tutorials can be generated inside the container by running:
+
+<pre><code>
+make tutorials
+</code></pre>
+
+The tutorials will be installed in `/root/PSD-tutorials`
+
 #### Configuration flags
 
 These are a set of commandline flags/options that control your PSD configuration via the automake ligo.
