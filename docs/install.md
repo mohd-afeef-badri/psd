@@ -1,4 +1,4 @@
-PSD is a cross‑platform, MPI‑enabled high‑performance finite element solver (FEM) for Unix/Linux systems. This installation guide describes required dependencies, step‑by‑step instructions to build from source (Ubuntu/macOS examples), how to use the official Docker image, and the available `./configure` and `make` options.
+PSD is a cross‑platform, MPI‑enabled high‑performance finite element solver (FEM) for Unix/Linux systems. This installation guide describes required dependencies, step‑by‑step instructions to build from source (Ubuntu/macOS examples), how to use the official Docker image (Linux/macOS/Windows), and the available `./configure` and `make` options.
 
   ---
 
@@ -110,7 +110,7 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
 
   ## Docker Image for PSD
 
-  To simplify installation and ensure a consistent runtime environment across platforms, a Docker image for PSD is available. This image can be used on Linux and macOS systems with Docker installed hence the image contains a ready‑to‑use installation of PSD.
+  To simplify installation and ensure a consistent runtime environment across platforms, a Docker image for PSD is available. This image can be used on Linux, Windows, and macOS systems with Docker installed hence the image contains a ready‑to‑use installation of PSD.
 
   **Pulling the Docker Image**
 
@@ -138,8 +138,6 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
 
 
   The tutorials will be installed in `/root/PSD-tutorials`
-
-  #### 
 
   #### Configuration flags
 
