@@ -1,39 +1,42 @@
-LIST_COMPILE= Test_1.edp \
-Test_2.edp \
-Test_3.edp
+# Define test scripts
+TESTS = test_1.sh \
+        test_2.sh \
+        test_3.sh
 
+TEST_EXTENSIONS = .sh
 
-all-local: 
-	@echo ""
-	
-check-local: check-header Test_1 Test_2 Test_3
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Checking gofastplugins plugin : SUCCESS                      "
-	@echo "*============================================================*"
+# Make test scripts executable
+check_SCRIPTS = $(TESTS)
+
+# Ensure test input files are distributed
+EXTRA_DIST = Test_1.edp \
+             Test_2.edp \
+             Test_3.edp
+
+all-local:
 	@echo ""
 
-check-header:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Checking gofastplugins plugin : RUNNING                      "
-	@echo "*============================================================*"
-	@echo ""
-	
-Test_1: Test_1.edp
-	@echo "Test_1 : gofastplugins load test"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_1.edp -v 10 >  Test_1.log
-	@echo "  PASSED "
+# Generate test wrapper scripts
+test_1.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'echo "Test_1 : gofastplugins load test"' >> $@
+	@echo './../../../psd-solve/PSD_Solve -n 1 Test_1.edp -v 10 > Test_1.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@
 
-Test_2: Test_2.edp
-	@echo "Test_2 : gofastplugins GFPeigenAlone test"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_2.edp >  Test_2.log
-	@echo "  PASSED "	
+test_2.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'echo "Test_2 : gofastplugins GFPeigenAlone test"' >> $@
+	@echo './../../../psd-solve/PSD_Solve -n 1 Test_2.edp > Test_2.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@
 
-Test_3: Test_3.edp
-	@echo "Test_3 : gofastplugins GFPeigen test"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_3.edp >  Test_3.log
-	@echo "  PASSED "
+test_3.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'echo "Test_3 : gofastplugins GFPeigen test"' >> $@
+	@echo './../../../psd-solve/PSD_Solve -n 1 Test_3.edp > Test_3.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@
 			
 clean-local:
 	@echo ""
@@ -42,8 +45,7 @@ clean-local:
 	@echo "*============================================================*"
 	@echo ""	
 	rm  -f *~ *.mesh *.pvd *.vtu *.info *.pdf *.xyz *.dat *.gnu *.output
-	rm  -f *~ *.log	
-	
+	rm  -f *~ *.log	*.sh *.trs
 
 maintainer-clean-local: clean-local
 	@echo ""

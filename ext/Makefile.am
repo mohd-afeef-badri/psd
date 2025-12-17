@@ -624,20 +624,6 @@ MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: ME
 	cp -rf MEDCOUPLING-$(MEDCOUPLING_VERSION) ${prefix}/. && \
 	rm -rf  ${prefix}/MEDCOUPLING-$(MEDCOUPLING_VERSION)/BINARIES-CO7/medfile/lib/libgfortran.so.5
 
-#--------------------------------------------------------------------------------
-# This section in Makefile.am defines a target "check-local" used to perform checks
-# or tests related to the build. However, in this case, it does not perform any checks
-# and only displays a message indicating that there is nothing to check.
-#--------------------------------------------------------------------------------
-
-# Target check-local: Nothing to check, just display a message
-check-local:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Nothing to check here:"
-	@echo "*============================================================*"
-	@echo ""
-
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines two targets: "clean-local" and

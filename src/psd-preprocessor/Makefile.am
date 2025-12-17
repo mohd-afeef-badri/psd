@@ -85,9 +85,6 @@ else !HAVEMED
 	$(CXX) -c PSD_PreProcess.cpp -std=c++11
 endif
 
-check-local:
-
-
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

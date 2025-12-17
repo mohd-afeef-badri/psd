@@ -1,5 +1,5 @@
 AC_INIT([PSD],[2.6],[mohd-afeef.badri@cea.fr])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign parallel-tests])
 
 AC_CONFIG_HEADERS([config.h])
 dnl AC_PREFIX_PROGRAM (gcc)

@@ -3,9 +3,6 @@ SUBDIRS=linear-elasticity fracture-mechanics elastodynamics soildynamics elasto-
 all-local: 
 	@echo ""
 	
-check-local:
-	@echo ""
-	
 clean-local:
 	@echo ""
 	@echo "*============================================================*"

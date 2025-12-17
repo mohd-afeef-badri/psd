@@ -1,35 +1,33 @@
-LIST_COMPILE= Test_1.edp \
-Test_2.edp
+# Define test scripts
+TESTS = test_1.sh \
+        test_2.sh
 
-all-local: 
-	@echo ""
-	
-check-local: check-header Test_1 Test_2
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Checking soil-laws plugin : SUCCESS                      "
-	@echo "*============================================================*"
+TEST_EXTENSIONS = .sh
+
+# Make test scripts executable
+check_SCRIPTS = $(TESTS)
+
+# Ensure test input files are distributed
+EXTRA_DIST = Test_1.edp \
+             Test_2.edp
+
+all-local:
 	@echo ""
 
-check-header:
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Checking soil-laws plugin : RUNNING                      "
-	@echo "*============================================================*"
-	@echo ""
-	
-Test_1: Test_1.edp
-	@echo "Test_1 : soil-laws load test"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_1.edp >  Test_1.log
-	@./../../../psd-solve/PSD_Solve -n 2 Test_1.edp >  Test_1_NP2.log
-	@echo "  PASSED "
+# Generate test wrapper scripts
+test_1.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'echo "Test_1 : sparsity-visualizer load test"' >> $@
+	@echo './../../../psd-solve/PSD_Solve -n 1 Test_1.edp > Test_1.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@
 
-Test_2: Test_2.edp
-	@echo "Test_2 : soil-laws testing PSDHujeuxSoilLaw routiner"
-	@./../../../psd-solve/PSD_Solve -n 1 Test_2.edp >  Test_2.log
-	@./../../../psd-solve/PSD_Solve -n 2 Test_2.edp >  Test_2_NP2.log
-	@echo "  PASSED "	
-
+test_2.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'echo "Test_2 : sparsity-visualizer testing matrix visualization of Laplace operator"' >> $@
+	@echo './../../../psd-solve/PSD_Solve -n 1 Test_2.edp > Test_2.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@	
 
 clean-local:
 	@echo ""

@@ -1,3 +1,11 @@
+# Define test scripts
+TESTS = hujeux_utils_test.sh
+
+TEST_EXTENSIONS = .sh
+
+# Make test scripts executable
+check_SCRIPTS = $(TESTS)
+
 LIST_COMPILE = utils.cpp hujeux.cpp druckerprager.cpp
 	
 all-local: utils.o hujeux.o druckerprager.o
@@ -20,15 +28,24 @@ druckerprager.o: druckerprager.cpp druckerprager.o utils.cpp utils.h
 	@echo ""
 	$(FFCXX) -O3 -finline-functions -std=c++11 -fpic -c 	druckerprager.cpp
 
-check-local: utils.o 	hujeux.o		
-	@echo ""
-	@echo "*============================================================*"
-	@echo " Checking  hujeux  & utils routines in hujeux-law-lib          "
-	@echo "*============================================================*"
-	@echo ""
-	$(CXX) -c test.cpp  -O2 -finline-functions -std=c++11
-	$(CXX) -O2 -o hujeux-utils-tester utils.o hujeux.o test.o  -std=c++11
-	./hujeux-utils-tester	> PSD-check.log	
+# Build test executable
+hujeux-utils-tester: utils.o hujeux.o test.o
+	$(CXX) -O2 -o $@ utils.o hujeux.o test.o -std=c++11
+
+test.o: test.cpp
+	$(CXX) -c test.cpp -O2 -finline-functions -std=c++11
+
+# Generate test wrapper script
+hujeux_utils_test.sh: hujeux-utils-tester
+	@echo '#!/bin/bash' > $@
+	@echo 'echo ""' >> $@
+	@echo 'echo "*============================================================*"' >> $@
+	@echo 'echo " Checking hujeux & utils routines in hujeux-law-lib          "' >> $@
+	@echo 'echo "*============================================================*"' >> $@
+	@echo 'echo ""' >> $@
+	@echo './hujeux-utils-tester > PSD-check.log || exit 1' >> $@
+	@echo 'echo "  PASSED "' >> $@
+	@chmod +x $@
 
 clean-local:
 	@echo ""
@@ -36,7 +53,7 @@ clean-local:
 	@echo " Cleaning files in :"; pwd
 	@echo "*============================================================*"
 	@echo ""
-	rm  -f *~  *.$(SO_SUFFIX) *.o *.output
+	rm  -f *~  *.$(SO_SUFFIX) *.o *.output *.log *.sh *.trs
 
 maintainer-clean-local: clean-local
 	@echo ""
