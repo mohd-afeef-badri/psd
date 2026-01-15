@@ -167,7 +167,7 @@ clean-local:
 	rm  -f *~ *.log *.sh *.trs   *.edp PSD_Solve PSD_PreProcess PSD_Solve_Seq *.csv
 
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"

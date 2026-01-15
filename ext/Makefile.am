@@ -641,16 +641,20 @@ clean-local:
 	rm  -f *~ *.log
 
 
-# Target maintainer-clean-local: Clean automake generated files and dependencies
-maintainer-clean-local: clean-local
+# Target distclean-local: Clean automake generated files and dependencies
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
-	@echo " Cleaning automake generated files"
+	@echo " Cleaning all generated files"
 	@echo "*============================================================*"
 	@echo ""
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
-	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION)
+	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION) MEDCOUPLING-$(MEDCOUPLING_VERSION)
+	rm  -rf hypre-$(HYPRE_VERSION) hpddm-$(HPDDM_VERSION) f2cblaslapack-$(F2CBLASLAPACK_VERSION)
+	rm  -rf mumps-$(MUMPS_VERSION) mumps-seq-$(MUMPS_SEQ_VERSION) metis-$(METIS_VERSION)
+	rm  -rf parmetis-$(PARMETIS_VERSION) slepc-$(SLEPC_VERSION) scalapack-$(SCALAPACK_VERSION)
+	rm  -rf parmmg-$(PARMMG_VERSION) mmg-$(MMG_VERSION) ptscotch-$(PTSCOTCH_VERSION)
 	rm  -rf mgis-$(MGIS_VERSION) gmsh-$(GMSH_VERSION) Ipopt-$(IPOPT_VERSION).tgz mshmet.$(MSHMET_VERSION).tgz
 	rm  -rf *.tar.gz
 

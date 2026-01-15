@@ -159,7 +159,7 @@ clean-local:
 	@echo ""
 	rm  -f *~ *.pdf *.html
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning maintainer mode"

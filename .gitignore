@@ -83,6 +83,10 @@ launch.sh
 
 ## TEST  FILE ##
 #test*
+test/**/*.sh
+test/**/*.trs
+src/plugins/**/*.sh
+src/plugins/**/*.trs
 
 ## AUTOCONF FILES ##
 Makefile

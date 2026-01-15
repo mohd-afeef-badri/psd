@@ -8,7 +8,7 @@ clean-local:
 	@echo ""
 	rm  -f *~
 	
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"

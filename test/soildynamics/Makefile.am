@@ -162,7 +162,7 @@ clean-local:
 	rm  -rf top-ii-vol-meshes	
 	
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"

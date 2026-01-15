@@ -53,7 +53,7 @@ clean-local:
 	rm  -f *~  *.$(SO_SUFFIX) *.o ./ff-c++-temp ./ff-get-dep
 
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"

@@ -55,7 +55,7 @@ clean-local:
 	@echo ""
 	rm  -f *~  *.$(SO_SUFFIX) *.o *.output *.log *.sh *.trs
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
