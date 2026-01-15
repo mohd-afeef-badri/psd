@@ -11,16 +11,16 @@ MEDCOUPLING_VERSION=9.14.0
 IPOPT_VERSION=3.12.4
 
 # Define the version of parmmg
-PARMMG_VERSION=beb4147b7b29a2891e1a55745ff95863e93bcc0d
+PARMMG_VERSION=1.5.0
 
 # Define the version of mmg
-MMG_VERSION=2263f92c032a26672c2625230a0689e29e8d96c6
+MMG_VERSION=5.8.0
 
 # Define the version of mshmet
 MSHMET_VERSION=2012.04.25
 
 # Define the version of ptscotch
-PTSCOTCH_VERSION=7.0.5
+PTSCOTCH_VERSION=7.0.10
 
 # Define the version of MFront library
 MFRONT_VERSION=5.0.0
@@ -29,10 +29,10 @@ MFRONT_VERSION=5.0.0
 MGIS_VERSION=3.0
 
 # Define the version of PETSc library
-PETSC_VERSION=3.22.2
+PETSC_VERSION=3.24.3
 
 # Define the version of FreeFEM library
-FREEFEM_VERSION=4.15
+FREEFEM_VERSION=7c7504e932222cbb750a5c1829f4faf6bf405e0c
 
 # Define the version of Gmsh library
 GMSH_VERSION=4.11.1
@@ -41,7 +41,7 @@ GMSH_VERSION=4.11.1
 MUMPS_SEQ_VERSION=5.0.2
 
 # Define the version of MUMPS library
-MUMPS_VERSION=5.7.3
+MUMPS_VERSION=5.8.1
 
 # Define the version of METIS library
 METIS_VERSION=5.1.0
@@ -50,16 +50,16 @@ METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
 
 # Define the version of SLEPc library
-SLEPC_VERSION=3.22.0
+SLEPC_VERSION=0781cbf813ba3e39cd03b7f735dbbaa9fc8e0756
 
 # Define the version of SCALAPACK library
-SCALAPACK_VERSION=5bad7487f496c811192334640ce4d3fc5f88144b
+SCALAPACK_VERSION=6f56981cb0cabffd8c72c7d1016146c4b8e276dc
 
 # Define the version of HPDDM library
-HPDDM_VERSION=2.3.1
+HPDDM_VERSION=2.3.5
 
 # Define the version of HYPRE library
-HYPRE_VERSION=2.31.0
+HYPRE_VERSION=3.0.0
 
 # Define the version of BLAS/LAPACK library
 F2CBLASLAPACK_VERSION=3.8.0
@@ -97,7 +97,7 @@ endif
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
 			-O gmsh-$(GMSH_VERSION).tar.gz
 # Download FreeFEM source code
-FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v$(FREEFEM_VERSION).tar.gz \
+FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/$(FREEFEM_VERSION).tar.gz \
 			-O freefem-$(FREEFEM_VERSION).tar.gz
 # Download HPDDM source code
 HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
@@ -121,10 +121,10 @@ MUMPS_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/extern
 MUMPS_SEQ_DOWNLOAD = wget -c https://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_SEQ_VERSION).tar.gz \
 			-O mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz
 # Download METIS source code
-METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p11.tar.gz \
+METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p12.tar.gz \
 			-O metis-$(METIS_VERSION).tar.gz
 # Download SLEPc source code
-SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
+SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VERSION)/slepc-$(SLEPC_VERSION).tar.gz \
 			-O slepc-$(SLEPC_VERSION).tar.gz
 # Download ParMETIS source code
 PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
@@ -136,10 +136,10 @@ SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/ar
 F2CBLASLAPACK_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/f2cblaslapack-$(F2CBLASLAPACK_VERSION).q2.tar.gz \
 			-O f2cblaslapack-$(F2CBLASLAPACK_VERSION).tar.gz
 # Download parmmg source code
-PARMMG_DOWNLOAD = wget https://github.com/MmgTools/ParMmg/archive/$(PARMMG_VERSION).tar.gz \
+PARMMG_DOWNLOAD = wget https://github.com/MmgTools/ParMmg/archive/v$(PARMMG_VERSION).tar.gz \
 			-O parmmg-$(PARMMG_VERSION).tar.gz
 # Download mmg source code
-MMG_DOWNLOAD = wget https://github.com/MmgTools/mmg/archive/$(MMG_VERSION).tar.gz \
+MMG_DOWNLOAD = wget https://github.com/MmgTools/mmg/archive/v$(MMG_VERSION).tar.gz \
 			-O mmg-$(MMG_VERSION).tar.gz
 # Download ptscotch source code
 PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSCOTCH_VERSION)/scotch-v$(PTSCOTCH_VERSION).tar.gz \
@@ -148,7 +148,7 @@ PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSC
 MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdparties/refs/heads/main/mshmet.$(MSHMET_VERSION).tgz \
 			-O mshmet.$(MSHMET_VERSION).tgz
 # Download PETSc patch for cmake
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/tags/v$(FREEFEM_VERSION)/3rdparty/ff-petsc/petsc-cmake-seq.patch
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/7c7504e932222cbb750a5c1829f4faf6bf405e0c/3rdparty/ff-petsc/petsc-cmake-seq.patch
 # Download Ipopt source code
 IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
 			-O Ipopt-$(IPOPT_VERSION).tgz
@@ -243,13 +243,13 @@ download-dependencies:
 	fi
 	@if [ ! -f mmg-$(MMG_VERSION).tar.gz ]; then \
 		$(MMG_DOWNLOAD); \
-    fi
+	fi
 	@if [ ! -f ptscotch-$(PTSCOTCH_VERSION).tar.gz ]; then \
 		$(PTSCOTCH_DOWNLOAD); \
-    fi
+	fi
 	@if [ ! -f mshmet.$(MSHMET_VERSION).tgz ]; then \
 		$(MSHMET_DOWNLOAD); \
-    fi
+	fi
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
 	fi
@@ -627,7 +627,7 @@ MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: ME
 
 #--------------------------------------------------------------------------------
 # This section in Makefile.am defines two targets: "clean-local" and
-# "maintainer-clean-local" used for cleaning files generated during the build process.
+# "distclean-local" used for cleaning files generated during the build process.
 #--------------------------------------------------------------------------------
 
 # Target clean-local: Clean generated files in the current directory
