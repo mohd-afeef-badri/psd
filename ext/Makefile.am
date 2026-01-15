@@ -23,10 +23,10 @@ MSHMET_VERSION=2012.04.25
 PTSCOTCH_VERSION=7.0.10
 
 # Define the version of MFront library
-MFRONT_VERSION=5.0.0
+MFRONT_VERSION=5.1.0
 
 # Define the version of MGIS library
-MGIS_VERSION=3.0
+MGIS_VERSION=3.1
 
 # Define the version of PETSc library
 PETSC_VERSION=3.24.3
