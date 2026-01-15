@@ -166,7 +166,7 @@ clean-local:
 	rm  -rf *~  *.$(SO_SUFFIX) *.o $(DEP1) ./src ./include/MFront ./include/TFEL
 
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"

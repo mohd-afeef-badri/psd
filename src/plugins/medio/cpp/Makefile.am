@@ -33,7 +33,7 @@ clean-local:
 	rm  -f *~  *.$(SO_SUFFIX) *.o
 
 
-maintainer-clean-local: clean-local
+distclean-local: clean-local
 	@echo ""
 	@echo "*============================================================*"
 	@echo " Cleaning automake generated files"
