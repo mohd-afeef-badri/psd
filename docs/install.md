@@ -42,7 +42,7 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
           liblapack-dev libopenmpi-dev freeglut3-dev \
           cpp g++ gcc gfortran bison flex gdb git \
           m4 make patch pkg-config wget python3 unzip \
-          autoconf automake autotools-dev cmake libtirpc-dev
+          autoconf automake autotools-dev cmake libtirpc-dev libtbb-dev
  </code></pre>
 
 

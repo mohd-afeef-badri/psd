@@ -44,7 +44,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich libtirpc-dev
+        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich libtirpc-dev libtbb-dev
     - name: configure
       run: |
         export PREFIXPSD=/home/runner/psd
