@@ -31,7 +31,7 @@ if HAVEMGIS
 	cat $(FF_CPP_IS) | sed 's/++14/++20/g' > ff-c++-temp && chmod a+x ff-c++-temp
 	cp $(FF_DEP_IS) .
 	find . -name typedefinitions.hxx -exec sed -i -e "s#/usr/lib/libBehaviour.$(SO_SUFFIX)#${prefix}/lib/libBehaviour.$(SO_SUFFIX)#g" {} \;
-	./ff-c++-temp -auto -mpi mfront.cpp ${mgis}/lib/libMFrontGenericInterface.$(SO_SUFFIX) $(OPEN_MP_FLAGS_INCLUDE) -I${mgis}/include -Wl,-rpath,${mgis}/lib $(OPEN_MP_FLAGS_LIB) 
+	./ff-c++-temp -auto -mpi mfront.cpp ${MGIS_PREFIX}/lib/libMFrontGenericInterface.$(SO_SUFFIX) $(OPEN_MP_FLAGS_INCLUDE) -I${MGIS_PREFIX}/include -Wl,-rpath,${mgis}/lib $(OPEN_MP_FLAGS_LIB) 
 	find . -name typedefinitions.hxx -exec sed -i -e "s#${prefix}/lib#/usr/lib#g" {} \;
 else !HAVEMGIS
 	@echo ""

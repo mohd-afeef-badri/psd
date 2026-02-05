@@ -135,14 +135,6 @@ AC_ARG_WITH(Gmsh,
 	[  --with-Gmsh=            Gmsh installation path : (e.g. --with-Gmsh=/opt/Gmsh/bin)],
 	   GMSH="${withval}/gmsh")
 
-AC_ARG_WITH([mfront],
-	[  --with-mfront=          mfront installation path : (e.g. --with-mfront=/opt/install/local)],
-        [mfront="$withval"], [mfront="no"])
-
-AC_ARG_WITH([mgis],
-	[  --with-mgis=            Mgis installation path : (e.g. --with-mgis=/opt/install/local)],
-        [mgis="$withval"], [mgis="no"])
-
 AC_ARG_WITH([salome],
 	[  --with-salome=          salome installation path : (e.g. --with-salome=/opt/install/local)
 	],
@@ -464,47 +456,134 @@ dnl ---------------------------------------------------------------
 dnl Did the user provide mfront/mgis
 dnl ---------------------------------------------------------------
 
-SECTION_TITLE([      checking for a MFront support     ])
+SECTION_TITLE([      checking for a MFront/MGIS support     ])
 
+HAVE_MGIS_SUPPORT=no
 HAVE_MFRONT_SUPPORT=no
+MFRONT_PREFIX=""
+MGIS_PREFIX=""
+MGIS_LIBS=""
+MGIS_LDFLAGS=""
+MGIS_CPPFLAGS=""
+
+AC_ARG_WITH([mfront],
+  AS_HELP_STRING([--with-mfront=PREFIX],
+                 [prefix where mfront is installed]),
+  [MFRONT_PREFIX="$withval"],
+  [MFRONT_PREFIX=""]
+)
 
 if test "$dependencies" != "no"; then
-dnl Use internally built dependencies from ext/
-  mgis="${prefix}"
-  mfront="${prefix}"
+  if test "x$MFRONT_PREFIX" = "x"; then
+    MFRONT_PREFIX="${prefix}"
+    PATH="$prefix/bin:$PATH"
+    mgis="${prefix}"
+    AC_PATH_PROG([MFRONT], [mfront])
+  fi
 fi
 
-if test "$mgis" != "no" && test "$mfront" != "no"; then
-  HAVE_MFRONT_SUPPORT=yes
+# If user gave --with-mfront, prepend its bin to PATH for detection
+if test "x$MFRONT_PREFIX" != "x"; then
+  PATH="$MFRONT_PREFIX/bin:$PATH"
 fi
 
-AC_SUBST([mgis])
-AC_SUBST([mfront])
+# Look for the mfront executable
+AC_PATH_PROG([MFRONT], [mfront])
+AC_SUBST([MFRONT])
+AC_MSG_NOTICE([Using mfront: $MFRONT])
 
-AM_CONDITIONAL([HAVEMGIS], [test "$HAVE_MFRONT_SUPPORT" = yes])
+# AC_ARG_WITH([mgis],
+#   AS_HELP_STRING([--with-mgis=PREFIX],
+#                  [prefix where mfront is installed]),
+#   [MGIS_PREFIX="$withval"],
+#   [MGIS_PREFIX=""]
+# )
+
+dnl ---------------------------------------------------------------
+dnl MGIS argument and path preparation (don't test library yet)
+dnl ---------------------------------------------------------------
+AC_ARG_WITH([mgis],
+  AS_HELP_STRING([--with-mgis@<:@=PATH@:>@],
+                 [Enable MFront Generic Interface support (auto-detects from Spack LIBRARY_PATH if available)]),
+  [with_mgis="$withval"],
+  [with_mgis="auto"])
+
+dnl 1. Handle Internal Dependencies Override
+if test "$dependencies" != "no"; then
+    AC_MSG_NOTICE([Using internal PSD dependencies for MGIS])
+    MGIS_PREFIX="${prefix}"
+    MFRONT="${prefix}/bin/mfront"
+    HAVE_MGIS_SUPPORT=yes
+    HAVE_MFRONT_SUPPORT=yes
+
+dnl 2. Automatic Detection (via Spack/Environment)
+else
+    # Locate mfront executable
+    AC_PATH_PROG([MFRONT], [mfront])
+	if test "x$MFRONT_PREFIX" = "x"; then
+		HAVE_MFRONT_SUPPORT=yes
+	fi
+    
+    # Locate the MGIS library folder by scanning LD_LIBRARY_PATH
+    AC_MSG_CHECKING([for MGIS library directory])
+    found_lib_dir=""
+    save_IFS=$IFS; IFS=':'
+    for dir in $LD_LIBRARY_PATH; do
+        if test -f "$dir/libMFrontGenericInterface.$SO_SUFFIX"; then
+            found_lib_dir=$dir
+            break
+        fi
+    done
+    IFS=$save_IFS
+
+    if test -n "$found_lib_dir"; then
+        AC_MSG_RESULT([$found_lib_dir])
+        # Derive prefix by going up one level from the lib directory
+        MGIS_PREFIX=`AS_DIRNAME(["$found_lib_dir"])`
+        HAVE_MGIS_SUPPORT=yes
+    else
+        AC_MSG_RESULT([not found])
+        # Fallback to user-provided --with-mgis path if available
+        if test "$mgis" != "no" && test -d "$mgis"; then
+            MGIS_PREFIX="$mgis"
+            HAVE_MGIS_SUPPORT=yes
+        fi
+    fi
+fi
+
+dnl 3. Set Flags if MGIS is found
+if test "$HAVE_MGIS_SUPPORT" = "yes"; then
+    MGIS_LIBS="-lMFrontGenericInterface"
+    MGIS_LDFLAGS="-L$MGIS_PREFIX/lib"
+    MGIS_CPPFLAGS="-I$MGIS_PREFIX/include"
+    
+    # Verification check
+    save_LDFLAGS="$LDFLAGS"
+    LDFLAGS="$MGIS_LDFLAGS $LDFLAGS"
+    AC_CHECK_LIB([MFrontGenericInterface], [main], [], [
+        AC_MSG_WARN([Linking test failed. Ensure all MGIS dependencies are in LD_LIBRARY_PATH.])
+    ])
+    LDFLAGS="$save_LDFLAGS"
+fi
+
+dnl Export variables to Makefiles
+AC_SUBST([MFRONT_PREFIX])
+AC_SUBST([MGIS_PREFIX])
+AC_SUBST([MGIS_LIBS])
+AC_SUBST([MGIS_LDFLAGS])
+AC_SUBST([MGIS_CPPFLAGS])
+AC_SUBST([MFRONT])
+
 AM_CONDITIONAL([HAVEMFRONT], [test "$HAVE_MFRONT_SUPPORT" = yes])
+AM_CONDITIONAL([HAVEMGIS], [test "$HAVE_MGIS_SUPPORT" = yes])
 
-dnl Summary logging
+dnl Summary report
 AC_MSG_RESULT([])
-AC_MSG_RESULT([Using internal dependencies... $dependencies])
-AC_MSG_RESULT([checking for mgis...           $mgis])
-AC_MSG_RESULT([checking for mfront...         $mfront])
-AC_MSG_RESULT([Mfront support...              $HAVE_MFRONT_SUPPORT])
-AC_MSG_RESULT([])
+AC_MSG_RESULT([MGIS Prefix:       $MGIS_PREFIX])
+AC_MSG_RESULT([MGIS Support:      $HAVE_MGIS_SUPPORT])
+AC_MSG_RESULT([MFront Prefix:     $MFRONT_PREFIX])
+AC_MSG_RESULT([MFront support:    $HAVE_MFRONT_SUPPORT])
 
-if test "$HAVE_MFRONT_SUPPORT" = no; then
-  AC_MSG_WARN([
- Mfront will not be configured with PSD.
- You must provide either:
-
-  --with-dependencies
-    OR
-  --with-mgis
-  --with-mfront
-
- MFRONT SUPPORT = OFF
-])
-fi
 dnl ---------------------------------------------------------------
 
 dnl ---------------------------------------------------------------
