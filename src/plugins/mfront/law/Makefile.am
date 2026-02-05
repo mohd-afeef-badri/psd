@@ -150,6 +150,7 @@ src/desmoratplanestressDelta.o: desmoratplanestressDelta.mfront
 
 install-exec-local:
 if HAVEMFRONT
+	@mkdir -p ${prefix}/lib
 	@cp src/libBehaviour.$(SO_SUFFIX) ${prefix}/lib/.
 endif
 	@echo ""
