@@ -70,7 +70,8 @@ F2CBLASLAPACK_VERSION=3.8.0
 
 if BUILDDEPENDENCIES
 
-LIST_MAKE_EXECUTE = download-dependencies \
+LIST_MAKE_EXECUTE = make-directories \
+                    download-dependencies \
                     mfront-build \
                     mgis-build   \
                     petsc-build  \
@@ -167,7 +168,7 @@ MEDCOUPLING_DOWNLOAD =	wget -c \
 #----------------------------------------------------------------------------------------
 
 # Target to build the necessary directories and execute the specified make commands
-all-local: make-directories $(LIST_MAKE_EXECUTE)
+all-local: $(LIST_MAKE_EXECUTE)
 	@echo ""
 
 

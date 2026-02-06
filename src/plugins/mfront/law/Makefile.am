@@ -28,8 +28,10 @@ else
 LIST_OBJ_FILES =
 endif
 
-export PATH := ${mfront}/bin:$(PATH)
-export LD_LIBRARY_PATH := ${mfront}/lib:$(LD_LIBRARY_PATH)
+if HAVEMFRONT
+export PATH := $(MFRONT_PREFIX)/bin:$(PATH)
+export LD_LIBRARY_PATH := $(MFRONT_PREFIX)/lib:$(LD_LIBRARY_PATH)
+endif
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
 
@@ -49,8 +51,8 @@ src/Elasticity.o: Elasticity.mfront
 	@echo "Compiled Elasticity support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  Elasticity.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  Elasticity.mfront
+	$(MFRONT) --obuild
 
 
 src/IsotropicLinearHardeningPlasticity.o: IsotropicLinearHardeningPlasticity.mfront
@@ -59,8 +61,8 @@ src/IsotropicLinearHardeningPlasticity.o: IsotropicLinearHardeningPlasticity.mfr
 	@echo "Compiled IsotropicLinearHardeningPlasticity support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  IsotropicLinearHardeningPlasticity.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  IsotropicLinearHardeningPlasticity.mfront
+	$(MFRONT) --obuild
 
 
 src/HelloWorld.o: HelloWorld.mfront
@@ -69,8 +71,8 @@ src/HelloWorld.o: HelloWorld.mfront
 	@echo "Compiled HelloWorld support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  HelloWorld.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  HelloWorld.mfront
+	$(MFRONT) --obuild
 
 
 src/Iwan.o: Iwan.mfront
@@ -79,8 +81,8 @@ src/Iwan.o: Iwan.mfront
 	@echo "Compiled Iwan support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  Iwan.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  Iwan.mfront
+	$(MFRONT) --obuild
 
 src/HujeuxECP1985.o: HujeuxECP1985.mfront
 	@echo ""
@@ -88,8 +90,8 @@ src/HujeuxECP1985.o: HujeuxECP1985.mfront
 	@echo "Compiled HujeuxECP1985 support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  HujeuxECP1985.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  HujeuxECP1985.mfront
+	$(MFRONT) --obuild
 
 src/Hujeux.o: Hujeux.mfront
 	@echo ""
@@ -97,8 +99,8 @@ src/Hujeux.o: Hujeux.mfront
 	@echo "Compiled Hujeux support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  Hujeux.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  Hujeux.mfront
+	$(MFRONT) --obuild
 
 src/desmorat20152d.o: desmorat20152d.mfront
 	@echo ""
@@ -106,8 +108,8 @@ src/desmorat20152d.o: desmorat20152d.mfront
 	@echo "Compiled desmorat20152d support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmorat20152d.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  desmorat20152d.mfront
+	$(MFRONT) --obuild
 
 src/desmorat20152dnonlocal.o: desmorat20152dnonlocal.mfront
 	@echo ""
@@ -115,8 +117,8 @@ src/desmorat20152dnonlocal.o: desmorat20152dnonlocal.mfront
 	@echo "Compiled desmorat20152dnonlocal support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmorat20152dnonlocal.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  desmorat20152dnonlocal.mfront
+	$(MFRONT) --obuild
 
 src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
 	@echo ""
@@ -124,8 +126,8 @@ src/desmorat3Dnonlocal.o: desmorat3Dnonlocal.mfront
 	@echo "Compiled desmorat3Dnonlocal support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmorat3Dnonlocal.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  desmorat3Dnonlocal.mfront
+	$(MFRONT) --obuild
 	
 src/desmoratplanestress.o: desmoratplanestress.mfront
 	@echo ""
@@ -133,8 +135,8 @@ src/desmoratplanestress.o: desmoratplanestress.mfront
 	@echo "Compiled desmoratplanestress support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmoratplanestress.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  desmoratplanestress.mfront
+	$(MFRONT) --obuild
 
 src/desmoratplanestressDelta.o: desmoratplanestressDelta.mfront
 	@echo ""
@@ -142,12 +144,13 @@ src/desmoratplanestressDelta.o: desmoratplanestressDelta.mfront
 	@echo "Compiled desmoratplanestressDelta support for mfront"
 	@echo "----------------------------------------"
 	@echo ""
-	${mfront}/bin/mfront --interface=generic  desmoratplanestressDelta.mfront
-	${mfront}/bin/mfront --obuild
+	$(MFRONT) --interface=generic  desmoratplanestressDelta.mfront
+	$(MFRONT) --obuild
 
 
 install-exec-local:
 if HAVEMFRONT
+	@mkdir -p ${prefix}/lib
 	@cp src/libBehaviour.$(SO_SUFFIX) ${prefix}/lib/.
 endif
 	@echo ""
