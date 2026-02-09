@@ -28,12 +28,14 @@ else
 LIST_OBJ_FILES =
 endif
 
-if HAVEMFRONT
+if HAVEMFRONTPREFIX
 export PATH := $(MFRONT_PREFIX)/bin:$(PATH)
 export LD_LIBRARY_PATH := $(MFRONT_PREFIX)/lib:$(LD_LIBRARY_PATH)
 endif
 
 DEP1 = src/libBehaviour.$(SO_SUFFIX)
+
+.NOTPARALLEL:
 
 all-local: $(DEP1)
 	@echo ""

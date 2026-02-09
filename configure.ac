@@ -492,13 +492,6 @@ AC_PATH_PROG([MFRONT], [mfront])
 AC_SUBST([MFRONT])
 AC_MSG_NOTICE([Using mfront: $MFRONT])
 
-# AC_ARG_WITH([mgis],
-#   AS_HELP_STRING([--with-mgis=PREFIX],
-#                  [prefix where mfront is installed]),
-#   [MGIS_PREFIX="$withval"],
-#   [MGIS_PREFIX=""]
-# )
-
 dnl ---------------------------------------------------------------
 dnl MGIS argument and path preparation (don't test library yet)
 dnl ---------------------------------------------------------------
@@ -574,6 +567,7 @@ AC_SUBST([MGIS_LDFLAGS])
 AC_SUBST([MGIS_CPPFLAGS])
 AC_SUBST([MFRONT])
 
+AM_CONDITIONAL([HAVEMFRONTPREFIX], [test "x$MFRONT_PREFIX" != "x"])
 AM_CONDITIONAL([HAVEMFRONT], [test "$HAVE_MFRONT_SUPPORT" = yes])
 AM_CONDITIONAL([HAVEMGIS], [test "$HAVE_MGIS_SUPPORT" = yes])
 
