@@ -94,8 +94,8 @@ Final step is to have a look at the results of the simulation. PSD can provides 
 
 ---
 
-## 📬 Contact
-
-To report bugs, request features, or ask questions, feel free to reach out:
-
-**📧 [mohd-afeef.badri@cea.fr](mailto:mohd-afeef.badri@cea.fr)**
+## Contributing & Community
+We welcome contributions to PSD! To ensure a smooth collaboration and maintain the high standards required for parallel FEM solvers, please follow these guidelines:
+- Contributing: Please read and follow [CONTRIBUTING.md](https://github.com/mohd-afeef-badri/psd/blob/community_code_of_conduct/CONTRIBUTING.md) in order to contribute to PSD.
+- Community: We follow the [CODE_OF_CONDUCT.md](https://github.com/mohd-afeef-badri/psd/blob/community_code_of_conduct/CODE_OF_CONDUCT.md) to ensure a welcoming and professional environment for all researchers and developers.
+- Issues: If you find a bug or have a feature request, please open an entry in the [Issue Tracker](https://github.com/mohd-afeef-badri/psd/issues).
