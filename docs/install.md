@@ -12,13 +12,13 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | [C/C++ compiler](http://www.cplusplus.com/)                  | GCC 7 or higher                                              | ✅         | ❌              |
   | [MPI](https://www.mpich.org/)                                | 2.0 or higher ([MPICH](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | ✅         | ❌              |
   | [git](https://git-scm.com/)                                  | –                                                            | ✅         | ❌              |
-  | [FreeFEM](https://freefem.org/)                              | 4.15                                                         | ✅         | ✅              |
-  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.22.2                                                       | ✅         | ✅              |
+  | [FreeFEM](https://freefem.org/)                              | 4.16                                                         | ✅         | ✅              |
+  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.24.3                                                       | ✅         | ✅              |
   | [Gmsh](http://gmsh.info/)                                    | 4.11.1                                                       | ✅         | ✅              |
-  | [SALOME](https://www.salome-platform.org/)                   | 9.0 or higher                                                | ❌         | ❌              |
+  | [MEDCOUPLING](https://www.salome-platform.org/)              | 9.0 or higher                                                | ❌         | ❌              |
   | [gnuplot](http://www.gnuplot.info/)                          | 4.0 or higher                                                | ❌         | ❌              |
-  | [MFront](http://tfel.sourceforge.net/)                       | 5.0.0                                                        | ❌         | ✅              |
-  | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.0                                                          | ❌         | ✅              |
+  | [MFront](http://tfel.sourceforge.net/)                       | 5.1.0                                                        | ❌         | ✅              |
+  | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.1                                                          | ❌         | ✅              |
 
   > ⚠️ **Note:**
   > Some dependencies can be automatically installed with PSD. These are marked in the “Install Assist” column above. Others must be installed manually before proceeding.
@@ -138,6 +138,10 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
 
 
   The tutorials will be installed in `/root/PSD-tutorials`
+
+  **PSD installation via spack**
+
+  PSD can be installed using [spack](https://spack.io/), installation process is detailed [here](https://github.com/mohd-afeef-badri/spack_psd/tree/main#psd-spack-repository).
 
   #### Configuration flags
 
