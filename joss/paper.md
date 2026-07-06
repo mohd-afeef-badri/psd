@@ -104,7 +104,7 @@ Results such as those presented in Figure \ref{fig:example1} can be obtained.
 
 # Demonstration
 
-Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the Cadarache region in France (50 km × 50 km) performed with `PSD` [@badri2024top], comprising over one billion degrees of freedom distributed across 6144 `MPI` domains on a 540-million-element mesh with 10 m resolution.
+Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the Cadarache region in France (50 km × 50 km) performed with `PSD` [@badri2024top], comprising over one billion degrees of freedom distributed across 6144 `MPI` domains on a 540-million-element mesh with 10-m resolution.
 
  ![Earthquake simulation of the French Cadarache region showing displacement magnitude at four time steps. \label{fig:example1}](./images/earthquake.png){width=72%}
 
