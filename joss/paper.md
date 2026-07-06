@@ -48,8 +48,6 @@ Current computational challenges in earthquake simulation include: (1) handling 
 
 `PSD` offers a range of physics modules designed for earthquake simulations, including linear elasticity, elastodynamics, fracture mechanics, soil dynamics[^soildynamics], and elasto-plasticity. Its versatility is further enhanced by the `Mfront` interface, which allows users to implement custom non-linear material models that can be seamlessly integrated into any of these modules, expanding their capabilities beyond its built-in constitutive laws. Additionally, comprehensive verification and validation campaigns for all `PSD` modules, with results cross-compared against reference codes, experimental data, and analytical benchmarks, ensure transparency and reproducibility (see [validation page](https://mohd-afeef-badri.github.io/psd/validation)).
 
-`PSD` adopts a layered architecture that separates mathematical formulation from computational implementation while maintaining high performance through strategic integration. It follows a code generation approach, where users specify problem configurations through command-line options, after which `PSD_PreProcess` generates optimized `FreeFEM` code tailored to the selected physics, dimensionality, and boundary conditions. The generated code is coupled with `PSD`-specific compiled components, including physics modules, `MFront` interfaces, `MED`-based pre- and post-processing tools, distributed mesh generation and partitioning utilities, nonlinear soil constitutive models, and eigensolver components for fracture mechanics. This complete software stack defines the governing formulations, assembles the corresponding finite-element problems, integrates specialized material models and boundary conditions, manages distributed meshes, invokes the required numerical libraries, and controls the simulation workflow. This design enables computational efficiency while preserving flexibility for diverse applications across the available physics modules.
-
 `PSD` adopts a layered architecture that separates mathematical formulation from computational implementation while maintaining high performance through strategic integration. It follows a code generation approach, users specify problem configurations through command-line options, after which `PSD_PreProcess` generates optimized `FreeFEM` code tailored to the selected physics, dimensionality, and boundary conditions. The generated `FreeFEM` code is not intended to run only as a standalone script for an unmodified `FreeFEM` installation. Instead, it is coupled with `PSD`-specific compiled plugins and software components, including:
 
 -  `MPI-I/O`-based distributed point-cloud-to-volume mesh generation and partitioning utilities for earthquake simulations;
@@ -81,7 +79,7 @@ Here, $(\mathbf{u}, \mathbf{v})$ are the FEM trial and test functions, respectiv
 **Execution Workflow**: `PSD` begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific FEM code based on user specifications.
 
 ```
-PSD_PreProcess -problem soildynamics -dimension 3 -top2vol-meshing \
+PSD_PreProcess -problem soildynamics -dimension 3 -top2voleshing \
 -timediscretization newmark_beta  -postprocess uav
 ```
 
@@ -106,7 +104,7 @@ Results such as those presented in Figure \ref{fig:example1} can be obtained.
 
 # Demonstration
 
-Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the Cadarache region in France (50 km × 50 km) performed with `PSD` [@badri2024top], comprising over one billion degrees of freedom distributed across 6144 `MPI` domains on a 540-million-element mesh with 10-m resolution.
+Figure \ref{fig:example1} presents a regional-scale earthquake simulation of the Cadarache region in France (50 km × 50 km) performed with `PSD` [@badri2024top], comprising over one billion degrees of freedom distributed across 6144 `MPI` domains on a 540-million-element mesh with 10 m resolution.
 
  ![Earthquake simulation of the French Cadarache region showing displacement magnitude at four time steps. \label{fig:example1}](./images/earthquake.png){width=72%}
 
