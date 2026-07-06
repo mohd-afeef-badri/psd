@@ -50,7 +50,7 @@ Current computational challenges in earthquake simulation include: (1) handling 
 
 `PSD` adopts a layered architecture that separates mathematical formulation from computational implementation while maintaining high performance through strategic integration. It follows a code generation approach, users specify problem configurations through command-line options, after which `PSD_PreProcess` generates optimized `FreeFEM` code tailored to the selected physics, dimensionality, and boundary conditions. The generated `FreeFEM` code is not intended to run only as a standalone script for an unmodified `FreeFEM` installation. Instead, it is coupled with `PSD`-specific compiled plugins and software components, including:
 
--  `MPI-I/O`-based distributed point-cloud-to-volume mesh generation and partitioning utilities for earthquake simulations;
+-  `MPI I/O`-based distributed point-cloud-to-volume mesh generation and partitioning utilities for earthquake simulations;
 -  compiled interfaces to `MFront` for the assembly of nonlinear constitutive behaviours;
 -  `MED`-based mesh and post-processing interfaces, including data transfer between earthquake and structural simulations;
 -  dedicated constitutive models and special bounday conditions for soil mechanics;
@@ -79,7 +79,7 @@ Here, $(\mathbf{u}, \mathbf{v})$ are the FEM trial and test functions, respectiv
 **Execution Workflow**: `PSD` begins with automated code generation through the `PSD_PreProcess` utility, which generates problem-specific FEM code based on user specifications.
 
 ```
-PSD_PreProcess -problem soildynamics -dimension 3 -top2voleshing \
+PSD_PreProcess -problem soildynamics -dimension 3 -top2vol-meshing \
 -timediscretization newmark_beta  -postprocess uav
 ```
 
@@ -94,7 +94,7 @@ Typical soil properties and time-integration parameters are included:
        dt   = 0.001   ;  // Time step
 ```
 
-The simulation is executed using the parallel solver with the specified number of `MPI`-processes:
+The simulation is executed using the parallel solver with the specified number of `MPI` processes:
 
 ```
 PSD_Solve -np 6144 Main.edp
