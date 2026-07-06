@@ -1,29 +1,34 @@
 # Changelog
 PSD has been maturing and evolving with time, following subsections present the highlights of  some key changes made to each PSD version.
 
-## Rolling release (2.6)
+## Rolling release (2.7)
+
+## [2.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.6) - 06-07-2026
 
 ### Added
-
+- Documentation on [web](https://mohd-afeef-badri.github.io/psd/#/)
+- PSD [Docker](https://mohd-afeef-badri.github.io/psd/#/install?id=docker-image-for-psd)
+- PSD instllation via spack [package](https://github.com/mohd-afeef-badri/spack_psd)
+- 
 - New poisson model `-model poisson`
 - New adapt meshing support:
 - New flags `-adaptmesh`, `-adaptmesh_iter`, `-adaptmesh_type`, `-adapt_mesh_backend` 
 - Support for Apple silicon MacOSARM
 - Installing Gmsh automatically for MacOS
 - Simplified install procedure
-- ParMMG, MMG, PTSCOTCH dependencies
+- ParMMG, MMG, PTSCOTCH, MUMPS, MUMPS_SEQ, MEDCOUPLING dependencies
+- New CI on Github UB 24.04, MacOS 26
+- New tutorials 
 
 ### Changed
 
-- Moved to FreeFEM 4.15
-- Moved to PETSc 3.22.2
+- Moved to FreeFEM 7c7504e932222cbb750a5c1829f4faf6bf405e0c
+- Moved to PETSc 3.24.3
 - Moved to Gmsh 4.11.1
-- Moved to Hypre 2.31.0
+- Moved to Hypre 3.0.0
 
 ### Removed
-
-### Bug
-
+- SALOME is no longer compiled
 
 
 ## [2.5](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.5) - 2023-05-12

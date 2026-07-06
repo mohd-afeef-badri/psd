@@ -12,13 +12,13 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | [C/C++ compiler](http://www.cplusplus.com/)                  | GCC 7 or higher                                              | ✅         | ❌              |
   | [MPI](https://www.mpich.org/)                                | 2.0 or higher ([MPICH](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | ✅         | ❌              |
   | [git](https://git-scm.com/)                                  | –                                                            | ✅         | ❌              |
-  | [FreeFEM](https://freefem.org/)                              | 4.15                                                         | ✅         | ✅              |
-  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.22.2                                                       | ✅         | ✅              |
+  | [FreeFEM](https://freefem.org/)                              | 4.16                                                         | ✅         | ✅              |
+  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.24.3                                                       | ✅         | ✅              |
   | [Gmsh](http://gmsh.info/)                                    | 4.11.1                                                       | ✅         | ✅              |
-  | [SALOME](https://www.salome-platform.org/)                   | 9.0 or higher                                                | ❌         | ❌              |
+  | [MEDCOUPLING](https://www.salome-platform.org/)              | 9.0 or higher                                                | ❌         | ❌              |
   | [gnuplot](http://www.gnuplot.info/)                          | 4.0 or higher                                                | ❌         | ❌              |
-  | [MFront](http://tfel.sourceforge.net/)                       | 5.0.0                                                        | ❌         | ✅              |
-  | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.0                                                          | ❌         | ✅              |
+  | [MFront](http://tfel.sourceforge.net/)                       | 5.1.0                                                        | ❌         | ✅              |
+  | [MGIS](https://thelfer.github.io/mgis/web/bindings-cxx.html) | 3.1                                                          | ❌         | ✅              |
 
   > ⚠️ **Note:**
   > Some dependencies can be automatically installed with PSD. These are marked in the “Install Assist” column above. Others must be installed manually before proceeding.
@@ -139,6 +139,10 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
 
   The tutorials will be installed in `/root/PSD-tutorials`
 
+  **PSD installation via spack**
+
+  PSD can be installed using [spack](https://spack.io/), installation process is detailed [here](https://github.com/mohd-afeef-badri/spack_psd/tree/main#psd-spack-repository).
+
   #### Configuration flags
 
   These are a set of commandline flags/options that control your PSD configuration via the automake ligo.
@@ -149,7 +153,6 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | `--with-FreeFEM`             | Enter the directory where FreeFem binary has been installed.<br />Tip, in your terminal  `which FreeFem++`  can  help you <br />find this directory.<br /><br />*This flag is an optional flag* | `--with-FreeFEM=/usr/bin` <br />`--with-FreeFEM=/home/install/bin` <br />`--with-FreeFEM=/usr/local/bin` |
   | `--with-Gmsh`                | Enter the directory  where  Gmsh  binary has been installed.<br />Tip, in your terminal `which gmsh`  can help you find this<br />directory.<br /><br />*This flag is an optional flag* | `--with-Gmsh=/usr/bin` <br />`--with-Gmsh=/home/install/bin` <br />`--with-Gmsh=/usr/local/bin` |
   | `--with-mgis`                | Enter the directory  where  Mgis  has been installed.<br /><br />*This flag is an optional flag* | `--with-mgis=/usr` <br />`--with-mgis=/home/install` <br />`--with-mgis=/usr/local` |
-  | `--with-salome`              | Enter the directory  where  SALOME  has been installed.<br /><br />*This flag is an optional flag* | `--with-salome=/home/SALOME-UB22.04` <br />`--with-salome=/home/install/SALOME-UB22.04` <br />`--with-salome=/usr/local/SALOME-UB22.04` |
   | `--with-hdf5`                | Enter the directory  where  hdf5  has been installed.<br /><br />*This flag is an optional flag* | `--with-hdf5=/home/SALOME-UB22.04/INSTALL/hdf5` <br />`--with-hdf5=/home/install/SALOME/BINARIES-UB22.04/hdf5` |
   | `--with-medfile`             | Enter the directory  where  medfile  has been installed.<br /><br />*This flag is an optional flag* | `--with-medfile=/home/SALOME-UB22.04/INSTALL/medfile` <br />`--with-medfile=/home/install/SALOME/BINARIES-UB22.04/medfile` |
   | `--with-medcoupling`         | Enter the directory  where  MEDCOUPLING  has been installed.<br /><br />*This flag is an optional flag* | `--with-medcoupling=/home/SALOME-UB22.04/INSTALL/MEDCOUPLING` <br />`--with-medcoupling=/home/install/SALOME/BINARIES-UB22.04/MEDCOUPLING` |
@@ -169,7 +172,7 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | `install`          | Command that installs PSD for you, this command should follow the `make` command. | `make install` <br /> `make install -j4` |
   | `check`            | Command that should follow `make install` helps to check the PSD installation.<br /><br />*This command is an optional but recommended* | `make check`                             |
   | `clean`            | Command that cleans PSD's compilation directory.<br /><br />*This command is an optional* | `make clean`                             |
-  | `maintainer-clean` | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make maintainer-clean`                  |
+  | `distclean`        | Command that cleans PSD's compilation directory throughly.<br /><br />*This command is an optional* | `make distclean`                  |
   | `tutorials`        | Command that builds PSD tutorials in `$HOME` directory. This should <br />follow/be-used only after  `make install`.<br /><br />*This command is an optional* | `make tutorials`                         |
   | `install-devl`     | Command that installs developers version of PSD for you, this command should follow<br />the `make` command.<br /><br />*This command is an optional* | `make install-devel`                     |
   | `documentation`    | Command that builds documentation, in html, and pdf formats. This command should follow<br />the `make` command. Note that this needs pandoc installed in your system. And also pandoc support for specific html templates, [Link](https://github.com/ryangrose/easy-pandoc-templates). <br /><br />*This command is an optional* | `make documentation`                     |
