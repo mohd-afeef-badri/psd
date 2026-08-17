@@ -811,6 +811,9 @@ Upon successful preprocessing, several `.edp` (FreeFEM) script files will be gen
 > 💡 **Note**:
 >The 3D mesh is generated in-memory and automatically partitioned across MPI processes using, partitions along x-axis $P_x$: `PartX() 1`, partitions along y-axis $P_y$: `PartY() mpisize` (one domain per MPI process), and partitions along z-axis $P_z$: `PartZ() 1`.
 
+> 💡 **Note**:
+>For this tutorial, the `Point-Cloud` DEM can be found in `psd/etc` folder, copy this to the desired path and provide the appropriate file with path to `PCName`.  
+
 >🚨 **Important**:
 >The total number of partitions must match the number of MPI processes: i.e. $P_x\times P_y \times P_z = \text{mpisize}$. Users are free to choose 1D, 2D, or 3D decompostion adhearing to the given notice.
 
