@@ -1,0 +1,147 @@
+name: UB26.04-Spack
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.MD'
+      - '**.md'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'docs/**'
+      - 'etc/**'
+      - 'joss/**'
+      - 'man/**'
+      - 'paper/**'
+      - 'src/ff-files/**'
+      - '**.png'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.MD'
+      - '**.md'
+      - '**/.gitignore'
+      - 'data/**'
+      - 'demos/**'
+      - 'docs/**'
+      - 'etc/**'
+      - 'joss/**'
+      - 'man/**'
+      - 'paper/**'
+      - 'src/ff-files/**'
+      - '**.png'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spack-install:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 360
+
+    env:
+      SPACK_ROOT: ${{ runner.temp }}/spack
+      SPACK_PSD_ROOT: ${{ runner.temp }}/spack_psd
+      SPACK_USER_CONFIG_PATH: ${{ runner.temp }}/spack-user-config
+      SPACK_USER_CACHE_PATH: ${{ runner.temp }}/spack-user-cache
+
+    steps:
+      - name: Check out PSD
+        uses: actions/checkout@v4
+
+      - name: Verify Ubuntu release
+        run: |
+          cat /etc/os-release
+          grep -q '^VERSION_ID="26.04"$' /etc/os-release
+
+      - name: Install Spack prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            build-essential \
+            bzip2 \
+            ca-certificates \
+            curl \
+            file \
+            gfortran \
+            git \
+            gzip \
+            patch \
+            python3 \
+            tar \
+            unzip \
+            xz-utils
+
+      - name: Install Spack
+        run: |
+          git clone --depth 1 --branch v1.2.2 \
+            https://github.com/spack/spack.git "$SPACK_ROOT"
+          source "$SPACK_ROOT/share/spack/setup-env.sh"
+          spack --version
+
+      - name: Add the PSD Spack repository
+        run: |
+          git clone --depth 1 \
+            https://github.com/mohd-afeef-badri/spack_psd.git \
+            "$SPACK_PSD_ROOT"
+          source "$SPACK_ROOT/share/spack/setup-env.sh"
+          spack repo add "$SPACK_PSD_ROOT/spack_repo/psd"
+          spack repo list
+          spack external find
+
+      - name: Concretize PSD
+        run: |
+          source "$SPACK_ROOT/share/spack/setup-env.sh"
+          spack env create psd-ci
+          spack -e psd-ci add psd@main
+          spack -e psd-ci develop --no-clone \
+            --path "$GITHUB_WORKSPACE" psd@main
+          spack -e psd-ci concretize
+          spack -e psd-ci find --show-concretized --deps \
+            --long --variants psd
+
+      - name: Install PSD with Spack
+        run: |
+          source "$SPACK_ROOT/share/spack/setup-env.sh"
+          spack -e psd-ci install --fail-fast
+
+      - name: Verify the Spack installation
+        run: |
+          source "$SPACK_ROOT/share/spack/setup-env.sh"
+          spack -e psd-ci find --long --variants psd
+          install_prefix="$(spack -e psd-ci location -i psd)"
+          test -d "$install_prefix"
+          test -x "$install_prefix/bin/PSD_PreProcess"
+
+      - name: Collect Spack logs
+        if: always()
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts"
+          "$SPACK_ROOT/bin/spack" debug report \
+            > "$GITHUB_WORKSPACE/artifacts/spack-debug-report.txt" \
+            2>&1 || true
+          cp "$SPACK_ROOT/var/spack/environments/psd-ci/spack.yaml" \
+            "$SPACK_ROOT/var/spack/environments/psd-ci/spack.lock" \
+            "$GITHUB_WORKSPACE/artifacts/" 2>/dev/null || true
+          find "$SPACK_ROOT/var/spack" -type f \
+            \( -name 'spack-build-out.txt' \
+               -o -name 'spack-build-env.txt' \
+               -o -name 'spack-configure-args.txt' \) \
+            -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; \
+            2>/dev/null || true
+
+      - name: Upload Spack logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spack-ubuntu-26.04-logs
+          path: ${{ github.workspace }}/artifacts
+          if-no-files-found: ignore
