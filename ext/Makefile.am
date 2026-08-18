@@ -77,10 +77,14 @@ LIST_MAKE_EXECUTE = make-directories \
                     petsc-build  \
                     freefem-build
 
-if !MAC
+if BUILDMEDCOUPLING
 LIST_MAKE_EXECUTE += \
                     gmsh-build \
                     medcoupling-build
+else
+if !MAC
+LIST_MAKE_EXECUTE += gmsh-build
+endif
 endif
 
 else
@@ -254,7 +258,7 @@ download-dependencies:
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
 	fi
-if !MAC
+if BUILDMEDCOUPLING
 	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
 		$(MEDCOUPLING_DOWNLOAD); \
 	fi

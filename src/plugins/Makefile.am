@@ -1,4 +1,10 @@
-SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins mfront medio
+SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins mfront
+
+if HAVEMED
+SUBDIRS += medio
+endif
+
+DIST_SUBDIRS=top-ii-vol soil-laws sparsity-visualizer go-fast-plugins mfront medio
 
 clean-local:
 	@echo ""

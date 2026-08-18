@@ -66,8 +66,12 @@ AC_ARG_WITH([medfile],
         [medfile="$withval"], [medfile="no"])
 
 AC_ARG_WITH([medcoupling],
-	[  --with-medcoupling=        medcoupling root path : (e.g. --with-salome=/home/salome/INSTALL/MEDCOUPLING)],
-        [medcoupling="$withval"], [medcoupling="no"])
+	[AS_HELP_STRING([--with-medcoupling=PATH],
+		[MEDCoupling root path; use --without-medcoupling to disable MED support even with --with-dependencies])],
+	[medcoupling="$withval"
+	 test "$withval" = "no" && medcoupling_disabled=yes || medcoupling_disabled=no],
+	[medcoupling="no"
+	 medcoupling_disabled=no])
 
 
 AU_ALIAS([ACX_GMSH], [AX_GMSH])
@@ -606,7 +610,7 @@ SECTION_TITLE([      checking for a med support     ])
 
 HAVE_MED_SUPPORT=no
 
-if test "$dependencies" != "no" && test "$os_type" != "mac" ; then
+if test "$dependencies" != "no" && test "$os_type" != "mac" && test "$medcoupling_disabled" != "yes" ; then
 dnl Use internally built dependencies from ext/
   hdf5="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/hdf5"
   medfile="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/medfile"
@@ -625,6 +629,8 @@ AC_SUBST([medfile])
 AC_SUBST([medcoupling])
 
 AM_CONDITIONAL([HAVEMED], [test "$HAVE_MED_SUPPORT" = yes])
+AM_CONDITIONAL([BUILDMEDCOUPLING],
+  [test "$dependencies" != "no" && test "$os_type" != "mac" && test "$medcoupling_disabled" != "yes"])
 
 dnl Summary logging
 AC_MSG_RESULT([])
@@ -636,8 +642,16 @@ AC_MSG_RESULT([MED support...                $HAVE_MED_SUPPORT])
 AC_MSG_RESULT([])
 
 if test "$HAVE_MED_SUPPORT" = no; then
-  AC_MSG_WARN([
- top-ii-vol will not be configured with MED support.
+  if test "$medcoupling_disabled" = yes; then
+    AC_MSG_NOTICE([
+ MEDCoupling was explicitly disabled.
+ The medio plugin and MED-specific checks will be skipped.
+
+ MED SUPPORT = OFF
+])
+  else
+    AC_MSG_WARN([
+ PSD will be configured without the optional medio plugin.
  You must provide either:
 
   --with-dependencies
@@ -646,8 +660,13 @@ if test "$HAVE_MED_SUPPORT" = no; then
   --with-medfile
   --with-medcoupling
 
+ To build the other bundled dependencies without MEDCoupling, use:
+
+  --with-dependencies=yes --without-medcoupling
+
  MED SUPPORT = OFF
 ])
+  fi
 fi
 dnl ---------------------------------------------------------------
 
