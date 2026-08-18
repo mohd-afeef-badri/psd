@@ -94,10 +94,6 @@ endif
 # specified based on the library versions and the target operating system.
 #----------------------------------------------------------------------------------------
 
-# Bitbucket HTTP errors guard for GitHub CI runners.
-BITBUCKET_WGET_RETRY = --tries=5 --waitretry=10 \
-			 --retry-on-http-error=404,429,500,502,503,504
-
 # Download Gmsh source code
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
 			-O gmsh-$(GMSH_VERSION).tar.gz
@@ -126,13 +122,13 @@ MUMPS_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/extern
 MUMPS_SEQ_DOWNLOAD = wget -c https://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_SEQ_VERSION).tar.gz \
 			-O mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz
 # Download METIS source code
-METIS_DOWNLOAD = wget -c $(BITBUCKET_WGET_RETRY) https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p12.tar.gz \
+METIS_DOWNLOAD = wget -c  https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/metis-$(METIS_VERSION).tar.gz \
 			-O metis-$(METIS_VERSION).tar.gz
 # Download SLEPc source code
 SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
 			-O slepc-$(SLEPC_VERSION).tar.gz
 # Download ParMETIS source code
-PARMETIS_DOWNLOAD = wget -c $(BITBUCKET_WGET_RETRY) https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
+PARMETIS_DOWNLOAD = wget -c https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/parmetis-$(PARMETIS_VERSION).tar.gz \
 			-O parmetis-$(PARMETIS_VERSION).tar.gz
 # Download SCALAPACK source code
 SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/v$(SCALAPACK_VERSION).tar.gz \
