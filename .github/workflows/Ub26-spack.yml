@@ -47,15 +47,16 @@ jobs:
     runs-on: ubuntu-26.04
     timeout-minutes: 360
 
-    env:
-      SPACK_ROOT: ${{ runner.temp }}/spack
-      SPACK_PSD_ROOT: ${{ runner.temp }}/spack_psd
-      SPACK_USER_CONFIG_PATH: ${{ runner.temp }}/spack-user-config
-      SPACK_USER_CACHE_PATH: ${{ runner.temp }}/spack-user-cache
-
     steps:
       - name: Check out PSD
         uses: actions/checkout@v4
+
+      - name: Configure Spack paths
+        run: |
+          echo "SPACK_ROOT=$RUNNER_TEMP/spack" >> "$GITHUB_ENV"
+          echo "SPACK_PSD_ROOT=$RUNNER_TEMP/spack_psd" >> "$GITHUB_ENV"
+          echo "SPACK_USER_CONFIG_PATH=$RUNNER_TEMP/spack-user-config" >> "$GITHUB_ENV"
+          echo "SPACK_USER_CACHE_PATH=$RUNNER_TEMP/spack-user-cache" >> "$GITHUB_ENV"
 
       - name: Verify Ubuntu release
         run: |
