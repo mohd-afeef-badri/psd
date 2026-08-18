@@ -20,7 +20,7 @@ MMG_VERSION=5.8.0
 MSHMET_VERSION=2012.04.25
 
 # Define the version of ptscotch
-PTSCOTCH_VERSION=7.0.10
+PTSCOTCH_VERSION=7.0.11
 
 # Define the version of MFront library
 MFRONT_VERSION=5.1.0
@@ -29,10 +29,10 @@ MFRONT_VERSION=5.1.0
 MGIS_VERSION=3.1
 
 # Define the version of PETSc library
-PETSC_VERSION=3.24.3
+PETSC_VERSION=3.25.3
 
 # Define the version of FreeFEM library
-FREEFEM_VERSION=7c7504e932222cbb750a5c1829f4faf6bf405e0c
+FREEFEM_VERSION=4.17
 
 # Define the version of Gmsh library
 GMSH_VERSION=4.11.1
@@ -41,7 +41,7 @@ GMSH_VERSION=4.11.1
 MUMPS_SEQ_VERSION=5.0.2
 
 # Define the version of MUMPS library
-MUMPS_VERSION=5.8.1
+MUMPS_VERSION=5.8.2
 
 # Define the version of METIS library
 METIS_VERSION=5.1.0
@@ -50,16 +50,16 @@ METIS_VERSION=5.1.0
 PARMETIS_VERSION=4.0.3
 
 # Define the version of SLEPc library
-SLEPC_VERSION=0781cbf813ba3e39cd03b7f735dbbaa9fc8e0756
+SLEPC_VERSION=3.25.1
 
 # Define the version of SCALAPACK library
-SCALAPACK_VERSION=6f56981cb0cabffd8c72c7d1016146c4b8e276dc
+SCALAPACK_VERSION=2.2.3
 
 # Define the version of HPDDM library
-HPDDM_VERSION=2.3.5
+HPDDM_VERSION=b79bf2a23284c4eca63ea04b5c18a325b664db1d
 
 # Define the version of HYPRE library
-HYPRE_VERSION=3.0.0
+HYPRE_VERSION=85b779557005b2eb94c231c1b516e988b87f4e53
 
 # Define the version of BLAS/LAPACK library
 F2CBLASLAPACK_VERSION=3.8.0
@@ -98,13 +98,13 @@ endif
 GMSH_DOWNLOAD    = wget -c https://gmsh.info/bin/Linux/gmsh-$(GMSH_VERSION)-Linux64.tgz \
 			-O gmsh-$(GMSH_VERSION).tar.gz
 # Download FreeFEM source code
-FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/$(FREEFEM_VERSION).tar.gz \
+FREEFEM_DOWNLOAD = wget -c https://github.com/FreeFem/FreeFem-sources/archive/v$(FREEFEM_VERSION).tar.gz \
 			-O freefem-$(FREEFEM_VERSION).tar.gz
 # Download HPDDM source code
-HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/v$(HPDDM_VERSION).tar.gz \
+HPDDM_DOWNLOAD = wget -c https://github.com/hpddm/hpddm/archive/$(HPDDM_VERSION).tar.gz \
 			-O hpddm-$(HPDDM_VERSION).tar.gz
 # Download HYPRE source code
-HYPRE_DOWNLOAD = wget -c https://github.com/hypre-space/hypre/archive/v$(HYPRE_VERSION).tar.gz \
+HYPRE_DOWNLOAD = wget -c https://github.com/hypre-space/hypre/archive/$(HYPRE_VERSION).tar.gz \
 			-O hypre-$(HYPRE_VERSION).tar.gz
 # Download MFront source code
 MFRONT_DOWNLOAD = wget -c https://github.com/thelfer/tfel/archive/refs/tags/TFEL-$(MFRONT_VERSION).tar.gz \
@@ -125,13 +125,13 @@ MUMPS_SEQ_DOWNLOAD = wget -c https://ftp.mcs.anl.gov/pub/petsc/externalpackages/
 METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p12.tar.gz \
 			-O metis-$(METIS_VERSION).tar.gz
 # Download SLEPc source code
-SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/$(SLEPC_VERSION)/slepc-$(SLEPC_VERSION).tar.gz \
+SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
 			-O slepc-$(SLEPC_VERSION).tar.gz
 # Download ParMETIS source code
 PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
 			-O parmetis-$(PARMETIS_VERSION).tar.gz
 # Download SCALAPACK source code
-SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/$(SCALAPACK_VERSION).tar.gz \
+SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/v$(SCALAPACK_VERSION).tar.gz \
 			-O scalapack-$(SCALAPACK_VERSION).tar.gz
 # Download SCALAPACK source code
 F2CBLASLAPACK_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/externalpackages/f2cblaslapack-$(F2CBLASLAPACK_VERSION).q2.tar.gz \
@@ -149,7 +149,7 @@ PTSCOTCH_DOWNLOAD = wget https://gitlab.inria.fr/scotch/scotch/-/archive/v$(PTSC
 MSHMET_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFEM-3rdparties/refs/heads/main/mshmet.$(MSHMET_VERSION).tgz \
 			-O mshmet.$(MSHMET_VERSION).tgz
 # Download PETSc patch for cmake
-PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/7c7504e932222cbb750a5c1829f4faf6bf405e0c/3rdparty/ff-petsc/petsc-cmake-seq.patch
+PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-sources/refs/heads/master/3rdparty/ff-petsc/petsc-cmake-seq.patch
 # Download Ipopt source code
 IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
 			-O Ipopt-$(IPOPT_VERSION).tgz
