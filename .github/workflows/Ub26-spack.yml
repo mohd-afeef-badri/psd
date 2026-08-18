@@ -111,13 +111,13 @@ jobs:
       - name: Install PSD with Spack
         run: |
           source "$SPACK_ROOT/share/spack/setup-env.sh"
-          spack -e psd-ci install --fail-fast
+          spack -e psd-ci install --fail-fast psd@main
 
       - name: Verify the Spack installation
         run: |
           source "$SPACK_ROOT/share/spack/setup-env.sh"
-          spack -e psd-ci find --long --variants psd
-          install_prefix="$(spack -e psd-ci location -i psd)"
+          spack -e psd-ci find --long --variants psd@main
+          install_prefix="$(spack -e psd-ci location -i psd@main)"
           test -d "$install_prefix"
           test -x "$install_prefix/bin/PSD_PreProcess"
 
