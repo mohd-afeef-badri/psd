@@ -96,7 +96,6 @@ jobs:
           source "$SPACK_ROOT/share/spack/setup-env.sh"
           spack repo add "$SPACK_PSD_ROOT/spack_repo/psd"
           spack repo list
-          spack external find
 
       - name: Concretize PSD
         run: |
@@ -132,12 +131,19 @@ jobs:
           cp "$SPACK_ROOT/var/spack/environments/psd-ci/spack.yaml" \
             "$SPACK_ROOT/var/spack/environments/psd-ci/spack.lock" \
             "$GITHUB_WORKSPACE/artifacts/" 2>/dev/null || true
-          find "$SPACK_ROOT/var/spack" -type f \
-            \( -name 'spack-build-out.txt' \
-               -o -name 'spack-build-env.txt' \
-               -o -name 'spack-configure-args.txt' \) \
-            -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; \
-            2>/dev/null || true
+          for log_root in \
+            "$SPACK_ROOT/var/spack" \
+            "$SPACK_USER_CACHE_PATH" \
+            "${TMPDIR:-/tmp}/runner"; do
+            test -d "$log_root" || continue
+            find "$log_root" -type f \
+              \( -name '*.log' \
+                 -o -name 'spack-build-out.txt' \
+                 -o -name 'spack-build-env.txt' \
+                 -o -name 'spack-configure-args.txt' \) \
+              -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; \
+              2>/dev/null || true
+          done
 
       - name: Upload Spack logs
         if: always()
