@@ -170,7 +170,7 @@ MEDCOUPLING_CONFIGURATION_DOWNLOAD = wget -c https://github.com/SalomePlatform/c
 			-O medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz
 HDF5_MED_DOWNLOAD = wget -c https://github.com/HDFGroup/hdf5/archive/refs/tags/$(HDF5_MED_TAG).tar.gz \
 			-O hdf5-med-$(HDF5_MED_VERSION).tar.gz
-MEDFILE_DOWNLOAD = wget -c https://files.salome-platform.org/Salome/medfile/med-$(MEDFILE_VERSION).tar.gz \
+MEDFILE_DOWNLOAD = wget -c https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/med-$(MEDFILE_VERSION).tar.gz \
 			-O med-$(MEDFILE_VERSION).tar.gz
 
 #----------------------------------------------------------------------------------------
