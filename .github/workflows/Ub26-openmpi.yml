@@ -1,5 +1,5 @@
-name: UB24.04-mpich
-# This workflow is designed to run on Ubuntu 24.04 with MPICH.
+name: UB26.04-OpenMPI
+# This workflow is designed to run on Ubuntu 26.04 with OpenMPI
 on:
   push:
     branches:
@@ -8,7 +8,6 @@ on:
       - '**.MD'
       - '**.md'
       - '**/.gitignore'
-      - 'joss/**'
       - 'data/**'
       - 'joss/**'
       - 'demos/**'
@@ -25,8 +24,8 @@ on:
       - '**.MD'
       - '**.md'
       - '**/.gitignore'
-      - 'joss/**'
       - 'data/**'
+      - 'joss/**'
       - 'demos/**'
       - 'docs/**'
       - 'etc/**'
@@ -44,7 +43,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake mpich libtirpc-dev libtbb-dev
+        sudo apt-get install freeglut3-dev liblapack-dev libhdf5-dev libgsl-dev cmake libopenmpi-dev libtirpc-dev libtbb-dev
     - name: configure
       run: |
         export PREFIXPSD=/home/runner/psd
@@ -57,7 +56,7 @@ jobs:
       run: |
         set +e                      # Don't exit immediately on failure
         PARMMG_ACTIVE=no make check # Run make check, ignoring PARMMG_ACTIVE
-        status=$?                  # Capture exit code of make check
+        status=$?                   # Capture exit code of make check
         mkdir -p "$GITHUB_WORKSPACE/artifacts"
         find . \( -name "*.log" -o -name "*.txt" \) -exec cp --parents {} "$GITHUB_WORKSPACE/artifacts/" \; || true
         exit $status               # Re-raise make check's status to mark the step as failed if it should

@@ -3,6 +3,18 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ## Rolling release (2.7)
 
+### Changed
+
+- Moved to FreeFEM 4.17
+- Moved to PETSc 3.25.3
+- Updated the PETSc dependency bundle:
+  - HYPRE 3.1.0 with PETSc fixes (`85b779557005b2eb94c231c1b516e988b87f4e53`)
+  - MUMPS 5.8.2
+  - SLEPc 3.25.1
+  - ScaLAPACK 2.2.3
+  - HPDDM 2.4.0 (`b79bf2a23284c4eca63ea04b5c18a325b664db1d`)
+  - PT-Scotch 7.0.11
+
 ## [2.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.6) - 06-07-2026
 
 ### Added

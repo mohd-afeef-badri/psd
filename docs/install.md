@@ -12,8 +12,8 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | [C/C++ compiler](http://www.cplusplus.com/)                  | GCC 7 or higher                                              | ✅         | ❌              |
   | [MPI](https://www.mpich.org/)                                | 2.0 or higher ([MPICH](https://www.mpich.org/) or [Open MPI](https://www.open-mpi.org/)) | ✅         | ❌              |
   | [git](https://git-scm.com/)                                  | –                                                            | ✅         | ❌              |
-  | [FreeFEM](https://freefem.org/)                              | 4.16                                                         | ✅         | ✅              |
-  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.24.3                                                       | ✅         | ✅              |
+  | [FreeFEM](https://freefem.org/)                              | 4.17                                                         | ✅         | ✅              |
+  | [PETSc](https://www.mcs.anl.gov/petsc/)                      | 3.25.3                                                       | ✅         | ✅              |
   | [Gmsh](http://gmsh.info/)                                    | 4.11.1                                                       | ✅         | ✅              |
   | [MEDCOUPLING](https://www.salome-platform.org/)              | 9.0 or higher                                                | ❌         | ❌              |
   | [gnuplot](http://www.gnuplot.info/)                          | 4.0 or higher                                                | ❌         | ❌              |
@@ -25,6 +25,24 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
 
   > ⚙️ **Important:**
   > `FreeFEM` and `PETSc` must be compiled with support for **METIS**, **ParMETIS**, and **HPDDM**. These are considered additional critical dependencies when compiling from source.
+
+  On Linux, when `--with-dependencies=yes` is used, PSD builds PETSc with the
+  following package versions and source revisions. The macOS build uses the
+  applicable packages from this list and system-provided numerical libraries:
+
+  | Package | Bundled version or revision |
+  | ------- | --------------------------- |
+  | HYPRE | 3.1.0 with PETSc fixes (`85b779557005b2eb94c231c1b516e988b87f4e53`) |
+  | MUMPS | 5.8.2 |
+  | METIS | 5.1.0-p12 |
+  | ParMETIS | 4.0.3-p9 |
+  | SLEPc | 3.25.1 |
+  | HPDDM | 2.4.0 (`b79bf2a23284c4eca63ea04b5c18a325b664db1d`) |
+  | ScaLAPACK | 2.2.3 |
+  | MMG | 5.8.0 |
+  | ParMmg | 1.5.0 |
+  | PT-Scotch | 7.0.11 |
+  | f2cBLAS/LAPACK | 3.8.0.q2 |
 
   ---
 
@@ -157,8 +175,8 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   | `--with-medfile`             | Enter the directory  where  medfile  has been installed.<br /><br />*This flag is an optional flag* | `--with-medfile=/home/SALOME-UB22.04/INSTALL/medfile` <br />`--with-medfile=/home/install/SALOME/BINARIES-UB22.04/medfile` |
   | `--with-medcoupling`         | Enter the directory  where  MEDCOUPLING  has been installed.<br /><br />*This flag is an optional flag* | `--with-medcoupling=/home/SALOME-UB22.04/INSTALL/MEDCOUPLING` <br />`--with-medcoupling=/home/install/SALOME/BINARIES-UB22.04/MEDCOUPLING` |
   | `--with-mfront`              | Enter the directory  where  Mfront binary  has been installed.<br /><br />*This flag is an optional flag* | `--with-mfront=/usr/bin` <br />`--with-mfront=/home/install/bin` <br />`--with-mfront=/usr/local/bin` |
-  | `--with-dependencies`        | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will build and compile its<br />dependencies for you. If yes PSD will compile PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes` <br />`--with-dependencies=no`     |
-  | `--with-zipped_dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered to this command, PSD will look for `.tar.gz` files for <br />dependencies in `ext` folder and compile them<br />for you. If yes PSD will expect `.tar.gz` for PETSc, FreeFEM,<br />Mgis, MFront, Metis, ParMetis, Scalapack, mumps, hpddm,<br />slepc, suitsspars, tetgen from ext folder.<br /><br />*This flag is an optional flag* | `--with-zipped_dependencies=yes` <br />`--with-zipped_dependencies=no` |
+  | `--with-dependencies`        | Enter yes or no as an option to this flag, default is no. If yes<br />is entered, PSD will download, build, and compile its dependencies,<br />including PETSc, FreeFEM, MGIS, MFront, Gmsh, and MEDCoupling.<br />PETSc is built with the bundled packages listed above.<br /><br />*This flag is an optional flag* | `--with-dependencies=yes` <br />`--with-dependencies=no`     |
+  | `--with-zipped_dependencies` | Enter yes or no as an option to this flag, default is no. If yes<br />is entered, PSD will use dependency archives supplied in the `ext`<br />folder instead of downloading them. Archive names and versions must<br />match those configured in `ext/Makefile.am`.<br /><br />*This flag is an optional flag* | `--with-zipped_dependencies=yes` <br />`--with-zipped_dependencies=no` |
 
   #### make options for PSD
 
