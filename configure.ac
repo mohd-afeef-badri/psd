@@ -612,8 +612,8 @@ HAVE_MED_SUPPORT=no
 
 if test "$dependencies" != "no" && test "$os_type" != "mac" && test "$medcoupling_disabled" != "yes" ; then
 dnl Use internally built dependencies from ext/
-  hdf5="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/hdf5"
-  medfile="${prefix}/MEDCOUPLING-9.14.0/BINARIES-CO7/medfile"
+  hdf5="${prefix}/MEDCOUPLING-9.14.0/INSTALL/hdf5"
+  medfile="${prefix}/MEDCOUPLING-9.14.0/INSTALL/medfile"
   medcoupling="${prefix}/MEDCOUPLING-9.14.0/INSTALL/MEDCOUPLING"
 fi
 

@@ -7,12 +7,12 @@ BIN_SALOME_NAME=BINARIES-SALOME
 
 if HAVEMED
 EXPORT_MED  =\nexport PATH="${hdf5}/bin:$${PATH}"
-EXPORT_MED +=\nexport LD_LIBRARY_PATH="${hdf5}/lib:$${LD_LIBRARY_PATH}"
 EXPORT_MED +=\nexport PATH="${medfile}/bin:$${PATH}"
-EXPORT_MED +=\nexport LD_LIBRARY_PATH="${medfile}/lib:$${LD_LIBRARY_PATH}"
 EXPORT_MED +=\nexport MEDCOUPLING_ROOT_DIR="${medcoupling}"
 EXPORT_MED +=\nexport PATH="$${MEDCOUPLING_ROOT_DIR}/bin:$${PATH}"
-EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${MEDCOUPLING_ROOT_DIR}/lib:$${LD_LIBRARY_PATH}"
+EXPORT_MED +=\nexport HDF5_ROOT_DIR="${hdf5}"
+EXPORT_MED +=\nexport MEDFILE_ROOT_DIR="${medfile}"
+EXPORT_MED +=\nexport LD_LIBRARY_PATH="$${MEDCOUPLING_ROOT_DIR}/lib:$${MEDFILE_ROOT_DIR}/lib:$${HDF5_ROOT_DIR}/lib:$${LD_LIBRARY_PATH}"
 else !HAVEMED
 EXPORT_MED  =
 endif
