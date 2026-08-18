@@ -77,10 +77,14 @@ LIST_MAKE_EXECUTE = make-directories \
                     petsc-build  \
                     freefem-build
 
-if !MAC
+if BUILDMEDCOUPLING
 LIST_MAKE_EXECUTE += \
                     gmsh-build \
                     medcoupling-build
+else
+if !MAC
+LIST_MAKE_EXECUTE += gmsh-build
+endif
 endif
 
 else
@@ -122,13 +126,13 @@ MUMPS_DOWNLOAD = wget -c https://web.cels.anl.gov/projects/petsc/download/extern
 MUMPS_SEQ_DOWNLOAD = wget -c https://ftp.mcs.anl.gov/pub/petsc/externalpackages/MUMPS_$(MUMPS_SEQ_VERSION).tar.gz \
 			-O mumps-seq-$(MUMPS_SEQ_VERSION).tar.gz
 # Download METIS source code
-METIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-metis/get/v$(METIS_VERSION)-p12.tar.gz \
+METIS_DOWNLOAD = wget -c  https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/metis-$(METIS_VERSION).tar.gz \
 			-O metis-$(METIS_VERSION).tar.gz
 # Download SLEPc source code
 SLEPC_DOWNLOAD = wget -c https://gitlab.com/slepc/slepc/-/archive/v$(SLEPC_VERSION)/slepc-v$(SLEPC_VERSION).tar.gz \
 			-O slepc-$(SLEPC_VERSION).tar.gz
 # Download ParMETIS source code
-PARMETIS_DOWNLOAD = wget -c https://bitbucket.org/petsc/pkg-parmetis/get/v$(PARMETIS_VERSION)-p9.tar.gz \
+PARMETIS_DOWNLOAD = wget -c https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/parmetis-$(PARMETIS_VERSION).tar.gz \
 			-O parmetis-$(PARMETIS_VERSION).tar.gz
 # Download SCALAPACK source code
 SCALAPACK_DOWNLOAD = wget -c https://github.com/Reference-ScaLAPACK/scalapack/archive/v$(SCALAPACK_VERSION).tar.gz \
@@ -254,7 +258,7 @@ download-dependencies:
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
 	fi
-if !MAC
+if BUILDMEDCOUPLING
 	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
 		$(MEDCOUPLING_DOWNLOAD); \
 	fi
