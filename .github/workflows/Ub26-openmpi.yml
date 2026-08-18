@@ -47,7 +47,7 @@ jobs:
     - name: configure
       run: |
         export PREFIXPSD=/home/runner/psd
-        autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes --without-medcoupling
+        autoreconf -i && ./configure --prefix=$PREFIXPSD --with-dependencies=yes
     - name: make
       run: |
         make && make install
