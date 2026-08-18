@@ -1,5 +1,5 @@
-name: UB24.04-OpenMPI
-# This workflow is designed to run on Ubuntu 24.04 with OpenMPI
+name: UB26.04-OpenMPI
+# This workflow is designed to run on Ubuntu 26.04 with OpenMPI
 on:
   push:
     branches:
