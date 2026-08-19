@@ -8,7 +8,6 @@
 MEDCOUPLING_VERSION=9.14.0
 MEDCOUPLING_TAG=V9_14_0
 MEDCOUPLING_ARCHIVE_VERSION=9_14_0
-MEDCOUPLING_CONFIGURATION_VERSION=9.14.0
 HDF5_MED_VERSION=1.10.11
 HDF5_MED_TAG=hdf5-1_10_11
 MEDFILE_VERSION=4.1.1
@@ -167,10 +166,10 @@ IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IP
 MEDCOUPLING_DOWNLOAD = wget -c https://github.com/SalomePlatform/medcoupling/archive/refs/tags/$(MEDCOUPLING_TAG).tar.gz \
 			-O medcoupling-$(MEDCOUPLING_VERSION).tar.gz
 MEDCOUPLING_CONFIGURATION_DOWNLOAD = wget -c https://github.com/SalomePlatform/configuration/archive/refs/tags/$(MEDCOUPLING_TAG).tar.gz \
-			-O medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz
+			-O medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz
 HDF5_MED_DOWNLOAD = wget -c https://github.com/HDFGroup/hdf5/archive/refs/tags/$(HDF5_MED_TAG).tar.gz \
 			-O hdf5-med-$(HDF5_MED_VERSION).tar.gz
-MEDFILE_DOWNLOAD = wget -c https://github.com/mohd-afeef-badri/psd-dependencies/raw/refs/heads/main/med-$(MEDFILE_VERSION).tar.gz \
+MEDFILE_DOWNLOAD = wget -c ftp://ftp.cea.fr/pub/salome/prerequisites/med-$(MEDFILE_VERSION).tar.gz \
 			-O med-$(MEDFILE_VERSION).tar.gz
 
 #----------------------------------------------------------------------------------------
@@ -209,7 +208,7 @@ make-directories:
 if BUILDMEDCOUPLING
 MEDCOUPLING_DOWNLOAD_TARGETS = \
 	medcoupling-$(MEDCOUPLING_VERSION).tar.gz \
-	medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz \
+	medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz \
 	hdf5-med-$(HDF5_MED_VERSION).tar.gz \
 	med-$(MEDFILE_VERSION).tar.gz
 else !BUILDMEDCOUPLING
@@ -592,7 +591,7 @@ if !BUILDZIPPEDDEPENDENCIES
 	$(MEDCOUPLING_DOWNLOAD)
 endif
 
-medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz:
+medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz:
 if !BUILDZIPPEDDEPENDENCIES
 	$(MEDCOUPLING_CONFIGURATION_DOWNLOAD)
 endif
@@ -626,7 +625,7 @@ CMAKE_FLAGS_MEDCOUPLING = \
 -DMEDCOUPLING_USE_MPI=OFF \
 -DMEDCOUPLING_USE_64BIT_IDS=ON \
 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
--DCONFIGURATION_ROOT_DIR=$(CURDIR)/configuration-$(MEDCOUPLING_CONFIGURATION_VERSION) \
+-DCONFIGURATION_ROOT_DIR=$(CURDIR)/configuration-$(MEDCOUPLING_VERSION) \
 -DHDF5_ROOT_DIR=$(HDF5_MED_INSTALL) \
 -DMEDFILE_ROOT_DIR=$(MEDFILE_INSTALL) \
 -DCMAKE_INSTALL_RPATH="$(MEDCOUPLING_INSTALL)/lib;$(MEDFILE_INSTALL)/lib;$(HDF5_MED_INSTALL)/lib" \
@@ -686,7 +685,7 @@ $(MEDFILE_INSTALL)/lib/libmedC.$(SO_SUFFIX): med-$(MEDFILE_VERSION).tar.gz $(HDF
 
 $(MEDCOUPLING_INSTALL)/lib/libmedcoupling.$(SO_SUFFIX): \
 		medcoupling-$(MEDCOUPLING_VERSION).tar.gz \
-		medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz \
+		medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz \
 		$(MEDFILE_INSTALL)/lib/libmedC.$(SO_SUFFIX)
 	@echo ""
 	@echo "*============================================================*"
@@ -701,11 +700,11 @@ $(MEDCOUPLING_INSTALL)/lib/libmedcoupling.$(SO_SUFFIX): \
 	@echo "*---------------------------------*"
 	@echo ""
 	rm -rf medcoupling-$(MEDCOUPLING_VERSION) medcoupling-$(MEDCOUPLING_ARCHIVE_VERSION)
-	rm -rf configuration-$(MEDCOUPLING_CONFIGURATION_VERSION) configuration-$(MEDCOUPLING_ARCHIVE_VERSION)
+	rm -rf configuration-$(MEDCOUPLING_VERSION) configuration-$(MEDCOUPLING_ARCHIVE_VERSION)
 	tar -xzf medcoupling-$(MEDCOUPLING_VERSION).tar.gz
 	mv medcoupling-$(MEDCOUPLING_ARCHIVE_VERSION) medcoupling-$(MEDCOUPLING_VERSION)
-	tar -xzf medcoupling-configuration-$(MEDCOUPLING_CONFIGURATION_VERSION).tar.gz
-	mv configuration-$(MEDCOUPLING_ARCHIVE_VERSION) configuration-$(MEDCOUPLING_CONFIGURATION_VERSION)
+	tar -xzf medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz
+	mv configuration-$(MEDCOUPLING_ARCHIVE_VERSION) configuration-$(MEDCOUPLING_VERSION)
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo "   creating the MEDCoupling build directory"
@@ -757,7 +756,7 @@ distclean-local: clean-local
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION) MEDCOUPLING-$(MEDCOUPLING_VERSION)
-	rm  -rf medcoupling-$(MEDCOUPLING_VERSION) configuration-$(MEDCOUPLING_CONFIGURATION_VERSION)
+	rm  -rf medcoupling-$(MEDCOUPLING_VERSION) configuration-$(MEDCOUPLING_VERSION)
 	rm  -rf hdf5-med-$(HDF5_MED_VERSION) med-$(MEDFILE_VERSION)
 	rm  -rf hypre-$(HYPRE_VERSION) hpddm-$(HPDDM_VERSION) f2cblaslapack-$(F2CBLASLAPACK_VERSION)
 	rm  -rf mumps-$(MUMPS_VERSION) mumps-seq-$(MUMPS_SEQ_VERSION) metis-$(METIS_VERSION)
