@@ -4,8 +4,13 @@
 # build process.
 #----------------------------------------------------------------------------------------
 
-# Define the version of MEDCOUPLLING library
+# Define the versions used by the MEDCoupling source build
 MEDCOUPLING_VERSION=9.14.0
+MEDCOUPLING_TAG=V9_14_0
+MEDCOUPLING_ARCHIVE_VERSION=9_14_0
+HDF5_MED_VERSION=1.10.11
+HDF5_MED_TAG=hdf5-1_10_11
+MEDFILE_VERSION=4.1.1
 
 # Define the version of Ipopt library
 IPOPT_VERSION=3.12.4
@@ -157,12 +162,15 @@ PETSC_PATCH_DOWNLOAD = wget https://raw.githubusercontent.com/FreeFem/FreeFem-so
 # Download Ipopt source code
 IPOPT_DOWNLOAD = wget -c http://www.coin-or.org/download/source/Ipopt/Ipopt-$(IPOPT_VERSION).tgz \
 			-O Ipopt-$(IPOPT_VERSION).tgz
-# Download MEDCoupling source code
-MEDCOUPLING_DOWNLOAD =	wget -c \
-  			--header="User-Agent: Mozilla/5.0 (X11; Linux x86_64)" \
-  			--header="Referer: https://www.salome-platform.org/" \
-  			https://files.salome-platform.org/Salome/Salome$(MEDCOUPLING_VERSION)/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz \
-  			-O MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+# Download MEDCoupling and its standalone build dependencies from source
+MEDCOUPLING_DOWNLOAD = wget -c https://github.com/SalomePlatform/medcoupling/archive/refs/tags/$(MEDCOUPLING_TAG).tar.gz \
+			-O medcoupling-$(MEDCOUPLING_VERSION).tar.gz
+MEDCOUPLING_CONFIGURATION_DOWNLOAD = wget -c https://github.com/SalomePlatform/configuration/archive/refs/tags/$(MEDCOUPLING_TAG).tar.gz \
+			-O medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz
+HDF5_MED_DOWNLOAD = wget -c https://github.com/HDFGroup/hdf5/archive/refs/tags/$(HDF5_MED_TAG).tar.gz \
+			-O hdf5-med-$(HDF5_MED_VERSION).tar.gz
+MEDFILE_DOWNLOAD = wget -c ftp://ftp.cea.fr/pub/salome/prerequisites/med-$(MEDFILE_VERSION).tar.gz \
+			-O med-$(MEDFILE_VERSION).tar.gz
 
 #----------------------------------------------------------------------------------------
 # This section in Makefile.am defines a target "all-local" that is executed during the
@@ -197,7 +205,17 @@ make-directories:
 #----------------------------------------------------------------------------------------
 
 # Target to download the required source code for libraries and dependencies
-download-dependencies:
+if BUILDMEDCOUPLING
+MEDCOUPLING_DOWNLOAD_TARGETS = \
+	medcoupling-$(MEDCOUPLING_VERSION).tar.gz \
+	medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz \
+	hdf5-med-$(HDF5_MED_VERSION).tar.gz \
+	med-$(MEDFILE_VERSION).tar.gz
+else !BUILDMEDCOUPLING
+MEDCOUPLING_DOWNLOAD_TARGETS =
+endif
+
+download-dependencies: $(MEDCOUPLING_DOWNLOAD_TARGETS)
 	@if [ ! -f hpddm-$(HPDDM_VERSION).tar.gz ]; then \
 		$(HPDDM_DOWNLOAD); \
 	fi
@@ -258,12 +276,6 @@ download-dependencies:
 	@if [ ! -f gmsh-$(GMSH_VERSION).tar.gz ]; then \
 		$(GMSH_DOWNLOAD); \
 	fi
-if BUILDMEDCOUPLING
-	@if [ ! -f MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz ]; then \
-		$(MEDCOUPLING_DOWNLOAD); \
-	fi
-endif
-
 #--------------------------------------------------------------------------------
 # Gmsh installation
 # This section in Makefile.am deals with the Gmsh installation process.
@@ -564,9 +576,35 @@ endif
 
 #--------------------------------------------------------------------------------
 # MEDCOUPLING installation
-#  - Download from wget version MEDCOUPLING_VERSION
-#  - User can override download by providing ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+#  - Build MEDCoupling from the tagged GitHub source archive
+#  - Build matching HDF5 and MEDFile prerequisites instead of using a SALOME binary bundle
+#  - Users can override downloads by providing the four source archives in ext/
 #--------------------------------------------------------------------------------
+
+MEDCOUPLING_ROOT=$(prefix)/MEDCOUPLING-$(MEDCOUPLING_VERSION)
+HDF5_MED_INSTALL=$(MEDCOUPLING_ROOT)/INSTALL/hdf5
+MEDFILE_INSTALL=$(MEDCOUPLING_ROOT)/INSTALL/medfile
+MEDCOUPLING_INSTALL=$(MEDCOUPLING_ROOT)/INSTALL/MEDCOUPLING
+
+medcoupling-$(MEDCOUPLING_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	$(MEDCOUPLING_DOWNLOAD)
+endif
+
+medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	$(MEDCOUPLING_CONFIGURATION_DOWNLOAD)
+endif
+
+hdf5-med-$(HDF5_MED_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	$(HDF5_MED_DOWNLOAD)
+endif
+
+med-$(MEDFILE_VERSION).tar.gz:
+if !BUILDZIPPEDDEPENDENCIES
+	$(MEDFILE_DOWNLOAD)
+endif
 
 # Cmake flags for MEDCOUPLING build
 CMAKE_FLAGS_MEDCOUPLING = \
@@ -580,54 +618,116 @@ CMAKE_FLAGS_MEDCOUPLING = \
 -DMEDCOUPLING_PARTITIONER_PTSCOTCH=OFF \
 -DMEDCOUPLING_MICROMED=OFF \
 -DMEDCOUPLING_BUILD_DOC=OFF \
+-DMEDCOUPLING_WITH_FILE_EXAMPLES=OFF \
 -DCMAKE_EXE_LINKER_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=1" \
 -DMEDCOUPLING_BUILD_TESTS=OFF \
--DSALOME_USE_MPI=ON \
--DCMAKE_INSTALL_PREFIX=./../INSTALL/MEDCOUPLING
+-DMEDCOUPLING_BUILD_PY_TESTS=OFF \
+-DMEDCOUPLING_USE_MPI=OFF \
+-DMEDCOUPLING_USE_64BIT_IDS=ON \
+-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+-DCONFIGURATION_ROOT_DIR=$(CURDIR)/configuration-$(MEDCOUPLING_VERSION) \
+-DHDF5_ROOT_DIR=$(HDF5_MED_INSTALL) \
+-DMEDFILE_ROOT_DIR=$(MEDFILE_INSTALL) \
+-DCMAKE_INSTALL_RPATH="$(MEDCOUPLING_INSTALL)/lib;$(MEDFILE_INSTALL)/lib;$(HDF5_MED_INSTALL)/lib" \
+-DCMAKE_INSTALL_PREFIX=$(MEDCOUPLING_INSTALL)
 
-medcoupling-build: MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so
+medcoupling-build: $(MEDCOUPLING_INSTALL)/lib/libmedcoupling.$(SO_SUFFIX)
 
-MEDCOUPLING-$(MEDCOUPLING_VERSION)/INSTALL/MEDCOUPLING/lib/libmedcoupling.so: MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+$(HDF5_MED_INSTALL)/lib/libhdf5.$(SO_SUFFIX): hdf5-med-$(HDF5_MED_VERSION).tar.gz
+	@echo ""
+	@echo "*============================================================*"
+	@echo " PSD is compiling HDF5 v$(HDF5_MED_VERSION) for MEDCoupling"
+	@echo "*============================================================*"
+	rm -rf hdf5-med-$(HDF5_MED_VERSION) hdf5-$(HDF5_MED_TAG)
+	tar -xzf hdf5-med-$(HDF5_MED_VERSION).tar.gz
+	mv hdf5-$(HDF5_MED_TAG) hdf5-med-$(HDF5_MED_VERSION)
+	cd hdf5-med-$(HDF5_MED_VERSION) && \
+	./configure \
+		--prefix=$(HDF5_MED_INSTALL) \
+		--enable-shared \
+		--disable-static \
+		--disable-fortran \
+		--disable-cxx \
+		--disable-tests \
+		--enable-hl && \
+	$(MAKE) -j8 && $(MAKE) -j8 install
+
+$(MEDFILE_INSTALL)/lib/libmedC.$(SO_SUFFIX): med-$(MEDFILE_VERSION).tar.gz $(HDF5_MED_INSTALL)/lib/libhdf5.$(SO_SUFFIX)
+	@echo ""
+	@echo "*============================================================*"
+	@echo " PSD is compiling MEDFile v$(MEDFILE_VERSION) for MEDCoupling"
+	@echo "*============================================================*"
+	rm -rf med-$(MEDFILE_VERSION)
+	tar -xzf med-$(MEDFILE_VERSION).tar.gz
+	cd med-$(MEDFILE_VERSION) && \
+	rm -rf build && mkdir -p build
+	cd med-$(MEDFILE_VERSION)/build && \
+	cmake \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_COMPILER=$(CC) \
+		-DCMAKE_C_FLAGS=-std=gnu17 \
+		-DCMAKE_CXX_COMPILER=$(CXX) \
+		-DCMAKE_Fortran_COMPILER=NOTFOUND \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+		-DHDF5_ROOT_DIR=$(HDF5_MED_INSTALL) \
+		-DMED_MEDINT_TYPE=long \
+		-DMEDFILE_BUILD_TESTS=OFF \
+		-DMEDFILE_BUILD_SHARED_LIBS=ON \
+		-DMEDFILE_BUILD_STATIC_LIBS=OFF \
+		-DMEDFILE_BUILD_PYTHON=OFF \
+		-DMEDFILE_BUILD_DOC=OFF \
+		-DMEDFILE_INSTALL_DOC=OFF \
+		-DMEDFILE_USE_MPI=OFF \
+		-DCMAKE_INSTALL_RPATH=$(HDF5_MED_INSTALL)/lib \
+		-DCMAKE_INSTALL_PREFIX=$(MEDFILE_INSTALL) \
+		.. && \
+	$(MAKE) -j8 && $(MAKE) -j8 install
+
+$(MEDCOUPLING_INSTALL)/lib/libmedcoupling.$(SO_SUFFIX): \
+		medcoupling-$(MEDCOUPLING_VERSION).tar.gz \
+		medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz \
+		$(MEDFILE_INSTALL)/lib/libmedC.$(SO_SUFFIX)
 	@echo ""
 	@echo "*============================================================*"
 	@echo " MEDCOUPLING installation began for you be patient:   "
-	@echo "   - Downloaded using wget version $(MEDCOUPLING_VERSION)"
-	@echo "   - to overide provide ext/MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
+	@echo "   - Building GitHub tag $(MEDCOUPLING_TAG)"
+	@echo "   - to override, provide the MEDCoupling source archives in ext/"
 	@echo "*============================================================*"
 	@echo ""
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo "   untaring MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz"
+	@echo "   untaring MEDCoupling and configuration source archives"
 	@echo "*---------------------------------*"
 	@echo ""
-	tar -xzf MEDCOUPLING-$(MEDCOUPLING_VERSION).tar.gz
+	rm -rf medcoupling-$(MEDCOUPLING_VERSION) medcoupling-$(MEDCOUPLING_ARCHIVE_VERSION)
+	rm -rf configuration-$(MEDCOUPLING_VERSION) configuration-$(MEDCOUPLING_ARCHIVE_VERSION)
+	tar -xzf medcoupling-$(MEDCOUPLING_VERSION).tar.gz
+	mv medcoupling-$(MEDCOUPLING_ARCHIVE_VERSION) medcoupling-$(MEDCOUPLING_VERSION)
+	tar -xzf medcoupling-configuration-$(MEDCOUPLING_VERSION).tar.gz
+	mv configuration-$(MEDCOUPLING_ARCHIVE_VERSION) configuration-$(MEDCOUPLING_VERSION)
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo "   creating BUILD and INSTALL directories"
+	@echo "   creating the MEDCoupling build directory"
 	@echo "*---------------------------------*"
 	@echo ""
-	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)   && \
-	mkdir -p BUILD   && \
-	mkdir -p INSTALL
+	cd medcoupling-$(MEDCOUPLING_VERSION) && \
+	rm -rf build && mkdir -p build
 	@echo ""
 	@echo "*---------------------------------*"
 	@echo "   compiling medcoupling"
 	@echo "*---------------------------------*"
 	@echo ""
-	cd MEDCOUPLING-$(MEDCOUPLING_VERSION)/SOURCES       && \
-	tar -xzf ./../ARCHIVES/MEDCOUPLING.tgz && \
-	cd ./../BUILD && \
-	source ./../env_launch.sh && \
-	cmake  $(CMAKE_FLAGS_MEDCOUPLING) ./../SOURCES/MEDCOUPLING && \
-	make -j all && \
-	source ./../env_launch.sh && make install -j all
+	cd medcoupling-$(MEDCOUPLING_VERSION)/build && \
+	cmake $(CMAKE_FLAGS_MEDCOUPLING) \
+		-DCMAKE_C_COMPILER=$(CC) \
+		-DCMAKE_CXX_COMPILER=$(CXX) \
+		.. && \
+	$(MAKE) -j8 && $(MAKE) -j8 install
 	@echo ""
 	@echo "*---------------------------------*"
-	@echo "   installing medcoupling"
+	@echo " finished installing MEDCoupling v$(MEDCOUPLING_VERSION)"
 	@echo "*---------------------------------*"
 	@echo ""
-	cp -rf MEDCOUPLING-$(MEDCOUPLING_VERSION) ${prefix}/. && \
-	rm -rf  ${prefix}/MEDCOUPLING-$(MEDCOUPLING_VERSION)/BINARIES-CO7/medfile/lib/libgfortran.so.5
 
 
 #--------------------------------------------------------------------------------
@@ -656,6 +756,8 @@ distclean-local: clean-local
 	rm  -rf Makefile Makefile.in petsc-cmake-seq.patch
 	rm  -rf petsc-cmake-seq.patch
 	rm  -rf petsc-$(PETSC_VERSION) freefem-$(FREEFEM_VERSION) mfront-$(MFRONT_VERSION) MEDCOUPLING-$(MEDCOUPLING_VERSION)
+	rm  -rf medcoupling-$(MEDCOUPLING_VERSION) configuration-$(MEDCOUPLING_VERSION)
+	rm  -rf hdf5-med-$(HDF5_MED_VERSION) med-$(MEDFILE_VERSION)
 	rm  -rf hypre-$(HYPRE_VERSION) hpddm-$(HPDDM_VERSION) f2cblaslapack-$(F2CBLASLAPACK_VERSION)
 	rm  -rf mumps-$(MUMPS_VERSION) mumps-seq-$(MUMPS_SEQ_VERSION) metis-$(METIS_VERSION)
 	rm  -rf parmetis-$(PARMETIS_VERSION) slepc-$(SLEPC_VERSION) scalapack-$(SCALAPACK_VERSION)

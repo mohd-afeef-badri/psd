@@ -6,6 +6,10 @@ gmsh-*
 salome-*
 SALOME-*
 MEDCOUPLING-*
+medcoupling-*
+configuration-*
+hdf5-med-*
+med-*
 *.tar.gz
 *.tgz
 !petsc-scalapack.patch
