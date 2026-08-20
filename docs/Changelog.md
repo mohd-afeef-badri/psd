@@ -3,6 +3,11 @@ PSD has been maturing and evolving with time, following subsections present the 
 
 ## Rolling release (2.7)
 
+### Added
+
+- Spack based CI on GitHub, see spack recipie https://github.com/mohd-afeef-badri/spack_psd.git
+- Med 4.1.1 and HDF5 1.10.11 is now compiled with `--download-dependencies=yes`
+
 ### Changed
 
 - Moved to FreeFEM 4.17
@@ -18,6 +23,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 ## [2.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.6) - 06-07-2026
 
 ### Added
+
 - Documentation on [web](https://mohd-afeef-badri.github.io/psd/#/)
 - PSD [Docker](https://mohd-afeef-badri.github.io/psd/#/install?id=docker-image-for-psd)
 - PSD instllation via spack [package](https://github.com/mohd-afeef-badri/spack_psd)
@@ -40,6 +46,7 @@ PSD has been maturing and evolving with time, following subsections present the 
 - Moved to Hypre 3.0.0
 
 ### Removed
+
 - SALOME is no longer compiled
 
 
