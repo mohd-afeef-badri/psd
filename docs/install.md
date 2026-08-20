@@ -28,9 +28,7 @@ PSD is a cross‑platform, MPI‑enabled high‑performance finite element solve
   > ⚙️ **Important:**
   > `FreeFEM` and `PETSc` must be compiled with support for **METIS**, **ParMETIS**, and **HPDDM**. These are considered additional critical dependencies when compiling from source.
 
-  On Linux, when `--with-dependencies=yes` is used, PSD builds PETSc with the
-  following package versions and source revisions. The macOS build uses the
-  applicable packages from this list and system-provided numerical libraries:
+  On Linux, when `--with-dependencies=yes` is used, PSD builds PETSc with the following package versions and source revisions. The macOS build uses the applicable packages from this list and system-provided numerical libraries:
 
   | Package | Bundled version or revision |
   | ------- | --------------------------- |
