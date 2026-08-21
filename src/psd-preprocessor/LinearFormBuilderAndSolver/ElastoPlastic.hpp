@@ -86,7 +86,7 @@ if(useMfront){
 }
 
 if(!useMfront){
- writeIt R"PSD(
+codeSnippet R""""(
 
 if(mpirank==0)
   cout
@@ -95,6 +95,34 @@ if(mpirank==0)
   << "\n#-----------------------------------------------------------------\n"
   << endl;
 
+//==============================================================================
+//  ------------------------------------------------------------
+//  ------- Algorithm below is explained here -------
+//  ------------------------------------------------------------
+//    Loop 1 : TlMaxItr;             # Quasi-time/load loop
+//      update_load();
+//      initialize_increment();      # Δu = 0
+//      restore_converged_state();   # Stress and plastic history
+//      initialize_elastic_tangent();
+//      assemble_linear_system();    # Assemble A,b
+//      calculate_residual();        # L_2(b)
+//      Loop 2 : NrMaxItr;           # Newton-Raphson loop
+//        solve_linear_system();     # du = A^-1*b
+//        update_increment();        # Δu += du
+//        compute_trial_state();     # Elastic trial stress
+//        evaluate_yield_function();
+//        radial_return_update();    # Stress and plastic increment
+//        update_consistent_tangent();
+//        assemble_linear_system();
+//        calculate_residual();
+//        check_convergence();
+//        exit_if_converged();
+//      exit_if_not_converged();
+//      commit_displacements();      # u += Δu
+//      commit_internal_variables(); # Stress and plastic history
+//  ------------------------------------------------------------
+//==============================================================================
+
 // Native small-strain J2 plasticity with linear isotropic hardening.
 // The 2D displacement problem is plane strain; sigma_zz is retained by the
 // local constitutive update. Tensor shear components use Kelvin notation.
@@ -102,23 +130,33 @@ if(mpirank==0)
 
 for (int i=0; i<TlMaxItr; i++) {
 
+  // --- update_load ---- //
   tl = sqrt(1.1/TlMaxItr*(i+1));
+
+  // --- initialize_increment ---- //
+  startProcedure("increment initialization",t0)
   Du[] = 0.;
   du[] = 0.;
   niter = 0;
+  endProcedure("increment initialization",t0)
 
-  // At the beginning of a load step, internal variables are the last
-  // converged values and the first Newton operator is elastic.
-  [Sig11,Sig22,Sig12] = [SigOld11,SigOld22,SigOld12]; Sig33 = SigOld33;
+  // --- restore_converged_state ---- //
+  startProcedure("converged state restoration",t0)
+  [Sig11,Sig22,Sig12] = [SigOld11,SigOld22,SigOld12]; 
+  Sig33 = SigOld33;
   [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33]
       = [lambda+2.*mu,lambda,0.,lambda+2.*mu,0.,2.*mu];
+  endProcedure("converged state restoration",t0)
 
+  // --- assemble_linear_system ---- //
   startProcedure("linear-system assembly",t0)
   ALoc = elast(Vh,Vh,solver=CG,sym=1);
   A = ALoc;
   b = elast(0,Vh);
   endProcedure("linear-system assembly",t0)
 
+  // --- calculate_residual ---- //
+  startProcedure("residual checking",t0)
   b = b .* DP;
   real resLoc = b.l2;
   real resGather = 0.;
@@ -126,18 +164,26 @@ for (int i=0; i<TlMaxItr; i++) {
   mpiAllReduce(resLoc,resGather,mpiCommWorld,mpiSUM);
   nRes0 = sqrt(resGather);
   nRes = nRes0;
+  endProcedure("residual checking",t0)
+
   while(nRes/(nRes0+1.e-30) > EpsNrCon && niter < NrMaxItr) {
     niter++;
 
+    // --- solve_linear_system ---- //
     startProcedure("linear-system solving",t0)
     set(A,sparams=" -ksp_type cg -ksp_rtol 1e-10 ");
     du[] = A^-1*b;
     endProcedure("linear-system solving",t0)
 
+    // --- update_increment ---- //
+    startProcedure("increment update",t0)
     Du[] += du[];
+    endProcedure("increment update",t0)
 
     // Elastic trial state from the last converged state and the total
     // displacement increment Δu of this load step.
+    // --- compute_trial_state ---- //
+    startProcedure("trial stress computation",t0)
     [Eps11,Eps22,Eps12] = epsilon(Du);
     [SigTrial11,SigTrial22,SigTrial12] = [
       SigOld11 + lambda*(Eps11+Eps22) + 2.*mu*Eps11,
@@ -150,19 +196,28 @@ for (int i=0; i<TlMaxItr; i++) {
                            SigTrial22-meanTrial,SigTrial12];
     Dev33 = SigTrial33-meanTrial;
     seqTrial = sqrt(1.5*(Dev11^2+Dev22^2+Dev33^2+Dev12^2));
+    endProcedure("trial stress computation",t0)
 
+    // --- evaluate_yield_function ---- //
+    startProcedure("yield function evaluation",t0)
     yieldFunction = seqTrial-sig0-H*pOld;
     yieldPositive = (yieldFunction+abs(yieldFunction))/2.;
     dp = yieldPositive/(3.*mu+H);
     plasticSwitch = yieldPositive/(abs(yieldFunction)+1.e-14*sig0);
+    endProcedure("yield function evaluation",t0)
 
+    // --- radial_return_update ---- //
+    startProcedure("radial return update",t0)
     [FlowN11,FlowN22,FlowN12] = [
       plasticSwitch*Dev11/(seqTrial+1.e-14*sig0),
       plasticSwitch*Dev22/(seqTrial+1.e-14*sig0),
       plasticSwitch*Dev12/(seqTrial+1.e-14*sig0)];
     FlowN33 = plasticSwitch*Dev33/(seqTrial+1.e-14*sig0);
     beta = 3.*mu*dp/(seqTrial+1.e-14*sig0);
+    endProcedure("radial return update",t0)
 
+    // --- update_consistent_tangent ---- //
+    startProcedure("consistent tangent update",t0)
     [Sig11,Sig22,Sig12] = [SigTrial11-beta*Dev11,
                             SigTrial22-beta*Dev22,
                             SigTrial12-beta*Dev12];
@@ -178,6 +233,7 @@ for (int i=0; i<TlMaxItr; i++) {
       lambda+2.*mu-tangentA*FlowN22^2-4.*mu*beta/3.,
       -tangentA*FlowN22*FlowN12,
       2.*mu-tangentA*FlowN12^2-2.*mu*beta];
+    endProcedure("consistent tangent update",t0)
 
     startProcedure("linear-system assembly",t0)
     ALoc = elast(Vh,Vh,solver=CG,sym=1);
@@ -185,11 +241,14 @@ for (int i=0; i<TlMaxItr; i++) {
     b = elast(0,Vh);
     endProcedure("linear-system assembly",t0)
 
+    // --- calculate_residual ---- //
+    startProcedure("residual checking",t0)
     b = b .* DP;
     resLoc = b.l2;
     resLoc = resLoc*resLoc;
     mpiAllReduce(resLoc,resGather,mpiCommWorld,mpiSUM);
     nRes = sqrt(resGather);
+    endProcedure("residual checking",t0)
   }
 
   if(nRes/(nRes0+1.e-30) > EpsNrCon) {
@@ -201,15 +260,23 @@ for (int i=0; i<TlMaxItr; i++) {
 
   // Commit only after Newton convergence; a failed iterate never contaminates
   // the history used by the next load step.
+  // --- commit_displacements ---- //
+  startProcedure("displacement commit",t0)
   u[] += Du[];
-  [SigOld11,SigOld22,SigOld12] = [Sig11,Sig22,Sig12]; SigOld33 = Sig33;
+  endProcedure("displacement commit",t0)
+
+  // --- commit_internal_variables ---- //
+  startProcedure("internal variable commit",t0)
+  [SigOld11,SigOld22,SigOld12] = [Sig11,Sig22,Sig12]; 
+  SigOld33 = Sig33;
   pOld = pOld+dp;
+  endProcedure("internal variable commit",t0)
 
   if(mpirank==0)
     cout.scientific
          << " " << i << "\t\t" << tl*Qlim << "\t" << niter << "\t\t"
          << nRes/(nRes0+1.e-30) << endl;
-)PSD";
+)"""";
 
  if(ParaViewPostProcess){
  writeIt
@@ -221,13 +288,13 @@ for (int i=0; i<TlMaxItr; i++) {
  "  macro viz(i)i//\n"
  "  plotMPI(Th,u,P1,viz,real,wait=0,cmm=\"displacement\")\n";
 
- writeIt R"PSD(
+codeSnippet R""""(
 }
 
 if(mpirank==0)
   cout << "\n#-----------------------------------------------------------------\n" << endl;
 
-)PSD";
+)"""";
 }
 
 if(useMfront){
