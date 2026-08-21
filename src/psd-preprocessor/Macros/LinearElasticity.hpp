@@ -201,24 +201,33 @@ if(spc==2)
  "                                                                               \n"
  "//=============================================================================\n"
  "//         ------- Dirichlet boundary condition macros -------                 \n"
- "// --------------------------------------------------------------------------- \n"
+ "// --------------------------------------------------------------------------- \n";
+
+ if(Model=="pseudo_nonlinear")
+ writeIt
+ "// DirichletBc'I' : imposes the correction ug-u on the Newton increment du.    \n"
+ "//                  This makes the updated displacement u+du equal to ug.      \n";
+ else
+ writeIt
  "// DirichletBc'I' : will define the full Dirichlet boundary condition on       \n"
- "//                  border I                                                   \n"
+ "//                  border I                                                   \n";
+
+ writeIt
  "//=============================================================================\n";
 
  for(int i=0; i<dirichletconditions; i++)
  writeIt
  "                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy)                                 \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<"  EndMacro                    \n"
  "  ENDIFMACRO ENDIFMACRO                                                        \n"
  "                                                                               \n"
  "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                 \n"
- "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<"  EndMacro                    \n"
  "  ENDIFMACRO ENDIFMACRO                                                        \n"
  "                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                  \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<",Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<"  EndMacro    \n"
  "  ENDIFMACRO ENDIFMACRO                                                        \n"
  "                                                                               \n";
  }
@@ -461,40 +470,49 @@ if(!vectorial){
  "                                                                               \n"
  "//=============================================================================\n"
  "//         ------- Dirichlet boundary condition macros -------                 \n"
- "// --------------------------------------------------------------------------- \n"
+ "// --------------------------------------------------------------------------- \n";
+
+ if(Model=="pseudo_nonlinear")
+ writeIt
+ "// DirichletBc'I' : imposes the correction ug-u on the Newton increment du.    \n"
+ "//                  This makes the updated displacement u+du equal to ug.      \n";
+ else
+ writeIt
  "// DirichletBc'I' : will define the full Dirichlet boundary condition on       \n"
- "//                  border I                                                   \n"
+ "//                  border I                                                   \n";
+
+ writeIt
  "//=============================================================================\n";
 
  for(int i=0; i<dirichletconditions; i++)
  writeIt
  "                                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                          \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<"  EndMacro                                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                          \n"
- "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy  EndMacro                                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<"  EndMacro                                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                          \n"
- "    NewMacro DirichletBc"<<i<<"() Uz=Dbc"<<i<<"Uz  EndMacro                                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Uz=Dbc"<<i<<"Uz"<<(Model=="pseudo_nonlinear" ? "-u2" : "")<<"  EndMacro                                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(!Dbc"<<i<<"Uz)                           \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<",Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<"  EndMacro                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                           \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<",Uz=Dbc"<<i<<"Uz"<<(Model=="pseudo_nonlinear" ? "-u2" : "")<<"  EndMacro                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                           \n"
- "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro                    \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<",Uz=Dbc"<<i<<"Uz"<<(Model=="pseudo_nonlinear" ? "-u2" : "")<<"  EndMacro                    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy) IFMACRO(Dbc"<<i<<"Uz)                            \n"
- "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy,Uz=Dbc"<<i<<"Uz  EndMacro    \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux"<<(Model=="pseudo_nonlinear" ? "-u" : "")<<",Uy=Dbc"<<i<<"Uy"<<(Model=="pseudo_nonlinear" ? "-u1" : "")<<",Uz=Dbc"<<i<<"Uz"<<(Model=="pseudo_nonlinear" ? "-u2" : "")<<"  EndMacro    \n"
  "  ENDIFMACRO ENDIFMACRO ENDIFMACRO                                                             \n"
  "                                                                                               \n";
  }
