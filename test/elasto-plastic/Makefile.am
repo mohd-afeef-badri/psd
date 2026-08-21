@@ -9,6 +9,8 @@ else !HAVESALOME
 MESHDIR2=./../../data/meshes/2D/Geo-Files/Gmsh/
 MESHDIR3=./../../data/meshes/3D/Geo-Files/
 
+TESTS += test_elasto_plastic_native.sh
+
 if HAVEMGIS
 TESTS += test_elasto_plastic_mfront.sh
 endif
@@ -41,6 +43,20 @@ copy-executables:
 $(TESTS): copy-executables
 
 if !HAVESALOME
+test_elasto_plastic_native.sh:
+	@echo '#!/bin/bash' > $@
+	@echo 'set -e' >> $@
+	@echo 'echo ""' >> $@
+	@echo 'echo "*============================================================*"' >> $@
+	@echo 'echo " Parallel 2D native von-Mises elasto-plasticity "' >> $@
+	@echo 'echo "*============================================================*"' >> $@
+	@echo './PSD_PreProcess -dimension 2 -tractionconditions 1 -problem elasto_plastic -dirichletconditions 2 -model von_mises -testflags > PreProcess-2D_elasto-plasticity_native.log' >> $@
+	@echo '! grep -q "load.*mfront" Main.edp' >> $@
+	@echo './PSD_Solve -np $(NP) Main.edp -mesh $(MESHDIR2)/quater_cylinder.msh -v 0 -ns -nw > Solve-2D_elasto-plasticity_native.log' >> $@
+	@echo '! grep -q "Newton iterations maxed out" Solve-2D_elasto-plasticity_native.log' >> $@
+	@echo 'echo "Native von-Mises elasto-plasticity: SUCCESS"' >> $@
+	@chmod +x $@
+
 if HAVEMGIS
 test_elasto_plastic_mfront.sh:
 	@echo '#!/bin/bash' > $@
