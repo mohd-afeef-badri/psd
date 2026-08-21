@@ -2,7 +2,7 @@
 // ------ Elasto-Plastic Mechanics for the LinearFormBuilderAndSolver.edp file ------
 //=====================================================================================
 
-
+if(useMfront){
  writeIt
  "                                                                                \n"
  "if(mpirank==0)                                                                  \n"
@@ -83,7 +83,154 @@
  "                                                                                \n"
  "  startProcedure(\"Stress update via MFront\",t0)                               \n"
  "                                                                                \n";
+}
 
+if(!useMfront){
+ writeIt R"PSD(
+
+if(mpirank==0)
+  cout
+  << "\n#-----------------------------------------------------------------\n"
+  << "# TimeStep\tPressure\tNRiterations\tRelativeResidual"
+  << "\n#-----------------------------------------------------------------\n"
+  << endl;
+
+// Native small-strain J2 plasticity with linear isotropic hardening.
+// The 2D displacement problem is plane strain; sigma_zz is retained by the
+// local constitutive update. Tensor shear components use Kelvin notation.
+// Relative Newton-increment norm: ε = ‖Δu‖₂ / (1 + ‖u‖₂).
+
+for (int i=0; i<TlMaxItr; i++) {
+
+  tl = sqrt(1.1/TlMaxItr*(i+1));
+  Du[] = 0.;
+  du[] = 0.;
+  niter = 0;
+
+  // At the beginning of a load step, internal variables are the last
+  // converged values and the first Newton operator is elastic.
+  [Sig11,Sig22,Sig12] = [SigOld11,SigOld22,SigOld12]; Sig33 = SigOld33;
+  [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33]
+      = [lambda+2.*mu,lambda,0.,lambda+2.*mu,0.,2.*mu];
+
+  startProcedure("linear-system assembly",t0)
+  ALoc = elast(Vh,Vh,solver=CG,sym=1);
+  A = ALoc;
+  b = elast(0,Vh);
+  endProcedure("linear-system assembly",t0)
+
+  b = b .* DP;
+  real resLoc = b.l2;
+  real resGather = 0.;
+  resLoc = resLoc*resLoc;
+  mpiAllReduce(resLoc,resGather,mpiCommWorld,mpiSUM);
+  nRes0 = sqrt(resGather);
+  nRes = nRes0;
+  while(nRes/(nRes0+1.e-30) > EpsNrCon && niter < NrMaxItr) {
+    niter++;
+
+    startProcedure("linear-system solving",t0)
+    set(A,sparams=" -ksp_type cg -ksp_rtol 1e-10 ");
+    du[] = A^-1*b;
+    endProcedure("linear-system solving",t0)
+
+    Du[] += du[];
+
+    // Elastic trial state from the last converged state and the total
+    // displacement increment Δu of this load step.
+    [Eps11,Eps22,Eps12] = epsilon(Du);
+    [SigTrial11,SigTrial22,SigTrial12] = [
+      SigOld11 + lambda*(Eps11+Eps22) + 2.*mu*Eps11,
+      SigOld22 + lambda*(Eps11+Eps22) + 2.*mu*Eps22,
+      SigOld12 + 2.*mu*Eps12];
+    SigTrial33 = SigOld33 + lambda*(Eps11+Eps22);
+
+    meanTrial = (SigTrial11+SigTrial22+SigTrial33)/3.;
+    [Dev11,Dev22,Dev12] = [SigTrial11-meanTrial,
+                           SigTrial22-meanTrial,SigTrial12];
+    Dev33 = SigTrial33-meanTrial;
+    seqTrial = sqrt(1.5*(Dev11^2+Dev22^2+Dev33^2+Dev12^2));
+
+    yieldFunction = seqTrial-sig0-H*pOld;
+    yieldPositive = (yieldFunction+abs(yieldFunction))/2.;
+    dp = yieldPositive/(3.*mu+H);
+    plasticSwitch = yieldPositive/(abs(yieldFunction)+1.e-14*sig0);
+
+    [FlowN11,FlowN22,FlowN12] = [
+      plasticSwitch*Dev11/(seqTrial+1.e-14*sig0),
+      plasticSwitch*Dev22/(seqTrial+1.e-14*sig0),
+      plasticSwitch*Dev12/(seqTrial+1.e-14*sig0)];
+    FlowN33 = plasticSwitch*Dev33/(seqTrial+1.e-14*sig0);
+    beta = 3.*mu*dp/(seqTrial+1.e-14*sig0);
+
+    [Sig11,Sig22,Sig12] = [SigTrial11-beta*Dev11,
+                            SigTrial22-beta*Dev22,
+                            SigTrial12-beta*Dev12];
+    Sig33 = SigTrial33-beta*Dev33;
+
+    // Consistent algorithmic tangent for the radial-return update:
+    // C_alg = C - 3μ(3μ/(3μ+H)-β)n⊗n - 2μβ DEV.
+    tangentA = 3.*mu*(3.*mu/(3.*mu+H)-beta);
+    [Mt11,Mt12,Mt13,Mt22,Mt23,Mt33] = [
+      lambda+2.*mu-tangentA*FlowN11^2-4.*mu*beta/3.,
+      lambda-tangentA*FlowN11*FlowN22+2.*mu*beta/3.,
+      -tangentA*FlowN11*FlowN12,
+      lambda+2.*mu-tangentA*FlowN22^2-4.*mu*beta/3.,
+      -tangentA*FlowN22*FlowN12,
+      2.*mu-tangentA*FlowN12^2-2.*mu*beta];
+
+    startProcedure("linear-system assembly",t0)
+    ALoc = elast(Vh,Vh,solver=CG,sym=1);
+    A = ALoc;
+    b = elast(0,Vh);
+    endProcedure("linear-system assembly",t0)
+
+    b = b .* DP;
+    resLoc = b.l2;
+    resLoc = resLoc*resLoc;
+    mpiAllReduce(resLoc,resGather,mpiCommWorld,mpiSUM);
+    nRes = sqrt(resGather);
+  }
+
+  if(nRes/(nRes0+1.e-30) > EpsNrCon) {
+    if(mpirank==0)
+      cout << "Error: native von Mises Newton iterations maxed out at load step "
+           << i << endl;
+    exit(1201);
+  }
+
+  // Commit only after Newton convergence; a failed iterate never contaminates
+  // the history used by the next load step.
+  u[] += Du[];
+  [SigOld11,SigOld22,SigOld12] = [Sig11,Sig22,Sig12]; SigOld33 = Sig33;
+  pOld = pOld+dp;
+
+  if(mpirank==0)
+    cout.scientific
+         << " " << i << "\t\t" << tl*Qlim << "\t" << niter << "\t\t"
+         << nRes/(nRes0+1.e-30) << endl;
+)PSD";
+
+ if(ParaViewPostProcess){
+ writeIt
+ "  savevtk(\"VTUs/Solution.vtu\",Th,PlotVec(u),dataname=\"U\",order=vtuorder,append=i?true:false);\n";
+ }
+
+ if(debug)
+ writeIt
+ "  macro viz(i)i//\n"
+ "  plotMPI(Th,u,P1,viz,real,wait=0,cmm=\"displacement\")\n";
+
+ writeIt R"PSD(
+}
+
+if(mpirank==0)
+  cout << "\n#-----------------------------------------------------------------\n" << endl;
+
+)PSD";
+}
+
+if(useMfront){
  if(spc==2)
  writeIt
  "    [Eps11,Eps22,Eps12] = epsilon(u);                                           \n";
@@ -184,3 +331,4 @@
  "  << \"\\n#---------------------------------------------------------------\\n\" \n"
  "  <<endl;                                                                       \n"
  "                                                                                \n";
+}
