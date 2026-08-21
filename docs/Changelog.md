@@ -20,6 +20,9 @@ PSD has been maturing and evolving with time, following subsections present the 
   - HPDDM 2.4.0 (`b79bf2a23284c4eca63ea04b5c18a325b664db1d`)
   - PT-Scotch 7.0.11
 
+### Bug
+- Pseudo-nonlinear elasticity with non-homogenous Dirichlet boundary coditions fixed [#75](https://github.com/mohd-afeef-badri/psd/pull/75)
+
 ## [2.6](https://gitlab.com/PsdSolver/psd_sources/-/tree/v2.6) - 06-07-2026
 
 ### Added
