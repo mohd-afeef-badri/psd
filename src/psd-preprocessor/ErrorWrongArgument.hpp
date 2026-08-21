@@ -177,6 +177,21 @@
 
   }
 
+  if(Prblm=="elasto_plastic" && Model=="von_mises" && !useMfront
+     && (spc!=2 || Sequential))
+    {
+      cout <<
+          "===================================================================\n"
+          " ** ERROR **\n"
+          "===================================================================\n"
+          "\n"
+          "Native von_mises currently supports parallel 2D plane strain only.\n"
+          "Use -dimension 2 without -sequential, or enable -useMfront.\n"
+          "\n"
+          "===================================================================\n";
+      errorArgument = true;
+    }
+
   if(errorArgument)
    exit(1111);
 

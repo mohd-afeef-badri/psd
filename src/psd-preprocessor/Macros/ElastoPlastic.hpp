@@ -102,7 +102,7 @@ if(spc==2)
  "                     dy(i#1)             ,                                     \n"
  "                     (dy(i)+dx(i#1))/SQ2 ] //                                  \n";
 
- if(!fastmethod && useMfront)
+ if(!fastmethod)
  writeIt
  "                                                                               \n"
  "//=============================================================================\n"
@@ -170,8 +170,8 @@ if(spc==2)
  "//                  border I                                                   \n"
  "//=============================================================================\n";
 
- for(int i=0; i<dirichletconditions; i++)
- writeIt
+ for(int i=0; i<dirichletconditions; i++) {
+ if(useMfront) writeIt
  "                                                                               \n"
  "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy)                                 \n"
  "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux  EndMacro                    \n"
@@ -185,6 +185,22 @@ if(spc==2)
  "    NewMacro DirichletBc"<<i<<"() Ux=Dbc"<<i<<"Ux,Uy=Dbc"<<i<<"Uy  EndMacro    \n"
  "  ENDIFMACRO ENDIFMACRO                                                        \n"
  "                                                                               \n";
+
+ if(!useMfront) writeIt
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(!Dbc"<<i<<"Uy)                                 \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=(niter==0)*(Dbc"<<i<<"Ux-u-Du) EndMacro    \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(!Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                 \n"
+ "    NewMacro DirichletBc"<<i<<"() Uy=(niter==0)*(Dbc"<<i<<"Uy-u1-Du1) EndMacro  \n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n"
+ "  IFMACRO(Dbc"<<i<<"Ux) IFMACRO(Dbc"<<i<<"Uy)                                  \n"
+ "    NewMacro DirichletBc"<<i<<"() Ux=(niter==0)*(Dbc"<<i<<"Ux-u-Du),Uy=(niter==0)*(Dbc"<<i<<"Uy-u1-Du1) EndMacro\n"
+ "  ENDIFMACRO ENDIFMACRO                                                        \n"
+ "                                                                               \n";
+ }
  }
 
  if(bodyforceconditions>=1)

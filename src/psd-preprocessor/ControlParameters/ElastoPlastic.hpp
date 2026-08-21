@@ -49,13 +49,6 @@ writeHeader;
   "//  sig0  : Yield strength of the material                                    \n"
   "//  Et    : Tangent modulus of the material                                   \n"
   "//  H     : Hardening modulus of the material                                 \n"
-  "//  PropertyNames : String of material property names (space seperated)       \n"
-  "//                  that are provided to Mfront.                              \n"
-  "//  PropertyValues : Values of material properties provided to Mfront         \n"
-  "//                                                                            \n"
-  "// -------------------------------------------------------------------        \n"
-  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
-  "//            as in the Elasticity.mfront file                                \n"
   "// -------------------------------------------------------------------        \n"
   "//============================================================================\n"
   "                                                                              \n"
@@ -65,6 +58,9 @@ writeHeader;
   "       Et   = E/100.      ,                                                   \n"
   "       H    = E*Et/(E-Et) ;                                                   \n"
   "                                                                              \n"
+  "  real lambda = E*nu/((1.+nu)*(1.-2.*nu)),                                    \n"
+  "       mu     = E/(2.*(1.+nu));                                               \n"
+  "                                                                              \n"
   "                                                                              \n"
   "  real Re   = 1.3         ,  // external radius geometry                      \n"
   "       Ri   = 1.0         ;  // internal radius geometry                      \n"
@@ -72,7 +68,10 @@ writeHeader;
   "                                                                              \n"
   "  real Qlim = 2./sqrt(3.)*log(Re/Ri)*sig0; //  Limiting pressure              \n"
   "                                                                              \n"
-  "                                                                              \n"
+  "                                                                              \n";
+
+  if(useMfront){
+  writeIt
   "  string    MaterialBehaviour   = \"IsotropicLinearHardeningPlasticity\";     \n";
 
   if(spc==2)writeIt
@@ -85,7 +84,10 @@ writeHeader;
   "  string    PropertyNames       = \"YoungModulus PoissonRatio HardeningSlope YieldStrength\";\n"
   "  real[int] PropertyValues      = [ E, nu , H, sig0 ];                        \n"
   "                                                                              \n"
-  "                                                                              \n"
+  "                                                                              \n";
+  }
+
+  writeIt
   "//============================================================================\n"
   "//                   ------- Algorithmic parameters -------                   \n"
   "// -------------------------------------------------------------------        \n"
@@ -94,14 +96,13 @@ writeHeader;
   "//  TlMaxItr : Number of time steps for quasi-time discretization             \n"
   "//                                                                            \n"
   "// -------------------------------------------------------------------        \n"
-  "//  NOTE:     Please note that PropertyNames should be the same as            \n"
-  "//            as in the Elasticity.mfront file                                \n"
-  "// -------------------------------------------------------------------        \n"
   "//============================================================================\n"
   "                                                                              \n"
   "  macro EpsNrCon  ()   1.e-8       //                                         \n"
   "  macro NrMaxItr  ()   200         //                                         \n"
-  "  macro TlMaxItr  ()   20          //                                         \n";
+  "  macro TlMaxItr  ()   20          //                                         \n"
+  "                                                                              \n"
+  "  real tl = 0.; // pseudo-time load factor, shared by all external loads     \n";
 
 if(dirichletconditions>=1)
  {
@@ -122,11 +123,18 @@ if(dirichletconditions>=1)
  "//============================================================================\n"
  "                                                                              \n";
  if(spc==2)
-  for(int i=0; i<dirichletconditions; i++)
-   writeIt
+  for(int i=0; i<dirichletconditions; i++) {
+   if(i==0) writeIt
+   "  macro  Dbc0On 1   // y=0 symmetry boundary                               \n"
+   "  macro  Dbc0Uy 0.  //                                                     \n";
+   else if(i==1) writeIt
+   "  macro  Dbc1On 3   // x=0 symmetry boundary                               \n"
+   "  macro  Dbc1Ux 0.  //                                                     \n";
+   else writeIt
    "  macro  Dbc"<<i<<"On "<<labelDirichlet<<"   //                            \n"
    "  macro  Dbc"<<i<<"Ux 0.  //                                               \n"
    "  macro  Dbc"<<i<<"Uy 0.  //                                               \n";
+  }
 
  if(spc==3)
   for(int i=0; i<dirichletconditions; i++)
@@ -220,8 +228,6 @@ if(tractionconditions>=1)
  "//============================================================================\n"
  "                                                                              \n";
 
-  writeIt
-  "  real tl;       // Traction load to be updated in time loop                \n";
   for(int i=0; i<tractionconditions; i++)
    writeIt
    "  macro  Tbc"<<i<<"On  4           //                                      \n"
@@ -253,7 +259,7 @@ if(bodyforceconditions>=1)
   for(int i=0; i<bodyforceconditions; i++)
    writeIt
    "  macro  Fbc"<<i<<"On "<<labelBodyForce<<"   //                             \n"
-   "  macro  Fbc"<<i<<"Fy -78480.0 // {rho*g=8.e3*(-9.81)=-78480.0}             \n";
+   "  macro  Fbc"<<i<<"Fy -78480.0*tl // ramp exactly once: rho*g*tl            \n";
  }
 
 
@@ -295,4 +301,3 @@ writeIt
 "//=============================================================================\n"
 "                 // TO DO                                                      \n"
 "                                                                               \n";
-

@@ -107,6 +107,19 @@ if(!Sequential){
  "                            FEQF2, FEQF2,                                       \n"
  "                                   FEQF2] );                                    \n";
 
+ if(!useMfront && spc==2)
+  writeIt
+ "                                                                                \n"
+ "//==============================================================================\n"
+ "// ------- The finite element space  -------                                    \n"
+ "// ---------------------------------------------------------------------------- \n"
+ "//  Ph       : Quadratur finite element space for plane-strain return           \n"
+ "//             mapping. FEQF2 implies 3 dof for a  triangular cell in           \n"
+ "//             the mesh. A vec FE space is built with 3 components              \n"
+ "//==============================================================================\n"
+ "                                                                                \n"
+ " fespace Ph  ( Th , FEQF2 );                                                    \n";
+
  if(spc==2)
   writeIt
  "                                                                                \n"
